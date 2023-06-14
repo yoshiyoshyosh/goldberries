@@ -15,9 +15,10 @@ CREATE TABLE IF NOT EXISTS `Challenge`
  `difficulty_id`      int NOT NULL ,
  `difficulty_subtier` enum('high', 'mid', 'low', 'guard') NULL ,
  `date_created`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `is_fc`              bit NOT NULL ,
- `is_c_fc`            bit NOT NULL ,
- `is_special`         bit NOT NULL ,
+ `requires_fc`        bit NOT NULL DEFAULT 0 ,
+ `requires_special`   bit NOT NULL DEFAULT 0 ,
+ `has_fc`             bit NOT NULL DEFAULT 0 ,
+ `has_special`        bit NOT NULL DEFAULT 0 ,
 
 PRIMARY KEY (`id`),
 KEY `FK_1` (`map_id`),

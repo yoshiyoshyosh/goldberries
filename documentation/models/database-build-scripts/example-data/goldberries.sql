@@ -19,7 +19,6 @@ INSERT INTO `Objective`(`name`, `description`, `is_arbitrary`, `display_name_suf
 VALUES 
 ("Golden Berry", "Collect the golden strawberry of the map", 0, NULL),
 ("Silver Berry", "Collect the silver strawberry of the map", 0, NULL),
-("Quadruple Golden Berry", "Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.", 0, "Quadruple Golden"),
 
 ("All Maps Deathless", "Complete all maps in the campaign without dying", 0, NULL),
 ("100% Deathless", "Complete all maps and obtain all collectibles in the campaign without dying", 0, NULL),
@@ -30,8 +29,14 @@ VALUES
 ("Segment Golden Berry", "Collect a golden strawberry by completing a segment of the map without dying", 1, NULL),
 ("Segment Silver Berry", "Collect a silver strawberry by completing a segment of the map without dying", 1, NULL),
 ("Segment Red Berry", "Collect a red strawberry by completing a segment of the map without dying", 1, NULL),
+
 ("DTS", "Collect the golden strawberry while using a Dash-Trigger-Skip", 1, NULL),
-("No DTS", "Collect the golden strawberry without using an existing Dash-Trigger-Skip", 1, NULL);
+("No DTS", "Collect the golden strawberry without using an existing Dash-Trigger-Skip", 1, NULL),
+
+("Quadruple Golden Berry", "Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.", 0, "Quadruple Golden"),
+("Forwards Golden", "Collect the start->end golden strawberry", 1, "Forwards"),
+("Backwards Golden", "Collect the end->start golden strawberry", 1, "Backwards"),
+("Double Golden", "Collect both the forwards and backwards golden strawberry", 1, "Double Golden");
 
 
 -- ====== Example Data: Difficulty ======
@@ -54,7 +59,7 @@ VALUES
 INSERT INTO `Player`(`name`, `password`, `is_verifier`, `is_admin`, `is_suspended`, `suspension_reason`) 
 VALUES 
 ("KsPi", "chillgoldenarc", 0, 0, 0, NULL),
-("voddi", "weh", 0, 1, 0, NULL),
+("voddie", "weh", 0, 1, 0, NULL),
 ("Parrot_Mash", "she9onmydtilliplatinum", 1, 0, 0, NULL),
 ("Joshi", "interrobang", 1, 1, 0, NULL),
 ("SpaceUK", "hahacheatingfuny", 0, 0, 1, "nah");
@@ -98,6 +103,33 @@ VALUES
 
 
 -- ====== Example Data: Challenge ======
+INSERT INTO `Challenge`(`challenge_type`, `campaign_id`, `map_id`, `objective_id`, `description`, `difficulty_id`, `difficulty_subtier`, `requires_fc`, `requires_special`, `has_fc`, `has_special`) 
+VALUES 
+("map", NULL, 1, 1, NULL, 4, "guard", 0, 0, 0, 0),
+("map", NULL, 2, 1, NULL, 1, "high", 1, 0, 0, 0),
+
+("map", NULL, 3, 1, NULL, 2, "high", 1, 0, 0, 0),
+("map", NULL, 3, 1, NULL, 2, "low", 0, 0, 0, 0),
+
+("map", NULL, 4, 1, NULL, 2, "mid", 0, 0, 0, 0),
+
+("map", NULL, 5, 1, NULL, 2, "mid", 0, 0, 0, 0),
+
+("map", NULL, 6, 1, NULL, 2, "low", 0, 0, 1, 0),
+
+("map", NULL, 7, 1, NULL, 9, NULL, 0, 0, 1, 0),
+("map", NULL, 8, 1, NULL, 9, NULL, 0, 0, 0, 0),
+
+("map", NULL, 9, 1, NULL, 9, NULL, 0, 0, 1, 1),
+
+("map", NULL, 10, 13, NULL, 9, NULL, 0, 0, 0, 0),
+("map", NULL, 10, 14, NULL, 9, NULL, 0, 0, 1, 0),
+("map", NULL, 10, 15, NULL, 9, NULL, 0, 0, 0, 0),
+("map", NULL, 10, 16, NULL, 9, NULL, 0, 0, 1, 1),
+
+("map", NULL, 11, 2, NULL, 9, NULL, 0, 0, 1, 0),
+("map", NULL, 11, 2, NULL, 8, NULL, 0, 1, 0, 0),
+("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0);
 
 
 -- ====== Example Data: Submission ======

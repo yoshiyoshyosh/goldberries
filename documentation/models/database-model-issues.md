@@ -8,3 +8,4 @@
   - Top Golden List entries can be: `Clear, FC, C/FC, SB, FC+SB`
   - Top Golden List entries could potentially also be: `C/SB, FC/SB, C/FC/SB`
   - BUT entries `C/FC, C/SB, FC/SB, C/FC/SB` don't let a `Submission` specify what it is. The current Hard & Standard Golden Lists have this distinction
+  - Possible solution: `requires_fc, requires_special, has_fc, has_special` fields for `Challenge`, `is_fc, is_special` fields for Submission
