@@ -14,4 +14,4 @@ VALUES
 ("Nameless Pillars", NULL, NULL, 6, 2, NULL),
 
 ("Starship Ruins", NULL, NULL, 7, 5, NULL),
-("FORWARD FACILITY", NULL, NULL, 7, 5, NULL)
+("FORWARD FACILITY", NULL, NULL, 7, 5, NULL);

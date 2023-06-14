@@ -22,10 +22,10 @@ DROP TABLE IF EXISTS `Campaign`;
 CREATE TABLE IF NOT EXISTS `Campaign`
 (
  `id`         int NOT NULL AUTO_INCREMENT ,
- `name`       varchar(45) NOT NULL ,
- `url`        varchar(45) NOT NULL ,
+ `name`       varchar(128) NOT NULL ,
+ `url`        varchar(256) NOT NULL ,
  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `icon_url`   varchar(45) NULL ,
+ `icon_url`   varchar(256) NULL ,
 PRIMARY KEY (`id`)
 );
 
@@ -33,10 +33,10 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `Objective`
 (
  `id`                  int NOT NULL AUTO_INCREMENT ,
- `name`                varchar(45) NOT NULL ,
- `description`         varchar(45) NOT NULL ,
+ `name`                varchar(64) NOT NULL ,
+ `description`         text NOT NULL ,
  `is_arbitrary`        bit NOT NULL ,
- `display_name_suffix` varchar(45) NULL ,
+ `display_name_suffix` varchar(32) NULL ,
 PRIMARY KEY (`id`)
 );
 
@@ -44,7 +44,7 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `Difficulty`
 (
  `id`   int NOT NULL AUTO_INCREMENT ,
- `name` varchar(45) NOT NULL ,
+ `name` varchar(32) NOT NULL ,
  `tier` int NULL ,
 PRIMARY KEY (`id`)
 );
@@ -53,12 +53,12 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `Player`
 (
  `id`                int NOT NULL AUTO_INCREMENT ,
- `name`              varchar(45) NOT NULL ,
- `password`          varchar(45) NOT NULL ,
- `is_verifier`       bit NOT NULL ,
- `is_admin`          bit NOT NULL ,
- `is_suspended`      bit NOT NULL ,
- `suspension_reason` varchar(45) NULL ,
+ `name`              varchar(32) NOT NULL ,
+ `password`          varchar(128) NULL ,
+ `is_verifier`       bit NOT NULL DEFAULT 0,
+ `is_admin`          bit NOT NULL DEFAULT 0,
+ `is_suspended`      bit NOT NULL DEFAULT 0,
+ `suspension_reason` text NULL ,
  `date_created`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (`id`)
 );
@@ -67,9 +67,9 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `NewMapSubmission`
 (
  `id`          int NOT NULL AUTO_INCREMENT ,
- `url`         varchar(45) NOT NULL ,
- `name`        varchar(45) NOT NULL ,
- `description` varchar(45) NOT NULL ,
+ `url`         varchar(256) NOT NULL ,
+ `name`        varchar(128) NOT NULL ,
+ `description` text NOT NULL ,
 PRIMARY KEY (`id`)
 );
 
@@ -77,8 +77,8 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `NewCampaignSubmission`
 (
  `id`          int NOT NULL AUTO_INCREMENT ,
- `url`         varchar(45) NOT NULL ,
- `description` varchar(45) NOT NULL ,
+ `url`         varchar(256) NOT NULL ,
+ `description` text NOT NULL ,
 PRIMARY KEY (`id`)
 );
 
@@ -86,9 +86,9 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `Log`
 (
  `id`      int NOT NULL AUTO_INCREMENT ,
- `message` varchar(45) NOT NULL ,
+ `message` text NOT NULL ,
  `level`   enum('debug', 'info', 'warn', 'error', 'critical') NOT NULL ,
- `topic`   varchar(45) NULL ,
+ `topic`   varchar(64) NULL ,
  `date`    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (`id`)
 );
@@ -97,11 +97,11 @@ PRIMARY KEY (`id`)
 CREATE TABLE IF NOT EXISTS `Map`
 (
  `id`               int NOT NULL AUTO_INCREMENT ,
- `name`             varchar(45) NOT NULL ,
- `url`              varchar(45) NULL COMMENT 'GameBanana / Google Drive URL' ,
- `side`             varchar(45) NULL COMMENT '"A-Side", "B-Side", "C-Side", ...' ,
+ `name`             varchar(128) NOT NULL ,
+ `url`              varchar(256) NULL COMMENT 'GameBanana / Google Drive URL' ,
+ `side`             varchar(64) NULL COMMENT '"A-Side", "B-Side", "C-Side", ...' ,
  `is_rejected`      bit NOT NULL DEFAULT 0,
- `rejection_reason` varchar(45) NULL ,
+ `rejection_reason` text NULL ,
  `is_archived`      bit NOT NULL DEFAULT 0,
  `campaign_id`      int NULL ,
  `sort_1`           int NULL ,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `Challenge`
  `campaign_id`        int NULL ,
  `map_id`             int NULL ,
  `objective_id`       int NOT NULL ,
- `description`        varchar(45) NULL ,
+ `description`        text NULL ,
  `difficulty_id`      int NOT NULL ,
  `difficulty_subtier` enum('high', 'mid', 'low', 'guard') NULL ,
  `date_created`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -146,12 +146,12 @@ CREATE TABLE IF NOT EXISTS `Submission`
  `challenge_id`               int NULL ,
  `player_id`                  int NULL ,
  `date_created`               datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `proof_url`                  varchar(45) NOT NULL ,
- `player_notes`               varchar(45) NULL ,
+ `proof_url`                  varchar(256) NOT NULL ,
+ `player_notes`               text NULL ,
  `is_verified`                bit NOT NULL DEFAULT 0,
  `verifier_id`                int NULL ,
  `date_verified`              datetime NULL ,
- `verifier_notes`             varchar(45) NULL ,
+ `verifier_notes`             text NULL ,
  `new_map_submission_id`      int NULL ,
  `new_campaign_submission_id` int NULL ,
 PRIMARY KEY (`id`),
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `Change`
  `challenge_id` int NULL ,
  `player_id`    int NULL ,
  `author`       int NOT NULL ,
- `description`  varchar(45) NOT NULL ,
+ `description`  text NOT NULL ,
  `date`         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (`id`),
 KEY `FK_1` (`campaign_id`),
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `FarewellGoldenData`
  `id`                       int NOT NULL AUTO_INCREMENT ,
  `submission_id`            int NOT NULL ,
  `date_achieved`            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `platform`                 varchar(45) NOT NULL ,
+ `platform`                 varchar(64) NOT NULL ,
  `moonberry`                bit NOT NULL DEFAULT 0 ,
  `used_keys`                bit NOT NULL DEFAULT 0 ,
  `kept_keys`                int NOT NULL DEFAULT 0 ,

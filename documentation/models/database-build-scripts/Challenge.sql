@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `Challenge`
  `campaign_id`        int NULL ,
  `map_id`             int NULL ,
  `objective_id`       int NOT NULL ,
- `description`        varchar(45) NULL ,
+ `description`        text NULL ,
  `difficulty_id`      int NOT NULL ,
  `difficulty_subtier` enum('high', 'mid', 'low', 'guard') NULL ,
  `date_created`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `Change`
  `challenge_id` int NULL ,
  `player_id`    int NULL ,
  `author`       int NOT NULL ,
- `description`  varchar(45) NOT NULL ,
+ `description`  text NOT NULL ,
  `date`         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 
 PRIMARY KEY (`id`),

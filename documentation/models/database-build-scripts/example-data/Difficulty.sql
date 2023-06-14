@@ -9,5 +9,5 @@ VALUES
 ("Tier 6", 6),
 ("Tier 7", 7),
 ("Standard", NULL),
-("Undetermined", NULL)
+("Undetermined", NULL);
 

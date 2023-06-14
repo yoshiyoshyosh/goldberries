@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `FarewellGoldenData`
  `id`                       int NOT NULL AUTO_INCREMENT ,
  `submission_id`            int NOT NULL ,
  `date_achieved`            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `platform`                 varchar(45) NOT NULL ,
+ `platform`                 varchar(64) NOT NULL ,
  `moonberry`                bit NOT NULL DEFAULT 0 ,
  `used_keys`                bit NOT NULL DEFAULT 0 ,
  `kept_keys`                int NOT NULL DEFAULT 0 ,
