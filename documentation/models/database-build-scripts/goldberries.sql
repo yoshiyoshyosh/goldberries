@@ -1,0 +1,215 @@
+-- Combined Build Script
+
+-- =========== Drop Statements ===========
+DROP TABLE IF EXISTS `FarewellGoldenData`;
+DROP TABLE IF EXISTS `Change`;
+DROP TABLE IF EXISTS `Submission`;
+DROP TABLE IF EXISTS `Challenge`;
+DROP TABLE IF EXISTS `Map`;
+DROP TABLE IF EXISTS `Log`;
+DROP TABLE IF EXISTS `NewCampaignSubmission`;
+DROP TABLE IF EXISTS `NewMapSubmission`;
+DROP TABLE IF EXISTS `Player`;
+DROP TABLE IF EXISTS `Difficulty`;
+DROP TABLE IF EXISTS `Objective`;
+DROP TABLE IF EXISTS `Campaign`;
+
+
+
+-- =========== Create Statements ===========
+
+-- ====== Campaign ======
+CREATE TABLE IF NOT EXISTS `Campaign`
+(
+ `id`         int NOT NULL AUTO_INCREMENT ,
+ `name`       varchar(45) NOT NULL ,
+ `url`        varchar(45) NOT NULL ,
+ `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `icon_url`   varchar(45) NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Objective ======
+CREATE TABLE IF NOT EXISTS `Objective`
+(
+ `id`                  int NOT NULL AUTO_INCREMENT ,
+ `name`                varchar(45) NOT NULL ,
+ `description`         varchar(45) NOT NULL ,
+ `is_arbitrary`        bit NOT NULL ,
+ `display_name_suffix` varchar(45) NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Difficulty ======
+CREATE TABLE IF NOT EXISTS `Difficulty`
+(
+ `id`   int NOT NULL AUTO_INCREMENT ,
+ `name` varchar(45) NOT NULL ,
+ `tier` int NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Player ======
+CREATE TABLE IF NOT EXISTS `Player`
+(
+ `id`                int NOT NULL AUTO_INCREMENT ,
+ `name`              varchar(45) NOT NULL ,
+ `password`          varchar(45) NOT NULL ,
+ `is_verifier`       bit NOT NULL ,
+ `is_admin`          bit NOT NULL ,
+ `is_suspended`      bit NOT NULL ,
+ `suspension_reason` varchar(45) NULL ,
+ `date_created`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== NewMapSubmission ======
+CREATE TABLE IF NOT EXISTS `NewMapSubmission`
+(
+ `id`          int NOT NULL AUTO_INCREMENT ,
+ `url`         varchar(45) NOT NULL ,
+ `name`        varchar(45) NOT NULL ,
+ `description` varchar(45) NOT NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== NewCampaignSubmission ======
+CREATE TABLE IF NOT EXISTS `NewCampaignSubmission`
+(
+ `id`          int NOT NULL AUTO_INCREMENT ,
+ `url`         varchar(45) NOT NULL ,
+ `description` varchar(45) NOT NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Log ======
+CREATE TABLE IF NOT EXISTS `Log`
+(
+ `id`      int NOT NULL AUTO_INCREMENT ,
+ `message` varchar(45) NOT NULL ,
+ `level`   enum('debug', 'info', 'warn', 'error', 'critical') NOT NULL ,
+ `topic`   varchar(45) NULL ,
+ `date`    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Map ======
+CREATE TABLE IF NOT EXISTS `Map`
+(
+ `id`               int NOT NULL AUTO_INCREMENT ,
+ `name`             varchar(45) NOT NULL ,
+ `url`              varchar(45) NULL COMMENT 'GameBanana / Google Drive URL' ,
+ `side`             varchar(45) NULL COMMENT '"A-Side", "B-Side", "C-Side", ...' ,
+ `is_rejected`      bit NOT NULL DEFAULT 0,
+ `rejection_reason` varchar(45) NULL ,
+ `is_archived`      bit NOT NULL DEFAULT 0,
+ `campaign_id`      int NULL ,
+ `sort_1`           int NULL ,
+ `sort_2`           int NULL ,
+ `sort_3`           int NULL ,
+ `date_added`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`campaign_id`),
+CONSTRAINT `FK_1` FOREIGN KEY `FK_1` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ====== Challenge ======
+CREATE TABLE IF NOT EXISTS `Challenge`
+(
+ `id`                 int NOT NULL AUTO_INCREMENT ,
+ `challenge_type`     enum('map', 'campaign') NOT NULL ,
+ `campaign_id`        int NULL ,
+ `map_id`             int NULL ,
+ `objective_id`       int NOT NULL ,
+ `description`        varchar(45) NULL ,
+ `difficulty_id`      int NOT NULL ,
+ `difficulty_subtier` enum('high', 'mid', 'low', 'guard') NULL ,
+ `date_created`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `is_fc`              bit NOT NULL ,
+ `is_c_fc`            bit NOT NULL ,
+ `is_special`         bit NOT NULL ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`map_id`),
+CONSTRAINT `FK_2` FOREIGN KEY `FK_1` (`map_id`) REFERENCES `Map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_2` (`difficulty_id`),
+CONSTRAINT `FK_4` FOREIGN KEY `FK_2` (`difficulty_id`) REFERENCES `Difficulty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_3` (`campaign_id`),
+CONSTRAINT `FK_7` FOREIGN KEY `FK_3` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_4` (`objective_id`),
+CONSTRAINT `FK_8` FOREIGN KEY `FK_4` (`objective_id`) REFERENCES `Objective` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ====== Submission ======
+CREATE TABLE IF NOT EXISTS `Submission`
+(
+ `id`                         int NOT NULL AUTO_INCREMENT ,
+ `challenge_id`               int NULL ,
+ `player_id`                  int NULL ,
+ `date_created`               datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `proof_url`                  varchar(45) NOT NULL ,
+ `player_notes`               varchar(45) NULL ,
+ `is_verified`                bit NOT NULL DEFAULT 0,
+ `verifier_id`                int NULL ,
+ `date_verified`              datetime NULL ,
+ `verifier_notes`             varchar(45) NULL ,
+ `new_map_submission_id`      int NULL ,
+ `new_campaign_submission_id` int NULL ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`challenge_id`),
+CONSTRAINT `FK_3` FOREIGN KEY `FK_1` (`challenge_id`) REFERENCES `Challenge` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_2` (`verifier_id`),
+CONSTRAINT `FK_5` FOREIGN KEY `FK_2` (`verifier_id`) REFERENCES `Player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_3` (`player_id`),
+CONSTRAINT `FK_6` FOREIGN KEY `FK_3` (`player_id`) REFERENCES `Player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_4` (`new_map_submission_id`),
+CONSTRAINT `FK_16` FOREIGN KEY `FK_4` (`new_map_submission_id`) REFERENCES `NewMapSubmission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_6` (`new_campaign_submission_id`),
+CONSTRAINT `FK_18` FOREIGN KEY `FK_6` (`new_campaign_submission_id`) REFERENCES `NewCampaignSubmission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ====== Change ======
+CREATE TABLE IF NOT EXISTS `Change`
+(
+ `id`           int NOT NULL AUTO_INCREMENT ,
+ `change_type`  enum('campaign', 'map', 'challenge', 'player', 'general') NOT NULL ,
+ `campaign_id`  int NULL ,
+ `map_id`       int NULL ,
+ `challenge_id` int NULL ,
+ `player_id`    int NULL ,
+ `author`       int NOT NULL ,
+ `description`  varchar(45) NOT NULL ,
+ `date`         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`campaign_id`),
+CONSTRAINT `FK_9` FOREIGN KEY `FK_1` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_2` (`map_id`),
+CONSTRAINT `FK_10` FOREIGN KEY `FK_2` (`map_id`) REFERENCES `Map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_3` (`challenge_id`),
+CONSTRAINT `FK_11` FOREIGN KEY `FK_3` (`challenge_id`) REFERENCES `Challenge` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_4` (`player_id`),
+CONSTRAINT `FK_12` FOREIGN KEY `FK_4` (`player_id`) REFERENCES `Player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+KEY `FK_5` (`author`),
+CONSTRAINT `FK_13` FOREIGN KEY `FK_5` (`author`) REFERENCES `Player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ====== FarewellGoldenData ======
+CREATE TABLE IF NOT EXISTS `FarewellGoldenData`
+(
+ `id`                       int NOT NULL AUTO_INCREMENT ,
+ `submission_id`            int NOT NULL ,
+ `date_achieved`            datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `platform`                 varchar(45) NOT NULL ,
+ `moonberry`                bit NOT NULL DEFAULT 0 ,
+ `used_keys`                bit NOT NULL DEFAULT 0 ,
+ `kept_keys`                int NOT NULL DEFAULT 0 ,
+ `repeat_collect`           bit NOT NULL DEFAULT 0 ,
+ `partial_run`              bit NOT NULL DEFAULT 0 ,
+ `berry_number`             int NOT NULL DEFAULT 202 ,
+ `date_202`                 datetime NULL ,
+ `attempted_double_collect` bit NOT NULL DEFAULT 0 ,
+ `double_collect`           bit NOT NULL DEFAULT 0 ,
+ `no_moonberry_pickup`      bit NOT NULL DEFAULT 0 ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`submission_id`),
+CONSTRAINT `FK_20` FOREIGN KEY `FK_1` (`submission_id`) REFERENCES `Submission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
