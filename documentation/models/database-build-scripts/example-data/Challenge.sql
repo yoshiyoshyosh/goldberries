@@ -38,4 +38,7 @@ VALUES
 -- Starship Ruins
 ("map", NULL, 11, 2, NULL, 9, NULL, 0, 0, 1, 0),
 ("map", NULL, 11, 2, NULL, 8, NULL, 0, 1, 0, 0),
-("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0);
+("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0),
+
+-- Full Game Challenges
+("campaign", 5, NULL, 17, NULL, 3, "high", 0, 0, 0, 0);

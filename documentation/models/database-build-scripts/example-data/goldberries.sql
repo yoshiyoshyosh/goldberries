@@ -36,7 +36,9 @@ VALUES
 ("Quadruple Golden Berry", "Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.", 0, "Quadruple Golden"),
 ("Forwards Golden", "Collect the start->end golden strawberry", 1, "Forwards"),
 ("Backwards Golden", "Collect the end->start golden strawberry", 1, "Backwards"),
-("Double Golden", "Collect both the forwards and backwards golden strawberry", 1, "Double Golden");
+("Double Golden", "Collect both the forwards and backwards golden strawberry", 1, "Double Golden"),
+
+("Intermediate Lobby Deathless", "Complete all maps in the intermediate lobby without dying", 0, NULL);
 
 
 -- ====== Example Data: Difficulty ======
@@ -58,17 +60,30 @@ VALUES
 -- ====== Example Data: Player ======
 INSERT INTO `Player`(`name`, `password`, `is_verifier`, `is_admin`, `is_suspended`, `suspension_reason`) 
 VALUES 
-("KsPi", "chillgoldenarc", 0, 0, 0, NULL),
+("KpSi", "chillgoldenarc", 0, 0, 0, NULL),
 ("voddie", "weh", 0, 1, 0, NULL),
 ("Parrot_Mash", "she9onmydtilliplatinum", 1, 0, 0, NULL),
 ("Joshi", "interrobang", 1, 1, 0, NULL),
-("SpaceUK", "hahacheatingfuny", 0, 0, 1, "nah");
+("Todd Rogers", "dragster5.51", 0, 0, 1, "glumbsdown"),
+("Kroomfie", "fullgamegod", 1, 0, 0, NULL),
+("isabolle", "sweepingmines", 1, 0, 0, NULL),
+("320° NW", ":spki:", 0, 0, 0, NULL),
+("Asgor", ":skullemoji:", 0, 0, 0, NULL),
+("Other Players", "idkanymorefunnypassword", 0, 0, 0, NULL);
 
 
 -- ====== Example Data: NewMapSubmission ======
+INSERT INTO `NewMapSubmission`(`url`, `name`, `description`) 
+VALUES 
+("https://gamebanana.com/mods/301132", "7a single dash ver", "fc lol"),
+("https://gamebanana.com/mods/150789", "Lunar Ascension", "Silver");
 
 
 -- ====== Example Data: NewCampaignSubmission ======
+INSERT INTO `NewCampaignSubmission`(`url`, `description`) 
+VALUES 
+("https://gamebanana.com/mods/150732", "Quickie Mountain 2, 100% deathless"),
+("https://gamebanana.com/mods/292719", "Celeste: Into The Jungle, All C-Sides deathless");
 
 
 -- ====== Example Data: Log ======
@@ -129,13 +144,51 @@ VALUES
 
 ("map", NULL, 11, 2, NULL, 9, NULL, 0, 0, 1, 0),
 ("map", NULL, 11, 2, NULL, 8, NULL, 0, 1, 0, 0),
-("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0);
+("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0),
+
+("campaign", 5, NULL, 17, NULL, 3, "high", 0, 0, 0, 0);
 
 
 -- ====== Example Data: Submission ======
+INSERT INTO `Submission`(`challenge_id`, `player_id`, `proof_url`, `player_notes`, `is_verified`, `verifier_id`, `date_verified`, `verifier_notes`, `new_map_submission_id`, `new_campaign_submission_id`, `is_fc`, `is_special`)
+VALUES 
+(1, 1, "https://www.youtube.com/watch?v=6LZc0nRkl3I", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(1, 2, "https://www.youtube.com/watch?v=naYN4BlslZQ", "frogeline", 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(1, 4, "https://www.youtube.com/watch?v=UdwwJy-2ymM", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 1, 0),
+
+(2, 8, "https://www.youtube.com/watch?v=LCBmyY0yxZo", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+
+(3, 1, "https://www.youtube.com/watch?v=6LZc0nRkl3I", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(4, 9, "https://www.youtube.com/watch?v=6LZc0nRkl3I", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+
+(5, 2, "https://www.youtube.com/watch?v=XLyA-UMhQqo", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(6, 3, "https://www.youtube.com/watch?v=pwoxCMMLuqY&t=155s", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+
+(7, 1, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 1, 0),
+(7, 2, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(7, 3, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(7, 7, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(7, 8, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 1, 0),
+(7, 9, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+
+(15, 10, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(16, 10, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0),
+(17, 10, "<insert url here>", NULL, 1, 7, CURRENT_TIMESTAMP, NULL, NULL, NULL, 0, 0);
 
 
 -- ====== Example Data: Change ======
+INSERT INTO `Change`(`change_type`, `campaign_id`, `map_id`, `challenge_id`, `player_id`, `author`, `description`) 
+VALUES 
+("campaign", 1, NULL, NULL, NULL, 2, "Fixed typo: 'Vanillo' -> 'Vanilla'"),
+("map", NULL, 7, NULL, NULL, 2, "Archived map"),
+("challenge", NULL, NULL, 2, NULL, 2, "Moved from 'Tier 6' to 'High Tier 0'"),
+("player", NULL, NULL, NULL, 2, 2, "Renamed from 'veddie' to 'voddie'"),
+("general", NULL, NULL, NULL, NULL, 2, "Changed description of Objective 'Golden Berry' from 'Get funny fruit' to 'Collect the golden strawberry of the map'");
 
 
 -- ====== Example Data: FarewellGoldenData ======
+INSERT INTO `FarewellGoldenData`(`submission_id`, `date_achieved`, `platform`, `moonberry`, `used_keys`, `kept_keys`, `repeat_collect`, `partial_run`, `berry_number`, `date_202`, `attempted_double_collect`, `double_collect`, `no_moonberry_pickup`) 
+VALUES 
+(1, CURRENT_TIMESTAMP, "Windows", 0, 0, 0, 0, 0, 202, NULL, 0, 0, 0),
+(2, CURRENT_TIMESTAMP, "Windows", 0, 0, 0, 0, 0, 202, NULL, 0, 0, 0),
+(3, CURRENT_TIMESTAMP, "Windows", 1, 0, 5, 0, 0, 202, NULL, 1, 1, 0);

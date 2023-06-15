@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `Submission`
  `new_map_submission_id`      int NULL ,
  `new_campaign_submission_id` int NULL ,
  `is_fc`                      bit NOT NULL DEFAULT 0 ,
- `is_sepcial`                 bit NOT NULL DEFAULT 0 ,
+ `is_special`                 bit NOT NULL DEFAULT 0 ,
 PRIMARY KEY (`id`),
 KEY `FK_1` (`challenge_id`),
 CONSTRAINT `FK_3` FOREIGN KEY `FK_1` (`challenge_id`) REFERENCES `Challenge` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

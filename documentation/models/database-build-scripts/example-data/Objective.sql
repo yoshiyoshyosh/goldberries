@@ -19,4 +19,6 @@ VALUES
 ("Quadruple Golden Berry", "Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.", 0, "Quadruple Golden"),
 ("Forwards Golden", "Collect the start->end golden strawberry", 1, "Forwards"),
 ("Backwards Golden", "Collect the end->start golden strawberry", 1, "Backwards"),
-("Double Golden", "Collect both the forwards and backwards golden strawberry", 1, "Double Golden");
+("Double Golden", "Collect both the forwards and backwards golden strawberry", 1, "Double Golden"),
+
+("Intermediate Lobby Deathless", "Complete all maps in the intermediate lobby without dying", 0, NULL);
