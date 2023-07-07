@@ -1,32 +1,22 @@
-DROP TABLE IF EXISTS `Challenge`;
+DROP TABLE IF EXISTS Challenge;
 
-
-
--- ************************************** `Challenge`
-
-CREATE TABLE IF NOT EXISTS `Challenge`
+-- ====== Challenge ======
+CREATE TABLE IF NOT EXISTS Challenge
 (
- `id`                 int NOT NULL AUTO_INCREMENT ,
- `challenge_type`     enum('map', 'campaign') NOT NULL ,
- `campaign_id`        int NULL ,
- `map_id`             int NULL ,
- `objective_id`       int NOT NULL ,
- `description`        text NULL ,
- `difficulty_id`      int NOT NULL ,
- `difficulty_subtier` enum('high', 'mid', 'low', 'guard') NULL ,
- `date_created`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `requires_fc`        bit NOT NULL DEFAULT 0 ,
- `requires_special`   bit NOT NULL DEFAULT 0 ,
- `has_fc`             bit NOT NULL DEFAULT 0 ,
- `has_special`        bit NOT NULL DEFAULT 0 ,
+	id                 SERIAL PRIMARY KEY,
+	challenge_type     text NOT NULL,
+	campaign_id        int NULL REFERENCES Campaign (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	map_id             int NULL REFERENCES Map (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	objective_id       int NOT NULL REFERENCES Objective (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	description        text NULL,
+	difficulty_id      int NOT NULL REFERENCES Difficulty (id) ON DELETE SET NULL ON UPDATE CASCADE,
+	difficulty_subtier text NULL,
+	date_created       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	requires_fc        boolean NOT NULL DEFAULT false,
+	requires_special   boolean NOT NULL DEFAULT false,
+	has_fc             boolean NOT NULL DEFAULT false,
+	has_special        boolean NOT NULL DEFAULT false,
 
-PRIMARY KEY (`id`),
-KEY `FK_1` (`map_id`),
-CONSTRAINT `FK_2` FOREIGN KEY `FK_1` (`map_id`) REFERENCES `Map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-KEY `FK_2` (`difficulty_id`),
-CONSTRAINT `FK_4` FOREIGN KEY `FK_2` (`difficulty_id`) REFERENCES `Difficulty` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-KEY `FK_3` (`campaign_id`),
-CONSTRAINT `FK_7` FOREIGN KEY `FK_3` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-KEY `FK_4` (`objective_id`),
-CONSTRAINT `FK_8` FOREIGN KEY `FK_4` (`objective_id`) REFERENCES `Objective` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT check_challenge_type CHECK (challenge_type in ('map', 'campaign')),
+	CONSTRAINT check_difficulty_subtier CHECK (difficulty_subtier in ('high', 'mid', 'low', 'guard'))
 );

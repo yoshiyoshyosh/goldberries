@@ -1,44 +1,44 @@
-INSERT INTO `Challenge`(`challenge_type`, `campaign_id`, `map_id`, `objective_id`, `description`, `difficulty_id`, `difficulty_subtier`, `requires_fc`, `requires_special`, `has_fc`, `has_special`) 
+INSERT INTO Challenge(challenge_type, campaign_id, map_id, objective_id, description, difficulty_id, difficulty_subtier, requires_fc, requires_special, has_fc, has_special) 
 VALUES 
---FWG
-("map", NULL, 1, 1, NULL, 4, "guard", 0, 0, 0, 0),
--- Wountain
-("map", NULL, 2, 1, NULL, 1, "high", 1, 0, 0, 0),
+-- FWG
+('map', NULL, 1, 1, NULL, 4, 'guard', false, false, false, false),
+-- Waterbear Mountain
+('map', NULL, 2, 1, NULL, 1, 'high', true, false, false, false),
 
 -- Summit Prologue
-("map", NULL, 3, 1, NULL, 2, "high", 1, 0, 0, 0),
-("map", NULL, 3, 1, NULL, 2, "low", 0, 0, 0, 0),
+('map', NULL, 3, 1, NULL, 2, 'high', true, false, false, false),
+('map', NULL, 3, 1, NULL, 2, 'low', false, false, false, false),
 
--- City on the moon
-("map", NULL, 4, 1, NULL, 2, "mid", 0, 0, 0, 0),
+-- CotM
+('map', NULL, 4, 1, NULL, 2, 'mid', false, false, false, false),
 
---Starfruit Supernova
-("map", NULL, 5, 1, NULL, 2, "mid", 0, 0, 0, 0),
+-- Starfruit Supernova
+('map', NULL, 5, 1, NULL, 2, 'mid', false, false, false, false),
 
 -- 7DG
-("map", NULL, 6, 1, NULL, 2, "low", 0, 0, 1, 0),
+('map', NULL, 6, 1, NULL, 2, 'low', false, false, true, false),
 
 -- 1DG
-("map", NULL, 7, 1, NULL, 9, NULL, 0, 0, 1, 0),
+('map', NULL, 7, 1, NULL, 9, NULL, false, false, true, false),
 -- 1DarkG
-("map", NULL, 8, 1, NULL, 9, NULL, 0, 0, 0, 0),
+('map', NULL, 8, 1, NULL, 9, NULL, false, false, false, false),
 
 -- Impossible Visitors (Clear, SB, SB+FC)
-("map", NULL, 9, 1, NULL, 9, NULL, 0, 0, 1, 1),
+('map', NULL, 9, 1, NULL, 9, NULL, false, false, true, true),
 
 -- Nameless Pillars [Quad]
-("map", NULL, 10, 13, NULL, 9, NULL, 0, 0, 0, 0),
+('map', NULL, 10, 13, NULL, 9, NULL, false, false, false, false),
 -- Nameless Pillars [Forwards]
-("map", NULL, 10, 14, NULL, 9, NULL, 0, 0, 1, 0),
+('map', NULL, 10, 14, NULL, 9, NULL, false, false, true, false),
 -- Nameless Pillars [Backwards]
-("map", NULL, 10, 15, NULL, 9, NULL, 0, 0, 0, 0),
+('map', NULL, 10, 15, NULL, 9, NULL, false, false, false, false),
 -- Nameless Pillars [Double Golden]
-("map", NULL, 10, 16, NULL, 9, NULL, 0, 0, 1, 1),
+('map', NULL, 10, 16, NULL, 9, NULL, false, false, true, false),
 
 -- Starship Ruins
-("map", NULL, 11, 2, NULL, 9, NULL, 0, 0, 1, 0),
-("map", NULL, 11, 2, NULL, 8, NULL, 0, 1, 0, 0),
-("map", NULL, 11, 2, NULL, 7, NULL, 1, 1, 0, 0),
+('map', NULL, 11, 2, NULL, 9, NULL, false, false, true, false),
+('map', NULL, 11, 2, NULL, 8, NULL, false, true, false, false),
+('map', NULL, 11, 2, NULL, 7, NULL, true, true, false, false),
 
 -- Full Game Challenges
-("campaign", 5, NULL, 17, NULL, 3, "high", 0, 0, 0, 0);
+('campaign', 5, NULL, 17, NULL, 3, 'high', false, false, false, false);
