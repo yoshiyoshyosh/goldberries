@@ -14,6 +14,8 @@ DROP TABLE IF EXISTS Difficulty;
 DROP TABLE IF EXISTS Objective;
 DROP TABLE IF EXISTS Campaign;
 
+DROP TYPE difficulty_subtier_t;
+
 
 -- =========== Create Statements ===========
 
@@ -38,6 +40,7 @@ CREATE TABLE IF NOT EXISTS Objective
 );
 
 -- ====== Difficulty ======
+CREATE TYPE difficulty_subtier_t AS ENUM ('high', 'mid', 'low', 'guard');
 CREATE TABLE IF NOT EXISTS Difficulty
 (
 	id   SERIAL PRIMARY KEY,
@@ -114,15 +117,14 @@ CREATE TABLE IF NOT EXISTS Challenge
 	objective_id       int NOT NULL REFERENCES Objective (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	description        text NULL,
 	difficulty_id      int NOT NULL REFERENCES Difficulty (id) ON DELETE SET NULL ON UPDATE CASCADE,
-	difficulty_subtier text NULL,
+	difficulty_subtier difficulty_subtier_t NULL,
 	date_created       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	requires_fc        boolean NOT NULL DEFAULT false,
 	requires_special   boolean NOT NULL DEFAULT false,
 	has_fc             boolean NOT NULL DEFAULT false,
 	has_special        boolean NOT NULL DEFAULT false,
 
-	CONSTRAINT check_challenge_type CHECK (challenge_type in ('map', 'campaign')),
-	CONSTRAINT check_difficulty_subtier CHECK (difficulty_subtier in ('high', 'mid', 'low', 'guard'))
+	CONSTRAINT check_challenge_type CHECK (challenge_type in ('map', 'campaign'))
 );
 
 -- ====== Submission ======

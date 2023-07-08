@@ -18,4 +18,4 @@ JOIN Player player ON Submission.player_id = player.id
 JOIN Player verifier ON Submission.verifier_id = verifier.id
 LEFT JOIN Map ON Challenge.map_id = Map.id
 LEFT JOIN Campaign ON Map.campaign_id = Campaign.id
-WHERE Submission.player_id IN (SELECT Player.id FROM Player WHERE Player.name LIKE "voddie")
+WHERE Submission.player_id IN (SELECT Player.id FROM Player WHERE Player.name LIKE 'voddie');

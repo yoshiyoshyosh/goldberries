@@ -1,9 +1,10 @@
 SELECT
   COUNT(*) AS submission_count,
-  Difficulty.name,
-  Challenge.difficulty_subtier
+  Challenge.difficulty_id,
+  Challenge.difficulty_subtier AS difficulty_subtier,
+  Difficulty.name AS difficulty_tier
 FROM Submission
-JOIN Challenge ON Submission.challenge_id = Challenge.id
-JOIN Difficulty ON Challenge.difficulty_id = Difficulty.id
-JOIN Player ON Submission.player_id = Player.id
-GROUP BY Challenge.difficulty_id, Challenge.difficulty_subtier
+INNER JOIN Challenge ON Submission.challenge_id = Challenge.id
+INNER JOIN Difficulty ON Challenge.difficulty_id = Difficulty.id
+GROUP BY Challenge.difficulty_id, Challenge.difficulty_subtier, Difficulty.name
+ORDER BY Challenge.difficulty_id, Challenge.difficulty_subtier;
