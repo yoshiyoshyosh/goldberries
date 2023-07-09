@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS Difficulty;
 DROP TABLE IF EXISTS Objective;
 DROP TABLE IF EXISTS Campaign;
 
-DROP TYPE difficulty_subtier_t;
+DROP TYPE IF EXISTS difficulty_subtier_t;
 
 
 -- =========== Create Statements ===========
