@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS Map
 (
 	id               SERIAL PRIMARY KEY,
 	name             varchar(128) NOT NULL,
-	url              varchar(256) NULL, /* Gamebanana / archive.org URL */
+	url              varchar(256) NOT NULL, /* Gamebanana / archive.org URL */
 	side             varchar(64) NULL, /* A-Side, B-Side, etc. */
 	is_rejected      boolean NOT NULL DEFAULT false,
 	rejection_reason text NULL,
@@ -14,5 +14,6 @@ CREATE TABLE IF NOT EXISTS Map
 	sort_1           int NULL,
 	sort_2           int NULL,
 	sort_3           int NULL,
-	date_added       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+	date_added       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	authors          text NULL
 );

@@ -16,5 +16,6 @@ CREATE TABLE IF NOT EXISTS Submission
 	new_map_submission_id      int NULL REFERENCES NewMapSubmission (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	new_campaign_submission_id int NULL REFERENCES NewCampaignSubmission (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	is_fc                      boolean NOT NULL DEFAULT false,
-	is_special                 boolean NOT NULL DEFAULT false
+	is_special                 boolean NOT NULL DEFAULT false,
+	suggested_difficulty_id    int NULL REFERENCES Difficulty (id) ON DELETE CASCADE ON UPDATE CASCADE,
 );

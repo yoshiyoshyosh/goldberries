@@ -22,11 +22,18 @@ DROP TYPE IF EXISTS difficulty_subtier_t;
 -- ====== Campaign ======
 CREATE TABLE IF NOT EXISTS Campaign
 (
-	id         SERIAL PRIMARY KEY,
-	name       varchar(128) NOT NULL,
-	url        varchar(256) NOT NULL,
-	date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	icon_url   varchar(256) NULL
+	id                       SERIAL PRIMARY KEY,
+	name                     varchar(128) NOT NULL,
+	url                      varchar(256) NOT NULL,
+	date_added               timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	icon_url                 varchar(256) NULL,
+	authors                  text NULL,
+	sort_major_name          varchar(32) NULL,
+	sort_major_labels        text NULL,
+	sort_major_accent_colors text CHECK (sort_major_accent_colors ~* '[0-9A-F\t]'),
+	sort_minor_name          varchar(32) NULL,
+	sort_minor_labels        text NULL,
+	sort_minor_accent_colors text CHECK (sort_minor_accent_colors ~* '[0-9A-F\t]')
 );
 
 -- ====== Objective ======
@@ -43,9 +50,12 @@ CREATE TABLE IF NOT EXISTS Objective
 CREATE TYPE difficulty_subtier_t AS ENUM ('high', 'mid', 'low', 'guard');
 CREATE TABLE IF NOT EXISTS Difficulty
 (
-	id   SERIAL PRIMARY KEY,
-	name varchar(32) NOT NULL,
-	tier int NULL
+	id           SERIAL PRIMARY KEY,
+	name         varchar(32) NOT NULL,
+	subtier      difficulty_subtier_t NULL,
+	sort         int NOT NULL,
+	color        char(6) CHECK (color ~* '[0-9A-F]{6}'),
+	color_group  char(6) CHECK (color_group ~* '[0-9A-F]{6}')
 );
 
 -- ====== Player ======
@@ -101,10 +111,11 @@ CREATE TABLE IF NOT EXISTS Map
 	rejection_reason text NULL,
 	is_archived      boolean NOT NULL DEFAULT false,
 	campaign_id      int NULL REFERENCES Campaign (id) ON DELETE CASCADE ON UPDATE CASCADE,
-	sort_1           int NULL,
-	sort_2           int NULL,
-	sort_3           int NULL,
-	date_added       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+	sort_major       int NULL,
+	sort_minor       int NULL,
+	sort_order       int NULL,
+	date_added       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	authors          text NULL
 );
 
 -- ====== Challenge ======
@@ -143,7 +154,8 @@ CREATE TABLE IF NOT EXISTS Submission
 	new_map_submission_id      int NULL REFERENCES NewMapSubmission (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	new_campaign_submission_id int NULL REFERENCES NewCampaignSubmission (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	is_fc                      boolean NOT NULL DEFAULT false,
-	is_special                 boolean NOT NULL DEFAULT false
+	is_special                 boolean NOT NULL DEFAULT false,
+	suggested_difficulty_id    int NULL REFERENCES Difficulty (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ====== Change ======
