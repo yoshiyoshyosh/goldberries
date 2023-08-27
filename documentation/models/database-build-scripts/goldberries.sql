@@ -22,18 +22,18 @@ DROP TYPE IF EXISTS difficulty_subtier_t;
 -- ====== Campaign ======
 CREATE TABLE IF NOT EXISTS Campaign
 (
-	id                       SERIAL PRIMARY KEY,
-	name                     varchar(128) NOT NULL,
-	url                      varchar(256) NOT NULL,
-	date_added               timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	icon_url                 varchar(256) NULL,
-	authors                  text NULL,
-	sort_major_name          varchar(32) NULL,
-	sort_major_labels        text NULL,
-	sort_major_accent_colors text CHECK (sort_major_accent_colors ~* '[0-9A-F\t]'),
-	sort_minor_name          varchar(32) NULL,
-	sort_minor_labels        text NULL,
-	sort_minor_accent_colors text CHECK (sort_minor_accent_colors ~* '[0-9A-F\t]')
+	id                 SERIAL PRIMARY KEY,
+	name               varchar(128) NOT NULL,
+	url                varchar(256) NOT NULL,
+	date_added         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	icon_url           varchar(256) NULL,
+	authors            text NOT NULL,
+	sort_major_name    varchar(32) NULL,
+	sort_major_labels  text NULL,
+	sort_major_colors  text CHECK (sort_major_colors ~* '[0-9A-F\t]'),
+	sort_minor_name    varchar(32) NULL,
+	sort_minor_labels  text NULL,
+	sort_minor_colors  text CHECK (sort_minor_colors ~* '[0-9A-F\t]')
 );
 
 -- ====== Objective ======
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS Difficulty
 	name         varchar(32) NOT NULL,
 	subtier      difficulty_subtier_t NULL,
 	sort         int NOT NULL,
-	color        char(6) CHECK (color ~* '[0-9A-F]{6}'),
-	color_group  char(6) CHECK (color_group ~* '[0-9A-F]{6}')
+	color        char(6) NOT NULL CHECK (color ~* '[0-9A-F]{6}'),
+	color_group  char(6) NOT NULL CHECK (color_group ~* '[0-9A-F]{6}')
 );
 
 -- ====== Player ======
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS Player
 (
 	id                SERIAL PRIMARY KEY,
 	name              varchar(32) NOT NULL,
-	password          varchar(128) NULL,
+	password          text NOT NULL,
 	is_verifier       boolean NOT NULL DEFAULT false,
 	is_admin          boolean NOT NULL DEFAULT false,
 	is_suspended      boolean NOT NULL DEFAULT false,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS NewCampaignSubmission
 	description text NOT NULL
 );
 
--- ====== LOGGING ======
+-- ====== Logging ======
 CREATE TABLE IF NOT EXISTS Logging
 (
 	id       SERIAL PRIMARY KEY,
@@ -128,7 +128,6 @@ CREATE TABLE IF NOT EXISTS Challenge
 	objective_id       int NOT NULL REFERENCES Objective (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	description        text NULL,
 	difficulty_id      int NOT NULL REFERENCES Difficulty (id) ON DELETE SET NULL ON UPDATE CASCADE,
-	difficulty_subtier difficulty_subtier_t NULL,
 	date_created       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	requires_fc        boolean NOT NULL DEFAULT false,
 	requires_special   boolean NOT NULL DEFAULT false,
