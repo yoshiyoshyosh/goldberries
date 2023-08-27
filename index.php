@@ -1,5 +1,5 @@
 <?php
-require_once("bootstrap.php");
+require_once("bootstrap.inc.php");
 
 require_once("include_site/header.php");
 ?>

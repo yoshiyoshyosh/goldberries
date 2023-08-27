@@ -1,15 +1,23 @@
 <?php
-require_once("bootstrap.php");
+require_once("bootstrap.inc.php");
 
 require_once("include_site/header.php");
 
-$top = "Rules and Info";
-$rules_maps = "Rules for Maps";
-$rules_submissions_all = "Rules for All Submissions";
-$rules_submissions_fullgame = "Additional Rules for Full Game Submissions";
-$general_recs = "General Recommendations";
-$recommended_mods = "Allowed and Recommended Mods";
-$faq = "Frequently Asked Questions";
+$toc = array(
+	'rules-maps' => 'Rules for Maps',
+	'rules-submissions-all' => 'Rules for All Submissions',
+	'submenu1' => array(
+		'rules-submissions-fullgame' => 'Additional Rules for Full Game Submissions'
+	),
+	'general-recs' => 'General Recommendations',
+	'recommended-mods' => 'Allowed and Recommended Mods',
+	'faq' => 'FAQ',
+	'submenu2' => array(
+		'faq-fc-criteria' => 'What is the criteria for getting a full clear?',
+		'faq-fc-map-ineligible' => 'Why are some maps ineligible for full clear runs?',
+		'faq-fc-map-names' => 'Why do some map names include [Full Clear]?',
+	),
+);
 ?>
 
 <style>
@@ -17,30 +25,26 @@ body {
 	width: 80%;
 	margin: 8px auto;
 }
+
+ol li {
+	list-style-type: decimal;
+}
+ol ol li {
+	list-style-type: lower-alpha;
+}
 </style>
 
 <main>
 	<header>
-		<h1 id="top"><?= $top ?></h1>
-		<nav>
-			<ol>
-				<li><a href="#rules-maps"><?= $rules_maps ?></a></li>
-				<li><a href="#rules-submissions-all"><?= $rules_submissions_all ?></a></li>
-				<ol>
-					<li><a href="#rules-submissions-fullgame"><?= $rules_submissions_fullgame ?></a></li>
-				</ol>
-				<li><a href="#general-recs"><?= $general_recs ?></a></li>
-				<li><a href="#recommended-mods"><?= $recommended_mods ?></a></li>
-				<li><a href="#faq"><?= $faq ?></a></li>
-			</ol>
-		</nav>
+		<h1>Rules and Info</h1>
+		<?php generate_toc($toc) ?>
 	</header>
 
 	<hr/>
 
 	<p>This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.</p>
 
-	<h2 id="rules-maps"><?= $rules_maps ?> <a href="#">#</a></h2>
+	<?php toc_next_heading($toc) ?>
 	<ul>
 		<li><p>The map or map pack <em>must</em> be uploaded to <a href="https://gamebanana.com/games/6460">GameBanana</a>. If a map was previously on GameBanana but it was taken down afterwards, it will be uploaded to <a href="https://archive.org/details/celeste-golden-list-removed-from-gb-maps">this archive.org item</a> unless the map creator specifically requests to remove its downloadability.</p></li>
 		<li><p>The map or map pack <em>must</em> pose a non-trivial amount of difficulty, even if that difficulty may be very small. Maps with little to no ways to die will be rejected.</p></li>
@@ -49,7 +53,8 @@ body {
 		<li><p>The map or map pack <em>is recommended to not</em> resemble a base game map or an existing custom map to a high degree. Unique map packs such as <a href="https://gamebanana.com/mods/150418">Etselec</a> or more thoughtful, usually more difficult edits such as <a href="https://www.youtube.com/watch?v=aYpean9AahU">Farewell^9</a> are acceptable, while maps such as <a href="https://gamebanana.com/mods/349586">1a Undefined</a> are likely to be rejected.</p></li>
 		<li><p>The map or map pack <em>is recommended to not</em> be low-quality in nature. "Shitpost" or "meme" maps are fine, so long as there remains playable and generally-thought-out gameplay beneath it. Since this is vague, it's really decided more on a case by case basis, but if one would like a quick comparison: Maps like <a href="https://www.youtube.com/watch?v=MsScIP3ZqCM">Shitpost Summit</a> or <a href="https://www.youtube.com/watch?v=XODzWNSNKZk">The Decline</a> are fine, but maps like <a href="https://youtu.be/qRz5XC0P7MQ">frickyou</a> are not.</p></li>
 	</ul>
-	<h2 id="rules-submissions-all"><?= $rules_submissions_all ?> <a href="#">#</a></h2>
+
+	<?php toc_next_heading($toc) ?>
 	<ul>
 		<li><p>The submission video <em>must</em> be uploaded to a place that does not require "signing in" to view. The most popular sites for such videos are <a href="https://www.youtube.com/">YouTube</a>, <a href="https://www.twitch.tv/">Twitch</a>, <a href="https://www.bilibili.com/">bilibili</a>, and <a href="https://www.nicovideo.jp/">nicovideo</a>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.</p></li>
 		<li><p>The submission video <em>must</em> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. "Heart Deaths"). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <a href="https://youtu.be/c4VwQrNwGjE?t=235">Anubi Full Clear</a>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.</p></li>
@@ -62,7 +67,8 @@ body {
 		<li><p>For golden strawberry (or other similar berry) submissions, the submission <em>does not have to</em> actually collect the berry so long as the run follows the same challenge requirements (A.K.A. a <i>deathless berryless</i> run). Runs where a golden strawberry is fundamentally different than a non-golden, such as a golden room, will <em>not</em> be accepted in this manner. While of course discouraged and we urge submissions to collect the applicable berry, we also understand that sometimes things happen and people unexpectedly fluke, and we don't want that to take away from anyone's achievement. Deathless berryless submissions will be given a note.</p></li>
 		<li><p>For golden strawberry (or other similar berry) submissions, submissions <em>may</em> edit the <em>end</em> of a map to add a golden collect trigger <em>if and only if</em> a golden collect trigger does not exist. If a crystal heart indicates the ending but doesn't kick the player out, editing it to kick the player out is fine. This will be evaluated on a case-by-case basis, as this is very rare.</p></li>
 	</ul>
-	<h3 id="rules-submissions-fullgame"><?= $rules_submissions_fullgame ?> <a href="#">#</a></h3>
+
+	<?php toc_next_heading($toc) ?>
 	<p>There are two types of "full game" submissions: ones that complete a relevant subset of all maps in a map pack (which will be referred to as <i>partial full game runs</i>), such as all c-sides deathless or beginner lobby deathless, and completely full game runs, such as all maps deathless or 100% deathless (which will be referred to as <i>complete full game runs</i>). Rules which apply to only a specific category of these will be indicated.</p>
 	<ul>
 		<li><p>The submission video <em>must</em> show the run in full. For a partial full game run, this must be at or before the chapter select screen of the first map completed. For a complete full game run, this must be at or before the file select screen.</p></li>
@@ -76,16 +82,18 @@ body {
 		<li><p>If a submission does not collect golden/silver berries, it <em>may</em> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs.</p></li>
 	</ul>
 	<p>Of course, some of these rules are not 100% set and carved in stone, and very rarely will exceptions be made for valid circumstances. Please do try your best to follow these rules and guidelines for submissions, though.</p>
-	<h2 id="general-recommendations"><?= $general_recs ?> <a href="#">#</a></h2>
+
+	<?php toc_next_heading($toc) ?>
 	<p>These aren't <em>exactly</em> rules that need to be followed, but they help in aiding proof strength, avoiding giving your submission a note, helping one complete a challenge, or is a general courteous decision for others.</p>
 	<ul>
 		<li><p>Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <em>is</em> required for full game submissions.</p></li>
-		<li><p>Using an external input display, such as <a href="https://github.com/ThoNohT/NohBoard">NohBoard</a> for Windows or <a href="https://github.com/yoshiyoshyosh/kbdisplay">kbdisplay</a> for Linux (X11), will help credibility.</p></li>
+		<li><p>Using an external input display, such as <a href="https://github.com/ThoNohT/NohBoard">NohBoard</a> for Windows, <a href="https://github.com/yoshiyoshyosh/kbdisplay">kbdisplay</a> for Linux (X11), or <a href="https://github.com/RoanH/KeysPerSecond">KeysPerSecond</a> for cross-platform, will help credibility.</p></li>
 		<li><p>For video compilations with multiple maps, adding timestamps in the description or on the submission page will help greatly.</p></li>
 		<li><p>For maps with lobbies and do not require a complete video, such as Strawberry Jam, putting all the lobby maps in one video would help ease on verifiers.</p></li>
 		<li><p>Keep one or two full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof.</p></li>
 	</ul>
-	<h2 id="recommended-mods"><?= $recommended_mods ?> <a href="#">#</a></h2>
+
+	<?php toc_next_heading($toc) ?>
 	<p>All mods listed here are allowed for submissions unless otherwise specified. Mods not listed here are also allowed for submissions unless they violate the gameplay altering mod rule or info gaining mod rule.</p>
 	<ul>
 		<li><p>The <em>only</em> gameplay-altering mod that is allowed is the <i>No Freeze Frames</i> variant in <a href="https://gamebanana.com/mods/53650">Extended Variants</a>. The rationale is that this mod does not fundamentally change the game as well as makes the game harder in most instances.</p></li>
@@ -94,15 +102,14 @@ body {
 		<li><p>The <a href="https://gamebanana.com/tools/6597">Speedrun Tool</a> mod and <a href="https://gamebanana.com/tools/6715">CelesteTAS</a> mods can help finding strategies and setups for parts in a challenge. Do note, however, that utilizing any gameplay-altering of info-gaining features of these mods during a challenge is disallowed.</p></li>
 		<li><p>Other mods frequently used for deathless challenges include <a href="https://gamebanana.com/mods/358978">Consistency Tracker</a> and <a href="https://gamebanana.com/mods/53681">DeathTracker</a>.</p></li>
 	</ul>
-	<h2 id="faq"><?= $faq ?> <a href="#">#</a></h2>
-	<ul>
-		<li><p><strong>What is the criteria for getting a full clear?</strong></p>
-			<p>Maps can have the following optional collectibles that may or may not be obtained in a golden run: Heart, cassette, red berries, and non-red berries such as moon, dashless, or custom berries. Full clear runs generally require getting all optional collectibles, unless a collectible significantly changes the nature of the run, such as the winged golden strawberry in 1A. In that case, the collectible is considered as a special berry, and runs which collect it will gain the [SB] tag.</p></li>
-		<li><p><strong>Why are some maps ineligible for full clear runs?</strong></p>
-			<p>Some maps have collectibles which are not optional, such as the cassette in 8A or the strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side.</p></li>
-		<li><p><strong>Why do some map names include [Full Clear]?</strong></p>
-			<p>This means that a Full Clear is required to be entered into the list, and a normal clear will be rejected. There's a note attached to each of these maps that explains exactly what is needed in the run and why. These extra requirements are added either because a map is too easy to be on the Standard List without them (Cheyenne, RITE), or because the extra challenge means it should be on the Hard List (Hakoniwa Adventure).</p></li>
-	</ul>
+
+	<?php toc_next_heading($toc) ?>
+		<?php toc_next_heading($toc) ?>
+		<p>Maps can have the following optional collectibles that may or may not be obtained in a golden run: Heart, cassette, red berries, and non-red berries such as moon, dashless, or custom berries. Full clear runs generally require getting all optional collectibles, unless a collectible significantly changes the nature of the run, such as the winged golden strawberry in 1A. In that case, the collectible is considered as a special berry, and runs which collect it will gain the [SB] tag.</p>
+		<?php toc_next_heading($toc) ?>
+		<p>Some maps have collectibles which are not optional, such as the cassette in 8A or the strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side.</p>
+		<?php toc_next_heading($toc) ?>
+		<p>This means that a Full Clear is required to be entered into the list, and a normal clear will be rejected. There's a note attached to each of these maps that explains exactly what is needed in the run and why. These extra requirements are added either because a map is too easy to be on the Standard List without them (Cheyenne, RITE), or because the extra challenge means it should be on the Hard List (Hakoniwa Adventure).</p>
 
 </main>
 
