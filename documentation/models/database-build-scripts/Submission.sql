@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Submission
 	proof_url                  varchar(256) NOT NULL,
 	player_notes               text NULL,
 	is_verified                boolean NOT NULL DEFAULT false,
+	is_rejected                boolean NOT NULL DEFAULT false,
 	verifier_id                int NULL REFERENCES Player (id) ON DELETE SET NULL ON UPDATE CASCADE,
 	date_verified              timestamp NULL,
 	verifier_notes             text NULL,
