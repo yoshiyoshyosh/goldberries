@@ -7,40 +7,51 @@ function escape_html(string $s): string
 	return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, "utf-8");
 }
 
-function generate_toc_inner(array &$arr)
+function generate_linked_list(array &$arr, bool $ol = false)
 {
-	echo '<ol>';
-	foreach($arr as $key => $val) {
+	echo $ol ? '<ol>' : '<ul>';
+	foreach($arr as $key => &$val) {
+		if ($key === '.')
+			continue;
 		if (is_array($val)) {
-			generate_toc_inner($val);
+			echo '<li><a href="' . escape_html($val['.']) . '">' . escape_html($key) . '</a>';
+			generate_linked_list($val, $ol);
+			echo '</li>';
 			continue;
 		}
-		echo '<li><a href="#' . escape_html($key) . '">' . escape_html($val) . '</a></li>';
+		echo '<li><a href="' . escape_html($val) . '">' . escape_html($key) . '</a></li>';
 	}
-	echo '</ol>';
+	echo $ol ? '</ol>' : '</ul>';
 }
 
 function generate_toc(array &$arr)
 {
 	echo '<nav aria-labelledby="toc-label">';
 	echo '<h2 id="toc-label">Table of Contents</h2>';
-	echo generate_toc_inner($arr);
+	generate_linked_list($arr, true);
 	echo '</nav>';
 }
 
 /* this function shifts the first thing out of the toc and uses it as a heading.
- * the complete toc array isn't needed after generate_toc, so this is fine */
+ * the complete toc array isn't needed after generate_toc, so this is fine
+ * it starts at header_depth 2 for h2
+ */
 function toc_next_heading(array &$toc, int $header_depth = 2)
 {
-	[$key, $val] = array(array_key_first($toc), array_shift($toc));
+	$key = &array_key_first($toc);
+	$val = &array_shift($toc);
 
 	if (is_array($val)) {
-		toc_next_heading($val, $header_depth + 1);
+		if (isset($val['.'])) {
+			echo '<h' . $header_depth . ' id="' . substr($val['.'], 1) . '">' . $key . ' <a href="#">#</a></h' . $header_depth . '>';
+			unset($val['.']);
+		} else {
+			toc_next_heading($val, $header_depth + 1);
+		}
 		/* push back only if array is nonempty, hence more in this section */
-		if ($val)
+		if (!empty($val))
 			array_unshift($toc, $val);
 	} else {
-		echo '<h' . $header_depth . ' id="' . $key . '">' . $val .
-			' <a href="#">#</a></h' . $header_depth . '>';
+		echo '<h' . $header_depth . ' id="' . substr($val, 1) . '">' . $key . ' <a href="#">#</a></h' . $header_depth . '>';
 	}
 }
