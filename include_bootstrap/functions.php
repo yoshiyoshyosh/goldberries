@@ -7,7 +7,10 @@ function escape_html(string $s): string
 	return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, "utf-8");
 }
 
-function generate_linked_list(array &$arr, bool $ol = false)
+/* this function generates a list of links based on array structure.
+ * sublists use the '.' key as their link
+ */
+function generate_link_list(array &$arr, bool $ol = false)
 {
 	echo $ol ? '<ol>' : '<ul>';
 	foreach($arr as $key => &$val) {
@@ -15,7 +18,7 @@ function generate_linked_list(array &$arr, bool $ol = false)
 			continue;
 		if (is_array($val)) {
 			echo '<li><a href="' . escape_html($val['.']) . '">' . escape_html($key) . '</a>';
-			generate_linked_list($val, $ol);
+			generate_link_list($val, $ol);
 			echo '</li>';
 			continue;
 		}
@@ -28,13 +31,13 @@ function generate_toc(array &$arr)
 {
 	echo '<nav aria-labelledby="toc-label">';
 	echo '<h2 id="toc-label">Table of Contents</h2>';
-	generate_linked_list($arr, true);
+	generate_link_list($arr, true);
 	echo '</nav>';
 }
 
 /* this function shifts the first thing out of the toc and uses it as a heading.
- * the complete toc array isn't needed after generate_toc, so this is fine
- * it starts at header_depth 2 for h2
+ * the complete toc array isn't needed after generate_toc, so this is fine.
+ * the function starts at header_depth 2 for h2, since h1 isn
  */
 function toc_next_heading(array &$toc, int $header_depth = 2)
 {
