@@ -17,7 +17,7 @@ class Campaign
 
 	function pull_from_db($DB, int $id): bool
 	{
-		$arr = db_fetch_id($DB, 'Campaign'. $id);
+		$arr = db_fetch_id($DB, 'Campaign', $id);
 		if ($arr === false)
 			return false;
 
