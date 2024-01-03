@@ -38,9 +38,8 @@ function is_valid_id_query($arg): bool
 
 ////// UNIFIED GET FUNCTION
 
-function api_unified_get(string $table_noesc, $object_skel)
+function api_unified_get($DB, string $table_noesc, $object_skel)
 {
-	$DB = db_connect();
 	$json_arr = array();
 	$table = pg_escape_identifier(strtolower($table_noesc));
 

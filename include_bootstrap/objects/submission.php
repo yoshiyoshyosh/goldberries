@@ -3,12 +3,13 @@
 class Submission
 {
 	public int $id;
-	public $challenge_id = null; /* int */
-	public $player_id = null; /* int */
+	public int $challenge_id;
+	public int $player_id;
 	public string $date_created;
 	public string $proof_url;
 	public $player_notes; /* string */
 	public bool $is_verified;
+	public bool $is_rejected;
 	public $verifier_id; /* int */
 	public $date_verified; /* string */
 	public $verifier_notes; /* string */
@@ -33,16 +34,15 @@ class Submission
 			return false;
 
 		$this->id = intval($arr['id']);
+		$this->challenge_id = intval($arr['challenge_id']);
+		$this->player_id = intval($arr['player_id']);
 		$this->date_created = $arr['date_created'];
 		$this->proof_url = $arr['proof_url'];
 		$this->is_verified = $arr['is_verified'] === 't';
+		$this->is_rejected = $arr['is_rejected'] === 't';
 		$this->is_fc = $arr['is_fc'] === 't';
 		$this->is_special = $arr['is_special'] === 't';
 
-		if (isset($arr['challenge_id']))
-			$this->challenge_id = intval($arr['challenge_id']);
-		if (isset($arr['player_id']))
-			$this->player_id = intval($arr['player_id']);
 		if (isset($arr['verifier_id']))
 			$this->verifier_id = intval($arr['verifier_id']);
 		if (isset($arr['new_map_submission_id']))
