@@ -6,17 +6,16 @@ DROP TABLE IF EXISTS `Challenge`;
 
 CREATE TABLE IF NOT EXISTS `Challenge`
 (
- `id`             int NOT NULL AUTO_INCREMENT ,
- `challenge_type` enum('map', 'campaign') NOT NULL ,
- `campaign_id`    int NULL ,
- `map_id`         int NULL ,
- `objective_id`   int NOT NULL ,
- `description`    text NULL ,
- `difficulty_id`  int NOT NULL ,
- `date_created`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `requires_fc`    bit NOT NULL DEFAULT 0 ,
- `has_fc`         bit NOT NULL DEFAULT 0 ,
- `is_arbitrary`   bit NULL ,
+ `id`            int NOT NULL AUTO_INCREMENT ,
+ `campaign_id`   int NULL ,
+ `map_id`        int NULL ,
+ `objective_id`  int NOT NULL ,
+ `description`   text NULL ,
+ `difficulty_id` int NOT NULL ,
+ `date_created`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `requires_fc`   bit NOT NULL DEFAULT 0 ,
+ `has_fc`        bit NOT NULL DEFAULT 0 ,
+ `is_arbitrary`  bit NULL ,
 
 PRIMARY KEY (`id`),
 KEY `FK_1` (`map_id`),

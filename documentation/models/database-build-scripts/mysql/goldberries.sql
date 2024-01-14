@@ -6,24 +6,33 @@ DROP TABLE IF EXISTS `Change`;
 DROP TABLE IF EXISTS `Submission`;
 DROP TABLE IF EXISTS `Challenge`;
 DROP TABLE IF EXISTS `Map`;
-DROP TABLE IF EXISTS `Campaign`;
 DROP TABLE IF EXISTS `Logging`;
 DROP TABLE IF EXISTS `NewChallenge`;
 DROP TABLE IF EXISTS `Player`;
 DROP TABLE IF EXISTS `Difficulty`;
 DROP TABLE IF EXISTS `Objective`;
-DROP TABLE IF EXISTS `Author`;
+DROP TABLE IF EXISTS `Campaign`;
 
 
 
 -- =========== Create Statements ===========
 
--- ====== Author ======
-CREATE TABLE IF NOT EXISTS `Author`
+-- ====== Campaign ======
+CREATE TABLE IF NOT EXISTS `Campaign`
 (
- `id`    int NOT NULL AUTO_INCREMENT ,
- `gb_id` int NOT NULL ,
- `name`  varchar(128) NOT NULL ,
+ `id`                       int NOT NULL AUTO_INCREMENT ,
+ `name`                     varchar(128) NOT NULL ,
+ `url`                      varchar(256) NOT NULL ,
+ `date_added`               datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `icon_url`                 varchar(256) NULL ,
+ `sort_major_name`          varchar(32) NULL ,
+ `sort_major_labels`        text NULL ,
+ `sort_major_accent_colors` text NULL ,
+ `sort_minor_name`          varchar(32) NULL ,
+ `sort_minor_labels`        text NULL ,
+ `sort_minor_accent_colors` text NULL ,
+ `author_gb_id`             int NULL ,
+ `author_gb_name`           varchar(128) NULL ,
 PRIMARY KEY (`id`)
 );
 
@@ -83,33 +92,12 @@ CREATE TABLE IF NOT EXISTS `Logging`
 PRIMARY KEY (`id`)
 );
 
--- ====== Campaign ======
-CREATE TABLE IF NOT EXISTS `Campaign`
-(
- `id`                       int NOT NULL AUTO_INCREMENT ,
- `name`                     varchar(128) NOT NULL ,
- `url`                      varchar(256) NOT NULL ,
- `author_id`                int NOT NULL ,
- `date_added`               datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `icon_url`                 varchar(256) NULL ,
- `sort_major_name`          varchar(32) NULL ,
- `sort_major_labels`        text NULL ,
- `sort_major_accent_colors` text NULL ,
- `sort_minor_name`          varchar(32) NULL ,
- `sort_minor_labels`        text NULL ,
- `sort_minor_accent_colors` text NULL ,
-PRIMARY KEY (`id`),
-KEY `FK_1` (`author_id`),
-CONSTRAINT `FK_25_1` FOREIGN KEY `FK_1` (`author_id`) REFERENCES `Author` (`id`)
-);
-
 -- ====== Map ======
 CREATE TABLE IF NOT EXISTS `Map`
 (
  `id`               int NOT NULL AUTO_INCREMENT ,
  `name`             varchar(128) NOT NULL ,
  `url`              varchar(256) NULL COMMENT 'GameBanana / Google Drive URL' ,
- `author_id`        int NULL ,
  `side`             varchar(64) NULL COMMENT '"A-Side", "B-Side", "C-Side", ...' ,
  `is_rejected`      bit NOT NULL DEFAULT 0 ,
  `rejection_reason` text NULL ,
@@ -119,27 +107,26 @@ CREATE TABLE IF NOT EXISTS `Map`
  `sort_minor`       int NULL ,
  `sort_order`       int NULL ,
  `date_added`       datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `author_gb_id`     int NULL ,
+ `author_gb_name`   varchar(128) NULL ,
 PRIMARY KEY (`id`),
 KEY `FK_1` (`campaign_id`),
-CONSTRAINT `FK_1` FOREIGN KEY `FK_1` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-KEY `FK_2` (`author_id`),
-CONSTRAINT `FK_26` FOREIGN KEY `FK_2` (`author_id`) REFERENCES `Author` (`id`)
+CONSTRAINT `FK_1` FOREIGN KEY `FK_1` (`campaign_id`) REFERENCES `Campaign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ====== Challenge ======
 CREATE TABLE IF NOT EXISTS `Challenge`
 (
- `id`             int NOT NULL AUTO_INCREMENT ,
- `challenge_type` enum('map', 'campaign') NOT NULL ,
- `campaign_id`    int NULL ,
- `map_id`         int NULL ,
- `objective_id`   int NOT NULL ,
- `description`    text NULL ,
- `difficulty_id`  int NOT NULL ,
- `date_created`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `requires_fc`    bit NOT NULL DEFAULT 0 ,
- `has_fc`         bit NOT NULL DEFAULT 0 ,
- `is_arbitrary`   bit NULL ,
+ `id`            int NOT NULL AUTO_INCREMENT ,
+ `campaign_id`   int NULL ,
+ `map_id`        int NULL ,
+ `objective_id`  int NOT NULL ,
+ `description`   text NULL ,
+ `difficulty_id` int NOT NULL ,
+ `date_created`  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `requires_fc`   bit NOT NULL DEFAULT 0 ,
+ `has_fc`        bit NOT NULL DEFAULT 0 ,
+ `is_arbitrary`  bit NULL ,
 PRIMARY KEY (`id`),
 KEY `FK_1` (`map_id`),
 CONSTRAINT `FK_2` FOREIGN KEY `FK_1` (`map_id`) REFERENCES `Map` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
