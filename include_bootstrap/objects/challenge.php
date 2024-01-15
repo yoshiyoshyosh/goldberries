@@ -34,24 +34,24 @@ class Challenge
     $this->apply_db_data($arr);
     return true;
   }
-  function apply_db_data($arr)
+  function apply_db_data($arr, $prefix = '')
   {
-    $this->id = intval($arr['id']);
-    $this->challenge_type = $arr['challenge_type'];
-    $this->objective_id = intval($arr['objective_id']);
-    $this->difficulty_id = intval($arr['difficulty_id']);
-    $this->date_created = $arr['date_created'];
-    $this->requires_fc = $arr['requires_fc'] === 't';
-    $this->requires_special = $arr['requires_special'] === 't';
-    $this->has_fc = $arr['has_fc'] === 't';
-    $this->has_special = $arr['has_special'] === 't';
+    $this->id = intval($arr[$prefix . 'id']);
+    $this->challenge_type = $arr[$prefix . 'challenge_type'];
+    $this->objective_id = intval($arr[$prefix . 'objective_id']);
+    $this->difficulty_id = intval($arr[$prefix . 'difficulty_id']);
+    $this->date_created = $arr[$prefix . 'date_created'];
+    $this->requires_fc = $arr[$prefix . 'requires_fc'] === 't';
+    $this->requires_special = $arr[$prefix . 'requires_special'] === 't';
+    $this->has_fc = $arr[$prefix . 'has_fc'] === 't';
+    $this->has_special = $arr[$prefix . 'has_special'] === 't';
 
-    if (isset($arr['campaign_id']))
-      $this->campaign_id = intval($arr['campaign_id']);
-    if (isset($arr['map_id']))
-      $this->map_id = intval($arr['map_id']);
-    if (isset($arr['description']))
-      $this->description = $arr['description'];
+    if (isset($arr[$prefix . 'campaign_id']))
+      $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
+    if (isset($arr[$prefix . 'map_id']))
+      $this->map_id = intval($arr[$prefix . 'map_id']);
+    if (isset($arr[$prefix . 'description']))
+      $this->description = $arr[$prefix . 'description'];
   }
 
   function clone_for_api($DB)
@@ -88,4 +88,28 @@ class Challenge
   {
     $this->submissions = db_fetch_assoc($DB, 'Submission', 'challenge_id', $this->id, new Submission());
   }
+
+  function expand_from_sql_result($arr, $dont_expand = [])
+  {
+    if (!in_array('campaign', $dont_expand) && isset($this->campaign_id)) {
+      $this->campaign = new Campaign();
+      $this->campaign->apply_db_data($arr, "campaign_");
+    }
+
+    if (!in_array('map', $dont_expand) && isset($this->map_id)) {
+      $this->map = new Map();
+      $this->map->apply_db_data($arr, "map_");
+    }
+
+    if (!in_array('objective', $dont_expand)) {
+      $this->objective = new Objective();
+      $this->objective->apply_db_data($arr, "objective_");
+    }
+
+    if (!in_array('difficulty', $dont_expand)) {
+      $this->difficulty = new Difficulty();
+      $this->difficulty->apply_db_data($arr, "difficulty_");
+    }
+  }
+
 }

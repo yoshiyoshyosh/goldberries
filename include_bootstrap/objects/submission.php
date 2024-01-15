@@ -37,32 +37,32 @@ class Submission
     return true;
   }
 
-  function apply_db_data($arr)
+  function apply_db_data($arr, $prefix = '')
   {
-    $this->id = intval($arr['id']);
-    $this->challenge_id = intval($arr['challenge_id']);
-    $this->player_id = intval($arr['player_id']);
-    $this->date_created = $arr['date_created'];
-    $this->proof_url = $arr['proof_url'];
-    $this->is_verified = $arr['is_verified'] === 't';
-    $this->is_rejected = $arr['is_rejected'] === 't';
-    $this->is_fc = $arr['is_fc'] === 't';
-    $this->is_special = $arr['is_special'] === 't';
+    $this->id = intval($arr[$prefix . 'id']);
+    $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
+    $this->player_id = intval($arr[$prefix . 'player_id']);
+    $this->date_created = $arr[$prefix . 'date_created'];
+    $this->proof_url = $arr[$prefix . 'proof_url'];
+    $this->is_verified = $arr[$prefix . 'is_verified'] === 't';
+    //$this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
+    $this->is_fc = $arr[$prefix . 'is_fc'] === 't';
+    $this->is_special = $arr[$prefix . 'is_special'] === 't';
 
-    if (isset($arr['verifier_id']))
-      $this->verifier_id = intval($arr['verifier_id']);
-    if (isset($arr['new_map_submission_id']))
-      $this->new_map_submission_id = intval($arr['new_map_submission_id']);
-    if (isset($arr['new_campaign_submission_id']))
-      $this->new_campaign_submission_id = intval($arr['new_campaign_submission_id']);
-    if (isset($arr['suggested_difficulty_id']))
-      $this->suggested_difficulty_id = intval($arr['suggested_difficulty_id']);
-    if (isset($arr['player_notes']))
-      $this->player_notes = $arr['player_notes'];
-    if (isset($arr['date_verified']))
-      $this->date_verified = $arr['date_verified'];
-    if (isset($arr['verifier_notes']))
-      $this->verifier_notes = $arr['verifier_notes'];
+    if (isset($arr[$prefix . 'verifier_id']))
+      $this->verifier_id = intval($arr[$prefix . 'verifier_id']);
+    if (isset($arr[$prefix . 'new_map_submission_id']))
+      $this->new_map_submission_id = intval($arr[$prefix . 'new_map_submission_id']);
+    if (isset($arr[$prefix . 'new_campaign_submission_id']))
+      $this->new_campaign_submission_id = intval($arr[$prefix . 'new_campaign_submission_id']);
+    if (isset($arr[$prefix . 'suggested_difficulty_id']))
+      $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
+    if (isset($arr[$prefix . 'player_notes']))
+      $this->player_notes = $arr[$prefix . 'player_notes'];
+    if (isset($arr[$prefix . 'date_verified']))
+      $this->date_verified = $arr[$prefix . 'date_verified'];
+    if (isset($arr[$prefix . 'verifier_notes']))
+      $this->verifier_notes = $arr[$prefix . 'verifier_notes'];
   }
 
   function clone_for_api($DB)
@@ -81,10 +81,38 @@ class Submission
     if (!in_array('player', $dont_expand) && isset($this->player_id)) {
       $this->player = new Player();
       $this->player->pull_from_db($DB, $this->player_id);
+      $this->player->remove_sensitive_info();
     }
     if (!in_array('verifier', $dont_expand) && isset($this->verifier_id)) {
       $this->verifier = new Player();
       $this->verifier->pull_from_db($DB, $this->verifier_id);
+      $this->verifier->remove_sensitive_info();
+    }
+    if (!in_array('suggested_difficulty', $dont_expand) && isset($this->suggested_difficulty_id)) {
+      $this->suggested_difficulty = new Difficulty();
+      $this->suggested_difficulty->pull_from_db($DB, $this->suggested_difficulty_id);
+    }
+  }
+
+  function expand_from_sql_result($arr, $dont_expand = [])
+  {
+    if (!in_array('challenge', $dont_expand) && isset($this->challenge_id)) {
+      $this->challenge = new Challenge();
+      $this->challenge->apply_db_data($arr, 'challenge_');
+    }
+    if (!in_array('player', $dont_expand) && isset($this->player_id)) {
+      $this->player = new Player();
+      $this->player->apply_db_data($arr, 'player_');
+      $this->player->remove_sensitive_info();
+    }
+    if (!in_array('verifier', $dont_expand) && isset($this->verifier_id)) {
+      $this->verifier = new Player();
+      $this->verifier->apply_db_data($arr, 'verifier_');
+      $this->verifier->remove_sensitive_info();
+    }
+    if (!in_array('suggested_difficulty', $dont_expand) && isset($this->suggested_difficulty_id)) {
+      $this->suggested_difficulty = new Difficulty();
+      $this->suggested_difficulty->apply_db_data($arr, 'suggested_difficulty_');
     }
   }
 }

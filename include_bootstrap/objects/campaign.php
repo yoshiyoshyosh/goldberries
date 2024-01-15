@@ -28,25 +28,26 @@ class Campaign
     return true;
   }
 
-  function apply_db_data($arr)
+  //$prefix is used to load just the campaign data from a row that contains all bunch of data
+  function apply_db_data($arr, $prefix = '')
   {
-    $this->id = intval($arr['id']);
-    $this->name = $arr['name'];
-    $this->url = $arr['url'];
-    $this->date_added = $arr['date_added'];
-    $this->authors = explode("\t", $arr['authors']);
+    $this->id = intval($arr[$prefix . 'id']);
+    $this->name = $arr[$prefix . 'name'];
+    $this->url = $arr[$prefix . 'url'];
+    $this->date_added = $arr[$prefix . 'date_added'];
+    $this->authors = explode("\t", $arr[$prefix . 'authors']);
 
-    if (isset($arr['icon_url']))
-      $this->icon_url = $arr['icon_url'];
-    if (isset($arr['sort_major_name'])) {
-      $this->sort_major_name = $arr['sort_major_name'];
-      $this->sort_major_labels = explode("\t", $arr['sort_major_labels']);
-      $this->sort_major_colors = explode("\t", $arr['sort_major_colors']);
+    if (isset($arr[$prefix . 'icon_url']))
+      $this->icon_url = $arr[$prefix . 'icon_url'];
+    if (isset($arr[$prefix . 'sort_major_name'])) {
+      $this->sort_major_name = $arr[$prefix . 'sort_major_name'];
+      $this->sort_major_labels = explode("\t", $arr[$prefix . 'sort_major_labels']);
+      $this->sort_major_colors = explode("\t", $arr[$prefix . 'sort_major_colors']);
     }
     if (isset($arr['sort_minor_name'])) {
-      $this->sort_minor_name = $arr['sort_minor_name'];
-      $this->sort_minor_labels = explode("\t", $arr['sort_minor_labels']);
-      $this->sort_minor_colors = explode("\t", $arr['sort_minor_colors']);
+      $this->sort_minor_name = $arr[$prefix . 'sort_minor_name'];
+      $this->sort_minor_labels = explode("\t", $arr[$prefix . 'sort_minor_labels']);
+      $this->sort_minor_colors = explode("\t", $arr[$prefix . 'sort_minor_colors']);
     }
   }
 

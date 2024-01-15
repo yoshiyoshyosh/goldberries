@@ -18,15 +18,15 @@ class Objective
     return true;
   }
 
-  function apply_db_data($arr)
+  function apply_db_data($arr, $prefix = '')
   {
-    $this->id = intval($arr['id']);
-    $this->name = $arr['name'];
-    $this->description = $arr['description'];
-    $this->is_arbitrary = $arr['is_arbitrary'] === 't';
+    $this->id = intval($arr[$prefix . 'id']);
+    $this->name = $arr[$prefix . 'name'];
+    $this->description = $arr[$prefix . 'description'];
+    $this->is_arbitrary = $arr[$prefix . 'is_arbitrary'] === 't';
 
-    if (isset($arr['display_name_suffix']))
-      $this->display_name_suffix = $arr['display_name_suffix'];
+    if (isset($arr[$prefix . 'display_name_suffix']))
+      $this->display_name_suffix = $arr[$prefix . 'display_name_suffix'];
   }
 
   function clone_for_api($DB)

@@ -19,16 +19,16 @@ class Difficulty
     return true;
   }
 
-  function apply_db_data($arr)
+  function apply_db_data($arr, $prefix = '')
   {
-    $this->id = intval($arr['id']);
-    $this->name = $arr['name'];
-    $this->sort = intval($arr['sort']);
-    $this->color = $arr['color'];
-    $this->color_group = $arr['color_group'];
+    $this->id = intval($arr[$prefix . 'id']);
+    $this->name = $arr[$prefix . 'name'];
+    $this->sort = intval($arr[$prefix . 'sort']);
+    $this->color = $arr[$prefix . 'color'];
+    $this->color_group = $arr[$prefix . 'color_group'];
 
-    if (isset($arr['subtier']))
-      $this->subtier = $arr['subtier'];
+    if (isset($arr[$prefix . 'subtier']))
+      $this->subtier = $arr[$prefix . 'subtier'];
   }
 
   function clone_for_api($DB)
