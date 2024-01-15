@@ -8,7 +8,7 @@ class Challenge
   public $map_id = null; /* int */
   public int $objective_id;
   public $description = null; /* string */
-  public string $difficulty_id;
+  public int $difficulty_id;
   public string $difficulty_subtier;
   public string $date_created;
   public bool $requires_fc;

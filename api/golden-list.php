@@ -107,6 +107,33 @@ LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
 ";
 
+$where = "";
+if (isset($_GET['campaign'])) {
+  $where = "WHERE campaign.id = " . intval($_GET['campaign']);
+} else if (isset($_GET['map'])) {
+  $where = "WHERE map.id = " . intval($_GET['map']);
+} else if (isset($_GET['challenge'])) {
+  $where = "WHERE challenge.id = " . intval($_GET['challenge']);
+} else if (isset($_GET['player'])) {
+  $where = "WHERE p.id = " . intval($_GET['player']);
+} else if (isset($_GET['verifier'])) {
+  $where = "WHERE v.id = " . intval($_GET['verifier']);
+}
+
+$listWhere = "";
+if (isset($_GET['hard'])) {
+  $listWhere = "cd.id < 18"; //18 is Standard, id < 18 is everything tiered
+} else if (isset($_GET['standard'])) {
+  $listWhere = "cd.id = 18";
+} else if (isset($_GET['undetermined'])) {
+  $listWhere = "cd.id = 19";
+}
+
+if ($listWhere != "") {
+  $where = $where . ($where === "" ? "WHERE " : " AND ") . $listWhere;
+}
+$query = $query . $where;
+
 $result = pg_query($DB, $query) or die('Query failed: ' . pg_last_error());
 
 $campaigns = array(); //dictionary id -> campaign
