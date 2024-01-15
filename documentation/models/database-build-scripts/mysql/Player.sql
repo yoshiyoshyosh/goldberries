@@ -14,6 +14,10 @@ CREATE TABLE IF NOT EXISTS `Player`
  `is_suspended`      bit NOT NULL DEFAULT 0 ,
  `suspension_reason` text NULL ,
  `date_created`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `discord_id`        varchar(32) NULL ,
+ `session_token`     varchar(64) NULL ,
+ `session_created`   datetime NULL ,
+ `claimed`           bit NOT NULL DEFAULT 1 ,
 
 PRIMARY KEY (`id`)
 );
