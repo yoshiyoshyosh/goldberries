@@ -6,9 +6,10 @@ DROP TABLE IF EXISTS `Change`;
 DROP TABLE IF EXISTS `Submission`;
 DROP TABLE IF EXISTS `Challenge`;
 DROP TABLE IF EXISTS `Map`;
+DROP TABLE IF EXISTS `Account`;
+DROP TABLE IF EXISTS `Player`;
 DROP TABLE IF EXISTS `Logging`;
 DROP TABLE IF EXISTS `NewChallenge`;
-DROP TABLE IF EXISTS `Player`;
 DROP TABLE IF EXISTS `Difficulty`;
 DROP TABLE IF EXISTS `Objective`;
 DROP TABLE IF EXISTS `Campaign`;
@@ -57,24 +58,6 @@ CREATE TABLE IF NOT EXISTS `Difficulty`
 PRIMARY KEY (`id`)
 );
 
--- ====== Player ======
-CREATE TABLE IF NOT EXISTS `Player`
-(
- `id`                int NOT NULL AUTO_INCREMENT ,
- `name`              varchar(32) NOT NULL ,
- `password`          varchar(128) NULL ,
- `is_verifier`       bit NOT NULL DEFAULT 0 ,
- `is_admin`          bit NOT NULL DEFAULT 0 ,
- `is_suspended`      bit NOT NULL DEFAULT 0 ,
- `suspension_reason` text NULL ,
- `date_created`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
- `discord_id`        varchar(32) NULL ,
- `session_token`     varchar(64) NULL ,
- `session_created`   datetime NULL ,
- `claimed`           bit NOT NULL DEFAULT 1 ,
-PRIMARY KEY (`id`)
-);
-
 -- ====== NewChallenge ======
 CREATE TABLE IF NOT EXISTS `NewChallenge`
 (
@@ -94,6 +77,37 @@ CREATE TABLE IF NOT EXISTS `Logging`
  `topic`   varchar(64) NULL ,
  `date`    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (`id`)
+);
+
+-- ====== Player ======
+CREATE TABLE IF NOT EXISTS `Player`
+(
+ `id`   int NOT NULL AUTO_INCREMENT ,
+ `name` varchar(32) NOT NULL ,
+PRIMARY KEY (`id`)
+);
+
+-- ====== Account ======
+CREATE TABLE IF NOT EXISTS `Account`
+(
+ `id`                int NOT NULL AUTO_INCREMENT ,
+ `player_id`         int NOT NULL ,
+ `claimed_player_id` int NOT NULL ,
+ `email`             varchar(128) NULL ,
+ `password`          varchar(128) NULL ,
+ `discord_id`        varchar(32) NULL ,
+ `session_token`     varchar(64) NULL ,
+ `session_created`   datetime NULL ,
+ `date_created`      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+ `is_verifier`       bit NOT NULL DEFAULT 0 ,
+ `is_admin`          bit NOT NULL DEFAULT 0 ,
+ `is_suspended`      bit NOT NULL DEFAULT 0 ,
+ `suspension_reason` text NULL ,
+PRIMARY KEY (`id`),
+KEY `FK_1` (`player_id`),
+CONSTRAINT `FK_24_1` FOREIGN KEY `FK_1` (`player_id`) REFERENCES `Player` (`id`),
+KEY `FK_2` (`claimed_player_id`),
+CONSTRAINT `FK_25_1` FOREIGN KEY `FK_2` (`claimed_player_id`) REFERENCES `Player` (`id`)
 );
 
 -- ====== Map ======
