@@ -42,3 +42,12 @@ function db_fetch_assoc($DB, string $table_noesc, string $col_noesc, $val, $obje
   }
   return $ret;
 }
+
+function pg_query_params_or_die($DB, string $query, array $params, $errorMsg = "Failed to query database")
+{
+  $result = pg_query_params($DB, $query, $params);
+  if ($result == false) {
+    die_json(500, $errorMsg);
+  }
+  return $result;
+}
