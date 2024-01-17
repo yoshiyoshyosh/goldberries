@@ -28,11 +28,31 @@ $account = get_user_data();
     exit();
   }
 
-  echo "Logged in as {$account['name']}<br>";
-  echo "Session token: {$_SESSION['token']}<br>";
-  echo "Sesion created: {$account['session_created']}<br>";
-  echo "Discord ID: {$account['discord_id']}<br>";
-  echo "Discord user: <code><pre>" . json_encode($_SESSION['discord_user']) . "</pre></code><br>";
+  echo "Logged in as ID:{$account->id}<br>";
+  echo "Session token: " . to_string_null_check($account->session_token) . "<br>";
+  echo "Seasion created: " . date_to_long_string($account->session_created) . "<br>";
+  echo "----- <br>";
+  echo "Discord ID: " . to_string_null_check($account->discord_id) . "<br>";
+  echo "----- <br>";
+  echo "Email: " . to_string_null_check($account->email) . "<br>";
+  echo "----- <br>";
+
+  echo "You are:";
+  $any = false;
+  if ($account->is_admin) {
+    echo " Admin";
+    $any = true;
+  }
+  if ($account->is_verifier) {
+    echo " Verifier";
+    $any = true;
+  }
+  if ($account->is_suspended) {
+    echo " Suspended";
+    $any = true;
+  }
+  echo "<br>";
+
   echo "<a href=\"logout.php\">Logout</a><br>";
 
   ?>

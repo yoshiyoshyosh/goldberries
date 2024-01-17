@@ -22,19 +22,18 @@ function get_discord_token_url()
   return constant('DISCORD_TOKEN_URL');
 }
 
-function successful_login($account_id)
+function successful_login($account)
 {
   global $DB;
 
   $token = create_session_token();
+  $account->session_token = $token;
+  $account->session_created = new DateTime();
 
-  //Update the Account table to set 'session_token' to $token and 'session_created' to NOW()
-  $result = pg_query_params($DB, "UPDATE Account SET session_token = $1, session_created = NOW() WHERE id = $2", array($token, $account_id));
-  if ($result) {
-    return true;
-  } else {
+  if (!$account->update($DB)) {
     return false;
   }
+  return true;
 }
 
 function logout()
@@ -46,11 +45,10 @@ function logout()
     return false;
   }
 
-  $account_id = $account['id'];
+  $account->session_token = null;
+  $account->session_created = null;
 
-  //Update the Account table to set 'session_token' to NULL and 'session_created' to NULL
-  $query = pg_query_params($DB, "UPDATE Account SET session_token = NULL, session_created = NULL WHERE id = $1", array($account_id));
-  if ($query != false) {
+  if ($account->update($DB)) {
     session_destroy();
     return true;
   } else {
@@ -80,16 +78,18 @@ function get_user_data()
 
   //Fetch account from database
   //Respect the expire time of the session
-  $result = pg_query_params(
-    $DB,
-    "SELECT * FROM Account WHERE session_token = $1 AND session_created > NOW() - INTERVAL '$session_expire_days days'",
-    array($_SESSION['token'])
-  );
-  if ($result == false) {
+  $accounts = Account::find_by_session_token($DB, $_SESSION['token']);
+  if ($accounts == false) {
     return null;
   }
-  return pg_fetch_assoc($result);
+  if (count($accounts) == 0 || count($accounts) > 1) {
+    return null;
+  }
+
+  return $accounts[0];
 }
+
+// === Utility Functions ===
 
 function is_logged_in()
 {
@@ -104,4 +104,31 @@ function valid_password($password)
 function valid_email($email)
 {
   return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function is_verifier($account = null)
+{
+  $account = $account ?? get_user_data();
+  if ($account == null) {
+    return false;
+  }
+  return $account->is_verifier === true;
+}
+
+function is_admin($account = null)
+{
+  $account = $account ?? get_user_data();
+  if ($account == null) {
+    return false;
+  }
+  return $account->is_admin === true;
+}
+
+function is_suspended($account = null)
+{
+  $account = $account ?? get_user_data();
+  if ($account == null) {
+    return false;
+  }
+  return $account->is_suspended === true;
 }

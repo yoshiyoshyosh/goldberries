@@ -35,28 +35,37 @@ if (isset($_REQUEST['code'])) {
   $_SESSION['discord_user'] = $user;
   $user_id = $user->id;
 
+  if ($user_id == null) {
+    die_json(500, "Failed to get discord user id");
+  }
+
   //Check if user is in database
-  $result = pg_query_params_or_die($DB, "SELECT * FROM Account WHERE discord_id = $1", array($user_id));
+  $accounts = Account::find_by_discord_id($DB, $user_id);
+  $account = null;
 
-  $account = pg_fetch_assoc($result);
-  $account_id = null;
-
-  if ($account == false) {
+  if ($accounts == false) {
     //No account was found
     if ($_SESSION['login'] == true) {
-      //User is not in database, but was trying to login
       die_json(401, "User is not registered");
     }
     //User is not in database, create new account
-    $query = pg_query_params_or_die($DB, "INSERT INTO Account (discord_id) VALUES ($1) RETURNING id", array($user_id), "Failed to create new account");
-    $result = pg_fetch_assoc($query);
-    $account_id = $result['id'];
+    $account = new Account();
+    $account->discord_id = $user_id;
+    if ($account->insert($DB) === false) {
+      die_json(500, "Failed to create account");
+    }
+    log_info("User registered Account({$account->id}) via Discord (id: {$user_id})", "Login");
   } else {
-    $account_id = $account['id'];
+    //User account was found, try to login
+    $account = $accounts[0];
+    if (is_suspended($account)) {
+      die_json(401, "Account is suspended: " . $account->suspension_reason);
+    }
+    log_debug("User logged in to Account({$account->id}) via Discord", "Login");
   }
 
   //Login user
-  if (successful_login($account_id)) {
+  if (successful_login($account)) {
     //Redirect to test_session.php
     header('Location: test_session.php');
   } else {

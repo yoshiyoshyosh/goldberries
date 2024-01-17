@@ -9,24 +9,29 @@ if ($email == null || $password == null) {
   die_json(400, "Missing email or password");
 }
 
-$result = pg_query_params_or_die($DB, "SELECT * FROM Account WHERE email = $1", array($email));
+$accounts = Account::find_by_email($DB, $email);
+if ($accounts === false) {
+  die_json(401, "Failed to query database");
+}
+if (count($accounts) == 0) {
+  die_json(401, "No account found with that email and password");
+}
+$account = $accounts[0];
 
-if (pg_num_rows($result) == 0) {
+if (!password_verify($password, $account->password)) {
   die_json(401, "No account found with that email and password");
 }
 
-$account = pg_fetch_assoc($result);
-
-if (!password_verify($password, $account['password'])) {
-  die_json(401, "No account found with that email and password");
-}
-
-if ($account['email_verified'] == 0) {
+if ($account->email_verified === false) {
   die_json(401, "Email is not verified");
 }
+if (is_suspended($account)) {
+  die_json(401, "Account is suspended: " . $account->suspension_reason);
+}
 
-$account_id = $account['id'];
-successful_login($account_id);
+log_debug("User logged in to Account({$account->id}) via email", "Login");
+
+successful_login($account);
 
 //Redirect to test_session.php
 header('Location: test_session.php');
