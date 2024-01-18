@@ -22,8 +22,8 @@ class Account extends DbObject
   public $email_verify_code = null; /* string */
 
   // Linked Objects
-  public $player = null; /* Player */
-  public $claimed_player = null; /* Player */
+  public ?Player $player = null; /* Player */
+  public ?Player $claimed_player = null; /* Player */
 
 
   // === Abstract Functions ===
@@ -31,9 +31,9 @@ class Account extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->date_created = new DateTime($arr[$prefix . 'date_created']);
-    $this->is_verifier = $arr[$prefix . 'is_verifier'] === '1';
-    $this->is_admin = $arr[$prefix . 'is_admin'] === '1';
-    $this->is_suspended = $arr[$prefix . 'is_suspended'] === '1';
+    $this->is_verifier = $arr[$prefix . 'is_verifier'] === 't';
+    $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
+    $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
 
     if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
@@ -52,7 +52,7 @@ class Account extends DbObject
     if (isset($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
     if (isset($arr[$prefix . 'email_verified']))
-      $this->email_verified = $arr[$prefix . 'email_verified'] === '1';
+      $this->email_verified = $arr[$prefix . 'email_verified'] === 't';
     if (isset($arr[$prefix . 'email_verify_code']))
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
   }
@@ -64,14 +64,12 @@ class Account extends DbObject
 
     if (!in_array('player', $dont_expand)) {
       if ($this->player_id !== null) {
-        $this->player = new Player();
-        $this->player->pull_from_db($DB, $this->player_id);
+        $this->player = Player::get_by_id($DB, $this->player_id, $depth - 1);
       }
     }
     if (!in_array('claimed_player', $dont_expand)) {
       if ($this->claimed_player_id !== null) {
-        $this->claimed_player = new Player();
-        $this->claimed_player->pull_from_db($DB, $this->claimed_player_id);
+        $this->claimed_player = Player::get_by_id($DB, $this->claimed_player_id, $depth - 1);
       }
     }
   }
@@ -120,7 +118,7 @@ class Account extends DbObject
   // === Utility Functions ===
   function __toString()
   {
-    $player_name = $this->player !== null ? $this->player->name : "<No Player>";
+    $player_name = $this->player !== null ? "'{$this->player->name}'" : "<No Player>";
     return "(Account, id: {$this->id}, name: {$player_name})";
   }
 }

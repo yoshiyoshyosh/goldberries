@@ -6,8 +6,9 @@ abstract class DbObject
 
   public int $id;
 
-  abstract function apply_db_data($arr, $prefix = '');
+  // === Abstract Functions ===
   abstract function get_field_set();
+  abstract function apply_db_data($arr, $prefix = '');
   abstract function expand_foreign_keys($DB, $depth = 2, $dont_expand = array());
 
   // === Update Functions ===
@@ -45,6 +46,7 @@ abstract class DbObject
     return $obj;
   }
 
+  // $id can be an ID, an array of IDs, or "all"
   static function get_request($DB, $id, int $depth = 2, $dont_expand = array())
   {
     $json_arr = array();

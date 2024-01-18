@@ -1,26 +1,18 @@
 <?php
 
-class Player
+class Player extends DbObject
 {
-  public int $id;
+  public static string $table_name = 'Player';
+
   public string $name;
-  public $password = null; // string
-  public bool $is_verifier;
-  public bool $is_admin;
-  public bool $is_suspended;
-  public string $suspension_reason;
-  public string $date_created;
 
-  function pull_from_db($DB, int $id): bool
+  // === Abstract Functions ===
+  function get_field_set()
   {
-    $arr = db_fetch_id($DB, 'Player', $id);
-    if ($arr === false)
-      return false;
-
-    $this->apply_db_data($arr);
-    return true;
+    return array(
+      'name' => $this->name,
+    );
   }
-
   function apply_db_data($arr, $prefix = '')
   {
     $this->id = intval($arr[$prefix . 'id']);
@@ -34,20 +26,16 @@ class Player
     if (isset($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
   }
-
-  function clone_for_api($DB)
+  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
   {
-    $obj = clone $this;
-    $obj->remove_sensitive_info();
-    return $obj;
   }
 
-  function remove_sensitive_info()
-  {
-    unset($this->password);
-  }
+  // === Find Functions ===
 
-  function expand_foreign_keys($DB)
+
+  // === Utility Functions ===
+  function __toString()
   {
+    return "(Player, id:{$this->id}, name:'{$this->name}')";
   }
 }
