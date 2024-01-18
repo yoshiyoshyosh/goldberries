@@ -12,12 +12,6 @@ abstract class DbObject
   abstract function expand_foreign_keys($DB, $depth = 2, $dont_expand = array());
 
   // === Update Functions ===
-  function update($DB)
-  {
-    $arr = $this->get_field_set();
-    return db_update($DB, static::$table_name, $this->id, $arr);
-  }
-
   function insert($DB)
   {
     $arr = $this->get_field_set();
@@ -26,6 +20,12 @@ abstract class DbObject
       return false;
     $this->id = $id;
     return true;
+  }
+
+  function update($DB)
+  {
+    $arr = $this->get_field_set();
+    return db_update($DB, static::$table_name, $this->id, $arr);
   }
 
   function delete($DB)
