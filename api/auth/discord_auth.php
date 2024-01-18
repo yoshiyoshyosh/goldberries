@@ -67,7 +67,7 @@ if (isset($_REQUEST['code'])) {
   //Login user
   if (successful_login($account)) {
     //Redirect to test_session.php
-    header('Location: test_session.php');
+    header('Location: ../test_session.php');
   } else {
     die_json(500, "Failed to login");
   }

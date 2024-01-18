@@ -1,6 +1,6 @@
 <?php
 
-require_once('../api_bootstrap.inc.php');
+require_once('api_bootstrap.inc.php');
 
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -18,13 +18,17 @@ $account = get_user_data();
 <body>
   <?php
 
+  if (isset($_GET['msg'])) {
+    echo "<p>{$_GET['msg']}</p>";
+  }
+
   if ($account == null) {
     echo "Not logged in<br>";
-    echo "<a href=\"discord_auth.php\">Register with Discord</a><br>";
-    echo "<a href=\"discord_auth.php?login\">Login with Discord</a><br>";
+    echo "<a href=\"auth/discord_auth.php\">Register with Discord</a><br>";
+    echo "<a href=\"auth/discord_auth.php?login\">Login with Discord</a><br>";
     echo "-----<br>";
-    echo "<a href=\"register.php\">Register with Email</a><br>";
-    echo "<a href=\"login.php\">Login with Email</a><br>";
+    echo "<a href=\"auth/register.php\">Register with Email</a><br>";
+    echo "<a href=\"auth/login.php\">Login with Email</a><br>";
     exit();
   }
 
@@ -53,7 +57,11 @@ $account = get_user_data();
   }
   echo "<br>";
 
-  echo "<a href=\"logout.php\">Logout</a><br>";
+  echo "----- <br>";
+  echo "<a href=\"logging.php\">Logs</a><br>";
+
+  echo "----- <br>";
+  echo "<a href=\"auth/logout.php\">Logout</a><br>";
 
   ?>
 </body>

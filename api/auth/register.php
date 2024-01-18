@@ -26,7 +26,7 @@ if (isset($_GET['verify'])) {
   log_info("User verified email for Account({$account->id})", "Login");
 
   //redirect to login page
-  header('Location: login.php');
+  header('Location: ../test_session.php?msg=Email verified, you can now login!');
   exit();
 }
 
@@ -68,4 +68,4 @@ log_info("User registered Account({$account->id}) via email ({$account->email})"
 
 
 //redirect to verify notice page
-header('Location: verify_notice.php');
+header('Location: ../test_session.php?msg=Please check your email to verfiy your account (' . $account->email_verify_code . ')');

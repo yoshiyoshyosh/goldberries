@@ -34,4 +34,4 @@ log_debug("User logged in to Account({$account->id}) via email", "Login");
 successful_login($account);
 
 //Redirect to test_session.php
-header('Location: test_session.php');
+header('Location: ../test_session.php');

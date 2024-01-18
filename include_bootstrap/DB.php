@@ -38,7 +38,7 @@ function db_fetch_where($DB, string $table_noesc, string $where, $params = array
 
 }
 
-// Finds one or multiple accounts. Does not override $object_skel's values
+// Finds one or multiple objects. Does not override $object_skel's values
 function find_in_db($DB, string $table_noesc, string $where, $params = array(), $object_skel)
 {
   $result = db_fetch_where($DB, $table_noesc, $where, $params);

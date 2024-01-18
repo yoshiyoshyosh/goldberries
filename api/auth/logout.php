@@ -8,7 +8,7 @@ if ($account == null) {
 }
 
 if (logout()) {
-  header('Location: test_session.php');
+  header('Location: ../test_session.php?msg=Logged out');
 } else {
   die_json(500, "Failed to logout");
 }
