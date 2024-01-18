@@ -2,9 +2,10 @@
 
 $session_expire_days = 7;
 
-class Account
+class Account extends DbObject
 {
-  public int $id;
+  public static string $table_name = 'Account';
+
   public $player_id = null; /* int */
   public $claimed_player_id = null; /* int */
   public $email = null; /* string */
@@ -24,17 +25,8 @@ class Account
   public $player = null; /* Player */
   public $claimed_player = null; /* Player */
 
-  // === Core Functions ===
-  function pull_from_db($DB, int $id): bool
-  {
-    $arr = db_fetch_id($DB, 'Account', $id);
-    if ($arr === false)
-      return false;
 
-    $this->apply_db_data($arr);
-    return true;
-  }
-
+  // === Abstract Functions ===
   function apply_db_data($arr, $prefix = '')
   {
     $this->id = intval($arr[$prefix . 'id']);
@@ -65,13 +57,11 @@ class Account
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
   }
 
-  function clone_for_api($DB)
+  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
   {
-    return clone $this;
-  }
+    if ($depth <= 1)
+      return;
 
-  function expand_foreign_keys($DB, $dont_expand = array())
-  {
     if (!in_array('player', $dont_expand)) {
       if ($this->player_id !== null) {
         $this->player = new Player();
@@ -105,28 +95,6 @@ class Account
     );
   }
 
-  // === Update Functions ===
-  function update($DB)
-  {
-    $arr = $this->get_field_set();
-    return db_update($DB, 'Account', $this->id, $arr);
-  }
-
-  function insert($DB)
-  {
-    $arr = $this->get_field_set();
-    $id = db_insert($DB, 'Account', $arr);
-    if ($id === false)
-      return false;
-    $this->id = $id;
-    return true;
-  }
-
-  function delete($DB)
-  {
-    return db_delete($DB, 'Account', $this->id);
-  }
-
   // === Find Functions ===
   static function find_by_discord_id($DB, string $discord_id)
   {
@@ -147,5 +115,12 @@ class Account
   static function find_by_email_verify_code($DB, string $email_verify_code)
   {
     return find_in_db($DB, 'Account', "email_verify_code = $1", array($email_verify_code), new Account());
+  }
+
+  // === Utility Functions ===
+  function __toString()
+  {
+    $player_name = $this->player !== null ? $this->player->name : "<No Player>";
+    return "(Account, id: {$this->id}, name: {$player_name})";
   }
 }

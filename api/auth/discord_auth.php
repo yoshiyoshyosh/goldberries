@@ -61,11 +61,10 @@ if (isset($_REQUEST['code'])) {
     if (is_suspended($account)) {
       die_json(401, "Account is suspended: " . $account->suspension_reason);
     }
-    log_debug("User logged in to Account({$account->id}) via Discord", "Login");
   }
 
   //Login user
-  if (successful_login($account)) {
+  if (successful_login($account, "discord")) {
     //Redirect to test_session.php
     header('Location: ../test_session.php');
   } else {

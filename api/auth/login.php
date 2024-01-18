@@ -29,9 +29,7 @@ if (is_suspended($account)) {
   die_json(401, "Account is suspended: " . $account->suspension_reason);
 }
 
-log_debug("User logged in to Account({$account->id}) via email", "Login");
-
-successful_login($account);
+successful_login($account, "mail");
 
 //Redirect to test_session.php
 header('Location: ../test_session.php');

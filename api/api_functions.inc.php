@@ -67,8 +67,10 @@ function api_unified_get($DB, string $table_noesc, $object_skel)
   if (!is_valid_id_query($_GET['id'])) {
     die_json(400, 'invalid query: invalid or missing id');
   }
-  if (is_array($_GET['id'])) {
-    foreach ($_GET['id'] as $val) {
+
+  $id = intval($_GET['id']);
+  if (is_array($id)) {
+    foreach ($id as $val) {
       if ($object_skel->pull_from_db($DB, intval($val)) === false) {
         die_json(400, "invalid query: id {$val} does not exist");
       }
@@ -76,8 +78,8 @@ function api_unified_get($DB, string $table_noesc, $object_skel)
     }
     return $json_arr;
   } else {
-    if ($object_skel->pull_from_db($DB, intval($_GET['id'])) === false) {
-      die_json(400, "invalid query: id {$_GET['id']} does not exist");
+    if ($object_skel->pull_from_db($DB, intval($id)) === false) {
+      die_json(400, "invalid query: id {$id} does not exist");
     }
     return $object_skel->clone_for_api($DB);
   }

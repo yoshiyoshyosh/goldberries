@@ -22,17 +22,23 @@ function get_discord_token_url()
   return constant('DISCORD_TOKEN_URL');
 }
 
-function successful_login($account)
+//method = mail, discord
+function successful_login($account, $method)
 {
   global $DB;
 
   $token = create_session_token();
   $account->session_token = $token;
   $account->session_created = new DateTime();
+  $account->expand_foreign_keys($DB);
 
   if (!$account->update($DB)) {
     return false;
   }
+
+  $methodStr = $method === "mail" ? "email" : "Discord";
+  log_debug("User logged in to {$account} via {$methodStr}", "Login");
+
   return true;
 }
 
@@ -86,7 +92,9 @@ function get_user_data()
     return null;
   }
 
-  return $accounts[0];
+  $account = $accounts[0];
+  $account->expand_foreign_keys($DB);
+  return $account;
 }
 
 // === Utility Functions ===
