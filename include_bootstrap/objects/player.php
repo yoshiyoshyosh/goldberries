@@ -2,7 +2,7 @@
 
 class Player extends DbObject
 {
-  public static string $table_name = 'Player';
+  public static string $table_name = 'player';
 
   public string $name;
 

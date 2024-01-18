@@ -3,32 +3,21 @@
 require_once('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $camp = new Campaign();
-  //api_unified_output($DB, 'Campaign', $camp);
-  $campaign = api_unified_get($DB, 'Campaign', $camp);
-  if (is_array($campaign)) {
-    foreach ($campaign as $c) {
-      expand_campaign($DB, $c);
-    }
-  } else {
-    expand_campaign($DB, $campaign);
-  }
-  api_write($campaign);
-}
+  $maps = isset($_REQUEST['maps']) && $_REQUEST['maps'] === 'true';
+  $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
+  $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
 
-function expand_campaign($DB, $campaign)
-{
-  $campaign->fetch_maps($DB);
-  foreach ($campaign->maps as $map) {
-    $map->fetch_challenges($DB);
-    foreach ($map->challenges as $challenge) {
-      $challenge->expand_foreign_keys($DB, ['campaign', 'map']);
-      $challenge->fetch_submissions($DB);
-      foreach ($challenge->submissions as $submission) {
-        $submission->expand_foreign_keys($DB, ['challenge']);
+  $id = $_REQUEST['id'];
+  $campaigns = Campaign::get_request($DB, $id);
+  if ($maps) {
+    if (is_array($campaigns)) {
+      foreach ($campaigns as $campaign) {
+        $campaign->fetch_maps($DB, $challenges, $submissions);
       }
+    } else {
+      $campaigns->fetch_maps($DB, $challenges, $submissions);
     }
   }
-}
 
-?>
+  api_write($challenges);
+}

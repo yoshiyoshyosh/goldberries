@@ -20,5 +20,6 @@ if ($logs === false) {
 //api_write($logs);
 header('Content-Type: text/html; charset=UTF-8');
 foreach ($logs as $log) {
-  echo "{$log}<br>";
+  $escaped = htmlspecialchars($log);
+  echo "<pre style='margin:2px'>{$escaped}</pre>";
 }

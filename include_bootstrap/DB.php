@@ -56,7 +56,7 @@ function find_in_db($DB, string $table_noesc, string $where, $params = array(), 
 }
 
 
-function db_fetch_assoc($DB, string $table_noesc, string $col_noesc, $val, $object_skel)
+function db_fetch_assoc($DB, string $table_noesc, string $col_noesc, $val, $class)
 {
   error_log("fetching associated objects for \"{$table_noesc}\" \"{$col_noesc}\" \"{$val}\"");
   $table = pg_escape_identifier(strtolower($table_noesc));
@@ -66,11 +66,13 @@ function db_fetch_assoc($DB, string $table_noesc, string $col_noesc, $val, $obje
     "SELECT * FROM {$table} WHERE {$col} = $1;",
     array($val)
   );
-  //Fetch all rows in the result set as an associative array
+  if ($result === false)
+    return false;
 
+  //Fetch all rows in the result set as an associative array
   $ret = array();
   foreach (pg_fetch_all($result) as $row) {
-    $obj = clone $object_skel;
+    $obj = new $class();
     $obj->apply_db_data($row);
     $ret[] = $obj;
   }

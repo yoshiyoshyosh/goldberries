@@ -4,10 +4,8 @@ $session_expire_days = 7;
 
 class Account extends DbObject
 {
-  public static string $table_name = 'Account';
+  public static string $table_name = 'account';
 
-  public $player_id = null; /* int */
-  public $claimed_player_id = null; /* int */
   public $email = null; /* string */
   public $password = null; /* string hash */
   public $discord_id = null; /* string */
@@ -20,6 +18,10 @@ class Account extends DbObject
   public $suspension_reason = null; /* string */
   public bool $email_verified = false;
   public $email_verify_code = null; /* string */
+
+  // Foreign Keys
+  public $player_id = null; /* int */
+  public $claimed_player_id = null; /* int */
 
   // Linked Objects
   public ?Player $player = null; /* Player */
@@ -62,15 +64,11 @@ class Account extends DbObject
     if ($depth <= 1)
       return;
 
-    if (!in_array('player', $dont_expand)) {
-      if ($this->player_id !== null) {
-        $this->player = Player::get_by_id($DB, $this->player_id, $depth - 1);
-      }
+    if (!in_array('player', $dont_expand) && $this->player_id !== null) {
+      $this->player = Player::get_by_id($DB, $this->player_id, $depth - 1);
     }
-    if (!in_array('claimed_player', $dont_expand)) {
-      if ($this->claimed_player_id !== null) {
-        $this->claimed_player = Player::get_by_id($DB, $this->claimed_player_id, $depth - 1);
-      }
+    if (!in_array('claimed_player', $dont_expand) && $this->claimed_player_id !== null) {
+      $this->claimed_player = Player::get_by_id($DB, $this->claimed_player_id, $depth - 1);
     }
   }
 

@@ -59,6 +59,7 @@ $account = get_user_data();
 
   echo "----- <br>";
   echo "<a href=\"logging.php\">Logs</a><br>";
+  echo "<a href=\"challenge.php?id=1\">Challenge 'ID = 1'</a><br>";
 
   echo "----- <br>";
   echo "<a href=\"auth/logout.php\">Logout</a><br>";

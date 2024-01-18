@@ -9,6 +9,8 @@ abstract class DbObject
   // === Abstract Functions ===
   abstract function get_field_set();
   abstract function apply_db_data($arr, $prefix = '');
+
+  // $DB is either a database connection or an array containing a row of the results of a query
   abstract function expand_foreign_keys($DB, $depth = 2, $dont_expand = array());
 
   // === Update Functions ===
@@ -86,6 +88,14 @@ abstract class DbObject
       }
       return $obj;
     }
+  }
+
+  function fetch_list($DB, $id_col, $class)
+  {
+    $arr = db_fetch_assoc($DB, $class::$table_name, $id_col, $this->id, $class);
+    if ($arr === false)
+      return false;
+    return $arr;
   }
 
   // === Utility Functions ===

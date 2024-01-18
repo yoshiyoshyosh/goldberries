@@ -1,22 +1,21 @@
 <?php
 
-class Difficulty
+class Difficulty extends DbObject
 {
-  public int $id;
+  public static string $table_name = 'difficulty';
+
   public string $name;
-  public $subtier = null; /* string */
+  public ?string $subtier = null;
   public int $sort;
-  public string $color;
-  public string $color_group;
 
-  function pull_from_db($DB, int $id): bool
+  // === Abstract Functions ===
+  function get_field_set()
   {
-    $arr = db_fetch_id($DB, 'Difficulty', $id);
-    if ($arr === false)
-      return false;
-
-    $this->apply_db_data($arr);
-    return true;
+    return array(
+      'name' => $this->name,
+      'subtier' => $this->subtier,
+      'sort' => $this->sort,
+    );
   }
 
   function apply_db_data($arr, $prefix = '')
@@ -24,19 +23,21 @@ class Difficulty
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
     $this->sort = intval($arr[$prefix . 'sort']);
-    $this->color = $arr[$prefix . 'color'];
-    $this->color_group = $arr[$prefix . 'color_group'];
 
     if (isset($arr[$prefix . 'subtier']))
       $this->subtier = $arr[$prefix . 'subtier'];
   }
 
-  function clone_for_api($DB)
+  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
   {
-    return clone $this;
   }
 
-  function expand_foreign_keys($DB)
+  // === Find Functions ===
+
+  // === Utility Functions ===
+  function __toString()
   {
+    $subtierStr = to_string_null_check($this->subtier);
+    return "(Difficulty, id:{$this->id}, name:'{$this->name}', subtier:'{$subtierStr}')";
   }
 }

@@ -2,7 +2,7 @@
 
 class Logging extends DbObject
 {
-  public static string $table_name = 'Logging';
+  public static string $table_name = 'logging';
 
   public string $message;
   public string $level;

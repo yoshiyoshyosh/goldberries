@@ -1,21 +1,24 @@
 <?php
 
-class Objective
+class Objective extends DbObject
 {
-  public int $id;
+  public static string $table_name = 'objective';
+
   public string $name;
   public string $description;
+  public ?string $display_name_suffix = null;
   public bool $is_arbitrary;
-  public $display_name_suffix = null; /* string */
 
-  function pull_from_db($DB, int $id): bool
+
+  // === Abstract Functions ===
+  function get_field_set()
   {
-    $arr = db_fetch_id($DB, 'Objective', $id);
-    if ($arr === false)
-      return false;
-
-    $this->apply_db_data($arr);
-    return true;
+    return array(
+      'name' => $this->name,
+      'description' => $this->description,
+      'display_name_suffix' => $this->display_name_suffix,
+      'is_arbitrary' => $this->is_arbitrary,
+    );
   }
 
   function apply_db_data($arr, $prefix = '')
@@ -29,14 +32,16 @@ class Objective
       $this->display_name_suffix = $arr[$prefix . 'display_name_suffix'];
   }
 
-  function clone_for_api($DB)
+  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
   {
-    return clone $this;
   }
 
-  function expand_foreign_keys($DB)
+  // === Find Functions ===
+
+  // === Utility Functions ===
+  function __toString()
   {
+    $arbitraryStr = $this->is_arbitrary ? 'true' : 'false';
+    return "(Objective, id:{$this->id}, name:'{$this->name}', is_arbitrary:{$arbitraryStr})";
   }
 }
-
-?>
