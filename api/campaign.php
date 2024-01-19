@@ -19,5 +19,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 
-  api_write($challenges);
+  api_write($campaigns);
 }
