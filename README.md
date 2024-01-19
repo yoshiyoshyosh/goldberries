@@ -14,7 +14,7 @@ With `goldberries.net` this is supposed to change. `goldberries.net` is going to
 
 Things we have completed, or that are currently in the works:
 
-- Database ✅🔧
+- Database:
   - Model ✅
   - Build Scripts for Postgres ✅
   - Data Migration Pipeline (Google Sheets -> Database) 🔧
