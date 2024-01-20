@@ -29,7 +29,10 @@ if (is_suspended($account)) {
   die_json(401, "Account is suspended: " . $account->suspension_reason);
 }
 
-successful_login($account, "mail");
-
-//Redirect to test_session.php
-header('Location: ../test_session.php');
+if (successful_login($account, "mail")) {
+  $account->remove_sensitive_info();
+  $account->expand_foreign_keys($DB);
+  api_write($account);
+} else {
+  die_json(500, "Failed to login");
+}

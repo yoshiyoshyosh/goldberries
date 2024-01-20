@@ -65,8 +65,8 @@ if (isset($_REQUEST['code'])) {
 
   //Login user
   if (successful_login($account, "discord")) {
-    //Redirect to test_session.php
-    header('Location: ../test_session.php');
+    $redirect = $_SESSION['REDIRECT_AFTER_LOGIN'] ?? constant('REDIRECT_POST_LOGIN');
+    header('Location: ' . $redirect);
   } else {
     die_json(500, "Failed to login");
   }
@@ -75,6 +75,12 @@ if (isset($_REQUEST['code'])) {
   //Redirect to discord oauth
   //Rememeber if user was trying to login or register
   $_SESSION['login'] = isset($_GET['login']);
+
+  if (isset($_REQUEST['redirect'])) {
+    $_SESSION['REDIRECT_AFTER_LOGIN'] = $_REQUEST['redirect'];
+  } else if (isset($_SERVER['HTTP_REFERER'])) {
+    $_SESSION['REDIRECT_AFTER_LOGIN'] = $_SERVER['HTTP_REFERER'];
+  }
 
   //Redirect to discord oauth
   header("Location: " . get_discord_url());

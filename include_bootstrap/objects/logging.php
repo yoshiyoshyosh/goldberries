@@ -51,12 +51,12 @@ class Logging extends DbObject
     $arr = array();
     $i = 1;
     if ($level != null) {
-      $where .= " AND level = '\${$i}'";
+      $where .= " AND level = \${$i}";
       $arr[] = $level;
       $i++;
     }
     if ($topic != null) {
-      $where .= " AND topic = '\${$i}'";
+      $where .= " AND topic = \${$i}";
       $arr[] = $topic;
       $i++;
     }

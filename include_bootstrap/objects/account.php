@@ -6,26 +6,26 @@ class Account extends DbObject
 {
   public static string $table_name = 'account';
 
-  public $email = null; /* string */
-  public $password = null; /* string hash */
-  public $discord_id = null; /* string */
-  public $session_token = null; /* string */
-  public $session_created = null; /* DateTime */
-  public DateTime $date_created;
+  public ?string $email = null;
+  public ?string $password = null;
+  public ?string $discord_id = null;
+  public ?string $session_token = null;
+  public ?DateTime $session_created = null;
+  public ?DateTime $date_created;
   public bool $is_verifier = false;
   public bool $is_admin = false;
   public bool $is_suspended = false;
-  public $suspension_reason = null; /* string */
+  public ?string $suspension_reason = null;
   public bool $email_verified = false;
-  public $email_verify_code = null; /* string */
+  public ?string $email_verify_code = null;
 
   // Foreign Keys
-  public $player_id = null; /* int */
-  public $claimed_player_id = null; /* int */
+  public ?int $player_id = null;
+  public ?int $claimed_player_id = null;
 
   // Linked Objects
-  public ?Player $player = null; /* Player */
-  public ?Player $claimed_player = null; /* Player */
+  public ?Player $player = null;
+  public ?Player $claimed_player = null;
 
 
   // === Abstract Functions ===
@@ -118,5 +118,14 @@ class Account extends DbObject
   {
     $player_name = $this->player !== null ? "'{$this->player->name}'" : "<No Player>";
     return "(Account, id: {$this->id}, name: {$player_name})";
+  }
+
+  function remove_sensitive_info()
+  {
+    $this->password = null;
+    $this->discord_id = null;
+    $this->session_token = null;
+    $this->session_created = null;
+    $this->email_verify_code = null;
   }
 }

@@ -17,9 +17,4 @@ if ($logs === false) {
   die_json(500, "Failed to get logs");
 }
 
-//api_write($logs);
-header('Content-Type: text/html; charset=UTF-8');
-foreach ($logs as $log) {
-  $escaped = htmlspecialchars($log);
-  echo "<pre style='margin:2px'>{$escaped}</pre>";
-}
+api_write($logs);

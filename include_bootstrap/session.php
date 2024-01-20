@@ -2,10 +2,17 @@
 
 DEFINE('DISCORD_CLIENT_ID', '1196814348203593729');
 DEFINE('DISCORD_CLIENT_SECRET', getenv('DISCORD_CLIENT_SECRET'));
-DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/api/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fstats.vi-home.de%2Fgb_api%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
 DEFINE('DISCORD_TOKEN_URL', 'https://discord.com/api/oauth2/token');
-DEFINE('DISCORD_REDIRECT_URI', 'https://stats.vi-home.de/gb_api/api/auth/discord_auth.php');
 DEFINE('DISCORD_API_URL', 'https://discord.com/api');
+if (getenv('DEBUG') === 'true') {
+  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/api/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
+  DEFINE('DISCORD_REDIRECT_URI', 'http://localhost/api/auth/discord_auth.php');
+  DEFINE('REDIRECT_POST_LOGIN', 'http://localhost:3000');
+} else {
+  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/api/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fstats.vi-home.de%2Fgb_api%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
+  DEFINE('DISCORD_REDIRECT_URI', 'https://stats.vi-home.de/gb_api/api/auth/discord_auth.php');
+  DEFINE('REDIRECT_POST_LOGIN', 'https://stats.vi-home.de/gb_api/api/test_session.php');
+}
 $session_expire_days = 7;
 
 session_start();
