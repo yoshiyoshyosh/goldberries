@@ -150,7 +150,8 @@ CREATE TABLE challenge
  CONSTRAINT challenge_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT challenge_difficulty_id_fkey FOREIGN KEY ( difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT challenge_map_id_fkey FOREIGN KEY ( map_id ) REFERENCES "map" ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
- CONSTRAINT challenge_objective_id_fkey FOREIGN KEY ( objective_id ) REFERENCES objective ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
+ CONSTRAINT challenge_objective_id_fkey FOREIGN KEY ( objective_id ) REFERENCES objective ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
+ CONSTRAINT check_challenge_fc CHECK ( has_fc = false OR requires_fc = false )
 );
 
 -- ====== submission ======
