@@ -120,6 +120,7 @@ CREATE TABLE "map"
  name             varchar(128) NOT NULL,
  url              text NULL,
  date_added       timestamptz NULL DEFAULT CURRENT_TIMESTAMP,
+ has_fc           boolean NOT NULL DEFAULT false,
  is_rejected      boolean NOT NULL DEFAULT false,
  rejection_reason text NULL,
  is_archived      boolean NOT NULL DEFAULT false,
