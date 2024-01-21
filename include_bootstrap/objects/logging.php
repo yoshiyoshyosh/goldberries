@@ -36,17 +36,17 @@ class Logging extends DbObject
   }
 
   // === Find Functions ===
-  static function get_all($DB, $last = "day", $level = null, $topic = null, $search = null)
+  static function get_all($DB, $time = "day", $level = null, $topic = null, $search = null)
   {
     $where = "date > date_trunc('day', NOW()) - interval '1 day'";
-    if ($last == "week")
-      $where .= "date > date_trunc('week', NOW()) - interval '1 week'";
-    else if ($last == "month")
-      $where .= "date > date_trunc('month', NOW()) - interval '1 month'";
-    else if ($last == "year")
-      $where .= "date > date_trunc('year', NOW()) - interval '1 year'";
-    else if ($last == "all")
-      $where .= "1 = 1";
+    if ($time == "week")
+      $where = "date > date_trunc('week', NOW()) - interval '1 week'";
+    else if ($time == "month")
+      $where = "date > date_trunc('month', NOW()) - interval '1 month'";
+    else if ($time == "year")
+      $where = "date > date_trunc('year', NOW()) - interval '1 year'";
+    else if ($time == "all")
+      $where = "1 = 1";
 
     $arr = array();
     $i = 1;
