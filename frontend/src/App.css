@@ -1,0 +1,10 @@
+#app {
+  margin: 10px 0px;
+}
+
+
+.gb-api-has-content {
+  text-decoration: underline;
+  cursor: pointer;
+  /*color: var(--bs-link-color);*/
+}
