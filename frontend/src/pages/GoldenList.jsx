@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { getDifficultyColors } from "../util/constants";
 import { VariableSizeList } from "react-window";
+import "../css/GoldenList.css";
 
 export function PageGoldenList({ type }) {
   return (
@@ -90,21 +91,12 @@ function CampaignEntry({ campaign, style, type }) {
   return (
     <Stack direction="row" spacing={0} style={style}>
       <a href={campaign.url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
-        <InfoBox
-          sx={{
-            bgcolor: "black",
-            color: "primary.main",
-            border: "1px solid white",
-            height: challengeCount * 50 + "px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            p: 1,
-            lineClamp: 2,
-            fontSize: fontSize,
-          }}
+        <Box
+          className="golden-list-info-box campaign"
+          style={{ height: challengeCount * 50 + "px", fontSize: fontSize }}
         >
           {displayName}
-        </InfoBox>
+        </Box>
       </a>
       <Box>
         {campaign.maps.map((map) => (
@@ -119,18 +111,12 @@ function MapEntry({ map, type }) {
   const fontSize = map.name.length > 40 ? "12px" : "16px";
   return (
     <Stack direction="row" spacing={0}>
-      <InfoBox
-        sx={{
-          bgcolor: "black",
-          color: "white",
-          border: "1px solid white",
-          height: map.challenges.length * 50 + "px",
-          p: 1,
-          fontSize: fontSize,
-        }}
+      <Box
+        className="golden-list-info-box map"
+        style={{ height: map.challenges.length * 50 + "px", fontSize: fontSize }}
       >
         <span>{map.name}</span>
-      </InfoBox>
+      </Box>
       <Box>
         {map.challenges.map((challenge) => (
           <ChallengeEntry key={challenge.id} challenge={challenge} type={type} />
@@ -153,21 +139,16 @@ function ChallengeEntry({ challenge, type }) {
 
   return (
     <Stack direction="row" spacing={0}>
-      <InfoBox
-        sx={{
-          bgcolor: colors.color,
-          color: colors.contrast_color,
-          minWidth: "150px",
-          width: "150px",
-          border: "1px solid white",
-        }}
+      <Box
+        className="golden-list-info-box challenge"
+        style={{ backgroundColor: colors.color, color: colors.contrast_color }}
       >
         <span style={{ textTransform: "capitalize" }}>
           {subtier}
           {tier}
           {fcAddition} {counter}
         </span>
-      </InfoBox>
+      </Box>
       {challenge.submissions.map((submission) => (
         <SubmissionEntry key={submission.id} submission={submission} />
       ))}
@@ -179,30 +160,14 @@ function SubmissionEntry({ submission }) {
   const playerName = submission.player ? submission.player.name : "<NULL>";
   return (
     <a href={submission.proof_url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
-      <InfoBox
-        sx={{
-          bgcolor: !submission.is_fc ? "#ffd966" : "#f9cb9c",
-          color: "primary.main",
-          border: "1px solid gray",
-          width: "150px",
-          minWidth: "150px",
-          px: 1,
-          fontWeight: "bold",
-        }}
+      <Box
+        className="golden-list-info-box submission"
+        style={{ backgroundColor: !submission.is_fc ? "#ffd966" : "#f9cb9c" }}
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {playerName}
         </span>
-      </InfoBox>
+      </Box>
     </a>
   );
 }
-
-const InfoBox = styled(Box)(({ theme }) => ({
-  height: "50px",
-  width: "200px",
-  minWidth: "200px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "start",
-}));
