@@ -211,12 +211,12 @@ export function Layout() {
     },
     verifier: {
       icon: <FontAwesomeIcon icon={faEye} />,
-      name: "Verifier Stuff",
+      name: "Internal",
       items: [{ name: "Logs", path: "/logs", icon: <FontAwesomeIcon icon={faInbox} /> }],
     },
     admin: {
       icon: <FontAwesomeIcon icon={faHammer} />,
-      name: "Admin Stuff",
+      name: "Admin",
       items: [{ name: "Admin Stuff", path: "/admin-panel", icon: <FontAwesomeIcon icon={faHammer} /> }],
     },
   };
@@ -305,10 +305,6 @@ export function Layout() {
       <Box
         component="main"
         sx={{
-          // mx: {
-          //   xs: 0,
-          //   sm: 1,
-          // },
           mt: {
             xs: 7,
             sm: 0,
@@ -321,10 +317,6 @@ export function Layout() {
       </Box>
     </Box>
   );
-}
-
-function pathMatchesItem(pathname, itemPath) {
-  return (itemPath === "/" && pathname === "/") || (itemPath !== "/" && pathname.startsWith(itemPath));
 }
 
 function MobileDrawer({ leftMenu, rightMenu }) {
@@ -365,8 +357,6 @@ function MobileSubMenu({ name, icon, items }) {
     return pathMatchesItem(pathname, item.path);
   });
 
-  console.log("Menu is open: ", name, open, items);
-
   return (
     <>
       <Divider />
@@ -391,7 +381,6 @@ function MobileSubMenu({ name, icon, items }) {
 function MobileMenuItem({ item, indent = 0 }) {
   const { pathname } = useLocation();
   const selected = item.action ? false : pathMatchesItem(pathname, item.path);
-  console.log("Menu Item:", item);
   return (
     <ListItem disablePadding>
       {item.action !== undefined && (
@@ -428,9 +417,7 @@ function DesktopNav({ leftMenu, rightMenu }) {
         pr: "calc(-100vw + 100%)",
         color: "primary.contrastText",
       }}
-      // position="absolute"
     >
-      {/* <Container> */}
       <Toolbar
         sx={{
           gap: 1,
@@ -452,6 +439,7 @@ function DesktopNav({ leftMenu, rightMenu }) {
         <Divider
           sx={{
             flexGrow: 1,
+            borderColor: "#00000000",
           }}
         />
         {rightMenu.map((entry, index) => {
@@ -462,7 +450,6 @@ function DesktopNav({ leftMenu, rightMenu }) {
           }
         })}
       </Toolbar>
-      {/* </Container> */}
     </Box>
   );
 }
@@ -483,8 +470,6 @@ function DesktopItem({ item }) {
 }
 
 function DesktopSubMenu({ name, icon, items }) {
-  //Render this as a dropdown menu
-
   return (
     <PopupState variant="popover" popupId="demoMenu">
       {(popupState) => (
@@ -531,4 +516,8 @@ function DesktopSubMenuItem({ item, closeMenu }) {
       <ListItemText primary={item.name} />
     </MenuItem>
   );
+}
+
+function pathMatchesItem(pathname, itemPath) {
+  return (itemPath === "/" && pathname === "/") || (itemPath !== "/" && pathname.startsWith(itemPath));
 }

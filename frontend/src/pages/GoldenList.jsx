@@ -1,7 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, Stack, styled } from "@mui/material";
 import { useQuery } from "react-query";
 import { fetchGoldenList } from "../util/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { getDifficultyColors } from "../util/constants";
+import { VariableSizeList } from "react-window";
 
 export function PageGoldenList({ type }) {
   return (
@@ -15,110 +19,190 @@ export function GoldenList({ type }) {
   const goldenListQuery = useQuery({
     queryKey: ["goldenList", type],
     queryFn: () => fetchGoldenList(type),
+    cacheTime: 0,
+    staleTime: 0,
   });
 
-  if (goldenListQuery.isLoading) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    document.body.parentElement.style.overflowX = "scroll";
+    return () => {
+      document.body.parentElement.style.overflowX = "hidden";
+    };
+  }, []);
+
+  if (goldenListQuery.isLoading || goldenListQuery.isFetching) {
+    return (
+      <div>
+        <h1 style={{ textTransform: "capitalize", margin: "0 10px" }}>{type} Golden List</h1>
+        <h3 style={{ marginLeft: "10px" }}>
+          Loading <FontAwesomeIcon icon={faSpinner} spin />
+        </h3>
+      </div>
+    );
   }
 
   if (goldenListQuery.isError) {
     return <div>Error: {goldenListQuery.error.message}</div>;
   }
 
+  const getItemSize = (index) =>
+    goldenListQuery.data.data[index].maps.reduce((acc, map) => acc + map.challenges.length, 0) * 50;
+  const Row = ({ index, style }) => {
+    const campaign = goldenListQuery.data.data[index];
+    return <CampaignEntry key={campaign.id} campaign={campaign} style={style} type={type} />;
+  };
+
+  const totalSubmissionCount = goldenListQuery.data.data.reduce(
+    (acc, campaign) =>
+      acc +
+      campaign.maps.reduce(
+        (acc, map) => acc + map.challenges.reduce((acc, challenge) => acc + challenge.submissions.length, 0),
+        0
+      ),
+    0
+  );
+
   return (
     <div>
-      <h1>Golden List</h1>
-      <p>Here are the {type} goldens</p>
-      <ul>
-        {goldenListQuery.data.data.map((campaign) => (
-          <CampaignEntry key={campaign.id} campaign={campaign} />
-        ))}
-      </ul>
+      <h1 style={{ textTransform: "capitalize", margin: "0 10px" }}>
+        {type} Golden List ({totalSubmissionCount} Submissions)
+      </h1>
+      {goldenListQuery.data.data.map((campaign) => (
+        <CampaignEntry key={campaign.id} campaign={campaign} type={type} />
+      ))}
+      {/* <VariableSizeList
+        height={831}
+        itemCount={goldenListQuery.data.data.length}
+        itemSize={getItemSize}
+        width="calc(100vw - (100% - 100vw))"
+        overscanCount={10}
+      >
+        {Row}
+      </VariableSizeList> */}
     </div>
   );
 }
 
-function CampaignEntry({ campaign }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
-  const contentClass = campaign.maps.length > 0 ? "gb-api-has-content" : "";
+function CampaignEntry({ campaign, style, type }) {
+  const challengeCount = campaign.maps.reduce((acc, map) => acc + map.challenges.length, 0);
+  const displayName = campaign.name + " (by " + campaign.author_gb_name + ")";
+  const fontSize = challengeCount > 1 ? "16px" : displayName.length > 40 ? "12px" : "16px";
   return (
-    <li>
-      <span className={contentClass} onClick={toggle}>
-        {campaign.name}
-      </span>
-      {isOpen && (
-        <ul>
-          {campaign.maps.map((map) => (
-            <MapEntry key={map.id} map={map} />
-          ))}
-        </ul>
-      )}
-    </li>
+    <Stack direction="row" spacing={0} style={style}>
+      <a href={campaign.url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+        <InfoBox
+          sx={{
+            bgcolor: "black",
+            color: "primary.main",
+            border: "1px solid white",
+            height: challengeCount * 50 + "px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            p: 1,
+            lineClamp: 2,
+            fontSize: fontSize,
+          }}
+        >
+          {displayName}
+        </InfoBox>
+      </a>
+      <Box>
+        {campaign.maps.map((map) => (
+          <MapEntry key={map.id} map={map} type={type} />
+        ))}
+      </Box>
+    </Stack>
   );
 }
 
-function MapEntry({ map }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const contentClass = map.challenges.length > 0 ? "gb-api-has-content" : "";
+function MapEntry({ map, type }) {
+  const fontSize = map.name.length > 40 ? "12px" : "16px";
   return (
-    <li>
-      <span className={contentClass} onClick={toggle}>
-        {map.name}
-      </span>
-      {isOpen && (
-        <ul>
-          {map.challenges.map((challenge) => (
-            <ChallengeEntry key={challenge.id} challenge={challenge} />
-          ))}
-        </ul>
-      )}
-    </li>
+    <Stack direction="row" spacing={0}>
+      <InfoBox
+        sx={{
+          bgcolor: "black",
+          color: "white",
+          border: "1px solid white",
+          height: map.challenges.length * 50 + "px",
+          p: 1,
+          fontSize: fontSize,
+        }}
+      >
+        <span>{map.name}</span>
+      </InfoBox>
+      <Box>
+        {map.challenges.map((challenge) => (
+          <ChallengeEntry key={challenge.id} challenge={challenge} type={type} />
+        ))}
+      </Box>
+    </Stack>
   );
 }
 
-function ChallengeEntry({ challenge }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const contentClass = challenge.submissions.length > 0 ? "gb-api-has-content" : "";
+function ChallengeEntry({ challenge, type }) {
+  const tier = type === "hard" ? challenge.difficulty.name + " " : "";
+  const subtier =
+    type === "hard" && challenge.difficulty.subtier !== null ? challenge.difficulty.subtier + " " : "";
   const fcAddition = challenge.requires_fc ? "[FC]" : challenge.has_fc ? "[C/FC]" : "[C]";
+  const counter = "(" + challenge.submissions.length + ")";
   const subtierAddition =
     challenge.difficulty.subtier !== null ? " [" + challenge.difficulty.subtier + "]" : "";
 
+  const colors = getDifficultyColors(challenge.difficulty_id);
+
   return (
-    <li>
-      <span className={contentClass} onClick={toggle}>
-        {challenge.objective.name} {fcAddition} - {challenge.difficulty.name}
-        {subtierAddition}
-      </span>
-      {isOpen && (
-        <ul>
-          {challenge.submissions.map((submission) => (
-            <SubmissionEntry key={submission.id} submission={submission} />
-          ))}
-        </ul>
-      )}
-    </li>
+    <Stack direction="row" spacing={0}>
+      <InfoBox
+        sx={{
+          bgcolor: colors.color,
+          color: colors.contrast_color,
+          minWidth: "150px",
+          width: "150px",
+          border: "1px solid white",
+        }}
+      >
+        <span style={{ textTransform: "capitalize" }}>
+          {subtier}
+          {tier}
+          {fcAddition} {counter}
+        </span>
+      </InfoBox>
+      {challenge.submissions.map((submission) => (
+        <SubmissionEntry key={submission.id} submission={submission} />
+      ))}
+    </Stack>
   );
 }
 
 function SubmissionEntry({ submission }) {
   const playerName = submission.player ? submission.player.name : "<NULL>";
   return (
-    <li>
-      <a href={submission.proof_url}>{playerName}</a>
-    </li>
+    <a href={submission.proof_url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+      <InfoBox
+        sx={{
+          bgcolor: !submission.is_fc ? "#ffd966" : "#f9cb9c",
+          color: "primary.main",
+          border: "1px solid gray",
+          width: "150px",
+          minWidth: "150px",
+          px: 1,
+          fontWeight: "bold",
+        }}
+      >
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {playerName}
+        </span>
+      </InfoBox>
+    </a>
   );
 }
+
+const InfoBox = styled(Box)(({ theme }) => ({
+  height: "50px",
+  width: "200px",
+  minWidth: "200px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "start",
+}));

@@ -58,3 +58,28 @@ export const FormOptions = {
     },
   },
 };
+
+export const DIFFICULTY_COLORS = {
+  1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+  2: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+  3: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+  4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000" },
+  5: { color: "#ff9989", group_color: "#ff7b67", contrast_color: "#000000" },
+  6: { color: "#fcb6ab", group_color: "#ff7b67", contrast_color: "#000000" },
+  7: { color: "#ffc874", group_color: "#ffc874", contrast_color: "#000000" },
+  8: { color: "#ffd595", group_color: "#ffc874", contrast_color: "#000000" },
+  9: { color: "#f8dcb2", group_color: "#ffc874", contrast_color: "#000000" },
+  10: { color: "#ffec87", group_color: "#ffec87", contrast_color: "#000000" },
+  11: { color: "#ffebb0", group_color: "#ffec87", contrast_color: "#000000" },
+  12: { color: "#fbf3cf", group_color: "#ffec87", contrast_color: "#000000" },
+  13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
+  14: { color: "#c9ff8d", group_color: "#c9ff8d", contrast_color: "#000000" },
+  15: { color: "#93e69e", group_color: "#93e69e", contrast_color: "#000000" },
+  16: { color: "#8fdeff", group_color: "#8fdeff", contrast_color: "#000000" },
+  17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000" },
+  18: { color: "#ffffff", group_color: "#aaaaaa", contrast_color: "#000000" },
+  19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
+};
+export function getDifficultyColors(id) {
+  return DIFFICULTY_COLORS[id];
+}
