@@ -108,8 +108,8 @@ CREATE TABLE account
  email_verified    boolean NOT NULL DEFAULT false,
  email_verify_code varchar(16) NULL,
  CONSTRAINT account_pkey PRIMARY KEY ( "id" ),
- CONSTRAINT account_claimed_player_id_fkey FOREIGN KEY ( claimed_player_id ) REFERENCES player ( "id" ),
- CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" )
+ CONSTRAINT account_claimed_player_id_fkey FOREIGN KEY ( claimed_player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
+ CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- ====== map ======
@@ -163,6 +163,7 @@ CREATE TABLE submission
  date_created            timestamptz NULL DEFAULT CURRENT_TIMESTAMP,
  is_fc                   boolean NOT NULL DEFAULT false,
  proof_url               text NOT NULL,
+ raw_session_url         text NULL,
  player_notes            text NULL,
  suggested_difficulty_id integer NULL,
  is_verified             boolean NOT NULL DEFAULT false,
@@ -173,10 +174,10 @@ CREATE TABLE submission
  new_challenge_id        integer NULL,
  CONSTRAINT submission_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT submission_challenge_id_fkey FOREIGN KEY ( challenge_id ) REFERENCES challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
- CONSTRAINT submission_new_challenge_id_fkey FOREIGN KEY ( new_challenge_id ) REFERENCES new_challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
+ CONSTRAINT submission_new_challenge_id_fkey FOREIGN KEY ( new_challenge_id ) REFERENCES new_challenge ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT submission_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
- CONSTRAINT submission_suggested_difficulty_id_fkey FOREIGN KEY ( suggested_difficulty_id ) REFERENCES difficulty ( "id" ),
- CONSTRAINT submission_verifier_id_fkey FOREIGN KEY ( verifier_id ) REFERENCES account ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
+ CONSTRAINT submission_suggested_difficulty_id_fkey FOREIGN KEY ( suggested_difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
+ CONSTRAINT submission_verifier_id_fkey FOREIGN KEY ( verifier_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- ====== change ======
@@ -188,11 +189,11 @@ CREATE TABLE change
  map_id       integer NULL,
  challenge_id integer NULL,
  player_id    integer NULL,
- author_id    integer NOT NULL,
+ author_id    integer NULL,
  description  text NOT NULL,
  "date"         timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT change_pkey PRIMARY KEY ( "id" ),
- CONSTRAINT change_author_id_fkey FOREIGN KEY ( author_id ) REFERENCES account ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
+ CONSTRAINT change_author_id_fkey FOREIGN KEY ( author_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT change_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT change_challenge_id_fkey FOREIGN KEY ( challenge_id ) REFERENCES challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT change_map_id_fkey FOREIGN KEY ( map_id ) REFERENCES "map" ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
