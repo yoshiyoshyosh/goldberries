@@ -61,11 +61,11 @@ class Challenge extends DbObject
       $this->is_arbitrary = $arr[$prefix . 'is_arbitrary'] === 't';
   }
 
-  function expand_foreign_keys($DB, $depths = 2, $dont_expand = [])
+  function expand_foreign_keys($DB, $depths = 2, $expand_structure = true)
   {
     $isFromSqlResult = is_array($DB);
 
-    if (!in_array('campaign', $dont_expand) && isset($this->campaign_id)) {
+    if ($expand_structure && isset($this->campaign_id)) {
       if ($isFromSqlResult) {
         $this->campaign = new Campaign();
         $this->campaign->apply_db_data($DB, "campaign_");
@@ -75,33 +75,28 @@ class Challenge extends DbObject
       }
     }
 
-    if (!in_array('map', $dont_expand) && isset($this->map_id)) {
+    if ($expand_structure && isset($this->map_id)) {
       if ($isFromSqlResult) {
         $this->map = new Map();
         $this->map->apply_db_data($DB, "map_");
-        $this->map->expand_foreign_keys($DB, $depths - 1, array('campaign'));
+        $this->map->expand_foreign_keys($DB, $depths - 1);
       } else {
-        $this->map = Map::get_by_id($DB, $this->map_id, $depths - 1, array('campaign'));
+        $this->map = Map::get_by_id($DB, $this->map_id, $depths - 1);
       }
     }
 
-    //Still gotta do these
-    if (!in_array('objective', $dont_expand)) {
-      if ($isFromSqlResult) {
-        $this->objective = new Objective();
-        $this->objective->apply_db_data($DB, "objective_");
-      } else {
-        $this->objective = Objective::get_by_id($DB, $this->objective_id);
-      }
+    if ($isFromSqlResult) {
+      $this->objective = new Objective();
+      $this->objective->apply_db_data($DB, "objective_");
+    } else {
+      $this->objective = Objective::get_by_id($DB, $this->objective_id);
     }
 
-    if (!in_array('difficulty', $dont_expand)) {
-      if ($isFromSqlResult) {
-        $this->difficulty = new Difficulty();
-        $this->difficulty->apply_db_data($DB, "difficulty_");
-      } else {
-        $this->difficulty = Difficulty::get_by_id($DB, $this->difficulty_id);
-      }
+    if ($isFromSqlResult) {
+      $this->difficulty = new Difficulty();
+      $this->difficulty->apply_db_data($DB, "difficulty_");
+    } else {
+      $this->difficulty = Difficulty::get_by_id($DB, $this->difficulty_id);
     }
   }
 
@@ -113,7 +108,7 @@ class Challenge extends DbObject
       return false;
     $this->submissions = $submissions;
     foreach ($this->submissions as $submission) {
-      $submission->expand_foreign_keys($DB, 2, ['challenge']);
+      $submission->expand_foreign_keys($DB, 2, false);
     }
     return true;
   }

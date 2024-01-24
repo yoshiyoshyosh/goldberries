@@ -75,14 +75,14 @@ class Map extends DbObject
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
     if ($depth <= 1)
       return;
 
     $isFromSqlResult = is_array($DB);
 
-    if (!in_array('campaign', $dont_expand) && isset($this->campaign_id)) {
+    if ($expand_structure && isset($this->campaign_id)) {
       if ($isFromSqlResult) {
         $this->campaign = new Campaign();
         $this->campaign->apply_db_data($DB, "campaign_");
@@ -103,7 +103,7 @@ class Map extends DbObject
     foreach ($this->challenges as $challenge) {
       if ($with_submissions)
         $challenge->fetch_submissions($DB);
-      $challenge->expand_foreign_keys($DB, 2, array('map'));
+      $challenge->expand_foreign_keys($DB, 3, false);
     }
     return true;
   }

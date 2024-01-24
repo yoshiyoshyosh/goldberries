@@ -58,16 +58,15 @@ class Account extends DbObject
     if (isset($arr[$prefix . 'email_verify_code']))
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
   }
-
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
     if ($depth <= 1)
       return;
 
-    if (!in_array('player', $dont_expand) && $this->player_id !== null) {
+    if ($this->player_id !== null) {
       $this->player = Player::get_by_id($DB, $this->player_id, $depth - 1);
     }
-    if (!in_array('claimed_player', $dont_expand) && $this->claimed_player_id !== null) {
+    if ($this->claimed_player_id !== null) {
       $this->claimed_player = Player::get_by_id($DB, $this->claimed_player_id, $depth - 1);
     }
   }
@@ -111,6 +110,11 @@ class Account extends DbObject
   static function find_by_email_verify_code($DB, string $email_verify_code)
   {
     return find_in_db($DB, 'Account', "email_verify_code = $1", array($email_verify_code), new Account());
+  }
+
+  static function find_by_player_id($DB, int $player_id)
+  {
+    return find_in_db($DB, 'Account', "player_id = $1", array($player_id), new Account());
   }
 
   // === Utility Functions ===

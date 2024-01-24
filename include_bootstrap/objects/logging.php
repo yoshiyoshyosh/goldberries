@@ -31,7 +31,7 @@ class Logging extends DbObject
       $this->topic = $arr[$prefix . 'topic'];
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
   }
 

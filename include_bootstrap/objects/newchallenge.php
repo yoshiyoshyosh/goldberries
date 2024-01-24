@@ -29,7 +29,7 @@ class NewChallenge extends DbObject
       $this->name = $arr[$prefix . 'name'];
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
   }
 

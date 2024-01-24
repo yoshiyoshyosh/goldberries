@@ -32,7 +32,7 @@ class Objective extends DbObject
       $this->display_name_suffix = $arr[$prefix . 'display_name_suffix'];
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
   }
 

@@ -65,7 +65,7 @@ class Campaign extends DbObject
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = array())
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
   }
 
@@ -79,7 +79,7 @@ class Campaign extends DbObject
     foreach ($this->maps as $map) {
       if ($with_challenges)
         $map->fetch_challenges($DB, $with_submissions);
-      $map->expand_foreign_keys($DB, 2, array('campaign'));
+      $map->expand_foreign_keys($DB, 2, false);
     }
     return true;
   }

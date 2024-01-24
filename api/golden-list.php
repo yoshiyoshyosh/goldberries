@@ -24,11 +24,12 @@ SELECT
   map.url AS map_url,                                                    
   map.date_added AS map_date_added,                                      
   map.is_rejected AS map_is_rejected,                                    
-  map.rejection_reason AS map_rejection_reason,                          
-  map.is_archived AS map_is_archived,                                    
-  map.sort_major AS map_sort_major,                                      
-  map.sort_minor AS map_sort_minor,                                      
-  map.sort_order AS map_sort_order,                                      
+  map.rejection_reason AS map_rejection_reason,
+  map.is_archived AS map_is_archived,
+  map.has_fc AS map_has_fc,
+  map.sort_major AS map_sort_major,
+  map.sort_minor AS map_sort_minor,
+  map.sort_order AS map_sort_order,
   map.author_gb_id AS map_author_gb_id,
   map.author_gb_name AS map_author_gb_name,
 
@@ -60,6 +61,7 @@ SELECT
   submission.date_created AS submission_date_created,
   submission.is_fc AS submission_is_fc,
   submission.proof_url AS submission_proof_url,
+  submission.raw_session_url AS submission_raw_session_url,
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
   submission.is_verified AS submission_is_verified,
@@ -117,6 +119,7 @@ if ($listWhere != "") {
   $where = $where . ($where === "" ? "WHERE " : " AND ") . $listWhere;
 }
 $query = $query . $where;
+$query .= " ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order";
 
 $result = pg_query($DB, $query) or die('Query failed: ' . pg_last_error());
 
@@ -154,7 +157,7 @@ while ($row = pg_fetch_assoc($result)) {
 
   $submission = new Submission();
   $submission->apply_db_data($row, "submission_");
-  $submission->expand_foreign_keys($row, 1, ["challenge"]);
+  $submission->expand_foreign_keys($row, 2, ["challenge"]);
   $challenge->submissions[$submission->id] = $submission;
 }
 

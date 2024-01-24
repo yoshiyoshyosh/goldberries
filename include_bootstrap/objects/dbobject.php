@@ -11,7 +11,7 @@ abstract class DbObject
   abstract function apply_db_data($arr, $prefix = '');
 
   // $DB is either a database connection or an array containing a row of the results of a query
-  abstract function expand_foreign_keys($DB, $depth = 2, $dont_expand = array());
+  abstract function expand_foreign_keys($DB, $depth = 2, $expand_structure = true);
 
   // === Update Functions ===
   function insert($DB)
@@ -36,7 +36,7 @@ abstract class DbObject
   }
 
   // === Find Functions ===
-  static function get_by_id($DB, int $id, int $depth = 2, $dont_expand = array())
+  static function get_by_id($DB, int $id, int $depth = 2, $expand_structure = true)
   {
     $arr = db_fetch_id($DB, static::$table_name, $id);
     if ($arr === false)
@@ -44,12 +44,12 @@ abstract class DbObject
 
     $obj = new static;
     $obj->apply_db_data($arr);
-    $obj->expand_foreign_keys($DB, $depth, $dont_expand);
+    $obj->expand_foreign_keys($DB, $depth, $expand_structure);
     return $obj;
   }
 
   // $id can be an ID, an array of IDs, or "all"
-  static function get_request($DB, $id, int $depth = 2, $dont_expand = array())
+  static function get_request($DB, $id, int $depth = 2, $expand_structure = true)
   {
     $json_arr = array();
     $table = static::$table_name;
@@ -63,7 +63,7 @@ abstract class DbObject
         $obj = new static;
         $obj->apply_db_data($row);
         if ($depth > 1)
-          $obj->expand_foreign_keys($DB, $depth, $dont_expand);
+          $obj->expand_foreign_keys($DB, $depth, $expand_structure);
         $json_arr[] = $obj;
       }
       return $json_arr;
@@ -74,7 +74,7 @@ abstract class DbObject
 
     if (is_array($id)) {
       foreach ($id as $val) {
-        $obj = static::get_by_id($DB, intval($val), $depth, $dont_expand);
+        $obj = static::get_by_id($DB, intval($val), $depth, $expand_structure);
         if ($obj === false) {
           die_json(400, "invalid query: id {$val} does not exist");
         }
@@ -82,7 +82,7 @@ abstract class DbObject
       }
       return $json_arr;
     } else {
-      $obj = static::get_by_id($DB, $id, $depth, $dont_expand);
+      $obj = static::get_by_id($DB, $id, $depth, $expand_structure);
       if ($obj === false) {
         die_json(400, "invalid query: id {$id} does not exist");
       }

@@ -6,6 +6,7 @@ class Submission extends DbObject
 
   public ?DateTime $date_created = null;
   public string $proof_url;
+  public ?string $raw_session_url = null;
   public ?string $player_notes = null;
   public bool $is_verified = false;
   public bool $is_rejected = false;
@@ -23,7 +24,7 @@ class Submission extends DbObject
 
   // Linked Objects
   public ?Challenge $challenge = null;
-  public ?Player $player;
+  public ?Player $player = null;
   public ?Difficulty $suggested_difficulty = null;
   public ?Player $verifier = null;
   public ?NewChallenge $new_challenge = null;
@@ -36,6 +37,7 @@ class Submission extends DbObject
     return array(
       'date_created' => $this->date_created,
       'proof_url' => $this->proof_url,
+      'raw_session_url' => $this->raw_session_url,
       'player_notes' => $this->player_notes,
       'is_verified' => $this->is_verified,
       'is_rejected' => $this->is_rejected,
@@ -61,6 +63,8 @@ class Submission extends DbObject
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
     if (isset($arr[$prefix . 'date_created']))
       $this->date_created = new DateTime($arr[$prefix . 'date_created']);
+    if (isset($arr[$prefix . 'raw_session_url']))
+      $this->raw_session_url = $arr[$prefix . 'raw_session_url'];
     if (isset($arr[$prefix . 'player_notes']))
       $this->player_notes = $arr[$prefix . 'player_notes'];
     if (isset($arr[$prefix . 'suggested_difficulty_id']))
@@ -77,14 +81,14 @@ class Submission extends DbObject
       $this->new_challenge_id = intval($arr[$prefix . 'new_challenge_id']);
   }
 
-  function expand_foreign_keys($DB, $depth = 2, $dont_expand = [])
+  function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
     if ($depth <= 1)
       return;
 
     $isFromSqlResult = is_array($DB);
 
-    if (!in_array('challenge', $dont_expand) && isset($this->challenge_id)) {
+    if ($expand_structure && isset($this->challenge_id)) {
       if ($isFromSqlResult) {
         $this->challenge = new Challenge();
         $this->challenge->apply_db_data($DB, "challenge_");
@@ -93,7 +97,7 @@ class Submission extends DbObject
         $this->challenge = Challenge::get_by_id($DB, $this->challenge_id, $depth - 1);
       }
     }
-    if (!in_array('player', $dont_expand) && isset($this->player_id)) {
+    if (isset($this->player_id)) {
       if ($isFromSqlResult) {
         $this->player = new Player();
         $this->player->apply_db_data($DB, "player_");
@@ -101,7 +105,7 @@ class Submission extends DbObject
         $this->player = Player::get_by_id($DB, $this->player_id);
       }
     }
-    if (!in_array('verifier', $dont_expand) && isset($this->verifier_id)) {
+    if (isset($this->verifier_id)) {
       if ($isFromSqlResult) {
         $this->verifier = new Player();
         $this->verifier->apply_db_data($DB, "verifier_");
@@ -109,7 +113,7 @@ class Submission extends DbObject
         $this->verifier = Player::get_by_id($DB, $this->verifier_id);
       }
     }
-    if (!in_array('suggested_difficulty', $dont_expand) && isset($this->suggested_difficulty_id)) {
+    if (isset($this->suggested_difficulty_id)) {
       if ($isFromSqlResult) {
         $this->suggested_difficulty = new Difficulty();
         $this->suggested_difficulty->apply_db_data($DB, "suggested_difficulty_");
