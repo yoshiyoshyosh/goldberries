@@ -20,7 +20,12 @@ abstract class DbObject
     $id = db_insert($DB, static::$table_name, $arr);
     if ($id === false)
       return false;
-    $this->id = $id;
+
+    $arr = db_fetch_id($DB, static::$table_name, $id);
+    if ($arr === false)
+      return false;
+    $this->apply_db_data($arr);
+
     return true;
   }
 
@@ -102,5 +107,15 @@ abstract class DbObject
   function __toString()
   {
     return "({$this->table_name}, id: {$this->id})";
+  }
+
+  function has_fields_set(array $arr): bool
+  {
+    foreach ($arr as $field) {
+      if (!isset($this->$field)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

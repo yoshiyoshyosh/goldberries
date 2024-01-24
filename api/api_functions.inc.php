@@ -9,7 +9,7 @@ function die_json(int $code, string $why): string
   exit();
 }
 
-////// VALIDATING IDS
+////// VALIDATION
 
 // preg_match returns 1 on match, 0 on no match, false on failure
 // so this will only be true when there is a match
@@ -34,6 +34,20 @@ function is_valid_id_query($arg): bool
     return is_id_strings($arg);
   }
   return is_id_string($arg);
+}
+
+function is_valid_url($url): bool
+{
+  return (bool) preg_match('/^https?:\/\/[^\s\/$.?#].[^\s]*$/i', $url);
+}
+
+////// CHECKS
+
+function check_url($url, $field_name = null)
+{
+  if (!is_valid_url($url)) {
+    die_json(400, $field_name === null ? "invalid url" : "{$field_name} is not a valid url");
+  }
 }
 
 ////// UNIFIED GET FUNCTION
@@ -83,4 +97,20 @@ function api_unified_get($DB, string $table_noesc, $object_skel)
     }
     return $object_skel->clone_for_api($DB);
   }
+}
+
+
+////// PARSE FUNCTIONS
+
+function parse_post_body_as_json()
+{
+  $json = file_get_contents('php://input');
+  if ($json === false) {
+    die_json(400, 'invalid request: no body');
+  }
+  $data = json_decode($json, true);
+  if ($data === null) {
+    die_json(400, 'invalid request: malformed json');
+  }
+  return $data;
 }

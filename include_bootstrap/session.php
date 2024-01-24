@@ -127,7 +127,7 @@ function is_verifier($account = null)
   if ($account == null) {
     return false;
   }
-  return $account->is_verifier === true;
+  return $account->is_verifier === true || $account->is_admin === true;
 }
 
 function is_admin($account = null)
@@ -146,4 +146,17 @@ function is_suspended($account = null)
     return false;
   }
   return $account->is_suspended === true;
+}
+
+function check_access($account, $needs_player = true, $reject_suspended = true)
+{
+  if ($account === null) {
+    die_json(401, "not logged in");
+  }
+  if ($reject_suspended && $account->is_suspended) {
+    die_json(403, "account is suspended");
+  }
+  if ($needs_player && $account->player === null) {
+    die_json(403, "account does not have a player claimed yet");
+  }
 }
