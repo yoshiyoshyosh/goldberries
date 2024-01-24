@@ -29,3 +29,21 @@ Things we have completed, or that are currently in the works:
 You have skills in web development and would like to help us? Join the [Celeste Modded Done Deathless Discord Server](https://discord.gg/GeJvmMycaC) and check out the **#goldberries.net** channel. (There is a thread in that channel where everyone can chat). We are currently looking especially for anyone capable of frontend web design!
 
 Even if you don't have any dev skills, be sure to check out that channel. As soon as we start development on the frontend it will be great to have community feedback quickly available on bigger design choices!
+
+## Project Setup
+
+### Test Environment
+
+- Backend (most recent changes on branch `php-api`)
+  - Postgres server running on default port
+  - PHP extension for postgres enabled
+  - Webserver needs these environment variables set:
+    - `GB_DBNAME <database>`
+    - `GB_DBUSER <user>`
+    - `GB_DBPASS <password>`
+    - `DISCORD_CLIENT_ID <id>`
+    - `DISCORD_CLIENT_SECRET <secret>`
+    - `DEBUG true`
+- Frontend (most recent changes on branch `frontend-react`)
+  - Setup the React project in `/frontend´
+  - Adjust the environment variables in `.env` if either the React app or the backend is mounted to something non-default
