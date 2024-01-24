@@ -20,3 +20,35 @@ export function fetchGoldenList(type, id = null) {
 
   return axios.get("/golden-list.php", { params: data });
 }
+
+export function fetchAllChallenges(isFullGame = false) {
+  const data = {
+    id: "all",
+    is_full_game: isFullGame,
+  };
+  return axios.get("/challenge.php", { params: data });
+}
+
+export function fetchAllCampaigns() {
+  return axios.get("/campaign.php?id=all&maps=true&challenges=true");
+}
+export function fetchAllMapsInCampaign(campaignId) {
+  const data = {
+    id: campaignId,
+    maps: true,
+    challenges: true,
+  };
+  return axios.get("/campaign.php", { params: data });
+}
+
+export function fetchAllChallengesInMap(mapId) {
+  const data = {
+    id: mapId,
+    challenges: true,
+  };
+  return axios.get("/map.php", { params: data });
+}
+
+export function fetchAllDifficulties() {
+  return axios.get("/difficulty.php?id=all");
+}

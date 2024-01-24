@@ -56,6 +56,7 @@ import {
   faList,
   faMailForward,
   faPerson,
+  faPlus,
   faRegistered,
   faSignIn,
   faSignOut,
@@ -70,6 +71,7 @@ import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
+import { PageUserSubmission } from "./pages/UserSubmission";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -105,6 +107,14 @@ const router = createBrowserRouter([
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
       { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
       { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
+      {
+        path: "submit",
+        element: (
+          <ProtectedRoute redirect="submit">
+            <PageUserSubmission />
+          </ProtectedRoute>
+        ),
+      },
       //Catch all
       { path: "*", element: <Page404 /> },
     ],
@@ -204,6 +214,11 @@ export function Layout() {
         },
       ],
     },
+    submit: {
+      name: "Submit A Golden",
+      path: "/submit",
+      icon: <FontAwesomeIcon icon={faPlus} />,
+    },
     notUser: {
       name: "Login",
       path: "/login",
@@ -231,6 +246,7 @@ export function Layout() {
     leftMenu.push(menus.admin);
   }
   if (auth.isLoggedIn) {
+    rightMenu.push(menus.submit);
     rightMenu.push(menus.user);
   } else {
     rightMenu.push(menus.notUser);
@@ -307,7 +323,7 @@ export function Layout() {
         sx={{
           mt: {
             xs: 7,
-            sm: 0,
+            sm: 1,
           },
           mb: 3,
           flexGrow: 1,

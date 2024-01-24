@@ -57,6 +57,12 @@ export const FormOptions = {
       message: "Name can't be longer than 128 characters",
     },
   },
+  UrlRequired: {
+    required: {
+      value: true,
+      message: "URL can't be empty",
+    },
+  },
 };
 
 export const DIFFICULTY_COLORS = {
