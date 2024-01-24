@@ -20,17 +20,18 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
   fetchAllCampaigns,
   fetchAllChallenges,
   fetchAllChallengesInMap,
   fetchAllDifficulties,
   fetchAllMapsInCampaign,
+  postSubmission,
 } from "../util/api";
 import {
   getChallengeName,
-  getChallengeFcAddition,
+  getChallengeFcShort,
   getChallengeObjectiveSuffix,
   getDifficultyName,
   getChallengeFlags,
@@ -38,12 +39,26 @@ import {
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { FormOptions } from "../util/constants";
+import { FormOptions, getDifficultyColors } from "../util/constants";
+import { useAuth } from "./AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 export function PageUserSubmission() {
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [campaign, setCampaign] = useState(null);
   const [map, setMap] = useState(null);
   const [challenge, setChallenge] = useState(null);
+
+  const { mutate: submitRun } = useMutation({
+    mutationFn: (data) => postSubmission(data),
+    onSuccess: (response) => {
+      navigate("/submissions/" + response.data.id);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.error);
+    },
+  });
 
   //Form props
   const form = useForm({
@@ -52,18 +67,17 @@ export function PageUserSubmission() {
       raw_session_url: "",
       player_notes: "",
       is_fc: false,
-      suggested_difficulty_id: "",
+      suggested_difficulty_id: null,
     },
   });
-  const onSubmit = form.handleSubmit(
-    (data) => {
-      console.log("Form data:", data);
-      toast.success("Form valid");
-    },
-    (errors) => {
-      toast.error("Form invalid");
-    }
-  );
+  const onSubmit = form.handleSubmit((data) => {
+    console.log("Form data:", data);
+    submitRun({
+      challenge_id: challenge.id,
+      player_id: auth.user.player.id,
+      ...data,
+    });
+  });
   const errors = form.formState.errors;
 
   const onCampaignSelect = (campaign) => {
@@ -117,14 +131,7 @@ export function PageUserSubmission() {
           <h4 style={{ marginBottom: "0" }}>Select a Challenge</h4>
           <CampaignSelect selected={campaign} setSelected={onCampaignSelect} />
           {campaign && <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} />}
-          {map && (
-            <ChallengeSelect
-              campaign={campaign}
-              map={map}
-              selected={challenge}
-              setSelected={onChallengeSelect}
-            />
-          )}
+          {map && <ChallengeSelect map={map} selected={challenge} setSelected={onChallengeSelect} />}
         </Stack>
         {challenge && (
           <>
@@ -139,23 +146,19 @@ export function PageUserSubmission() {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Difficulty</TableCell>
-                    <TableCell>{getDifficultyName(challenge.difficulty)}</TableCell>
-                  </TableRow>
-                  <TableRow>
                     <TableCell>Flags</TableCell>
                     <TableCell>
-                      {getChallengeFlags(challenge).map((f) => (
-                        <Chip label={f} size="small" />
-                      ))}
+                      <Stack direction="row" gap={1}>
+                        <DifficultyChip difficulty={challenge.difficulty} prefix="Difficulty: " />
+                        {getChallengeFlags(challenge).map((f) => (
+                          <Chip label={f} size="small" />
+                        ))}
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
-            {/* <Divider sx={{ my: 3 }}>
-              <Chip label="Your Submission" size="small" />
-            </Divider> */}
           </>
         )}
         <Divider sx={{ my: 3 }} />
@@ -164,7 +167,7 @@ export function PageUserSubmission() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Proof URL"
+                label="Proof URL*"
                 fullWidth
                 {...form.register("proof_url", FormOptions.UrlRequired)}
                 error={errors.proof_url}
@@ -177,14 +180,14 @@ export function PageUserSubmission() {
             {challenge !== null && challenge.difficulty.id <= 13 && (
               <Grid item xs={12}>
                 <TextField
-                  label="Raw Session URL"
+                  label="Raw Session URL*"
                   fullWidth
                   {...form.register("raw_session_url", FormOptions.UrlRequired)}
                   error={errors.raw_session_url}
                   helperText={errors.raw_session_url?.message}
                 />
                 <FormHelperText>
-                  Raw session recording of the winning run is required for Tier 3+ golden.
+                  Raw session recording of the winning run is required for Tier 3+ goldens.
                 </FormHelperText>
               </Grid>
             )}
@@ -264,8 +267,7 @@ export function ChallengeCombinedSelect({ selected, setSelected, isFullGame = fa
       renderOption={(props, challenge) => {
         return (
           <Stack direction="row" gap={1} {...props}>
-            <b>{challenge.map.campaign.name}:</b> {" " + challenge.map.name}{" "}
-            {getChallengeFcAddition(challenge)}
+            <b>{challenge.map.campaign.name}:</b> {" " + challenge.map.name} {getChallengeFcShort(challenge)}
           </Stack>
         );
       }}
@@ -350,23 +352,17 @@ export function MapSelect({ campaign, selected, setSelected }) {
 }
 
 export function ChallengeSelect({ campaign, map, selected, setSelected }) {
-  const [challenges, setChallenges] = useState([]);
+  const keyFullGame = campaign === undefined ? "campaign" : "map";
+  const targetId = campaign === undefined ? map.id : campaign.id;
   const query = useQuery({
-    queryKey: ["all_challenges", map.id],
-    queryFn: () => fetchAllChallengesInMap(map.id),
-    onSuccess: (data) => {
-      setChallenges(data.data.challenges);
-    },
+    queryKey: ["all_challenges", keyFullGame, targetId],
+    queryFn: () => fetchAllChallengesInMap(targetId),
     onError: (error) => {
       toast.error(error.message);
     },
   });
-
-  useEffect(() => {
-    if (map) {
-      setChallenges(map.challenges);
-    }
-  }, [map]);
+  const challenges = query.data?.data?.challenges ?? [];
+  console.log("Challenges in ChallengeSelect:", challenges, query.data);
 
   const getOptionLabel = (challenge) => {
     return getChallengeName(challenge);
@@ -378,9 +374,6 @@ export function ChallengeSelect({ campaign, map, selected, setSelected }) {
       getOptionKey={(challenge) => challenge.id}
       getOptionLabel={getOptionLabel}
       options={challenges}
-      // groupBy={(challenge) =>
-      //   challenge.map.campaign.name !== challenge.map.name ? challenge.map.campaign.name : "Standalone"
-      // }
       disableListWrap
       value={selected}
       onChange={(event, newValue) => {
@@ -402,14 +395,13 @@ export function DifficultySelect(props) {
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
-    onSuccess: (data) => {
-      setDifficulties(data.data);
-    },
     onError: (error) => {
       toast.error(error.message);
     },
   });
-  const [difficulties, setDifficulties] = useState(query.data?.data ?? []);
+  let difficulties = query.data?.data ?? [];
+  //filter out id 13 (fwg) and 19 (undetermined)
+  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
 
   return (
     <TextField
@@ -429,5 +421,12 @@ export function DifficultySelect(props) {
         </MenuItem>
       ))}
     </TextField>
+  );
+}
+
+function DifficultyChip({ difficulty, prefix = "" }) {
+  const colors = getDifficultyColors(difficulty.id);
+  return (
+    <Chip label={prefix + getDifficultyName(difficulty)} size="small" sx={{ bgcolor: colors.group_color }} />
   );
 }

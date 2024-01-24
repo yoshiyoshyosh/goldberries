@@ -9,12 +9,12 @@
 //   return campaignPre + map.name + objectiveSuffix + fc;
 // }
 
-export function getChallengeFcAddition(challenge) {
+export function getChallengeFcShort(challenge) {
   if (challenge.requires_fc) return "[FC]";
   else if (challenge.has_fc) return "[C/FC]";
   else return "[C]";
 }
-export function getChallengeFcType(challenge) {
+export function getChallengeFcLong(challenge) {
   if (challenge.requires_fc) return "Full Clear";
   else if (challenge.has_fc) return "Regular/Full Clear";
   else return "Regular Clear";
@@ -27,7 +27,7 @@ export function getChallengeObjectiveSuffix(challenge) {
 
 export function getChallengeName(challenge) {
   return (
-    getChallengeFcType(challenge) + ": " + challenge.objective.name + getChallengeObjectiveSuffix(challenge)
+    getChallengeFcLong(challenge) + ": " + challenge.objective.name + getChallengeObjectiveSuffix(challenge)
   );
 }
 
@@ -40,9 +40,10 @@ export function getDifficultyName(difficulty) {
 
 export function getChallengeFlags(challenge) {
   const flags = [];
-  if (challenge.requires_fc) flags.push("Requires FC");
-  else if (challenge.has_fc) flags.push("Has FC");
-  else flags.push("Regular");
-  if (challenge.is_arbitrary) flags.push("Arbitrary");
+  if (challenge.requires_fc) flags.push("Full Clear");
+  else if (challenge.has_fc) flags.push("Clear / Full Clear");
+  else flags.push("Clear");
+  if (challenge.is_arbitrary !== null && (challenge.id_arbitrary || challenge.objective.is_arbitrary))
+    flags.push("Arbitrary");
   return flags;
 }

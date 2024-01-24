@@ -1,5 +1,7 @@
 import axios from "axios";
 
+// ===== GET =====
+
 //type: "hard", "standard", "campaign", "map", "challenge", "player"
 export function fetchGoldenList(type, id = null) {
   const data = {};
@@ -51,4 +53,22 @@ export function fetchAllChallengesInMap(mapId) {
 
 export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
+}
+
+// ===== POST =====
+export function postSubmission(data) {
+  return axios.post("/submission.php", formatDataForApi(data));
+}
+
+export function formatDataForApi(data) {
+  //Loop through all props in data
+  //If prop is a string, trim it. if its empty, set it to null
+
+  for (const prop in data) {
+    if (typeof data[prop] === "string") {
+      data[prop] = data[prop].trim();
+      if (data[prop] === "") data[prop] = null;
+    }
+  }
+  return data;
 }

@@ -13,7 +13,7 @@ import axios from "axios";
 import { API_URL, APP_URL } from "./util/constants";
 import { PageLogs } from "./pages/Logs";
 import { PagePostOAuthLogin } from "./pages/PostOAuthLogin";
-import { Page403, Page404 } from "./pages/ErrorPages";
+import { Page403, Page404, PageNoPlayerClaimed } from "./pages/ErrorPages";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -110,7 +110,7 @@ const router = createBrowserRouter([
       {
         path: "submit",
         element: (
-          <ProtectedRoute redirect="submit">
+          <ProtectedRoute needsPlayerClaimed redirect="submit">
             <PageUserSubmission />
           </ProtectedRoute>
         ),
@@ -136,16 +136,19 @@ export function AuthWrapper({ children }) {
   return <AuthProvider>{children}</AuthProvider>;
 }
 
-function ProtectedRoute({ needsVerifier, needsAdmin, redirect, children }) {
+function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirect, children }) {
   const auth = useAuth();
   if (auth.user === null) {
     return <Navigate to={"/login/" + encodeURIComponent(redirect)} />;
   }
-  if (needsVerifier && !auth.isVerifier) {
-    return <Page403 />;
+  if (needsPlayerClaimed && auth.user.player === null) {
+    return <PageNoPlayerClaimed />;
+  }
+  if (needsVerifier && !auth.isVerifier && !auth.isAdmin) {
+    return <Page403 message="Only verifiers can access this page!" />;
   }
   if (needsAdmin && !auth.isAdmin) {
-    return <Page403 />;
+    return <Page403 message="Only admins can access this page!" />;
   }
   return children;
 }
@@ -245,8 +248,8 @@ export function Layout() {
   if (auth.isAdmin) {
     leftMenu.push(menus.admin);
   }
+  rightMenu.push(menus.submit);
   if (auth.isLoggedIn) {
-    rightMenu.push(menus.submit);
     rightMenu.push(menus.user);
   } else {
     rightMenu.push(menus.notUser);
