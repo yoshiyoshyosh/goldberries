@@ -55,6 +55,14 @@ export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
 
+export function fetchSubmission(id) {
+  const data = {
+    id: id,
+    depth: 4,
+  };
+  return axios.get("/submission.php", { params: data });
+}
+
 // ===== POST =====
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
@@ -68,6 +76,8 @@ export function formatDataForApi(data) {
     if (typeof data[prop] === "string") {
       data[prop] = data[prop].trim();
       if (data[prop] === "") data[prop] = null;
+    } else if (typeof data[prop] === "object") {
+      data[prop] = formatDataForApi(data[prop]);
     }
   }
   return data;

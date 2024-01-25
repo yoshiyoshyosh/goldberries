@@ -53,7 +53,7 @@ export function PageUserSubmission() {
   const { mutate: submitRun } = useMutation({
     mutationFn: (data) => postSubmission(data),
     onSuccess: (response) => {
-      navigate("/submissions/" + response.data.id);
+      navigate("/submission/" + response.data.id);
     },
     onError: (error) => {
       toast.error(error.response.data.error);
@@ -174,7 +174,7 @@ export function PageUserSubmission() {
                 helperText={errors.proof_url?.message}
               />
               <FormHelperText>
-                Upload your proof video to a permanent place, such as YouTube, Billibilli, Twitch Highlight
+                Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight
               </FormHelperText>
             </Grid>
             {challenge !== null && challenge.difficulty.id <= 13 && (
@@ -232,67 +232,16 @@ export function PageUserSubmission() {
   );
 }
 
-export function ChallengeCombinedSelect({ selected, setSelected, isFullGame = false }) {
-  const [challenges, setChallenges] = useState([]);
-  const query = useQuery({
-    queryKey: ["all_challenges", isFullGame],
-    queryFn: () => fetchAllChallenges(isFullGame),
-    onSuccess: (data) => {
-      setChallenges(data.data);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const getOptionLabel = (challenge) => {
-    return getChallengeName(challenge.map.campaign, challenge.map, challenge);
-  };
-
-  return (
-    <Autocomplete
-      fullWidth
-      getOptionKey={(challenge) => challenge.id}
-      getOptionLabel={getOptionLabel}
-      options={challenges}
-      // groupBy={(challenge) =>
-      //   challenge.map.campaign.name !== challenge.map.name ? challenge.map.campaign.name : "Standalone"
-      // }
-      disableListWrap
-      value={selected}
-      onChange={(event, newValue) => {
-        setSelected(newValue);
-      }}
-      renderInput={(params) => <TextField {...params} label="Challenge" />}
-      renderOption={(props, challenge) => {
-        return (
-          <Stack direction="row" gap={1} {...props}>
-            <b>{challenge.map.campaign.name}:</b> {" " + challenge.map.name} {getChallengeFcShort(challenge)}
-          </Stack>
-        );
-      }}
-    />
-  );
-}
-
-export function CampaignSelect({ selected, setSelected }) {
-  const [campaigns, setCampaigns] = useState([]);
+export function CampaignSelect({ selected, setSelected, disabled }) {
   const query = useQuery({
     queryKey: ["all_campaigns"],
     queryFn: () => fetchAllCampaigns(),
-    onSuccess: (data) => {
-      setCampaigns(data.data);
-    },
     onError: (error) => {
       toast.error(error.message);
     },
   });
 
-  useEffect(() => {
-    if (query.data) {
-      setCampaigns(query.data.data);
-    }
-  }, []);
+  const campaigns = query.data?.data ?? [];
 
   const getOptionLabel = (campaign) => {
     return campaign.name + " (by " + campaign.author_gb_name + ")";
@@ -301,6 +250,7 @@ export function CampaignSelect({ selected, setSelected }) {
   return (
     <Autocomplete
       fullWidth
+      disabled={disabled}
       getOptionKey={(campaign) => campaign.id}
       getOptionLabel={getOptionLabel}
       options={campaigns}
@@ -313,24 +263,16 @@ export function CampaignSelect({ selected, setSelected }) {
   );
 }
 
-export function MapSelect({ campaign, selected, setSelected }) {
-  const [maps, setMaps] = useState([]);
+export function MapSelect({ campaign, selected, setSelected, disabled }) {
   const query = useQuery({
     queryKey: ["all_maps", campaign.id],
     queryFn: () => fetchAllMapsInCampaign(campaign.id),
-    onSuccess: (data) => {
-      setMaps(data.data.maps);
-    },
     onError: (error) => {
       toast.error(error.message);
     },
   });
 
-  useEffect(() => {
-    if (campaign) {
-      setMaps(campaign.maps);
-    }
-  }, [campaign]);
+  const maps = query.data?.data?.maps ?? [];
 
   const getOptionLabel = (map) => {
     return map.name;
@@ -339,6 +281,7 @@ export function MapSelect({ campaign, selected, setSelected }) {
   return (
     <Autocomplete
       fullWidth
+      disabled={disabled}
       getOptionKey={(map) => map.id}
       getOptionLabel={getOptionLabel}
       options={maps}
@@ -351,7 +294,7 @@ export function MapSelect({ campaign, selected, setSelected }) {
   );
 }
 
-export function ChallengeSelect({ campaign, map, selected, setSelected }) {
+export function ChallengeSelect({ campaign, map, selected, setSelected, disabled }) {
   const keyFullGame = campaign === undefined ? "campaign" : "map";
   const targetId = campaign === undefined ? map.id : campaign.id;
   const query = useQuery({
@@ -371,6 +314,7 @@ export function ChallengeSelect({ campaign, map, selected, setSelected }) {
   return (
     <Autocomplete
       fullWidth
+      disabled={disabled}
       getOptionKey={(challenge) => challenge.id}
       getOptionLabel={getOptionLabel}
       options={challenges}
@@ -424,9 +368,8 @@ export function DifficultySelect(props) {
   );
 }
 
-function DifficultyChip({ difficulty, prefix = "" }) {
-  const colors = getDifficultyColors(difficulty.id);
-  return (
-    <Chip label={prefix + getDifficultyName(difficulty)} size="small" sx={{ bgcolor: colors.group_color }} />
-  );
+export function DifficultyChip({ difficulty, prefix = "" }) {
+  const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
+  const colors = getDifficultyColors(difficulty?.id);
+  return <Chip label={prefix + text} size="small" sx={{ bgcolor: colors.group_color }} />;
 }

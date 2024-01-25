@@ -9,6 +9,8 @@
 //   return campaignPre + map.name + objectiveSuffix + fc;
 // }
 
+import { jsonDateToJsDate } from "./util";
+
 export function getChallengeFcShort(challenge) {
   if (challenge.requires_fc) return "[FC]";
   else if (challenge.has_fc) return "[C/FC]";
@@ -42,8 +44,13 @@ export function getChallengeFlags(challenge) {
   const flags = [];
   if (challenge.requires_fc) flags.push("Full Clear");
   else if (challenge.has_fc) flags.push("Clear / Full Clear");
-  else flags.push("Clear");
+  else flags.push("Regular Clear");
   if (challenge.is_arbitrary !== null && (challenge.id_arbitrary || challenge.objective.is_arbitrary))
     flags.push("Arbitrary");
   return flags;
+}
+
+export function displayDate(dateObj) {
+  if (dateObj === null || dateObj === undefined) return "<Unknown Date>";
+  return jsonDateToJsDate(dateObj).toLocaleDateString();
 }

@@ -87,5 +87,6 @@ export const DIFFICULTY_COLORS = {
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
 };
 export function getDifficultyColors(id) {
+  if (id === null || id === undefined) return DIFFICULTY_COLORS[19];
   return DIFFICULTY_COLORS[id];
 }

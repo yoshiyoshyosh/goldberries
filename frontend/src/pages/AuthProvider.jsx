@@ -75,6 +75,7 @@ export function AuthProvider({ children }) {
   const isLoggedIn = user !== null;
   const isVerifier = user !== null && user.is_verifier === true;
   const isAdmin = user !== null && user.is_admin === true;
+  const hasVerifierPriv = isVerifier || isAdmin;
 
   return (
     <AuthContext.Provider

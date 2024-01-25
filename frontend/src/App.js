@@ -72,6 +72,7 @@ import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
 import { PageUserSubmission } from "./pages/UserSubmission";
+import { PageViewSubmission } from "./pages/ViewSubmission";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -115,6 +116,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: "submission/:id", element: <PageViewSubmission /> },
       //Catch all
       { path: "*", element: <Page404 /> },
     ],

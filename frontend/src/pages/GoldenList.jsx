@@ -7,6 +7,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { getDifficultyColors } from "../util/constants";
 import { VariableSizeList } from "react-window";
 import "../css/GoldenList.css";
+import { Link } from "react-router-dom";
 
 export function PageGoldenList({ type }) {
   return (
@@ -159,7 +160,8 @@ function ChallengeEntry({ challenge, type }) {
 function SubmissionEntry({ submission }) {
   const playerName = submission.player ? submission.player.name : "<NULL>";
   return (
-    <a href={submission.proof_url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+    <Link to={"/submission/" + submission.id} style={{ textDecoration: "none" }}>
+      {/* <a href={submission.proof_url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}> */}
       <Box
         className="golden-list-info-box submission"
         style={{ backgroundColor: !submission.is_fc ? "#ffd966" : "#f9cb9c" }}
@@ -168,6 +170,7 @@ function SubmissionEntry({ submission }) {
           {playerName}
         </span>
       </Box>
-    </a>
+      {/* </a> */}
+    </Link>
   );
 }
