@@ -28,10 +28,10 @@ CREATE TABLE campaign
  icon_url                 text NULL,
  sort_major_name          varchar(32) NULL,
  sort_major_labels        text NULL,
- sort_major_accent_colors text NULL,
+ sort_major_colors text NULL,
  sort_minor_name          varchar(32) NULL,
  sort_minor_labels        text NULL,
- sort_minor_accent_colors text NULL,
+ sort_minor_colors text NULL,
  author_gb_id             integer NULL,
  author_gb_name           varchar(128) NULL,
  CONSTRAINT campaign_pkey PRIMARY KEY ( "id" )

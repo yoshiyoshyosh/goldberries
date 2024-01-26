@@ -11,10 +11,10 @@ SELECT
   campaign.icon_url AS campaign_icon_url,                                
   campaign.sort_major_name AS campaign_sort_major_name,                  
   campaign.sort_major_labels AS campaign_sort_major_labels,              
-  campaign.sort_major_accent_colors AS campaign_sort_major_accent_colors,
+  campaign.sort_major_colors AS campaign_sort_major_colors,
   campaign.sort_minor_name AS campaign_sort_minor_name,                  
   campaign.sort_minor_labels AS campaign_sort_minor_labels,              
-  campaign.sort_minor_accent_colors AS campaign_sort_minor_accent_colors,
+  campaign.sort_minor_colors AS campaign_sort_minor_colors,
   campaign.author_gb_id AS campaign_author_gb_id,                        
   campaign.author_gb_name AS campaign_author_gb_name,                    
                                                                          
