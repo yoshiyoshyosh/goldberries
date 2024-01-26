@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../hooks/AuthProvider";
 
 export function PageIndex() {
   const auth = useAuth();

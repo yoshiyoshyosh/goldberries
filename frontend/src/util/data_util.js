@@ -54,3 +54,18 @@ export function displayDate(dateObj) {
   if (dateObj === null || dateObj === undefined) return "<Unknown Date>";
   return jsonDateToJsDate(dateObj).toLocaleDateString();
 }
+
+export function getGamebananaEmbedUrl(url) {
+  //urls look like: https://gamebanana.com/mods/409812
+  if (!url.startsWith("https://gamebanana.com/mods/")) {
+    return null;
+  }
+  const split = url.split("/");
+  if (split.length !== 5) {
+    return null;
+  }
+  const id = split[4];
+
+  //Make the embed url: https://gamebanana.com/mods/embeddables/<id>?type=medium
+  return "https://gamebanana.com/mods/embeddables/" + id + "?type=medium";
+}

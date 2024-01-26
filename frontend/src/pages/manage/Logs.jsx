@@ -1,9 +1,9 @@
 import { useDebounce } from "@uidotdev/usehooks";
-import { useLocalStorage } from "../hooks/useStorage";
+import { useLocalStorage } from "../../hooks/useStorage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../../hooks/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -28,7 +28,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import { jsonDateToJsDate } from "../util/util";
+import { jsonDateToJsDate } from "../../util/util";
 
 export function PageLogs() {
   const auth = useAuth();

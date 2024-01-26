@@ -1,5 +1,5 @@
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../hooks/AuthProvider";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormOptions } from "../util/constants";

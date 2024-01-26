@@ -55,6 +55,15 @@ export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
 
+export function fetchChallenge(id, submissions = true) {
+  const data = {
+    id: id,
+    depth: 3,
+    submissions: submissions,
+  };
+  return axios.get("/challenge.php", { params: data });
+}
+
 export function fetchSubmission(id) {
   const data = {
     id: id,

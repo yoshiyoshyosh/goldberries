@@ -140,16 +140,18 @@ function ChallengeEntry({ challenge, type }) {
 
   return (
     <Stack direction="row" spacing={0}>
-      <Box
-        className="golden-list-info-box challenge"
-        style={{ backgroundColor: colors.color, color: colors.contrast_color }}
-      >
-        <span style={{ textTransform: "capitalize" }}>
-          {subtier}
-          {tier}
-          {fcAddition} {counter}
-        </span>
-      </Box>
+      <Link to={"/challenge/" + challenge.id} style={{ textDecoration: "none" }}>
+        <Box
+          className="golden-list-info-box challenge"
+          style={{ backgroundColor: colors.color, color: colors.contrast_color }}
+        >
+          <span style={{ textTransform: "capitalize" }}>
+            {subtier}
+            {tier}
+            {fcAddition} {counter}
+          </span>
+        </Box>
+      </Link>
       {challenge.submissions.map((submission) => (
         <SubmissionEntry key={submission.id} submission={submission} />
       ))}

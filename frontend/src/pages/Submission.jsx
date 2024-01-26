@@ -20,13 +20,14 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../hooks/AuthProvider";
 import { errorToast, jsonDateToJsDate } from "../util/util";
-import { CampaignSelect, ChallengeSelect, DifficultyChip, MapSelect } from "./UserSubmission";
+import { CampaignSelect, ChallengeSelect, DifficultyChip, MapSelect } from "./Submit";
 import { useEffect, useState } from "react";
 import { displayDate, getChallengeFlags, getChallengeName } from "../util/data_util";
+import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 
-export function PageViewSubmission({}) {
+export function PageSubmission({}) {
   const { id } = useParams();
 
   return (
@@ -119,6 +120,12 @@ export function SubmissionDisplay({ id, onDelete }) {
   if ((!isOwnSubmission && !isVerifier) || true) {
     return (
       <Box>
+        <GoldberriesBreadcrumbs
+          campaign={submission.challenge.map.campaign}
+          map={submission.challenge.map}
+          challenge={submission.challenge}
+          submission={submission}
+        />
         <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
           <Grid item xs={12} sm="auto">
             <Typography variant="h4">Submission</Typography>

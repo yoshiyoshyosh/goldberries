@@ -40,7 +40,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { FormOptions, getDifficultyColors } from "../util/constants";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 export function PageUserSubmission() {

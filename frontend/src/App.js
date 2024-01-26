@@ -8,10 +8,10 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PageLogin } from "./pages/Login";
-import { AuthProvider, useAuth } from "./pages/AuthProvider";
+import { AuthProvider, useAuth } from "./hooks/AuthProvider";
 import axios from "axios";
 import { API_URL, APP_URL } from "./util/constants";
-import { PageLogs } from "./pages/Logs";
+import { PageLogs } from "./pages/manage/Logs";
 import { PagePostOAuthLogin } from "./pages/PostOAuthLogin";
 import { Page403, Page404, PageNoPlayerClaimed } from "./pages/ErrorPages";
 
@@ -71,8 +71,9 @@ import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
-import { PageUserSubmission } from "./pages/UserSubmission";
-import { PageViewSubmission } from "./pages/ViewSubmission";
+import { PageUserSubmission } from "./pages/Submit";
+import { PageSubmission } from "./pages/Submission";
+import { PageChallenge } from "./pages/Challenge";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -116,7 +117,8 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: "submission/:id", element: <PageViewSubmission /> },
+      { path: "submission/:id", element: <PageSubmission /> },
+      { path: "challenge/:id", element: <PageChallenge /> },
       //Catch all
       { path: "*", element: <Page404 /> },
     ],
