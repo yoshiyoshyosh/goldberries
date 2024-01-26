@@ -95,9 +95,9 @@ abstract class DbObject
     }
   }
 
-  function fetch_list($DB, $id_col, $class)
+  function fetch_list($DB, $id_col, $class, string $whereAddition = null, $orderBy = "ORDER BY id")
   {
-    $arr = db_fetch_assoc($DB, $class::$table_name, $id_col, $this->id, $class);
+    $arr = db_fetch_assoc($DB, $class::$table_name, $id_col, $this->id, $class, $whereAddition, $orderBy);
     if ($arr === false)
       return false;
     return $arr;
