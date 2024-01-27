@@ -45,30 +45,35 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       //User are allowed to: Update their email and password
       //Unlink their discord account (discord_id = null)
       //Set the claimed_player_id to an unclaimed player's id, if previously null
-
       if ($id !== $account->id) {
         die_json(403, "Not authorized");
       }
 
-      if (isset($request['email'])) {
-        $account->email = $request['email'];
+      $changes = "";
 
+      if (isset($request['email'])) {
+        $changes .= "email ({$account->email} -> {$request['email']}), ";
+        $account->email = $request['email'];
       }
 
       if (isset($request['password'])) {
+        $changes .= "password, ";
         $account->password = password_hash($request['password'], PASSWORD_DEFAULT);
-
       }
 
       if (isset($request['unlink_discord']) && $request['unlink_discord'] === true) {
         if ($account->email === null && $account->password === null) {
           die_json(400, "Cannot unlink discord account without email and password");
         }
+        $changes .= "discord_id ({$account->discord_id} -> null), ";
         $account->discord_id = null;
-
       }
 
       if (isset($request['claimed_player_id'])) {
+        if ($account->claimed_player_id !== null) {
+          die_json(400, "Cannot change claimed_player_id");
+        }
+
         $claimed_player_id = intval($request['claimed_player_id']);
         $player = Player::get_by_id($DB, $claimed_player_id);
         if ($player === false) {
@@ -83,9 +88,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
           die_json(409, "Another account has made a claim on this player that is currently under review. If you believe this is an error, please contact a team member!");
         }
         $account->claimed_player_id = $claimed_player_id;
+        $changes .= "claimed_player_id (null -> {$claimed_player_id}, player.name '{$player->name}'), ";
       }
 
-      $account->update($DB);
+      if ($account->update($DB) === false) {
+        log_error("Failed to update {$account} in database with changes: {$changes}", "Account");
+        die_json(500, "Failed to update account in database");
+      }
+      log_info("Updated {$account} in database with changes: {$changes}", "Account");
       $account->remove_sensitive_info();
       api_write($account);
       exit();

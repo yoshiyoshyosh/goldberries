@@ -23,7 +23,7 @@ if (isset($_GET['verify'])) {
     die_json(500, "Failed to update database");
   }
 
-  log_info("User verified email for Account({$account->id})", "Login");
+  log_info("User verified email for {$account}", "Login");
 
   http_response_code(200);
   exit();
@@ -62,7 +62,7 @@ if ($account->insert($DB) === false) {
   die_json(500, "Failed to create account");
 }
 
-log_info("User registered Account({$account->id}) via email ({$account->email})", "Login");
+log_info("User registered {$account} via email ({$account->email})", "Login");
 //Send a confirmation email with code
 
 

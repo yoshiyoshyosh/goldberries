@@ -70,9 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die_json(500, "Failed to insert player into database");
   }
 
+  log_info("Created {$player} for {$account}", "Account");
+
   $account->player_id = $player->id;
   $account->claimed_player_id = null;
   if ($account->update($DB) === false) {
+    log_error("Failed to update {$account} in database after creating {$player}", "Account");
     die_json(500, "Failed to update account in database");
   }
 
