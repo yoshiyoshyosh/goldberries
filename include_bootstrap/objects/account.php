@@ -112,6 +112,11 @@ class Account extends DbObject
     return find_in_db($DB, 'Account', "email_verify_code = $1", array($email_verify_code), new Account());
   }
 
+  static function find_by_claimed_player_id($DB, int $player_id)
+  {
+    return find_in_db($DB, 'Account', "claimed_player_id = $1", array($player_id), new Account());
+  }
+
   static function find_by_player_id($DB, int $player_id)
   {
     return find_in_db($DB, 'Account', "player_id = $1", array($player_id), new Account());
@@ -127,7 +132,7 @@ class Account extends DbObject
   function remove_sensitive_info()
   {
     $this->password = null;
-    $this->discord_id = null;
+    // $this->discord_id = null;
     $this->session_token = null;
     $this->session_created = null;
     $this->email_verify_code = null;
