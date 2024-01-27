@@ -157,9 +157,6 @@ export function ChallengeSubmissionTable({ challenge }) {
             <TableCell width={1} align="center" sx={displayNoneOnMobile}>
               <FontAwesomeIcon icon={faComment} />
             </TableCell>
-            <TableCell width={1} align="center">
-              Submission
-            </TableCell>
             <TableCell width={1} align="center" sx={displayNoneOnMobile}>
               <FontAwesomeIcon icon={faYoutube} />
             </TableCell>
@@ -190,16 +187,16 @@ export function ChallengeSubmissionTable({ challenge }) {
 export function ChallengeSubmissionRow({ submission, index }) {
   return (
     <TableRow>
-      <TableCell
-        width={1}
-        sx={{
-          pr: 0,
-        }}
-      >
+      <TableCell width={1} sx={{ pr: 0 }}>
         #{index + 1}
       </TableCell>
       <TableCell>
-        <Link to={"/player/" + submission.player.id}>{submission.player.name}</Link>
+        <Stack direction="row" gap={1}>
+          <Link to={"/submission/" + submission.id}>
+            <FontAwesomeIcon icon={faBook} />
+          </Link>
+          <Link to={"/player/" + submission.player.id}>{submission.player.name}</Link>
+        </Stack>
       </TableCell>
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
         {submission.player_notes && (
@@ -207,11 +204,6 @@ export function ChallengeSubmissionRow({ submission, index }) {
             <FontAwesomeIcon icon={faComment} />
           </Tooltip>
         )}
-      </TableCell>
-      <TableCell width={1} align="center">
-        <Link to={"/submission/" + submission.id}>
-          <FontAwesomeIcon icon={faBook} />
-        </Link>
       </TableCell>
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
         <Link to={submission.proof_url} target="_blank">

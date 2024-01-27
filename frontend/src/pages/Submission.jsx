@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchSubmission, postSubmission } from "../util/api";
 import { toast } from "react-toastify";
 import {
@@ -8,6 +8,11 @@ import {
   Container,
   Divider,
   Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
   Paper,
   Stack,
   Table,
@@ -16,16 +21,25 @@ import {
   TableContainer,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faComment,
+  faShield,
+  faSpinner,
+  faUser,
+  faUserAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import { errorToast, jsonDateToJsDate } from "../util/util";
 import { CampaignSelect, ChallengeSelect, DifficultyChip, MapSelect } from "./Submit";
 import { useEffect, useState } from "react";
-import { displayDate, getChallengeFlags, getChallengeName } from "../util/data_util";
+import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 export function PageSubmission({}) {
   const { id } = useParams();
@@ -43,9 +57,13 @@ export function PageSubmission({}) {
       <Paper
         elevation={2}
         sx={{
-          p: {
+          px: {
             xs: 2,
             sm: 5,
+          },
+          py: {
+            xs: 2,
+            sm: 3,
           },
         }}
       >
@@ -126,6 +144,7 @@ export function SubmissionDisplay({ id, onDelete }) {
           challenge={submission.challenge}
           submission={submission}
         />
+        <Divider sx={{ my: 2 }}></Divider>
         <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
           <Grid item xs={12} sm="auto">
             <Typography variant="h4">Submission</Typography>
@@ -134,17 +153,11 @@ export function SubmissionDisplay({ id, onDelete }) {
             <Typography>by {submission.player.name}</Typography>
           </Grid>
           <Grid item xs={6} sm="auto">
-            {submission.is_verified && <Chip label="Verified" color="success" />}
-            {submission.is_rejected && <Chip label="Rejected" color="error" />}
-            {!submission.is_verified && !submission.is_rejected && (
-              <Chip label="Pending Verification" color="warning" />
-            )}
+            <VerificationStatusChip isVerified={submission.is_verified} isRejected={submission.is_rejected} />
           </Grid>
         </Grid>
         <FullChallengeDisplay challenge={submission.challenge} />
-        <Divider sx={{ my: 2 }}>
-          <Chip label="Details" size="small" />
-        </Divider>
+        <Divider sx={{ my: 2 }}>{/* <Chip label="Details" size="small" /> */}</Divider>
         <SubmissionDetailsDisplay submission={submission} />
       </Box>
     );
@@ -223,32 +236,81 @@ export function FullChallengeDisplay({ challenge }) {
 }
 
 export function SubmissionDetailsDisplay({ submission }) {
+  const verifier = getSubmissionVerifier(submission);
   return (
-    <Box gap={2}>
-      <Typography variant="h4">Submission Details</Typography>
-      <Typography variant="h6">Submitted on: {displayDate(submission.date_created)}</Typography>
-      <Typography variant="h6">
-        Proof Video:{" "}
-        <a href={submission.proof_url} target="_blank" rel="noreferrer">
-          {submission.proof_url}
-        </a>
-      </Typography>
-      <Typography variant="h6">Notes:</Typography>
-      <TextField fullWidth multiline rows={2} value={submission.notes} disabled />
-      <Typography variant="h6">
-        Suggested Difficulty: <DifficultyChip difficulty={submission.suggested_difficulty} />
-      </Typography>
+    <Grid container>
+      <Grid item xs={12} sm={6}>
+        <List dense>
+          <ListSubheader>Submission Details</ListSubheader>
+          <ListItem>
+            <ListItemIcon>
+              <FontAwesomeIcon icon={faClock} />
+            </ListItemIcon>
+            <ListItemText primary={displayDate(submission.date_created)} secondary="Submitted" />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <FontAwesomeIcon icon={faYoutube} />
+            </ListItemIcon>
+            <ListItemText
+              primary={<Link to={submission.proof_url}>{submission.proof_url}</Link>}
+              secondary="Proof"
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <FontAwesomeIcon icon={faShield} />
+            </ListItemIcon>
+            <ListItemText
+              primary={<DifficultyChip difficulty={submission.suggested_difficulty} />}
+              secondary="Suggested Difficulty"
+            />
+          </ListItem>
+        </List>
+      </Grid>
       {submission.is_verified || submission.is_rejected ? (
-        <>
-          <Divider sx={{ my: 2 }}>
-            <Chip label="Verification" size="small" />
-          </Divider>
-          <Typography variant="h6">Verified By: {submission.verifier?.name ?? "Molden Team"}</Typography>
-          <Typography variant="h6">On: {displayDate(submission.date_verified)}</Typography>
-          <Typography variant="h6">Verifier Notes:</Typography>
-          <TextField fullWidth multiline rows={2} value={submission.verifier_notes} disabled />
-        </>
+        <Grid item xs={12} sm={6}>
+          <List dense>
+            <ListSubheader>Verification Details</ListSubheader>
+            <ListItem>
+              <ListItemIcon>
+                <FontAwesomeIcon icon={faClock} />
+              </ListItemIcon>
+              <ListItemText primary={displayDate(submission.date_verified)} secondary="Verified" />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <FontAwesomeIcon icon={faComment} />
+              </ListItemIcon>
+              <ListItemText primary={submission.verifier_notes ?? "-"} secondary="Verifier Notes" />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <FontAwesomeIcon icon={faUser} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  verifier.id ? (
+                    <Link to={"/player/" + verifier.id}>{verifier.name}</Link>
+                  ) : (
+                    <>{verifier.name}</>
+                  )
+                }
+                secondary="Verifier"
+              />
+            </ListItem>
+          </List>
+        </Grid>
       ) : null}
-    </Box>
+    </Grid>
   );
+}
+
+export function VerificationStatusChip({ isVerified, isRejected, prefix = "" }) {
+  if (isVerified) {
+    return <Chip label={prefix + "Verified"} color="success" />;
+  } else if (isRejected) {
+    return <Chip label={prefix + "Rejected"} color="error" />;
+  }
+  return <Chip label={prefix + "Pending"} color="warning" />;
 }

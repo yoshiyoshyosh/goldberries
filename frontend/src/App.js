@@ -56,6 +56,7 @@ import {
   faList,
   faMailForward,
   faPerson,
+  faPlayCircle,
   faPlus,
   faRegistered,
   faSignIn,
@@ -74,6 +75,8 @@ import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
 import { PageUserSubmission } from "./pages/Submit";
 import { PageSubmission } from "./pages/Submission";
 import { PageChallenge } from "./pages/Challenge";
+import { PageMap } from "./pages/Map";
+import { PageClaimPlayer } from "./pages/ClaimPlayer";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -97,7 +100,6 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <PageIndex /> },
-      { path: "login/:redirect?", element: <PageLogin /> },
       {
         path: "logs",
         element: (
@@ -106,9 +108,16 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: "login/:redirect?", element: <PageLogin /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
-      { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
-      { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
+      {
+        path: "claim-player",
+        element: (
+          <ProtectedRoute redirect="claim-player">
+            <PageClaimPlayer />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "submit",
         element: (
@@ -117,8 +126,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+
+      { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
+      { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
+
       { path: "submission/:id", element: <PageSubmission /> },
       { path: "challenge/:id", element: <PageChallenge /> },
+      { path: "map/:id", element: <PageMap /> },
+
       //Catch all
       { path: "*", element: <Page404 /> },
     ],
@@ -208,10 +223,11 @@ export function Layout() {
       ],
     },
     user: {
-      name: "My Account",
+      name: auth.hasPlayerClaimed ? auth.user.player.name : "My Account",
       icon: <FontAwesomeIcon icon={faUser} />,
       items: [
         { name: "My Profile", path: "/my-golden-list", icon: <FontAwesomeIcon icon={faUserAlt} /> },
+        { name: "Claim A Player", path: "/claim-player", icon: <FontAwesomeIcon icon={faPlayCircle} /> },
         {
           name: "Logout",
           action: () => {
@@ -485,7 +501,12 @@ function DesktopItem({ item }) {
       startIcon={item.icon}
       variant="text"
       color="inherit"
-      sx={{ px: 1 }}
+      sx={{
+        px: 1,
+        "&:hover": {
+          backgroundColor: "#555",
+        },
+      }}
     >
       {item.name}
     </Button>
@@ -503,7 +524,15 @@ function DesktopSubMenu({ name, icon, items }) {
             {...bindHover(popupState)}
             startIcon={icon}
             endIcon={<FontAwesomeIcon size="2xs" icon={faChevronDown} />}
-            sx={{ px: 2 }}
+            sx={{
+              px: 2,
+              "&:hover": {
+                backgroundColor: "#555",
+              },
+              "&[aria-controls]": {
+                backgroundColor: "#555",
+              },
+            }}
           >
             {name}
           </Button>

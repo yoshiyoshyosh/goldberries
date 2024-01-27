@@ -112,12 +112,14 @@ function MapEntry({ map, type }) {
   const fontSize = map.name.length > 40 ? "12px" : "16px";
   return (
     <Stack direction="row" spacing={0}>
-      <Box
-        className="golden-list-info-box map"
-        style={{ height: map.challenges.length * 50 + "px", fontSize: fontSize }}
-      >
-        <span>{map.name}</span>
-      </Box>
+      <Link to={"/map/" + map.id} style={{ textDecoration: "none" }}>
+        <Box
+          className="golden-list-info-box map"
+          style={{ height: map.challenges.length * 50 + "px", fontSize: fontSize }}
+        >
+          <span>{map.name}</span>
+        </Box>
+      </Link>
       <Box>
         {map.challenges.map((challenge) => (
           <ChallengeEntry key={challenge.id} challenge={challenge} type={type} />

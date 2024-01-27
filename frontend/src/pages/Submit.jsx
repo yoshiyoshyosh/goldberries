@@ -368,8 +368,8 @@ export function DifficultySelect(props) {
   );
 }
 
-export function DifficultyChip({ difficulty, prefix = "" }) {
+export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
   const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
   const colors = getDifficultyColors(difficulty?.id);
-  return <Chip label={prefix + text} size="small" sx={{ bgcolor: colors.group_color }} />;
+  return <Chip label={prefix + text} size="small" {...props} sx={{ ...sx, bgcolor: colors.group_color }} />;
 }

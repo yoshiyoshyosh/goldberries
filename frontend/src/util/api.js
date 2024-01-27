@@ -24,57 +24,87 @@ export function fetchGoldenList(type, id = null) {
 }
 
 export function fetchAllChallenges(isFullGame = false) {
-  const data = {
-    id: "all",
-    is_full_game: isFullGame,
-  };
-  return axios.get("/challenge.php", { params: data });
+  return axios.get("/challenge.php", {
+    params: {
+      id: "all",
+      is_full_game: isFullGame,
+    },
+  });
 }
 
 export function fetchAllCampaigns() {
   return axios.get("/campaign.php?id=all&maps=true&challenges=true");
 }
 export function fetchAllMapsInCampaign(campaignId) {
-  const data = {
-    id: campaignId,
-    maps: true,
-    challenges: true,
-  };
-  return axios.get("/campaign.php", { params: data });
+  return axios.get("/campaign.php", {
+    params: {
+      id: campaignId,
+      maps: true,
+      challenges: true,
+    },
+  });
 }
 
 export function fetchAllChallengesInMap(mapId) {
-  const data = {
-    id: mapId,
-    challenges: true,
-  };
-  return axios.get("/map.php", { params: data });
+  return axios.get("/map.php", {
+    params: {
+      id: mapId,
+      challenges: true,
+    },
+  });
 }
 
 export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
 
+export function fetchAllPlayers() {
+  return axios.get("/player.php", { params: { id: "all" } });
+}
+export function fetchPlayerList(group) {
+  return axios.get("/player.php", { params: { group: group } });
+}
+
+export function fetchMap(id, challenges = true, submission = true) {
+  return axios.get("/map.php", {
+    params: {
+      id: id,
+      challenges: challenges,
+      submissions: submission,
+    },
+  });
+}
+
 export function fetchChallenge(id, submissions = true) {
-  const data = {
-    id: id,
-    depth: 3,
-    submissions: submissions,
-  };
-  return axios.get("/challenge.php", { params: data });
+  return axios.get("/challenge.php", {
+    params: {
+      id: id,
+      depth: 3,
+      submissions: submissions,
+    },
+  });
 }
 
 export function fetchSubmission(id) {
-  const data = {
-    id: id,
-    depth: 4,
-  };
-  return axios.get("/submission.php", { params: data });
+  return axios.get("/submission.php", {
+    params: {
+      id: id,
+      depth: 4,
+    },
+  });
 }
 
 // ===== POST =====
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
+}
+
+export function postPlayer(data) {
+  return axios.post("/player.php", formatDataForApi(data));
+}
+
+export function updateAccount(data) {
+  return axios.post("/account.php", formatDataForApi(data));
 }
 
 export function formatDataForApi(data) {
