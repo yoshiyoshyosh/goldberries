@@ -104,8 +104,7 @@ class Player extends DbObject
       player.* 
     FROM player 
     LEFT JOIN account a ON a.player_id = player.id
-    LEFT JOIN account c ON c.claimed_player_id = player.id
-    WHERE a.id IS NULL AND c.id IS NULL ORDER BY player.id
+    WHERE a.id IS NULL ORDER BY player.id
     ";
     $result = pg_query($DB, $query);
     if ($result === false) {
