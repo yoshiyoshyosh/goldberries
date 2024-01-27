@@ -74,14 +74,14 @@ abstract class DbObject
       return $json_arr;
     }
     if (!is_valid_id_query($id)) {
-      die_json(400, 'invalid query: invalid or missing id');
+      die_json(400, 'Invalid or missing ID');
     }
 
     if (is_array($id)) {
       foreach ($id as $val) {
         $obj = static::get_by_id($DB, intval($val), $depth, $expand_structure);
         if ($obj === false) {
-          die_json(400, "invalid query: id {$val} does not exist");
+          die_json(400, "ID {$val} does not exist");
         }
         $json_arr[] = $obj;
       }
@@ -89,7 +89,7 @@ abstract class DbObject
     } else {
       $obj = static::get_by_id($DB, $id, $depth, $expand_structure);
       if ($obj === false) {
-        die_json(400, "invalid query: id {$id} does not exist");
+        die_json(400, "ID {$id} does not exist");
       }
       return $obj;
     }

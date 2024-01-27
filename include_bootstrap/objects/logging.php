@@ -7,7 +7,7 @@ class Logging extends DbObject
   public string $message;
   public string $level;
   public $topic = null; /* string */
-  public DateTime $date;
+  public JsonDateTime $date;
 
   // === Abstract Functions ===
   function get_field_set()
@@ -25,7 +25,7 @@ class Logging extends DbObject
     $this->id = intval($arr[$prefix . 'id']);
     $this->message = $arr[$prefix . 'message'];
     $this->level = $arr[$prefix . 'level'];
-    $this->date = new DateTime($arr[$prefix . 'date']);
+    $this->date = new JsonDateTime($arr[$prefix . 'date']);
 
     if (isset($arr[$prefix . 'topic']))
       $this->topic = $arr[$prefix . 'topic'];

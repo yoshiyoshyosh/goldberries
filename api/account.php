@@ -29,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 // Post Request
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-  $json = parse_post_body_as_json();
-  $reqAccount = new Account();
-  $reqAccount->apply_db_data($json);
+  $request = parse_post_body_as_json();
 
-  if (isset($json['id'])) {
+  if (isset($request['id'])) {
+    $id = intval($request['id']);
+
     //Update request
     if (is_admin($account)) {
 
@@ -46,24 +46,31 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       //Unlink their discord account (discord_id = null)
       //Set the claimed_player_id to an unclaimed player's id, if previously null
 
-      if ($reqAccount->id !== $account->id) {
+      if ($id !== $account->id) {
         die_json(403, "Not authorized");
       }
 
-      if ($json['email']) {
-        $account->email = $json['email'];
+      if (isset($request['email'])) {
+        $account->email = $request['email'];
 
-      } else if ($json['password']) {
-        $account->password = password_hash($json['password'], PASSWORD_DEFAULT);
+      }
 
-      } else if ($json['discord_id'] === null) {
+      if (isset($request['password'])) {
+        $account->password = password_hash($request['password'], PASSWORD_DEFAULT);
+
+      }
+
+      if (isset($request['unlink_discord']) && $request['unlink_discord'] === true) {
         if ($account->email === null && $account->password === null) {
           die_json(400, "Cannot unlink discord account without email and password");
         }
         $account->discord_id = null;
 
-      } else if ($json['claimed_player_id']) {
-        $player = Player::get_by_id($DB, intval($json['claimed_player_id']));
+      }
+
+      if (isset($request['claimed_player_id'])) {
+        $claimed_player_id = intval($request['claimed_player_id']);
+        $player = Player::get_by_id($DB, $claimed_player_id);
         if ($player === false) {
           die_json(400, "Invalid claimed_player_id");
         }
@@ -73,11 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
         $openClaim = Account::find_by_claimed_player_id($DB, $player->id);
         if ($openClaim !== false && count($openClaim) > 0) {
-          die_json(400, "Player is currently being claimed by another account");
+          die_json(409, "Another account has made a claim on this player that is currently under review. If you believe this is an error, please contact a team member!");
         }
-        $account->claimed_player_id = intval($json['claimed_player_id']);
-      } else {
-        die_json(400, "Missing parameter");
+        $account->claimed_player_id = $claimed_player_id;
       }
 
       $account->update($DB);

@@ -117,7 +117,10 @@ if (isset($_GET['hard'])) {
 $query = $query . $where;
 $query .= " ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, challenge.difficulty_id, submission.id";
 
-$result = pg_query($DB, $query) or die('Query failed: ' . pg_last_error());
+$result = pg_query($DB, $query);
+if (!$result) {
+  die_json(500, "Failed to query database");
+}
 
 $campaigns = array(); //dictionary id -> campaign
 

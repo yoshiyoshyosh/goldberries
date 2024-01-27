@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   $group = $_REQUEST['group'] ?? null;
   if ($group === null) {
-    die_json(400, "missing paramter 'group'");
+    die_json(400, "Missing paramter 'group'");
   }
 
   if ($group === "unclaimed") {
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   $players = Player::find_by_group($DB, $group);
   if ($players === false) {
-    die_json(400, "invalid group");
+    die_json(400, "Invalid group");
   }
   api_write($players);
 }
@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die_json(401, "Not logged in");
   }
 
-  $json = parse_post_body_as_json();
+  $request = parse_post_body_as_json();
   $player = new Player();
-  $player->apply_db_data($json);
+  $player->apply_db_data($request);
 
-  if (isset($json['id'])) {
+  if (isset($request['id'])) {
     //Update request
     die_json(400, "Not yet implemented");
   }
@@ -58,12 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($account->player_id !== null) {
     die_json(400, "Account already has a player");
   }
-  if (!isset($json['name'])) {
-    die_json(400, "missing parameter 'name'");
+  if (!isset($request['name'])) {
+    die_json(400, "Missing parameter 'name'");
   }
   $player->name = trim($player->name);
   if (Player::name_exists($DB, $player->name)) {
-    die_json(400, "player name is already taken");
+    die_json(400, "Player name is already taken");
   }
 
   if ($player->insert($DB) === false) {

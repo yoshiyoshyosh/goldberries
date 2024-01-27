@@ -60,3 +60,12 @@ function to_string_null_check($value)
 {
   return $value === null ? "NULL" : $value . "";
 }
+
+
+class JsonDateTime extends \DateTime implements \JsonSerializable
+{
+  public function jsonSerialize()
+  {
+    return $this->format("c");
+  }
+}

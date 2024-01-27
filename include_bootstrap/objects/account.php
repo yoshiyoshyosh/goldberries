@@ -10,8 +10,8 @@ class Account extends DbObject
   public ?string $password = null;
   public ?string $discord_id = null;
   public ?string $session_token = null;
-  public ?DateTime $session_created = null;
-  public ?DateTime $date_created;
+  public ?JsonDateTime $session_created = null;
+  public ?JsonDateTime $date_created;
   public bool $is_verifier = false;
   public bool $is_admin = false;
   public bool $is_suspended = false;
@@ -32,7 +32,7 @@ class Account extends DbObject
   function apply_db_data($arr, $prefix = '')
   {
     $this->id = intval($arr[$prefix . 'id']);
-    $this->date_created = new DateTime($arr[$prefix . 'date_created']);
+    $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
     $this->is_verifier = $arr[$prefix . 'is_verifier'] === 't';
     $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
@@ -50,7 +50,7 @@ class Account extends DbObject
     if (isset($arr[$prefix . 'session_token']))
       $this->session_token = $arr[$prefix . 'session_token'];
     if (isset($arr[$prefix . 'session_created']))
-      $this->session_created = new DateTime($arr[$prefix . 'session_created']);
+      $this->session_created = new JsonDateTime($arr[$prefix . 'session_created']);
     if (isset($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
     if (isset($arr[$prefix . 'email_verified']))

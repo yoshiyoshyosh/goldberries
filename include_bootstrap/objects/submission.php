@@ -4,13 +4,13 @@ class Submission extends DbObject
 {
   public static string $table_name = 'submission';
 
-  public ?DateTime $date_created = null;
+  public ?JsonDateTime $date_created = null;
   public string $proof_url;
   public ?string $raw_session_url = null;
   public ?string $player_notes = null;
   public bool $is_verified = false;
   public bool $is_rejected = false;
-  public ?DateTime $date_verified = null;
+  public ?JsonDateTime $date_verified = null;
   public ?string $verifier_notes = null;
   public bool $is_fc = false;
 
@@ -62,7 +62,7 @@ class Submission extends DbObject
     if (isset($arr[$prefix . 'challenge_id']))
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
     if (isset($arr[$prefix . 'date_created']))
-      $this->date_created = new DateTime($arr[$prefix . 'date_created']);
+      $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
     if (isset($arr[$prefix . 'raw_session_url']))
       $this->raw_session_url = $arr[$prefix . 'raw_session_url'];
     if (isset($arr[$prefix . 'player_notes']))
@@ -71,7 +71,7 @@ class Submission extends DbObject
       $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
 
     if (isset($arr[$prefix . 'date_verified']))
-      $this->date_verified = new DateTime($arr[$prefix . 'date_verified']);
+      $this->date_verified = new JsonDateTime($arr[$prefix . 'date_verified']);
     if (isset($arr[$prefix . 'verifier_notes']))
       $this->verifier_notes = $arr[$prefix . 'verifier_notes'];
     if (isset($arr[$prefix . 'verifier_id']))

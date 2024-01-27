@@ -5,7 +5,7 @@ class Challenge extends DbObject
   public static string $table_name = 'challenge';
 
   public ?string $description = null;
-  public ?DateTime $date_created = null;
+  public ?JsonDateTime $date_created = null;
   public bool $requires_fc = false;
   public bool $has_fc = false;
   public ?bool $is_arbitrary = null;
@@ -50,7 +50,7 @@ class Challenge extends DbObject
     $this->has_fc = $arr[$prefix . 'has_fc'] === 't';
 
     if (isset($arr[$prefix . 'date_created']))
-      $this->date_created = new DateTime($arr[$prefix . 'date_created']);
+      $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
     if (isset($arr[$prefix . 'campaign_id']))
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
     if (isset($arr[$prefix . 'map_id']))

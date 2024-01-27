@@ -9,7 +9,7 @@ function log_msg($level, $message, $topic = null)
   $log->level = $level;
   $log->message = $message;
   $log->topic = $topic;
-  $log->date = new DateTime();
+  $log->date = new JsonDateTime();
 
   $log->insert($DB);
 }

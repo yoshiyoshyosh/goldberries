@@ -6,7 +6,7 @@ class Map extends DbObject
 
   public string $name;
   public ?string $url = null;
-  public ?DateTime $date_added = null;
+  public ?JsonDateTime $date_added = null;
   public bool $is_rejected = false;
   public ?string $rejection_reason = null;
   public bool $is_archived = false;
@@ -54,7 +54,7 @@ class Map extends DbObject
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
 
     if (isset($arr[$prefix . 'date_added']))
-      $this->date_added = new DateTime($arr[$prefix . 'date_added']);
+      $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
     if (isset($arr[$prefix . 'url']))
       $this->url = $arr[$prefix . 'url'];
     if (isset($arr[$prefix . 'side']))

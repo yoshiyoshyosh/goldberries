@@ -36,7 +36,7 @@ function successful_login($account, $method)
 
   $token = create_session_token();
   $account->session_token = $token;
-  $account->session_created = new DateTime();
+  $account->session_created = new JsonDateTime();
   $account->expand_foreign_keys($DB);
 
   if (!$account->update($DB)) {
