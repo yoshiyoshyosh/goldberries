@@ -345,7 +345,7 @@ export function Layout() {
         component="main"
         sx={{
           mt: {
-            xs: 7,
+            xs: 8,
             sm: 1,
           },
           mb: 3,

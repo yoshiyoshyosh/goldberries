@@ -99,6 +99,16 @@ export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
 }
 
+export function claimPlayer(userObj, player) {
+  return axios.post(
+    "/account.php",
+    formatDataForApi({
+      id: userObj.id,
+      claimed_player_id: player.id,
+    })
+  );
+}
+
 export function postPlayer(data) {
   return axios.post("/player.php", formatDataForApi(data));
 }

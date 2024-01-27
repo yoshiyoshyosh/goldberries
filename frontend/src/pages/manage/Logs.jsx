@@ -92,6 +92,7 @@ function LogFilter({ filter, setFilter }) {
   const topics = [
     { value: "Login", label: "Login" },
     { value: "Registration", label: "Registration" },
+    { value: "Account", label: "Account" },
   ];
   const levels = [
     { value: "debug", label: "Debug" },

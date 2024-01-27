@@ -9,10 +9,9 @@ export function jsonDateToJsDate(jsonDate) {
       timezone: string
     }
   */
-  const timestamp = Date.parse(jsonDate.date);
-  const date = new Date(timestamp);
 
-  return date;
+  //After a new backend update it is now just a string
+  return new Date(jsonDate);
 }
 
 export function errorToast(axiosError) {
@@ -20,5 +19,6 @@ export function errorToast(axiosError) {
 }
 
 export function getAxiosErrorMessage(axiosError) {
-  return axiosError.response.data?.message ?? axiosError.message;
+  console.log("Axios error:", axiosError);
+  return axiosError.response.data?.error ?? axiosError.message;
 }

@@ -106,7 +106,7 @@ export function SubmissionDisplay({ id, onDelete }) {
     if (query.data) setSubmission(query.data.data);
   }, [id]);
 
-  const isOwnSubmission = auth.isLoggedIn && submission && submission.player_id === auth.user.player.id;
+  const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 
   if (query.isLoading) {

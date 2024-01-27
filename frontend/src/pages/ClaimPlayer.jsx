@@ -2,8 +2,10 @@ import {
   Autocomplete,
   Box,
   Button,
+  Checkbox,
   Container,
   Divider,
+  FormControlLabel,
   List,
   ListItem,
   ListItemText,
@@ -15,8 +17,8 @@ import {
 } from "@mui/material";
 import { useAuth } from "../hooks/AuthProvider";
 import { useMutation, useQuery } from "react-query";
-import { fetchAllPlayers, fetchPlayerList, postPlayer } from "../util/api";
-import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { claimPlayer, fetchAllPlayers, fetchGoldenList, fetchPlayerList, postPlayer } from "../util/api";
+import { BasicContainerBox, ErrorDisplay, LoadingSpinner, ProofEmbed } from "../components/BasicComponents";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -25,13 +27,20 @@ import { errorToast } from "../util/util";
 export function PageClaimPlayer() {
   const auth = useAuth();
 
-  if (auth.user.player_id !== null) {
-    return <ClaimPlayerLinkSuccess />;
-  } else if (auth.user.claimed_player_id !== null) {
-    return <ClaimPlayerClaimMade />;
-  } else {
-    return <ClaimPlayerMakeClaim />;
-  }
+  return (
+    <BasicContainerBox
+      sx={{
+        mt: {
+          xs: 0,
+          sm: 3,
+        },
+      }}
+    >
+      {auth.user.player_id !== null ? <ClaimPlayerLinkSuccess /> : null}
+      {auth.user.claimed_player_id !== null ? <ClaimPlayerClaimMade /> : null}
+      {auth.user.player_id === null && auth.user.claimed_player_id === null ? <ClaimPlayerMakeClaim /> : null}
+    </BasicContainerBox>
+  );
 }
 
 export function ClaimPlayerClaimMade() {
@@ -44,7 +53,7 @@ export function ClaimPlayerClaimMade() {
   console.log("Query:", query);
 
   return (
-    <ClaimPlayerContainer>
+    <>
       <Typography variant="h4" gutterBottom color="success.main">
         Player claim submitted!
       </Typography>
@@ -75,30 +84,20 @@ export function ClaimPlayerClaimMade() {
           ))}
         </List>
       ) : null}
-    </ClaimPlayerContainer>
+    </>
   );
 }
 
 export function ClaimPlayerLinkSuccess() {
   return (
-    <ClaimPlayerContainer>
+    <>
       <Typography variant="h4" gutterBottom color="success.main">
         Player claimed!
       </Typography>
       <Typography variant="body1">
         You have successfully claimed your player. You can now submit runs!
       </Typography>
-    </ClaimPlayerContainer>
-  );
-}
-
-function ClaimPlayerContainer({ children }) {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ p: 2, borderRadius: "10px", border: "1px solid #cccccc99", padding: "20px", boxShadow: 1 }}>
-        {children}
-      </Box>
-    </Container>
+    </>
   );
 }
 
@@ -108,7 +107,7 @@ function ClaimPlayerMakeClaim() {
 
   if (createNewPlayer === null) {
     return (
-      <ClaimPlayerContainer>
+      <>
         <Typography variant="h4" gutterBottom>
           Claim Player
         </Typography>
@@ -125,7 +124,7 @@ function ClaimPlayerMakeClaim() {
             Create New Player
           </Button>
         </Stack>
-      </ClaimPlayerContainer>
+      </>
     );
   }
 
@@ -168,7 +167,7 @@ function ClaimPlayerCreateNewPlayer({ onGoBack }) {
   };
 
   return (
-    <ClaimPlayerContainer>
+    <>
       <Button variant="outlined" size="large" onClick={onGoBack}>
         Back
       </Button>
@@ -204,16 +203,47 @@ function ClaimPlayerCreateNewPlayer({ onGoBack }) {
           </Button>
         </form>
       ) : null}
-    </ClaimPlayerContainer>
+    </>
   );
 }
 
 function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
   const auth = useAuth();
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [confirmCheck, setConfirmCheck] = useState(false);
+  const { mutate: claimSelectedPlayer } = useMutation({
+    mutationFn: () => claimPlayer(auth.user, selectedPlayer),
+    onSuccess: (data) => {
+      auth.checkSession();
+    },
+    onError: errorToast,
+  });
+  const query = useQuery({
+    queryKey: ["golden_list", "player", selectedPlayer?.id],
+    queryFn: () => fetchGoldenList("player", selectedPlayer?.id),
+    enabled: selectedPlayer !== null,
+  });
+
+  let url = null;
+  if (query.isSuccess) {
+    let highestDiffChallenge = null;
+    query.data.data.forEach((campaign) => {
+      campaign.maps.forEach((map) => {
+        map.challenges.forEach((challenge) => {
+          if (
+            highestDiffChallenge === null ||
+            challenge.difficulty.sort > highestDiffChallenge.difficulty.sort
+          ) {
+            highestDiffChallenge = challenge;
+          }
+        });
+      });
+    });
+    url = highestDiffChallenge.submissions[0].proof_url;
+  }
 
   return (
-    <ClaimPlayerContainer>
+    <>
       <Button variant="outlined" size="large" onClick={onGoBack}>
         Back
       </Button>
@@ -222,18 +252,43 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
         Claim Existing Player
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        If you have made submission for the old spreadsheet, you can claim these for your account. Please
-        select the player you want to claim below.
+        If you have made submission for the old spreadsheet, you can claim these for your account.
+      </Typography>
+      <Typography variant="body1" sx={{ mb: 2 }}>
+        After making a claim, you will have to contact a team member to verify that you are who you claim to
+        be!
       </Typography>
       <PlayerSelect
         type="unclaimed"
         value={selectedPlayer}
         onChange={(e, value) => setSelectedPlayer(value)}
       />
-      <Button variant="contained" sx={{ mt: 2 }} fullWidth>
+      {query.isLoading ? <LoadingSpinner /> : null}
+      {query.isError ? <ErrorDisplay error={query.error} /> : null}
+      {query.isSuccess ? (
+        <>
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            This u?
+          </Typography>
+          <ProofEmbed url={url} />
+        </>
+      ) : null}
+      <Divider sx={{ my: 2 }} />
+      <FormControlLabel
+        control={<Checkbox checked={confirmCheck} onChange={(e) => setConfirmCheck(e.target.checked)} />}
+        label="I confirm that I am the player shown in the video"
+        disabled={selectedPlayer === null}
+      />
+      <Button
+        variant="contained"
+        sx={{ mt: 2 }}
+        fullWidth
+        onClick={() => claimSelectedPlayer()}
+        disabled={selectedPlayer === null || !confirmCheck}
+      >
         Claim Player
       </Button>
-    </ClaimPlayerContainer>
+    </>
   );
 }
 
