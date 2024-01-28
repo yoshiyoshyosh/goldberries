@@ -35,7 +35,6 @@ function db_fetch_where($DB, string $table_noesc, string $where, $params = array
     return false;
 
   return $result;
-
 }
 
 // Finds one or multiple objects. Does not override $object_skel's values
