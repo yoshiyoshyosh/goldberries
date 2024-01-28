@@ -8,6 +8,7 @@ class Change extends DbObject
   public ?int $map_id = null;
   public ?int $challenge_id = null;
   public ?int $player_id = null;
+  public ?int $author_id = null;
   public string $description;
   public JsonDateTime $date;
 
@@ -16,6 +17,7 @@ class Change extends DbObject
   public ?Map $map = null;
   public ?Challenge $challenge = null;
   public ?Player $player = null;
+  public ?Player $author = null;
 
   // === Abstract Functions ===
   function get_field_set()
@@ -25,6 +27,7 @@ class Change extends DbObject
       'map_id' => $this->map_id,
       'challenge_id' => $this->challenge_id,
       'player_id' => $this->player_id,
+      'author_id' => $this->author_id,
       'description' => $this->description,
       'date' => $this->date,
     );
@@ -44,6 +47,8 @@ class Change extends DbObject
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
     if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
+    if (isset($arr[$prefix . 'author_id']))
+      $this->author_id = intval($arr[$prefix . 'author_id']);
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -51,17 +56,23 @@ class Change extends DbObject
     if ($depth <= 1)
       return;
 
-    if ($this->campaign_id !== null) {
-      $this->campaign = Campaign::get_by_id($DB, $this->campaign_id);
+    if ($expand_structure) {
+      if ($this->campaign_id !== null) {
+        $this->campaign = Campaign::get_by_id($DB, $this->campaign_id);
+      }
+      if ($this->map_id !== null) {
+        $this->map = Map::get_by_id($DB, $this->map_id);
+      }
+      if ($this->challenge_id !== null) {
+        $this->challenge = Challenge::get_by_id($DB, $this->challenge_id);
+      }
+      if ($this->player_id !== null) {
+        $this->player = Player::get_by_id($DB, $this->player_id);
+      }
     }
-    if ($this->map_id !== null) {
-      $this->map = Map::get_by_id($DB, $this->map_id);
-    }
-    if ($this->challenge_id !== null) {
-      $this->challenge = Challenge::get_by_id($DB, $this->challenge_id);
-    }
-    if ($this->player_id !== null) {
-      $this->player = Player::get_by_id($DB, $this->player_id);
+
+    if ($this->author_id !== null) {
+      $this->author = Player::get_by_id($DB, $this->author_id);
     }
   }
 
@@ -73,6 +84,10 @@ class Change extends DbObject
     $logs = find_in_db($DB, Change::$table_name, $where, $arr, new Change());
     if ($logs === false)
       return false;
+
+    foreach ($logs as $log) {
+      $log->expand_foreign_keys($DB, 2, false);
+    }
 
     return $logs;
   }
