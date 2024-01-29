@@ -41,6 +41,8 @@ class Submission extends DbObject
       'player_notes' => $this->player_notes,
       'is_verified' => $this->is_verified,
       'is_rejected' => $this->is_rejected,
+      'date_verified' => $this->date_verified,
+      'verifier_notes' => $this->verifier_notes,
       'is_fc' => $this->is_fc,
       'challenge_id' => $this->challenge_id,
       'player_id' => $this->player_id,
@@ -124,6 +126,22 @@ class Submission extends DbObject
   }
 
   // === Find Functions ===
+  static function get_submission_queue($DB)
+  {
+    $result = pg_query($DB, "SELECT * FROM submission WHERE is_verified = false AND is_rejected = false ORDER BY date_created ASC, id ASC;");
+    if ($result === false)
+      die_json(500, "Failed to query database");
+
+    $submissions = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $submission = new Submission();
+      $submission->apply_db_data($row);
+      $submission->expand_foreign_keys($DB, 4);
+      $submissions[] = $submission;
+    }
+    return $submissions;
+  }
+
 
   // === Utility Functions ===
   function __toString()

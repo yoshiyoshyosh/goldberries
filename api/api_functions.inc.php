@@ -114,3 +114,13 @@ function parse_post_body_as_json()
   }
   return $data;
 }
+
+function format_assoc_array_bools($arr)
+{
+  foreach ($arr as $key => $val) {
+    if (is_bool($val)) {
+      $arr[$key] = $val ? 't' : 'f';
+    }
+  }
+  return $arr;
+}
