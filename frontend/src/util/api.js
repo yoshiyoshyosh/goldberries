@@ -78,7 +78,7 @@ export function fetchAllDifficulties() {
 }
 
 export function fetchAllPlayers() {
-  return axios.get("/player.php", { params: { id: "all" } });
+  return axios.get("/player.php", { params: { all: true } });
 }
 export function fetchPlayerList(group) {
   return axios.get("/player.php", { params: { group: group } });
@@ -113,6 +113,14 @@ export function fetchSubmission(id) {
   });
 }
 
+export function fetchSubmissionQueue() {
+  return axios.get("/submission.php", {
+    params: {
+      queue: true,
+    },
+  });
+}
+
 // ===== POST =====
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
@@ -136,6 +144,16 @@ export function updateAccount(data) {
   return axios.post("/account.php", formatDataForApi(data));
 }
 
+// ===== DELETE =====
+export function deleteSubmission(id) {
+  return axios.delete("/submission.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+// Utility
 export function formatDataForApi(data) {
   //Loop through all props in data
   //If prop is a string, trim it. if its empty, set it to null

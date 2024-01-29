@@ -12,8 +12,12 @@ export function LoadingSpinner({}) {
 }
 
 export function ErrorDisplay({ error }) {
-  const errorMsg = error.response.data ? error.response.data.message : error.message;
-  return <Typography variant="h6">Error: {errorMsg}</Typography>;
+  const errorMsg = error.response?.data ? error.response.data.message : error.message;
+  return (
+    <Typography variant="h6" color="error.main">
+      Error: {errorMsg}
+    </Typography>
+  );
 }
 
 export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props }) {

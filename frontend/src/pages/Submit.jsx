@@ -305,7 +305,6 @@ export function ChallengeSelect({ campaign, map, selected, setSelected, disabled
     },
   });
   const challenges = query.data?.data?.challenges ?? [];
-  console.log("Challenges in ChallengeSelect:", challenges, query.data);
 
   const getOptionLabel = (challenge) => {
     return getChallengeName(challenge);
@@ -335,7 +334,7 @@ export function ChallengeSelect({ campaign, map, selected, setSelected, disabled
   );
 }
 
-export function DifficultySelect(props) {
+export function DifficultySelect({ defaultValue, ...props }) {
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
@@ -351,6 +350,7 @@ export function DifficultySelect(props) {
     <TextField
       {...props}
       select
+      defaultValue={defaultValue}
       SelectProps={{
         ...props.SelectProps,
         MenuProps: { disableScrollLock: true },

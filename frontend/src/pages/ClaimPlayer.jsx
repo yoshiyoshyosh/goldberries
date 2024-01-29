@@ -1,8 +1,10 @@
 import {
   Autocomplete,
+  Avatar,
   Box,
   Button,
   Checkbox,
+  Chip,
   Container,
   Divider,
   FormControlLabel,
@@ -23,6 +25,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function PageClaimPlayer() {
   const auth = useAuth();
@@ -292,7 +296,7 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
   );
 }
 
-export function PlayerSelect({ type, value, onChange }) {
+export function PlayerSelect({ type, value, onChange, ...props }) {
   const queryFn = type === "all" ? fetchAllPlayers : () => fetchPlayerList(type);
   const query = useQuery({
     queryKey: ["player_list", type],
@@ -310,6 +314,21 @@ export function PlayerSelect({ type, value, onChange }) {
       renderInput={(params) => <TextField {...params} label="Player" variant="outlined" />}
       value={value}
       onChange={onChange}
+      {...props}
+    />
+  );
+}
+
+export function PlayerChip({ player }) {
+  return (
+    <Chip
+      label={player?.name ?? "-"}
+      avatar={
+        <Avatar>
+          <FontAwesomeIcon icon={faUser} />
+        </Avatar>
+      }
+      sx={{ mr: 1 }}
     />
   );
 }

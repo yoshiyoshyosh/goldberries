@@ -125,8 +125,6 @@ export function SubmissionDisplay({ id, onDelete }) {
     );
   }
 
-  console.log("Submission -> ", submission);
-
   if (submission.new_challenge_id !== null) {
     return (
       <Box>
@@ -180,21 +178,48 @@ export function SubmissionDisplay({ id, onDelete }) {
   );
 }
 
-export function FullChallengeSelect({ defaultCampaign, defaultMap, challenge, setChallenge, disabled }) {
-  const [campaign, setCampaign] = useState(defaultCampaign ?? null);
-  const [map, setMap] = useState(defaultMap ?? null);
+export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
+  const [campaign, setCampaign] = useState(challenge?.map?.campaign ?? null);
+  const [map, setMap] = useState(challenge?.map ?? null);
+
+  const onCampaignSelect = (campaign) => {
+    setCampaign(campaign);
+    if (campaign !== null && campaign.maps.length === 1) {
+      setMap(campaign.maps[0]);
+      if (campaign.maps[0].challenges.length === 1) {
+        setChallenge(campaign.maps[0].challenges[0]);
+      } else {
+        setChallenge(null);
+      }
+    } else {
+      setMap(null);
+      setChallenge(null);
+    }
+  };
+  const onMapSelect = (map) => {
+    setMap(map);
+    if (map !== null && map.challenges.length === 1) {
+      setChallenge(map.challenges[0]);
+    } else {
+      setChallenge(null);
+    }
+  };
 
   return (
     <Stack direction="column" gap={2}>
-      <CampaignSelect selected={campaign} setSelected={setCampaign} disabled={disabled} />
-      <MapSelect campaign={campaign} selected={map} setSelected={setMap} disabled={disabled} />
-      <ChallengeSelect
-        campaign={campaign}
-        map={map}
-        selected={challenge}
-        setSelected={setChallenge}
-        disabled={disabled}
-      />
+      <CampaignSelect selected={campaign} setSelected={onCampaignSelect} disabled={disabled} />
+      {campaign && (
+        <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} disabled={disabled} />
+      )}
+      {campaign && map && (
+        <ChallengeSelect
+          campaign={campaign}
+          map={map}
+          selected={challenge}
+          setSelected={setChallenge}
+          disabled={disabled}
+        />
+      )}
     </Stack>
   );
 }

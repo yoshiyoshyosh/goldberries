@@ -78,6 +78,7 @@ import { PageChallenge } from "./pages/Challenge";
 import { PageMap } from "./pages/Map";
 import { PageClaimPlayer } from "./pages/ClaimPlayer";
 import { PageTopGoldenList } from "./pages/TopGoldenList";
+import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -102,12 +103,25 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <PageIndex /> },
       {
-        path: "logs",
-        element: (
-          <ProtectedRoute needsVerifier redirect="logs">
-            <PageLogs />
-          </ProtectedRoute>
-        ),
+        path: "manage",
+        children: [
+          {
+            path: "logs",
+            element: (
+              <ProtectedRoute needsVerifier redirect="manage/logs">
+                <PageLogs />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "submission-queue/:submissionId?",
+            element: (
+              <ProtectedRoute redirect="manage/submission-queue">
+                <PageSubmissionQueue />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
       { path: "login/:redirect?", element: <PageLogin /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
@@ -252,7 +266,14 @@ export function Layout() {
     verifier: {
       icon: <FontAwesomeIcon icon={faEye} />,
       name: "Internal",
-      items: [{ name: "Logs", path: "/logs", icon: <FontAwesomeIcon icon={faInbox} /> }],
+      items: [
+        { name: "Logs", path: "/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
+        {
+          name: "Submission Queue",
+          path: "/manage/submission-queue",
+          icon: <FontAwesomeIcon icon={faMailForward} />,
+        },
+      ],
     },
     admin: {
       icon: <FontAwesomeIcon icon={faHammer} />,
