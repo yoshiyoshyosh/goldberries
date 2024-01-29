@@ -114,6 +114,10 @@ if (isset($_GET['hard'])) {
   $where .= " AND cd.id = 19";
 }
 
+if (!isset($_GET['archived'])) {
+  $where .= " AND map.is_archived = false";
+}
+
 $query = $query . $where;
 $query .= " ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, challenge.difficulty_id, submission.id";
 

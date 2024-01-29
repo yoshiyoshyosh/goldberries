@@ -96,18 +96,20 @@ LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
 $where = "WHERE submission.is_verified = true AND submission.is_rejected = false AND cd.id != 18";
 if (isset($_GET['campaign'])) {
   $where .= " AND campaign.id = " . intval($_GET['campaign']);
-} else if (isset($_GET['map'])) {
+}
+if (isset($_GET['map'])) {
   $where .= " AND map.id = " . intval($_GET['map']);
-} else if (isset($_GET['challenge'])) {
-  $where .= " AND challenge.id = " . intval($_GET['challenge']);
-} else if (isset($_GET['player'])) {
+}
+if (isset($_GET['player'])) {
   $where .= " AND p.id = " . intval($_GET['player']);
-} else if (isset($_GET['verifier'])) {
-  $where .= " AND v.id = " . intval($_GET['verifier']);
+}
+
+if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
+  $where .= " AND map.is_archived = false";
 }
 
 $query = $query . $where;
-$query .= " ORDER BY cd.sort DESC, map.name ASC";
+$query .= " ORDER BY cd.sort DESC, map.name ASC, submission.id ASC";
 
 $result = pg_query($DB, $query);
 if (!$result) {
@@ -183,6 +185,15 @@ while ($row = pg_fetch_assoc($result)) {
   $submission->apply_db_data($row, "submission_");
   $submission->expand_foreign_keys($row, 2, false);
   $challenge->submissions[$submission->id] = $submission;
+}
+
+//Flatten challenge.submissions
+foreach ($response['tiers'] as $tierIndex => $subtiers) {
+  foreach ($subtiers as $subtierIndex => $subtier) {
+    foreach ($subtier['challenges'] as $challengeIndex => $challenge) {
+      $response['tiers'][$tierIndex][$subtierIndex]['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
+    }
+  }
 }
 
 api_write($response);
