@@ -146,37 +146,41 @@ export function ChallengeDetailsList({ challenge }) {
   );
 }
 
-export function ChallengeSubmissionTable({ challenge }) {
+export function ChallengeSubmissionTable({ challenge, compact = false, ...props }) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} {...props}>
       <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell width={1}></TableCell>
-            <TableCell>Player</TableCell>
-            <TableCell width={1} align="center" sx={displayNoneOnMobile}>
-              <FontAwesomeIcon icon={faComment} />
-            </TableCell>
+            <TableCell width={compact ? 1 : undefined}>Player</TableCell>
+            {compact ? null : (
+              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+                <FontAwesomeIcon icon={faComment} />
+              </TableCell>
+            )}
             <TableCell width={1} align="center" sx={displayNoneOnMobile}>
               <FontAwesomeIcon icon={faYoutube} />
             </TableCell>
-            <TableCell
-              width={1}
-              align="center"
-              sx={{
-                whiteSpace: {
-                  xs: "normal",
-                  sm: "nowrap",
-                },
-              }}
-            >
-              Suggestion
-            </TableCell>
+            {compact ? null : (
+              <TableCell
+                width={1}
+                align="center"
+                sx={{
+                  whiteSpace: {
+                    xs: "normal",
+                    sm: "nowrap",
+                  },
+                }}
+              >
+                Suggestion
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
           {challenge.submissions.map((submission, index) => (
-            <ChallengeSubmissionRow submission={submission} index={index} />
+            <ChallengeSubmissionRow submission={submission} index={index} compact={compact} />
           ))}
         </TableBody>
       </Table>
@@ -184,35 +188,41 @@ export function ChallengeSubmissionTable({ challenge }) {
   );
 }
 
-export function ChallengeSubmissionRow({ submission, index }) {
+export function ChallengeSubmissionRow({ submission, index, compact }) {
   return (
     <TableRow>
       <TableCell width={1} sx={{ pr: 0 }}>
         #{index + 1}
       </TableCell>
-      <TableCell>
+      <TableCell width={compact ? 1 : undefined}>
         <Stack direction="row" gap={1}>
           <Link to={"/submission/" + submission.id}>
             <FontAwesomeIcon icon={faBook} />
           </Link>
-          <Link to={"/player/" + submission.player.id}>{submission.player.name}</Link>
+          <Link to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap" }}>
+            {submission.player.name}
+          </Link>
         </Stack>
       </TableCell>
-      <TableCell width={1} align="center" sx={displayNoneOnMobile}>
-        {submission.player_notes && (
-          <Tooltip title={submission.player_notes}>
-            <FontAwesomeIcon icon={faComment} />
-          </Tooltip>
-        )}
-      </TableCell>
+      {compact ? null : (
+        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+          {submission.player_notes && (
+            <Tooltip title={submission.player_notes}>
+              <FontAwesomeIcon icon={faComment} />
+            </Tooltip>
+          )}
+        </TableCell>
+      )}
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
         <Link to={submission.proof_url} target="_blank">
           <FontAwesomeIcon icon={faExternalLinkAlt} />
         </Link>
       </TableCell>
-      <TableCell width={1} align="center">
-        <DifficultyChip difficulty={submission.suggested_difficulty} />
-      </TableCell>
+      {compact ? null : (
+        <TableCell width={1} align="center">
+          <DifficultyChip difficulty={submission.suggested_difficulty} />
+        </TableCell>
+      )}
     </TableRow>
   );
 }

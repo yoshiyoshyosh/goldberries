@@ -23,6 +23,25 @@ export function fetchGoldenList(type, id = null) {
   return axios.get("/golden-list.php", { params: data });
 }
 
+export function fetchTopGoldenList(type, id = null, archived = false) {
+  const data = {
+    archived: archived,
+  };
+
+  if (type === "all") {
+  } else if (type === "campaign") {
+    data.campaign = id;
+  } else if (type === "map") {
+    data.map = id;
+  } else if (type === "player") {
+    data.player = id;
+  }
+
+  return axios.get("/top-golden-list.php", {
+    params: data,
+  });
+}
+
 export function fetchAllChallenges(isFullGame = false) {
   return axios.get("/challenge.php", {
     params: {

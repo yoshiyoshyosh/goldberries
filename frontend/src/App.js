@@ -77,6 +77,7 @@ import { PageSubmission } from "./pages/Submission";
 import { PageChallenge } from "./pages/Challenge";
 import { PageMap } from "./pages/Map";
 import { PageClaimPlayer } from "./pages/ClaimPlayer";
+import { PageTopGoldenList } from "./pages/TopGoldenList";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -127,6 +128,7 @@ const router = createBrowserRouter([
         ),
       },
 
+      { path: "top-golden-list/:type?/:id?", element: <PageTopGoldenList /> },
       { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
       { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
 

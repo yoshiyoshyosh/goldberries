@@ -11,10 +11,10 @@
 
 import { jsonDateToJsDate } from "./util";
 
-export function getChallengeFcShort(challenge) {
+export function getChallengeFcShort(challenge, noC = false) {
   if (challenge.requires_fc) return "[FC]";
   else if (challenge.has_fc) return "[C/FC]";
-  else return "[C]";
+  else return noC ? "" : "[C]";
 }
 export function getChallengeFcLong(challenge) {
   if (challenge.requires_fc) return "Full Clear";
