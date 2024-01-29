@@ -46,14 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   //If $submission->id is set, then this is an update request
   if (isset($data['id'])) {
-    error_log("Updating {$submission}");
     $old_submission = Submission::get_by_id($DB, $submission->id);
     if ($old_submission === false) {
       die_json(400, "Submission with id {$submission->id} does not exist");
     }
 
     if (is_verifier($account)) {
-      error_log("Updating {$old_submission} as verifier");
       if ($old_submission->challenge_id !== $submission->challenge_id) {
         $challenge = Challenge::get_by_id($DB, $submission->challenge_id);
         if ($challenge === false) {
@@ -95,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $old_submission->verifier_notes = $submission->verifier_notes;
 
       if ($old_submission->update($DB)) {
-        error_log("Updated {$old_submission}");
         api_write($old_submission);
       } else {
         die_json(500, "Failed to update submission");

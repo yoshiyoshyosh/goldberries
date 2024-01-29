@@ -104,7 +104,6 @@ function db_update($DB, string $table_noesc, int $id, $arr)
   $query .= " WHERE id = \${$i};";
   $params[] = $id;
 
-  error_log("Updating {$table} with query: {$query} and params: " . print_r($params, true));
   $result = pg_query_params($DB, $query, $params);
   if ($result == false) {
     return false;
