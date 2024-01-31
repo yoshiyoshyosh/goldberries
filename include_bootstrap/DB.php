@@ -57,7 +57,6 @@ function find_in_db($DB, string $table_noesc, string $where, $params = array(), 
 
 function db_fetch_assoc($DB, string $table_noesc, string $col_noesc, $val, $class, string $whereAddition = null, $orderBy = "ORDER BY id")
 {
-  error_log("fetching associated objects for \"{$table_noesc}\" \"{$col_noesc}\" \"{$val}\"");
   $table = pg_escape_identifier(strtolower($table_noesc));
   $col = pg_escape_identifier(strtolower($col_noesc));
   $whereAddition = $whereAddition ? "AND {$whereAddition}" : "";

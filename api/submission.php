@@ -130,6 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge->difficulty_id <= 12) {
         check_url($submission->raw_session_url, 'raw_session_url');
       }
+      if ($challenge->requires_fc) {
+        $submission->is_fc = true;
+      }
     } else {
       die_json(400, "challenge_id or new_challenge is missing");
     }

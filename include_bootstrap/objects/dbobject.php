@@ -81,7 +81,7 @@ abstract class DbObject
       foreach ($id as $val) {
         $obj = static::get_by_id($DB, intval($val), $depth, $expand_structure);
         if ($obj === false) {
-          die_json(400, "ID {$val} does not exist");
+          die_json(404, "ID {$val} does not exist");
         }
         $json_arr[] = $obj;
       }
@@ -89,7 +89,7 @@ abstract class DbObject
     } else {
       $obj = static::get_by_id($DB, $id, $depth, $expand_structure);
       if ($obj === false) {
-        die_json(400, "ID {$id} does not exist");
+        die_json(404, "ID {$id} does not exist");
       }
       return $obj;
     }
