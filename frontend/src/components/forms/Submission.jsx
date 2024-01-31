@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, ProofEmbed } from "../BasicComponents";
 import { Controller, set, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { FullChallengeDisplay, FullChallengeSelect, VerificationStatusChip } from "../../pages/Submission";
@@ -22,14 +22,17 @@ import { useEffect, useState } from "react";
 import { PlayerChip, PlayerSelect } from "../../pages/ClaimPlayer";
 import { DifficultySelect } from "../../pages/Submit";
 import { jsonDateToJsDate } from "../../util/util";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
+    staleTime: 0,
+    cacheTime: 0,
   });
 
-  if (query.isLoading) {
+  if (query.isLoading || query.isFetching) {
     return (
       <>
         <Typography variant="h6">Submission ({id})</Typography>
@@ -79,6 +82,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
     form.setValue("is_rejected", true);
     onUpdateSubmit();
   };
+
+  const proofUrl = form.watch("proof_url");
+  const proofUrlDebounced = useDebounce(proofUrl, 150);
 
   useEffect(() => {
     //Update all fields from submission to the form
@@ -186,8 +192,11 @@ export function FormSubmission({ submission, onSave, ...props }) {
         label="Proof URL*"
         disabled={!isVerifier}
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ my: 2 }}
+        InputLabelProps={{ shrink: true }}
       />
+      {proofUrlDebounced ? <ProofEmbed url={proofUrlDebounced} /> : null}
+
       {submission.raw_session_url ? (
         <TextField {...form.register("raw_session_url")} label="Raw Session URL" fullWidth sx={{ mt: 2 }} />
       ) : null}

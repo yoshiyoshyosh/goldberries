@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Container, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export function LoadingSpinner({}) {
+export function LoadingSpinner({ ...props }) {
   return (
-    <Typography variant="h6">
+    <Typography variant="h6" {...props}>
       Loading <FontAwesomeIcon icon={faSpinner} spin />
     </Typography>
   );
@@ -25,7 +25,24 @@ export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props
     <Container maxWidth={maxWidth}>
       <Box
         {...props}
-        sx={{ mt: 8, p: 3, borderRadius: "10px", border: "1px solid #cccccc99", boxShadow: 1, ...sx }}
+        sx={{
+          p: {
+            xs: 2,
+            sm: 5,
+          },
+          pt: {
+            xs: 1,
+            sm: 3,
+          },
+          mt: {
+            xs: 5,
+            sm: 1,
+          },
+          borderRadius: "10px",
+          border: "1px solid #cccccc99",
+          boxShadow: 1,
+          ...sx,
+        }}
       >
         {children}
       </Box>

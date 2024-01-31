@@ -72,7 +72,7 @@ import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
-import { PageUserSubmission } from "./pages/Submit";
+import { PageSubmit, PageUserSubmission } from "./pages/Submit";
 import { PageSubmission } from "./pages/Submission";
 import { PageChallenge } from "./pages/Challenge";
 import { PageMap } from "./pages/Map";
@@ -134,10 +134,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "submit",
+        path: "submit/:tab?/:challengeId?",
         element: (
           <ProtectedRoute needsPlayerClaimed redirect="submit">
-            <PageUserSubmission />
+            <PageSubmit />
           </ProtectedRoute>
         ),
       },

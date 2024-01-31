@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
-import { Box, Stack, TableCell, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Stack, TableCell, Tooltip, Typography } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
@@ -10,11 +10,15 @@ import { faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeFcShort } from "../util/data_util";
 import { DifficultyChip } from "../pages/Submit";
+import { useAuth } from "../hooks/AuthProvider";
+import { useTheme } from "@emotion/react";
 
 export function TopGoldenList({ type, id, archived = false }) {
   const query = useQuery({
     queryKey: ["top_golden_list", type, id, archived],
     queryFn: () => fetchTopGoldenList(type, id, archived),
+    cacheTime: 0,
+    staleTime: 0,
   });
 
   useEffect(() => {
@@ -129,7 +133,7 @@ function TopGoldenListGroupHeader({ tier }) {
 }
 
 function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
-  console.log("Rendering challenge:", challenge, "in subtier:", subtier);
+  const auth = useAuth();
   const colors = getDifficultyColors(subtier.difficulty.id);
 
   const rowStyle = {
@@ -199,7 +203,26 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
               enterTouchDelay={0}
               leaveTouchDelay={0}
               leaveDelay={200}
-              title={<ChallengeSubmissionTable challenge={challenge} compact />}
+              title={
+                <>
+                  {auth.hasPlayerClaimed ? (
+                    <Link to={"/submit/single-challenge/" + challenge.id}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        fullWidth
+                        color="info"
+                        sx={{
+                          mb: "2px",
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </Link>
+                  ) : null}
+                  <ChallengeSubmissionTable challenge={challenge} compact />
+                </>
+              }
             >
               <Typography color="info.dark" sx={{ cursor: "pointer" }}>
                 <FontAwesomeIcon icon={faList} />

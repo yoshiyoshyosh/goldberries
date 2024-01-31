@@ -12,9 +12,10 @@ import {
 } from "@mui/material";
 import { useQuery } from "react-query";
 import { fetchSubmissionQueue } from "../../util/api";
+import { useState } from "react";
 
 export function PageSubmissionQueue() {
-  const { submissionId } = useParams();
+  const [submissionId, setSubmissionId] = useState(undefined);
   const navigate = useNavigate();
 
   const query = useQuery({
@@ -43,16 +44,24 @@ export function PageSubmissionQueue() {
   }
 
   if (submissionId === undefined) {
+    if (query.data.data.length === 0) {
+      return (
+        <BasicContainerBox sx={{ mt: 0, p: 2 }}>
+          <Typography variant="h4" sx={{ mt: 0 }}>
+            Submission Queue
+          </Typography>
+          <Typography variant="body1">No submissions in queue</Typography>
+        </BasicContainerBox>
+      );
+    }
+
+    setSubmissionId(query.data.data[0].id);
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
         <Typography variant="h4" sx={{ mt: 0 }}>
           Submission Queue
         </Typography>
-        {query.data.data.length === 0 ? (
-          <Typography variant="h5">No submissions in queue</Typography>
-        ) : (
-          <Navigate to={`/manage/submission-queue/${query.data.data[0].id}`} replace={true} />
-        )}
+        <LoadingSpinner />
       </BasicContainerBox>
     );
   }
@@ -67,60 +76,62 @@ export function PageSubmissionQueue() {
     if (nextSubmission === undefined) {
       return;
     }
-    navigate(`/manage/submission-queue/${nextSubmission.id}`, { replace: true });
+    setSubmissionId(nextSubmission.id);
   };
 
   return (
     <>
-      <BasicContainerBox sx={{ mt: 0, p: 2 }}>
+      <BasicContainerBox sx={{ mt: 0, p: 2, position: "relative" }}>
         <FormSubmissionWrapper id={submissionId} onSave={goToNextSubmission} />
-      </BasicContainerBox>
-      <BasicContainerBox
-        sx={{
-          position: "absolute",
-          p: 1,
-          top: 0,
-          right: "10px",
-          display: {
-            xs: "none",
-            lg: "block",
-          },
-        }}
-      >
-        <List dense>
-          <ListSubheader disableSticky>
-            <Typography variant="h5">Submissions</Typography>
-          </ListSubheader>
-          {query.data.data.length === 0 && (
-            <ListItem>
-              <ListItemText primary="No submissions in queue" />
-            </ListItem>
-          )}
-          {query.data.data.map((submission) => (
-            <ListItemButton
-              key={submission.id}
-              disablePadding
-              selected={submission.id === parseInt(submissionId)}
-              onClick={() => {
-                window.scrollTo(0, 0);
-                navigate(`/manage/submission-queue/${submission.id}`, { replace: true });
-              }}
-            >
-              <ListItemText
-                primary={
-                  <Typography variant="body1">
-                    {submission.id} - {submission.challenge.map.name} - {submission.player.name}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="body2">
-                    {submission.challenge.map.campaign.name} - {submission.challenge.difficulty.name}
-                  </Typography>
-                }
-              />
-            </ListItemButton>
-          ))}
-        </List>
+        <BasicContainerBox
+          sx={{
+            position: "absolute",
+            mt: 0,
+            p: 1,
+            top: 0,
+            left: 0,
+            transform: "translate(calc(-100% - 20px), 0)",
+            display: {
+              xs: "none",
+              lg: "block",
+            },
+          }}
+        >
+          <List dense>
+            <ListSubheader disableSticky>
+              <Typography variant="h5">Submissions</Typography>
+            </ListSubheader>
+            {query.data.data.length === 0 && (
+              <ListItem>
+                <ListItemText primary="No submissions in queue" />
+              </ListItem>
+            )}
+            {query.data.data.map((submission) => (
+              <ListItemButton
+                key={submission.id}
+                disablePadding
+                selected={submission.id === parseInt(submissionId)}
+                onClick={() => {
+                  // window.scrollTo(0, 0);
+                  setSubmissionId(submission.id);
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      {submission.id} - {submission.challenge.map.name} - {submission.player.name}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="body2">
+                      {submission.challenge.map.campaign.name} - {submission.challenge.difficulty.name}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </BasicContainerBox>
       </BasicContainerBox>
     </>
   );

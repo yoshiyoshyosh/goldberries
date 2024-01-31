@@ -205,6 +205,13 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
     }
   };
 
+  useEffect(() => {
+    if (challenge) {
+      setCampaign(challenge.map.campaign);
+      setMap(challenge.map);
+    }
+  }, [challenge]);
+
   return (
     <Stack direction="column" gap={2}>
       <CampaignSelect selected={campaign} setSelected={onCampaignSelect} disabled={disabled} />
