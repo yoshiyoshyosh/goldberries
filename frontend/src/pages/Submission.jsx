@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { fetchSubmission, postSubmission } from "../util/api";
+import { deleteSubmission, fetchSubmission, postSubmission } from "../util/api";
 import { toast } from "react-toastify";
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Divider,
   Grid,
@@ -52,7 +53,12 @@ import { useEffect, useState } from "react";
 import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import CustomizedMenus, { BasicContainerBox, ProofEmbed } from "../components/BasicComponents";
+import CustomizedMenus, {
+  BasicContainerBox,
+  ErrorDisplay,
+  LoadingSpinner,
+  ProofEmbed,
+} from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { PlayerChip } from "./ClaimPlayer";
 
@@ -75,7 +81,6 @@ export function SubmissionDisplay({ id, onDelete }) {
     onSuccess: (response) => {
       setSubmission(response.data);
     },
-    onError: errorToast,
   });
   const { mutate: updateSubmission } = useMutation({
     mutationFn: (data) => postSubmission(data),
@@ -85,11 +90,12 @@ export function SubmissionDisplay({ id, onDelete }) {
     },
     onError: errorToast,
   });
-  const { mutate: deleteSubmission } = useMutation({
+  const { mutate: doDeleteSubmission } = useMutation({
     mutationFn: (id) => deleteSubmission(id),
     onSuccess: (data) => {
       toast.success("Submission deleted!");
       queryClient.invalidateQueries(["submission", id]);
+      if (onDelete !== undefined) onDelete();
     },
     onError: errorToast,
   });
@@ -106,13 +112,9 @@ export function SubmissionDisplay({ id, onDelete }) {
   const isVerifier = auth.hasVerifierPriv;
 
   if (query.isLoading) {
-    return (
-      <Typography variant="h3">
-        Loading <FontAwesomeIcon icon={faSpinner} spin />
-      </Typography>
-    );
+    return <LoadingSpinner />;
   } else if (query.isError) {
-    return <Typography variant="h3">Error: {query.error.message}</Typography>;
+    return <ErrorDisplay error={query.error} />;
   }
 
   return (
@@ -168,7 +170,6 @@ export function SubmissionDisplay({ id, onDelete }) {
 
       <Dialog
         onClose={() => setEditModalOpen(false)}
-        aria-labelledby="customized-dialog-title"
         open={editModalOpen}
         maxWidth="sm"
         fullWidth
@@ -178,6 +179,36 @@ export function SubmissionDisplay({ id, onDelete }) {
         <DialogContent dividers>
           <FormSubmissionWrapper id={submission.id} onSave={() => setEditModalOpen(false)} />
         </DialogContent>
+      </Dialog>
+
+      <Dialog
+        onClose={() => setDeleteModalOpen(false)}
+        open={deleteModalOpen}
+        maxWidth="sm"
+        fullWidth
+        disableScrollLock
+        disableRestoreFocus
+      >
+        <DialogTitle id="alert-dialog-title">Delete Submission?</DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText>
+            Are you sure you want to delete this submission? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              setDeleteModalOpen(false);
+              doDeleteSubmission(submission.id);
+            }}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

@@ -19,11 +19,16 @@ export function LoadingSpinner({ ...props }) {
 }
 
 export function ErrorDisplay({ error }) {
-  const errorMsg = error.response?.data ? error.response.data.message : error.message;
+  const errorMsg = error.response?.data ? error.response.data.error : error.message;
   return (
-    <Typography variant="h6" color="error.main">
-      Error: {errorMsg}
-    </Typography>
+    <>
+      <Typography variant="h4" color="error.main">
+        Error
+      </Typography>
+      <Typography variant="body1" color="error.main">
+        {errorMsg}
+      </Typography>
+    </>
   );
 }
 
