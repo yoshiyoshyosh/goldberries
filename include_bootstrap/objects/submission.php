@@ -123,6 +123,14 @@ class Submission extends DbObject
         $this->suggested_difficulty = Difficulty::get_by_id($DB, $this->suggested_difficulty_id);
       }
     }
+    if (isset($this->new_challenge_id)) {
+      if ($isFromSqlResult) {
+        $this->new_challenge = new NewChallenge();
+        $this->new_challenge->apply_db_data($DB, "new_challenge_");
+      } else {
+        $this->new_challenge = NewChallenge::get_by_id($DB, $this->new_challenge_id);
+      }
+    }
   }
 
   // === Find Functions ===

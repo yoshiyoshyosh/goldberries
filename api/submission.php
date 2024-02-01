@@ -80,7 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->raw_session_url = $submission->raw_session_url;
       }
 
-      if (!$old_submission->is_verified && !$old_submission->is_rejected && ($submission->is_verified || $submission->is_rejected)) {
+      if (
+        $old_submission->verifier_id === null
+        && !$old_submission->is_verified && !$old_submission->is_rejected
+        && ($submission->is_verified || $submission->is_rejected)
+      ) {
         $toLog = $submission->is_verified ? "verified" : "rejected";
         log_info("{$old_submission} was {$toLog} by {$account->player}", "Submission");
         $old_submission->date_verified = new JsonDateTime();
@@ -91,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $old_submission->player_notes = $submission->player_notes;
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       $old_submission->verifier_notes = $submission->verifier_notes;
+      $old_submission->new_challenge_id = $submission->is_verified || $submission->is_rejected ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
         api_write($old_submission);
@@ -115,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //new challenge stuff
     if (isset($data['new_challenge'])) {
       $new_challenge = new NewChallenge();
-      $new_challenge->apply_db_data($data->new_challenge);
+      $new_challenge->apply_db_data($data['new_challenge']);
       $new_challenge_id = $new_challenge->insert($DB);
       if ($new_challenge_id === false) {
         die_json(400, "New Challenge could not be inserted");

@@ -6,7 +6,7 @@ class NewChallenge extends DbObject
 
   public string $url;
   public ?string $name = null;
-  public string $description;
+  public ?string $description;
 
 
   // === Abstract Functions ===
