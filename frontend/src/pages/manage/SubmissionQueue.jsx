@@ -72,9 +72,12 @@ export function PageSubmissionQueue() {
     if (currentIndex === -1) {
       return;
     }
-    const nextSubmission = query.data.data[currentIndex + 1];
+    let nextSubmission = query.data.data[currentIndex + 1];
     if (nextSubmission === undefined) {
-      return;
+      nextSubmission = query.data.data[currentIndex];
+      if (nextSubmission === undefined) {
+        return;
+      }
     }
     setSubmissionId(nextSubmission.id);
   };
@@ -88,6 +91,7 @@ export function PageSubmissionQueue() {
             position: "absolute",
             mt: 0,
             p: 1,
+            pt: 1,
             top: 0,
             left: 0,
             transform: "translate(calc(-100% - 20px), 0)",
@@ -112,22 +116,34 @@ export function PageSubmissionQueue() {
                 disablePadding
                 selected={submission.id === parseInt(submissionId)}
                 onClick={() => {
-                  // window.scrollTo(0, 0);
                   setSubmissionId(submission.id);
                 }}
               >
-                <ListItemText
-                  primary={
-                    <Typography variant="body1">
-                      {submission.id} - {submission.challenge.map.name} - {submission.player.name}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2">
-                      {submission.challenge.map.campaign.name} - {submission.challenge.difficulty.name}
-                    </Typography>
-                  }
-                />
+                {submission.challenge !== null ? (
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1">
+                        {submission.id} - {submission.challenge.map.name} - {submission.player.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2">
+                        {submission.challenge.map.campaign.name} - {submission.challenge.difficulty.name}
+                      </Typography>
+                    }
+                  />
+                ) : (
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1">
+                        {submission.id} - {submission.player.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2">New Challenge: {submission.new_challenge.name}</Typography>
+                    }
+                  />
+                )}
               </ListItemButton>
             ))}
           </List>

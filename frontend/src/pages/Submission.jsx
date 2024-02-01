@@ -4,15 +4,23 @@ import { fetchSubmission, postSubmission } from "../util/api";
 import { toast } from "react-toastify";
 import {
   Box,
+  Button,
+  ButtonGroup,
   Chip,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  MenuItem,
   Paper,
   Stack,
   Table,
@@ -28,10 +36,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClock,
   faComment,
+  faEdit,
+  faFileExport,
   faShield,
   faSpinner,
+  faTrash,
   faUser,
   faUserAlt,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import { errorToast, jsonDateToJsDate } from "../util/util";
@@ -40,36 +52,17 @@ import { useEffect, useState } from "react";
 import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import CustomizedMenus, { BasicContainerBox, ProofEmbed } from "../components/BasicComponents";
+import { FormSubmissionWrapper } from "../components/forms/Submission";
+import { PlayerChip } from "./ClaimPlayer";
 
 export function PageSubmission({}) {
   const { id } = useParams();
 
   return (
-    <Container
-      sx={{
-        p: {
-          xs: 0,
-          sm: 1,
-        },
-      }}
-      maxWidth="md"
-    >
-      <Paper
-        elevation={2}
-        sx={{
-          px: {
-            xs: 2,
-            sm: 5,
-          },
-          py: {
-            xs: 2,
-            sm: 3,
-          },
-        }}
-      >
-        <SubmissionDisplay id={id} />
-      </Paper>
-    </Container>
+    <BasicContainerBox maxWidth="md">
+      <SubmissionDisplay id={parseInt(id)} />
+    </BasicContainerBox>
   );
 }
 
@@ -106,75 +99,87 @@ export function SubmissionDisplay({ id, onDelete }) {
     if (query.data) setSubmission(query.data.data);
   }, [id]);
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 
   if (query.isLoading) {
     return (
-      <Box>
-        <Typography variant="h3">
-          Loading <FontAwesomeIcon icon={faSpinner} spin />
-        </Typography>
-      </Box>
+      <Typography variant="h3">
+        Loading <FontAwesomeIcon icon={faSpinner} spin />
+      </Typography>
     );
   } else if (query.isError) {
-    return (
-      <Box>
-        <Typography variant="h3">Error: {query.error.message}</Typography>
-      </Box>
-    );
+    return <Typography variant="h3">Error: {query.error.message}</Typography>;
   }
 
-  if (submission.new_challenge_id !== null) {
-    return (
-      <Box>
-        <Typography variant="h3">Submission</Typography>
-        <Typography variant="h6">Your submission for a new challenge is being checked!</Typography>
-      </Box>
-    );
-  }
-  if ((!isOwnSubmission && !isVerifier) || true) {
-    return (
-      <Box>
+  return (
+    <>
+      {submission.challenge !== null && (
         <GoldberriesBreadcrumbs
           campaign={submission.challenge.map.campaign}
           map={submission.challenge.map}
           challenge={submission.challenge}
           submission={submission}
         />
-        <Divider sx={{ my: 2 }}></Divider>
-        <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
-          <Grid item xs={12} sm="auto">
-            <Typography variant="h4">Submission</Typography>
-          </Grid>
-          <Grid item xs="auto" sm="auto">
-            <Typography>by {submission.player.name}</Typography>
-          </Grid>
-          <Grid item xs={6} sm="auto">
-            <VerificationStatusChip isVerified={submission.is_verified} isRejected={submission.is_rejected} />
-          </Grid>
+      )}
+      <Divider sx={{ my: 2 }}></Divider>
+      <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
+        <Grid item xs={12} sm="auto">
+          <Typography variant="h4">Submission</Typography>
         </Grid>
+        <Grid item xs={6} sm>
+          <VerificationStatusChip isVerified={submission.is_verified} isRejected={submission.is_rejected} />
+        </Grid>
+        {isVerifier || isOwnSubmission ? (
+          <Grid item xs={6} sm="auto">
+            <CustomizedMenus title="Modify">
+              <MenuItem disableRipple onClick={() => setEditModalOpen(true)}>
+                <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                Edit
+              </MenuItem>
+              <Divider sx={{ my: 0.5 }} />
+              <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                <Button
+                  onClick={() => setDeleteModalOpen(true)}
+                  color="error"
+                  disableRipple
+                  sx={{ px: "16px" }}
+                >
+                  <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                  Delete
+                </Button>
+              </MenuItem>
+            </CustomizedMenus>
+          </Grid>
+        ) : null}
+      </Grid>
+      <PlayerChip player={submission.player} sx={{ mb: 2 }} />
+      {submission.challenge !== null ? (
         <FullChallengeDisplay challenge={submission.challenge} />
-        <Divider sx={{ my: 2 }}>{/* <Chip label="Details" size="small" /> */}</Divider>
-        <SubmissionDetailsDisplay submission={submission} />
-      </Box>
-    );
-  }
+      ) : (
+        <NewChallengeDisplay newChallenge={submission.new_challenge} />
+      )}
+      <Divider sx={{ my: 2 }}>{/* <Chip label="Details" size="small" /> */}</Divider>
+      <ProofEmbed url={submission.proof_url} />
+      <SubmissionDetailsDisplay submission={submission} />
 
-  const setChallenge = (challenge) => {
-    setSubmission({ ...submission, challenge: challenge, challenge_id: challenge.id });
-  };
-
-  return (
-    <Box>
-      <FullChallengeSelect
-        defaultCampaign={submission.challenge.map?.campaign}
-        defaultMap={submission.challenge.map}
-        challenge={submission.challenge}
-        setChallenge={setChallenge}
-        disabled={!isOwnSubmission && !isVerifier}
-      />
-    </Box>
+      <Dialog
+        onClose={() => setEditModalOpen(false)}
+        aria-labelledby="customized-dialog-title"
+        open={editModalOpen}
+        maxWidth="sm"
+        fullWidth
+        disableScrollLock
+        disableRestoreFocus
+      >
+        <DialogContent dividers>
+          <FormSubmissionWrapper id={submission.id} onSave={() => setEditModalOpen(false)} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -206,8 +211,8 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
   };
 
   useEffect(() => {
-    if (challenge) {
-      setCampaign(challenge.map.campaign);
+    if (challenge !== null && challenge.map !== null) {
+      setCampaign(challenge.map?.campaign);
       setMap(challenge.map);
     }
   }, [challenge]);
@@ -219,13 +224,7 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
         <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} disabled={disabled} />
       )}
       {campaign && map && (
-        <ChallengeSelect
-          campaign={campaign}
-          map={map}
-          selected={challenge}
-          setSelected={setChallenge}
-          disabled={disabled}
-        />
+        <ChallengeSelect map={map} selected={challenge} setSelected={setChallenge} disabled={disabled} />
       )}
     </Stack>
   );
@@ -267,6 +266,29 @@ export function FullChallengeDisplay({ challenge }) {
   );
 }
 
+export function NewChallengeDisplay({ newChallenge }) {
+  return (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold" }}>Campaign URL</TableCell>
+            <TableCell>{newChallenge.url}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold" }}>Map</TableCell>
+            <TableCell>{newChallenge.name}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold" }}>Description</TableCell>
+            <TableCell>{newChallenge.description}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
 export function SubmissionDetailsDisplay({ submission }) {
   const verifier = getSubmissionVerifier(submission);
   return (
@@ -282,12 +304,9 @@ export function SubmissionDetailsDisplay({ submission }) {
           </ListItem>
           <ListItem>
             <ListItemIcon>
-              <FontAwesomeIcon icon={faYoutube} />
+              <FontAwesomeIcon icon={faComment} />
             </ListItemIcon>
-            <ListItemText
-              primary={<Link to={submission.proof_url}>{submission.proof_url}</Link>}
-              secondary="Proof"
-            />
+            <ListItemText primary={submission.player_notes ?? "-"} secondary="Player Notes" />
           </ListItem>
           <ListItem>
             <ListItemIcon>

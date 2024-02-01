@@ -23,6 +23,7 @@ import { PlayerChip, PlayerSelect } from "../../pages/ClaimPlayer";
 import { DifficultySelect } from "../../pages/Submit";
 import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
+import { FormOptions } from "../../util/constants";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({
@@ -72,7 +73,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
     defaultValues: submission,
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
-    saveSubmission({ ...data, challenge_id: challenge.id, player_id: player.id });
+    saveSubmission({ ...data, challenge_id: challenge?.id, player_id: player.id });
   });
   const onVerifySubmit = () => {
     form.setValue("is_verified", true);
@@ -94,7 +95,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
   }, [submission]);
 
   const isVerifier = auth.hasVerifierPriv;
-  const submitDisabled = challenge === null || player === null;
+  const submitDisabled = player === null || (challenge === null && !submission.new_challenge_id);
+
+  const new_challenge_id = form.watch("new_challenge_id");
 
   if (!isVerifier && submission.player.id !== auth.user.player.id) {
     return (
@@ -109,21 +112,53 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
   return (
     <form {...props}>
-      <Typography variant="h6" gutterBottom>
-        Submission ({submission.id})
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+        <Typography variant="h6">Submission ({submission.id})</Typography>
+        <VerificationStatusChip
+          isVerified={submission.is_verified}
+          isRejected={submission.is_rejected}
+          prefix="Status: "
+        />
+      </Stack>
+
       {isVerifier ? (
         <FullChallengeSelect challenge={challenge} setChallenge={setChallenge} />
-      ) : (
+      ) : new_challenge_id === null ? (
         <FullChallengeDisplay challenge={challenge} />
-      )}
+      ) : null}
 
-      {submission.new_challenge_id ? (
-        <>
-          <TextField label="New Challenge URL" disabled fullWidth />
-          <TextField label="New Challenge Name" disabled fullWidth />
-          <TextField label="New Challenge Description" multiline minRows={2} disabled fullWidth />
-        </>
+      {new_challenge_id ? (
+        <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+          <Divider flexItem />
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">New Challenge Details</Typography>
+            {isVerifier ? (
+              <Button variant="outlined" onClick={() => form.setValue("new_challenge_id", null)}>
+                Remove
+              </Button>
+            ) : null}
+          </Stack>
+          <TextField
+            label="URL"
+            disabled={!isVerifier}
+            fullWidth
+            {...form.register("new_challenge.url", FormOptions.UrlRequired)}
+          />
+          <TextField
+            label="Name"
+            disabled={!isVerifier}
+            fullWidth
+            {...form.register("new_challenge.name", FormOptions.Name128Required)}
+          />
+          <TextField
+            label="Description"
+            multiline
+            minRows={2}
+            disabled={!isVerifier}
+            fullWidth
+            {...form.register("new_challenge.description")}
+          />
+        </Stack>
       ) : null}
 
       <Divider sx={{ my: 2 }} />
@@ -146,6 +181,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             onChange={field.onChange}
             label="Is FC"
             checked={field.value}
+            disabled={!isVerifier}
             control={<Checkbox />}
           />
         )}
@@ -179,13 +215,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             )}
           />
         </>
-      ) : (
-        <VerificationStatusChip
-          isVerified={submission.is_verified}
-          isRejected={submission.is_rejected}
-          prefix="Status: "
-        />
-      )}
+      ) : null}
 
       <TextField
         {...form.register("proof_url")}
@@ -198,7 +228,13 @@ export function FormSubmission({ submission, onSave, ...props }) {
       {proofUrlDebounced ? <ProofEmbed url={proofUrlDebounced} /> : null}
 
       {submission.raw_session_url ? (
-        <TextField {...form.register("raw_session_url")} label="Raw Session URL" fullWidth sx={{ mt: 2 }} />
+        <TextField
+          {...form.register("raw_session_url")}
+          label="Raw Session URL"
+          fullWidth
+          sx={{ mt: 2 }}
+          disabled={!isVerifier}
+        />
       ) : null}
       <TextField
         {...form.register("player_notes")}
@@ -218,7 +254,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         defaultValue={submission.suggested_difficulty_id ?? null}
       />
 
-      <List dense>
+      <List dense sx={{ pb: 0 }}>
         <ListItem>
           <ListItemText
             primary={jsonDateToJsDate(submission.date_created).toLocaleString()}
@@ -235,21 +271,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
                 secondary="Date Verified"
               />
             </ListItem>
-            {!isVerifier ? (
-              <ListItem>
-                <ListItemText
-                  primary={
-                    submission.date_verified
-                      ? jsonDateToJsDate(submission.date_verified).toLocaleString()
-                      : "-"
-                  }
-                  secondary="Date Verified"
-                />
-              </ListItem>
-            ) : null}
             <ListItem>
               <ListItemText
-                primary={submission.verifier ? submission.verifier.name : "-"}
+                primary={submission.verifier ? submission.verifier.name : "Modded Golden Team"}
                 secondary="Verifier"
               />
             </ListItem>
@@ -264,7 +288,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           multiline
           rows={1}
           fullWidth
-          sx={{ mt: 0 }}
+          sx={{ mt: 1 }}
           InputLabelProps={{ shrink: true }}
         />
       ) : null}

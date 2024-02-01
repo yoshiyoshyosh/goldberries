@@ -267,7 +267,7 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faEye} />,
       name: "Internal",
       items: [
-        { name: "Logs", path: "/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
+        { name: "Logs", path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
         {
           name: "Submission Queue",
           path: "/manage/submission-queue",

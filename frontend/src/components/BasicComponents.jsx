@@ -1,6 +1,13 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faChevronDown,
+  faEdit,
+  faFileExport,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Menu, MenuItem, Typography } from "@mui/material";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export function LoadingSpinner({ ...props }) {
@@ -94,5 +101,39 @@ export function ProofEmbed({ url, ...props }) {
         </Link>
       </Typography>
     </div>
+  );
+}
+
+export default function CustomizedMenus({ title, children, ...props }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <Box {...props}>
+      <Button
+        variant="contained"
+        disableElevation
+        onClick={handleClick}
+        endIcon={<FontAwesomeIcon icon={faChevronDown} />}
+      >
+        {title}
+      </Button>
+      <Menu
+        id="demo-customized-menu"
+        disableScrollLock
+        anchorEl={anchorEl}
+        open={open}
+        onClick={handleClose}
+        onClose={handleClose}
+      >
+        {children}
+      </Menu>
+    </Box>
   );
 }

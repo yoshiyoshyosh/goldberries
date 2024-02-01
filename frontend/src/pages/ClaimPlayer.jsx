@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 export function PageClaimPlayer() {
   const auth = useAuth();
@@ -319,16 +320,19 @@ export function PlayerSelect({ type, value, onChange, ...props }) {
   );
 }
 
-export function PlayerChip({ player }) {
+export function PlayerChip({ player, ...props }) {
   return (
-    <Chip
-      label={player?.name ?? "-"}
-      avatar={
-        <Avatar>
-          <FontAwesomeIcon icon={faUser} />
-        </Avatar>
-      }
-      sx={{ mr: 1 }}
-    />
+    <Link to={"/player/" + player.id}>
+      <Chip
+        label={player?.name ?? "-"}
+        avatar={
+          <Avatar>
+            <FontAwesomeIcon icon={faUser} />
+          </Avatar>
+        }
+        sx={{ mr: 1 }}
+        {...props}
+      />
+    </Link>
   );
 }

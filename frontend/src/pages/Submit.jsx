@@ -68,9 +68,15 @@ export function PageSubmit() {
   if (query.isFetching) {
     return (
       <BasicContainerBox maxWidth="md">
-        <Tabs value={selectedTab} onChange={(event, newValue) => setSelectedTab(newValue)}>
+        <Tabs
+          value={selectedTab}
+          onChange={(event, newValue) => setSelectedTab(newValue)}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
           <Tab label="Single Challenge" value="single-challenge" />
           <Tab label="Multi Challenge" value="multi-challenge" />
+          <Tab label="New Challenge" value="new-challenge" />
         </Tabs>
         <LoadingSpinner sx={{ mt: 2 }} />
       </BasicContainerBox>
@@ -87,9 +93,15 @@ export function PageSubmit() {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <Tabs value={selectedTab} onChange={(event, newValue) => setSelectedTab(newValue)}>
+      <Tabs
+        value={selectedTab}
+        onChange={(event, newValue) => setSelectedTab(newValue)}
+        variant="scrollable"
+        scrollButtons="auto"
+      >
         <Tab label="Single Challenge" value="single-challenge" />
         <Tab label="Multi Challenge" value="multi-challenge" />
+        <Tab label="New Challenge" value="new-challenge" />
       </Tabs>
       {selectedTab === "single-challenge" && (
         <SingleUserSubmission
@@ -99,6 +111,7 @@ export function PageSubmit() {
         />
       )}
       {selectedTab === "multi-challenge" && <MultiUserSubmission />}
+      {selectedTab === "new-challenge" && <NewChallengeUserSubmission />}
     </BasicContainerBox>
   );
 }
@@ -213,7 +226,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              label="Proof URL*"
+              label="Proof URL *"
               fullWidth
               {...form.register("proof_url", FormOptions.UrlRequired)}
               error={errors.proof_url}
@@ -226,7 +239,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
           {challenge !== null && challenge.difficulty.id <= 13 && (
             <Grid item xs={12}>
               <TextField
-                label="Raw Session URL*"
+                label="Raw Session URL *"
                 fullWidth
                 {...form.register("raw_session_url", FormOptions.UrlRequired)}
                 error={errors.raw_session_url}
@@ -286,8 +299,6 @@ export function MultiUserSubmission() {
   const [sortMinorIndex, setSortMinorIndex] = useState(null);
   const [preferFc, setPreferFc] = useState(false);
   const [mapDataList, setMapDataList] = useState([]); // [{map: map, challenge: challenge, is_fc: false, player_notes: "", suggested_difficulty_id: null}]
-
-  console.log("Rendering MultiUserSubmission");
 
   const { mutate: submitRun } = useMutation({
     mutationFn: (data) => postSubmission(data),
@@ -389,9 +400,6 @@ export function MultiUserSubmission() {
 
   const hasSortMajor = campaign !== null && campaign.sort_major_name !== null;
   const hasSortMinor = campaign !== null && campaign.sort_minor_name !== null;
-
-  // console.log("major sort selected", sortMajorIndex, "minor sort selected", sortMinorIndex);
-  console.log("With major/minor sort of ", sortMajorIndex, sortMinorIndex, "mapDataList is", mapDataList);
 
   let submittable = campaign !== null && mapDataList.length > 0;
   let rawSessionsGood = true;
@@ -505,7 +513,7 @@ export function MultiUserSubmission() {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              label="Proof URL*"
+              label="Proof URL *"
               fullWidth
               {...form.register("proof_url", FormOptions.UrlRequired)}
               error={errors.proof_url}
@@ -532,6 +540,139 @@ export function MultiUserSubmission() {
               </Typography>
             </Grid>
           )}
+        </Grid>
+      </form>
+    </>
+  );
+}
+
+export function NewChallengeUserSubmission({}) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const { mutate: submitRun } = useMutation({
+    mutationFn: (data) => postSubmission(data),
+    onSuccess: (response) => {
+      navigate("/submission/" + response.data.id);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.error);
+    },
+  });
+
+  //Form props
+  const form = useForm({
+    defaultValues: {
+      new_challenge: {
+        url: "",
+        name: "",
+        description: "",
+      },
+      proof_url: "",
+      raw_session_url: "",
+      player_notes: "",
+      is_fc: false,
+      suggested_difficulty_id: null,
+    },
+  });
+  const onSubmit = form.handleSubmit((data) => {
+    console.log("Form data:", data);
+    submitRun({
+      player_id: auth.user.player.id,
+      ...data,
+    });
+  });
+  const errors = form.formState.errors;
+  const suggested_difficulty_id = form.watch("suggested_difficulty_id");
+
+  return (
+    <>
+      <h1 style={{ marginBottom: "0" }}>Submit a run</h1>
+      <form>
+        <Typography variant="body1">
+          This form is for submitting a run for a challenge that is not yet in the database. Might take longer
+          to get verified!
+        </Typography>
+        <h4>Challenge Data</h4>
+        <Stack direction="column" gap={2}>
+          <TextField
+            label="GameBanana URL *"
+            fullWidth
+            {...form.register("new_challenge.url", FormOptions.UrlRequired)}
+            error={errors.new_challenge?.url}
+            helperText={errors.new_challenge?.url?.message}
+          />
+          <TextField
+            label="Map Name *"
+            fullWidth
+            {...form.register("new_challenge.name", FormOptions.Name128Required)}
+            error={errors.new_challenge?.name}
+            helperText={errors.new_challenge?.name?.message}
+          />
+          <TextField
+            label="Challenge Description"
+            fullWidth
+            multiline
+            minRows={3}
+            {...form.register("new_challenge.description")}
+            InputLabelProps={{ shrink: true }}
+            placeholder="Description of the challenge, if different from a regular deathless run"
+          />
+        </Stack>
+        <Divider sx={{ my: 3 }} />
+        <h4>Your Run</h4>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Proof URL *"
+              fullWidth
+              {...form.register("proof_url", FormOptions.UrlRequired)}
+              error={errors.proof_url}
+              helperText={errors.proof_url?.message}
+            />
+            <FormHelperText>
+              Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight
+            </FormHelperText>
+          </Grid>
+          {suggested_difficulty_id !== null && suggested_difficulty_id < 13 && (
+            <Grid item xs={12}>
+              <TextField
+                label="Raw Session URL *"
+                fullWidth
+                {...form.register("raw_session_url", FormOptions.UrlRequired)}
+                error={errors.raw_session_url}
+                helperText={errors.raw_session_url?.message}
+              />
+              <FormHelperText>
+                Raw session recording of the winning run is required for Tier 3+ goldens.
+              </FormHelperText>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <TextField
+              label="Player Notes"
+              multiline
+              fullWidth
+              minRows={2}
+              {...form.register("player_notes")}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is FC" />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <DifficultySelect
+              label="Suggested Difficulty"
+              fullWidth
+              SelectProps={{ ...form.register("suggested_difficulty_id") }}
+              helperText="Please use responsibly, meme suggestions will be removed!"
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Button variant="contained" fullWidth onClick={onSubmit}>
+              Submit
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </>
@@ -643,7 +784,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
                   >
                     <TableCell colSpan={7}>
                       <TextField
-                        label="Raw Session URL*"
+                        label="Raw Session URL *"
                         value={mapData.raw_session_url}
                         onChange={(e) =>
                           updateMapDataRow(index, { ...mapData, raw_session_url: e.target.value })
@@ -728,12 +869,10 @@ export function MapSelect({ campaign, selected, setSelected, disabled }) {
   );
 }
 
-export function ChallengeSelect({ campaign, map, selected, setSelected, disabled, hideLabel = false }) {
-  const keyFullGame = campaign === undefined ? "campaign" : "map";
-  const targetId = campaign === undefined ? map.id : campaign.id;
+export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabel = false }) {
   const query = useQuery({
-    queryKey: ["all_challenges", keyFullGame, targetId],
-    queryFn: () => fetchAllChallengesInMap(targetId),
+    queryKey: ["all_challenges", map.id],
+    queryFn: () => fetchAllChallengesInMap(map.id),
     onError: (error) => {
       toast.error(error.message);
     },
