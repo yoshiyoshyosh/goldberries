@@ -109,7 +109,7 @@ export function ProofEmbed({ url, ...props }) {
   );
 }
 
-export default function CustomizedMenus({ title, children, ...props }) {
+export default function CustomizedMenu({ title, children, ...props }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

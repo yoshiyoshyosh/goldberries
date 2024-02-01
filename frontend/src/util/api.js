@@ -121,6 +121,16 @@ export function fetchSubmissionQueue() {
   });
 }
 
+export function fetchChallenges(page, perPage, search) {
+  return axios.get("/challenge.php", {
+    params: {
+      page: page,
+      per_page: perPage,
+      search: search,
+    },
+  });
+}
+
 // ===== POST =====
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));

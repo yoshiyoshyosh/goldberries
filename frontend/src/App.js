@@ -48,12 +48,14 @@ import {
   faBurger,
   faChevronDown,
   faChevronLeft,
+  faEdit,
   faEye,
   faHammer,
   faHeart,
   faHome,
   faInbox,
   faList,
+  faMailBulk,
   faMailForward,
   faPerson,
   faPlayCircle,
@@ -79,6 +81,7 @@ import { PageMap } from "./pages/Map";
 import { PageClaimPlayer } from "./pages/ClaimPlayer";
 import { PageTopGoldenList } from "./pages/TopGoldenList";
 import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
+import { PageManageChallenges } from "./pages/manage/Challenges";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -118,6 +121,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute redirect="manage/submission-queue">
                 <PageSubmissionQueue />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "challenges",
+            element: (
+              <ProtectedRoute needsVerifier redirect="manage/challenges">
+                <PageManageChallenges />
               </ProtectedRoute>
             ),
           },
@@ -271,7 +282,12 @@ export function Layout() {
         {
           name: "Submission Queue",
           path: "/manage/submission-queue",
-          icon: <FontAwesomeIcon icon={faMailForward} />,
+          icon: <FontAwesomeIcon icon={faMailBulk} />,
+        },
+        {
+          name: "Manage Challenges",
+          path: "/manage/challenges",
+          icon: <FontAwesomeIcon icon={faEdit} />,
         },
       ],
     },

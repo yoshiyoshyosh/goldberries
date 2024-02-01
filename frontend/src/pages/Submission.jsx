@@ -53,7 +53,7 @@ import { useEffect, useState } from "react";
 import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import CustomizedMenus, {
+import CustomizedMenu, {
   BasicContainerBox,
   ErrorDisplay,
   LoadingSpinner,
@@ -61,6 +61,7 @@ import CustomizedMenus, {
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { PlayerChip } from "./ClaimPlayer";
+import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 
 export function PageSubmission({}) {
   const { id } = useParams();
@@ -105,8 +106,15 @@ export function SubmissionDisplay({ id, onDelete }) {
     if (query.data) setSubmission(query.data.data);
   }, [id]);
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const editModal = useModal(submission);
+  const deleteModal = useModal(
+    submission,
+    (cancelled, data) => {
+      if (cancelled) return;
+      doDeleteSubmission(data.id);
+    },
+    { actions: [ModalButtons.Cancel, ModalButtons.Delete] }
+  );
 
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
@@ -137,15 +145,15 @@ export function SubmissionDisplay({ id, onDelete }) {
         </Grid>
         {isVerifier || isOwnSubmission ? (
           <Grid item xs={6} sm="auto">
-            <CustomizedMenus title="Modify">
-              <MenuItem disableRipple onClick={() => setEditModalOpen(true)}>
+            <CustomizedMenu title="Modify">
+              <MenuItem disableRipple onClick={() => editModal.open(submission)}>
                 <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
                 Edit
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
               <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
                 <Button
-                  onClick={() => setDeleteModalOpen(true)}
+                  onClick={() => deleteModal.open(submission)}
                   color="error"
                   disableRipple
                   sx={{ px: "16px" }}
@@ -154,7 +162,7 @@ export function SubmissionDisplay({ id, onDelete }) {
                   Delete
                 </Button>
               </MenuItem>
-            </CustomizedMenus>
+            </CustomizedMenu>
           </Grid>
         ) : null}
       </Grid>
@@ -168,48 +176,15 @@ export function SubmissionDisplay({ id, onDelete }) {
       <ProofEmbed url={submission.proof_url} />
       <SubmissionDetailsDisplay submission={submission} />
 
-      <Dialog
-        onClose={() => setEditModalOpen(false)}
-        open={editModalOpen}
-        maxWidth="sm"
-        fullWidth
-        disableScrollLock
-        disableRestoreFocus
-      >
-        <DialogContent dividers>
-          <FormSubmissionWrapper id={submission.id} onSave={() => setEditModalOpen(false)} />
-        </DialogContent>
-      </Dialog>
+      <CustomModal modalHook={editModal} options={{ hideFooter: true }}>
+        <FormSubmissionWrapper id={editModal.data?.id} onSave={() => editModal.close()} />
+      </CustomModal>
 
-      <Dialog
-        onClose={() => setDeleteModalOpen(false)}
-        open={deleteModalOpen}
-        maxWidth="sm"
-        fullWidth
-        disableScrollLock
-        disableRestoreFocus
-      >
-        <DialogTitle id="alert-dialog-title">Delete Submission?</DialogTitle>
-        <DialogContent dividers>
-          <DialogContentText>
-            Are you sure you want to delete this submission? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              setDeleteModalOpen(false);
-              doDeleteSubmission(submission.id);
-            }}
-            autoFocus
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <CustomModal modalHook={deleteModal} options={{ title: "Delete Submission" }}>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Are you sure you want to delete this submission?
+        </Typography>
+      </CustomModal>
     </>
   );
 }
