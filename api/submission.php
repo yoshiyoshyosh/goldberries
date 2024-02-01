@@ -147,3 +147,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     api_write($submission);
   }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "You must be logged in to delete submissions");
+  }
+
+  $id = intval($_REQUEST['id']);
+  $submission = Submission::get_by_id($DB, $id);
+  if ($submission === false) {
+    die_json(404, "Submission with id {$id} does not exist");
+  }
+
+  if ($submission->player_id !== $account->player->id && !is_verifier($account)) {
+    die_json(403, "You are not allowed to delete submissions for other players");
+  }
+
+  if ($submission->delete($DB)) {
+    http_response_code(200);
+  } else {
+    die_json(500, "Failed to delete submission");
+  }
+}
