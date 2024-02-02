@@ -34,6 +34,7 @@ import {
   fetchAllChallengesInMap,
   fetchAllDifficulties,
   fetchAllMapsInCampaign,
+  fetchAllObjectives,
   fetchChallenge,
   postSubmission,
 } from "../util/api";
@@ -44,6 +45,7 @@ import {
   getDifficultyName,
   getChallengeFlags,
   getMapLobbyInfo,
+  getObjectiveName,
 } from "../util/data_util";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -945,4 +947,69 @@ export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
   const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
   const colors = getDifficultyColors(difficulty?.id);
   return <Chip label={prefix + text} size="small" {...props} sx={{ ...sx, bgcolor: colors.group_color }} />;
+}
+
+export function DifficultySelectControlled({ difficultyId, setDifficultyId, ...props }) {
+  const query = useQuery({
+    queryKey: ["all_difficulties"],
+    queryFn: () => fetchAllDifficulties(),
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  let difficulties = query.data?.data ?? [];
+  //filter out id 13 (fwg) and 19 (undetermined)
+  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+
+  return (
+    <TextField
+      {...props}
+      select
+      value={difficultyId ?? ""}
+      onChange={(e) => setDifficultyId(e.target.value)}
+      SelectProps={{
+        ...props.SelectProps,
+        MenuProps: { disableScrollLock: true },
+      }}
+    >
+      <MenuItem value="">
+        <em>No Suggestion</em>
+      </MenuItem>
+      {difficulties.map((difficulty) => (
+        <MenuItem key={difficulty.id} value={difficulty.id}>
+          {getDifficultyName(difficulty)}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
+}
+
+export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
+  const query = useQuery({
+    queryKey: ["all_objectives"],
+    queryFn: () => fetchAllObjectives(),
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  let objectives = query.data?.data ?? [];
+
+  return (
+    <TextField
+      {...props}
+      select
+      value={objectiveId ?? 1}
+      onChange={(e) => setObjectiveId(e.target.value)}
+      SelectProps={{
+        ...props.SelectProps,
+        MenuProps: { disableScrollLock: true },
+      }}
+    >
+      {objectives.map((objective) => (
+        <MenuItem key={objective.id} value={objective.id}>
+          {getObjectiveName(objective)}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
 }

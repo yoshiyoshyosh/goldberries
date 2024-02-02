@@ -3,8 +3,8 @@
 }
 
 
-.gb-api-has-content {
-  text-decoration: underline;
-  cursor: pointer;
-  /*color: var(--bs-link-color);*/
+.text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

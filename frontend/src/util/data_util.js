@@ -123,3 +123,12 @@ export function getSubmissionVerifier(submission) {
     id: null,
   };
 }
+
+export function getObjectiveName(objective) {
+  const arbitrarySuffix = objective.is_arbitrary ? " (A)" : "";
+  return objective.name + arbitrarySuffix;
+}
+
+export function getCampaignName(campaign) {
+  return campaign.name + " (by " + campaign.author_gb_name + ")";
+}

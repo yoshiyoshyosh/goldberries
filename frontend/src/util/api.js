@@ -73,6 +73,9 @@ export function fetchAllChallengesInMap(mapId) {
   });
 }
 
+export function fetchAllObjectives() {
+  return axios.get("/objective.php?id=all");
+}
 export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
@@ -132,6 +135,14 @@ export function fetchChallenges(page, perPage, search) {
 }
 
 // ===== POST =====
+export function postMap(data) {
+  return axios.post("/map.php", formatDataForApi(data));
+}
+
+export function postChallenge(data) {
+  return axios.post("/challenge.php", formatDataForApi(data));
+}
+
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
 }
