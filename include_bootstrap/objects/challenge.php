@@ -25,6 +25,9 @@ class Challenge extends DbObject
   // Associative Objects
   public ?array $submissions = null; /* Submission[] */
 
+  // Other
+  public $data = null; // Used for any arbitrary data, based on context
+
 
   // === Abstract Functions ===
   function get_field_set()

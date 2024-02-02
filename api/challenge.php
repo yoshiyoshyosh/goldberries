@@ -76,6 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $challenge->expand_foreign_keys($row, $depth);
       $challenges[] = $challenge;
 
+      $challenge->data = array(
+        'count_submissions' => intval($row['count_submissions']),
+      );
+
       if ($maxCount === 0) {
         $maxCount = intval($row['total_count']);
       }
@@ -90,5 +94,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         'per_page' => $per_page,
       )
     );
+  }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "Not logged in");
+  } else if (!is_verifier($account)) {
+    die_json(403, "Not authorized");
+  }
+
+  $data = format_assoc_array_bools(parse_post_body_as_json());
+  $challenge = new Challenge();
+  $challenge->apply_db_data($data);
+
+  if (isset($data['id'])) {
+    // Update
+    if ($challenge->update($DB)) {
+      api_write($challenge);
+    } else {
+      die_json(500, "Failed to update challenge");
+    }
+
+  } else {
+    // Insert
+    if ($challenge->insert($DB)) {
+      api_write($challenge);
+    } else {
+      die_json(500, "Failed to create challenge");
+    }
+  }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "Not logged in");
+  } else if (!is_verifier($account)) {
+    die_json(403, "Not authorized");
+  }
+
+  if (isset($_REQUEST['id'])) {
+    $id = $_REQUEST['id'];
+    $challenge = new Challenge();
+    $challenge->id = $id;
+    if ($challenge->delete($DB)) {
+      api_write($challenge);
+    } else {
+      die_json(500, "Failed to delete challenge");
+    }
+  } else {
+    die_json(400, "Missing id");
   }
 }

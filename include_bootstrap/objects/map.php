@@ -7,6 +7,7 @@ class Map extends DbObject
   public string $name;
   public ?string $url = null;
   public ?JsonDateTime $date_added = null;
+  public bool $has_fc = false;
   public bool $is_rejected = false;
   public ?string $rejection_reason = null;
   public bool $is_archived = false;
@@ -34,6 +35,7 @@ class Map extends DbObject
       'name' => $this->name,
       'url' => $this->url,
       'date_added' => $this->date_added,
+      'has_fc' => $this->has_fc,
       'is_rejected' => $this->is_rejected,
       'rejection_reason' => $this->rejection_reason,
       'is_archived' => $this->is_archived,
@@ -50,6 +52,7 @@ class Map extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
+    $this->has_fc = $arr[$prefix . 'has_fc'] === 't';
     $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
 

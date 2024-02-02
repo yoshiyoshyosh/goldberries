@@ -21,3 +21,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   api_write($campaigns);
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "Not logged in");
+  } else if (!is_verifier($account)) {
+    die_json(403, "Not authorized");
+  }
+
+  $data = format_assoc_array_bools(parse_post_body_as_json());
+  $campaign = new Campaign();
+  $campaign->apply_db_data($data);
+
+  if (isset($data['id'])) {
+    // Update
+    if ($campaign->update($DB)) {
+      api_write($campaign);
+    } else {
+      die_json(500, "Failed to update campaign");
+    }
+
+  } else {
+    // Insert
+    if ($campaign->insert($DB)) {
+      api_write($campaign);
+    } else {
+      die_json(500, "Failed to create campaign");
+    }
+  }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "Not logged in");
+  } else if (!is_verifier($account)) {
+    die_json(403, "Not authorized");
+  }
+
+  if (isset($_REQUEST['id'])) {
+    $id = $_REQUEST['id'];
+    $campaign = new Campaign();
+    $campaign->id = $id;
+    if ($campaign->delete($DB)) {
+      api_write($campaign);
+    } else {
+      die_json(500, "Failed to delete campaign");
+    }
+  } else {
+    die_json(400, "Missing id");
+  }
+}
