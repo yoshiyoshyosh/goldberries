@@ -109,7 +109,7 @@ export function ProofEmbed({ url, ...props }) {
   );
 }
 
-export default function CustomizedMenu({ title, children, ...props }) {
+export default function CustomizedMenu({ title, button, children, ...props }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -119,16 +119,15 @@ export default function CustomizedMenu({ title, children, ...props }) {
     setAnchorEl(null);
   };
 
+  const TriggerButton = button ?? (
+    <Button variant="contained" disableElevation endIcon={<FontAwesomeIcon icon={faChevronDown} />}>
+      {title}
+    </Button>
+  );
+
   return (
     <Box {...props}>
-      <Button
-        variant="contained"
-        disableElevation
-        onClick={handleClick}
-        endIcon={<FontAwesomeIcon icon={faChevronDown} />}
-      >
-        {title}
-      </Button>
+      <Box onClick={handleClick}>{TriggerButton}</Box>
       <Menu
         id="demo-customized-menu"
         disableScrollLock

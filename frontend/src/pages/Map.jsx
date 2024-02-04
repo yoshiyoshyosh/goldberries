@@ -1,4 +1,5 @@
 import {
+  Button,
   Chip,
   Container,
   Divider,
@@ -20,6 +21,9 @@ import { useQuery } from "react-query";
 import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { DifficultyChip } from "./Submit";
+import { CustomModal, useModal } from "../hooks/useModal";
+import { FormMapWrapper } from "../components/forms/Map";
+import { useAuth } from "../hooks/AuthProvider";
 
 export function PageMap() {
   const { id } = useParams();
@@ -27,17 +31,20 @@ export function PageMap() {
   return (
     <Container maxWidth="md">
       <Paper elevation={2} sx={{ p: 2 }}>
-        <MapDisplay id={id} />
+        <MapDisplay id={parseInt(id)} />
       </Paper>
     </Container>
   );
 }
 
 export function MapDisplay({ id }) {
+  const auth = useAuth();
   const query = useQuery({
     queryKey: ["map", id],
     queryFn: () => fetchMap(id),
   });
+
+  const editMapModal = useModal();
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -53,6 +60,11 @@ export function MapDisplay({ id }) {
       <Divider sx={{ my: 2 }}>
         <Chip label="Map" size="small" />
       </Divider>
+      {auth.hasVerifierPriv && (
+        <Button onClick={editMapModal.open} variant="outlined">
+          Verifier - Edit Map
+        </Button>
+      )}
       <MapDetailsList map={map} />
       {map.challenges.map((challenge) => {
         return (
@@ -67,6 +79,10 @@ export function MapDisplay({ id }) {
           </>
         );
       })}
+
+      <CustomModal modalHook={editMapModal} options={{ hideFooter: true }}>
+        <FormMapWrapper id={id} onSave={editMapModal.close} />
+      </CustomModal>
     </>
   );
 }
@@ -111,7 +127,13 @@ export function MapDetailsList({ map }) {
           <FontAwesomeIcon icon={faUser} />
         </ListItemIcon>
         <ListItemText
-          primary={<Link to={"https://gamebanana.com/members/" + author.id}>{author.name}</Link>}
+          primary={
+            author.name !== null ? (
+              <Link to={"https://gamebanana.com/members/" + author.id}>{author.name}</Link>
+            ) : (
+              "<Unknown Author>"
+            )
+          }
           secondary="Author"
         />
       </ListItem>

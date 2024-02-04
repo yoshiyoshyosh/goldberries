@@ -1,4 +1,5 @@
 import {
+  Button,
   Chip,
   Container,
   Divider,
@@ -39,6 +40,9 @@ import {
   faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { CustomModal, useModal } from "../hooks/useModal";
+import { useAuth } from "../hooks/AuthProvider";
+import { FormChallengeWrapper } from "../components/forms/Challenge";
 
 const displayNoneOnMobile = {
   display: {
@@ -53,17 +57,20 @@ export function PageChallenge({}) {
   return (
     <Container maxWidth="md">
       <Paper elevation={2} sx={{ p: 2 }}>
-        <ChallengeDisplay id={id} />
+        <ChallengeDisplay id={parseInt(id)} />
       </Paper>
     </Container>
   );
 }
 
 export function ChallengeDisplay({ id }) {
+  const auth = useAuth();
   const query = useQuery({
     queryKey: ["challenge", id],
     queryFn: () => fetchChallenge(id),
   });
+
+  const editChallengeModal = useModal();
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -79,11 +86,20 @@ export function ChallengeDisplay({ id }) {
       <Divider sx={{ my: 2 }}>
         <Chip label="Challenge" size="small" />
       </Divider>
+      {auth.hasVerifierPriv && (
+        <Button onClick={editChallengeModal.open} variant="outlined">
+          Verifier - Edit Challenge
+        </Button>
+      )}
       <ChallengeDetailsList challenge={challenge} />
       <Divider sx={{ my: 2 }}>
         <Chip label="Submissions" size="small" />
       </Divider>
       <ChallengeSubmissionTable challenge={challenge} />
+
+      <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
+        <FormChallengeWrapper id={id} onSave={editChallengeModal.close} />
+      </CustomModal>
     </>
   );
 }

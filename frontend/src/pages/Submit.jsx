@@ -46,6 +46,7 @@ import {
   getChallengeFlags,
   getMapLobbyInfo,
   getObjectiveName,
+  getCampaignName,
 } from "../util/data_util";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -821,7 +822,7 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
   campaigns.sort((a, b) => a.name.localeCompare(b.name));
 
   const getOptionLabel = (campaign) => {
-    return campaign.name + " (by " + campaign.author_gb_name + ")";
+    return getCampaignName(campaign);
   };
 
   return (
@@ -949,7 +950,7 @@ export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
   return <Chip label={prefix + text} size="small" {...props} sx={{ ...sx, bgcolor: colors.group_color }} />;
 }
 
-export function DifficultySelectControlled({ difficultyId, setDifficultyId, ...props }) {
+export function DifficultySelectControlled({ difficultyId, setDifficultyId, isSuggestion, ...props }) {
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
@@ -959,7 +960,9 @@ export function DifficultySelectControlled({ difficultyId, setDifficultyId, ...p
   });
   let difficulties = query.data?.data ?? [];
   //filter out id 13 (fwg) and 19 (undetermined)
-  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+  if (isSuggestion) {
+    difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+  }
 
   return (
     <TextField
@@ -973,7 +976,7 @@ export function DifficultySelectControlled({ difficultyId, setDifficultyId, ...p
       }}
     >
       <MenuItem value="">
-        <em>No Suggestion</em>
+        <em>No {isSuggestion ? "Suggestion" : "Selection"}</em>
       </MenuItem>
       {difficulties.map((difficulty) => (
         <MenuItem key={difficulty.id} value={difficulty.id}>

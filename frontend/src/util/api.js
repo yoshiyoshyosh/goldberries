@@ -87,6 +87,17 @@ export function fetchPlayerList(group) {
   return axios.get("/player.php", { params: { group: group } });
 }
 
+export function fetchCampaign(id, maps = true, challenges = true, submission = true) {
+  return axios.get("/campaign.php", {
+    params: {
+      id: id,
+      maps: maps,
+      challenges: challenges,
+      submissions: submission,
+    },
+  });
+}
+
 export function fetchMap(id, challenges = true, submission = true) {
   return axios.get("/map.php", {
     params: {
@@ -135,6 +146,10 @@ export function fetchChallenges(page, perPage, search) {
 }
 
 // ===== POST =====
+export function postCampaign(data) {
+  return axios.post("/campaign.php", formatDataForApi(data));
+}
+
 export function postMap(data) {
   return axios.post("/map.php", formatDataForApi(data));
 }
@@ -166,6 +181,30 @@ export function updateAccount(data) {
 }
 
 // ===== DELETE =====
+export function deleteCampaign(id) {
+  return axios.delete("/campaign.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function deleteMap(id) {
+  return axios.delete("/map.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function deleteChallenge(id) {
+  return axios.delete("/challenge.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
 export function deleteSubmission(id) {
   return axios.delete("/submission.php", {
     params: {
@@ -174,7 +213,7 @@ export function deleteSubmission(id) {
   });
 }
 
-// Utility
+// ===== Utility =====
 export function formatDataForApi(data) {
   //Loop through all props in data
   //If prop is a string, trim it. if its empty, set it to null

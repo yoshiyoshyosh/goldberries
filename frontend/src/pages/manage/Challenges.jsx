@@ -32,10 +32,11 @@ import CustomizedMenu, {
 import { useLocalStorage } from "../../hooks/useStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { get } from "react-hook-form";
 import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { FormChallengeWrapper } from "../../components/forms/Challenge";
 import { FormMapWrapper } from "../../components/forms/Map";
+import { useDeleteCampaign, useDeleteChallenge, useDeleteMap } from "../../hooks/useApi";
+import { FormCampaignWrapper } from "../../components/forms/Campaign";
 
 export function PageManageChallenges() {
   const [page, setPage] = useLocalStorage("manage_challenges_page", 1);
@@ -75,7 +76,12 @@ export function PageManageChallenges() {
         </Grid>
         <Grid item xs={12} md="auto">
           <ButtonGroup sx={{ mb: 2 }}>
-            <Button variant="contained" color="primary" startIcon={<FontAwesomeIcon icon={faPlus} />}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<FontAwesomeIcon icon={faPlus} />}
+              onClick={() => openModal(modalRefs.campaign.create, null)}
+            >
               New Campaign
             </Button>
             <Button
@@ -222,35 +228,91 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                 <TableCell align="left" width="35%">
                   <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
                     <Typography variant="body2">{getCampaignName(challenge.map.campaign)}</Typography>
-                    <IconButton size="small" color="primary" aria-label="edit">
-                      <FontAwesomeIcon size="xs" icon={faEdit} />
-                    </IconButton>
+                    <CustomizedMenu
+                      button={
+                        <IconButton size="small" color="primary" aria-label="edit">
+                          <FontAwesomeIcon size="xs" icon={faEdit} />
+                        </IconButton>
+                      }
+                    >
+                      <MenuItem
+                        disableRipple
+                        onClick={() => openModal(modalRefs.campaign.edit, challenge.map.campaign)}
+                      >
+                        <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                        Edit
+                      </MenuItem>
+                      <Divider sx={{ my: 0.5 }} />
+                      <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                        <Button
+                          onClick={() => openModal(modalRefs.campaign.delete, challenge.map.campaign)}
+                          color="error"
+                          disableRipple
+                          sx={{ px: "16px" }}
+                        >
+                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                          Delete
+                        </Button>
+                      </MenuItem>
+                    </CustomizedMenu>
                   </Stack>
                 </TableCell>
                 <TableCell align="left" width="35%">
                   <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
                     <Typography variant="body2">{challenge.map.name}</Typography>
-                    <IconButton
-                      size="small"
-                      color="primary"
-                      aria-label="edit"
-                      onClick={() => openModal(modalRefs.map.edit, challenge.map)}
+                    <CustomizedMenu
+                      button={
+                        <IconButton size="small" color="primary" aria-label="edit">
+                          <FontAwesomeIcon size="xs" icon={faEdit} />
+                        </IconButton>
+                      }
                     >
-                      <FontAwesomeIcon size="xs" icon={faEdit} />
-                    </IconButton>
+                      <MenuItem disableRipple onClick={() => openModal(modalRefs.map.edit, challenge.map)}>
+                        <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                        Edit
+                      </MenuItem>
+                      <Divider sx={{ my: 0.5 }} />
+                      <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                        <Button
+                          onClick={() => openModal(modalRefs.map.delete, challenge.map)}
+                          color="error"
+                          disableRipple
+                          sx={{ px: "16px" }}
+                        >
+                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                          Delete
+                        </Button>
+                      </MenuItem>
+                    </CustomizedMenu>
                   </Stack>
                 </TableCell>
                 <TableCell align="left" width="30%">
                   <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
                     <Typography variant="body2">{getChallengeName(challenge)}</Typography>
-                    <IconButton
-                      size="small"
-                      color="primary"
-                      aria-label="edit"
-                      onClick={() => openModal(modalRefs.challenge.edit, challenge)}
+                    <CustomizedMenu
+                      button={
+                        <IconButton size="small" color="primary" aria-label="edit">
+                          <FontAwesomeIcon size="xs" icon={faEdit} />
+                        </IconButton>
+                      }
                     >
-                      <FontAwesomeIcon size="xs" icon={faEdit} />
-                    </IconButton>
+                      <MenuItem disableRipple onClick={() => openModal(modalRefs.challenge.edit, challenge)}>
+                        <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                        Edit
+                      </MenuItem>
+                      <Divider sx={{ my: 0.5 }} />
+                      <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                        <Button
+                          onClick={() => openModal(modalRefs.challenge.delete, challenge)}
+                          color="error"
+                          disableRipple
+                          sx={{ px: "16px" }}
+                        >
+                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                          Delete
+                        </Button>
+                      </MenuItem>
+                    </CustomizedMenu>
                   </Stack>
                 </TableCell>
                 <TableCell align="center" width={1}>
@@ -288,21 +350,67 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
 }
 
 function ManageModalContainer({ modalRefs }) {
+  const { mutate: deleteCampaign } = useDeleteCampaign();
+  const { mutate: deleteMap } = useDeleteMap();
+  const { mutate: deleteChallenge } = useDeleteChallenge();
+
+  const createCampaignModal = useModal();
+  const editCampaignModal = useModal();
+  const deleteCampaignModal = useModal(null, (cancelled, data) => {
+    if (cancelled) return;
+    deleteCampaign(data.id);
+  });
+
   const createMapModal = useModal();
   const editMapModal = useModal();
+  const deleteMapModal = useModal(null, (cancelled, data) => {
+    if (cancelled) return;
+    deleteMap(data.id);
+  });
 
   const createChallengeModal = useModal();
   const editChallengeModal = useModal();
+  const deleteChallengeModal = useModal(null, (cancelled, data) => {
+    if (cancelled) return;
+    deleteChallenge(data.id);
+  });
 
   // Setting the refs
+  modalRefs.campaign.create.current = createCampaignModal;
+  modalRefs.campaign.edit.current = editCampaignModal;
+  modalRefs.campaign.delete.current = deleteCampaignModal;
+
   modalRefs.map.create.current = createMapModal;
   modalRefs.map.edit.current = editMapModal;
+  modalRefs.map.delete.current = deleteMapModal;
 
   modalRefs.challenge.create.current = createChallengeModal;
   modalRefs.challenge.edit.current = editChallengeModal;
+  modalRefs.challenge.delete.current = deleteChallengeModal;
 
   return (
     <>
+      <CustomModal modalHook={createCampaignModal} options={{ hideFooter: true }}>
+        <FormCampaignWrapper id={null} onSave={createCampaignModal.close} />
+      </CustomModal>
+      <CustomModal modalHook={editCampaignModal} options={{ hideFooter: true }}>
+        {editCampaignModal.data?.id == null ? (
+          <LoadingSpinner />
+        ) : (
+          <FormCampaignWrapper id={editCampaignModal.data?.id} onSave={editCampaignModal.close} />
+        )}
+      </CustomModal>
+      <CustomModal
+        modalHook={deleteCampaignModal}
+        options={{ title: "Delete Campaign?" }}
+        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+      >
+        <Typography variant="body1">
+          Are you sure you want to delete the campaign <b>'{deleteCampaignModal.data?.name ?? ""}'</b> and{" "}
+          <b>all of the attached maps, challenges and submissions</b> ?
+        </Typography>
+      </CustomModal>
+
       <CustomModal modalHook={createMapModal} options={{ hideFooter: true }}>
         <FormMapWrapper id={null} onSave={createMapModal.close} />
       </CustomModal>
@@ -312,6 +420,16 @@ function ManageModalContainer({ modalRefs }) {
         ) : (
           <FormMapWrapper id={editMapModal.data?.id} onSave={editMapModal.close} />
         )}
+      </CustomModal>
+      <CustomModal
+        modalHook={deleteMapModal}
+        options={{ title: "Delete Map?" }}
+        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+      >
+        <Typography variant="body1">
+          Are you sure you want to delete the map <b>'{deleteMapModal.data?.name ?? ""}'</b> and{" "}
+          <b>all of the attached challenges and submissions</b> ?
+        </Typography>
       </CustomModal>
 
       <CustomModal modalHook={createChallengeModal} options={{ hideFooter: true }}>
@@ -323,6 +441,17 @@ function ManageModalContainer({ modalRefs }) {
         ) : (
           <FormChallengeWrapper id={editChallengeModal.data?.id} onSave={editChallengeModal.close} />
         )}
+      </CustomModal>
+      <CustomModal
+        modalHook={deleteChallengeModal}
+        options={{ title: "Delete Challenge?" }}
+        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+      >
+        <Typography variant="body1">
+          Are you sure you want to delete the challenge{" "}
+          <b>'{deleteChallengeModal.data ? getChallengeName(deleteChallengeModal.data) : ""}'</b> for the map{" "}
+          <b>'{deleteChallengeModal.data?.map?.name}'</b> and <b>all of the attached submissions</b> ?
+        </Typography>
       </CustomModal>
     </>
   );

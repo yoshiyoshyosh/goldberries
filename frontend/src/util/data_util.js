@@ -130,5 +130,6 @@ export function getObjectiveName(objective) {
 }
 
 export function getCampaignName(campaign) {
-  return campaign.name + " (by " + campaign.author_gb_name + ")";
+  const authorName = campaign.author_gb_name === null ? "<Unknown Author>" : campaign.author_gb_name;
+  return campaign.name + " (by " + authorName + ")";
 }

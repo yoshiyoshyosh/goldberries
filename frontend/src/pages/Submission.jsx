@@ -79,18 +79,8 @@ export function SubmissionDisplay({ id, onDelete }) {
   const query = useQuery({
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
-    onSuccess: (response) => {
-      setSubmission(response.data);
-    },
   });
-  const { mutate: updateSubmission } = useMutation({
-    mutationFn: (data) => postSubmission(data),
-    onSuccess: (data) => {
-      toast.success("Submission updated!");
-      queryClient.invalidateQueries(["submission", id]);
-    },
-    onError: errorToast,
-  });
+  console.log("SubmissionDisplay query -> ", query.data?.data);
   const { mutate: doDeleteSubmission } = useMutation({
     mutationFn: (id) => deleteSubmission(id),
     onSuccess: (data) => {
@@ -101,14 +91,9 @@ export function SubmissionDisplay({ id, onDelete }) {
     onError: errorToast,
   });
 
-  const [submission, setSubmission] = useState(query.data ?? null);
-  useEffect(() => {
-    if (query.data) setSubmission(query.data.data);
-  }, [id]);
-
-  const editModal = useModal(submission);
+  const editModal = useModal();
   const deleteModal = useModal(
-    submission,
+    null,
     (cancelled, data) => {
       if (cancelled) return;
       doDeleteSubmission(data.id);
@@ -116,14 +101,15 @@ export function SubmissionDisplay({ id, onDelete }) {
     { actions: [ModalButtons.Cancel, ModalButtons.Delete] }
   );
 
-  const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
-  const isVerifier = auth.hasVerifierPriv;
-
-  if (query.isLoading) {
+  if (query.isLoading || query.isFetching) {
     return <LoadingSpinner />;
   } else if (query.isError) {
     return <ErrorDisplay error={query.error} />;
   }
+
+  const submission = query.data?.data;
+  const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
+  const isVerifier = auth.hasVerifierPriv;
 
   return (
     <>
