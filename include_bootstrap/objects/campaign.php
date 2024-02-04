@@ -30,11 +30,11 @@ class Campaign extends DbObject
       'date_added' => $this->date_added,
       'icon_url' => $this->icon_url,
       'sort_major_name' => $this->sort_major_name,
-      'sort_major_labels' => implode("\t", $this->sort_major_labels),
-      'sort_major_colors' => implode("\t", $this->sort_major_colors),
+      'sort_major_labels' => $this->sort_major_labels ? implode("\t", $this->sort_major_labels) : null,
+      'sort_major_colors' => $this->sort_major_colors ? implode("\t", $this->sort_major_colors) : null,
       'sort_minor_name' => $this->sort_minor_name,
-      'sort_minor_labels' => implode("\t", $this->sort_minor_labels),
-      'sort_minor_colors' => implode("\t", $this->sort_minor_colors),
+      'sort_minor_labels' => $this->sort_minor_labels ? implode("\t", $this->sort_minor_labels) : null,
+      'sort_minor_colors' => $this->sort_minor_colors ? implode("\t", $this->sort_minor_colors) : null,
       'author_gb_id' => $this->author_gb_id,
       'author_gb_name' => $this->author_gb_name,
     );
@@ -49,16 +49,31 @@ class Campaign extends DbObject
 
     if (isset($arr[$prefix . 'icon_url']))
       $this->icon_url = $arr[$prefix . 'icon_url'];
+
     if (isset($arr[$prefix . 'sort_major_name'])) {
       $this->sort_major_name = $arr[$prefix . 'sort_major_name'];
-      $this->sort_major_labels = explode("\t", $arr[$prefix . 'sort_major_labels']);
-      $this->sort_major_colors = explode("\t", $arr[$prefix . 'sort_major_colors']);
     }
+    if (isset($arr[$prefix . 'sort_major_labels'])) {
+      $sort_major_labels = $arr[$prefix . 'sort_major_labels'];
+      $this->sort_major_labels = is_array($sort_major_labels) ? $sort_major_labels : explode("\t", $sort_major_labels);
+    }
+    if (isset($arr[$prefix . 'sort_major_colors'])) {
+      $sort_major_colors = $arr[$prefix . 'sort_major_colors'];
+      $this->sort_major_colors = is_array($sort_major_colors) ? $sort_major_colors : explode("\t", $sort_major_colors);
+    }
+
     if (isset($arr['sort_minor_name'])) {
       $this->sort_minor_name = $arr[$prefix . 'sort_minor_name'];
-      $this->sort_minor_labels = explode("\t", $arr[$prefix . 'sort_minor_labels']);
-      $this->sort_minor_colors = explode("\t", $arr[$prefix . 'sort_minor_colors']);
     }
+    if (isset($arr[$prefix . 'sort_minor_labels'])) {
+      $sort_minor_labels = $arr[$prefix . 'sort_minor_labels'];
+      $this->sort_minor_labels = is_array($sort_minor_labels) ? $sort_minor_labels : explode("\t", $sort_minor_labels);
+    }
+    if (isset($arr[$prefix . 'sort_minor_colors'])) {
+      $sort_minor_colors = $arr[$prefix . 'sort_minor_colors'];
+      $this->sort_minor_colors = is_array($sort_minor_colors) ? $sort_minor_colors : explode("\t", $sort_minor_colors);
+    }
+
     if (isset($arr[$prefix . 'author_gb_id']))
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
     if (isset($arr[$prefix . 'author_gb_name']))

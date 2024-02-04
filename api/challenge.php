@@ -119,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   } else {
     // Insert
+    $challenge->date_created = new JsonDateTime();
     if ($challenge->insert($DB)) {
       api_write($challenge);
     } else {

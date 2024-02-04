@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   } else {
     // Insert
+    $campaign->date_added = new JsonDateTime();
     if ($campaign->insert($DB)) {
       api_write($campaign);
     } else {
