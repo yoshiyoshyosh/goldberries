@@ -25,6 +25,7 @@ export function PageTopGoldenList({}) {
         <Link to="/top-golden-list/player/64">Parrot</Link>
         <Link to="/top-golden-list/player/388">Clantis</Link>
         <Link to="/top-golden-list/player/429">ninz</Link>
+        <Link to="/top-golden-list/hitlist">Golden Hit-List</Link>
       </Stack>
       <Typography variant="body" gutterBottom>
         (type: {selectedType}, id: {id})

@@ -1,17 +1,31 @@
 import { useQuery } from "react-query";
-import { Button, Chip, Divider, FormHelperText, Stack, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Chip,
+  Divider,
+  FormHelperText,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FormOptions } from "../../util/constants";
-import { usePostCampaign } from "../../hooks/useApi";
+import { useDeleteMap, usePostCampaign, usePostMap } from "../../hooks/useApi";
 import { fetchCampaign } from "../../util/api";
 import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
+import { getMapLobbyInfo } from "../../util/data_util";
 
-export function FormCampaignWrapper({ id, onSave, isMaps = false, ...props }) {
+export function FormCampaignWrapper({ id, onSave, isEditMaps = false, ...props }) {
   const query = useQuery({
     queryKey: ["campaign", id],
     queryFn: () => fetchCampaign(id),
@@ -51,6 +65,7 @@ export function FormCampaignWrapper({ id, onSave, isMaps = false, ...props }) {
     author_gb_name: "",
   };
 
+  if (isEditMaps) return <FormCampaignEditMaps campaign={campaign} onSave={onSave} {...props} />;
   return <FormCampaign campaign={campaign} onSave={onSave} {...props} />;
 }
 
@@ -226,7 +241,155 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
   );
 }
 
+function FormCampaignEditMaps({ campaign, onSave, ...props }) {
+  const { mutateAsync: saveMaps } = usePostMap((response) => {
+    toast.success("Campaign maps updated!");
+    if (onSave) onSave(response);
+  });
+  const { mutateAsync: deleteMap } = useDeleteMap(() => {});
 
-export function FormCampaignMaps({ campaign, onSave, ...props }) {
-  const [maps, setMaps] = useState(campaign.maps ?? []);
+  const hasMajorSort = campaign.sort_major_name !== "" && campaign.sort_major_name !== null;
+  const hasMinorSort = campaign.sort_minor_name !== "" && campaign.sort_minor_name !== null;
+  const majorSorts = hasMajorSort ? campaign.sort_major_labels : [];
+  const minorSorts = hasMinorSort ? campaign.sort_minor_labels : [];
+
+  const transformMaps = (maps) => {
+    return maps.map((map) => {
+      return {
+        ...map,
+        sort_major: hasMajorSort ? majorSorts[map.sort_major] : null,
+        sort_minor: hasMinorSort ? minorSorts[map.sort_minor] : null,
+        sort_order: map.sort_order,
+      };
+    });
+  };
+
+  const form = useForm({
+    defaultValues: {
+      ...campaign,
+      maps: transformMaps(campaign.maps),
+      mapsToDelete: [],
+    },
+  });
+  const errors = form.formState.errors;
+  const onUpdateSubmit = form.handleSubmit((data) => {
+    for (const map of data.maps) {
+      if (map.sort_major !== "" && map.sort_major !== null)
+        map.sort_major = campaign.sort_major_labels.indexOf(map.sort_major);
+      if (map.sort_minor !== "" && map.sort_minor !== null)
+        map.sort_minor = campaign.sort_minor_labels.indexOf(map.sort_minor);
+      if (map.sort_order !== "" && map.sort_order !== null) map.sort_order = parseInt(map.sort_order);
+
+      delete map.challenges;
+    }
+    saveMaps(data.maps);
+
+    const mapsToDelete = data.mapsToDelete;
+    if (mapsToDelete.length > 0) {
+      Promise.all(mapsToDelete.map((mapId) => deleteMap(mapId))).then(() => {
+        toast.success("Selected map(s) deleted!");
+      });
+    }
+  });
+
+  useEffect(() => {
+    form.reset({
+      ...campaign,
+      maps: transformMaps(campaign.maps),
+      mapsToDelete: [],
+    });
+  }, [campaign]);
+
+  const mapsToDelete = form.watch("mapsToDelete");
+
+  return (
+    <form {...props}>
+      <Typography variant="h6" gutterBottom>
+        Campaign ({campaign.id}) {">"} Maps
+      </Typography>
+
+      {campaign.maps.map((map, i) => {
+        const isMapDeleted = mapsToDelete.includes(map.id);
+        return (
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            gap={{ xs: 1, sm: 2 }}
+            key={map.id}
+            sx={{ mt: 2 }}
+            alignItems="center"
+          >
+            <TextField
+              label="Name"
+              fullWidth
+              {...form.register(`maps[${i}].name`, FormOptions.Name128Required)}
+              disabled={isMapDeleted}
+            />
+            {hasMajorSort && (
+              <Controller
+                control={form.control}
+                name={`maps[${i}].sort_major`}
+                render={({ field }) => (
+                  <Autocomplete
+                    options={campaign.sort_major_labels}
+                    getOptionKey={(option) => campaign.sort_major_labels.indexOf(option)}
+                    fullWidth
+                    value={field.value}
+                    onChange={(e, v) => field.onChange(v)}
+                    renderInput={(params) => <TextField {...params} label={campaign.sort_major_name} />}
+                    disabled={isMapDeleted}
+                  />
+                )}
+              />
+            )}
+            {hasMinorSort && (
+              <Controller
+                control={form.control}
+                name={`maps[${i}].sort_minor`}
+                render={({ field }) => (
+                  <Autocomplete
+                    options={campaign.sort_minor_labels}
+                    getOptionKey={(option) => campaign.sort_minor_labels.indexOf(option)}
+                    fullWidth
+                    value={field.value}
+                    onChange={(e, v) => field.onChange(v)}
+                    renderInput={(params) => <TextField {...params} label={campaign.sort_minor_name} />}
+                    disabled={isMapDeleted}
+                  />
+                )}
+              />
+            )}
+            <TextField
+              label="Order"
+              type="number"
+              fullWidth
+              {...form.register(`maps[${i}].sort_order`)}
+              disabled={isMapDeleted}
+            />
+            <Tooltip title={isMapDeleted ? "Undo Delete" : "Delete Map"}>
+              <IconButton
+                color={isMapDeleted ? "success" : "error"}
+                onClick={() => {
+                  const newMapsToDelete = [...mapsToDelete];
+                  if (isMapDeleted) {
+                    newMapsToDelete.splice(newMapsToDelete.indexOf(map.id), 1);
+                  } else {
+                    newMapsToDelete.push(map.id);
+                  }
+                  form.setValue("mapsToDelete", newMapsToDelete);
+                }}
+              >
+                <FontAwesomeIcon size="xs" icon={isMapDeleted ? faPlus : faTrash} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        );
+      })}
+
+      <Divider sx={{ my: 2 }} />
+
+      <Button variant="contained" fullWidth color="primary" onClick={onUpdateSubmit}>
+        Save Maps
+      </Button>
+    </form>
+  );
 }

@@ -37,6 +37,7 @@ import { FormChallengeWrapper } from "../../components/forms/Challenge";
 import { FormMapWrapper } from "../../components/forms/Map";
 import { useDeleteCampaign, useDeleteChallenge, useDeleteMap } from "../../hooks/useApi";
 import { FormCampaignWrapper } from "../../components/forms/Campaign";
+import { FormCampaignMassAddMaps } from "../../components/forms/CampaignMassAddMaps";
 
 export function PageManageChallenges() {
   const [page, setPage] = useLocalStorage("manage_challenges_page", 1);
@@ -49,6 +50,9 @@ export function PageManageChallenges() {
       create: useRef(),
       edit: useRef(),
       delete: useRef(),
+
+      massAddMaps: useRef(),
+      massEditMaps: useRef(),
     },
     map: {
       create: useRef(),
@@ -75,32 +79,31 @@ export function PageManageChallenges() {
           </Typography>
         </Grid>
         <Grid item xs={12} md="auto">
-          <ButtonGroup sx={{ mb: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<FontAwesomeIcon icon={faPlus} />}
-              onClick={() => openModal(modalRefs.campaign.create, null)}
-            >
+          <CustomizedMenu
+            button={
+              <Button variant="contained" color="primary" startIcon={<FontAwesomeIcon icon={faEdit} />}>
+                Create
+              </Button>
+            }
+          >
+            <MenuItem disableRipple onClick={() => openModal(modalRefs.campaign.create, null)}>
+              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
               New Campaign
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<FontAwesomeIcon icon={faPlus} />}
-              onClick={() => openModal(modalRefs.map.create, null)}
-            >
+            </MenuItem>
+            <MenuItem disableRipple onClick={() => openModal(modalRefs.map.create, null)}>
+              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
               New Map
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<FontAwesomeIcon icon={faPlus} />}
-              onClick={() => openModal(modalRefs.challenge.create, null)}
-            >
+            </MenuItem>
+            <MenuItem disableRipple onClick={() => openModal(modalRefs.challenge.create, null)}>
+              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
               New Challenge
-            </Button>
-          </ButtonGroup>
+            </MenuItem>
+            <Divider sx={{ my: 0.5 }} />
+            <MenuItem disableRipple onClick={() => openModal(modalRefs.campaign.massAddMaps, null)}>
+              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+              Mass Add Maps to Campaign
+            </MenuItem>
+          </CustomizedMenu>
         </Grid>
       </Grid>
       <ManageChallengesSearchField search={search} setSearch={setSearch} />
@@ -129,7 +132,7 @@ function ManageChallengesSearchField({ search, setSearch }) {
         setSearchInternal(event.target.value);
         setSearchDebounced(event.target.value);
       }}
-      sx={{ mb: 2 }}
+      sx={{ mb: 2, mt: { xs: 2, sm: 0 } }}
       fullWidth
       onFocus={(e) => {
         setSearchInternal("");
@@ -241,6 +244,13 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                       >
                         <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
                         Edit
+                      </MenuItem>
+                      <MenuItem
+                        disableRipple
+                        onClick={() => openModal(modalRefs.campaign.massEditMaps, challenge.map.campaign)}
+                      >
+                        <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                        Edit Maps
                       </MenuItem>
                       <Divider sx={{ my: 0.5 }} />
                       <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
@@ -361,6 +371,9 @@ function ManageModalContainer({ modalRefs }) {
     deleteCampaign(data.id);
   });
 
+  const campaignMassAddMapsModal = useModal();
+  const campaignMassEditMapsModal = useModal();
+
   const createMapModal = useModal();
   const editMapModal = useModal();
   const deleteMapModal = useModal(null, (cancelled, data) => {
@@ -379,6 +392,9 @@ function ManageModalContainer({ modalRefs }) {
   modalRefs.campaign.create.current = createCampaignModal;
   modalRefs.campaign.edit.current = editCampaignModal;
   modalRefs.campaign.delete.current = deleteCampaignModal;
+
+  modalRefs.campaign.massAddMaps.current = campaignMassAddMapsModal;
+  modalRefs.campaign.massEditMaps.current = campaignMassEditMapsModal;
 
   modalRefs.map.create.current = createMapModal;
   modalRefs.map.edit.current = editMapModal;
@@ -411,6 +427,21 @@ function ManageModalContainer({ modalRefs }) {
         </Typography>
       </CustomModal>
 
+      <CustomModal modalHook={campaignMassAddMapsModal} options={{ hideFooter: true }}>
+        <FormCampaignMassAddMaps onSave={campaignMassAddMapsModal.close} />
+      </CustomModal>
+      <CustomModal maxWidth="lg" modalHook={campaignMassEditMapsModal} options={{ hideFooter: true }}>
+        {campaignMassEditMapsModal.data?.id == null ? (
+          <LoadingSpinner />
+        ) : (
+          <FormCampaignWrapper
+            id={campaignMassEditMapsModal.data.id}
+            isEditMaps
+            onSave={campaignMassEditMapsModal.close}
+          />
+        )}
+      </CustomModal>
+
       <CustomModal modalHook={createMapModal} options={{ hideFooter: true }}>
         <FormMapWrapper id={null} onSave={createMapModal.close} />
       </CustomModal>
@@ -418,7 +449,7 @@ function ManageModalContainer({ modalRefs }) {
         {editMapModal.data?.id == null ? (
           <LoadingSpinner />
         ) : (
-          <FormMapWrapper id={editMapModal.data?.id} onSave={editMapModal.close} />
+          <FormMapWrapper id={editMapModal.data.id} onSave={editMapModal.close} />
         )}
       </CustomModal>
       <CustomModal
@@ -439,7 +470,7 @@ function ManageModalContainer({ modalRefs }) {
         {editChallengeModal.data?.id == null ? (
           <LoadingSpinner />
         ) : (
-          <FormChallengeWrapper id={editChallengeModal.data?.id} onSave={editChallengeModal.close} />
+          <FormChallengeWrapper id={editChallengeModal.data.id} onSave={editChallengeModal.close} />
         )}
       </CustomModal>
       <CustomModal

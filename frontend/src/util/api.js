@@ -28,7 +28,10 @@ export function fetchTopGoldenList(type, id = null, archived = false) {
     archived: archived,
   };
 
+  let endpoint = "/top-golden-list.php";
   if (type === "all") {
+  } else if (type === "hitlist") {
+    endpoint = "/top-golden-hitlist.php";
   } else if (type === "campaign") {
     data.campaign = id;
   } else if (type === "map") {
@@ -37,7 +40,7 @@ export function fetchTopGoldenList(type, id = null, archived = false) {
     data.player = id;
   }
 
-  return axios.get("/top-golden-list.php", {
+  return axios.get(endpoint, {
     params: data,
   });
 }
