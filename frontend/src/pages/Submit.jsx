@@ -1,17 +1,13 @@
 import {
-  Autocomplete,
-  Box,
   Button,
   Checkbox,
   Chip,
   Collapse,
-  Container,
   Divider,
   FormControlLabel,
   FormHelperText,
   Grid,
   IconButton,
-  Menu,
   MenuItem,
   Paper,
   Stack,
@@ -28,35 +24,24 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
-import {
-  fetchAllCampaigns,
-  fetchAllChallenges,
-  fetchAllChallengesInMap,
-  fetchAllDifficulties,
-  fetchAllMapsInCampaign,
-  fetchAllObjectives,
-  fetchChallenge,
-  postSubmission,
-} from "../util/api";
-import {
-  getChallengeName,
-  getChallengeFcShort,
-  getChallengeObjectiveSuffix,
-  getDifficultyName,
-  getChallengeFlags,
-  getMapLobbyInfo,
-  getObjectiveName,
-  getCampaignName,
-} from "../util/data_util";
+import { fetchChallenge, postSubmission } from "../util/api";
+import { getChallengeFlags, getMapLobbyInfo } from "../util/data_util";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { FormOptions, getDifficultyColors } from "../util/constants";
+import { FormOptions } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronLeft, faCross, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  CampaignSelect,
+  MapSelect,
+  ChallengeSelect,
+  DifficultyChip,
+  DifficultySelect,
+} from "../components/GoldberriesComponents";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -803,216 +788,5 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
         </TableCell>
       </TableRow>
     </>
-  );
-}
-
-export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
-  const query = useQuery({
-    queryKey: ["all_campaigns"],
-    queryFn: () => fetchAllCampaigns(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  let campaigns = query.data?.data ?? [];
-  if (filter !== null) {
-    campaigns = campaigns.filter(filter);
-  }
-  campaigns.sort((a, b) => a.name.localeCompare(b.name));
-
-  const getOptionLabel = (campaign) => {
-    return getCampaignName(campaign);
-  };
-
-  return (
-    <Autocomplete
-      fullWidth
-      disabled={disabled}
-      getOptionKey={(campaign) => campaign.id}
-      getOptionLabel={getOptionLabel}
-      options={campaigns}
-      value={selected}
-      onChange={(event, newValue) => {
-        setSelected(newValue);
-      }}
-      renderInput={(params) => <TextField {...params} label="Campaign" />}
-    />
-  );
-}
-
-export function MapSelect({ campaign, selected, setSelected, disabled }) {
-  const query = useQuery({
-    queryKey: ["all_maps", campaign.id],
-    queryFn: () => fetchAllMapsInCampaign(campaign.id),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const maps = query.data?.data?.maps ?? [];
-
-  const getOptionLabel = (map) => {
-    return map.name;
-  };
-
-  return (
-    <Autocomplete
-      fullWidth
-      disabled={disabled}
-      getOptionKey={(map) => map.id}
-      getOptionLabel={getOptionLabel}
-      options={maps}
-      value={selected}
-      onChange={(event, newValue) => {
-        setSelected(newValue);
-      }}
-      renderInput={(params) => <TextField {...params} label="Map" />}
-    />
-  );
-}
-
-export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabel = false }) {
-  const query = useQuery({
-    queryKey: ["all_challenges", map.id],
-    queryFn: () => fetchAllChallengesInMap(map.id),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  const challenges = query.data?.data?.challenges ?? [];
-
-  const getOptionLabel = (challenge) => {
-    return getChallengeName(challenge);
-  };
-
-  return (
-    <Autocomplete
-      fullWidth
-      disabled={disabled}
-      getOptionKey={(challenge) => challenge.id}
-      getOptionLabel={getOptionLabel}
-      options={challenges}
-      disableListWrap
-      value={selected}
-      onChange={(event, newValue) => {
-        setSelected(newValue);
-      }}
-      renderInput={(params) => <TextField {...params} label={hideLabel ? undefined : "Challenge"} />}
-      renderOption={(props, challenge) => {
-        return (
-          <Stack direction="row" gap={1} {...props}>
-            {getChallengeName(challenge)}
-          </Stack>
-        );
-      }}
-    />
-  );
-}
-
-export function DifficultySelect({ defaultValue, ...props }) {
-  const query = useQuery({
-    queryKey: ["all_difficulties"],
-    queryFn: () => fetchAllDifficulties(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  let difficulties = query.data?.data ?? [];
-  //filter out id 13 (fwg) and 19 (undetermined)
-  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
-
-  return (
-    <TextField
-      {...props}
-      select
-      defaultValue={defaultValue}
-      SelectProps={{
-        ...props.SelectProps,
-        MenuProps: { disableScrollLock: true },
-      }}
-    >
-      <MenuItem value="">
-        <em>No Suggestion</em>
-      </MenuItem>
-      {difficulties.map((difficulty) => (
-        <MenuItem key={difficulty.id} value={difficulty.id}>
-          {getDifficultyName(difficulty)}
-        </MenuItem>
-      ))}
-    </TextField>
-  );
-}
-
-export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
-  const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
-  const colors = getDifficultyColors(difficulty?.id);
-  return <Chip label={prefix + text} size="small" {...props} sx={{ ...sx, bgcolor: colors.group_color }} />;
-}
-
-export function DifficultySelectControlled({ difficultyId, setDifficultyId, isSuggestion, ...props }) {
-  const query = useQuery({
-    queryKey: ["all_difficulties"],
-    queryFn: () => fetchAllDifficulties(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  let difficulties = query.data?.data ?? [];
-  //filter out id 13 (fwg) and 19 (undetermined)
-  if (isSuggestion) {
-    difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
-  }
-
-  return (
-    <TextField
-      {...props}
-      select
-      value={difficultyId ?? ""}
-      onChange={(e) => setDifficultyId(e.target.value)}
-      SelectProps={{
-        ...props.SelectProps,
-        MenuProps: { disableScrollLock: true },
-      }}
-    >
-      <MenuItem value="">
-        <em>No {isSuggestion ? "Suggestion" : "Selection"}</em>
-      </MenuItem>
-      {difficulties.map((difficulty) => (
-        <MenuItem key={difficulty.id} value={difficulty.id}>
-          {getDifficultyName(difficulty)}
-        </MenuItem>
-      ))}
-    </TextField>
-  );
-}
-
-export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
-  const query = useQuery({
-    queryKey: ["all_objectives"],
-    queryFn: () => fetchAllObjectives(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  let objectives = query.data?.data ?? [];
-
-  return (
-    <TextField
-      {...props}
-      select
-      value={objectiveId ?? 1}
-      onChange={(e) => setObjectiveId(e.target.value)}
-      SelectProps={{
-        ...props.SelectProps,
-        MenuProps: { disableScrollLock: true },
-      }}
-    >
-      {objectives.map((objective) => (
-        <MenuItem key={objective.id} value={objective.id}>
-          {getObjectiveName(objective)}
-        </MenuItem>
-      ))}
-    </TextField>
   );
 }

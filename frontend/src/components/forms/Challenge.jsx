@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useAuth } from "../../hooks/AuthProvider";
 import { fetchChallenge, postChallenge } from "../../util/api";
 import { Button, Checkbox, Divider, FormControlLabel, TextField, Typography } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { FullMapSelect } from "../../pages/Submission";
 import { useEffect } from "react";
-import { DifficultySelectControlled, ObjectiveSelect } from "../../pages/Submit";
+import { DifficultySelectControlled, ObjectiveSelect, FullMapSelect } from "../GoldberriesComponents";
 
 export function FormChallengeWrapper({ id, onSave, ...props }) {
   const query = useQuery({

@@ -1,11 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAuth } from "../../hooks/AuthProvider";
-import { deleteSubmission, fetchSubmission, postSubmission } from "../../util/api";
+import { fetchSubmission, postSubmission } from "../../util/api";
 import {
   Button,
   Checkbox,
   Divider,
-  FormControl,
   FormControlLabel,
   List,
   ListItem,
@@ -15,15 +14,20 @@ import {
   Typography,
 } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner, ProofEmbed } from "../BasicComponents";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { FullChallengeDisplay, FullChallengeSelect, VerificationStatusChip } from "../../pages/Submission";
 import { useEffect, useState } from "react";
-import { PlayerChip, PlayerSelect } from "../../pages/ClaimPlayer";
-import { DifficultySelect } from "../../pages/Submit";
+import {
+  DifficultySelect,
+  FullChallengeSelect,
+  VerificationStatusChip,
+  PlayerSelect,
+  PlayerChip,
+} from "../GoldberriesComponents";
 import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
 import { FormOptions } from "../../util/constants";
+import { FullChallengeDisplay } from "../../pages/Submission";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({

@@ -1,18 +1,12 @@
 import {
-  Autocomplete,
-  Avatar,
-  Box,
   Button,
   Checkbox,
-  Chip,
-  Container,
   Divider,
   FormControlLabel,
   List,
   ListItem,
   ListItemText,
   ListSubheader,
-  MenuItem,
   Stack,
   TextField,
   Typography,
@@ -25,9 +19,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { PlayerSelect } from "../components/GoldberriesComponents";
 
 export function PageClaimPlayer() {
   const auth = useAuth();
@@ -294,45 +286,5 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
         Claim Player
       </Button>
     </>
-  );
-}
-
-export function PlayerSelect({ type, value, onChange, ...props }) {
-  const queryFn = type === "all" ? fetchAllPlayers : () => fetchPlayerList(type);
-  const query = useQuery({
-    queryKey: ["player_list", type],
-    queryFn: queryFn,
-  });
-
-  const players = query.data?.data ?? [];
-  //Sort alphabetically
-  players.sort((a, b) => a.name.localeCompare(b.name));
-
-  return (
-    <Autocomplete
-      options={players}
-      getOptionLabel={(player) => player.name}
-      renderInput={(params) => <TextField {...params} label="Player" variant="outlined" />}
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
-  );
-}
-
-export function PlayerChip({ player, ...props }) {
-  return (
-    <Link to={"/player/" + player.id}>
-      <Chip
-        label={player?.name ?? "-"}
-        avatar={
-          <Avatar>
-            <FontAwesomeIcon icon={faUser} />
-          </Avatar>
-        }
-        sx={{ mr: 1 }}
-        {...props}
-      />
-    </Link>
   );
 }

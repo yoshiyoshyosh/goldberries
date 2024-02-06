@@ -9,9 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeFcShort } from "../util/data_util";
-import { DifficultyChip } from "../pages/Submit";
+import { DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
-import { useTheme } from "@emotion/react";
 
 export function TopGoldenList({ type, id, archived = false }) {
   const query = useQuery({

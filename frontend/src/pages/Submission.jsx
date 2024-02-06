@@ -1,21 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { deleteSubmission, fetchSubmission, postSubmission } from "../util/api";
+import { Link, useParams } from "react-router-dom";
+import { deleteSubmission, fetchSubmission } from "../util/api";
 import { toast } from "react-toastify";
 import {
-  Box,
   Button,
-  ButtonGroup,
   Chip,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -29,30 +20,15 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faClock,
-  faComment,
-  faEdit,
-  faFileExport,
-  faShield,
-  faSpinner,
-  faTrash,
-  faUser,
-  faUserAlt,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClock, faComment, faEdit, faShield, faUser, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
-import { errorToast, jsonDateToJsDate } from "../util/util";
-import { CampaignSelect, ChallengeSelect, DifficultyChip, MapSelect } from "./Submit";
-import { useEffect, useState } from "react";
+import { errorToast } from "../util/util";
+import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
 import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import CustomizedMenu, {
   BasicContainerBox,
   ErrorDisplay,
@@ -60,7 +36,6 @@ import CustomizedMenu, {
   ProofEmbed,
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
-import { PlayerChip } from "./ClaimPlayer";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 
 export function PageSubmission({}) {
@@ -172,79 +147,6 @@ export function SubmissionDisplay({ id, onDelete }) {
         </Typography>
       </CustomModal>
     </>
-  );
-}
-
-export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
-  const [campaign, setCampaign] = useState(challenge?.map?.campaign ?? null);
-  const [map, setMap] = useState(challenge?.map ?? null);
-
-  const onCampaignSelect = (campaign) => {
-    setCampaign(campaign);
-    if (campaign !== null && campaign.maps.length === 1) {
-      setMap(campaign.maps[0]);
-      if (campaign.maps[0].challenges.length === 1) {
-        setChallenge(campaign.maps[0].challenges[0]);
-      } else {
-        setChallenge(null);
-      }
-    } else {
-      setMap(null);
-      setChallenge(null);
-    }
-  };
-  const onMapSelect = (map) => {
-    setMap(map);
-    if (map !== null && map.challenges.length === 1) {
-      setChallenge(map.challenges[0]);
-    } else {
-      setChallenge(null);
-    }
-  };
-
-  useEffect(() => {
-    if (challenge !== null && challenge.map !== null) {
-      setCampaign(challenge.map?.campaign);
-      setMap(challenge.map);
-    }
-  }, [challenge]);
-
-  return (
-    <Stack direction="column" gap={2}>
-      <CampaignSelect selected={campaign} setSelected={onCampaignSelect} disabled={disabled} />
-      {campaign && (
-        <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} disabled={disabled} />
-      )}
-      {campaign && map && (
-        <ChallengeSelect map={map} selected={challenge} setSelected={setChallenge} disabled={disabled} />
-      )}
-    </Stack>
-  );
-}
-
-export function FullMapSelect({ map, setMap, disabled }) {
-  const [campaign, setCampaign] = useState(map?.campaign ?? null);
-
-  const onCampaignSelect = (campaign) => {
-    setCampaign(campaign);
-    if (campaign !== null && campaign.maps.length === 1) {
-      setMap(campaign.maps[0]);
-    } else {
-      setMap(null);
-    }
-  };
-
-  useEffect(() => {
-    if (map && map.campaign) {
-      setCampaign(map.campaign);
-    }
-  }, [map]);
-
-  return (
-    <Stack direction="column" gap={2}>
-      <CampaignSelect selected={campaign} setSelected={onCampaignSelect} disabled={disabled} />
-      {campaign && <MapSelect campaign={campaign} selected={map} setSelected={setMap} disabled={disabled} />}
-    </Stack>
   );
 }
 
@@ -373,13 +275,4 @@ export function SubmissionDetailsDisplay({ submission }) {
       ) : null}
     </Grid>
   );
-}
-
-export function VerificationStatusChip({ isVerified, isRejected, prefix = "" }) {
-  if (isVerified) {
-    return <Chip label={prefix + "Verified"} color="success" />;
-  } else if (isRejected) {
-    return <Chip label={prefix + "Rejected"} color="error" />;
-  }
-  return <Chip label={prefix + "Pending"} color="warning" />;
 }

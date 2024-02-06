@@ -13,7 +13,7 @@ import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import { CampaignSelect } from "../../pages/Submit";
+import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 
 export function FormMapWrapper({ id, onSave, ...props }) {

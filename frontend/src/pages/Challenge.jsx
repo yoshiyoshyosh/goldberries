@@ -18,14 +18,13 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { fetchChallenge } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
-import { DifficultyChip } from "./Submit";
-import { getChallengeName, getGamebananaEmbedUrl } from "../util/data_util";
+import { DifficultyChip } from "../components/GoldberriesComponents";
+import { getGamebananaEmbedUrl } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -36,8 +35,6 @@ import {
   faInfoCircle,
   faLandmark,
   faShield,
-  faTextWidth,
-  faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";

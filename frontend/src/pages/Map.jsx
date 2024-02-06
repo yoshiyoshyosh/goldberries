@@ -13,14 +13,14 @@ import {
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { fetchMap } from "../util/api";
-import { ChallengeDetailsList, ChallengeSubmissionTable } from "./Challenge";
+import { ChallengeSubmissionTable } from "./Challenge";
 import { faBook, faFlagCheckered, faLandmark, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getChallengeName, getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
 import { useQuery } from "react-query";
 import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import { DifficultyChip } from "./Submit";
+import { DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
