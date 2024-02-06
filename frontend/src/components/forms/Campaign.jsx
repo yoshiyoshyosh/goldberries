@@ -2,8 +2,10 @@ import { useQuery } from "react-query";
 import {
   Autocomplete,
   Button,
+  Checkbox,
   Chip,
   Divider,
+  FormControlLabel,
   FormHelperText,
   IconButton,
   Menu,
@@ -242,6 +244,7 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
 }
 
 function FormCampaignEditMaps({ campaign, onSave, ...props }) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutateAsync: saveMaps } = usePostMap((response) => {
     toast.success("Campaign maps updated!");
     if (onSave) onSave(response);
@@ -301,6 +304,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
   }, [campaign]);
 
   const mapsToDelete = form.watch("mapsToDelete");
+  const canSubmit = mapsToDelete.length === 0 || confirmDelete;
 
   return (
     <form {...props}>
@@ -386,8 +390,23 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
       })}
 
       <Divider sx={{ my: 2 }} />
+      {mapsToDelete.length > 0 && (
+        <>
+          <FormHelperText sx={{ color: "#ff0000" }}>
+            Please confirm that you want to delete <b>{mapsToDelete.length}</b> maps. This cannot be undone!
+          </FormHelperText>
+          <FormControlLabel
+            control={
+              <Checkbox checked={confirmDelete} onChange={(e) => setConfirmDelete(e.target.checked)} />
+            }
+            label={
+              "Yes, delete '" + mapsToDelete.length + "' map(s) and all attached challenges & submissions."
+            }
+          />
+        </>
+      )}
 
-      <Button variant="contained" fullWidth color="primary" onClick={onUpdateSubmit}>
+      <Button variant="contained" fullWidth color="primary" onClick={onUpdateSubmit} disabled={!canSubmit}>
         Save Maps
       </Button>
     </form>
