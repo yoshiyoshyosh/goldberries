@@ -43,6 +43,9 @@ abstract class DbObject
   // === Find Functions ===
   static function get_by_id($DB, int $id, int $depth = 2, $expand_structure = true)
   {
+    if ($id === null)
+      return false;
+
     $arr = db_fetch_id($DB, static::$table_name, $id);
     if ($arr === false)
       return false;

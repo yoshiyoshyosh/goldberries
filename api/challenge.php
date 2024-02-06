@@ -109,6 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $challenge = new Challenge();
   $challenge->apply_db_data($data);
 
+  $map = Map::get_by_id($DB, $challenge->map_id);
+  if ($map === false) {
+    die_json(400, "Invalid map_id");
+  }
+
   if (isset($data['id'])) {
     // Update
     if ($challenge->update($DB)) {
