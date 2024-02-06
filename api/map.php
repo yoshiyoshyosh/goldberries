@@ -29,26 +29,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die_json(403, "Not authorized");
   }
 
-  $data = format_assoc_array_bools(parse_post_body_as_json());
-  $map = new Map();
-  $map->apply_db_data($data);
+  $data_arr = format_assoc_array_bools(parse_post_body_as_json());
 
-  if (isset($data['id'])) {
-    // Update
-    if ($map->update($DB)) {
-      api_write($map);
-    } else {
-      die_json(500, "Failed to update map");
+  if (!array_is_list($data_arr)) {
+    // If the data is just a single object, put it in an array
+    $data_arr = array($data_arr);
+  }
+
+  $maps = array();
+  foreach ($data_arr as $data) {
+    $map = new Map();
+    $map->apply_db_data($data);
+    $maps[] = $map;
+
+    $campaign = Campaign::get_by_id($DB, $map->campaign_id);
+    if ($campaign === false) {
+      die_json(400, "Invalid campaign_id");
     }
 
+    if (isset($data['id'])) {
+      // Update
+      if (!$map->update($DB)) {
+        die_json(500, "Failed to update map ($map->id)");
+      }
+
+    } else {
+      // Insert
+      $map->date_added = new JsonDateTime();
+      if (!$map->insert($DB)) {
+        die_json(500, "Failed to create map ($map->id)");
+      }
+    }
+  }
+
+  if (count($maps) == 1) {
+    api_write($maps[0]);
   } else {
-    // Insert
-    $map->date_added = new JsonDateTime();
-    if ($map->insert($DB)) {
-      api_write($map);
-    } else {
-      die_json(500, "Failed to create map");
-    }
+    api_write($maps);
   }
 }
 

@@ -120,6 +120,8 @@ function format_assoc_array_bools($arr)
   foreach ($arr as $key => $val) {
     if (is_bool($val)) {
       $arr[$key] = $val ? 't' : 'f';
+    } else if (is_array($val)) {
+      $arr[$key] = format_assoc_array_bools($val);
     }
   }
   return $arr;
