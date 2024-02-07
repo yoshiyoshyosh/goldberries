@@ -312,7 +312,7 @@ JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
 
-ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort, submission.id ;
+ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort DESC, submission.id ;
 
 
 
@@ -378,4 +378,4 @@ JOIN objective  ON challenge.objective_id = objective.id
 LEFT JOIN submission  ON challenge.id = submission.challenge_id
 
 GROUP BY campaign.id, map.id, challenge.id, cd.id, objective.id
-ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort ;
+ORDER BY campaign.name, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort DESC ;
