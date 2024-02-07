@@ -676,9 +676,13 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
   const color = lobbyInfo?.major ? lobbyInfo?.major?.color : lobbyInfo?.minor?.color ?? "inherit";
   const border = lobbyInfo?.major || lobbyInfo?.minor ? "20px solid " + color : "none";
 
+  const needsRawSession = mapData.challenge && mapData.challenge.difficulty.id <= 13;
+  const hasRawSession = mapData.raw_session_url !== "" && mapData.raw_session_url !== null;
+  const bgColor = needsRawSession && !hasRawSession ? "#ffe7e7" : "inherit";
+
   return (
     <>
-      <TableRow sx={{ borderLeft: border }}>
+      <TableRow sx={{ borderLeft: border, bgcolor: bgColor }}>
         <TableCell width={1} sx={{ pr: 0 }}>
           {index + 1}
         </TableCell>
@@ -717,7 +721,12 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
           </Button>
         </TableCell>
       </TableRow>
-      <TableRow sx={{ borderBottom: expanded ? "1px solid lightgrey" : "unset" }}>
+      <TableRow
+        sx={{
+          borderBottom: expanded ? "1px solid lightgrey" : "unset",
+          bgcolor: bgColor,
+        }}
+      >
         <TableCell sx={{ py: expanded ? 1 : 0, borderBottom: "unset" }} colSpan={6}>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <Table size="small">

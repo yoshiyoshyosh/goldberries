@@ -25,7 +25,7 @@ import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import { getMapLobbyInfo } from "../../util/data_util";
+import { getCampaignName, getMapLobbyInfo } from "../../util/data_util";
 
 export function FormCampaignWrapper({ id, onSave, isEditMaps = false, ...props }) {
   const query = useQuery({
@@ -309,7 +309,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Campaign ({campaign.id}) {">"} Maps
+        {getCampaignName(campaign)} {">"} Maps
       </Typography>
 
       {campaign.maps.map((map, i) => {
