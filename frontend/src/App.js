@@ -67,6 +67,7 @@ import {
   faTooth,
   faUser,
   faUserAlt,
+  faUserEdit,
   faWeight,
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
@@ -83,6 +84,7 @@ import { PageClaimPlayer } from "./pages/ClaimPlayer";
 import { PageTopGoldenList } from "./pages/TopGoldenList";
 import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 import { PageManageChallenges } from "./pages/manage/Challenges";
+import { PageManageAccounts } from "./pages/manage/Accounts";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -130,6 +132,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute needsVerifier redirect="manage/challenges">
                 <PageManageChallenges />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "accounts/:tab?",
+            element: (
+              <ProtectedRoute needsVerifier redirect="manage/accounts">
+                <PageManageAccounts />
               </ProtectedRoute>
             ),
           },
@@ -294,6 +304,11 @@ export function Layout() {
           name: "Manage Challenges",
           path: "/manage/challenges",
           icon: <FontAwesomeIcon icon={faEdit} />,
+        },
+        {
+          name: "Manage Accounts",
+          path: "/manage/accounts",
+          icon: <FontAwesomeIcon icon={faUserEdit} />,
         },
       ],
     },

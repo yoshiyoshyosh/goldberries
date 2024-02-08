@@ -133,3 +133,13 @@ export function getCampaignName(campaign) {
   const authorName = campaign.author_gb_name === null ? "<Unknown Author>" : campaign.author_gb_name;
   return campaign.name + " (by " + authorName + ")";
 }
+
+export function getAccountName(account) {
+  if (account.player !== null) {
+    return `(${account.id}) ${account.player.name}`;
+  } else if (account.claimed_player !== null) {
+    return `(${account.id}) [Claim] ${account.claimed_player.name}`;
+  }
+
+  return `(${account.id}) <no player>`;
+}

@@ -312,7 +312,7 @@ export function FullMapSelect({ map, setMap, disabled }) {
 }
 
 // ===== Player Components =====
-export function PlayerSelect({ type, value, onChange, ...props }) {
+export function PlayerSelect({ type, value, onChange, label = "Player", ...props }) {
   const queryFn = type === "all" ? fetchAllPlayers : () => fetchPlayerList(type);
   const query = useQuery({
     queryKey: ["player_list", type],
@@ -327,7 +327,7 @@ export function PlayerSelect({ type, value, onChange, ...props }) {
     <Autocomplete
       options={players}
       getOptionLabel={(player) => player.name}
-      renderInput={(params) => <TextField {...params} label="Player" variant="outlined" />}
+      renderInput={(params) => <TextField {...params} label={label} variant="outlined" />}
       value={value}
       onChange={onChange}
       {...props}

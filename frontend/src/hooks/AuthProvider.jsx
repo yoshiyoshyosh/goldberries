@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { APP_URL, DISCORD_AUTH_URL, getOAuthUrl as getDiscordAuthUrl } from "../util/constants";
-import { set } from "react-hook-form";
+import { get, set } from "react-hook-form";
+import { getErrorMessage } from "../components/BasicComponents";
 
 const AuthContext = createContext();
 
@@ -25,8 +26,8 @@ export function AuthProvider({ children }) {
       } else {
         navigate("/");
       }
-    } catch (err) {
-      toast.error(err.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -47,7 +48,7 @@ export function AuthProvider({ children }) {
         setUser(null);
         toast.error("You weren't logged in.");
       } else {
-        toast.error(err.message);
+        toast.error(getErrorMessage(err));
       }
     }
   };

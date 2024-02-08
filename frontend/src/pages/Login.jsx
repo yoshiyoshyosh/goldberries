@@ -28,7 +28,6 @@ export function PageLogin() {
   const [sucks, setSucks] = useState(false);
   const form = useForm();
   const onSubmit = form.handleSubmit((data) => {
-    console.log(data);
     auth.loginWithEmail(data.email, data.password, redirect);
   });
   const errors = form.formState.errors;

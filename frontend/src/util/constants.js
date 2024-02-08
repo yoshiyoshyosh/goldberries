@@ -17,6 +17,16 @@ export const FormOptions = {
       message: "Player name can't be longer than 32 characters",
     },
   },
+  PasswordOptional: {
+    minLength: {
+      value: 8,
+      message: "Password must be at least 8 characters long",
+    },
+    maxLength: {
+      value: 128,
+      message: "Password can't be longer than 128 characters",
+    },
+  },
   Password: {
     required: {
       value: true,
@@ -29,6 +39,12 @@ export const FormOptions = {
     maxLength: {
       value: 128,
       message: "Password can't be longer than 128 characters",
+    },
+  },
+  EmailOptional: {
+    pattern: {
+      value: /^\S+@\S+\.\S+$/,
+      message: "Invalid email address",
     },
   },
   Email: {

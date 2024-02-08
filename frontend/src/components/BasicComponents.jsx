@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Container, Divider, Menu, MenuItem, Typography } from "@mui/material";
 import { useState } from "react";
+import { get } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export function LoadingSpinner({ ...props }) {
@@ -19,7 +20,7 @@ export function LoadingSpinner({ ...props }) {
 }
 
 export function ErrorDisplay({ error }) {
-  const errorMsg = error.response?.data ? error.response.data.error : error.message;
+  const errorMsg = getErrorMessage(error);
   return (
     <>
       <Typography variant="h4" color="error.main">
@@ -30,6 +31,9 @@ export function ErrorDisplay({ error }) {
       </Typography>
     </>
   );
+}
+export function getErrorMessage(error) {
+  return error.response?.data ? error.response.data.error : error.message;
 }
 
 export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props }) {

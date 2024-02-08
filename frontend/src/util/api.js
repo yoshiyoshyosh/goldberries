@@ -83,6 +83,12 @@ export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
 
+export function fetchAllAccounts() {
+  return axios.get("/account.php", { params: { id: "all" } });
+}
+export function fetchAccount(id) {
+  return axios.get("/account.php", { params: { id: id } });
+}
 export function fetchAllPlayers() {
   return axios.get("/player.php", { params: { all: true } });
 }
@@ -179,7 +185,7 @@ export function postPlayer(data) {
   return axios.post("/player.php", formatDataForApi(data));
 }
 
-export function updateAccount(data) {
+export function postAccount(data) {
   return axios.post("/account.php", formatDataForApi(data));
 }
 
