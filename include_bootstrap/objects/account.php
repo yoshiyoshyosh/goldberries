@@ -65,9 +65,14 @@ class Account extends DbObject
 
     if ($this->player_id !== null) {
       $this->player = Player::get_by_id($DB, $this->player_id, $depth - 1);
+    } else {
+      $this->player = null;
     }
+
     if ($this->claimed_player_id !== null) {
       $this->claimed_player = Player::get_by_id($DB, $this->claimed_player_id, $depth - 1);
+    } else {
+      $this->claimed_player = null;
     }
   }
 

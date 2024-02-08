@@ -9,37 +9,79 @@ if ($account === null) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  if (!is_admin($account)) {
+  if (!is_verifier($account)) {
     die_json(403, "Not authorized");
   }
 
   $id = $_REQUEST['id'] ?? null;
   if ($id === null) {
-    if (isset($_GET['all'])) {
-      $id = "all";
-    } else {
-      die_json(400, "Missing id");
-    }
+    die_json(400, "Missing id");
   }
 
   $accounts = Account::get_request($DB, $id);
+  if (is_array($accounts)) {
+    foreach ($accounts as $account) {
+      $account->remove_sensitive_info();
+    }
+  } else {
+    $accounts->remove_sensitive_info();
+  }
   api_write($accounts);
   exit();
 }
 
 // Post Request
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-  $request = parse_post_body_as_json();
+  $request = format_assoc_array_bools(parse_post_body_as_json());
 
   if (isset($request['id'])) {
     $id = intval($request['id']);
 
     //Update request
-    if (is_admin($account)) {
+    if (is_verifier($account)) {
+      //Verifiers are allowed to change all properties, except is_verifier, is_admin, for all accounts except other verifiers and admins
+      $target = Account::get_by_id($DB, $id);
+      if ($target === false) {
+        die_json(400, "Invalid id");
+      }
 
+      if ($account->id !== $target->id && is_verifier($target) && !is_admin($account)) {
+        die_json(403, "You cannot change other verifiers' accounts");
+      }
 
-    } else if (is_verifier($account)) {
+      $accountReq = new Account();
+      $accountReq->apply_db_data($request);
 
+      $target->player_id = $accountReq->player_id;
+      $target->claimed_player_id = $accountReq->claimed_player_id;
+      $target->email = $accountReq->email;
+      $target->discord_id = $accountReq->discord_id;
+      if (isset($request['reset_session']) && $request['reset_session'] === 't') {
+        $target->session_token = null;
+      }
+      $target->is_suspended = $accountReq->is_suspended;
+      $target->suspension_reason = $accountReq->suspension_reason;
+      $target->email_verified = $accountReq->email_verified;
+
+      if ($accountReq->password !== null) {
+        $target->password = password_hash($accountReq->password, PASSWORD_DEFAULT);
+      }
+
+      if (is_admin($account)) {
+        $target->is_verifier = $accountReq->is_verifier;
+        $target->is_admin = $accountReq->is_admin;
+      }
+
+      if ($target->update($DB) === false) {
+        log_error("Failed to update {$target} in database", "Account");
+        die_json(500, "Failed to update account in database");
+      } else {
+        log_info("Updated {$target} in database", "Account");
+        $target->remove_sensitive_info();
+        $target->expand_foreign_keys($DB, 2);
+        api_write($target);
+        exit();
+      }
 
     } else {
       //User are allowed to: Update their email and password
