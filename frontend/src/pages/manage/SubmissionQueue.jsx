@@ -13,6 +13,7 @@ import {
 import { useQuery } from "react-query";
 import { fetchSubmissionQueue } from "../../util/api";
 import { useState } from "react";
+import { set } from "react-hook-form";
 
 export function PageSubmissionQueue() {
   const [submissionId, setSubmissionId] = useState(undefined);
@@ -70,12 +71,14 @@ export function PageSubmissionQueue() {
     console.log("goToNextSubmission", currentSubmission);
     const currentIndex = query.data.data.findIndex((submission) => submission.id === currentSubmission.id);
     if (currentIndex === -1) {
+      setSubmissionId(undefined);
       return;
     }
     let nextSubmission = query.data.data[currentIndex + 1];
     if (nextSubmission === undefined) {
       nextSubmission = query.data.data[currentIndex];
       if (nextSubmission === undefined) {
+        setSubmissionId(undefined);
         return;
       }
     }

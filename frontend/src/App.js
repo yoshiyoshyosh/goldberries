@@ -37,6 +37,7 @@ import {
   MenuItem,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -68,6 +69,7 @@ import {
   faUser,
   faUserAlt,
   faUserEdit,
+  faUserNinja,
   faWeight,
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
@@ -85,6 +87,7 @@ import { PageTopGoldenList } from "./pages/TopGoldenList";
 import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 import { PageManageChallenges } from "./pages/manage/Challenges";
 import { PageManageAccounts } from "./pages/manage/Accounts";
+import { useGetOverallStats } from "./hooks/useApi";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -504,6 +507,8 @@ function MobileMenuItem({ item, indent = 0 }) {
 }
 
 function DesktopNav({ leftMenu, rightMenu }) {
+  const auth = useAuth();
+
   return (
     <Box
       sx={{
@@ -541,6 +546,7 @@ function DesktopNav({ leftMenu, rightMenu }) {
             borderColor: "#00000000",
           }}
         />
+        {auth.hasVerifierPriv && <VerifierStatsNavDesktop />}
         {rightMenu.map((entry, index) => {
           if (entry.items) {
             return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
@@ -627,6 +633,31 @@ function DesktopSubMenuItem({ item, closeMenu }) {
       <ListItemIcon>{item.icon}</ListItemIcon>
       <ListItemText primary={item.name} />
     </MenuItem>
+  );
+}
+
+function VerifierStatsNavDesktop() {
+  const query = useGetOverallStats(true);
+  const data = query.data?.data ?? {
+    submissions_in_queue: null,
+    open_player_claims: null,
+  };
+
+  return (
+    <Stack direction="row" spacing={2} alignItems="center">
+      <Tooltip title="Submissions in queue">
+        <Link to="/manage/submission-queue" style={{ color: "inherit", textDecoration: "none" }}>
+          <FontAwesomeIcon icon={faMailBulk} style={{ marginRight: "5px" }} />
+          {query.isError ? "X" : data.submissions_in_queue ?? "..."}
+        </Link>
+      </Tooltip>
+      <Tooltip title="Open player claims">
+        <Link to="/manage/accounts/player-claims" style={{ color: "inherit", textDecoration: "none" }}>
+          <FontAwesomeIcon icon={faUserNinja} style={{ marginRight: "5px" }} />
+          {query.isError ? "X" : data.open_player_claims ?? "..."}
+        </Link>
+      </Tooltip>
+    </Stack>
   );
 }
 

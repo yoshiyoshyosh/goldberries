@@ -1,6 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
-import { deleteSubmission, fetchSubmission } from "../util/api";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -25,7 +23,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faComment, faEdit, faShield, faUser, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
-import { errorToast } from "../util/util";
 import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
 import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
@@ -37,33 +34,31 @@ import CustomizedMenu, {
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
+import { getQueryData, useDeleteSubmission, useGetSubmission } from "../hooks/useApi";
 
 export function PageSubmission({}) {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <BasicContainerBox maxWidth="md">
-      <SubmissionDisplay id={parseInt(id)} />
+      <SubmissionDisplay
+        id={parseInt(id)}
+        onDelete={() => {
+          navigate("/");
+        }}
+      />
     </BasicContainerBox>
   );
 }
 
 export function SubmissionDisplay({ id, onDelete }) {
-  const queryClient = useQueryClient();
   const auth = useAuth();
-  const query = useQuery({
-    queryKey: ["submission", id],
-    queryFn: () => fetchSubmission(id),
-  });
-  console.log("SubmissionDisplay query -> ", query.data?.data);
-  const { mutate: doDeleteSubmission } = useMutation({
-    mutationFn: (id) => deleteSubmission(id),
-    onSuccess: (data) => {
-      toast.success("Submission deleted!");
-      queryClient.invalidateQueries(["submission", id]);
-      if (onDelete !== undefined) onDelete();
-    },
-    onError: errorToast,
+  const query = useGetSubmission(id);
+  console.log("SubmissionDisplay query -> ", query);
+  const { mutate: deleteSubmission } = useDeleteSubmission((submission) => {
+    toast.success("Submission deleted!");
+    if (onDelete !== undefined) onDelete();
   });
 
   const editModal = useModal();
@@ -71,7 +66,7 @@ export function SubmissionDisplay({ id, onDelete }) {
     null,
     (cancelled, data) => {
       if (cancelled) return;
-      doDeleteSubmission(data.id);
+      deleteSubmission(data.id);
     },
     { actions: [ModalButtons.Cancel, ModalButtons.Delete] }
   );
@@ -82,7 +77,7 @@ export function SubmissionDisplay({ id, onDelete }) {
     return <ErrorDisplay error={query.error} />;
   }
 
-  const submission = query.data?.data;
+  const submission = getQueryData(query);
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 

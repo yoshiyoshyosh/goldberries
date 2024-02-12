@@ -28,13 +28,12 @@ import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
 import { FormOptions } from "../../util/constants";
 import { FullChallengeDisplay } from "../../pages/Submission";
+import { usePostSubmission } from "../../hooks/useApi";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
-    staleTime: 0,
-    cacheTime: 0,
   });
 
   if (query.isLoading || query.isFetching) {
@@ -53,21 +52,15 @@ export function FormSubmissionWrapper({ id, onSave, ...props }) {
     );
   }
 
-  return <FormSubmission submission={query.data.data} onSave={onSave} {...props} />;
+  return <FormSubmission submission={query.data?.data ?? query.data} onSave={onSave} {...props} />;
 }
 
 export function FormSubmission({ submission, onSave, ...props }) {
   const auth = useAuth();
-  const queryClient = useQueryClient();
 
-  const { mutate: saveSubmission } = useMutation({
-    mutationFn: (submission) => postSubmission(submission),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries(["submission", submission.id]);
-      queryClient.invalidateQueries(["submission_queue"]);
-      toast.success("Submission updated!");
-      if (onSave) onSave(response.data);
-    },
+  const { mutate: saveSubmission } = usePostSubmission((submission) => {
+    toast.success("Submission updated");
+    if (onSave) onSave(submission);
   });
 
   const [challenge, setChallenge] = useState(submission.challenge ?? null);

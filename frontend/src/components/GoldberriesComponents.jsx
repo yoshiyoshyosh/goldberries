@@ -15,7 +15,7 @@ import { getDifficultyColors } from "../util/constants";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -228,13 +228,13 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
   );
 }
 
-export function VerificationStatusChip({ isVerified, isRejected, prefix = "" }) {
+export function VerificationStatusChip({ isVerified, isRejected, prefix = "", ...props }) {
   if (isVerified) {
-    return <Chip label={prefix + "Verified"} color="success" />;
+    return <Chip label={prefix + "Verified"} color="success" {...props} />;
   } else if (isRejected) {
-    return <Chip label={prefix + "Rejected"} color="error" />;
+    return <Chip label={prefix + "Rejected"} color="error" {...props} />;
   }
-  return <Chip label={prefix + "Pending"} color="warning" />;
+  return <Chip label={prefix + "Pending"} color="warning" {...props} />;
 }
 
 // ===== Full Select Components =====
@@ -348,6 +348,14 @@ export function PlayerChip({ player, ...props }) {
         sx={{ mr: 1 }}
         {...props}
       />
+    </Link>
+  );
+}
+
+export function SubmissionIcon({ submission }) {
+  return (
+    <Link to={"/submission/" + submission.id}>
+      <FontAwesomeIcon icon={faBook} />
     </Link>
   );
 }

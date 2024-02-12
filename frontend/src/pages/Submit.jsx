@@ -42,6 +42,7 @@ import {
   DifficultyChip,
   DifficultySelect,
 } from "../components/GoldberriesComponents";
+import { usePostSubmission } from "../hooks/useApi";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -111,14 +112,8 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const [map, setMap] = useState(defaultMap ?? null);
   const [challenge, setChallenge] = useState(defaultChallenge ?? null);
 
-  const { mutate: submitRun } = useMutation({
-    mutationFn: (data) => postSubmission(data),
-    onSuccess: (response) => {
-      navigate("/submission/" + response.data.id);
-    },
-    onError: (error) => {
-      toast.error(error.response.data.error);
-    },
+  const { mutate: submitRun } = usePostSubmission((submission) => {
+    navigate("/submission/" + submission.id);
   });
 
   //Form props
@@ -288,15 +283,7 @@ export function MultiUserSubmission() {
   const [preferFc, setPreferFc] = useState(false);
   const [mapDataList, setMapDataList] = useState([]); // [{map: map, challenge: challenge, is_fc: false, player_notes: "", suggested_difficulty_id: null}]
 
-  const { mutate: submitRun } = useMutation({
-    mutationFn: (data) => postSubmission(data),
-    onSuccess: (response) => {
-      toast.success("Submission successful!");
-    },
-    onError: (error) => {
-      toast.error(error.response.data.error);
-    },
-  });
+  const { mutateAsync: submitRun } = usePostSubmission();
 
   //Form props
   const form = useForm({
@@ -305,7 +292,22 @@ export function MultiUserSubmission() {
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    mapDataList.forEach((mapData) => {
+    const toastId = toast.loading("Creating Run (" + 0 + "/" + mapDataList.length + ")", {
+      autoClose: false,
+    });
+
+    const addRunRecursive = (index) => {
+      if (index >= mapDataList.length) {
+        toast.update(toastId, {
+          render: "Runs Created",
+          isLoading: false,
+          type: "success",
+          autoClose: 10000,
+          closeOnClick: true,
+        });
+        return;
+      }
+      const mapData = mapDataList[index];
       submitRun({
         challenge_id: mapData.challenge.id,
         player_id: auth.user.player.id,
@@ -314,8 +316,25 @@ export function MultiUserSubmission() {
         raw_session_url: mapData.raw_session_url,
         suggested_difficulty_id: mapData.suggested_difficulty_id,
         proof_url: data.proof_url,
-      });
-    });
+      })
+        .then(() => {
+          toast.update(toastId, {
+            render: "Creating Run (" + (index + 1) + "/" + mapDataList.length + ")",
+          });
+          addRunRecursive(index + 1);
+        })
+        .catch((e) => {
+          toast.update(toastId, {
+            render: "Error creating run: " + e.message,
+            isLoading: false,
+            type: "error",
+            autoClose: 15000,
+            closeOnClick: true,
+          });
+        });
+    };
+
+    addRunRecursive(0);
   });
   const errors = form.formState.errors;
 
@@ -538,14 +557,8 @@ export function NewChallengeUserSubmission({}) {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const { mutate: submitRun } = useMutation({
-    mutationFn: (data) => postSubmission(data),
-    onSuccess: (response) => {
-      navigate("/submission/" + response.data.id);
-    },
-    onError: (error) => {
-      toast.error(error.response.data.error);
-    },
+  const { mutate: submitRun } = usePostSubmission((submission) => {
+    navigate("/submission/" + submission.id);
   });
 
   //Form props

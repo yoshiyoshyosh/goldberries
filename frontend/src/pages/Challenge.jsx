@@ -19,9 +19,7 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import { fetchChallenge } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { getGamebananaEmbedUrl } from "../util/data_util";
@@ -40,6 +38,7 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
+import { useGetChallenge } from "../hooks/useApi";
 
 const displayNoneOnMobile = {
   display: {
@@ -62,10 +61,7 @@ export function PageChallenge({}) {
 
 export function ChallengeDisplay({ id }) {
   const auth = useAuth();
-  const query = useQuery({
-    queryKey: ["challenge", id],
-    queryFn: () => fetchChallenge(id),
-  });
+  const query = useGetChallenge(id);
 
   const editChallengeModal = useModal();
 
@@ -195,6 +191,11 @@ export function ChallengeSubmissionTable({ challenge, compact = false, ...props 
           {challenge.submissions.map((submission, index) => (
             <ChallengeSubmissionRow submission={submission} index={index} compact={compact} />
           ))}
+          {challenge.submissions.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5}>No submissions</TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

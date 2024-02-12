@@ -24,6 +24,7 @@ import { DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
+import { useGetMap } from "../hooks/useApi";
 
 export function PageMap() {
   const { id } = useParams();
@@ -39,10 +40,7 @@ export function PageMap() {
 
 export function MapDisplay({ id }) {
   const auth = useAuth();
-  const query = useQuery({
-    queryKey: ["map", id],
-    queryFn: () => fetchMap(id),
-  });
+  const query = useGetMap(id);
 
   const editMapModal = useModal();
 

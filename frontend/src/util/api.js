@@ -83,6 +83,9 @@ export function fetchAllDifficulties() {
   return axios.get("/difficulty.php?id=all");
 }
 
+export function fetchAllPlayerClaims() {
+  return axios.get("/account.php", { params: { claimed_players: true } });
+}
 export function fetchAllAccounts() {
   return axios.get("/account.php", { params: { id: "all" } });
 }
@@ -144,12 +147,35 @@ export function fetchSubmissionQueue() {
   });
 }
 
+export function fetchRecentSubmissions(type, page, perPage, search) {
+  const data = {
+    recent: true,
+    type: type,
+    page: page,
+    per_page: perPage,
+  };
+
+  if (search) data.search = search;
+
+  return axios.get("/submission.php", {
+    params: data,
+  });
+}
+
 export function fetchChallenges(page, perPage, search) {
   return axios.get("/challenge.php", {
     params: {
       page: page,
       per_page: perPage,
       search: search,
+    },
+  });
+}
+
+export function fetchOverallStats(verifier = false) {
+  return axios.get("/overall-stats.php", {
+    params: {
+      verifier: verifier,
     },
   });
 }
