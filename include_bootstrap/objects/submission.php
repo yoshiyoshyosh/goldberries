@@ -150,6 +150,54 @@ class Submission extends DbObject
     return $submissions;
   }
 
+  static function get_recent_submissions($DB, $type, $page, $per_page, $search = null)
+  {
+    $query = "SELECT * FROM view_submissions WHERE submission_is_verified = " . ($type === 'verified' ? 'true' : 'false') . " AND submission_is_rejected = false";
+
+    if ($search !== null) {
+      $search = pg_escape_string($search);
+      $query .= " AND campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%'";
+    }
+
+    $query .= " ORDER BY submission_date_created DESC";
+
+    $query = "
+    WITH submissions AS (
+      " . $query . "
+    )
+    SELECT *, count(*) OVER () AS total_count
+    FROM submissions";
+
+    if ($per_page !== -1) {
+      $query .= " LIMIT " . $per_page . " OFFSET " . ($page - 1) * $per_page;
+    }
+
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Failed to query database");
+    }
+
+    $maxCount = 0;
+    $submissions = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $submission = new Submission();
+      $submission->apply_db_data($row, "submission_");
+      $submission->expand_foreign_keys($row, 5);
+      $submissions[] = $submission;
+
+      if ($maxCount === 0) {
+        $maxCount = intval($row['total_count']);
+      }
+    }
+
+    return array(
+      'submissions' => $submissions,
+      'max_count' => $maxCount,
+      'max_page' => ceil($maxCount / $per_page),
+      'page' => $page,
+      'per_page' => $per_page,
+    );
+  }
 
   // === Utility Functions ===
   function __toString()

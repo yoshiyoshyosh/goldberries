@@ -13,6 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     die_json(403, "Not authorized");
   }
 
+  if (isset($_REQUEST['claimed_players']) && $_REQUEST['claimed_players'] === "true") {
+    $accounts = Account::get_all_player_claims($DB);
+    foreach ($accounts as $account) {
+      $account->expand_foreign_keys($DB, 2);
+      $account->remove_sensitive_info();
+    }
+    api_write($accounts);
+    exit();
+  }
+
+
   $id = $_REQUEST['id'] ?? null;
   if ($id === null) {
     die_json(400, "Missing id");

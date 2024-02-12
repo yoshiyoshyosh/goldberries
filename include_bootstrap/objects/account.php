@@ -127,6 +127,11 @@ class Account extends DbObject
     return find_in_db($DB, 'Account', "player_id = $1", array($player_id), new Account());
   }
 
+  static function get_all_player_claims($DB)
+  {
+    return find_in_db($DB, 'Account', "claimed_player_id IS NOT NULL", array(), new Account());
+  }
+
   // === Utility Functions ===
   function __toString()
   {

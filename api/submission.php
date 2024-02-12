@@ -10,6 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit();
   }
 
+  $recent = isset($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
+  if ($recent) {
+    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
+    $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
+    $per_page = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
+    // $per_page = min($per_page, 500);
+    $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : null;
+    $result = Submission::get_recent_submissions($DB, $type, $page, $per_page, $search);
+    api_write($result);
+    exit();
+  }
+
 
   $id = $_REQUEST['id'];
   $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 2;
@@ -121,11 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($data['new_challenge'])) {
       $new_challenge = new NewChallenge();
       $new_challenge->apply_db_data($data['new_challenge']);
-      $new_challenge_id = $new_challenge->insert($DB);
-      if ($new_challenge_id === false) {
+      if (!$new_challenge->insert($DB)) {
         die_json(400, "New Challenge could not be inserted");
       }
-      $submission->new_challenge_id = $new_challenge_id;
+      $submission->new_challenge_id = $new_challenge->id;
 
     } else if (isset($data['challenge_id'])) {
       $challenge = Challenge::get_by_id($DB, $data['challenge_id']);
@@ -144,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $submission->date_created = new JsonDateTime();
     $submission->insert($DB);
+    $submission->expand_foreign_keys($DB, 5);
     api_write($submission);
   }
 }
