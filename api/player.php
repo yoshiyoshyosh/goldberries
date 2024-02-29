@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   $group = $_REQUEST['group'] ?? null;
   if ($group === null) {
-    die_json(400, "Missing paramter 'group'");
+    die_json(400, "Missing paramter 'group' or 'id'");
   }
 
   if ($group === "unclaimed") {

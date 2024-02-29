@@ -8,7 +8,7 @@ class Player extends DbObject
 
 
   // === Player Bonus Objects ===
-  public array $flags = array(); //is_verifier, is_admin, is_suspended
+  public array $account = array(); //is_verifier, is_admin, is_suspended
 
   // === Abstract Functions ===
   function get_field_set()
@@ -24,21 +24,22 @@ class Player extends DbObject
     $this->name = $arr[$prefix . 'name'];
 
     if (isset($arr[$prefix . 'account_is_verifier']))
-      $this->flags['is_verifier'] = $arr[$prefix . 'account_is_verifier'] === 't';
+      $this->account['is_verifier'] = $arr[$prefix . 'account_is_verifier'] === 't';
     else
-      $this->flags['is_verifier'] = false;
+      $this->account['is_verifier'] = false;
     if (isset($arr[$prefix . 'account_is_admin']))
-      $this->flags['is_admin'] = $arr[$prefix . 'account_is_admin'] === 't';
+      $this->account['is_admin'] = $arr[$prefix . 'account_is_admin'] === 't';
     else
-      $this->flags['is_admin'] = false;
+      $this->account['is_admin'] = false;
     if (isset($arr[$prefix . 'account_is_suspended']))
-      $this->flags['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
+      $this->account['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
     else
-      $this->flags['is_suspended'] = false;
+      $this->account['is_suspended'] = false;
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
+    global $DB;
     if ($depth <= 1)
       return;
 
@@ -47,9 +48,10 @@ class Player extends DbObject
       return;
     }
     $account = $accounts[0];
-    $this->flags['is_verifier'] = $account->is_verifier;
-    $this->flags['is_admin'] = $account->is_admin;
-    $this->flags['is_suspended'] = $account->is_suspended;
+    $this->account['is_verifier'] = $account->is_verifier;
+    $this->account['is_admin'] = $account->is_admin;
+    $this->account['is_suspended'] = $account->is_suspended;
+    $this->account['suspension_reason'] = $account->suspension_reason;
   }
 
   // === Find Functions ===

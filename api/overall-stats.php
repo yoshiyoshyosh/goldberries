@@ -23,6 +23,4 @@ if (isset($_REQUEST['verifier']) && $_REQUEST['verifier'] === "true") {
   $row = pg_fetch_assoc($result);
   api_write($row);
 
-} else {
-
 }

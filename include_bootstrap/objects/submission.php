@@ -103,6 +103,7 @@ class Submission extends DbObject
       if ($isFromSqlResult) {
         $this->player = new Player();
         $this->player->apply_db_data($DB, "player_");
+        $this->player->expand_foreign_keys($DB, $depth - 1);
       } else {
         $this->player = Player::get_by_id($DB, $this->player_id);
       }
@@ -111,6 +112,7 @@ class Submission extends DbObject
       if ($isFromSqlResult) {
         $this->verifier = new Player();
         $this->verifier->apply_db_data($DB, "verifier_");
+        $this->verifier->expand_foreign_keys($DB, $depth - 1);
       } else {
         $this->verifier = Player::get_by_id($DB, $this->verifier_id);
       }
@@ -150,13 +152,16 @@ class Submission extends DbObject
     return $submissions;
   }
 
-  static function get_recent_submissions($DB, $type, $page, $per_page, $search = null)
+  static function get_recent_submissions($DB, $type, $page, $per_page, $search = null, $player = null)
   {
     $query = "SELECT * FROM view_submissions WHERE submission_is_verified = " . ($type === 'verified' ? 'true' : 'false') . " AND submission_is_rejected = false";
 
     if ($search !== null) {
       $search = pg_escape_string($search);
       $query .= " AND campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%'";
+    }
+    if ($player !== null) {
+      $query .= " AND player_id = " . $player;
     }
 
     $query .= " ORDER BY submission_date_created DESC";
