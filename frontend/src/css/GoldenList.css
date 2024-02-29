@@ -7,17 +7,7 @@
   justify-content: flex-start;
 }
 
-
 .golden-list-info-box.campaign {
-  /* bgcolor: "black",
-            color: "primary.main",
-            border: "1px solid white",
-            height: challengeCount * 50 + "px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            p: 1,
-            lineClamp: 2,
-            fontSize: fontSize, */
   background-color: black;
   color: rgb(25, 118, 210);
   border: 1px solid white;
@@ -29,11 +19,6 @@
 }
 
 .golden-list-info-box.map {
-  /* bgcolor: "black",
-          color: "white",
-          border: "1px solid white",
-          height: map.challenges.length * 50 + "px",
-          p: 1, */
   background-color: black;
   color: white;
   border: 1px solid white;
@@ -41,23 +26,12 @@
 }
 
 .golden-list-info-box.challenge {
-  /* minWidth: "150px",
-          width: "150px",
-          border: "1px solid white", */
-
   min-width: 150px;
   width: 150px;
   border: 1px solid white;
 }
 
 .golden-list-info-box.submission {
-  /* color: "primary.main",
-          border: "1px solid gray",
-          width: "150px",
-          minWidth: "150px",
-          px: 1,
-          fontWeight: "bold", */
-
   color: rgb(25, 118, 210);
   border: 1px solid gray;
   width: 150px;

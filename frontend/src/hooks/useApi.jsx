@@ -19,6 +19,10 @@ import {
   fetchCampaign,
   fetchChallenge,
   fetchMap,
+  fetchPlayer,
+  fetchPlayerStats,
+  fetchAllDifficulties,
+  fetchCampaignView,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -202,10 +206,26 @@ export function useGetOverallStats(verifier = false) {
   });
 }
 
+export function useGetPlayerStats(id) {
+  return useQuery({
+    queryKey: ["player_stats", id],
+    queryFn: () => fetchPlayerStats(id),
+    onError: errorToast,
+  });
+}
+
 export function useGetCampaign(id) {
   return useQuery({
     queryKey: ["campaign", id],
     queryFn: () => fetchCampaign(id),
+    onError: errorToast,
+  });
+}
+
+export function useGetCampaignView(id) {
+  return useQuery({
+    queryKey: ["campaign_view", id],
+    queryFn: () => fetchCampaignView(id),
     onError: errorToast,
   });
 }
@@ -234,10 +254,26 @@ export function useGetSubmission(id) {
   });
 }
 
-export function useGetRecentSubmissions(type, page, perPage, search) {
+export function useGetPlayer(id) {
   return useQuery({
-    queryKey: ["recent_submissions", type, page, perPage, search],
-    queryFn: () => fetchRecentSubmissions(type, page, perPage, search),
+    queryKey: ["player", id],
+    queryFn: () => fetchPlayer(id),
+    onError: errorToast,
+  });
+}
+
+export function useGetRecentSubmissions(type, page, perPage, search = null, playerId = null) {
+  return useQuery({
+    queryKey: ["recent_submissions", type, page, perPage, search, playerId],
+    queryFn: () => fetchRecentSubmissions(type, page, perPage, search, playerId),
+    onError: errorToast,
+  });
+}
+
+export function useGetAllDifficulties() {
+  return useQuery({
+    queryKey: ["all_difficulties"],
+    queryFn: () => fetchAllDifficulties(),
     onError: errorToast,
   });
 }

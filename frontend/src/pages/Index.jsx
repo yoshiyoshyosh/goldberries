@@ -37,11 +37,14 @@ export function PageIndex() {
   );
 }
 
-export function RecentSubmissions({}) {
+export function RecentSubmissions({ playerId = null }) {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useLocalStorage(
+    "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
+    10
+  );
   const [type, setType] = useLocalStorage("recent_submissions_type", "verified");
-  const query = useGetRecentSubmissions(type, page, perPage, null);
+  const query = useGetRecentSubmissions(type, page, perPage, null, playerId);
 
   const onChangeType = (event) => {
     setPage(1);
@@ -73,20 +76,21 @@ export function RecentSubmissions({}) {
           perPage={perPage}
           setPage={setPage}
           setPerPage={setPerPage}
+          hasPlayer={playerId !== null}
         />
       )}
     </>
   );
 }
 
-export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPage }) {
+export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPage, hasPlayer = false }) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Submission</TableCell>
-            <TableCell align="center">Player</TableCell>
+            {!hasPlayer && <TableCell align="center">Player</TableCell>}
             <TableCell align="center">Difficulty</TableCell>
             <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">
               Status
@@ -107,9 +111,11 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
                   <SubmissionIcon submission={submission} />
                 </Stack>
               </TableCell>
-              <TableCell align="center">
-                <PlayerChip player={submission.player} size="small" />
-              </TableCell>
+              {!hasPlayer && (
+                <TableCell align="center">
+                  <PlayerChip player={submission.player} size="small" />
+                </TableCell>
+              )}
               <TableCell align="center">
                 <DifficultyChip difficulty={submission.challenge.difficulty} />
               </TableCell>

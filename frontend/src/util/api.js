@@ -110,6 +110,14 @@ export function fetchCampaign(id, maps = true, challenges = true, submission = t
   });
 }
 
+export function fetchCampaignView(id) {
+  return axios.get("/campaign_view.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
 export function fetchMap(id, challenges = true, submission = true) {
   return axios.get("/map.php", {
     params: {
@@ -147,7 +155,15 @@ export function fetchSubmissionQueue() {
   });
 }
 
-export function fetchRecentSubmissions(type, page, perPage, search) {
+export function fetchPlayer(id) {
+  return axios.get("/player.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function fetchRecentSubmissions(type, page, perPage, search = null, playerId = null) {
   const data = {
     recent: true,
     type: type,
@@ -156,6 +172,7 @@ export function fetchRecentSubmissions(type, page, perPage, search) {
   };
 
   if (search) data.search = search;
+  if (playerId) data.player = playerId;
 
   return axios.get("/submission.php", {
     params: data,
@@ -176,6 +193,14 @@ export function fetchOverallStats(verifier = false) {
   return axios.get("/overall-stats.php", {
     params: {
       verifier: verifier,
+    },
+  });
+}
+
+export function fetchPlayerStats(id) {
+  return axios.get("/player-stats.php", {
+    params: {
+      id: id,
     },
   });
 }

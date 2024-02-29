@@ -83,25 +83,27 @@ export function getMapAuthor(map) {
   };
 }
 
-export function getMapLobbyInfo(map) {
-  const hasMajor = map.campaign.sort_major_name !== null && map.sort_major !== null;
-  const hasMinor = map.campaign.sort_minor_name !== null && map.sort_minor !== null;
+export function getMapLobbyInfo(map, campaign = null) {
+  campaign = campaign || map.campaign;
+
+  const hasMajor = campaign.sort_major_name !== null && map.sort_major !== null;
+  const hasMinor = campaign.sort_minor_name !== null && map.sort_minor !== null;
 
   const lobbyInfo = {};
 
   if (hasMajor) {
     lobbyInfo.major = {
-      name: map.campaign.sort_major_name,
-      label: map.campaign.sort_major_labels[map.sort_major],
-      color: map.campaign.sort_major_colors[map.sort_major],
+      name: campaign.sort_major_name,
+      label: campaign.sort_major_labels[map.sort_major],
+      color: campaign.sort_major_colors[map.sort_major],
     };
   }
 
   if (hasMinor) {
     lobbyInfo.minor = {
-      name: map.campaign.sort_minor_name,
-      label: map.campaign.sort_minor_labels[map.sort_minor],
-      color: map.campaign.sort_minor_colors[map.sort_minor],
+      name: campaign.sort_minor_name,
+      label: campaign.sort_minor_labels[map.sort_minor],
+      color: campaign.sort_minor_colors[map.sort_minor],
     };
   }
 

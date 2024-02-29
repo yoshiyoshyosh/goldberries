@@ -88,6 +88,8 @@ import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 import { PageManageChallenges } from "./pages/manage/Challenges";
 import { PageManageAccounts } from "./pages/manage/Accounts";
 import { useGetOverallStats } from "./hooks/useApi";
+import { PagePlayer } from "./pages/Player";
+import { PageCampaign } from "./pages/Campaign";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -171,9 +173,11 @@ const router = createBrowserRouter([
       { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
       { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
 
+      { path: "player/:id/:tab?", element: <PagePlayer /> },
       { path: "submission/:id", element: <PageSubmission /> },
       { path: "challenge/:id", element: <PageChallenge /> },
       { path: "map/:id", element: <PageMap /> },
+      { path: "campaign/:id/:tab?", element: <PageCampaign /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -249,8 +253,13 @@ export function Layout() {
       name: "Campaigns",
       icon: <FontAwesomeIcon icon={faBook} />,
       items: [
-        { name: "Strawberry Jam", path: "/campaign/760", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        { name: "Strawberry Jam", path: "/campaign/935", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         { name: "Spring Collab 2020", path: "/campaign/761", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        {
+          name: "Celeste 2021 Winter Collab",
+          path: "/campaign/778",
+          icon: <FontAwesomeIcon icon={faBlackberry} />,
+        },
         {
           name: "Secret Santa Collab 2022",
           path: "/campaign/762",
@@ -258,6 +267,7 @@ export function Layout() {
         },
         { name: "D-Sides", path: "/campaign/763", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         { name: "Etselec", path: "/campaign/764", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBlackberry} /> },
       ],
     },
     otherChallenges: {

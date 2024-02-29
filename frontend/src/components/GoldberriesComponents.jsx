@@ -10,12 +10,12 @@ import {
 } from "../util/api";
 import { toast } from "react-toastify";
 import { getCampaignName, getChallengeName, getDifficultyName, getObjectiveName } from "../util/data_util";
-import { Autocomplete, Avatar, Chip, MenuItem, Stack, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Chip, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArchway, faBan, faBook, faHammer, faShield, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -357,5 +357,27 @@ export function SubmissionIcon({ submission }) {
     <Link to={"/submission/" + submission.id}>
       <FontAwesomeIcon icon={faBook} />
     </Link>
+  );
+}
+
+export function VerifierIcon() {
+  return (
+    <Tooltip title="Part of the Modded Golden Team">
+      <FontAwesomeIcon icon={faShield} color="grey" />
+    </Tooltip>
+  );
+}
+export function AdminIcon() {
+  return (
+    <Tooltip title="Website Admin">
+      <FontAwesomeIcon icon={faHammer} color="grey" />
+    </Tooltip>
+  );
+}
+export function SuspendedIcon({ reason }) {
+  return (
+    <Tooltip title={"This user is suspended: " + reason}>
+      <FontAwesomeIcon icon={faBan} />
+    </Tooltip>
   );
 }

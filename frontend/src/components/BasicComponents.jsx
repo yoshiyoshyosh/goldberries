@@ -35,6 +35,14 @@ export function ErrorDisplay({ error }) {
 export function getErrorMessage(error) {
   return error.response?.data ? error.response.data.error : error.message;
 }
+export function getErrorFromMultiple(...queries) {
+  for (let query of queries) {
+    if (query.isError) {
+      return query.error;
+    }
+  }
+  return null;
+}
 
 export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props }) {
   return (
