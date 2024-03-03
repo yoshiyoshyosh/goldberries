@@ -87,7 +87,7 @@ class Campaign extends DbObject
   // === Find Functions ===
   function fetch_maps($DB, $with_challenges = false, $with_submissions = false): bool
   {
-    $maps = $this->fetch_list($DB, 'campaign_id', Map::class);
+    $maps = $this->fetch_list($DB, 'campaign_id', Map::class, null, "ORDER BY sort_major, sort_minor, sort_order, name");
     if ($maps === false)
       return false;
     $this->maps = $maps;
