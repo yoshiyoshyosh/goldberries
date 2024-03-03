@@ -99,7 +99,7 @@ export const DIFFICULTY_COLORS = {
   15: { color: "#85e191", group_color: "#85e191", contrast_color: "#000000" },
   16: { color: "#8fdeff", group_color: "#8fdeff", contrast_color: "#000000" },
   17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000" },
-  18: { color: "#ffffff", group_color: "#aaaaaa", contrast_color: "#000000" },
+  18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
 };
 export function getDifficultyColors(id) {
