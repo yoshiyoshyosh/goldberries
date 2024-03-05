@@ -10,6 +10,28 @@ import { useEffect } from "react";
 import { getMapLobbyInfo } from "../util/data_util";
 import { getDifficultyColors } from "../util/constants";
 
+const STYLE_CONSTS = {
+  player: {
+    width: 150,
+    height: 70,
+  },
+  submission: {
+    height: 50,
+  },
+  map: {
+    width: 250,
+    borderLeft: 25,
+    counter: 150,
+  },
+  total: {
+    height: 70,
+  },
+  lobby: {
+    width: 120,
+    fontSize: 75,
+  },
+};
+
 export function PageCampaign() {
   const { id, tab } = useParams();
 
@@ -54,16 +76,102 @@ export function CampaignDisplay({ id }) {
   );
 }
 
+function getPlayerSortInfo(player, campaign, submissions) {
+  let sortInfo = {
+    count: 0,
+    fcCount: 0,
+    maxPercent: false,
+    major: [], // [ {count: 14, rainbow: false, fcCount: 12} ]
+  };
+
+  const hasMajor = campaign.sort_major_name !== null;
+
+  if (hasMajor) {
+    const lastMinor = campaign.sort_minor_labels.length - 1;
+    //Loop backwards through lobbies
+    for (let major = 0; major < campaign.sort_major_labels.length; major++) {
+      //Check if the campaign.maps filtered by lastMinor has a length of 1
+      const hasHeartSide =
+        campaign.maps.filter((map) => {
+          return map.sort_major === major && map.sort_minor === lastMinor;
+        }).length === 1;
+
+      //Filter all maps for the current major sort
+      let maps = campaign.maps.filter((map) => {
+        return map.sort_major === major;
+      });
+      //If there is a heart side, length -1 is the rainbow amount
+      let mapsCount = hasHeartSide ? maps.length - 1 : maps.length;
+
+      const count = maps.reduce((acc, map) => {
+        return acc + (submissions[player.id][map.id] !== undefined ? 1 : 0);
+      }, 0);
+      const hasRainbow = count >= mapsCount;
+      //Count submission.is_fc for each player. if they are different, return the difference
+      const fcCount = maps.reduce((acc, map) => {
+        return acc + (submissions[player.id][map.id]?.is_fc ? 1 : 0);
+      }, 0);
+
+      sortInfo.major.push({
+        count: count,
+        rainbow: hasRainbow,
+        fcCount: fcCount,
+      });
+    }
+  }
+
+  let totalCount = Object.keys(submissions[player.id] ?? {}).length;
+  let totalFcCount = Object.values(submissions[player.id] ?? {}).reduce((acc, submission) => {
+    return acc + (submission.is_fc ? 1 : 0);
+  }, 0);
+
+  sortInfo.count = totalCount;
+  sortInfo.maxPercent = campaign.maps.length === totalCount;
+  sortInfo.fcCount = totalFcCount;
+
+  return sortInfo;
+}
+
+function comparePlayers(playerA, playerB, campaign, submissions) {
+  const hasMajor = campaign.sort_major_name !== null;
+  const playerASortInfo = getPlayerSortInfo(playerA, campaign, submissions);
+  const playerBSortInfo = getPlayerSortInfo(playerB, campaign, submissions);
+
+  if (hasMajor) {
+    //Loop backwards through lobbies
+    for (let major = campaign.sort_major_labels.length - 1; major >= 0; major--) {
+      let majorA = playerASortInfo.major[major];
+      let majorB = playerBSortInfo.major[major];
+
+      //XOR major.rainbow, return the difference
+      if (majorA.rainbow !== majorB.rainbow) {
+        return majorA.rainbow ? -1 : 1;
+      }
+
+      //If both have a rainbow, but one of them has more FCs, return the difference
+      if (majorA.rainbow && majorB.rainbow && majorA.fcCount !== majorB.fcCount) {
+        return majorB.fcCount - majorA.fcCount;
+      }
+    }
+  }
+
+  if (playerASortInfo.count !== playerBSortInfo.count) {
+    return playerBSortInfo.count - playerASortInfo.count;
+  }
+  if (playerASortInfo.fcCount !== playerBSortInfo.fcCount) {
+    return playerBSortInfo.fcCount - playerASortInfo.fcCount;
+  }
+
+  let playerAName = playerA.name.toLowerCase();
+  let playerBName = playerB.name.toLowerCase();
+  return playerAName.localeCompare(playerBName);
+}
+
 export function CampaignTableView({ campaign, players, submissions }) {
   //players is an object with player id => player object
   //flatten this object to an array
   const playersArray = Object.values(players);
-  //Sort the playersArray by how many submissions they have
-  playersArray.sort((a, b) => {
-    let submissionCountA = Object.keys(submissions[a.id] ?? {}).length;
-    let submissionCountB = Object.keys(submissions[b.id] ?? {}).length;
-    return submissionCountB - submissionCountA;
-  });
+  playersArray.sort((playerA, playerB) => comparePlayers(playerA, playerB, campaign, submissions));
 
   const totalSubmissions = playersArray.reduce((acc, player) => {
     let submissionCount = Object.keys(submissions[player.id] ?? {}).length;
@@ -101,7 +209,7 @@ export function CampaignTableView({ campaign, players, submissions }) {
       <Stack direction="column">
         <div
           className="campaign-view-box name relative-size"
-          style={{ fontWeight: "bold", fontSize: "150%" }}
+          style={{ fontWeight: "bold", fontSize: "150%", height: STYLE_CONSTS.player.height + "px" }}
         >
           {campaign.name}
         </div>
@@ -138,13 +246,23 @@ export function CampaignTableView({ campaign, players, submissions }) {
         <Stack direction="row">
           <div
             className="campaign-view-box name relative-size"
-            style={{ fontSize: "28px", fontWeight: "bold", width: "250px", minWidth: "250px" }}
+            style={{
+              fontSize: "28px",
+              fontWeight: "bold",
+              height: STYLE_CONSTS.total.height + "px",
+              flex: 1,
+            }}
           >
             Total:
           </div>
           <div
             className="campaign-view-box name"
-            style={{ fontSize: "28px", fontWeight: "bold", width: "150px", minWidth: "150px" }}
+            style={{
+              fontSize: "28px",
+              fontWeight: "bold",
+              width: STYLE_CONSTS.map.counter + "px",
+              height: STYLE_CONSTS.total.height + "px",
+            }}
           >
             {totalSubmissions}
           </div>
@@ -153,7 +271,12 @@ export function CampaignTableView({ campaign, players, submissions }) {
       <Stack direction="column">
         <Stack direction="row">
           {playersArray.map((player) => (
-            <CampaignTablePlayerBox key={player.id} player={player} />
+            <CampaignTablePlayerBox
+              key={player.id}
+              player={player}
+              campaign={campaign}
+              submissions={submissions}
+            />
           ))}
         </Stack>
         <Stack direction="row">
@@ -174,13 +297,12 @@ function CampaignTableLobbyBox({ name, color, span }) {
   let style = {
     color: color,
     backgroundColor: "black",
-    height: span * 50 + "px",
-    fontSize: "75px",
+    height: span * STYLE_CONSTS.submission.height + "px",
+    fontSize: STYLE_CONSTS.lobby.fontSize + "px",
     fontWeight: "bold",
     writingMode: "vertical-lr",
     textOrientation: "upright",
-    width: "120px",
-    minWidth: "120px",
+    width: STYLE_CONSTS.lobby.width + "px",
   };
 
   return (
@@ -193,8 +315,12 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
   const lobbyInfo = getMapLobbyInfo(map, campaign);
 
   let style = {
+    height: STYLE_CONSTS.submission.height + "px",
+    width: STYLE_CONSTS.map.width + "px",
     color: lobbyInfo.major ? lobbyInfo.major.color : "white",
-    borderLeft: lobbyInfo.minor ? "15px solid " + lobbyInfo.minor.color : "1px solid white",
+    borderLeft: lobbyInfo.minor
+      ? STYLE_CONSTS.map.borderLeft + "px solid " + lobbyInfo.minor.color
+      : "1px solid white",
     fontWeight: "bold",
   };
 
@@ -203,7 +329,7 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
   let hasFC = map.challenges.length > 1;
   let fcCount = 0;
   let fcStyle = {};
-  let testStyle = false;
+  let testStyle = true;
 
   if (hasFC) {
     submissions.forEach((submission) => {
@@ -267,13 +393,14 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
     }
   }
 
-  let boxWidth = hasFC ? 75 : 150;
+  let boxWidth = STYLE_CONSTS.map.counter;
+  boxWidth = hasFC ? boxWidth / 2 : boxWidth;
   let countStyle = {
     color: "white",
     fontSize: "28px",
     fontWeight: "bold",
     width: boxWidth + "px",
-    minWidth: boxWidth + "px",
+    height: STYLE_CONSTS.submission.height + "px",
   };
 
   return (
@@ -294,11 +421,41 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
     </Stack>
   );
 }
-function CampaignTablePlayerBox({ player }) {
+function CampaignTablePlayerBox({ player, campaign, submissions }) {
+  const style = {
+    width: STYLE_CONSTS.player.width + "px",
+    height: STYLE_CONSTS.player.height + "px",
+    fontSize: "20px",
+    fontWeight: "bold",
+    backgroundColor: "black",
+    color: "white",
+  };
+
+  const sortInfo = getPlayerSortInfo(player, campaign, submissions);
+  if (sortInfo.maxPercent) {
+    style.backgroundColor = "#ffd966";
+    style.color = "black";
+  } else {
+    //Loop backwards through lobbies
+    for (let major = sortInfo.major.length - 1; major >= 0; major--) {
+      let majorInfo = sortInfo.major[major];
+      if (majorInfo.rainbow) {
+        let lobbyColor = campaign.sort_major_colors[major];
+        style.backgroundColor = "black";
+        style.color = lobbyColor;
+        break;
+      }
+    }
+  }
+
   return (
     <Link to={`/player/${player.id}`} style={{ textDecoration: "none" }}>
-      <div className="campaign-view-box name" style={{ fontSize: "20px", fontWeight: "bold" }}>
-        {player.name}
+      <div className="campaign-view-box name" style={style}>
+        <span
+          style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 5px" }}
+        >
+          {player.name}
+        </span>
       </div>
     </Link>
   );
@@ -329,7 +486,13 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
       })}
       <div
         className="campaign-view-box name relative-size"
-        style={{ marginTop: currentSpace * 50 + "px", fontSize: "28px", fontWeight: "bold" }}
+        style={{
+          width: STYLE_CONSTS.player.width + "px",
+          height: STYLE_CONSTS.total.height + "px",
+          marginTop: currentSpace * STYLE_CONSTS.submission.height + "px",
+          fontSize: "28px",
+          fontWeight: "bold",
+        }}
       >
         {submissionCount}
       </div>
@@ -341,12 +504,19 @@ function CampaignTableSubmissionBox({ submission, color, spacing = 0 }) {
   color = hasColor ? color : "#ffd966";
   color = !hasColor && submission.is_fc ? "#f9cb9c" : color;
 
+  let style = {
+    width: STYLE_CONSTS.player.width + "px",
+    height: STYLE_CONSTS.submission.height + "px",
+    marginTop: spacing * STYLE_CONSTS.submission.height + "px",
+    backgroundColor: color,
+    textDecoration: "none",
+  };
+
   return (
-    <Link
-      to={`/submission/${submission.id}`}
-      style={{ marginTop: spacing * 50 + "px", backgroundColor: color, textDecoration: "none" }}
-    >
-      <div className="campaign-view-box submission">{submission.is_fc ? "FC" : ""}</div>
+    <Link to={`/submission/${submission.id}`} style={style}>
+      <div className="campaign-view-box submission" style={{ height: STYLE_CONSTS.submission.height + "px" }}>
+        {submission.is_fc ? "[FC]" : ""}
+      </div>
     </Link>
   );
 }

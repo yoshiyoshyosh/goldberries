@@ -142,6 +142,13 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
           setPerPage(event.target.value);
           setPage(1);
         }}
+        slotProps={{
+          select: {
+            MenuProps: {
+              disableScrollLock: true,
+            },
+          },
+        }}
       />
     </TableContainer>
   );

@@ -1,7 +1,5 @@
 .campaign-view-box {
   height: 50px;
-  width: 200px;
-  min-width: 200px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -24,13 +22,11 @@
   background-color: black;
   border: 1px solid white;
   width: 250px;
-  min-width: 250px;
   padding: 5px;
   justify-content: space-around;
 }
 
 .campaign-view-box.challenge {
-  min-width: 150px;
   width: 150px;
   border: 1px solid white;
 }
@@ -38,8 +34,6 @@
 .campaign-view-box.submission {
   color: rgb(25, 118, 210);
   border: 1px solid gray;
-  width: 200px;
-  min-width: 200px;
   padding: 5px;
   font-weight: bold;
   font-size: 22px;
