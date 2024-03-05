@@ -1,13 +1,24 @@
 import { Link, useParams } from "react-router-dom";
 import { getQueryData, useGetCampaignView } from "../hooks/useApi";
 import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  ListSubheader,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faLink, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
 import { useEffect } from "react";
-import { getMapLobbyInfo } from "../util/data_util";
+import { getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
 import { getDifficultyColors } from "../util/constants";
 
 const STYLE_CONSTS = {
@@ -56,15 +67,24 @@ export function CampaignDisplay({ id }) {
   return (
     <>
       <Box sx={{ mx: 2 }}>
-        <Stack direction="row" alignItems="center" gap={1}>
-          <FontAwesomeIcon icon={faBook} size="2x" />
-          <Typography variant="h4">{response.campaign.name}</Typography>
-        </Stack>
-        <ul>
-          <li>
-            <Link to={`/campaign/${id}/top-golden-list`}>Top Golden List</Link>
-          </li>
-        </ul>
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: "10px",
+            border: "1px solid #cccccc99",
+            boxShadow: 1,
+            width: {
+              xs: "100%",
+              sm: "600px",
+            },
+          }}
+        >
+          <Stack direction="row" alignItems="center" gap={1}>
+            <FontAwesomeIcon icon={faBook} size="2x" />
+            <Typography variant="h4">{response.campaign.name}</Typography>
+          </Stack>
+          <CampaignDetailsList campaign={response.campaign} sx={{}} />
+        </Box>
         <Divider sx={{ my: 2 }} />
       </Box>
       <CampaignTableView
@@ -75,6 +95,64 @@ export function CampaignDisplay({ id }) {
     </>
   );
 }
+
+export function CampaignDetailsList({ campaign, ...props }) {
+  const embedUrl = getGamebananaEmbedUrl(campaign.url);
+  const author = {
+    name: campaign.author_gb_name,
+    id: campaign.author_gb_id,
+  };
+  return (
+    <List dense {...props}>
+      <ListSubheader>Campaign Details</ListSubheader>
+      <ListItem>
+        <ListItemIcon>
+          <FontAwesomeIcon icon={faBook} />
+        </ListItemIcon>
+        <ListItemText primary={campaign.name} secondary="Campaign" />
+        {embedUrl && (
+          <ListItemSecondaryAction
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          >
+            <Link to={campaign.url} target="_blank">
+              <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
+            </Link>
+          </ListItemSecondaryAction>
+        )}
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <FontAwesomeIcon icon={faUser} />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            author.name !== null ? (
+              <Link to={"https://gamebanana.com/members/" + author.id}>{author.name}</Link>
+            ) : (
+              "<Unknown Author>"
+            )
+          }
+          secondary="Author"
+        />
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <FontAwesomeIcon icon={faLink} />
+        </ListItemIcon>
+        <ListItemText
+          primary={<Link to={`/campaign/${campaign.id}/top-golden-list`}>Top Golden List</Link>}
+        />
+      </ListItem>
+    </List>
+  );
+}
+
+//#region Campaign Table View
 
 function getPlayerSortInfo(player, campaign, submissions) {
   let sortInfo = {
@@ -205,11 +283,18 @@ export function CampaignTableView({ campaign, players, submissions }) {
   }, []);
 
   return (
-    <Stack direction="row">
-      <Stack direction="column">
+    <Stack direction="row" sx={{ width: "max-content" }}>
+      <Stack direction="column" sx={{ position: "sticky", left: "0", zIndex: 2 }}>
         <div
           className="campaign-view-box name relative-size"
-          style={{ fontWeight: "bold", fontSize: "150%", height: STYLE_CONSTS.player.height + "px" }}
+          style={{
+            fontWeight: "bold",
+            fontSize: "150%",
+            height: STYLE_CONSTS.player.height + "px",
+            position: "sticky",
+            top: "0",
+            zIndex: 3,
+          }}
         >
           {campaign.name}
         </div>
@@ -223,7 +308,7 @@ export function CampaignTableView({ campaign, players, submissions }) {
                 );
               })}
           </Stack>
-          <Stack direction="column">
+          <Stack id="campaign-view-map-list" direction="column">
             {campaign.maps.map((map) => {
               const mapSubmissions = [];
               playersArray.forEach((player) => {
@@ -269,7 +354,11 @@ export function CampaignTableView({ campaign, players, submissions }) {
         </Stack>
       </Stack>
       <Stack direction="column">
-        <Stack direction="row">
+        <Stack
+          id="campaign-view-players-row"
+          direction="row"
+          sx={{ position: "sticky", top: "0", zIndex: 1 }}
+        >
           {playersArray.map((player) => (
             <CampaignTablePlayerBox
               key={player.id}
@@ -287,6 +376,21 @@ export function CampaignTableView({ campaign, players, submissions }) {
               player={player}
               submissions={submissions[player.id]}
             />
+          ))}
+        </Stack>
+        <Stack direction="row">
+          {playersArray.map((player) => (
+            <div
+              className="campaign-view-box name relative-size"
+              style={{
+                width: STYLE_CONSTS.player.width + "px",
+                height: STYLE_CONSTS.total.height + "px",
+                fontSize: "28px",
+                fontWeight: "bold",
+              }}
+            >
+              {Object.keys(submissions[player.id] ?? {}).length}
+            </div>
           ))}
         </Stack>
       </Stack>
@@ -484,18 +588,6 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
           />
         );
       })}
-      <div
-        className="campaign-view-box name relative-size"
-        style={{
-          width: STYLE_CONSTS.player.width + "px",
-          height: STYLE_CONSTS.total.height + "px",
-          marginTop: currentSpace * STYLE_CONSTS.submission.height + "px",
-          fontSize: "28px",
-          fontWeight: "bold",
-        }}
-      >
-        {submissionCount}
-      </div>
     </Stack>
   );
 }
@@ -541,3 +633,5 @@ export function PageCampaignTopGoldenList({ id }) {
     </Box>
   );
 }
+
+//#endregion
