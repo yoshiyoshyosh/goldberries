@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   foreach ($campaign->maps as $map) {
     foreach ($map->challenges as $challenge) {
+      if ($challenge->is_challenge_arbitrary()) {
+        continue;
+      }
       foreach ($challenge->submissions as $submission) {
         $player_id = $submission->player_id;
         if (!array_key_exists($player_id, $players)) {

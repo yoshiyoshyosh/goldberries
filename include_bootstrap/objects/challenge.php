@@ -37,6 +37,7 @@ class Challenge extends DbObject
       'date_created' => $this->date_created,
       'requires_fc' => $this->requires_fc,
       'has_fc' => $this->has_fc,
+      'is_arbitrary' => $this->is_arbitrary,
       'campaign_id' => $this->campaign_id,
       'map_id' => $this->map_id,
       'objective_id' => $this->objective_id,
@@ -117,6 +118,11 @@ class Challenge extends DbObject
   }
 
   // === Utility Functions ===
+  function is_challenge_arbitrary(): bool
+  {
+    return $this->is_arbitrary || $this->objective->is_arbitrary;
+  }
+
   function __toString()
   {
     return "(Challenge, id:{$this->id}, description:'{$this->description}')";
