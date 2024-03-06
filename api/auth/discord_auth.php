@@ -2,12 +2,6 @@
 
 require_once('../api_bootstrap.inc.php');
 
-//Check if user is logged in
-if (is_logged_in()) {
-  header('Location: test_session.php');
-  exit();
-}
-
 if (isset($_REQUEST['code'])) {
   //Got code from discord oauth, now get access token
 
@@ -38,6 +32,19 @@ if (isset($_REQUEST['code'])) {
   if ($user_id == null) {
     die_json(500, "Failed to get discord user id");
   }
+
+  //Check if user is trying to link discord to their account
+  if ($_SESSION['link_account'] == true) {
+    $account = get_user_data();
+    $account->discord_id = $user_id;
+    if ($account->update($DB) === false) {
+      die_json(500, "Failed to link discord account");
+    }
+    log_info("User linked Account({$account->id}) to Discord (id: {$user_id})", "Account");
+    header('Location: ' . constant('REDIRECT_POST_LINK_ACCOUNT'));
+    exit();
+  }
+
 
   //Check if user is in database
   $accounts = Account::find_by_discord_id($DB, $user_id);
@@ -75,6 +82,15 @@ if (isset($_REQUEST['code'])) {
   //Redirect to discord oauth
   //Rememeber if user was trying to login or register
   $_SESSION['login'] = isset($_GET['login']);
+
+  //Remember if user is trying to link their existing account to discord
+  $_SESSION['link_account'] = isset($_GET['link_account']);
+
+  if ($_SESSION['link_account'] == false && is_logged_in()) {
+    //User is already logged in and not trying to link account
+    header('Location: ' . constant('REDIRECT_POST_LOGIN'));
+    exit();
+  }
 
   if (isset($_REQUEST['redirect'])) {
     $_SESSION['REDIRECT_AFTER_LOGIN'] = $_REQUEST['redirect'];

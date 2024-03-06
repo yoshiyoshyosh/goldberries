@@ -66,7 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $target->player_id = $accountReq->player_id;
       $target->claimed_player_id = $accountReq->claimed_player_id;
       $target->email = $accountReq->email;
-      $target->discord_id = $accountReq->discord_id;
+      if (isset($request['unlink_discord']) && $request['unlink_discord'] === 't') {
+        $target->discord_id = null;
+      }
       if (isset($request['reset_session']) && $request['reset_session'] === 't') {
         $target->session_token = null;
       }
@@ -105,8 +107,19 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $changes = "";
 
       if (isset($request['email'])) {
+        if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+          die_json(400, "Invalid email");
+        }
         $changes .= "email ({$account->email} -> {$request['email']}), ";
         $account->email = $request['email'];
+      }
+      if (isset($request['unlink_email']) && $request['unlink_email'] === true) {
+        if ($account->discord_id === null) {
+          die_json(400, "Cannot unlink email without discord account linked");
+        }
+        $changes .= "unlink email ({$account->email} -> null), ";
+        $account->email = null;
+        $account->password = null;
       }
 
       if (isset($request['password'])) {
