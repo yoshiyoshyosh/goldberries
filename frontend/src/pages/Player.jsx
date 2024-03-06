@@ -45,7 +45,6 @@ export function PlayerDisplay({ id }) {
   const player = getQueryData(query);
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
-  console.log("Player stats: ", stats);
 
   return (
     <>

@@ -336,10 +336,25 @@ export function PlayerSelect({ type, value, onChange, label = "Player", ...props
 }
 
 export function PlayerChip({ player, ...props }) {
+  if (player === undefined || player === null) {
+    return (
+      <Chip
+        label="<none>"
+        avatar={
+          <Avatar>
+            <FontAwesomeIcon icon={faUser} />
+          </Avatar>
+        }
+        sx={{ mr: 1 }}
+        {...props}
+      />
+    );
+  }
+
   return (
     <Link to={"/player/" + player.id}>
       <Chip
-        label={player?.name ?? "-"}
+        label={player.name ?? "-"}
         avatar={
           <Avatar>
             <FontAwesomeIcon icon={faUser} />

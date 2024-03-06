@@ -51,6 +51,7 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
   );
 }
 
+//This account form is used by team members, not users themselves
 export function FormAccount({ account, allPlayers, onSave, ...props }) {
   const auth = useAuth();
 

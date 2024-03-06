@@ -50,6 +50,7 @@ import {
   faBurger,
   faChevronDown,
   faChevronLeft,
+  faCog,
   faEdit,
   faEye,
   faHammer,
@@ -90,6 +91,7 @@ import { PageManageAccounts } from "./pages/manage/Accounts";
 import { useGetOverallStats } from "./hooks/useApi";
 import { PagePlayer } from "./pages/Player";
 import { PageCampaign } from "./pages/Campaign";
+import { PageAccount } from "./pages/Account";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -152,6 +154,14 @@ const router = createBrowserRouter([
       },
       { path: "login/:redirect?", element: <PageLogin /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
+      {
+        path: "my-account",
+        element: (
+          <ProtectedRoute redirect="my-account">
+            <PageAccount />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "claim-player",
         element: (
@@ -282,7 +292,12 @@ export function Layout() {
       name: auth.hasPlayerClaimed ? auth.user.player.name : "My Account",
       icon: <FontAwesomeIcon icon={faUser} />,
       items: [
-        { name: "My Profile", path: "/my-golden-list", icon: <FontAwesomeIcon icon={faUserAlt} /> },
+        {
+          name: "My Player Page",
+          path: auth.hasPlayerClaimed ? "/player/" + auth.user.player.id : "/claim-player",
+          icon: <FontAwesomeIcon icon={faUserAlt} />,
+        },
+        { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
         { name: "Claim A Player", path: "/claim-player", icon: <FontAwesomeIcon icon={faPlayCircle} /> },
         {
           name: "Logout",
