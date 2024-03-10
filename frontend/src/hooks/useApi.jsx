@@ -23,6 +23,9 @@ import {
   fetchPlayerStats,
   fetchAllDifficulties,
   fetchCampaignView,
+  deleteAccount,
+  deleteOwnAccount,
+  claimPlayer,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -38,7 +41,7 @@ export function getQueryData(query) {
   return query.data?.data ?? query.data;
 }
 
-// ===== DELETE =====
+//#region ===== DELETE =====
 export function useDeleteCampaign(onSuccess) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -95,7 +98,34 @@ export function useDeleteSubmission(onSuccess) {
   });
 }
 
-// ===== POST =====
+export function useDeleteAccount(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deleteAccount(id),
+    onSuccess: (response, id) => {
+      queryClient.invalidateQueries(["account", id]);
+      queryClient.invalidateQueries(["all_accounts"]);
+      queryClient.invalidateQueries(["accounts_player_claims"]);
+      queryClient.invalidateQueries(["overall_stats", "verifier"]);
+      if (onSuccess) onSuccess(response, id);
+      else toast.success("Account deleted");
+    },
+    onError: errorToast,
+  });
+}
+export function useDeleteOwnAccount(onSuccess) {
+  return useMutation({
+    mutationFn: () => deleteOwnAccount(),
+    onSuccess: (response) => {
+      if (onSuccess) onSuccess(response);
+      else toast.success("Account deleted");
+    },
+    onError: errorToast,
+  });
+}
+//#endregion
+
+//#region ===== POST =====
 export function usePostCampaign(onSuccess) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -149,10 +179,10 @@ export function usePostSubmission(onSuccess) {
   });
 }
 
-export function usePostAccount(onSuccess) {
+export function usePostAccount(onSuccess, self = false) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (account) => postAccount(account),
+    mutationFn: (account) => postAccount(self, account),
     onSuccess: (response, account) => {
       queryClient.setQueryData(["account", response.data.id], response.data);
       queryClient.invalidateQueries(["all_accounts"]);
@@ -164,7 +194,21 @@ export function usePostAccount(onSuccess) {
   });
 }
 
-// ===== GET =====
+export function useClaimPlayer(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (player) => claimPlayer(player),
+    onSuccess: (response, player) => {
+      queryClient.invalidateQueries(["accounts_player_claims"]);
+      queryClient.invalidateQueries(["overall_stats", "verifier"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+//#endregion
+
+//#region ===== GET =====
 export function useGetAllPlayerClaims() {
   return useQuery({
     queryKey: ["accounts_player_claims"],
@@ -277,3 +321,4 @@ export function useGetAllDifficulties() {
     onError: errorToast,
   });
 }
+//#endregion

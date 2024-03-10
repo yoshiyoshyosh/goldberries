@@ -155,7 +155,7 @@ const router = createBrowserRouter([
       { path: "login/:redirect?", element: <PageLogin /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
       {
-        path: "my-account",
+        path: "my-account/:tab?",
         element: (
           <ProtectedRoute redirect="my-account">
             <PageAccount />
@@ -346,6 +346,12 @@ export function Layout() {
       items: [{ name: "Admin Stuff", path: "/admin-panel", icon: <FontAwesomeIcon icon={faHammer} /> }],
     },
   };
+
+  if (auth.hasPlayerClaimed === true) {
+    menus.user.items = menus.user.items.filter((item) => item.name !== "Claim A Player");
+  } else {
+    menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
+  }
 
   // const menu = [menus.home, menus.lists, menus.campaigns, menus.otherChallenges];
   const leftMenu = [menus.lists, menus.campaigns, menus.otherChallenges];

@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
 import { PlayerSelect } from "../components/GoldberriesComponents";
+import { useClaimPlayer } from "../hooks/useApi";
 
 export function PageClaimPlayer() {
   const auth = useAuth();
@@ -208,12 +209,8 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
   const auth = useAuth();
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [confirmCheck, setConfirmCheck] = useState(false);
-  const { mutate: claimSelectedPlayer } = useMutation({
-    mutationFn: () => claimPlayer(auth.user, selectedPlayer),
-    onSuccess: (data) => {
-      auth.checkSession();
-    },
-    onError: errorToast,
+  const { mutate: claimSelectedPlayer } = useClaimPlayer(() => {
+    auth.checkSession();
   });
   const query = useQuery({
     queryKey: ["golden_list", "player", selectedPlayer?.id],
@@ -280,7 +277,7 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
         variant="contained"
         sx={{ mt: 2 }}
         fullWidth
-        onClick={() => claimSelectedPlayer()}
+        onClick={() => claimSelectedPlayer(selectedPlayer)}
         disabled={selectedPlayer === null || !confirmCheck}
       >
         Claim Player

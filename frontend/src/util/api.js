@@ -222,11 +222,11 @@ export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));
 }
 
-export function claimPlayer(userObj, player) {
+export function claimPlayer(player) {
   return axios.post(
     "/account.php",
     formatDataForApi({
-      id: userObj.id,
+      self: true,
       claimed_player_id: player.id,
     })
   );
@@ -236,8 +236,14 @@ export function postPlayer(data) {
   return axios.post("/player.php", formatDataForApi(data));
 }
 
-export function postAccount(data) {
-  return axios.post("/account.php", formatDataForApi(data));
+export function postAccount(self, data) {
+  return axios.post(
+    "/account.php",
+    formatDataForApi({
+      ...data,
+      self: self,
+    })
+  );
 }
 
 // ===== DELETE =====
@@ -267,6 +273,21 @@ export function deleteChallenge(id) {
 
 export function deleteSubmission(id) {
   return axios.delete("/submission.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function deleteOwnAccount() {
+  return axios.delete("/account.php", {
+    params: {
+      self: true,
+    },
+  });
+}
+export function deleteAccount(id) {
+  return axios.delete("/account.php", {
     params: {
       id: id,
     },
