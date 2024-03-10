@@ -15,7 +15,16 @@ import { getDifficultyColors } from "../util/constants";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArchway, faBan, faBook, faHammer, faShield, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArchway,
+  faBan,
+  faBook,
+  faHammer,
+  faLink,
+  faShield,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -393,6 +402,33 @@ export function SuspendedIcon({ reason }) {
   return (
     <Tooltip title={"This user is suspended: " + reason}>
       <FontAwesomeIcon icon={faBan} />
+    </Tooltip>
+  );
+}
+
+const LINK_ICONS = {
+  youtube: { icon: faYoutube, color: "red", identifier: ["youtu.be/", "youtube.com/"] },
+  twitch: { icon: faTwitch, color: "purple", identifier: ["twitch.tv/"] },
+  discord: { icon: faDiscord, color: "#5460ef", identifier: ["discord.gg/"] },
+};
+export function LinkIcon({ url }) {
+  let linkIconElement = null;
+  for (const [key, value] of Object.entries(LINK_ICONS)) {
+    if (value.identifier.some((i) => url.includes(i))) {
+      linkIconElement = <FontAwesomeIcon icon={value.icon} color={value.color} />;
+      break;
+    }
+  }
+
+  if (linkIconElement === null) {
+    linkIconElement = <FontAwesomeIcon icon={faLink} />;
+  }
+
+  return (
+    <Tooltip title={url}>
+      <a href={url} target="_blank" rel="noreferrer">
+        {linkIconElement}
+      </a>
     </Tooltip>
   );
 }

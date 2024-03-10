@@ -61,9 +61,9 @@ export function RecentSubmissions({ playerId = null }) {
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="body2">Pending</Typography>
+            <VerificationStatusChip size="small" />
             <Switch checked={type === "verified"} onChange={onChangeType} />
-            <Typography variant="body2">Verified</Typography>
+            <VerificationStatusChip isVerified size="small" />
           </Stack>
         </Grid>
       </Grid>
@@ -92,9 +92,6 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
             <TableCell>Submission</TableCell>
             {!hasPlayer && <TableCell align="center">Player</TableCell>}
             <TableCell align="center">Difficulty</TableCell>
-            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">
-              Status
-            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -118,13 +115,6 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
               )}
               <TableCell align="center">
                 <DifficultyChip difficulty={submission.challenge.difficulty} />
-              </TableCell>
-              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">
-                <VerificationStatusChip
-                  isVerified={submission.is_verified}
-                  isRejected={submission.is_rejected}
-                  size="small"
-                />
               </TableCell>
             </TableRow>
           ))}

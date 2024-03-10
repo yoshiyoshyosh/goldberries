@@ -58,12 +58,6 @@ export function PageAccount() {
               <VerificationStatusChip isVerified={auth.user.player !== null} prefix="Claim: " />
             </Stack>
           </Grid>
-          {/* <Grid item xs={12} sm={6}>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography>Claimed Player: </Typography>
-              <PlayerChip player={auth.user.claimed_player} />
-            </Stack>
-          </Grid> */}
         </Grid>
       )}
 
@@ -114,7 +108,8 @@ export function UserAccountLoginMethodsForm() {
   useEffect(() => {
     form.reset({
       ...auth.user,
-      reset_session: false,
+      unlink_discord: false,
+      unlink_email: false,
     });
   }, [auth.user]);
 
@@ -255,10 +250,95 @@ export function UserAccountLoginMethodsForm() {
 }
 
 export function UserAccountProfileForm() {
+  const auth = useAuth();
+  const { mutate: postAccount } = usePostAccount((account) => {
+    if (account.id === auth.user.id) auth.checkSession();
+    toast.success("Account updated");
+  }, true);
+
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      ...auth.user,
+    },
+  });
+  const errors = form.formState.errors;
+  const onSubmit = form.handleSubmit((data) => {
+    postAccount({
+      ...data,
+    });
+  });
+
+  useEffect(() => {
+    form.reset({
+      ...auth.user,
+    });
+  }, [auth.user]);
+
+  const formAccount = form.watch();
+
+  const addLink = () => {
+    if (formAccount.links === null) form.setValue("links", [""]);
+    else form.setValue("links", [...formAccount.links, ""]);
+  };
+  const deleteLink = (index) => {
+    form.setValue(
+      "links",
+      formAccount.links.filter((_, i) => i !== index)
+    );
+  };
+
   return (
-    <>
-      <Typography variant="h6">Profile</Typography>
-    </>
+    <form>
+      <Typography variant="h6">Custom Links</Typography>
+      <Typography variant="body2">
+        You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to
+        your YouTube channel, or any other link you want to share with the community.
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<FontAwesomeIcon icon={faLink} />}
+        onClick={addLink}
+        sx={{ mt: 2 }}
+      >
+        Add Link
+      </Button>
+      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+        {formAccount.links !== null &&
+          formAccount.links.map((link, index) => (
+            <Stack direction="row" spacing={2} key={index}>
+              <TextField
+                key={index}
+                label={`Link ${index + 1}`}
+                {...form.register(`links.${index}`, FormOptions.Url)}
+                fullWidth
+              />
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<FontAwesomeIcon icon={faLinkSlash} />}
+                onClick={() => deleteLink(index)}
+              >
+                Remove
+              </Button>
+            </Stack>
+          ))}
+      </Stack>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        startIcon={<FontAwesomeIcon icon={faSave} />}
+        onClick={onSubmit}
+        disabled={Object.keys(errors).length > 0}
+      >
+        Save Changes
+      </Button>
+    </form>
   );
 }
 

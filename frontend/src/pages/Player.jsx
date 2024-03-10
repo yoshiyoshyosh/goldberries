@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
-import { AdminIcon, SuspendedIcon, VerifierIcon } from "../components/GoldberriesComponents";
+import { AdminIcon, LinkIcon, SuspendedIcon, VerifierIcon } from "../components/GoldberriesComponents";
 import { RecentSubmissions } from "./Index";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
@@ -48,27 +48,33 @@ export function PlayerDisplay({ id }) {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" gap={1}>
-        <FontAwesomeIcon icon={faUser} size="2x" />
-        <Typography
-          variant="h6"
-          sx={{
-            textDecoration: suspended ? "line-through" : "inherit",
-            color: suspended ? "grey" : "inherit",
-          }}
-        >
-          {player.name}
-        </Typography>
-        {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
-        <Box flexGrow={1} />
-        {player.account.is_verifier && <VerifierIcon />}
-        {player.account.is_admin && <AdminIcon />}
+      <Stack direction="column" gap={1}>
+        <Stack direction="row" alignItems="center" gap={1}>
+          <FontAwesomeIcon icon={faUser} size="2x" />
+          <Typography
+            variant="h6"
+            sx={{
+              textDecoration: suspended ? "line-through" : "inherit",
+              color: suspended ? "grey" : "inherit",
+            }}
+          >
+            {player.name}
+          </Typography>
+          {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
+          <Box flexGrow={1} />
+          {player.account.is_verifier && <VerifierIcon />}
+          {player.account.is_admin && <AdminIcon />}
+        </Stack>
+        {player.account?.links !== null && (
+          <Stack direction="row" gap={1}>
+            {player.account.links.map((link) => (
+              <LinkIcon url={link} />
+            ))}
+          </Stack>
+        )}
+        <Link to={`/player/${id}/top-golden-list`}>Top Golden List</Link>
       </Stack>
-      <ul>
-        <li>
-          <Link to={`/player/${id}/top-golden-list`}>Top Golden List</Link>
-        </li>
-      </ul>
+
       <Divider sx={{ my: 2 }} />
       <Typography variant="h5">Player Stats</Typography>
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
