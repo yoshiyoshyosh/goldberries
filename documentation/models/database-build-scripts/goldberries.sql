@@ -107,6 +107,7 @@ CREATE TABLE account
  suspension_reason text NULL,
  email_verified    boolean NOT NULL DEFAULT false,
  email_verify_code varchar(16) NULL,
+ links             text NULL,
  CONSTRAINT account_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT account_claimed_player_id_fkey FOREIGN KEY ( claimed_player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE

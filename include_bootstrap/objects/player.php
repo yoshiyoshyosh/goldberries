@@ -35,6 +35,14 @@ class Player extends DbObject
       $this->account['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
     else
       $this->account['is_suspended'] = false;
+
+    if (isset($arr[$prefix . 'suspension_reason']))
+      $this->account['suspension_reason'] = $arr[$prefix . 'suspension_reason'];
+
+    if (isset($arr[$prefix . 'links']))
+      $this->account['links'] = $arr[$prefix . 'links'];
+    else
+      $this->account['links'] = null;
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -52,6 +60,7 @@ class Player extends DbObject
     $this->account['is_admin'] = $account->is_admin;
     $this->account['is_suspended'] = $account->is_suspended;
     $this->account['suspension_reason'] = $account->suspension_reason;
+    $this->account['links'] = $account->links;
   }
 
   // === Find Functions ===

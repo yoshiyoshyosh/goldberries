@@ -33,8 +33,16 @@ if (isset($_REQUEST['code'])) {
     die_json(500, "Failed to get discord user id");
   }
 
+  //Check if user is in database
+  $accounts = Account::find_by_discord_id($DB, $user_id);
+  $account = null;
+
   //Check if user is trying to link discord to their account
   if ($_SESSION['link_account'] == true) {
+    if ($accounts != false) {
+      die_json(400, "Discord account is already linked to another account");
+    }
+
     $account = get_user_data();
     $account->discord_id = $user_id;
     if ($account->update($DB) === false) {
@@ -45,11 +53,7 @@ if (isset($_REQUEST['code'])) {
     exit();
   }
 
-
-  //Check if user is in database
-  $accounts = Account::find_by_discord_id($DB, $user_id);
-  $account = null;
-
+  //Non-linking stuff
   if ($accounts == false) {
     //No account was found
     if ($_SESSION['login'] == true) {

@@ -18,6 +18,7 @@ class Account extends DbObject
   public ?string $suspension_reason = null;
   public bool $email_verified = false;
   public ?string $email_verify_code = null;
+  public ?array $links = null; // array of links, in DB: TSV of links
 
   // Foreign Keys
   public ?int $player_id = null;
@@ -57,6 +58,17 @@ class Account extends DbObject
       $this->email_verified = $arr[$prefix . 'email_verified'] === 't';
     if (isset($arr[$prefix . 'email_verify_code']))
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
+    if (isset($arr[$prefix . 'links'])) {
+      $this->links = explode("\t", $arr[$prefix . 'links']);
+      //Trim all strings
+      $this->links = array_map('trim', $this->links);
+      //Remove empty strings
+      $this->links = array_filter($this->links, function ($link) {
+        return $link !== ''; });
+      //Set to null if empty
+      if (count($this->links) === 0)
+        $this->links = null;
+    }
   }
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
@@ -92,6 +104,7 @@ class Account extends DbObject
       'is_verifier' => $this->is_verifier,
       'is_admin' => $this->is_admin,
       'is_suspended' => $this->is_suspended,
+      'links' => $this->links !== null && count($this->links) > 0 ? implode("\t", $this->links) : null,
     );
   }
 
