@@ -107,6 +107,9 @@ if (isset($_GET['player'])) {
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
   $where .= " AND map.is_archived = false";
 }
+if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
+  $where .= " AND objective.is_arbitrary = false AND (challenge.is_arbitrary = false OR challenge.is_arbitrary IS NULL)";
+}
 
 $query = $query . $where;
 $query .= " ORDER BY cd.sort DESC, map.name ASC, submission.id ASC";

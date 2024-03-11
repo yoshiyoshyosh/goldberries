@@ -114,8 +114,11 @@ if (isset($_GET['hard'])) {
   $where .= " AND cd.id = 19";
 }
 
-if (!isset($_GET['archived'])) {
+if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
   $where .= " AND map.is_archived = false";
+}
+if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
+  $where .= " AND objective.is_arbitrary = false AND (challenge.is_arbitrary = false OR challenge.is_arbitrary IS NULL)";
 }
 
 $query = $query . $where;

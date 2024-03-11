@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $old_submission->new_challenge_id = $submission->is_verified || $submission->is_rejected ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
+        $old_submission->expand_foreign_keys($DB, 5);
         api_write($old_submission);
       } else {
         die_json(500, "Failed to update submission");
