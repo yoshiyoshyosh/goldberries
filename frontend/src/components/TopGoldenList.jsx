@@ -8,14 +8,14 @@ import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
-import { getChallengeFcShort } from "../util/data_util";
+import { getChallengeFcShort, getChallengeObjectiveSuffix, getMapName } from "../util/data_util";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
 
-export function TopGoldenList({ type, id, archived = false }) {
+export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const query = useQuery({
-    queryKey: ["top_golden_list", type, id, archived],
-    queryFn: () => fetchTopGoldenList(type, id, archived),
+    queryKey: ["top_golden_list", type, id, archived, arbitrary],
+    queryFn: () => fetchTopGoldenList(type, id, archived, arbitrary),
     cacheTime: 0,
     staleTime: 0,
   });
@@ -143,11 +143,6 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
     borderLeft: "1px solid black",
   };
 
-  const mapName =
-    map.name === "A-Side" || map.name === "B-Side" || map.name === "C-Side" || map.name === "D-Side"
-      ? campaign.name + " " + map.name
-      : map.name;
-
   return (
     <tr style={rowStyle}>
       <td
@@ -162,7 +157,8 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
         }}
       >
         <Link style={{ color: "inherit", textDecoration: "none" }} to={"/map/" + map.id}>
-          {mapName} {getChallengeFcShort(challenge, true)}
+          {getMapName(map, campaign)} {getChallengeFcShort(challenge, true)}{" "}
+          {getChallengeObjectiveSuffix(challenge)}
         </Link>
       </td>
       <td style={{ ...rowStyle, ...cellStyle, textAlign: "left", paddingLeft: isPlayer ? "0" : "5px" }}>

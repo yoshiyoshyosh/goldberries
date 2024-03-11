@@ -91,14 +91,14 @@ function CampaignEntry({ campaign, style, type }) {
   const fontSize = challengeCount > 1 ? "16px" : displayName.length > 40 ? "12px" : "16px";
   return (
     <Stack direction="row" spacing={0} style={style}>
-      <a href={campaign.url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+      <Link to={"/campaign/" + campaign.id} style={{ textDecoration: "none" }}>
         <Box
           className="golden-list-info-box campaign"
           style={{ height: challengeCount * 50 + "px", fontSize: fontSize }}
         >
           {displayName}
         </Box>
-      </a>
+      </Link>
       <Box>
         {campaign.maps.map((map) => (
           <MapEntry key={map.id} map={map} type={type} />

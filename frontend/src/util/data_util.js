@@ -28,8 +28,14 @@ export function getChallengeObjectiveSuffix(challenge) {
 }
 
 export function getChallengeName(challenge) {
+  const isOld = challenge.map?.is_archived ?? false;
+  const oldPrefix = isOld ? "[Old] " : "";
   return (
-    getChallengeFcLong(challenge) + ": " + challenge.objective.name + getChallengeObjectiveSuffix(challenge)
+    oldPrefix +
+    getChallengeFcLong(challenge) +
+    ": " +
+    challenge.objective.name +
+    getChallengeObjectiveSuffix(challenge)
   );
 }
 
@@ -108,6 +114,20 @@ export function getMapLobbyInfo(map, campaign = null) {
   }
 
   return lobbyInfo;
+}
+
+export function getMapName(map, campaign) {
+  campaign = campaign || map.campaign;
+
+  const mapName =
+    map.name === "A-Side" || map.name === "B-Side" || map.name === "C-Side" || map.name === "D-Side"
+      ? campaign.name + " " + map.name
+      : map.name;
+
+  const isOld = map.is_archived ?? false;
+  const oldPrefix = isOld ? "[Old] " : "";
+
+  return oldPrefix + mapName;
 }
 
 export function getSubmissionVerifier(submission) {

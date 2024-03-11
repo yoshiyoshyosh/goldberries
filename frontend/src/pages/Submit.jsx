@@ -41,6 +41,8 @@ import {
   ChallengeSelect,
   DifficultyChip,
   DifficultySelect,
+  PlayerSelect,
+  PlayerChip,
 } from "../components/GoldberriesComponents";
 import { usePostSubmission } from "../hooks/useApi";
 
@@ -111,6 +113,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const [campaign, setCampaign] = useState(defaultCampaign ?? null);
   const [map, setMap] = useState(defaultMap ?? null);
   const [challenge, setChallenge] = useState(defaultChallenge ?? null);
+  const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
 
   const { mutate: submitRun } = usePostSubmission((submission) => {
     navigate("/submission/" + submission.id);
@@ -130,7 +133,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
     console.log("Form data:", data);
     submitRun({
       challenge_id: challenge.id,
-      player_id: auth.user.player.id,
+      player_id: selectedPlayer.id,
       ...data,
     });
   });
@@ -207,6 +210,18 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       <h4>Your Run</h4>
       <form>
         <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            {auth.hasVerifierPriv ? (
+              <PlayerSelect
+                type="all"
+                label="[Verifier Only] Submit for Player"
+                value={selectedPlayer}
+                onChange={(e, v) => setSelectedPlayer(v)}
+              />
+            ) : (
+              <PlayerChip player={selectedPlayer} />
+            )}
+          </Grid>
           <Grid item xs={12}>
             <TextField
               label="Proof URL *"
@@ -263,7 +278,12 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             />
           </Grid>
           <Grid item xs={12} sm={2}>
-            <Button variant="contained" fullWidth onClick={onSubmit} disabled={challenge === null}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={onSubmit}
+              disabled={challenge === null || selectedPlayer === null}
+            >
               Submit
             </Button>
           </Grid>

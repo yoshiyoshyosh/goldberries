@@ -1,9 +1,13 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
 import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useLocalStorage } from "../hooks/useStorage";
 
 export function PageTopGoldenList({}) {
   const { type, id } = useParams();
+  const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
+  const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
 
   const selectedType = type ? type : "all";
 
@@ -18,19 +22,16 @@ export function PageTopGoldenList({}) {
     >
       <Typography variant="h4">Top Golden List</Typography>
       <Stack direction="row" spacing={2} sx={{ my: 1 }}>
-        <Typography variant="body1">Quick links for testing:</Typography>
-        <Link to="/top-golden-list">Full List</Link>
-        <Link to="/top-golden-list/campaign/778">Winter Collab</Link>
-        <Link to="/top-golden-list/player/573">viddie</Link>
-        <Link to="/top-golden-list/player/64">Parrot</Link>
-        <Link to="/top-golden-list/player/388">Clantis</Link>
-        <Link to="/top-golden-list/player/429">ninz</Link>
-        <Link to="/top-golden-list/hitlist">Golden Hit-List</Link>
+        <FormControlLabel
+          control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
+          label="Show Archived"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />}
+          label="Show Arbitrary"
+        />
       </Stack>
-      <Typography variant="body" gutterBottom>
-        (type: {selectedType}, id: {id})
-      </Typography>
-      <TopGoldenList type={type} id={id} />
+      <TopGoldenList type={type} id={id} archived={showArchived} arbitrary={showArbitrary} />
     </Box>
   );
 }

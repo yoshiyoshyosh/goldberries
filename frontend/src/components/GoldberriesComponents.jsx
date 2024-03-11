@@ -332,10 +332,14 @@ export function PlayerSelect({ type, value, onChange, label = "Player", ...props
   //Sort alphabetically
   players.sort((a, b) => a.name.localeCompare(b.name));
 
+  const getOptionLabel = (player) => {
+    return player?.name;
+  };
+
   return (
     <Autocomplete
       options={players}
-      getOptionLabel={(player) => player.name}
+      getOptionLabel={getOptionLabel}
       renderInput={(params) => <TextField {...params} label={label} variant="outlined" />}
       value={value}
       onChange={onChange}
@@ -426,7 +430,7 @@ export function LinkIcon({ url }) {
 
   return (
     <Tooltip title={url}>
-      <a href={url} target="_blank" rel="noreferrer">
+      <a href={url} target="_blank" rel="noopener">
         {linkIconElement}
       </a>
     </Tooltip>

@@ -3,7 +3,11 @@ import axios from "axios";
 // ===== GET =====
 
 //type: "hard", "standard", "campaign", "map", "challenge", "player"
-export function fetchGoldenList(type, id = null) {
+export function fetchGoldenList(
+  type,
+  id = null,
+  options = { include_archived: false, include_arbitrary: false }
+) {
   const data = {};
 
   if (type === "hard") {
@@ -23,9 +27,10 @@ export function fetchGoldenList(type, id = null) {
   return axios.get("/golden-list.php", { params: data });
 }
 
-export function fetchTopGoldenList(type, id = null, archived = false) {
+export function fetchTopGoldenList(type, id = null, archived = false, arbitrary = false) {
   const data = {
     archived: archived,
+    arbitrary: arbitrary,
   };
 
   let endpoint = "/top-golden-list.php";
