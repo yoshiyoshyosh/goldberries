@@ -119,9 +119,16 @@ class Change extends DbObject
 
   static function create_change($DB, string $type, int $id, string $description)
   {
+    $account = get_user_data();
+    if ($account === null)
+      return false;
+    else if ($account->player === null)
+      return false;
+
     $change = new Change();
     $change->description = $description;
     $change->date = new JsonDateTime();
+    $change->author_id = $account->player->id;
 
     switch ($type) {
       case 'campaign':
@@ -136,6 +143,8 @@ class Change extends DbObject
       case 'player':
         $change->player_id = $id;
         break;
+      default:
+        return false;
     }
 
     if ($change->insert($DB)) {

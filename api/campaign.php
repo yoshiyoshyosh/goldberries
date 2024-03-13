@@ -37,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (isset($data['id'])) {
     // Update
+    $old_campaign = Campaign::get_by_id($DB, $data['id']);
     if ($campaign->update($DB)) {
+      Campaign::generate_changelog($DB, $old_campaign, $campaign);
       api_write($campaign);
     } else {
       die_json(500, "Failed to update campaign");

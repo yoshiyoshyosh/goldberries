@@ -127,4 +127,43 @@ class Challenge extends DbObject
   {
     return "(Challenge, id:{$this->id}, description:'{$this->description}')";
   }
+
+  static function generate_changelog($DB, $old, $new)
+  {
+    if ($old->id !== $new->id)
+      return false;
+
+    if ($old->map_id !== $new->map_id) {
+      $oldMap = Map::get_by_id($DB, $old->map_id);
+      $newMap = Map::get_by_id($DB, $new->map_id);
+      Change::create_change($DB, 'challenge', $new->id, "Moved challenge from map '{$oldMap->name}' to '{$newMap->name}'");
+    }
+    if ($old->objective_id !== $new->objective_id) {
+      $oldObjective = Objective::get_by_id($DB, $old->objective_id);
+      $newObjective = Objective::get_by_id($DB, $new->objective_id);
+      Change::create_change($DB, 'challenge', $new->id, "Changed objective from '{$oldObjective->name}' to '{$newObjective->name}'");
+    }
+    if ($old->difficulty_id !== $new->difficulty_id) {
+      $oldDifficulty = Difficulty::get_by_id($DB, $old->difficulty_id);
+      $newDifficulty = Difficulty::get_by_id($DB, $new->difficulty_id);
+      Change::create_change($DB, 'challenge', $new->id, "Moved from '{$oldDifficulty->to_tier_name()}' to '{$newDifficulty->to_tier_name()}'");
+    }
+    if ($old->description !== $new->description) {
+      Change::create_change($DB, 'challenge', $new->id, "Changed description from '{$old->description}' to '{$new->description}'");
+    }
+    if ($old->requires_fc !== $new->requires_fc) {
+      $stateNow = $new->requires_fc ? "Requires FC" : "Doesn't require FC";
+      Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
+    }
+    if ($old->has_fc !== $new->has_fc) {
+      $stateNow = $new->has_fc ? "Has FC" : "Doesn't have FC";
+      Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
+    }
+    if ($old->is_arbitrary !== $new->is_arbitrary) {
+      $stateNow = $new->is_arbitrary ? "Arbitrary challenge" : "Non-arbitrary challenge";
+      Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
+    }
+
+    return true;
+  }
 }

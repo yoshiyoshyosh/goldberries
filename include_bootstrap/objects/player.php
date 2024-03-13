@@ -144,4 +144,16 @@ class Player extends DbObject
   {
     return "(Player, id:{$this->id}, name:'{$this->name}')";
   }
+
+  static function generate_changelog($DB, $old, $new)
+  {
+    if ($old->id !== $new->id)
+      return false;
+
+    if ($old->name !== $new->name) {
+      Change::create_change($DB, 'player', $new->id, "Renamed from '{$old->name}' to '{$new->name}'");
+    }
+
+    return true;
+  }
 }

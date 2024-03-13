@@ -116,7 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (isset($data['id'])) {
     // Update
+    $old_challenge = Challenge::get_by_id($DB, $data['id']);
     if ($challenge->update($DB)) {
+      Challenge::generate_changelog($DB, $old_challenge, $challenge);
       api_write($challenge);
     } else {
       die_json(500, "Failed to update challenge");

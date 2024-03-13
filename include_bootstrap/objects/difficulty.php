@@ -40,4 +40,14 @@ class Difficulty extends DbObject
     $subtierStr = to_string_null_check($this->subtier);
     return "(Difficulty, id:{$this->id}, name:'{$this->name}', subtier:'{$subtierStr}')";
   }
+
+  function to_tier_name()
+  {
+    if ($this->subtier) {
+      //Uppercase the first letter of subtier
+      return ucfirst($this->subtier) . " " . $this->name;
+    } else {
+      return $this->name;
+    }
+  }
 }

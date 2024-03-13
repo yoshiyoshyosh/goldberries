@@ -49,8 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($data['id'])) {
       // Update
+      $old_map = Map::get_by_id($DB, $data['id']);
       if (!$map->update($DB)) {
         die_json(500, "Failed to update map ($map->id)");
+      } else {
+        Map::generate_changelog($DB, $old_map, $map);
       }
 
     } else {

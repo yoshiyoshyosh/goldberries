@@ -117,4 +117,32 @@ class Map extends DbObject
   {
     return "(Map, id:{$this->id}, name:'{$this->name}')";
   }
+
+  static function generate_changelog($DB, $old, $new)
+  {
+    if ($old->id !== $new->id)
+      return false;
+
+    if ($old->name !== $new->name) {
+      Change::create_change($DB, 'map', $new->id, "Renamed map from '{$old->name}' to '{$new->name}'");
+    }
+    if ($old->campaign_id !== $new->campaign_id) {
+      $oldCampaign = Campaign::get_by_id($DB, $old->campaign_id);
+      $newCampaign = Campaign::get_by_id($DB, $new->campaign_id);
+      Change::create_change($DB, 'map', $new->id, "Moved map from campaign '{$oldCampaign->name}' to '{$newCampaign->name}'");
+    }
+    if ($old->url !== $new->url) {
+      Change::create_change($DB, 'map', $new->id, "Changed url from '{$old->url}' to '{$new->url}'");
+    }
+    if ($old->is_archived !== $new->is_archived) {
+      $stateNow = $new->is_archived ? "Archived the map" : "Unarchived the map";
+      Change::create_change($DB, 'map', $new->id, $stateNow);
+    }
+    if ($old->is_rejected !== $new->is_rejected) {
+      $stateNow = $new->is_rejected ? "Rejected the map" : "Cleared rejection status";
+      Change::create_change($DB, 'map', $new->id, $stateNow);
+    }
+
+    return true;
+  }
 }

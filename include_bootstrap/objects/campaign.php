@@ -101,5 +101,19 @@ class Campaign extends DbObject
   }
 
   // === Utility Functions ===
+  static function generate_changelog($DB, $old, $new)
+  {
+    if ($old->id !== $new->id)
+      return false;
+
+    if ($old->name !== $new->name) {
+      Change::create_change($DB, 'campaign', $new->id, "Renamed campaign from '{$old->name}' to '{$new->name}'");
+    }
+    if ($old->url !== $new->url) {
+      Change::create_change($DB, 'campaign', $new->id, "Changed url from '{$old->url}' to '{$new->url}'");
+    }
+
+    return true;
+  }
 
 }
