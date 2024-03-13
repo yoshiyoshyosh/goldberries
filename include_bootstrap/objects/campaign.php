@@ -85,15 +85,16 @@ class Campaign extends DbObject
   }
 
   // === Find Functions ===
-  function fetch_maps($DB, $with_challenges = false, $with_submissions = false): bool
+  function fetch_maps($DB, $with_challenges = false, $with_submissions = false, $include_archived = true, $include_arbitrary = true): bool
   {
-    $maps = $this->fetch_list($DB, 'campaign_id', Map::class, null, "ORDER BY sort_major, sort_minor, sort_order, name");
+    $whereAddition = $include_archived ? null : "is_archived = false";
+    $maps = $this->fetch_list($DB, 'campaign_id', Map::class, $whereAddition, "ORDER BY sort_major, sort_minor, sort_order, name");
     if ($maps === false)
       return false;
     $this->maps = $maps;
     foreach ($this->maps as $map) {
       if ($with_challenges)
-        $map->fetch_challenges($DB, $with_submissions);
+        $map->fetch_challenges($DB, $with_submissions, $include_arbitrary);
       $map->expand_foreign_keys($DB, 2, false);
     }
     return true;

@@ -3,9 +3,13 @@
 require_once('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  $include_archived = isset($_GET['archived']) && $_GET['archived'] === "true";
+  //Campaign view doesnt show arbitrary challenges either way
+  //$include_arbitrary = isset($_GET['arbitrary']) && $_GET['arbitrary'] === "true";
+
   $id = $_REQUEST['id'];
   $campaign = Campaign::get_request($DB, $id);
-  $campaign->fetch_maps($DB, true, true);
+  $campaign->fetch_maps($DB, true, true, $include_archived, false);
 
   $players = array();
   $submissions = array();
@@ -15,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   //where all submissions are an associative array of map_id => submission
 
   foreach ($campaign->maps as $map) {
+    if ($map->is_archived && !$include_archived) {
+      continue;
+    }
     foreach ($map->challenges as $challenge) {
-      if ($challenge->is_challenge_arbitrary()) {
-        continue;
-      }
       foreach ($challenge->submissions as $submission) {
         $player_id = $submission->player_id;
         if (!array_key_exists($player_id, $players)) {
