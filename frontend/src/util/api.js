@@ -169,6 +169,15 @@ export function fetchPlayer(id) {
   });
 }
 
+export function fetchChangelog(type, id) {
+  return axios.get("/change.php", {
+    params: {
+      type: type,
+      id: id,
+    },
+  });
+}
+
 export function fetchRecentSubmissions(type, page, perPage, search = null, playerId = null) {
   const data = {
     recent: true,

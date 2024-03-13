@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
 import { getDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
+import { Changelog } from "../components/Changelog";
 
 const STYLE_CONSTS = {
   player: {
@@ -88,6 +89,7 @@ export function CampaignDisplay({ id }) {
             <Typography variant="h4">{response.campaign.name}</Typography>
           </Stack>
           <CampaignDetailsList campaign={response.campaign} sx={{}} />
+          <Changelog type="campaign" id={id} />
         </Box>
         <Divider sx={{ my: 2 }} />
         <FormControlLabel

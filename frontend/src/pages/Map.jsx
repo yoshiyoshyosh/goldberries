@@ -25,6 +25,7 @@ import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
 import { useGetMap } from "../hooks/useApi";
+import { Changelog } from "../components/Changelog";
 
 export function PageMap() {
   const { id } = useParams();
@@ -77,6 +78,9 @@ export function MapDisplay({ id }) {
           </>
         );
       })}
+
+      <Divider sx={{ my: 2 }} />
+      <Changelog type="map" id={id} />
 
       <CustomModal modalHook={editMapModal} options={{ hideFooter: true }}>
         <FormMapWrapper id={id} onSave={editMapModal.close} />

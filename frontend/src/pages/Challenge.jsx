@@ -39,6 +39,7 @@ import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
 import { useGetChallenge } from "../hooks/useApi";
+import { Changelog } from "../components/Changelog";
 
 const displayNoneOnMobile = {
   display: {
@@ -89,6 +90,9 @@ export function ChallengeDisplay({ id }) {
         <Chip label="Submissions" size="small" />
       </Divider>
       <ChallengeSubmissionTable challenge={challenge} />
+
+      <Divider sx={{ my: 2 }} />
+      <Changelog type="challenge" id={id} />
 
       <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
         <FormChallengeWrapper id={id} onSave={editChallengeModal.close} />

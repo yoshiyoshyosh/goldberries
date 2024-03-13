@@ -26,6 +26,7 @@ import {
   deleteAccount,
   deleteOwnAccount,
   claimPlayer,
+  fetchChangelog,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -302,6 +303,14 @@ export function useGetPlayer(id) {
   return useQuery({
     queryKey: ["player", id],
     queryFn: () => fetchPlayer(id),
+    onError: errorToast,
+  });
+}
+
+export function useGetChangelog(type, id) {
+  return useQuery({
+    queryKey: ["change_log", type, id],
+    queryFn: () => fetchChangelog(type, id),
     onError: errorToast,
   });
 }
