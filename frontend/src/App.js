@@ -275,7 +275,7 @@ export function Layout() {
           path: "/campaign/762",
           icon: <FontAwesomeIcon icon={faBlackberry} />,
         },
-        { name: "D-Sides", path: "/campaign/763", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        { name: "D-Sides", path: "/campaign/238", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         { name: "Etselec", path: "/campaign/764", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBlackberry} /> },
       ],

@@ -3,7 +3,9 @@ import { getQueryData, useGetCampaignView } from "../hooks/useApi";
 import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
 import {
   Box,
+  Checkbox,
   Divider,
+  FormControlLabel,
   List,
   ListItem,
   ListItemIcon,
@@ -20,6 +22,7 @@ import "../css/Campaign.css";
 import { useEffect } from "react";
 import { getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
 import { getDifficultyColors } from "../util/constants";
+import { useLocalStorage } from "../hooks/useStorage";
 
 const STYLE_CONSTS = {
   player: {
@@ -54,7 +57,8 @@ export function PageCampaign() {
 }
 
 export function CampaignDisplay({ id }) {
-  const query = useGetCampaignView(id);
+  const [showArchived, setShowArchived] = useLocalStorage("campaign_filter_archived", false);
+  const query = useGetCampaignView(id, showArchived);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -86,6 +90,10 @@ export function CampaignDisplay({ id }) {
           <CampaignDetailsList campaign={response.campaign} sx={{}} />
         </Box>
         <Divider sx={{ my: 2 }} />
+        <FormControlLabel
+          control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
+          label="Show Archived"
+        />
       </Box>
       <CampaignTableView
         campaign={response.campaign}
@@ -426,6 +434,7 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
       ? STYLE_CONSTS.map.borderLeft + "px solid " + lobbyInfo.minor.color
       : "1px solid white",
     fontWeight: "bold",
+    backgroundColor: map.is_archived ? "#592828" : "black",
   };
 
   let regularCount = 0;
@@ -569,21 +578,33 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
   let currentSpace = 0;
   return (
     <Stack direction="column">
-      {campaign.maps.map((map) => {
+      {campaign.maps.map((map, index) => {
         const submission = submissions[map.id];
         if (submission === undefined) {
           currentSpace += 1;
           return;
         }
         let space = currentSpace;
+        let endingSpace = 0;
         currentSpace = 0;
         let lobbyInfo = getMapLobbyInfo(map, campaign);
         let lobbyColor = lobbyInfo.major?.color ?? lobbyInfo.minor?.color ?? null;
+
+        //Find the number of maps without submissions after the current one, if all are empty.
+        let remainingMaps = campaign.maps.slice(index + 1);
+        let hasAnotherSubmission = remainingMaps.some((map) => {
+          return submissions[map.id] !== undefined;
+        });
+        if (!hasAnotherSubmission) {
+          endingSpace = remainingMaps.length;
+        }
+
         return (
           <CampaignTableSubmissionBox
             key={map.id}
             submission={submission}
             spacing={space}
+            endingSpacing={endingSpace}
             color={lobbyColor}
           />
         );
@@ -591,7 +612,7 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
     </Stack>
   );
 }
-function CampaignTableSubmissionBox({ submission, color, spacing = 0 }) {
+function CampaignTableSubmissionBox({ submission, color, spacing = 0, endingSpacing = 0 }) {
   let hasColor = color !== undefined && color !== null;
   color = hasColor ? color : "#ffd966";
   color = !hasColor && submission.is_fc ? "#f9cb9c" : color;
@@ -600,6 +621,7 @@ function CampaignTableSubmissionBox({ submission, color, spacing = 0 }) {
     width: STYLE_CONSTS.player.width + "px",
     height: STYLE_CONSTS.submission.height + "px",
     marginTop: spacing * STYLE_CONSTS.submission.height + "px",
+    marginBottom: endingSpacing * STYLE_CONSTS.submission.height + "px",
     backgroundColor: color,
     textDecoration: "none",
   };

@@ -115,10 +115,11 @@ export function fetchCampaign(id, maps = true, challenges = true, submission = t
   });
 }
 
-export function fetchCampaignView(id) {
+export function fetchCampaignView(id, include_archived = false) {
   return axios.get("/campaign_view.php", {
     params: {
       id: id,
+      archived: include_archived,
     },
   });
 }

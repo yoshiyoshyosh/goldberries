@@ -266,10 +266,10 @@ export function useGetCampaign(id) {
   });
 }
 
-export function useGetCampaignView(id) {
+export function useGetCampaignView(id, include_archived = false) {
   return useQuery({
-    queryKey: ["campaign_view", id],
-    queryFn: () => fetchCampaignView(id),
+    queryKey: ["campaign_view", id, include_archived],
+    queryFn: () => fetchCampaignView(id, include_archived),
     onError: errorToast,
   });
 }

@@ -30,12 +30,14 @@ export function getChallengeObjectiveSuffix(challenge) {
 export function getChallengeName(challenge) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
+  const challengeDescriptionSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
   return (
     oldPrefix +
     getChallengeFcLong(challenge) +
     ": " +
     challenge.objective.name +
-    getChallengeObjectiveSuffix(challenge)
+    getChallengeObjectiveSuffix(challenge) +
+    challengeDescriptionSuffix
   );
 }
 
