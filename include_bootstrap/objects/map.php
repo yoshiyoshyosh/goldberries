@@ -56,25 +56,25 @@ class Map extends DbObject
     $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
 
-    if (isset($arr[$prefix . 'date_added']))
+    if (isset ($arr[$prefix . 'date_added']))
       $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
-    if (isset($arr[$prefix . 'url']))
+    if (isset ($arr[$prefix . 'url']))
       $this->url = $arr[$prefix . 'url'];
-    if (isset($arr[$prefix . 'side']))
+    if (isset ($arr[$prefix . 'side']))
       $this->side = $arr[$prefix . 'side'];
-    if (isset($arr[$prefix . 'rejection_reason']))
+    if (isset ($arr[$prefix . 'rejection_reason']))
       $this->rejection_reason = $arr[$prefix . 'rejection_reason'];
-    if (isset($arr[$prefix . 'sort_major']))
+    if (isset ($arr[$prefix . 'sort_major']))
       $this->sort_major = intval($arr[$prefix . 'sort_major']);
-    if (isset($arr[$prefix . 'sort_minor']))
+    if (isset ($arr[$prefix . 'sort_minor']))
       $this->sort_minor = intval($arr[$prefix . 'sort_minor']);
-    if (isset($arr[$prefix . 'sort_order']))
+    if (isset ($arr[$prefix . 'sort_order']))
       $this->sort_order = intval($arr[$prefix . 'sort_order']);
-    if (isset($arr[$prefix . 'author_gb_id']))
+    if (isset ($arr[$prefix . 'author_gb_id']))
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
-    if (isset($arr[$prefix . 'author_gb_name']))
+    if (isset ($arr[$prefix . 'author_gb_name']))
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
-    if (isset($arr[$prefix . 'campaign_id']))
+    if (isset ($arr[$prefix . 'campaign_id']))
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
   }
 
@@ -85,7 +85,7 @@ class Map extends DbObject
 
     $isFromSqlResult = is_array($DB);
 
-    if ($expand_structure && isset($this->campaign_id)) {
+    if ($expand_structure && isset ($this->campaign_id)) {
       if ($isFromSqlResult) {
         $this->campaign = new Campaign();
         $this->campaign->apply_db_data($DB, "campaign_");
@@ -110,6 +110,40 @@ class Map extends DbObject
       $challenge->expand_foreign_keys($DB, 3, false);
     }
     return true;
+  }
+
+  static function search_by_name($DB, $name)
+  {
+    $query = "SELECT * FROM map WHERE map.name ILIKE '%" . $name . "%' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    $maps = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $map = new Map();
+      $map->apply_db_data($row);
+      $map->expand_foreign_keys($DB, 2);
+      $maps[] = $map;
+    }
+    return $maps;
+  }
+
+  static function find_by_author($DB, $author)
+  {
+    $query = "SELECT * FROM map WHERE map.author_gb_name ILIKE '%" . $author . "%' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    $maps = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $map = new Map();
+      $map->apply_db_data($row);
+      $map->expand_foreign_keys($DB, 2);
+      $maps[] = $map;
+    }
+    return $maps;
   }
 
   // === Utility Functions ===

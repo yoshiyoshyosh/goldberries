@@ -23,23 +23,23 @@ class Player extends DbObject
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
 
-    if (isset($arr[$prefix . 'account_is_verifier']))
+    if (isset ($arr[$prefix . 'account_is_verifier']))
       $this->account['is_verifier'] = $arr[$prefix . 'account_is_verifier'] === 't';
     else
       $this->account['is_verifier'] = false;
-    if (isset($arr[$prefix . 'account_is_admin']))
+    if (isset ($arr[$prefix . 'account_is_admin']))
       $this->account['is_admin'] = $arr[$prefix . 'account_is_admin'] === 't';
     else
       $this->account['is_admin'] = false;
-    if (isset($arr[$prefix . 'account_is_suspended']))
+    if (isset ($arr[$prefix . 'account_is_suspended']))
       $this->account['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
     else
       $this->account['is_suspended'] = false;
 
-    if (isset($arr[$prefix . 'suspension_reason']))
+    if (isset ($arr[$prefix . 'suspension_reason']))
       $this->account['suspension_reason'] = $arr[$prefix . 'suspension_reason'];
 
-    if (isset($arr[$prefix . 'links']))
+    if (isset ($arr[$prefix . 'links']))
       $this->account['links'] = $arr[$prefix . 'links'];
     else
       $this->account['links'] = null;
@@ -134,8 +134,25 @@ class Player extends DbObject
   static function name_exists($DB, string $name): bool
   {
     $query = "SELECT id FROM player WHERE LOWER(name) = LOWER($1)";
-    $result = pg_query_params($DB, $query, array($name)) or die('Query failed: ' . pg_last_error());
+    $result = pg_query_params($DB, $query, array($name)) or die ('Query failed: ' . pg_last_error());
     return pg_num_rows($result) > 0;
+  }
+
+  static function search_by_name($DB, string $search)
+  {
+    $query = "SELECT * FROM player WHERE player.name ILIKE '%" . $search . "%' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    $players = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $player = new Player();
+      $player->apply_db_data($row);
+      $player->expand_foreign_keys($DB, 2);
+      $players[] = $player;
+    }
+    return $players;
   }
 
 

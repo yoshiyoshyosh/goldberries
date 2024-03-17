@@ -47,36 +47,36 @@ class Campaign extends DbObject
     $this->url = $arr[$prefix . 'url'];
     $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
 
-    if (isset($arr[$prefix . 'icon_url']))
+    if (isset ($arr[$prefix . 'icon_url']))
       $this->icon_url = $arr[$prefix . 'icon_url'];
 
-    if (isset($arr[$prefix . 'sort_major_name'])) {
+    if (isset ($arr[$prefix . 'sort_major_name'])) {
       $this->sort_major_name = $arr[$prefix . 'sort_major_name'];
     }
-    if (isset($arr[$prefix . 'sort_major_labels'])) {
+    if (isset ($arr[$prefix . 'sort_major_labels'])) {
       $sort_major_labels = $arr[$prefix . 'sort_major_labels'];
       $this->sort_major_labels = is_array($sort_major_labels) ? $sort_major_labels : explode("\t", $sort_major_labels);
     }
-    if (isset($arr[$prefix . 'sort_major_colors'])) {
+    if (isset ($arr[$prefix . 'sort_major_colors'])) {
       $sort_major_colors = $arr[$prefix . 'sort_major_colors'];
       $this->sort_major_colors = is_array($sort_major_colors) ? $sort_major_colors : explode("\t", $sort_major_colors);
     }
 
-    if (isset($arr['sort_minor_name'])) {
+    if (isset ($arr['sort_minor_name'])) {
       $this->sort_minor_name = $arr[$prefix . 'sort_minor_name'];
     }
-    if (isset($arr[$prefix . 'sort_minor_labels'])) {
+    if (isset ($arr[$prefix . 'sort_minor_labels'])) {
       $sort_minor_labels = $arr[$prefix . 'sort_minor_labels'];
       $this->sort_minor_labels = is_array($sort_minor_labels) ? $sort_minor_labels : explode("\t", $sort_minor_labels);
     }
-    if (isset($arr[$prefix . 'sort_minor_colors'])) {
+    if (isset ($arr[$prefix . 'sort_minor_colors'])) {
       $sort_minor_colors = $arr[$prefix . 'sort_minor_colors'];
       $this->sort_minor_colors = is_array($sort_minor_colors) ? $sort_minor_colors : explode("\t", $sort_minor_colors);
     }
 
-    if (isset($arr[$prefix . 'author_gb_id']))
+    if (isset ($arr[$prefix . 'author_gb_id']))
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
-    if (isset($arr[$prefix . 'author_gb_name']))
+    if (isset ($arr[$prefix . 'author_gb_name']))
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
   }
 
@@ -98,6 +98,42 @@ class Campaign extends DbObject
       $map->expand_foreign_keys($DB, 2, false);
     }
     return true;
+  }
+
+  static function search_by_name($DB, $search)
+  {
+    $found = array();
+
+    $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '%" . $search . "%' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    while ($row = pg_fetch_assoc($result)) {
+      $campaign = new Campaign();
+      $campaign->apply_db_data($row);
+      $campaign->fetch_maps($DB);
+      $found[] = $campaign;
+    }
+
+    return $found;
+  }
+
+  static function find_by_author($DB, $author)
+  {
+    $query = "SELECT * FROM campaign WHERE campaign.author_gb_name = '" . $author . "' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    $campaigns = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $campaign = new Campaign();
+      $campaign->apply_db_data($row);
+      $campaign->fetch_maps($DB);
+      $campaigns[] = $campaign;
+    }
+    return $campaigns;
   }
 
   // === Utility Functions ===

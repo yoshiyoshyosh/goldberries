@@ -1,9 +1,9 @@
 <?php
 
-require_once('../api_bootstrap.inc.php');
+require_once ('../api_bootstrap.inc.php');
 
 //=== Verification ===
-if (isset($_GET['verify'])) {
+if (isset ($_GET['verify'])) {
   $code = $_GET['verify'];
 
   //Check if code is valid
@@ -17,6 +17,11 @@ if (isset($_GET['verify'])) {
 
   //Update account state in db
   $account = $accounts[0];
+
+  if ($account->email_verified == true) {
+    die_json(400, "Email is already verified");
+  }
+
   $account->email_verified = true;
   $account->email_verify_code = null;
   if ($account->update($DB) === false) {
@@ -63,8 +68,22 @@ if ($account->insert($DB) === false) {
 }
 
 log_info("User registered {$account} via email ({$account->email})", "Login");
-//Send a confirmation email with code
 
+//Send a confirmation email with code
+$subject = "Verify Your Email | Goldberries.net";
+$message = "Hello,\n\n";
+$message .= "activate your Goldberries.net account by clicking the link below:\n\n";
+$message .= constant('BASE_URL') . "/verify-email/{$account->email_verify_code}\n\n";
+$message .= "If you did not sign up, please ignore this email.\n\n";
+$message .= "Thank you,\n";
+$message .= "Goldberries.net Team";
+$sender = constant('ADMIN_EMAIL');
+$recipient = $account->email;
+$headers = "From: " . $sender;
+
+if (mail($recipient, $subject, $message, $headers) === false) {
+  die_json(500, "Failed to send email");
+}
 
 //redirect to verify notice page
 http_response_code(200);
