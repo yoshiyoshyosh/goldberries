@@ -220,6 +220,14 @@ export function fetchPlayerStats(id) {
   });
 }
 
+export function fetchSearch(search) {
+  return axios.get("/search.php", {
+    params: {
+      q: search,
+    },
+  });
+}
+
 // ===== POST =====
 export function postCampaign(data) {
   return axios.post("/campaign.php", formatDataForApi(data));
@@ -259,6 +267,37 @@ export function postAccount(self, data) {
       self: self,
     })
   );
+}
+
+export function registerEmail(data) {
+  return axios.get("/auth/register.php", {
+    params: {
+      email: data.email,
+      password: data.password,
+    },
+  });
+}
+export function verifyEmail(token) {
+  return axios.get("/auth/register.php", {
+    params: {
+      verify: token,
+    },
+  });
+}
+export function forgotPasswordRequest(email) {
+  return axios.get("/auth/forgot_password.php", {
+    params: {
+      email: email,
+    },
+  });
+}
+export function forgotPasswordVerify(data) {
+  return axios.get("/auth/forgot_password.php", {
+    params: {
+      token: data.token,
+      password: data.password,
+    },
+  });
 }
 
 // ===== DELETE =====

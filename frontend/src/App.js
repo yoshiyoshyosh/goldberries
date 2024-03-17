@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { PageLogin } from "./pages/Login";
+import { PageForgotPassword, PageLogin, PageRegister, PageVerifyEmail } from "./pages/Login";
 import { AuthProvider, useAuth } from "./hooks/AuthProvider";
 import axios from "axios";
 import { API_URL, APP_URL } from "./util/constants";
@@ -64,6 +64,7 @@ import {
   faPlayCircle,
   faPlus,
   faRegistered,
+  faSearch,
   faSignIn,
   faSignOut,
   faTooth,
@@ -92,6 +93,7 @@ import { useGetOverallStats } from "./hooks/useApi";
 import { PagePlayer } from "./pages/Player";
 import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
+import { PageSearch } from "./pages/Search";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -153,6 +155,9 @@ const router = createBrowserRouter([
         ],
       },
       { path: "login/:redirect?", element: <PageLogin /> },
+      { path: "register", element: <PageRegister /> },
+      { path: "verify-email/:verify", element: <PageVerifyEmail /> },
+      { path: "forgot-password/:token?", element: <PageForgotPassword /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
       {
         path: "my-account/:tab?",
@@ -188,6 +193,8 @@ const router = createBrowserRouter([
       { path: "challenge/:id", element: <PageChallenge /> },
       { path: "map/:id", element: <PageMap /> },
       { path: "campaign/:id/:tab?", element: <PageCampaign /> },
+
+      { path: "search/:q?", element: <PageSearch /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -345,6 +352,11 @@ export function Layout() {
       name: "Admin",
       items: [{ name: "Admin Stuff", path: "/admin-panel", icon: <FontAwesomeIcon icon={faHammer} /> }],
     },
+    search: {
+      name: "Search",
+      path: "/search",
+      icon: <FontAwesomeIcon icon={faSearch} />,
+    },
   };
 
   if (auth.hasPlayerClaimed === true) {
@@ -354,7 +366,7 @@ export function Layout() {
   }
 
   // const menu = [menus.home, menus.lists, menus.campaigns, menus.otherChallenges];
-  const leftMenu = [menus.lists, menus.campaigns, menus.otherChallenges];
+  const leftMenu = [menus.lists, menus.campaigns, menus.otherChallenges, menus.search];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);

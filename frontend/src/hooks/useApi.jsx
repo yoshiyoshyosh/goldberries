@@ -27,6 +27,11 @@ import {
   deleteOwnAccount,
   claimPlayer,
   fetchChangelog,
+  registerEmail,
+  forgotPasswordRequest,
+  forgotPasswordVerify,
+  verifyEmail,
+  fetchSearch,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -207,6 +212,45 @@ export function useClaimPlayer(onSuccess) {
     onError: errorToast,
   });
 }
+
+export function useRegister(onSuccess) {
+  return useMutation({
+    mutationFn: (data) => registerEmail(data),
+    onSuccess: (response, data) => {
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+export function useVerifyEmail(onSuccess) {
+  return useMutation({
+    mutationFn: (token) => verifyEmail(token),
+    onSuccess: (response, token) => {
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function useForgotPasswordRequest(onSuccess) {
+  return useMutation({
+    mutationFn: (data) => forgotPasswordRequest(data),
+    onSuccess: (response, data) => {
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function useForgotPasswordVerify(onSuccess) {
+  return useMutation({
+    mutationFn: (data) => forgotPasswordVerify(data),
+    onSuccess: (response, data) => {
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
 //#endregion
 
 //#region ===== GET =====
@@ -327,6 +371,14 @@ export function useGetAllDifficulties() {
   return useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
+    onError: errorToast,
+  });
+}
+
+export function useSearch(search) {
+  return useQuery({
+    queryKey: ["search", search],
+    queryFn: () => fetchSearch(search),
     onError: errorToast,
   });
 }
