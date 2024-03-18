@@ -64,6 +64,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
   const form = useForm({
     defaultValues: {
       ...account,
+      unlink_discord: false,
       reset_session: false,
     },
   });
@@ -79,6 +80,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
   useEffect(() => {
     form.reset({
       ...account,
+      unlink_discord: false,
       reset_session: false,
     });
   }, [account]);
@@ -142,13 +144,27 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
         {...form.register("password", FormOptions.PasswordOptional)}
         fullWidth
       />
-      <TextField
-        sx={{ mt: 2 }}
-        label="Discord ID"
-        {...form.register("discord_id")}
-        fullWidth
-        InputLabelProps={{ shrink: true }}
-      />
+      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+        <TextField
+          label="Discord ID"
+          {...form.register("discord_id")}
+          disabled
+          InputLabelProps={{ shrink: true }}
+        />
+        <Controller
+          control={form.control}
+          name="unlink_discord"
+          render={({ field }) => (
+            <FormControlLabel
+              onChange={field.onChange}
+              label="Unlink Discord"
+              checked={field.value}
+              disabled={!formAccount.discord_id}
+              control={<Checkbox />}
+            />
+          )}
+        />
+      </Stack>
 
       <Divider sx={{ my: 2 }} />
 

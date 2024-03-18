@@ -7,7 +7,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { PlayerChip } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
-import { getMapLobbyInfo } from "../util/data_util";
+import { getCampaignName, getMapLobbyInfo } from "../util/data_util";
 
 export function PageSearch() {
   const { q } = useParams();
@@ -32,6 +32,11 @@ export function PageSearch() {
       </Typography>
       <DebouncedTextField value={search} setValue={updateSearch} label="Search" />
       {search && search.length >= 3 && <SearchDisplay search={search} />}
+      {search && search.length < 3 && search.length > 0 && (
+        <Typography variant="body1" color="gray">
+          Please enter at least 3 characters to search
+        </Typography>
+      )}
     </BasicContainerBox>
   );
 }
@@ -61,7 +66,7 @@ function SearchResultsCampaigns({ campaigns }) {
 
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Campaigns</Typography>
+      <Typography variant="h5">Campaigns ({campaigns.length})</Typography>
       {filteredCampaigns.length === 0 && (
         <Typography variant="body1" color="gray">
           No campaigns found
@@ -71,7 +76,7 @@ function SearchResultsCampaigns({ campaigns }) {
         <Stack direction="column">
           <Stack direction="row" gap={2} alignItems="center">
             <Link to={"/campaign/" + campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-              <Typography variant="h6">{campaign.name}</Typography>
+              <Typography variant="h6">{getCampaignName(campaign)}</Typography>
             </Link>
           </Stack>
           {campaign.maps.length > 1 && (
@@ -114,7 +119,7 @@ function SearchResultsCampaigns({ campaigns }) {
 function SearchResultsMaps({ maps }) {
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Maps</Typography>
+      <Typography variant="h5">Maps ({maps.length})</Typography>
       {maps.length === 0 && (
         <Typography variant="body1" color="gray">
           No maps found
@@ -128,7 +133,7 @@ function SearchResultsMaps({ maps }) {
           <Typography variant="body2" sx={{ pl: 2 }}>
             <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
               <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
-              {map.campaign.name}
+              {getCampaignName(map.campaign)}
             </Link>
           </Typography>
         </Stack>
@@ -140,7 +145,7 @@ function SearchResultsMaps({ maps }) {
 function SearchResultsPlayers({ players }) {
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Players</Typography>
+      <Typography variant="h5">Players ({players.length})</Typography>
       {players.length === 0 && (
         <Typography variant="body1" color="gray">
           No players found

@@ -31,10 +31,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const loginWithDiscord = async (url) => {
+  const loginWithDiscord = (url) => {
     let redirect = url ? encodeURIComponent("/" + url) : "";
     let postOAuthLogin = APP_URL + "/post-oauth" + redirect;
-    window.location.href = DISCORD_AUTH_URL + "?redirect=" + postOAuthLogin;
+    window.location.href = DISCORD_AUTH_URL + "?login=true&redirect=" + postOAuthLogin;
+  };
+
+  const registerWithDiscord = () => {
+    window.location.href = DISCORD_AUTH_URL;
   };
 
   const logout = async () => {
@@ -90,6 +94,7 @@ export function AuthProvider({ children }) {
         hasPlayerClaimed,
         loginWithEmail,
         loginWithDiscord,
+        registerWithDiscord,
         logout,
         checkSession,
       }}

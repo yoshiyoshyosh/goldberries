@@ -155,7 +155,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "login/:redirect?", element: <PageLogin /> },
-      { path: "register", element: <PageRegister /> },
+      { path: "register/:error?", element: <PageRegister /> },
       { path: "verify-email/:verify", element: <PageVerifyEmail /> },
       { path: "forgot-password/:token?", element: <PageForgotPassword /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },

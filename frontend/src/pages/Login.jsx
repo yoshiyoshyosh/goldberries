@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord, faRaspberryPi } from "@fortawesome/free-brands-svg-icons";
 
 import "@mui/material";
-import { Avatar, Box, Button, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Avatar, Box, Button, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
 import { BasicContainerBox } from "../components/BasicComponents";
 import {
   useForgotPasswordRequest,
@@ -85,6 +85,7 @@ export function PageLogin() {
 
 export function PageRegister() {
   const auth = useAuth();
+  const { error } = useParams();
   const [postRegister, setPostRegister] = useState(false);
   const { mutate: register } = useRegister(() => {
     setPostRegister(true);
@@ -123,6 +124,11 @@ export function PageRegister() {
 
   return (
     <LoginBox title="Register">
+      {error && (
+        <Alert severity="error" sx={{ mt: 2, alignSelf: "stretch" }}>
+          {decodeURIComponent(error)}
+        </Alert>
+      )}
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
@@ -171,7 +177,7 @@ export function PageRegister() {
         fullWidth
         variant="contained"
         sx={{ mt: 2, mb: 1 }}
-        onClick={() => auth.loginWithDiscord()}
+        onClick={() => auth.registerWithDiscord()}
         endIcon={<FontAwesomeIcon icon={faDiscord} />}
       >
         Register with Discord
