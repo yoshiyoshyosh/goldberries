@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Stack, Typography } from "@mui/material";
 import {
   BasicContainerBox,
   ErrorDisplay,
@@ -16,6 +16,7 @@ import { RecentSubmissions } from "./Index";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName } from "../util/data_util";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -86,6 +87,8 @@ export function PlayerDisplay({ id }) {
 
 export function PagePlayerTopGoldenList({ id }) {
   const query = useGetPlayer(id);
+  const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
+  const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -102,7 +105,17 @@ export function PagePlayerTopGoldenList({ id }) {
         <Link to={`/player/${id}`}>{player.name}</Link>
         {apostrophe} Top Golden List
       </Typography>
-      <TopGoldenList type="player" id={id} />
+      <Stack direction="row" spacing={2}>
+        <FormControlLabel
+          control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
+          label="Show Archived"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />}
+          label="Show Arbitrary"
+        />
+      </Stack>
+      <TopGoldenList type="player" id={id} archived={showArchived} arbitrary={showArbitrary} />
     </Box>
   );
 }

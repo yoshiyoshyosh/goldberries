@@ -1,18 +1,25 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
-import { Box, Button, Stack, TableCell, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Checkbox, FormControlLabel, Stack, Tooltip, Typography } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeFcShort, getChallengeObjectiveSuffix, getMapName } from "../util/data_util";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
+import { getQueryData } from "../hooks/useApi";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
+  const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
+    "top_golden_list_useSuggestedDifficulties",
+    false
+  );
+
   const query = useQuery({
     queryKey: ["top_golden_list", type, id, archived, arbitrary],
     queryFn: () => fetchTopGoldenList(type, id, archived, arbitrary),
@@ -33,26 +40,43 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
     return <ErrorDisplay error={query.error} />;
   }
 
-  const topGoldenList = query.data.data;
-  console.log("topGoldenList", topGoldenList);
+  const topGoldenList = getQueryData(query);
+  const isPlayer = type === "player";
 
   return (
-    <Stack direction="row" gap={0}>
-      {topGoldenList.tiers.map((tier, index) => (
-        <TopGoldenListGroup
-          key={index}
-          tier={tier}
-          campaigns={topGoldenList.campaigns}
-          maps={topGoldenList.maps}
-          isPlayer={type === "player"}
-        />
-      ))}
+    <Stack direction="column" gap={1}>
+      {isPlayer && (
+        <Stack direction="row" spacing={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={useSuggestedDifficulties}
+                onChange={(e) => setUseSuggestedDifficulties(e.target.checked)}
+              />
+            }
+            label="Use Suggested Difficulties for ranking"
+          />
+        </Stack>
+      )}
+      <Stack direction="row" gap={0}>
+        {topGoldenList.tiers.map((tier, index) => (
+          <TopGoldenListGroup
+            key={index}
+            tier={tier}
+            campaigns={topGoldenList.campaigns}
+            maps={topGoldenList.maps}
+            challenges={topGoldenList.challenges}
+            isPlayer={isPlayer}
+            useSuggested={useSuggestedDifficulties}
+          />
+        ))}
+      </Stack>
     </Stack>
   );
 }
 
-function TopGoldenListGroup({ tier, campaigns, maps, isPlayer = false }) {
-  const colors = getDifficultyColors(tier[0].difficulty.id);
+function TopGoldenListGroup({ tier, campaigns, maps, challenges, isPlayer = false, useSuggested = false }) {
+  const colors = getDifficultyColors(tier[0].id);
 
   const headerStyle = {
     backgroundColor: colors.group_color,
@@ -80,7 +104,13 @@ function TopGoldenListGroup({ tier, campaigns, maps, isPlayer = false }) {
             <th style={{ minWidth: "100px", borderRight: "1px solid black" }}>
               <Typography fontWeight="bold">Map</Typography>
             </th>
-            <th style={{ minWidth: "80px", borderRight: "1px solid black" }}>
+            <th
+              style={{
+                minWidth: "80px",
+                borderRight: "1px solid black",
+                display: useSuggested ? "none" : "table-cell",
+              }}
+            >
               <Typography fontWeight="bold">{isPlayer ? "Sug. Diff." : "Clears"}</Typography>
             </th>
             <th style={{ minWidth: "60px" }}>
@@ -89,8 +119,14 @@ function TopGoldenListGroup({ tier, campaigns, maps, isPlayer = false }) {
           </tr>
         </thead>
         <tbody>
-          {tier.map((subtier) =>
-            subtier.challenges.map((challenge) => {
+          {tier.map((subtier) => {
+            const tierChallenges = challenges.filter(
+              (challenge) =>
+                (useSuggested
+                  ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+                  : challenge.difficulty.id) === subtier.id
+            );
+            return tierChallenges.map((challenge) => {
               const map = maps[challenge.map_id];
               const campaign = campaigns[map.campaign_id];
 
@@ -102,10 +138,11 @@ function TopGoldenListGroup({ tier, campaigns, maps, isPlayer = false }) {
                   campaign={campaign}
                   map={map}
                   isPlayer={isPlayer}
+                  useSuggested={useSuggested}
                 />
               );
-            })
-          )}
+            });
+          })}
         </tbody>
       </table>
     </Box>
@@ -124,16 +161,16 @@ function TopGoldenListGroupHeader({ tier }) {
             {group.tier} [{group.isRanked ? "Ranked" : "Unranked"}]
           </span>
         ) : ( */}
-        {tier[0].difficulty.name}
+        {tier[0].name}
         {/* )} */}
       </Typography>
     </div>
   );
 }
 
-function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
+function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested }) {
   const auth = useAuth();
-  const colors = getDifficultyColors(subtier.difficulty.id);
+  const colors = getDifficultyColors(subtier.id);
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -161,7 +198,15 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
           {getChallengeObjectiveSuffix(challenge)}
         </Link>
       </td>
-      <td style={{ ...rowStyle, ...cellStyle, textAlign: "left", paddingLeft: isPlayer ? "0" : "5px" }}>
+      <td
+        style={{
+          ...rowStyle,
+          ...cellStyle,
+          textAlign: "left",
+          paddingLeft: isPlayer ? "0" : "5px",
+          display: useSuggested ? "none" : "table-cell",
+        }}
+      >
         {isPlayer ? (
           <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
             <DifficultyChip difficulty={challenge.submissions[0].suggested_difficulty} />
@@ -177,7 +222,11 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer }) {
               ▶
             </Link>
           )}
-          {isPlayer ? null : (
+          {isPlayer ? (
+            <Link to={"/submission/" + challenge.submissions[0].id}>
+              <FontAwesomeIcon icon={faBook} />
+            </Link>
+          ) : (
             <Tooltip
               componentsProps={{
                 tooltip: {
