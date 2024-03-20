@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 $query = "
 SELECT                                                                   
@@ -94,20 +94,20 @@ LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
 ";
 
 $where = "WHERE submission.is_verified = true AND submission.is_rejected = false AND cd.id != 18";
-if (isset($_GET['campaign'])) {
+if (isset ($_GET['campaign'])) {
   $where .= " AND campaign.id = " . intval($_GET['campaign']);
 }
-if (isset($_GET['map'])) {
+if (isset ($_GET['map'])) {
   $where .= " AND map.id = " . intval($_GET['map']);
 }
-if (isset($_GET['player'])) {
+if (isset ($_GET['player'])) {
   $where .= " AND p.id = " . intval($_GET['player']);
 }
 
-if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
+if (!isset ($_GET['archived']) || $_GET['archived'] === "false") {
   $where .= " AND map.is_archived = false";
 }
-if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
+if (!isset ($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
   $where .= " AND objective.is_arbitrary = false AND (challenge.is_arbitrary = false OR challenge.is_arbitrary IS NULL)";
 }
 
@@ -128,6 +128,7 @@ if (!$resultDifficulties) {
 
 $response = array(
   "tiers" => array(),
+  "challenges" => array(),
   "campaigns" => array(),
   "maps" => array(),
 );
@@ -141,15 +142,12 @@ while ($row = pg_fetch_assoc($resultDifficulties)) {
   $tierIndex = get_tier_index($difficulty);
   $subtierIndex = get_subtier_index($difficulty);
 
-  if (!isset($response['tiers'][$tierIndex]))
+  if (!isset ($response['tiers'][$tierIndex]))
     $response['tiers'][$tierIndex] = array();
-  if (!isset($response['tiers'][$tierIndex][$subtierIndex]))
+  if (!isset ($response['tiers'][$tierIndex][$subtierIndex]))
     $response['tiers'][$tierIndex][$subtierIndex] = array();
 
-  $response['tiers'][$tierIndex][$subtierIndex] = array(
-    "difficulty" => $difficulty,
-    "challenges" => array(),
-  );
+  $response['tiers'][$tierIndex][$subtierIndex] = $difficulty;
   $difficulties[$difficulty->id] = $difficulty;
 }
 
@@ -169,19 +167,15 @@ while ($row = pg_fetch_assoc($result)) {
     $response['maps'][$map_id] = $map;
   }
 
-  $difficulty_id = intval($row['challenge_difficulty_id']);
-  $difficulty = $difficulties[$difficulty_id];
-  $tierIndex = get_tier_index($difficulty);
-  $subtierIndex = get_subtier_index($difficulty);
-
   $challenge_id = intval($row['challenge_id']);
-  $challenge = find_challenge_in_array($response['tiers'][$tierIndex][$subtierIndex]['challenges'], $challenge_id);
-  if ($challenge === null) {
+  if (!array_key_exists($challenge_id, $response['challenges'])) {
     $challenge = new Challenge();
     $challenge->apply_db_data($row, "challenge_");
     $challenge->submissions = array();
     $challenge->expand_foreign_keys($row, 1, false);
-    $response['tiers'][$tierIndex][$subtierIndex]['challenges'][] = $challenge;
+    $response['challenges'][$challenge_id] = $challenge;
+  } else {
+    $challenge = $response['challenges'][$challenge_id];
   }
 
   $submission = new Submission();
@@ -190,13 +184,12 @@ while ($row = pg_fetch_assoc($result)) {
   $challenge->submissions[$submission->id] = $submission;
 }
 
-//Flatten challenge.submissions
-foreach ($response['tiers'] as $tierIndex => $subtiers) {
-  foreach ($subtiers as $subtierIndex => $subtier) {
-    foreach ($subtier['challenges'] as $challengeIndex => $challenge) {
-      $response['tiers'][$tierIndex][$subtierIndex]['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
-    }
-  }
+//Flatten challenges
+$response['challenges'] = array_values($response['challenges']);
+
+//Flatten submissions
+foreach ($response['challenges'] as $challengeIndex => $challenge) {
+  $response['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
 }
 
 api_write($response);
