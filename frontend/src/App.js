@@ -129,7 +129,7 @@ const router = createBrowserRouter([
             ),
           },
           {
-            path: "submission-queue/:submissionId?",
+            path: "submission-queue/:submission?",
             element: (
               <ProtectedRoute redirect="manage/submission-queue">
                 <PageSubmissionQueue />

@@ -24,13 +24,23 @@ import {
 import { useQuery } from "react-query";
 import { fetchSubmissionQueue } from "../../util/api";
 import { useState } from "react";
-import { set } from "react-hook-form";
 import { getQueryData } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageSubmissionQueue() {
-  const [submissionId, setSubmissionId] = useState(undefined);
+  const { submission } = useParams();
+  const [submissionId, setSubmissionId] = useState(submission ?? undefined);
   const navigate = useNavigate();
+
+  const updateSubmissionId = (id) => {
+    setSubmissionId(id);
+    if (id === undefined) {
+      navigate("/manage/submission-queue", { replace: true });
+    } else {
+      navigate(`/manage/submission-queue/${id}`, { replace: true });
+    }
+  };
 
   const query = useQuery({
     queryKey: ["submission_queue"],
@@ -72,7 +82,7 @@ export function PageSubmissionQueue() {
       );
     }
 
-    setSubmissionId(parseInt(queue[0].id));
+    updateSubmissionId(parseInt(queue[0].id));
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
         <Typography variant="h4" sx={{ mt: 0 }}>
@@ -87,18 +97,18 @@ export function PageSubmissionQueue() {
     console.log("goToNextSubmission", currentSubmission, "queue", queue);
     const currentIndex = queue.findIndex((submission) => submission.id === currentSubmission.id);
     if (currentIndex === -1) {
-      setSubmissionId(undefined);
+      updateSubmissionId(undefined);
       return;
     }
     let nextSubmission = queue[currentIndex + 1];
     if (nextSubmission === undefined) {
       nextSubmission = queue[currentIndex];
       if (nextSubmission === undefined) {
-        setSubmissionId(undefined);
+        updateSubmissionId(undefined);
         return;
       }
     }
-    setSubmissionId(nextSubmission.id);
+    updateSubmissionId(nextSubmission.id);
   };
 
   return (
@@ -118,7 +128,7 @@ export function PageSubmissionQueue() {
           <SubmissionQueueTable
             queue={queue}
             selectedSubmissionId={parseInt(submissionId)}
-            setSubmissionId={setSubmissionId}
+            setSubmissionId={updateSubmissionId}
           />
           <Divider sx={{ my: 2, display: { xs: "block", lg: "none" } }} />
         </Box>
@@ -133,8 +143,16 @@ export function PageSubmissionQueue() {
 }
 
 function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useLocalStorage("submission_queue_rows_per_page", 10);
+
+  let defaultPage = 0;
+  if (selectedSubmissionId !== null) {
+    const index = queue.findIndex((submission) => submission.id === selectedSubmissionId);
+    if (index !== -1) {
+      defaultPage = Math.floor(index / rowsPerPage);
+    }
+  }
+  const [page, setPage] = useState(defaultPage);
 
   return (
     <TableContainer component={Paper}>

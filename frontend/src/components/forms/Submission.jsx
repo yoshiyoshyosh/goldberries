@@ -231,6 +231,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           fullWidth
           sx={{ mt: 2 }}
           disabled={!isVerifier}
+          InputLabelProps={{ shrink: true }}
         />
       ) : null}
       <TextField
