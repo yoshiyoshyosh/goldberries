@@ -271,19 +271,12 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faBook} />,
       items: [
         { name: "Strawberry Jam", path: "/campaign/935", icon: <FontAwesomeIcon icon={faBlackberry} /> },
-        { name: "Spring Collab 2020", path: "/campaign/761", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         {
           name: "Celeste 2021 Winter Collab",
           path: "/campaign/778",
           icon: <FontAwesomeIcon icon={faBlackberry} />,
         },
-        {
-          name: "Secret Santa Collab 2022",
-          path: "/campaign/762",
-          icon: <FontAwesomeIcon icon={faBlackberry} />,
-        },
         { name: "D-Sides", path: "/campaign/238", icon: <FontAwesomeIcon icon={faBlackberry} /> },
-        { name: "Etselec", path: "/campaign/764", icon: <FontAwesomeIcon icon={faBlackberry} /> },
         { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBlackberry} /> },
       ],
     },
@@ -366,7 +359,7 @@ export function Layout() {
   }
 
   // const menu = [menus.home, menus.lists, menus.campaigns, menus.otherChallenges];
-  const leftMenu = [menus.lists, menus.campaigns, menus.otherChallenges, menus.search];
+  const leftMenu = [menus.lists, menus.campaigns, /*menus.otherChallenges,*/ menus.search];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);

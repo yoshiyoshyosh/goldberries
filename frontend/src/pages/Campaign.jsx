@@ -428,6 +428,10 @@ function CampaignTableLobbyBox({ name, color, span }) {
 function CampaignTableMapBox({ campaign, map, submissions }) {
   const lobbyInfo = getMapLobbyInfo(map, campaign);
 
+  if (map.challenges.length === 0) {
+    return null;
+  }
+
   let style = {
     height: STYLE_CONSTS.submission.height + "px",
     width: STYLE_CONSTS.map.width + "px",
@@ -581,6 +585,9 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
   return (
     <Stack direction="column">
       {campaign.maps.map((map, index) => {
+        if (map.challenges.length === 0) {
+          return;
+        }
         const submission = submissions[map.id];
         if (submission === undefined) {
           currentSpace += 1;
@@ -599,6 +606,12 @@ function CampaignTableSubmissionColumn({ campaign, player, submissions }) {
         });
         if (!hasAnotherSubmission) {
           endingSpace = remainingMaps.length;
+          //Remove endingSpace for each map that has no challenges
+          remainingMaps.forEach((map) => {
+            if (map.challenges.length === 0) {
+              endingSpace -= 1;
+            }
+          });
         }
 
         return (

@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import { useMutation, useQuery } from "react-query";
 import { fetchChallenge, postSubmission } from "../util/api";
-import { getChallengeFlags, getMapLobbyInfo } from "../util/data_util";
+import { getChallengeFlags, getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -395,6 +395,11 @@ export function MultiUserSubmission() {
           challenge = map.challenges.find(
             (c) => (c.requires_fc && preferFc) || (!c.requires_fc && !preferFc)
           );
+          //If challenge wasnt found
+          if (challenge === undefined) {
+            //Find first challenge that isn't arbitrary
+            challenge = map.challenges.find((c) => getChallengeIsArbitrary(c) === false);
+          }
         }
         map.campaign = campaign;
         mapDataList.push({

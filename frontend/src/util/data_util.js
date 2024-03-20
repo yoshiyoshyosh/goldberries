@@ -41,6 +41,10 @@ export function getChallengeName(challenge) {
   );
 }
 
+export function getChallengeIsArbitrary(challenge) {
+  return challenge.is_arbitrary === null ? challenge.objective.is_arbitrary : challenge.is_arbitrary;
+}
+
 export function getDifficultyName(difficulty) {
   let subtierPrefix = difficulty.subtier === null ? "" : difficulty.subtier + " ";
   //capitalize first letter
