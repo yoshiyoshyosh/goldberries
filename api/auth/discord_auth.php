@@ -1,8 +1,8 @@
 <?php
 
-require_once('../api_bootstrap.inc.php');
+require_once ('../api_bootstrap.inc.php');
 
-if (isset($_REQUEST['code'])) {
+if (isset ($_REQUEST['code'])) {
   //Got code from discord oauth, now get access token
 
   $state = $_REQUEST['state'];
@@ -57,20 +57,23 @@ if (isset($_REQUEST['code'])) {
   if ($accounts == false) {
     //No account was found
     if ($_SESSION['login'] == true) {
-      die_json(401, "User is not registered");
+      header('Location: ' . constant('REGISTER_URL') . "/" . "Discord ID not linked to an account. Please register an account first.");
+      exit();
     }
     //User is not in database, create new account
     $account = new Account();
     $account->discord_id = $user_id;
     if ($account->insert($DB) === false) {
-      die_json(500, "Failed to create account");
+      header('Location: ' . constant('REGISTER_URL') . "/" . urlencode("Failed to create account"));
+      exit();
     }
     log_info("User registered Account({$account->id}) via Discord (id: {$user_id})", "Login");
   } else {
     //User account was found, try to login
     $account = $accounts[0];
     if (is_suspended($account)) {
-      die_json(401, "Account is suspended: " . $account->suspension_reason);
+      header('Location: ' . constant('REGISTER_URL') . "/" . urlencode("Account is suspended: " . $account->suspension_reason));
+      exit();
     }
   }
 
@@ -79,16 +82,16 @@ if (isset($_REQUEST['code'])) {
     $redirect = $_SESSION['REDIRECT_AFTER_LOGIN'] ?? constant('REDIRECT_POST_LOGIN');
     header('Location: ' . $redirect);
   } else {
-    die_json(500, "Failed to login");
+    header('Location: ' . constant('REGISTER_URL') . "/" . urlencode("Failed to login"));
   }
 
 } else {
   //Redirect to discord oauth
   //Rememeber if user was trying to login or register
-  $_SESSION['login'] = isset($_GET['login']);
+  $_SESSION['login'] = isset ($_GET['login']);
 
   //Remember if user is trying to link their existing account to discord
-  $_SESSION['link_account'] = isset($_GET['link_account']);
+  $_SESSION['link_account'] = isset ($_GET['link_account']);
 
   if ($_SESSION['link_account'] == false && is_logged_in()) {
     //User is already logged in and not trying to link account
@@ -96,9 +99,9 @@ if (isset($_REQUEST['code'])) {
     exit();
   }
 
-  if (isset($_REQUEST['redirect'])) {
+  if (isset ($_REQUEST['redirect'])) {
     $_SESSION['REDIRECT_AFTER_LOGIN'] = $_REQUEST['redirect'];
-  } else if (isset($_SERVER['HTTP_REFERER'])) {
+  } else if (isset ($_SERVER['HTTP_REFERER'])) {
     $_SESSION['REDIRECT_AFTER_LOGIN'] = $_SERVER['HTTP_REFERER'];
   }
 
@@ -120,7 +123,7 @@ function apiRequest($url, $post = FALSE, $headers = array())
   }
   $headers[] = 'Accept: application/json';
 
-  if (isset($_SESSION['access_token']))
+  if (isset ($_SESSION['access_token']))
     $headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

@@ -38,33 +38,39 @@ class Account extends DbObject
     $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
 
-    if (isset($arr[$prefix . 'player_id']))
+    if (isset ($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
-    if (isset($arr[$prefix . 'claimed_player_id']))
+    if (isset ($arr[$prefix . 'claimed_player_id']))
       $this->claimed_player_id = intval($arr[$prefix . 'claimed_player_id']);
-    if (isset($arr[$prefix . 'email']))
+    if (isset ($arr[$prefix . 'email']))
       $this->email = $arr[$prefix . 'email'];
-    if (isset($arr[$prefix . 'password']))
+    if (isset ($arr[$prefix . 'password']))
       $this->password = $arr[$prefix . 'password'];
-    if (isset($arr[$prefix . 'discord_id']))
+    if (isset ($arr[$prefix . 'discord_id']))
       $this->discord_id = $arr[$prefix . 'discord_id'];
-    if (isset($arr[$prefix . 'session_token']))
+    if (isset ($arr[$prefix . 'session_token']))
       $this->session_token = $arr[$prefix . 'session_token'];
-    if (isset($arr[$prefix . 'session_created']))
+    if (isset ($arr[$prefix . 'session_created']))
       $this->session_created = new JsonDateTime($arr[$prefix . 'session_created']);
-    if (isset($arr[$prefix . 'suspension_reason']))
+    if (isset ($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
-    if (isset($arr[$prefix . 'email_verified']))
+    if (isset ($arr[$prefix . 'email_verified']))
       $this->email_verified = $arr[$prefix . 'email_verified'] === 't';
-    if (isset($arr[$prefix . 'email_verify_code']))
+    if (isset ($arr[$prefix . 'email_verify_code']))
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
-    if (isset($arr[$prefix . 'links'])) {
-      $this->links = explode("\t", $arr[$prefix . 'links']);
-      //Trim all strings
-      $this->links = array_map('trim', $this->links);
-      //Remove empty strings
-      $this->links = array_filter($this->links, function ($link) {
-        return $link !== ''; });
+    if (isset ($arr[$prefix . 'links'])) {
+      $value = $arr[$prefix . 'links'];
+      if (is_array($value)) {
+        $this->links = $value;
+      } else {
+        $this->links = explode("\t", $value);
+        //Trim all strings
+        $this->links = array_map('trim', $this->links);
+        //Remove empty strings
+        $this->links = array_filter($this->links, function ($link) {
+          return $link !== '';
+        });
+      }
       //Set to null if empty
       if (count($this->links) === 0)
         $this->links = null;
