@@ -14,7 +14,7 @@ import { BasicContainerBox } from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { useDeleteOwnAccount, usePostAccount } from "../hooks/useApi";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { PlayerChip, VerificationStatusChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { API_URL, FormOptions } from "../util/constants";
@@ -30,6 +30,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { isValidHttpUrl } from "../util/util";
 
 export function PageAccount() {
   const auth = useAuth();
@@ -295,36 +296,11 @@ export function UserAccountProfileForm() {
         You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to
         your YouTube channel, or any other link you want to share with the community.
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<FontAwesomeIcon icon={faLink} />}
-        onClick={addLink}
-        sx={{ mt: 2 }}
-      >
-        Add Link
-      </Button>
-      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
-        {formAccount.links !== null &&
-          formAccount.links.map((link, index) => (
-            <Stack direction="row" spacing={2} key={index}>
-              <TextField
-                key={index}
-                label={`Link ${index + 1}`}
-                {...form.register(`links.${index}`, FormOptions.Url)}
-                fullWidth
-              />
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<FontAwesomeIcon icon={faLinkSlash} />}
-                onClick={() => deleteLink(index)}
-              >
-                Remove
-              </Button>
-            </Stack>
-          ))}
-      </Stack>
+      <Controller
+        name="links"
+        control={form.control}
+        render={({ field }) => <ManageUserLinks links={field.value} setLinks={field.onChange} />}
+      />
 
       <Divider sx={{ my: 2 }} />
 
@@ -339,6 +315,60 @@ export function UserAccountProfileForm() {
         Save Changes
       </Button>
     </form>
+  );
+}
+
+export function ManageUserLinks({ links, setLinks }) {
+  const deleteLink = (index) => {
+    setLinks(links.filter((_, i) => i !== index));
+  };
+  const addLink = () => {
+    setLinks([...links, ""]);
+  };
+  const changeLink = (index, value) => {
+    setLinks(links.map((link, i) => (i === index ? value : link)));
+  };
+
+  return (
+    <>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<FontAwesomeIcon icon={faLink} />}
+        onClick={addLink}
+        sx={{ mt: 2 }}
+      >
+        Add Link
+      </Button>
+      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+        {links !== null &&
+          links.map((link, index) => {
+            //validate link to be a valid URL
+            const error = link.trim() !== "" && isValidHttpUrl(link) === false ? "Invalid URL" : "";
+            return (
+              <Stack direction="row" spacing={2} key={index}>
+                <TextField
+                  key={index}
+                  label={`Link ${index + 1}`}
+                  value={link}
+                  onChange={(e) => changeLink(index, e.target.value)}
+                  fullWidth
+                  error={!!error}
+                  helperText={error}
+                />
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<FontAwesomeIcon icon={faLinkSlash} />}
+                  onClick={() => deleteLink(index)}
+                >
+                  Remove
+                </Button>
+              </Stack>
+            );
+          })}
+      </Stack>
+    </>
   );
 }
 

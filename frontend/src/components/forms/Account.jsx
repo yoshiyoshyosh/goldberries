@@ -10,13 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
-import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { Controller, set, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { PlayerSelect } from "../GoldberriesComponents";
-import { useGetAccount, useGetAllPlayers, usePostAccount } from "../../hooks/useApi";
+import { useDeleteAccount, useGetAccount, useGetAllPlayers, usePostAccount } from "../../hooks/useApi";
 import { getAccountName } from "../../util/data_util";
 import { FormOptions } from "../../util/constants";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { ManageUserLinks } from "../../pages/Account";
 
 export function FormAccountWrapper({ account, id, onSave, ...props }) {
   const query = useGetAccount(id, {
@@ -54,12 +57,21 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
 //This account form is used by team members, not users themselves
 export function FormAccount({ account, allPlayers, onSave, ...props }) {
   const auth = useAuth();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
     toast.success("Account updated");
     if (onSave) onSave(account);
   });
+
+  const { mutate: deleteAccount } = useDeleteAccount((account) => {
+    toast.success("Account deleted");
+    if (onSave) onSave(null); //Return null to indicate the account was deleted
+  });
+  const deleteSelectedAccount = () => {
+    deleteAccount(account.id);
+  };
 
   const form = useForm({
     defaultValues: {
@@ -83,6 +95,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       unlink_discord: false,
       reset_session: false,
     });
+    setConfirmDelete(false);
   }, [account]);
 
   const formAccount = form.watch();
@@ -168,6 +181,18 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography variant="h6">User Links</Typography>
+        <FontAwesomeIcon icon={faLink} />
+      </Stack>
+      <Controller
+        control={form.control}
+        name="links"
+        render={({ field }) => <ManageUserLinks links={field.value} setLinks={field.onChange} />}
+      />
+
+      <Divider sx={{ my: 2 }} />
+
       <Controller
         control={form.control}
         name="is_suspended"
@@ -220,26 +245,45 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
         />
       )}
 
-      <Divider sx={{ my: 2 }} />
-
       <Controller
         control={form.control}
         name="reset_session"
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Log User Out"
+            label="Logout User"
             checked={field.value}
             control={<Checkbox />}
           />
         )}
       />
 
-      <Divider sx={{ my: 2 }} />
-
       <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
         Update Account
       </Button>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="h6">Delete Account</Typography>
+      <Typography variant="body2" gutterBottom>
+        Deleting an account is permanent and cannot be undone. This does <b>not</b> delete the player
+        associated with the account.
+      </Typography>
+      <Stack direction="row" spacing={2}>
+        <FormControlLabel
+          control={<Checkbox checked={confirmDelete} onChange={(e) => setConfirmDelete(e.target.checked)} />}
+          label="Confirm"
+        />
+        <Button
+          startIcon={<FontAwesomeIcon icon={faTrash} />}
+          variant="contained"
+          color="error"
+          onClick={deleteSelectedAccount}
+          disabled={!confirmDelete}
+        >
+          Delete
+        </Button>
+      </Stack>
     </form>
   );
 }

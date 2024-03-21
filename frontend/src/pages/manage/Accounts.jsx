@@ -73,6 +73,10 @@ function ManageAccountsTab() {
     return <ErrorDisplay error={query.error} />;
   }
 
+  const onSave = (account) => {
+    if (account === null) setAccount(null);
+  };
+
   const accounts = query.data.data;
   //sort accounts by id
   accounts.sort((a, b) => a.id - b.id);
@@ -89,7 +93,7 @@ function ManageAccountsTab() {
       {account && (
         <>
           <Divider sx={{ my: 2 }} />
-          <FormAccountWrapper id={account.id} account={null} />
+          <FormAccountWrapper id={account.id} account={null} onSave={onSave} />
         </>
       )}
     </>

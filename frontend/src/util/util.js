@@ -22,3 +22,13 @@ export function getAxiosErrorMessage(axiosError) {
   console.log("Axios error:", axiosError);
   return axiosError.response.data?.error ?? axiosError.message;
 }
+
+export function isValidHttpUrl(string) {
+  let url;
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
