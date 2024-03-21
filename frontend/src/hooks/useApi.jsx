@@ -32,6 +32,7 @@ import {
   forgotPasswordVerify,
   verifyEmail,
   fetchSearch,
+  fetchSubmissionQueue,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -340,6 +341,15 @@ export function useGetSubmission(id) {
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
     onError: errorToast,
+  });
+}
+
+export function useGetSubmissionQueue() {
+  return useQuery({
+    queryKey: ["submission_queue"],
+    queryFn: () => fetchSubmissionQueue(),
+    onError: errorToast,
+    refetchInterval: 5 * 1000,
   });
 }
 

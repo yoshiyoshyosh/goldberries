@@ -24,7 +24,7 @@ import {
 import { useQuery } from "react-query";
 import { fetchSubmissionQueue } from "../../util/api";
 import { useState } from "react";
-import { getQueryData } from "../../hooks/useApi";
+import { getQueryData, useGetSubmissionQueue } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
@@ -42,10 +42,7 @@ export function PageSubmissionQueue() {
     }
   };
 
-  const query = useQuery({
-    queryKey: ["submission_queue"],
-    queryFn: () => fetchSubmissionQueue(),
-  });
+  const query = useGetSubmissionQueue();
 
   if (query.isLoading) {
     return (

@@ -29,6 +29,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { FormOptions } from "../../util/constants";
 import { FullChallengeDisplay } from "../../pages/Submission";
 import { usePostSubmission } from "../../hooks/useApi";
+import { CreateAnyButton } from "../../pages/manage/Challenges";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({
@@ -130,9 +131,14 @@ export function FormSubmission({ submission, onSave, ...props }) {
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="h6">New Challenge Details</Typography>
             {isVerifier ? (
-              <Button variant="outlined" onClick={() => form.setValue("new_challenge_id", null)}>
-                Remove
-              </Button>
+              <Stack direction="row" gap={2}>
+                <CreateAnyButton
+                  defaultCampaignName={submission.new_challenge?.name}
+                  defaultCampaignUrl={submission.new_challenge?.url}
+                  defaultMapName={submission.new_challenge?.name}
+                  defaultDifficultyId={submission.suggested_difficulty_id ?? undefined}
+                />
+              </Stack>
             ) : null}
           </Stack>
           <TextField

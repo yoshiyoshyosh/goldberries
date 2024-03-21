@@ -25,9 +25,16 @@ import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import { getCampaignName, getMapLobbyInfo } from "../../util/data_util";
+import { getCampaignName } from "../../util/data_util";
 
-export function FormCampaignWrapper({ id, onSave, isEditMaps = false, ...props }) {
+export function FormCampaignWrapper({
+  id,
+  onSave,
+  isEditMaps = false,
+  defaultCampaignName,
+  defaultCampaignUrl,
+  ...props
+}) {
   const query = useQuery({
     queryKey: ["campaign", id],
     queryFn: () => fetchCampaign(id),
@@ -54,8 +61,8 @@ export function FormCampaignWrapper({ id, onSave, isEditMaps = false, ...props }
 
   const campaign = query.data?.data ?? {
     id: null,
-    name: "",
-    url: "",
+    name: defaultCampaignName ?? "",
+    url: defaultCampaignUrl ?? "",
     icon_url: "",
     sort_major_name: "",
     sort_major_labels: [],

@@ -304,9 +304,13 @@ export function CampaignTableView({ campaign, players, submissions }) {
             position: "sticky",
             top: "0",
             zIndex: 3,
+            width: STYLE_CONSTS.map.width + STYLE_CONSTS.map.counter + "px",
+            padding: "0 5px",
           }}
         >
-          {campaign.name}
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {campaign.name}
+          </span>
         </div>
         <Stack direction="row">
           <Stack direction="column">

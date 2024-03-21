@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { DifficultySelectControlled, ObjectiveSelect, FullMapSelect } from "../GoldberriesComponents";
 
-export function FormChallengeWrapper({ id, onSave, ...props }) {
+export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
   const query = useQuery({
     queryKey: ["challenge", id],
     queryFn: () => fetchChallenge(id),
@@ -40,7 +40,7 @@ export function FormChallengeWrapper({ id, onSave, ...props }) {
     requires_fc: false,
     has_fc: false,
     is_arbitrary: false,
-    difficulty_id: null,
+    difficulty_id: defaultDifficultyId ?? 19, //Undetermined
   };
 
   return <FormChallenge challenge={challenge} onSave={onSave} {...props} />;

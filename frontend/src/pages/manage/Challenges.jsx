@@ -79,31 +79,7 @@ export function PageManageChallenges() {
           </Typography>
         </Grid>
         <Grid item xs={12} md="auto">
-          <CustomizedMenu
-            button={
-              <Button variant="contained" color="primary" startIcon={<FontAwesomeIcon icon={faEdit} />}>
-                Create
-              </Button>
-            }
-          >
-            <MenuItem disableRipple onClick={() => openModal(modalRefs.campaign.create, null)}>
-              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-              New Campaign
-            </MenuItem>
-            <MenuItem disableRipple onClick={() => openModal(modalRefs.map.create, null)}>
-              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-              New Map
-            </MenuItem>
-            <MenuItem disableRipple onClick={() => openModal(modalRefs.challenge.create, null)}>
-              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-              New Challenge
-            </MenuItem>
-            <Divider sx={{ my: 0.5 }} />
-            <MenuItem disableRipple onClick={() => openModal(modalRefs.campaign.massAddMaps, null)}>
-              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-              Mass Add Maps to Campaign
-            </MenuItem>
-          </CustomizedMenu>
+          <CreateAnyButton />
         </Grid>
       </Grid>
       <ManageChallengesSearchField search={search} setSearch={setSearch} />
@@ -364,24 +340,20 @@ function ManageModalContainer({ modalRefs }) {
   const { mutate: deleteMap } = useDeleteMap();
   const { mutate: deleteChallenge } = useDeleteChallenge();
 
-  const createCampaignModal = useModal();
   const editCampaignModal = useModal();
   const deleteCampaignModal = useModal(null, (cancelled, data) => {
     if (cancelled) return;
     deleteCampaign(data.id);
   });
 
-  const campaignMassAddMapsModal = useModal();
   const campaignMassEditMapsModal = useModal();
 
-  const createMapModal = useModal();
   const editMapModal = useModal();
   const deleteMapModal = useModal(null, (cancelled, data) => {
     if (cancelled) return;
     deleteMap(data.id);
   });
 
-  const createChallengeModal = useModal();
   const editChallengeModal = useModal();
   const deleteChallengeModal = useModal(null, (cancelled, data) => {
     if (cancelled) return;
@@ -389,26 +361,19 @@ function ManageModalContainer({ modalRefs }) {
   });
 
   // Setting the refs
-  modalRefs.campaign.create.current = createCampaignModal;
   modalRefs.campaign.edit.current = editCampaignModal;
   modalRefs.campaign.delete.current = deleteCampaignModal;
 
-  modalRefs.campaign.massAddMaps.current = campaignMassAddMapsModal;
   modalRefs.campaign.massEditMaps.current = campaignMassEditMapsModal;
 
-  modalRefs.map.create.current = createMapModal;
   modalRefs.map.edit.current = editMapModal;
   modalRefs.map.delete.current = deleteMapModal;
 
-  modalRefs.challenge.create.current = createChallengeModal;
   modalRefs.challenge.edit.current = editChallengeModal;
   modalRefs.challenge.delete.current = deleteChallengeModal;
 
   return (
     <>
-      <CustomModal modalHook={createCampaignModal} options={{ hideFooter: true }}>
-        <FormCampaignWrapper id={null} onSave={createCampaignModal.close} />
-      </CustomModal>
       <CustomModal modalHook={editCampaignModal} options={{ hideFooter: true }}>
         {editCampaignModal.data?.id == null ? (
           <LoadingSpinner />
@@ -427,9 +392,6 @@ function ManageModalContainer({ modalRefs }) {
         </Typography>
       </CustomModal>
 
-      <CustomModal modalHook={campaignMassAddMapsModal} options={{ hideFooter: true }}>
-        <FormCampaignMassAddMaps onSave={campaignMassAddMapsModal.close} />
-      </CustomModal>
       <CustomModal maxWidth="lg" modalHook={campaignMassEditMapsModal} options={{ hideFooter: true }}>
         {campaignMassEditMapsModal.data?.id == null ? (
           <LoadingSpinner />
@@ -442,9 +404,6 @@ function ManageModalContainer({ modalRefs }) {
         )}
       </CustomModal>
 
-      <CustomModal modalHook={createMapModal} options={{ hideFooter: true }}>
-        <FormMapWrapper id={null} onSave={createMapModal.close} />
-      </CustomModal>
       <CustomModal modalHook={editMapModal} options={{ hideFooter: true }}>
         {editMapModal.data?.id == null ? (
           <LoadingSpinner />
@@ -463,9 +422,6 @@ function ManageModalContainer({ modalRefs }) {
         </Typography>
       </CustomModal>
 
-      <CustomModal modalHook={createChallengeModal} options={{ hideFooter: true }}>
-        <FormChallengeWrapper id={null} onSave={createChallengeModal.close} />
-      </CustomModal>
       <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
         {editChallengeModal.data?.id == null ? (
           <LoadingSpinner />
@@ -483,6 +439,73 @@ function ManageModalContainer({ modalRefs }) {
           <b>'{deleteChallengeModal.data ? getChallengeName(deleteChallengeModal.data) : ""}'</b> for the map{" "}
           <b>'{deleteChallengeModal.data?.map?.name}'</b> and <b>all of the attached submissions</b> ?
         </Typography>
+      </CustomModal>
+    </>
+  );
+}
+
+export function CreateAnyButton({
+  defaultCampaignName,
+  defaultCampaignUrl,
+  defaultMapName,
+  defaultDifficultyId,
+}) {
+  const createCampaignModal = useModal();
+  const campaignMassAddMapsModal = useModal();
+  const createMapModal = useModal();
+  const createChallengeModal = useModal();
+
+  return (
+    <>
+      <CustomizedMenu
+        button={
+          <Button variant="contained" color="primary" startIcon={<FontAwesomeIcon icon={faEdit} />}>
+            Create
+          </Button>
+        }
+      >
+        <MenuItem disableRipple onClick={createCampaignModal.open}>
+          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+          New Campaign
+        </MenuItem>
+        <MenuItem disableRipple onClick={createMapModal.open}>
+          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+          New Map
+        </MenuItem>
+        <MenuItem disableRipple onClick={createChallengeModal.open}>
+          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+          New Challenge
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem disableRipple onClick={campaignMassAddMapsModal.open}>
+          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+          Mass Add Maps to Campaign
+        </MenuItem>
+      </CustomizedMenu>
+
+      <CustomModal modalHook={createCampaignModal} options={{ hideFooter: true }}>
+        <FormCampaignWrapper
+          id={null}
+          onSave={createCampaignModal.close}
+          defaultCampaignName={defaultCampaignName}
+          defaultCampaignUrl={defaultCampaignUrl}
+        />
+      </CustomModal>
+
+      <CustomModal modalHook={campaignMassAddMapsModal} options={{ hideFooter: true }}>
+        <FormCampaignMassAddMaps onSave={campaignMassAddMapsModal.close} />
+      </CustomModal>
+
+      <CustomModal modalHook={createMapModal} options={{ hideFooter: true }}>
+        <FormMapWrapper id={null} onSave={createMapModal.close} defaultMapName={defaultMapName} />
+      </CustomModal>
+
+      <CustomModal modalHook={createChallengeModal} options={{ hideFooter: true }}>
+        <FormChallengeWrapper
+          id={null}
+          onSave={createChallengeModal.close}
+          defaultDifficultyId={defaultDifficultyId}
+        />
       </CustomModal>
     </>
   );

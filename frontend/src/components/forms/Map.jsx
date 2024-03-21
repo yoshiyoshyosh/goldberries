@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 
-export function FormMapWrapper({ id, onSave, ...props }) {
+export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
   const query = useQuery({
     queryKey: ["map", id],
     queryFn: () => fetchMap(id),
@@ -44,7 +44,7 @@ export function FormMapWrapper({ id, onSave, ...props }) {
   const map = query.data?.data ?? {
     id: null,
     campaign: null,
-    name: "",
+    name: defaultMapName ?? "",
     url: "",
     has_fc: false,
     is_rejected: false,
