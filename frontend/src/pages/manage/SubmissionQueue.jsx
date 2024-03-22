@@ -1,15 +1,9 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../../components/BasicComponents";
 import { FormSubmissionWrapper } from "../../components/forms/Submission";
 import {
   Box,
   Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
   Paper,
   Stack,
   Table,
@@ -21,21 +15,21 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useQuery } from "react-query";
-import { fetchSubmissionQueue } from "../../util/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getQueryData, useGetSubmissionQueue } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { toast } from "react-toastify";
 
 export function PageSubmissionQueue() {
   const { submission } = useParams();
-  const [submissionId, setSubmissionId] = useState(submission ?? undefined);
+  const defaultSubmission = submission === undefined ? null : parseInt(submission);
+  const [submissionId, setSubmissionId] = useState(defaultSubmission ?? null);
   const navigate = useNavigate();
 
   const updateSubmissionId = (id) => {
     setSubmissionId(id);
-    if (id === undefined) {
+    if (id === null) {
       navigate("/manage/submission-queue", { replace: true });
     } else {
       navigate(`/manage/submission-queue/${id}`, { replace: true });
@@ -43,6 +37,31 @@ export function PageSubmissionQueue() {
   };
 
   const query = useGetSubmissionQueue();
+  const queue = getQueryData(query);
+
+  useEffect(() => {
+    if (queue === null || queue === undefined) return;
+
+    if (submissionId === null && queue.length > 0) {
+      updateSubmissionId(queue[0].id);
+    } else if (submissionId !== null) {
+      if (queue.length === 0) {
+        toast.info(
+          "The submission you were viewing is no longer in the queue. It was either deleted or verified by someone else."
+        );
+        updateSubmissionId(null);
+      } else {
+        const index = queue.findIndex((submission) => submission.id === submissionId);
+        if (index === -1) {
+          toast.info(
+            "The submission you were viewing is no longer in the queue. It was either deleted or verified by someone else."
+          );
+          goToNextSubmission({ id: submissionId });
+        }
+      }
+    } else if (submissionId !== null) {
+    }
+  }, [submissionId, query]);
 
   if (query.isLoading) {
     return (
@@ -64,44 +83,17 @@ export function PageSubmissionQueue() {
     );
   }
 
-  const queue = getQueryData(query);
-  console.log("queue", queue);
-
-  if (submissionId === undefined) {
-    if (queue.length === 0) {
-      return (
-        <BasicContainerBox sx={{ mt: 0, p: 2 }}>
-          <Typography variant="h4" sx={{ mt: 0 }}>
-            Submission Queue
-          </Typography>
-          <Typography variant="body1">No submissions in queue</Typography>
-        </BasicContainerBox>
-      );
-    }
-
-    updateSubmissionId(parseInt(queue[0].id));
-    return (
-      <BasicContainerBox sx={{ mt: 0, p: 2 }}>
-        <Typography variant="h4" sx={{ mt: 0 }}>
-          Submission Queue
-        </Typography>
-        <LoadingSpinner />
-      </BasicContainerBox>
-    );
-  }
-
   const goToNextSubmission = (currentSubmission) => {
-    console.log("goToNextSubmission", currentSubmission, "queue", queue);
     const currentIndex = queue.findIndex((submission) => submission.id === currentSubmission.id);
     if (currentIndex === -1) {
-      updateSubmissionId(undefined);
+      updateSubmissionId(null);
       return;
     }
     let nextSubmission = queue[currentIndex + 1];
-    if (nextSubmission === undefined) {
+    if (nextSubmission === null) {
       nextSubmission = queue[currentIndex];
-      if (nextSubmission === undefined) {
-        updateSubmissionId(undefined);
+      if (nextSubmission === null) {
+        updateSubmissionId(null);
         return;
       }
     }
@@ -219,6 +211,7 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
         </TableBody>
       </Table>
       <TablePagination
+        labelRowsPerPage="Per page"
         rowsPerPageOptions={[5, 10, 25, 50, 100, { label: "All", value: -1 }]}
         component="div"
         count={queue.length}

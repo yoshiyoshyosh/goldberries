@@ -44,6 +44,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
   faArrowUp,
+  faBan,
   faBars,
   faBook,
   faBullseye,
@@ -80,7 +81,7 @@ import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
-import { PageSubmit, PageUserSubmission } from "./pages/Submit";
+import { PageSubmit } from "./pages/Submit";
 import { PageSubmission } from "./pages/Submission";
 import { PageChallenge } from "./pages/Challenge";
 import { PageMap } from "./pages/Map";
@@ -94,6 +95,7 @@ import { PagePlayer } from "./pages/Player";
 import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
 import { PageSearch } from "./pages/Search";
+import { PageRejectedMaps } from "./pages/RejectedMaps";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -188,6 +190,8 @@ const router = createBrowserRouter([
       { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
       { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
 
+      { path: "rejected-maps", element: <PageRejectedMaps /> },
+
       { path: "player/:id/:tab?", element: <PagePlayer /> },
       { path: "submission/:id", element: <PageSubmission /> },
       { path: "challenge/:id", element: <PageChallenge /> },
@@ -263,6 +267,11 @@ export function Layout() {
           name: "Golden Hit-List",
           path: "/top-golden-list/hitlist",
           icon: <FontAwesomeIcon icon={faBullseye} />,
+        },
+        {
+          name: "Rejected Maps",
+          path: "/rejected-maps",
+          icon: <FontAwesomeIcon icon={faBan} />,
         },
       ],
     },
@@ -445,7 +454,7 @@ export function Layout() {
         sx={{
           mt: {
             xs: 8,
-            sm: 1,
+            sm: "65px",
           },
           mb: 3,
           flexGrow: 1,
@@ -556,6 +565,10 @@ function DesktopNav({ leftMenu, rightMenu }) {
         width: "100%",
         pr: "calc(-100vw + 100%)",
         color: "primary.contrastText",
+
+        position: "fixed",
+        top: "0",
+        zIndex: "1000", //Above everything but dropdown popups, which are 1300
       }}
     >
       <Toolbar

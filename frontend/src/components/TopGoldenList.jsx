@@ -4,15 +4,17 @@ import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import { Box, Button, Checkbox, FormControlLabel, Stack, Tooltip, Typography } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faList } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faEdit, faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeFcShort, getChallengeObjectiveSuffix, getMapName } from "../util/data_util";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData } from "../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { CustomModal, useModal } from "../hooks/useModal";
+import { FormChallengeWrapper } from "./forms/Challenge";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
@@ -33,6 +35,16 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
       document.body.parentElement.style.overflowX = "hidden";
     };
   }, []);
+
+  const modalRefs = {
+    challenge: {
+      edit: useRef(),
+    },
+  };
+
+  const openEditChallenge = (id) => {
+    modalRefs.challenge.edit.current.open({ id });
+  };
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -68,14 +80,24 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
             challenges={topGoldenList.challenges}
             isPlayer={isPlayer}
             useSuggested={useSuggestedDifficulties}
+            openEditChallenge={openEditChallenge}
           />
         ))}
       </Stack>
+      <ModalContainer modalRefs={modalRefs} />
     </Stack>
   );
 }
 
-function TopGoldenListGroup({ tier, campaigns, maps, challenges, isPlayer = false, useSuggested = false }) {
+function TopGoldenListGroup({
+  tier,
+  campaigns,
+  maps,
+  challenges,
+  isPlayer = false,
+  useSuggested = false,
+  openEditChallenge,
+}) {
   const colors = getDifficultyColors(tier[0].id);
 
   const headerStyle = {
@@ -139,6 +161,7 @@ function TopGoldenListGroup({ tier, campaigns, maps, challenges, isPlayer = fals
                   map={map}
                   isPlayer={isPlayer}
                   useSuggested={useSuggested}
+                  openEditChallenge={openEditChallenge}
                 />
               );
             });
@@ -168,7 +191,7 @@ function TopGoldenListGroupHeader({ tier }) {
   );
 }
 
-function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested }) {
+function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested, openEditChallenge }) {
   const auth = useAuth();
   const colors = getDifficultyColors(subtier.id);
 
@@ -250,19 +273,25 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
               title={
                 <>
                   {auth.hasPlayerClaimed ? (
-                    <Link to={"/submit/single-challenge/" + challenge.id}>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        fullWidth
-                        color="info"
-                        sx={{
-                          mb: "2px",
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </Link>
+                    <Stack direction="column" gap="2px" sx={{ mb: "2px" }}>
+                      <Link to={"/submit/single-challenge/" + challenge.id}>
+                        <Button variant="contained" size="small" fullWidth color="info">
+                          Submit
+                        </Button>
+                      </Link>
+                      {auth.hasVerifierPriv && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          fullWidth
+                          color="info"
+                          startIcon={<FontAwesomeIcon icon={faEdit} />}
+                          onClick={() => openEditChallenge(challenge.id)}
+                        >
+                          Edit
+                        </Button>
+                      )}
+                    </Stack>
                   ) : null}
                   <ChallengeSubmissionTable challenge={challenge} compact />
                 </>
@@ -276,5 +305,24 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
         </Stack>
       </td>
     </tr>
+  );
+}
+
+function ModalContainer({ modalRefs }) {
+  const editChallengeModal = useModal();
+
+  // Setting the refs
+  modalRefs.challenge.edit.current = editChallengeModal;
+
+  return (
+    <>
+      <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
+        {editChallengeModal.data?.id == null ? (
+          <LoadingSpinner />
+        ) : (
+          <FormChallengeWrapper id={editChallengeModal.data.id} onSave={editChallengeModal.close} />
+        )}
+      </CustomModal>
+    </>
   );
 }

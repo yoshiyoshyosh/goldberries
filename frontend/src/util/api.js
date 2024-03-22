@@ -134,6 +134,14 @@ export function fetchMap(id, challenges = true, submission = true) {
   });
 }
 
+export function fetchRejectedMapList() {
+  return axios.get("/map.php", {
+    params: {
+      list_rejected: true,
+    },
+  });
+}
+
 export function fetchChallenge(id, submissions = true) {
   return axios.get("/challenge.php", {
     params: {

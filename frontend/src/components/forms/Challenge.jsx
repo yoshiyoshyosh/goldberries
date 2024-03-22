@@ -57,6 +57,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       queryClient.invalidateQueries(["challenge", challenge.id]);
       queryClient.invalidateQueries(["submission_queue"]);
       queryClient.invalidateQueries(["manage_challenges"]);
+      queryClient.invalidateQueries(["top_golden_list"]);
       toast.success("Challenge " + (newChallenge ? "created" : "updated") + "!");
       if (onSave) onSave(response.data);
     },

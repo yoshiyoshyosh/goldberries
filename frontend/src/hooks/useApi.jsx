@@ -33,6 +33,7 @@ import {
   verifyEmail,
   fetchSearch,
   fetchSubmissionQueue,
+  fetchRejectedMapList,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -324,6 +325,14 @@ export function useGetMap(id) {
   return useQuery({
     queryKey: ["map", id],
     queryFn: () => fetchMap(id),
+    onError: errorToast,
+  });
+}
+
+export function useGetRejectedMapList() {
+  return useQuery({
+    queryKey: ["rejected_map_list"],
+    queryFn: () => fetchRejectedMapList(),
     onError: errorToast,
   });
 }

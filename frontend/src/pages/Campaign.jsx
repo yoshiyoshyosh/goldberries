@@ -302,9 +302,9 @@ export function CampaignTableView({ campaign, players, submissions }) {
             fontSize: "150%",
             height: STYLE_CONSTS.player.height + "px",
             position: "sticky",
-            top: "0",
+            top: "48px",
             zIndex: 3,
-            width: STYLE_CONSTS.map.width + STYLE_CONSTS.map.counter + "px",
+            width: (hasMajor ? 120 : 0) + STYLE_CONSTS.map.width + STYLE_CONSTS.map.counter + "px",
             padding: "0 5px",
           }}
         >
@@ -371,7 +371,7 @@ export function CampaignTableView({ campaign, players, submissions }) {
         <Stack
           id="campaign-view-players-row"
           direction="row"
-          sx={{ position: "sticky", top: "0", zIndex: 1 }}
+          sx={{ position: "sticky", top: "48px", zIndex: 1 }}
         >
           {playersArray.map((player) => (
             <CampaignTablePlayerBox
