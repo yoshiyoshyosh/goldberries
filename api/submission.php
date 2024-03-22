@@ -1,23 +1,23 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $queue = isset($_REQUEST['queue']) && $_REQUEST['queue'] === 'true';
+  $queue = isset ($_REQUEST['queue']) && $_REQUEST['queue'] === 'true';
   if ($queue) {
     $submissions = Submission::get_submission_queue($DB);
     api_write($submissions);
     exit();
   }
 
-  $recent = isset($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
+  $recent = isset ($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
   if ($recent) {
-    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
-    $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
-    $per_page = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
+    $type = isset ($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
+    $page = isset ($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
+    $per_page = isset ($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
     // $per_page = min($per_page, 500);
-    $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : null;
-    $player = isset($_REQUEST['player']) ? intval($_REQUEST['player']) : null;
+    $search = isset ($_REQUEST['search']) ? $_REQUEST['search'] : null;
+    $player = isset ($_REQUEST['player']) ? intval($_REQUEST['player']) : null;
     $result = Submission::get_recent_submissions($DB, $type, $page, $per_page, $search, $player);
     api_write($result);
     exit();
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
   $id = $_REQUEST['id'];
-  $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 2;
+  $depth = isset ($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 2;
 
   $submissions = Submission::get_request($DB, $id);
   if (is_array($submissions)) {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   //If $submission->id is set, then this is an update request
-  if (isset($data['id'])) {
+  if (isset ($data['id'])) {
     $old_submission = Submission::get_by_id($DB, $submission->id);
     if ($old_submission === false) {
       die_json(400, "Submission with id {$submission->id} does not exist");
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         && ($submission->is_verified || $submission->is_rejected)
       ) {
         $toLog = $submission->is_verified ? "verified" : "rejected";
-        log_info("{$old_submission} was {$toLog} by {$account->player}", "Submission");
+        log_info("{$old_submission} was {$toLog} by '{$account->player->name}'", "Submission");
         $old_submission->date_verified = new JsonDateTime();
         $old_submission->verifier_id = $account->player->id;
       }
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Create a new submission
 
     //new challenge stuff
-    if (isset($data['new_challenge'])) {
+    if (isset ($data['new_challenge'])) {
       $new_challenge = new NewChallenge();
       $new_challenge->apply_db_data($data['new_challenge']);
       if (!$new_challenge->insert($DB)) {
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $submission->new_challenge_id = $new_challenge->id;
 
-    } else if (isset($data['challenge_id'])) {
+    } else if (isset ($data['challenge_id'])) {
       $challenge = Challenge::get_by_id($DB, $data['challenge_id']);
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");

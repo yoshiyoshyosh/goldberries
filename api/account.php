@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 $account = get_user_data();
 if ($account === null) {
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     die_json(403, "Not authorized");
   }
 
-  if (isset($_REQUEST['claimed_players']) && $_REQUEST['claimed_players'] === "true") {
+  if (isset ($_REQUEST['claimed_players']) && $_REQUEST['claimed_players'] === "true") {
     $accounts = Account::get_all_player_claims($DB);
     foreach ($accounts as $account) {
       $account->expand_foreign_keys($DB, 2);
@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   $request = format_assoc_array_bools(parse_post_body_as_json());
 
   //Update request
-  if (is_verifier($account) && (!isset($request['self']) || $request['self'] !== 't')) {
-    if (!isset($request['id'])) {
+  if (is_verifier($account) && (!isset ($request['self']) || $request['self'] !== 't')) {
+    if (!isset ($request['id'])) {
       die_json(400, "Invalid id");
     }
     $id = intval($request['id']);
@@ -82,10 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       }
     }
     $target->email = $accountReq->email;
-    if (isset($request['unlink_discord']) && $request['unlink_discord'] === 't') {
+    if (isset ($request['unlink_discord']) && $request['unlink_discord'] === 't') {
       $target->discord_id = null;
     }
-    if (isset($request['reset_session']) && $request['reset_session'] === 't') {
+    if (isset ($request['reset_session']) && $request['reset_session'] === 't') {
       $target->session_token = null;
     }
     $target->is_suspended = $accountReq->is_suspended;
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       log_error("Failed to update {$target} in database", "Account");
       die_json(500, "Failed to update account in database");
     } else {
-      log_info("Updated {$target} in database", "Account");
+      log_info("'{$account->player->name}' updated {$target} in database", "Account");
       $target->remove_sensitive_info();
       $target->expand_foreign_keys($DB, 2);
       api_write($target);
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
   } else {
     //Dont need to check $id, as self modifying requests only modify the own $account
-    if (!isset($request['self']) || $request['self'] !== 't') {
+    if (!isset ($request['self']) || $request['self'] !== 't') {
       die_json(403, "Not authorized");
     }
 
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $changes = "";
 
-    if (isset($request['email']) && $request['email'] !== $account->email) {
+    if (isset ($request['email']) && $request['email'] !== $account->email) {
       if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
         die_json(400, "Invalid email");
       }
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $account->email = $request['email'];
       $account->email_verified = true; //Skip email verification if it's been added later
     }
-    if (isset($request['unlink_email']) && $request['unlink_email'] === 't') {
+    if (isset ($request['unlink_email']) && $request['unlink_email'] === 't') {
       if ($account->discord_id === null) {
         die_json(400, "Cannot unlink email without discord account linked");
       }
@@ -148,12 +148,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $account->password = null;
     }
 
-    if (isset($request['password'])) {
+    if (isset ($request['password'])) {
       $changes .= "password, ";
       $account->password = password_hash($request['password'], PASSWORD_DEFAULT);
     }
 
-    if (isset($request['unlink_discord']) && $request['unlink_discord'] === 't') {
+    if (isset ($request['unlink_discord']) && $request['unlink_discord'] === 't') {
       if ($account->email === null && $account->password === null) {
         die_json(400, "Cannot unlink discord account without email and password");
       }
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $account->discord_id = null;
     }
 
-    if (isset($request['claimed_player_id']) && $request['claimed_player_id'] !== $account->claimed_player_id) {
+    if (isset ($request['claimed_player_id']) && $request['claimed_player_id'] !== $account->claimed_player_id) {
       if ($account->claimed_player_id !== null) {
         die_json(400, "Cannot change claimed_player_id");
       }
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $changes .= "claimed_player_id (null -> {$claimed_player_id}, player.name '{$player->name}'), ";
     }
 
-    if (isset($request['links'])) {
+    if (isset ($request['links'])) {
       $account->links = $request['links'];
       $linksStr = $account->links === null ? "null" : implode("\t", $account->links);
       $changes .= "links (new list: {$linksStr}), ";
@@ -202,8 +202,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 // Delete Request
 if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
-  if (is_verifier($account) && !isset($_REQUEST['self'])) {
-    if (!isset($_REQUEST['id'])) {
+  if (is_verifier($account) && !isset ($_REQUEST['self'])) {
+    if (!isset ($_REQUEST['id'])) {
       die_json(400, "Invalid id");
     }
     $id = intval($_REQUEST['id']);
@@ -220,13 +220,13 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
       log_error("Failed to delete {$target}", "Account");
       die_json(500, "Failed to delete account");
     } else {
-      log_info("{$account} deleted {$target}", "Account");
+      log_info("'{$account->player->name}' deleted {$target}", "Account");
       http_response_code(200);
       exit();
     }
 
   } else {
-    if (!isset($_REQUEST['self']) || $_REQUEST['self'] !== "true") {
+    if (!isset ($_REQUEST['self']) || $_REQUEST['self'] !== "true") {
       die_json(403, "Not authorized");
     }
 
