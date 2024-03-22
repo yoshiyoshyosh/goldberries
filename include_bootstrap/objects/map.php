@@ -146,6 +146,23 @@ class Map extends DbObject
     return $maps;
   }
 
+  static function get_all_rejected($DB)
+  {
+    $query = "SELECT * FROM map WHERE is_rejected = true ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+    $maps = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $map = new Map();
+      $map->apply_db_data($row);
+      $map->expand_foreign_keys($DB, 2);
+      $maps[] = $map;
+    }
+    return $maps;
+  }
+
   // === Utility Functions ===
   function __toString()
   {
