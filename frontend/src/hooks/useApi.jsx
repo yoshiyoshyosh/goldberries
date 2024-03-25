@@ -34,6 +34,7 @@ import {
   fetchSearch,
   fetchSubmissionQueue,
   fetchRejectedMapList,
+  fetchPlayerList,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -366,6 +367,14 @@ export function useGetPlayer(id) {
   return useQuery({
     queryKey: ["player", id],
     queryFn: () => fetchPlayer(id),
+    onError: errorToast,
+  });
+}
+
+export function useGetVerifierList() {
+  return useQuery({
+    queryKey: ["player_list", "verifier"],
+    queryFn: () => fetchPlayerList("verifier"),
     onError: errorToast,
   });
 }

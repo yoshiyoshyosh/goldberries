@@ -264,11 +264,6 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faHeart} />,
         },
         {
-          name: "Golden Hit-List",
-          path: "/top-golden-list/hitlist",
-          icon: <FontAwesomeIcon icon={faBullseye} />,
-        },
-        {
           name: "Rejected Maps",
           path: "/rejected-maps",
           icon: <FontAwesomeIcon icon={faBan} />,

@@ -73,6 +73,25 @@ export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props
     </Container>
   );
 }
+export function BorderedBox({ children, sx = {}, ...props }) {
+  return (
+    <Box
+      {...props}
+      sx={{
+        p: {
+          xs: 2,
+          sm: 3,
+        },
+        borderRadius: "10px",
+        border: "1px solid #cccccc99",
+        boxShadow: 1,
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
 
 export function ProofEmbed({ url, ...props }) {
   if (url === undefined || url === null || url === "") {

@@ -129,6 +129,9 @@ export function PageRegister() {
           {decodeURIComponent(error)}
         </Alert>
       )}
+      <Typography variant="body2" textAlign="center">
+        Registering via email requires you to verify your email address. Register with Discord to skip this.
+      </Typography>
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
