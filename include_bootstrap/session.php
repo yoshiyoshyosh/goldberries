@@ -10,10 +10,10 @@ if (getenv('DEBUG') === 'true') {
   DEFINE('REDIRECT_POST_LOGIN', 'http://localhost:3000');
   DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'http://localhost:3000/my-account');
 } else {
-  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/api/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fstats.vi-home.de%2Fgb_api%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
-  DEFINE('DISCORD_REDIRECT_URI', 'https://stats.vi-home.de/gb_api/api/auth/discord_auth.php');
-  DEFINE('REDIRECT_POST_LOGIN', 'https://stats.vi-home.de/gb_api/api/test_session.php');
-  DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://stats.vi-home.de/gb_api/api/test_session.php');
+  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fgoldberries.vi-home.de%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
+  DEFINE('DISCORD_REDIRECT_URI', 'https://goldberries.vi-home.de/api/auth/discord_auth.php');
+  DEFINE('REDIRECT_POST_LOGIN', 'https://goldberries.vi-home.de');
+  DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://goldberries.vi-home.de/my-account');
 }
 $session_expire_days = 7;
 
@@ -87,7 +87,7 @@ function get_user_data()
   global $DB;
   global $session_expire_days;
 
-  if (!isset($_SESSION['token'])) {
+  if (!isset ($_SESSION['token'])) {
     return null;
   }
 
