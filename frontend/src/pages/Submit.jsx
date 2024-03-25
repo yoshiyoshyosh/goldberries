@@ -29,10 +29,10 @@ import { getChallengeFlags, getChallengeIsArbitrary, getMapLobbyInfo } from "../
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { FormOptions } from "../util/constants";
+import { APP_NAME_LONG, FormOptions } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -45,6 +45,7 @@ import {
   PlayerChip,
 } from "../components/GoldberriesComponents";
 import { usePostSubmission } from "../hooks/useApi";
+import { Helmet } from "react-helmet";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -59,6 +60,7 @@ export function PageSubmit() {
   if (query.isFetching) {
     return (
       <BasicContainerBox maxWidth="md">
+        <HeadTitle title="Submit a run" />
         <Tabs
           value={selectedTab}
           onChange={(event, newValue) => setSelectedTab(newValue)}

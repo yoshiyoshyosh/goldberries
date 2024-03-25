@@ -8,10 +8,14 @@ import { getDifficultyColors } from "../util/constants";
 import { VariableSizeList } from "react-window";
 import "../css/GoldenList.css";
 import { Link } from "react-router-dom";
+import { HeadTitle } from "../components/BasicComponents";
 
 export function PageGoldenList({ type }) {
+  const title = type === "hard" ? "Hard Golden List" : "Standard Golden List";
+
   return (
     <Box>
+      <HeadTitle title={title} />
       <GoldenList type={type} />
     </Box>
   );

@@ -1,7 +1,6 @@
-import { BasicContainerBox, BorderedBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { BorderedBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import {
   Container,
-  Divider,
   Grid,
   Paper,
   Stack,
@@ -16,7 +15,6 @@ import {
   Typography,
 } from "@mui/material";
 import { getQueryData, useGetRecentSubmissions, useGetVerifierList } from "../hooks/useApi";
-import { getCampaignName } from "../util/data_util";
 import {
   DifficultyChip,
   PlayerChip,
@@ -29,11 +27,12 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faNewspaper, faPaperPlane, faScroll } from "@fortawesome/free-solid-svg-icons";
+import { faScroll } from "@fortawesome/free-solid-svg-icons";
 
 export function PageIndex() {
   return (
     <Container maxWidth="xl">
+      <HeadTitle title="Welcome!" />
       <Grid container spacing={2}>
         <Grid item xs={12} lg={7}>
           <Stack direction="column" spacing={2}>

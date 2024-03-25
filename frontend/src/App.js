@@ -96,6 +96,7 @@ import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
 import { PageSearch } from "./pages/Search";
 import { PageRejectedMaps } from "./pages/RejectedMaps";
+import { Helmet } from "react-helmet";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;

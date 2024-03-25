@@ -41,6 +41,18 @@ export function getChallengeName(challenge) {
   );
 }
 
+export function getChallengeNameShort(challenge) {
+  const isOld = challenge.map?.is_archived ?? false;
+  const oldPrefix = isOld ? "[Old] " : "";
+  return (
+    oldPrefix +
+    challenge.objective.name +
+    " " +
+    getChallengeFcShort(challenge) +
+    getChallengeObjectiveSuffix(challenge)
+  );
+}
+
 export function getChallengeIsArbitrary(challenge) {
   return challenge.is_arbitrary === null ? challenge.objective.is_arbitrary : challenge.is_arbitrary;
 }

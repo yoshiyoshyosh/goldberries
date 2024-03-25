@@ -1,8 +1,8 @@
 import { Box, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
-import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useStorage";
+import { HeadTitle } from "../components/BasicComponents";
 
 export function PageTopGoldenList({}) {
   const { type, id } = useParams();
@@ -10,6 +10,8 @@ export function PageTopGoldenList({}) {
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
 
   const selectedType = type ? type : "all";
+
+  const title = "Top Golden List";
 
   return (
     <Box
@@ -20,6 +22,7 @@ export function PageTopGoldenList({}) {
         },
       }}
     >
+      <HeadTitle title={title} />
       <Typography variant="h4">Top Golden List</Typography>
       <Stack direction="row" spacing={2} sx={{ my: 1 }}>
         <FormControlLabel

@@ -12,19 +12,23 @@ import {
   Paper,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { fetchMap } from "../util/api";
 import { ChallengeSubmissionTable } from "./Challenge";
 import { faBook, faFlagCheckered, faLandmark, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getChallengeName, getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
-import { useQuery } from "react-query";
-import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import {
+  getCampaignName,
+  getChallengeName,
+  getGamebananaEmbedUrl,
+  getMapAuthor,
+  getMapLobbyInfo,
+} from "../util/data_util";
+import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
-import { useGetMap } from "../hooks/useApi";
+import { getQueryData, useGetMap } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 
 export function PageMap() {
@@ -51,10 +55,12 @@ export function MapDisplay({ id }) {
     return <ErrorDisplay error={query.error} />;
   }
 
-  const map = query.data.data;
+  const map = getQueryData(query);
+  const title = map.name + " - " + getCampaignName(map.campaign);
 
   return (
     <>
+      <HeadTitle title={title} />
       <GoldberriesBreadcrumbs campaign={map.campaign} map={map} />
       <Divider sx={{ my: 2 }}>
         <Chip label="Map" size="small" />

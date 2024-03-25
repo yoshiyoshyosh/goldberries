@@ -20,9 +20,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { DifficultyChip } from "../components/GoldberriesComponents";
-import { getGamebananaEmbedUrl } from "../util/data_util";
+import { getChallengeNameShort, getGamebananaEmbedUrl } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -38,7 +38,7 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
-import { useGetChallenge } from "../hooks/useApi";
+import { getQueryData, useGetChallenge } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 
 const displayNoneOnMobile = {
@@ -72,10 +72,12 @@ export function ChallengeDisplay({ id }) {
     return <ErrorDisplay error={query.error} />;
   }
 
-  const challenge = query.data.data;
+  const challenge = getQueryData(query);
+  const title = challenge.map.name + " - " + getChallengeNameShort(challenge);
 
   return (
     <>
+      <HeadTitle title={title} />
       <GoldberriesBreadcrumbs campaign={challenge.map.campaign} map={challenge.map} challenge={challenge} />
       <Divider sx={{ my: 2 }}>
         <Chip label="Challenge" size="small" />

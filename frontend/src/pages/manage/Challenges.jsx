@@ -24,10 +24,12 @@ import { useRef, useState } from "react";
 import { getCampaignName, getChallengeName } from "../../util/data_util";
 import { fetchChallenges } from "../../util/api";
 import { useQuery } from "react-query";
-import CustomizedMenu, {
+import {
+  CustomizedMenu,
   BasicContainerBox,
   ErrorDisplay,
   LoadingSpinner,
+  HeadTitle,
 } from "../../components/BasicComponents";
 import { useLocalStorage } from "../../hooks/useStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -72,6 +74,7 @@ export function PageManageChallenges() {
 
   return (
     <BasicContainerBox maxWidth="lg" sx={{ mt: 0, p: 2 }}>
+      <HeadTitle title="Manage Challenges" />
       <Grid container spacing={2}>
         <Grid item xs={12} md>
           <Typography variant="h4" sx={{ mt: 0 }} gutterBottom>

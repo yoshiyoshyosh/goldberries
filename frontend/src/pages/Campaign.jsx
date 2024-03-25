@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { getQueryData, useGetCampaignView } from "../hooks/useApi";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import {
   Box,
   Checkbox,
@@ -20,10 +20,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faLink, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
 import { useEffect } from "react";
-import { getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
-import { getDifficultyColors } from "../util/constants";
+import { getCampaignName, getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
+import { APP_NAME_LONG, getDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
+import { Helmet } from "react-helmet";
 
 const STYLE_CONSTS = {
   player: {
@@ -68,9 +69,12 @@ export function CampaignDisplay({ id }) {
   }
 
   const response = getQueryData(query);
+  const { campaign, players, submissions } = response;
+  const title = getCampaignName(campaign);
 
   return (
     <>
+      <HeadTitle title={title} />
       <Box sx={{ mx: 2 }}>
         <Box
           sx={{
@@ -86,9 +90,9 @@ export function CampaignDisplay({ id }) {
         >
           <Stack direction="row" alignItems="center" gap={1}>
             <FontAwesomeIcon icon={faBook} size="2x" />
-            <Typography variant="h4">{response.campaign.name}</Typography>
+            <Typography variant="h4">{campaign.name}</Typography>
           </Stack>
-          <CampaignDetailsList campaign={response.campaign} sx={{}} />
+          <CampaignDetailsList campaign={campaign} sx={{}} />
           <Changelog type="campaign" id={id} />
         </Box>
         <Divider sx={{ my: 2 }} />
@@ -97,11 +101,7 @@ export function CampaignDisplay({ id }) {
           label="Show Archived"
         />
       </Box>
-      <CampaignTableView
-        campaign={response.campaign}
-        players={response.players}
-        submissions={response.submissions}
-      />
+      <CampaignTableView campaign={campaign} players={players} submissions={submissions} />
     </>
   );
 }

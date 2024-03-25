@@ -13,8 +13,14 @@ import {
 } from "@mui/material";
 import { useAuth } from "../hooks/AuthProvider";
 import { useMutation, useQuery } from "react-query";
-import { claimPlayer, fetchAllPlayers, fetchGoldenList, fetchPlayerList, postPlayer } from "../util/api";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner, ProofEmbed } from "../components/BasicComponents";
+import { fetchAllPlayers, fetchGoldenList, fetchPlayerList, postPlayer } from "../util/api";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  ProofEmbed,
+} from "../components/BasicComponents";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -34,6 +40,7 @@ export function PageClaimPlayer() {
         },
       }}
     >
+      <HeadTitle title="Claim a Player" />
       {auth.user.player_id !== null ? <ClaimPlayerLinkSuccess /> : null}
       {auth.user.claimed_player_id !== null ? <ClaimPlayerClaimMade /> : null}
       {auth.user.player_id === null && auth.user.claimed_player_id === null ? <ClaimPlayerMakeClaim /> : null}

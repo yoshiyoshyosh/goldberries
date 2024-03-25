@@ -8,7 +8,7 @@ import { faDiscord, faRaspberryPi } from "@fortawesome/free-brands-svg-icons";
 
 import "@mui/material";
 import { Alert, Avatar, Box, Button, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
-import { BasicContainerBox } from "../components/BasicComponents";
+import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
 import {
   useForgotPasswordRequest,
   useForgotPasswordVerify,
@@ -358,6 +358,7 @@ export function PageForgotPasswordVerify({ token }) {
 function LoginBox({ children, title, titleColor }) {
   return (
     <BasicContainerBox maxWidth="xs" sx={{ mt: 8 }}>
+      <HeadTitle title={title} />
       <Stack direction="column" justifyContent="center" alignItems="center">
         <LoginHeader title={title} titleColor={titleColor} />
         {children}
@@ -381,6 +382,7 @@ function LoginHeader({ title, titleColor }) {
 function AlreadyLoggedInBox({ title }) {
   return (
     <BasicContainerBox maxWidth="xs" sx={{ mt: 8 }}>
+      <HeadTitle title={title} />
       <Stack direction="column" justifyContent="center" alignItems="center">
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <FontAwesomeIcon icon={faRaspberryPi} />

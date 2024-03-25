@@ -1,6 +1,8 @@
 export const APP_URL = process.env.REACT_APP_URL;
 export const API_URL = process.env.REACT_APP_API_URL;
 export const DISCORD_AUTH_URL = API_URL + "/auth/discord_auth.php";
+export const APP_NAME_SHORT = "GBN";
+export const APP_NAME_LONG = "Goldberries.net";
 
 export const FormOptions = {
   PlayerName: {

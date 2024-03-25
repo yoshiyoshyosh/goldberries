@@ -24,13 +24,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faComment, faEdit, faShield, faUser, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
-import { displayDate, getChallengeFlags, getChallengeName, getSubmissionVerifier } from "../util/data_util";
+import {
+  displayDate,
+  getChallengeFlags,
+  getChallengeName,
+  getChallengeNameShort,
+  getSubmissionVerifier,
+} from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import CustomizedMenu, {
+import {
+  CustomizedMenu,
   BasicContainerBox,
   ErrorDisplay,
   LoadingSpinner,
   ProofEmbed,
+  HeadTitle,
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
@@ -81,8 +89,17 @@ export function SubmissionDisplay({ id, onDelete }) {
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 
+  const title =
+    submission.challenge.map.name +
+    " - " +
+    getChallengeNameShort(submission.challenge) +
+    " by '" +
+    submission.player.name +
+    "'";
+
   return (
     <>
+      <HeadTitle title={title} />
       {submission.challenge !== null && (
         <GoldberriesBreadcrumbs
           campaign={submission.challenge.map.campaign}

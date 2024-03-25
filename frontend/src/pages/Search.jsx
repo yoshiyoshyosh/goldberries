@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { getQueryData, useSearch } from "../hooks/useApi";
-import { Paper, Stack, TextField, Typography } from "@mui/material";
+import { Stack, TextField, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import { PlayerChip } from "../components/GoldberriesComponents";
@@ -24,8 +24,11 @@ export function PageSearch() {
     }
   };
 
+  const title = search ? "Search '" + search + "'" : "Search";
+
   return (
     <BasicContainerBox maxWidth="md">
+      <HeadTitle title={title} />
       <Typography variant="h4">Search Goldberries Database</Typography>
       <Typography variant="body1" color="gray" gutterBottom>
         Search for players, campaigns, and maps by name.

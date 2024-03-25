@@ -8,7 +8,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { getQueryData, useGetRejectedMapList } from "../hooks/useApi";
 import { Link } from "react-router-dom";
 import { getCampaignName } from "../util/data_util";
@@ -33,9 +33,11 @@ export function PageRejectedMaps() {
   }
 
   const maps = getQueryData(query);
+  const title = "Rejected Maps";
 
   return (
     <BasicContainerBox maxWidth="md">
+      <HeadTitle title={title} />
       <RejectedMapsTable maps={maps} />
     </BasicContainerBox>
   );

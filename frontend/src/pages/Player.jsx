@@ -2,10 +2,10 @@ import { Box, Checkbox, Divider, FormControlLabel, Stack, Typography } from "@mu
 import {
   BasicContainerBox,
   ErrorDisplay,
+  HeadTitle,
   LoadingSpinner,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
-import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData, useGetAllDifficulties, useGetPlayer, useGetPlayerStats } from "../hooks/useApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -47,8 +47,11 @@ export function PlayerDisplay({ id }) {
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
 
+  const title = `${player.name} - Profile`;
+
   return (
     <>
+      <HeadTitle title={title} />
       <Stack direction="column" gap={1}>
         <Stack direction="row" alignItems="center" gap={1}>
           <FontAwesomeIcon icon={faUser} size="2x" />
@@ -96,11 +99,14 @@ export function PagePlayerTopGoldenList({ id }) {
     return <ErrorDisplay error={query.error} />;
   }
 
-  const player = query.data.data;
+  const player = getQueryData(query);
   const apostrophe = player.name.endsWith("s") ? "'" : "'s";
+
+  const title = `${player.name}${apostrophe} Top Golden List`;
 
   return (
     <Box sx={{ mx: 2 }}>
+      <HeadTitle title={title} />
       <Typography variant="h4">
         <Link to={`/player/${id}`}>{player.name}</Link>
         {apostrophe} Top Golden List

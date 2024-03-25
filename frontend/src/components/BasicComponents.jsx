@@ -8,8 +8,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Container, Divider, Menu, MenuItem, Typography } from "@mui/material";
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 import { get } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { APP_NAME_LONG } from "../util/constants";
 
 export function LoadingSpinner({ ...props }) {
   return (
@@ -140,7 +142,7 @@ export function ProofEmbed({ url, ...props }) {
   );
 }
 
-export default function CustomizedMenu({ title, button, children, ...props }) {
+export function CustomizedMenu({ title, button, children, ...props }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -170,5 +172,15 @@ export default function CustomizedMenu({ title, button, children, ...props }) {
         {children}
       </Menu>
     </Box>
+  );
+}
+
+export function HeadTitle({ title }) {
+  return (
+    <Helmet>
+      <title>
+        {title} - {APP_NAME_LONG}
+      </title>
+    </Helmet>
   );
 }

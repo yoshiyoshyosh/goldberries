@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
 import { FormSubmissionWrapper } from "../../components/forms/Submission";
 import {
   Box,
@@ -100,8 +100,11 @@ export function PageSubmissionQueue() {
     updateSubmissionId(nextSubmission.id);
   };
 
+  const title = "(" + queue.length + ") Submission Queue";
+
   return (
     <>
+      <HeadTitle title={title} />
       <BasicContainerBox sx={{ mt: 0, p: 2, position: "relative" }}>
         <Box
           sx={{

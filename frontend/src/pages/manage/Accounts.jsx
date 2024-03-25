@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
 import {
   Autocomplete,
   Button,
@@ -47,6 +47,7 @@ export function PageManageAccounts({}) {
 
   return (
     <BasicContainerBox maxWidth="md">
+      <HeadTitle title="Manage Accounts" />
       <Typography variant="h4">Manage Accounts</Typography>
       <Tabs
         value={activeTab}
