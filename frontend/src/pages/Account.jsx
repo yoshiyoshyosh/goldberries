@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox } from "../components/BasicComponents";
+import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { useDeleteOwnAccount, usePostAccount } from "../hooks/useApi";
 import { toast } from "react-toastify";
@@ -39,6 +39,7 @@ export function PageAccount() {
 
   return (
     <BasicContainerBox maxWidth="md">
+      <HeadTitle title="My Account" />
       <Typography variant="h4" gutterBottom>
         My Account
       </Typography>

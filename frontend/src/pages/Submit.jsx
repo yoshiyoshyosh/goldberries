@@ -60,7 +60,6 @@ export function PageSubmit() {
   if (query.isFetching) {
     return (
       <BasicContainerBox maxWidth="md">
-        <HeadTitle title="Submit a run" />
         <Tabs
           value={selectedTab}
           onChange={(event, newValue) => setSelectedTab(newValue)}
@@ -86,6 +85,7 @@ export function PageSubmit() {
 
   return (
     <BasicContainerBox maxWidth="md">
+      <HeadTitle title="Submit a run" />
       <Tabs
         value={selectedTab}
         onChange={(event, newValue) => setSelectedTab(newValue)}

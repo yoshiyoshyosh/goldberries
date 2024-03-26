@@ -34,7 +34,7 @@ export function PageIndex() {
     <Container maxWidth="xl">
       <HeadTitle title="Welcome!" />
       <Grid container spacing={2}>
-        <Grid item xs={12} lg={7}>
+        <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
             <BorderedBox>
               <WelcomeComponent />
@@ -44,7 +44,7 @@ export function PageIndex() {
             </BorderedBox>
           </Stack>
         </Grid>
-        <Grid item xs={12} lg={5}>
+        <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
             <BorderedBox>
               <RecentSubmissions />
