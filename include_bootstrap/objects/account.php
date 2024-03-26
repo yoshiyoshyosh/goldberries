@@ -18,7 +18,13 @@ class Account extends DbObject
   public ?string $suspension_reason = null;
   public bool $email_verified = false;
   public ?string $email_verify_code = null;
+
+  // Profile Customization
   public ?array $links = null; // array of links, in DB: TSV of links
+  public ?string $input_method = null;
+  public ?string $about_me = null;
+  public ?string $name_color_start = null;
+  public ?string $name_color_end = null;
 
   // Foreign Keys
   public ?int $player_id = null;
@@ -75,6 +81,14 @@ class Account extends DbObject
       if (count($this->links) === 0)
         $this->links = null;
     }
+    if (isset ($arr[$prefix . 'input_method']))
+      $this->input_method = $arr[$prefix . 'input_method'];
+    if (isset ($arr[$prefix . 'about_me']))
+      $this->about_me = $arr[$prefix . 'about_me'];
+    if (isset ($arr[$prefix . 'name_color_start']))
+      $this->name_color_start = $arr[$prefix . 'name_color_start'];
+    if (isset ($arr[$prefix . 'name_color_end']))
+      $this->name_color_end = $arr[$prefix . 'name_color_end'];
   }
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
@@ -111,6 +125,10 @@ class Account extends DbObject
       'is_admin' => $this->is_admin,
       'is_suspended' => $this->is_suspended,
       'links' => $this->links !== null && count($this->links) > 0 ? implode("\t", $this->links) : null,
+      'input_method' => $this->input_method,
+      'about_me' => $this->about_me,
+      'name_color_start' => $this->name_color_start,
+      'name_color_end' => $this->name_color_end,
     );
   }
 

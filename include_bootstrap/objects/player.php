@@ -35,14 +35,6 @@ class Player extends DbObject
       $this->account['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
     else
       $this->account['is_suspended'] = false;
-
-    if (isset ($arr[$prefix . 'suspension_reason']))
-      $this->account['suspension_reason'] = $arr[$prefix . 'suspension_reason'];
-
-    if (isset ($arr[$prefix . 'links']))
-      $this->account['links'] = $arr[$prefix . 'links'];
-    else
-      $this->account['links'] = null;
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -60,7 +52,17 @@ class Player extends DbObject
     $this->account['is_admin'] = $account->is_admin;
     $this->account['is_suspended'] = $account->is_suspended;
     $this->account['suspension_reason'] = $account->suspension_reason;
-    $this->account['links'] = $account->links;
+
+    $this->account['name_color_start'] = $account->name_color_start;
+    $this->account['name_color_end'] = $account->name_color_end;
+
+    //For player, expand structure is for the profile customization that isn't needed for all pages
+    //extract the fields: links, input_method, about_me, name_color_start, name_color_end
+    if ($expand_structure) {
+      $this->account['links'] = $account->links;
+      $this->account['input_method'] = $account->input_method;
+      $this->account['about_me'] = $account->about_me;
+    }
   }
 
   // === Find Functions ===
@@ -87,10 +89,7 @@ class Player extends DbObject
     }
 
     $query = "SELECT 
-      player.*, 
-      account.is_verifier AS account_is_verifier,
-      account.is_admin AS account_is_admin,
-      account.is_suspended AS account_is_suspended 
+      player.* 
     FROM player 
     LEFT JOIN {$join}
     WHERE {$where} ORDER BY player.id
@@ -104,6 +103,7 @@ class Player extends DbObject
     while ($row = pg_fetch_assoc($result)) {
       $player = new Player();
       $player->apply_db_data($row);
+      $player->expand_foreign_keys($DB, 2, false);
       $players[] = $player;
     }
     return $players;
@@ -149,7 +149,7 @@ class Player extends DbObject
     while ($row = pg_fetch_assoc($result)) {
       $player = new Player();
       $player->apply_db_data($row);
-      $player->expand_foreign_keys($DB, 2);
+      $player->expand_foreign_keys($DB, 2, false);
       $players[] = $player;
     }
     return $players;

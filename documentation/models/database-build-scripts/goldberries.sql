@@ -108,9 +108,14 @@ CREATE TABLE account
  email_verified    boolean NOT NULL DEFAULT false,
  email_verify_code varchar(16) NULL,
  links             text NULL,
+ input_method      text NULL,
+ about_me          text NULL,
+ name_color_start  text NULL,
+ name_color_end    text NULL,
  CONSTRAINT account_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT account_claimed_player_id_fkey FOREIGN KEY ( claimed_player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
- CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE
+ CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
+ CONSTRAINT check_account_input_method CHECK ( input_method IS NULL OR input_method IN ('keyboard', 'controller', 'hybrid', 'other') )
 );
 
 -- ====== map ======

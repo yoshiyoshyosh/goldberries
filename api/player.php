@@ -1,18 +1,20 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $all = isset($_REQUEST['all']) && $_REQUEST['all'] === 'true';
+  $all = isset ($_REQUEST['all']) && $_REQUEST['all'] === 'true';
+  $customization = isset ($_REQUEST['customization']) && $_REQUEST['customization'] === 'true';
+
   if ($all) {
-    $players = Player::get_request($DB, "all", 2); //$depth of 1 to avoid fetching all accounts
+    $players = Player::get_request($DB, "all", 2, $customization); //$depth of 1 to avoid fetching all accounts
     api_write($players);
     exit();
   }
 
   $id = $_REQUEST['id'] ?? null;
   if ($id !== null) {
-    $players = Player::get_request($DB, $id);
+    $players = Player::get_request($DB, $id, 2, $customization);
     api_write($players);
     exit();
   }
@@ -49,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $player = new Player();
   $player->apply_db_data($request);
 
-  if (isset($request['id'])) {
+  if (isset ($request['id'])) {
     //Update request
     die_json(400, "Not yet implemented");
   }
@@ -58,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($account->player_id !== null) {
     die_json(400, "Account already has a player");
   }
-  if (!isset($request['name'])) {
+  if (!isset ($request['name'])) {
     die_json(400, "Missing parameter 'name'");
   }
   $player->name = trim($player->name);
