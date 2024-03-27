@@ -1,9 +1,13 @@
 import {
   Button,
+  Checkbox,
   Divider,
+  FormControl,
   FormControlLabel,
   FormHelperText,
   Grid,
+  MenuItem,
+  Select,
   Stack,
   Tab,
   Tabs,
@@ -15,11 +19,12 @@ import { useAuth } from "../hooks/AuthProvider";
 import { useDeleteOwnAccount, usePostAccount } from "../hooks/useApi";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
-import { PlayerChip, VerificationStatusChip } from "../components/GoldberriesComponents";
+import { InputMethodIcon, PlayerChip, VerificationStatusChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { API_URL, FormOptions } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowRightArrowLeft,
   faCheckSquare,
   faEnvelope,
   faLink,
@@ -31,11 +36,23 @@ import {
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { isValidHttpUrl } from "../util/util";
+import { MuiColorInput } from "mui-color-input";
+import { getPlayerNameColorStyle } from "../util/data_util";
 
 export function PageAccount() {
   const auth = useAuth();
   const { tab } = useParams();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(tab ?? "login-methods");
+
+  const setTab = (tab) => {
+    setSelectedTab(tab);
+    if (tab === "login-methods") {
+      navigate("/my-account", { replace: true });
+    } else {
+      navigate(`/my-account/${tab}`, { replace: true });
+    }
+  };
 
   return (
     <BasicContainerBox maxWidth="md">
@@ -67,7 +84,7 @@ export function PageAccount() {
 
       <Tabs
         value={selectedTab}
-        onChange={(event, newValue) => setSelectedTab(newValue)}
+        onChange={(event, newValue) => setTab(newValue)}
         variant="scrollable"
         scrollButtons="auto"
         sx={{ mb: 2 }}
@@ -262,36 +279,175 @@ export function UserAccountProfileForm() {
     mode: "onBlur",
     defaultValues: {
       ...auth.user,
+      about_me: auth.user.about_me ?? "",
+      name_color_start: auth.user.name_color_start ?? "rgb(0, 0, 0)",
+      name_color_end: auth.user.name_color_end ?? "rgb(0, 0, 0)",
     },
   });
   const errors = form.formState.errors;
   const onSubmit = form.handleSubmit((data) => {
     postAccount({
       ...data,
+      name_color_start: data.name_color_start === "rgb(0, 0, 0)" ? null : data.name_color_start,
+      name_color_end: useGradient
+        ? data.name_color_end === "rgb(0, 0, 0)"
+          ? null
+          : data.name_color_end
+        : null,
     });
   });
 
   useEffect(() => {
     form.reset({
       ...auth.user,
+      about_me: auth.user.about_me ?? "",
+      name_color_start: auth.user.name_color_start ?? "rgb(0, 0, 0)",
+      name_color_end: auth.user.name_color_end ?? "rgb(0, 0, 0)",
     });
   }, [auth.user]);
 
+  const [useGradient, setUseGradient] = useState(auth.user.name_color_end !== null);
+
   const formAccount = form.watch();
 
-  const addLink = () => {
-    if (formAccount.links === null) form.setValue("links", [""]);
-    else form.setValue("links", [...formAccount.links, ""]);
+  const switchColors = () => {
+    const start = formAccount.name_color_start;
+    const end = formAccount.name_color_end;
+    form.setValue("name_color_start", end);
+    form.setValue("name_color_end", start);
   };
-  const deleteLink = (index) => {
-    form.setValue(
-      "links",
-      formAccount.links.filter((_, i) => i !== index)
-    );
-  };
+
+  const nameColorStyle = getPlayerNameColorStyle({
+    account: {
+      name_color_start: formAccount.name_color_start === "rgb(0, 0, 0)" ? null : formAccount.name_color_start,
+      name_color_end: formAccount.name_color_end === "rgb(0, 0, 0)" ? null : formAccount.name_color_end,
+    },
+  });
 
   return (
     <form>
+      <Typography variant="h6">Name Color</Typography>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography variant="body1">Preview:</Typography>
+        <span style={{ fontSize: "1.4rem", ...nameColorStyle }}>
+          {auth.user.player?.name ?? "Player Name"}
+        </span>
+      </Stack>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={useGradient}
+            onChange={(e) => setUseGradient(e.target.checked)}
+            color="primary"
+          />
+        }
+        label="Use Gradient"
+      />
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={5}>
+          <Typography variant="body1">{useGradient ? "Start Color" : "Solid Color"}</Typography>
+          <Controller
+            name="name_color_start"
+            control={form.control}
+            render={({ field }) => (
+              <MuiColorInput
+                format="rgb"
+                isAlphaHidden
+                value={field.value}
+                onChange={(c) => field.onChange(c)}
+                PopoverProps={{
+                  disableScrollLock: true,
+                }}
+              />
+            )}
+          />
+        </Grid>
+        {useGradient && (
+          <>
+            <Grid item xs={12} sm={2} sx={{ display: "flex", placeItems: "center" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<FontAwesomeIcon icon={faArrowRightArrowLeft} />}
+                onClick={switchColors}
+              >
+                Switch
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <Typography variant="body1">End Color</Typography>
+              <Controller
+                name="name_color_end"
+                control={form.control}
+                render={({ field }) => (
+                  <MuiColorInput
+                    format="rgb"
+                    isAlphaHidden
+                    value={field.value}
+                    onChange={(c) => field.onChange(c)}
+                    PopoverProps={{
+                      disableScrollLock: true,
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+          </>
+        )}
+      </Grid>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="h6">About Me</Typography>
+      <TextField {...form.register("about_me")} fullWidth multiline rows={4} placeholder="Empty" />
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="h6">Input Method</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="input_method"
+            control={form.control}
+            render={({ field }) => (
+              <TextField
+                select
+                fullWidth
+                value={field.value}
+                onChange={field.onChange}
+                SelectProps={{
+                  MenuProps: { disableScrollLock: true },
+                }}
+              >
+                <MenuItem value="">
+                  <em>Not specified</em>
+                </MenuItem>
+                <MenuItem value="keyboard">
+                  Keyboard
+                  <InputMethodIcon method="keyboard" style={{ marginLeft: "8px" }} />
+                </MenuItem>
+                <MenuItem value="controller">
+                  Controller
+                  <InputMethodIcon method="controller" style={{ marginLeft: "8px" }} />
+                </MenuItem>
+                <MenuItem value="hybrid">
+                  Hybrid
+                  <InputMethodIcon method="hybrid" style={{ marginLeft: "8px" }} />
+                </MenuItem>
+                <MenuItem value="other">
+                  Other
+                  <InputMethodIcon method="other" style={{ marginLeft: "8px" }} />
+                </MenuItem>
+              </TextField>
+            )}
+          />
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ my: 2 }} />
+
       <Typography variant="h6">Custom Links</Typography>
       <Typography variant="body2">
         You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to

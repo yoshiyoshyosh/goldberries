@@ -173,6 +173,7 @@ export function fetchPlayer(id) {
   return axios.get("/player.php", {
     params: {
       id: id,
+      customization: true,
     },
   });
 }

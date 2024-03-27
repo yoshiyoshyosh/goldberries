@@ -183,3 +183,18 @@ export function getAccountName(account) {
 
   return `(${account.id}) <no player>`;
 }
+
+export function getPlayerNameColorStyle(player) {
+  const hasColor = player.account.name_color_start !== null && player.account.name_color_start !== undefined;
+  const nameColorStart = player.account.name_color_start ?? "#000000";
+  const nameColorEnd = player.account.name_color_end ?? nameColorStart;
+  const style = hasColor
+    ? {
+        background: "text linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",
+        WebkitTextFillColor: "transparent",
+        fontWeight: "bold",
+      }
+    : {};
+
+  return style;
+}

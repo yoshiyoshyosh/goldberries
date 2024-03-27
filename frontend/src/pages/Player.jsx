@@ -11,11 +11,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
-import { AdminIcon, LinkIcon, SuspendedIcon, VerifierIcon } from "../components/GoldberriesComponents";
+import {
+  AdminIcon,
+  InputMethodIcon,
+  LinkIcon,
+  SuspendedIcon,
+  VerifierIcon,
+} from "../components/GoldberriesComponents";
 import { RecentSubmissions } from "./Index";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
-import { getDifficultyName } from "../util/data_util";
+import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PagePlayer() {
@@ -47,6 +53,9 @@ export function PlayerDisplay({ id }) {
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
 
+  const nameStyle = getPlayerNameColorStyle(player);
+  const aboutMeSplit = player.account.about_me?.split("\n") || [];
+
   const title = `${player.name} - Profile`;
 
   return (
@@ -60,23 +69,39 @@ export function PlayerDisplay({ id }) {
             sx={{
               textDecoration: suspended ? "line-through" : "inherit",
               color: suspended ? "grey" : "inherit",
+              ...nameStyle,
             }}
           >
             {player.name}
           </Typography>
           {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
-          <Box flexGrow={1} />
           {player.account.is_verifier && <VerifierIcon />}
           {player.account.is_admin && <AdminIcon />}
+          <Box flexGrow={1} />
+          {player.account.input_method && (
+            <>
+              <Typography variant="body1">Input Method </Typography>
+              <InputMethodIcon method={player.account.input_method} />
+            </>
+          )}
         </Stack>
-        {player.account?.links !== null && (
+        {player.account?.links ? (
           <Stack direction="row" gap={1}>
             {player.account.links.map((link) => (
               <LinkIcon url={link} />
             ))}
           </Stack>
-        )}
+        ) : null}
         <Link to={`/player/${id}/top-golden-list`}>Top Golden List</Link>
+
+        {player.account.about_me && (
+          <>
+            <Typography variant="h6">About Me</Typography>
+            {aboutMeSplit.map((line) => (
+              <Typography variant="body1">{line}</Typography>
+            ))}
+          </>
+        )}
       </Stack>
 
       <Divider sx={{ my: 2 }} />

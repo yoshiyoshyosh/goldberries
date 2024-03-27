@@ -9,7 +9,13 @@ import {
   fetchPlayerList,
 } from "../util/api";
 import { toast } from "react-toastify";
-import { getCampaignName, getChallengeName, getDifficultyName, getObjectiveName } from "../util/data_util";
+import {
+  getCampaignName,
+  getChallengeName,
+  getDifficultyName,
+  getObjectiveName,
+  getPlayerNameColorStyle,
+} from "../util/data_util";
 import { Autocomplete, Avatar, Chip, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { useEffect, useState } from "react";
@@ -19,12 +25,15 @@ import {
   faArchway,
   faBan,
   faBook,
+  faGamepad,
   faHammer,
+  faKeyboard,
   faLink,
+  faQuestion,
   faShield,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -350,30 +359,21 @@ export function PlayerSelect({ type, value, onChange, label = "Player", ...props
 
 export function PlayerChip({ player, ...props }) {
   if (player === undefined || player === null) {
-    return (
-      <Chip
-        label="<none>"
-        avatar={
-          <Avatar>
-            <FontAwesomeIcon icon={faUser} />
-          </Avatar>
-        }
-        sx={{ mr: 1 }}
-        {...props}
-      />
-    );
+    return <Chip label="<none>" sx={{ mr: 1 }} {...props} />;
   }
+
+  const style = getPlayerNameColorStyle(player);
 
   return (
     <Link to={"/player/" + player.id}>
       <Chip
-        label={player.name ?? "-"}
-        avatar={
-          <Avatar>
-            <FontAwesomeIcon icon={faUser} />
-          </Avatar>
+        label={
+          <Stack direction="row" alignItems="center" gap={1}>
+            <span style={style}>{player.name}</span>
+            {player.account.is_verifier && <VerifierIcon />}
+            {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
+          </Stack>
         }
-        sx={{ mr: 1 }}
         {...props}
       />
     </Link>
@@ -403,9 +403,25 @@ export function AdminIcon() {
   );
 }
 export function SuspendedIcon({ reason }) {
+  const text = reason ? "This user is suspended: " + reason : "This user is suspended";
   return (
-    <Tooltip title={"This user is suspended: " + reason}>
+    <Tooltip title={text}>
       <FontAwesomeIcon icon={faBan} />
+    </Tooltip>
+  );
+}
+
+const INPUT_METHOD_ICONS = {
+  keyboard: faKeyboard,
+  controller: faGamepad,
+  hybrid: faMix,
+  other: faQuestion,
+};
+export function InputMethodIcon({ method, ...props }) {
+  const inputMethodName = method.charAt(0).toUpperCase() + method.slice(1);
+  return (
+    <Tooltip title={inputMethodName}>
+      <FontAwesomeIcon icon={INPUT_METHOD_ICONS[method]} {...props} />
     </Tooltip>
   );
 }
