@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 $query = "
 SELECT                                                                   
@@ -73,9 +73,21 @@ SELECT
 
   p.id AS player_id,
   p.name AS player_name,
+  pa.is_verifier AS player_account_is_verifier,
+  pa.is_admin AS player_account_is_admin,
+  pa.is_suspended AS player_account_is_suspended,
+  pa.suspension_reason AS player_account_suspension_reason,
+  pa.name_color_start AS player_account_name_color_start,
+  pa.name_color_end AS player_account_name_color_end,
 
   v.id AS verifier_id,
   v.name AS verifier_name,
+  va.is_verifier AS verifier_account_is_verifier,
+  va.is_admin AS verifier_account_is_admin,
+  va.is_suspended AS verifier_account_is_suspended,
+  va.suspension_reason AS verifier_account_suspension_reason,
+  va.name_color_start AS verifier_account_name_color_start,
+  va.name_color_end AS verifier_account_name_color_end,
 
   pd.id AS suggested_difficulty_id,
   pd.name AS suggested_difficulty_name,
@@ -91,6 +103,8 @@ JOIN submission  ON challenge.id = submission.challenge_id
 JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
+LEFT JOIN account pa ON p.id = pa.player_id
+LEFT JOIN account va ON v.id = va.player_id
 ";
 
 $where = "WHERE submission.is_verified = true AND submission.is_rejected = false";
@@ -156,14 +170,14 @@ while ($row = pg_fetch_assoc($result)) {
     $challenge = new Challenge();
     $challenge->apply_db_data($row, "challenge_");
     $challenge->submissions = array();
-    $challenge->expand_foreign_keys($row, 1, ["campaign", "map"]);
+    $challenge->expand_foreign_keys($row, 1, false);
     $map->challenges[$challenge_id] = $challenge;
   }
   $challenge = $map->challenges[$challenge_id];
 
   $submission = new Submission();
   $submission->apply_db_data($row, "submission_");
-  $submission->expand_foreign_keys($row, 2, ["challenge"]);
+  $submission->expand_foreign_keys($row, 2, false);
   $challenge->submissions[$submission->id] = $submission;
 }
 

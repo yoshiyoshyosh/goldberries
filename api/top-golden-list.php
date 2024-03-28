@@ -73,9 +73,21 @@ SELECT
 
   p.id AS player_id,
   p.name AS player_name,
+  pa.is_verifier AS player_account_is_verifier,
+  pa.is_admin AS player_account_is_admin,
+  pa.is_suspended AS player_account_is_suspended,
+  pa.suspension_reason AS player_account_suspension_reason,
+  pa.name_color_start AS player_account_name_color_start,
+  pa.name_color_end AS player_account_name_color_end,
 
   v.id AS verifier_id,
   v.name AS verifier_name,
+  va.is_verifier AS verifier_account_is_verifier,
+  va.is_admin AS verifier_account_is_admin,
+  va.is_suspended AS verifier_account_is_suspended,
+  va.suspension_reason AS verifier_account_suspension_reason,
+  va.name_color_start AS verifier_account_name_color_start,
+  va.name_color_end AS verifier_account_name_color_end,
 
   pd.id AS suggested_difficulty_id,
   pd.name AS suggested_difficulty_name,
@@ -91,23 +103,25 @@ JOIN submission  ON challenge.id = submission.challenge_id
 JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
+LEFT JOIN account pa ON p.id = pa.player_id
+LEFT JOIN account va ON v.id = va.player_id
 ";
 
 $where = "WHERE submission.is_verified = true AND submission.is_rejected = false AND cd.id != 18";
-if (isset ($_GET['campaign'])) {
+if (isset($_GET['campaign'])) {
   $where .= " AND campaign.id = " . intval($_GET['campaign']);
 }
-if (isset ($_GET['map'])) {
+if (isset($_GET['map'])) {
   $where .= " AND map.id = " . intval($_GET['map']);
 }
-if (isset ($_GET['player'])) {
+if (isset($_GET['player'])) {
   $where .= " AND p.id = " . intval($_GET['player']);
 }
 
-if (!isset ($_GET['archived']) || $_GET['archived'] === "false") {
+if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
   $where .= " AND map.is_archived = false";
 }
-if (!isset ($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
+if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
   $where .= " AND objective.is_arbitrary = false AND (challenge.is_arbitrary = false OR challenge.is_arbitrary IS NULL)";
 }
 
@@ -142,9 +156,9 @@ while ($row = pg_fetch_assoc($resultDifficulties)) {
   $tierIndex = get_tier_index($difficulty);
   $subtierIndex = get_subtier_index($difficulty);
 
-  if (!isset ($response['tiers'][$tierIndex]))
+  if (!isset($response['tiers'][$tierIndex]))
     $response['tiers'][$tierIndex] = array();
-  if (!isset ($response['tiers'][$tierIndex][$subtierIndex]))
+  if (!isset($response['tiers'][$tierIndex][$subtierIndex]))
     $response['tiers'][$tierIndex][$subtierIndex] = array();
 
   $response['tiers'][$tierIndex][$subtierIndex] = $difficulty;
