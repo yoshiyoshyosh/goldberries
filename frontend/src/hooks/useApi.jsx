@@ -35,6 +35,7 @@ import {
   fetchSubmissionQueue,
   fetchRejectedMapList,
   fetchPlayerList,
+  postPlayer,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -210,6 +211,30 @@ export function useClaimPlayer(onSuccess) {
     onSuccess: (response, player) => {
       queryClient.invalidateQueries(["accounts_player_claims"]);
       queryClient.invalidateQueries(["overall_stats", "verifier"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function usePostPlayer(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (player) => postPlayer(player),
+    onSuccess: (response, player) => {
+      queryClient.invalidateQueries(["all_players"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function usePostPlayerSelf(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (player) => postPlayer(player, true),
+    onSuccess: (response, player) => {
+      queryClient.invalidateQueries(["all_players"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,

@@ -17,11 +17,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useGetAllAccounts, useGetAllPlayerClaims, usePostAccount } from "../../hooks/useApi";
+import {
+  getQueryData,
+  useGetAllAccounts,
+  useGetAllPlayerClaims,
+  useGetAllPlayers,
+  usePostAccount,
+  usePostPlayer,
+} from "../../hooks/useApi";
 import { getAccountName } from "../../util/data_util";
 import { useEffect, useState } from "react";
 import { FormAccountWrapper } from "../../components/forms/Account";
 import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/AuthProvider";
 
 export function PageManageAccounts({}) {
   const navigate = useNavigate();
@@ -57,9 +65,11 @@ export function PageManageAccounts({}) {
       >
         <Tab label="Accounts" value="accounts" />
         <Tab label="Player Claims" value="player-claims" />
+        <Tab label="Player Rename" value="player-rename" />
       </Tabs>
       {activeTab === "accounts" && <ManageAccountsTab />}
       {activeTab === "player-claims" && <ManagePlayerClaimsTab />}
+      {activeTab === "player-rename" && <ManagePlayerNamesTab />}
     </BasicContainerBox>
   );
 }
@@ -78,7 +88,7 @@ function ManageAccountsTab() {
     if (account === null) setAccount(null);
   };
 
-  const accounts = query.data.data;
+  const accounts = getQueryData(query);
   //sort accounts by id
   accounts.sort((a, b) => a.id - b.id);
 
@@ -163,6 +173,68 @@ function ManagePlayerClaimsTab() {
           </TableBody>
         </Table>
       </TableContainer>
+    </>
+  );
+}
+
+function ManagePlayerNamesTab() {
+  const auth = useAuth();
+  const query = useGetAllPlayers();
+  const [player, setPlayer] = useState(null);
+  const [newName, setNewName] = useState("");
+
+  const { mutate: renamePlayer } = usePostPlayer(() => {
+    toast.success("Player renamed");
+    if (auth.user && player.id === auth.user.player_id) {
+      auth.checkSession();
+    }
+    setPlayer({ ...player, name: newName });
+  });
+
+  useEffect(() => {
+    if (player !== null) {
+      setNewName(player.name);
+    }
+  }, [player]);
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const allPlayers = getQueryData(query);
+
+  return (
+    <>
+      <Autocomplete
+        options={allPlayers}
+        getOptionLabel={(option) => option.name}
+        onChange={(event, newValue) => setPlayer(newValue)}
+        renderInput={(params) => <TextField {...params} label="Select a Player" />}
+        sx={{ mt: 2 }}
+      />
+      {player && (
+        <>
+          <Divider sx={{ my: 2 }} />
+          <TextField
+            label="New Name"
+            value={newName}
+            onChange={(event) => setNewName(event.target.value)}
+            sx={{ mt: 2 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() => renamePlayer({ ...player, name: newName })}
+            disabled={newName === player.name || newName.trim() === "" || newName.length < 3}
+            sx={{ mt: 2 }}
+          >
+            Rename Player
+          </Button>
+        </>
+      )}
     </>
   );
 }

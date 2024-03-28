@@ -25,10 +25,13 @@ import {
   faArchway,
   faBan,
   faBook,
+  faChild,
+  faChildCombatant,
   faGamepad,
   faHammer,
   faKeyboard,
   faLink,
+  faPersonDrowning,
   faQuestion,
   faShield,
   faUser,
@@ -414,8 +417,8 @@ export function SuspendedIcon({ reason }) {
 const INPUT_METHOD_ICONS = {
   keyboard: faKeyboard,
   controller: faGamepad,
-  hybrid: faMix,
-  other: faQuestion,
+  hybrid: faPersonDrowning,
+  other: faChildCombatant,
 };
 export function InputMethodIcon({ method, ...props }) {
   const inputMethodName = method.charAt(0).toUpperCase() + method.slice(1);

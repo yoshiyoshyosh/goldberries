@@ -63,9 +63,8 @@ export function PlayerDisplay({ id }) {
       <HeadTitle title={title} />
       <Stack direction="column" gap={1}>
         <Stack direction="row" alignItems="center" gap={1}>
-          <FontAwesomeIcon icon={faUser} size="2x" />
           <Typography
-            variant="h6"
+            variant="h4"
             sx={{
               textDecoration: suspended ? "line-through" : "inherit",
               color: suspended ? "grey" : "inherit",

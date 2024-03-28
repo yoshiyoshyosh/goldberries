@@ -9,6 +9,7 @@ import { VariableSizeList } from "react-window";
 import "../css/GoldenList.css";
 import { Link } from "react-router-dom";
 import { HeadTitle } from "../components/BasicComponents";
+import { getChallengeNameShort, getPlayerNameColorStyle } from "../util/data_util";
 
 export function PageGoldenList({ type }) {
   const title = type === "hard" ? "Hard Golden List" : "Standard Golden List";
@@ -134,13 +135,8 @@ function MapEntry({ map, type }) {
 }
 
 function ChallengeEntry({ challenge, type }) {
-  const tier = type === "hard" ? challenge.difficulty.name + " " : "";
-  const subtier =
-    type === "hard" && challenge.difficulty.subtier !== null ? challenge.difficulty.subtier + " " : "";
   const fcAddition = challenge.requires_fc ? "[FC]" : challenge.has_fc ? "[C/FC]" : "[C]";
-  const counter = "(" + challenge.submissions.length + ")";
-  const subtierAddition =
-    challenge.difficulty.subtier !== null ? " [" + challenge.difficulty.subtier + "]" : "";
+  const counter = "" + challenge.submissions.length + "";
 
   const colors = getDifficultyColors(challenge.difficulty_id);
 
@@ -151,11 +147,12 @@ function ChallengeEntry({ challenge, type }) {
           className="golden-list-info-box challenge"
           style={{ backgroundColor: colors.color, color: colors.contrast_color }}
         >
-          <span style={{ textTransform: "capitalize" }}>
-            {subtier}
-            {tier}
-            {fcAddition} {counter}
-          </span>
+          <div style={{ width: "50%", textAlign: "center", fontWeight: "bold", fontSize: "1.1rem" }}>
+            {fcAddition}
+          </div>
+          <div style={{ width: "50%", textAlign: "center", fontWeight: "bold", fontSize: "1.2rem" }}>
+            {counter}
+          </div>
         </Box>
       </Link>
       {challenge.submissions.map((submission) => (
@@ -166,7 +163,7 @@ function ChallengeEntry({ challenge, type }) {
 }
 
 function SubmissionEntry({ submission }) {
-  const playerName = submission.player ? submission.player.name : "<NULL>";
+  const nameStyle = getPlayerNameColorStyle(submission.player);
   return (
     <Link to={"/submission/" + submission.id} style={{ textDecoration: "none" }}>
       {/* <a href={submission.proof_url} target="_blank" rel="noopener" style={{ textDecoration: "none" }}> */}
@@ -174,8 +171,8 @@ function SubmissionEntry({ submission }) {
         className="golden-list-info-box submission"
         style={{ backgroundColor: !submission.is_fc ? "#ffd966" : "#f9cb9c" }}
       >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {playerName}
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...nameStyle }}>
+          {submission.player.name}
         </span>
       </Box>
       {/* </a> */}

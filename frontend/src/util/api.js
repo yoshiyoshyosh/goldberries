@@ -264,7 +264,10 @@ export function claimPlayer(player) {
   );
 }
 
-export function postPlayer(data) {
+export function postPlayer(data, self = false) {
+  if (self) {
+    data.self = true;
+  }
   return axios.post("/player.php", formatDataForApi(data));
 }
 

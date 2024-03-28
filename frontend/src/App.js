@@ -297,13 +297,13 @@ export function Layout() {
       name: auth.hasPlayerClaimed ? auth.user.player.name : "My Account",
       icon: <FontAwesomeIcon icon={faUser} />,
       items: [
+        { name: "Claim A Player", path: "/claim-player", icon: <FontAwesomeIcon icon={faPlayCircle} /> },
         {
           name: "My Player Page",
           path: auth.hasPlayerClaimed ? "/player/" + auth.user.player.id : "/claim-player",
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
-        { name: "Claim A Player", path: "/claim-player", icon: <FontAwesomeIcon icon={faPlayCircle} /> },
         {
           name: "Logout",
           action: () => {

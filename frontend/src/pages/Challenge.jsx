@@ -22,7 +22,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { DifficultyChip } from "../components/GoldberriesComponents";
-import { getChallengeNameShort, getGamebananaEmbedUrl } from "../util/data_util";
+import { getChallengeNameShort, getGamebananaEmbedUrl, getPlayerNameColorStyle } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -209,6 +209,7 @@ export function ChallengeSubmissionTable({ challenge, compact = false, ...props 
 }
 
 export function ChallengeSubmissionRow({ submission, index, compact }) {
+  const nameStyle = getPlayerNameColorStyle(submission.player);
   return (
     <TableRow>
       <TableCell width={1} sx={{ pr: 0 }}>
@@ -219,7 +220,7 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
           <Link to={"/submission/" + submission.id}>
             <FontAwesomeIcon icon={faBook} />
           </Link>
-          <Link to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap" }}>
+          <Link to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
             {submission.player.name}
           </Link>
         </Stack>

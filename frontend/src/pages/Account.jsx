@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
-import { useDeleteOwnAccount, usePostAccount } from "../hooks/useApi";
+import { useDeleteOwnAccount, usePostAccount, usePostPlayerSelf } from "../hooks/useApi";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
 import { InputMethodIcon, PlayerChip, VerificationStatusChip } from "../components/GoldberriesComponents";
@@ -35,7 +35,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { isValidHttpUrl } from "../util/util";
+import { isValidHttpUrl, jsonDateToJsDate } from "../util/util";
 import { MuiColorInput } from "mui-color-input";
 import { getPlayerNameColorStyle } from "../util/data_util";
 
@@ -53,6 +53,12 @@ export function PageAccount() {
       navigate(`/my-account/${tab}`, { replace: true });
     }
   };
+
+  //   const { mutate: renamePlayer } = usePostPlayerSelf(() => {
+  //   toast.success("Rename successful");
+  //   auth.checkSession();
+  //   setPlayer({ ...player, name: newName });
+  // });
 
   return (
     <BasicContainerBox maxWidth="md">
@@ -91,10 +97,12 @@ export function PageAccount() {
       >
         <Tab label="Login Methods" value="login-methods" />
         <Tab label="Profile" value="profile" />
+        <Tab label="Player Rename" value="rename" />
         <Tab label="Danger Zone" value="danger-zone" />
       </Tabs>
       {selectedTab === "login-methods" && <UserAccountLoginMethodsForm />}
       {selectedTab === "profile" && <UserAccountProfileForm />}
+      {selectedTab === "rename" && <UserAccountRenameForm />}
       {selectedTab === "danger-zone" && <UserAccountDangerZoneForm />}
     </BasicContainerBox>
   );
@@ -320,7 +328,11 @@ export function UserAccountProfileForm() {
   const nameColorStyle = getPlayerNameColorStyle({
     account: {
       name_color_start: formAccount.name_color_start === "rgb(0, 0, 0)" ? null : formAccount.name_color_start,
-      name_color_end: formAccount.name_color_end === "rgb(0, 0, 0)" ? null : formAccount.name_color_end,
+      name_color_end: useGradient
+        ? formAccount.name_color_end === "rgb(0, 0, 0)"
+          ? null
+          : formAccount.name_color_end
+        : null,
     },
   });
 
@@ -401,7 +413,7 @@ export function UserAccountProfileForm() {
       <Divider sx={{ my: 2 }} />
 
       <Typography variant="h6">About Me</Typography>
-      <TextField {...form.register("about_me")} fullWidth multiline rows={4} placeholder="Empty" />
+      <TextField {...form.register("about_me")} fullWidth multiline minRows={4} placeholder="Empty" />
 
       <Divider sx={{ my: 2 }} />
 
@@ -568,6 +580,92 @@ export function UserAccountDangerZoneForm() {
             onClick={() => deleteAccount()}
           >
             Delete Account
+          </Button>
+        </Stack>
+      </form>
+    </>
+  );
+}
+
+export function UserAccountRenameForm() {
+  const auth = useAuth();
+  const { mutate: renameSelf } = usePostPlayerSelf(() => {
+    toast.success("Rename successful");
+    auth.checkSession();
+  });
+
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      name: auth.user.player?.name ?? "",
+    },
+  });
+  const onSubmit = form.handleSubmit((data) => {
+    renameSelf({ ...auth.user.player, name: data.name });
+  });
+  const errors = form.formState.errors;
+
+  useEffect(() => {
+    form.reset({
+      name: auth.user.player?.name ?? "",
+    });
+  }, [auth.user]);
+
+  const lastRename = auth.user.last_player_rename;
+  const canRename =
+    lastRename === null ||
+    new Date().getTime() - jsonDateToJsDate(lastRename).getTime() > 24 * 60 * 60 * 1000;
+  const timeUntilRename =
+    lastRename === null
+      ? 0
+      : 24 * 60 * 60 * 1000 - (new Date().getTime() - jsonDateToJsDate(lastRename).getTime());
+
+  //Format time remaining in this format: hh:mm
+  const formatTime = (time) => {
+    const hours = Math.floor(time / 60 / 60 / 1000);
+    const minutes = Math.floor((time - hours * 60 * 60 * 1000) / 60 / 1000);
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <>
+      {auth.user.player === null && (
+        <>
+          <Typography variant="body1" gutterBottom>
+            You don't have a player claimed yet!
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+        </>
+      )}
+      <Typography variant="h6">Rename your Player</Typography>
+      <Typography variant="body2" gutterBottom>
+        Give your player a new name. This can be done once every 24 hours.
+      </Typography>
+      {canRename ? (
+        <Typography variant="body2" color="green" gutterBottom>
+          You can rename your player!
+        </Typography>
+      ) : (
+        <Typography variant="body2" color="error" gutterBottom>
+          You can rename your player in {formatTime(timeUntilRename)}h.
+        </Typography>
+      )}
+
+      <form>
+        <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
+          <TextField
+            label="New Name"
+            fullWidth
+            disabled={auth.user.player === null}
+            {...form.register("name", FormOptions.PlayerName)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={auth.user.player === null || !form.formState.isValid || !canRename}
+            onClick={onSubmit}
+          >
+            Rename
           </Button>
         </Stack>
       </form>
