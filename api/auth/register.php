@@ -3,7 +3,7 @@
 require_once ('../api_bootstrap.inc.php');
 
 //=== Verification ===
-if (isset ($_GET['verify'])) {
+if (isset($_GET['verify'])) {
   $code = $_GET['verify'];
 
   //Check if code is valid
@@ -77,7 +77,7 @@ $message .= constant('BASE_URL') . "/verify-email/{$account->email_verify_code}\
 $message .= "If you did not sign up, please ignore this email.\n\n";
 $message .= "Thank you,\n";
 $message .= "Goldberries.net Team";
-$sender = constant('ADMIN_EMAIL');
+$sender = constant('NOREPLY_EMAIL');
 $recipient = $account->email;
 $headers = "From: " . $sender;
 

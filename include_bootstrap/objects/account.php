@@ -26,6 +26,9 @@ class Account extends DbObject
   public ?string $name_color_start = null;
   public ?string $name_color_end = null;
 
+  // Other
+  public ?JsonDateTime $last_player_rename = null;
+
   // Foreign Keys
   public ?int $player_id = null;
   public ?int $claimed_player_id = null;
@@ -44,27 +47,27 @@ class Account extends DbObject
     $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
 
-    if (isset ($arr[$prefix . 'player_id']))
+    if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
-    if (isset ($arr[$prefix . 'claimed_player_id']))
+    if (isset($arr[$prefix . 'claimed_player_id']))
       $this->claimed_player_id = intval($arr[$prefix . 'claimed_player_id']);
-    if (isset ($arr[$prefix . 'email']))
+    if (isset($arr[$prefix . 'email']))
       $this->email = $arr[$prefix . 'email'];
-    if (isset ($arr[$prefix . 'password']))
+    if (isset($arr[$prefix . 'password']))
       $this->password = $arr[$prefix . 'password'];
-    if (isset ($arr[$prefix . 'discord_id']))
+    if (isset($arr[$prefix . 'discord_id']))
       $this->discord_id = $arr[$prefix . 'discord_id'];
-    if (isset ($arr[$prefix . 'session_token']))
+    if (isset($arr[$prefix . 'session_token']))
       $this->session_token = $arr[$prefix . 'session_token'];
-    if (isset ($arr[$prefix . 'session_created']))
+    if (isset($arr[$prefix . 'session_created']))
       $this->session_created = new JsonDateTime($arr[$prefix . 'session_created']);
-    if (isset ($arr[$prefix . 'suspension_reason']))
+    if (isset($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
-    if (isset ($arr[$prefix . 'email_verified']))
+    if (isset($arr[$prefix . 'email_verified']))
       $this->email_verified = $arr[$prefix . 'email_verified'] === 't';
-    if (isset ($arr[$prefix . 'email_verify_code']))
+    if (isset($arr[$prefix . 'email_verify_code']))
       $this->email_verify_code = $arr[$prefix . 'email_verify_code'];
-    if (isset ($arr[$prefix . 'links'])) {
+    if (isset($arr[$prefix . 'links'])) {
       $value = $arr[$prefix . 'links'];
       if (is_array($value)) {
         $this->links = $value;
@@ -81,14 +84,18 @@ class Account extends DbObject
       if (count($this->links) === 0)
         $this->links = null;
     }
-    if (isset ($arr[$prefix . 'input_method']))
+    if (isset($arr[$prefix . 'input_method']))
       $this->input_method = $arr[$prefix . 'input_method'];
-    if (isset ($arr[$prefix . 'about_me']))
+    if (isset($arr[$prefix . 'about_me']))
       $this->about_me = $arr[$prefix . 'about_me'];
-    if (isset ($arr[$prefix . 'name_color_start']))
+    if (isset($arr[$prefix . 'name_color_start']))
       $this->name_color_start = $arr[$prefix . 'name_color_start'];
-    if (isset ($arr[$prefix . 'name_color_end']))
+    if (isset($arr[$prefix . 'name_color_end']))
       $this->name_color_end = $arr[$prefix . 'name_color_end'];
+
+    if (isset($arr[$prefix . 'last_player_rename'])) {
+      $this->last_player_rename = new JsonDateTime($arr[$prefix . 'last_player_rename']);
+    }
   }
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
   {
@@ -129,6 +136,7 @@ class Account extends DbObject
       'about_me' => $this->about_me,
       'name_color_start' => $this->name_color_start,
       'name_color_end' => $this->name_color_end,
+      'last_player_rename' => $this->last_player_rename,
     );
   }
 

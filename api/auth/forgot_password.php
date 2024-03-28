@@ -3,7 +3,7 @@
 require_once ('../api_bootstrap.inc.php');
 
 //=== Verification ===
-if (isset ($_REQUEST['token'])) {
+if (isset($_REQUEST['token'])) {
   $code = $_REQUEST['token'];
   $password = $_REQUEST['password'] ?? null;
   if ($password == null) {
@@ -84,7 +84,7 @@ $message .= constant('BASE_URL') . "/forgot-password/{$account->email_verify_cod
 $message .= "If you did not request this, please ignore this email.\n\n";
 $message .= "Thank you,\n";
 $message .= "Goldberries.net Team";
-$sender = constant('ADMIN_EMAIL');
+$sender = constant('NOREPLY_EMAIL');
 $recipient = $account->email;
 $headers = "From: " . $sender;
 
