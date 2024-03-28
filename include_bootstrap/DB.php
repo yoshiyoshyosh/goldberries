@@ -146,7 +146,7 @@ function fix_pg_variable_value($value)
   if ($value === false)
     return '0';
   if (gettype($value) === 'object' && get_class($value) === 'JsonDateTime')
-    return $value->format('Y-m-d H:i:s+00');
+    return $value->format('c');
   return $value;
 }
 
