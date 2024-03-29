@@ -84,14 +84,14 @@ export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
   return (
     <Box component={Paper} sx={{ p: 1 }}>
       <Stack direction="row" alignItems="center">
-        <PlayerChip player={entry.author} />
+        <PlayerChip player={entry.author} size="small" />
         <Typography variant="body1" sx={{ flex: 1, ml: 1 }}>
           {entry.description}
         </Typography>
         <Typography variant="body1">{displayDate(entry.date)}</Typography>
         {canManage && (
           <IconButton color="error" onClick={() => deleteEntry(entry.id)} sx={{ ml: 1 }}>
-            <FontAwesomeIcon icon={faTrash} style={{ fontSize: "75%" }} />
+            <FontAwesomeIcon icon={faTrash} style={{ fontSize: "65%" }} />
           </IconButton>
         )}
       </Stack>

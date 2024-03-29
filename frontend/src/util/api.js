@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// ===== GET =====
+//#region ===== GET =====
 
 //type: "hard", "standard", "campaign", "map", "challenge", "player"
 export function fetchGoldenList(
@@ -237,7 +237,22 @@ export function fetchSearch(search) {
   });
 }
 
-// ===== POST =====
+export function fetchLogs(page, perPage, level, topic, search, start_date, end_date) {
+  return axios.get("/logging.php", {
+    params: {
+      page: page,
+      per_page: perPage,
+      level: level,
+      topic: topic,
+      search: search,
+      start_date: start_date,
+      end_date: end_date,
+    },
+  });
+}
+//#endregion
+
+//#region ===== POST =====
 export function postCampaign(data) {
   return axios.post("/campaign.php", formatDataForApi(data));
 }
@@ -311,8 +326,9 @@ export function forgotPasswordVerify(data) {
     },
   });
 }
+//#endregion
 
-// ===== DELETE =====
+//#region ===== DELETE =====
 export function deleteCampaign(id) {
   return axios.delete("/campaign.php", {
     params: {
@@ -368,7 +384,16 @@ export function deleteAccount(id) {
   });
 }
 
-// ===== Utility =====
+export function deleteLogEntry(id) {
+  return axios.delete("/logging.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+//#endregion
+
+//#region ===== Utility =====
 export function formatDataForApi(data) {
   //Loop through all props in data
   //If prop is a string, trim it. if its empty, set it to null
@@ -383,3 +408,4 @@ export function formatDataForApi(data) {
   }
   return data;
 }
+//#endregion

@@ -37,6 +37,8 @@ import {
   fetchPlayerList,
   postPlayer,
   deleteChangelogEntry,
+  fetchLogs,
+  deleteLogEntry,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -143,6 +145,17 @@ export function useDeleteOwnAccount(onSuccess) {
     onSuccess: (response) => {
       if (onSuccess) onSuccess(response);
       else toast.success("Account deleted");
+    },
+    onError: errorToast,
+  });
+}
+
+export function useDeleteLogEntry(onSuccess) {
+  return useMutation({
+    mutationFn: (id) => deleteLogEntry(id),
+    onSuccess: (response) => {
+      if (onSuccess) onSuccess(response);
+      else toast.success("Log entry deleted");
     },
     onError: errorToast,
   });
@@ -446,6 +459,14 @@ export function useSearch(search) {
   return useQuery({
     queryKey: ["search", search],
     queryFn: () => fetchSearch(search),
+    onError: errorToast,
+  });
+}
+
+export function useGetLogs(page, perPage, level, topic, search, start_date, end_date) {
+  return useQuery({
+    queryKey: ["logs", page, perPage, level, topic, search, start_date, end_date],
+    queryFn: () => fetchLogs(page, perPage, level, topic, search, start_date, end_date),
     onError: errorToast,
   });
 }
