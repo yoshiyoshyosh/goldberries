@@ -23,6 +23,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { Changelog } from "../components/Changelog";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -108,6 +109,8 @@ export function PlayerDisplay({ id }) {
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
       <Divider sx={{ my: 2 }} />
       <RecentSubmissions playerId={id} />
+      <Divider sx={{ my: 2 }} />
+      <Changelog type="player" id={id} />
     </>
   );
 }

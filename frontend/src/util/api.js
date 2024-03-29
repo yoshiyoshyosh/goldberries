@@ -345,6 +345,14 @@ export function deleteSubmission(id) {
   });
 }
 
+export function deleteChangelogEntry(id) {
+  return axios.delete("/change.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
 export function deleteOwnAccount() {
   return axios.delete("/account.php", {
     params: {

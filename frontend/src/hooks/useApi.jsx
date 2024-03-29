@@ -36,6 +36,7 @@ import {
   fetchRejectedMapList,
   fetchPlayerList,
   postPlayer,
+  deleteChangelogEntry,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -103,6 +104,19 @@ export function useDeleteSubmission(onSuccess) {
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response, id);
       else toast.success("Submission deleted");
+    },
+    onError: errorToast,
+  });
+}
+
+export function useDeleteChangelogEntry(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deleteChangelogEntry(id),
+    onSuccess: (response, id) => {
+      queryClient.invalidateQueries(["change_log"]);
+      if (onSuccess) onSuccess(response, id);
+      else toast.success("Changelog entry deleted");
     },
     onError: errorToast,
   });

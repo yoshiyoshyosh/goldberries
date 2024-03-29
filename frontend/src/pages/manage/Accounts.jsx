@@ -3,7 +3,9 @@ import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../.
 import {
   Autocomplete,
   Button,
+  Checkbox,
   Divider,
+  FormControlLabel,
   Paper,
   Stack,
   Tab,
@@ -30,6 +32,7 @@ import { useEffect, useState } from "react";
 import { FormAccountWrapper } from "../../components/forms/Account";
 import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/AuthProvider";
+import { Controller, useForm } from "react-hook-form";
 
 export function PageManageAccounts({}) {
   const navigate = useNavigate();
@@ -181,7 +184,6 @@ function ManagePlayerNamesTab() {
   const auth = useAuth();
   const query = useGetAllPlayers();
   const [player, setPlayer] = useState(null);
-  const [newName, setNewName] = useState("");
 
   const { mutate: renamePlayer } = usePostPlayer(() => {
     toast.success("Player renamed");
@@ -191,10 +193,21 @@ function ManagePlayerNamesTab() {
     setPlayer({ ...player, name: newName });
   });
 
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      log_change: true,
+    },
+  });
+  const onSubmit = form.handleSubmit((data) => {
+    renamePlayer({ ...player, name: newName, log_change: data.log_change });
+  });
+
   useEffect(() => {
-    if (player !== null) {
-      setNewName(player.name);
-    }
+    form.reset({
+      name: player ? player.name : "",
+      log_change: true,
+    });
   }, [player]);
 
   if (query.isLoading) {
@@ -204,6 +217,7 @@ function ManagePlayerNamesTab() {
   }
 
   const allPlayers = getQueryData(query);
+  const newName = form.watch("name");
 
   return (
     <>
@@ -217,22 +231,36 @@ function ManagePlayerNamesTab() {
       {player && (
         <>
           <Divider sx={{ my: 2 }} />
-          <TextField
-            label="New Name"
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-            sx={{ mt: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={() => renamePlayer({ ...player, name: newName })}
-            disabled={newName === player.name || newName.trim() === "" || newName.length < 3}
-            sx={{ mt: 2 }}
-          >
-            Rename Player
-          </Button>
+          <Stack direction="column" spacing={2}>
+            <TextField
+              label="New Name"
+              {...form.register("name", { required: true, minLength: 2 })}
+              InputLabelProps={{ shrink: true }}
+              sx={{ mt: 2 }}
+            />
+            <Controller
+              name="log_change"
+              control={form.control}
+              render={({ field }) => (
+                <FormControlLabel
+                  checked={field.value}
+                  onChange={field.onChange}
+                  control={<Checkbox {...field} />}
+                  label="Log the rename in the player's changelog"
+                />
+              )}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={onSubmit}
+              disabled={newName === player.name || newName.trim() === "" || newName.length < 3}
+              sx={{ mt: 2 }}
+            >
+              Rename Player
+            </Button>
+          </Stack>
         </>
       )}
     </>

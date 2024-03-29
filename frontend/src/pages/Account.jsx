@@ -598,16 +598,18 @@ export function UserAccountRenameForm() {
     mode: "onBlur",
     defaultValues: {
       name: auth.user.player?.name ?? "",
+      log_change: true,
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    renameSelf({ ...auth.user.player, name: data.name });
+    renameSelf({ ...auth.user.player, name: data.name, log_change: data.log_change });
   });
   const errors = form.formState.errors;
 
   useEffect(() => {
     form.reset({
       name: auth.user.player?.name ?? "",
+      log_change: true,
     });
   }, [auth.user]);
 
@@ -658,6 +660,18 @@ export function UserAccountRenameForm() {
             fullWidth
             disabled={auth.user.player === null}
             {...form.register("name", FormOptions.PlayerName)}
+          />
+          <Controller
+            name="log_change"
+            control={form.control}
+            render={({ field }) => (
+              <FormControlLabel
+                checked={field.value}
+                onChange={field.onChange}
+                control={<Checkbox {...field} />}
+                label="Log the rename in your player's changelog"
+              />
+            )}
           />
           <Button
             variant="contained"
