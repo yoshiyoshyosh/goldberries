@@ -4,6 +4,8 @@ class Logging extends DbObject
 {
   public static string $table_name = 'logging';
 
+  public static array $LEVELS = array('debug', 'info', 'warn', 'error', 'critical');
+
   public string $message;
   public string $level;
   public $topic = null; /* string */
@@ -74,6 +76,81 @@ class Logging extends DbObject
       return false;
 
     return $logs;
+  }
+
+
+  static function get_paginated($DB, $page, $per_page, $level, $topic, $search, $date_start, $date_end)
+  {
+    $query = "SELECT * FROM logging";
+
+    $where = array();
+    if ($level !== null) {
+      //find index of level in LEVELS
+      $level_index = array_search($level, self::$LEVELS);
+      if ($level_index === false) {
+        die_json(400, "Invalid level");
+      }
+      $levelsToInclude = array_slice(self::$LEVELS, $level_index);
+      $where[] = "level IN ('" . implode("', '", $levelsToInclude) . "')";
+    }
+    if ($topic !== null) {
+      $topic = pg_escape_string($topic);
+      $where[] = "topic = '" . $topic . "'";
+    }
+    if ($search !== null) {
+      $search = pg_escape_string($search);
+      $where[] = "message ILIKE '%" . $search . "%'";
+    }
+    if ($date_start !== null) {
+      $date_start = pg_escape_string($date_start);
+      $where[] = "date >= '" . $date_start . "'";
+    }
+    if ($date_end !== null) {
+      $date_end = pg_escape_string($date_end);
+      $where[] = "date <= '" . $date_end . "'";
+    }
+
+    if (count($where) > 0) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
+
+    $query .= " ORDER BY date DESC";
+
+    $query = "
+    WITH logs AS (
+      " . $query . "
+    )
+    SELECT *, count(*) OVER () AS total_count
+    FROM logs";
+
+    if ($per_page !== -1) {
+      $query .= " LIMIT " . $per_page . " OFFSET " . ($page - 1) * $per_page;
+    }
+
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Failed to query database");
+    }
+
+    $maxCount = 0;
+    $logs = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $log = new Logging();
+      $log->apply_db_data($row);
+      $logs[] = $log;
+
+      if ($maxCount === 0) {
+        $maxCount = intval($row['total_count']);
+      }
+    }
+
+    return array(
+      'logs' => $logs,
+      'max_count' => $maxCount,
+      'max_page' => ceil($maxCount / $per_page),
+      'page' => $page,
+      'per_page' => $per_page,
+    );
   }
 
   // === Utility Functions ===

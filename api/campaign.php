@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $maps = isset($_REQUEST['maps']) && $_REQUEST['maps'] === 'true';
@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old_campaign = Campaign::get_by_id($DB, $data['id']);
     if ($campaign->update($DB)) {
       Campaign::generate_changelog($DB, $old_campaign, $campaign);
+      log_info("'{$account->player->name}' updated {$campaign}", "Campaign");
       api_write($campaign);
     } else {
       die_json(500, "Failed to update campaign");
@@ -49,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert
     $campaign->date_added = new JsonDateTime();
     if ($campaign->insert($DB)) {
+      log_info("'{$account->player->name}' created {$campaign}", "Campaign");
       api_write($campaign);
     } else {
       die_json(500, "Failed to create campaign");
@@ -70,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $campaign = new Campaign();
     $campaign->id = $id;
     if ($campaign->delete($DB)) {
+      log_info("'{$account->player->name}' deleted {$campaign}", "Campaign");
       api_write($campaign);
     } else {
       die_json(500, "Failed to delete campaign");

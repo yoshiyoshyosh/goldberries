@@ -3,10 +3,10 @@
 require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $challenges = isset ($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
-  $submissions = isset ($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
+  $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
+  $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
 
-  $list_rejected = isset ($_REQUEST['list_rejected']) && $_REQUEST['list_rejected'] === 'true';
+  $list_rejected = isset($_REQUEST['list_rejected']) && $_REQUEST['list_rejected'] === 'true';
   if ($list_rejected) {
     $maps = Map::get_all_rejected($DB);
     api_write($maps);
@@ -54,13 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Invalid campaign_id");
     }
 
-    if (isset ($data['id'])) {
+    if (isset($data['id'])) {
       // Update
       $old_map = Map::get_by_id($DB, $data['id']);
       if (!$map->update($DB)) {
         die_json(500, "Failed to update map ($map->id)");
       } else {
         Map::generate_changelog($DB, $old_map, $map);
+        log_info("'{$account->player->name}' updated {$map}", "Map");
       }
 
     } else {
@@ -68,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $map->date_added = new JsonDateTime();
       if (!$map->insert($DB)) {
         die_json(500, "Failed to create map ($map->id)");
+      } else {
+        log_info("'{$account->player->name}' created {$map}", "Map");
       }
     }
   }
@@ -88,11 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     die_json(403, "Not authorized");
   }
 
-  if (isset ($_REQUEST['id'])) {
+  if (isset($_REQUEST['id'])) {
     $id = $_REQUEST['id'];
     $map = new Map();
     $map->id = $id;
     if ($map->delete($DB)) {
+      log_info("'{$account->player->name}' deleted {$map}", "Map");
       api_write($map);
     } else {
       die_json(500, "Failed to delete map");

@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (isset($request['id'])) {
     //Update request
+    $log_change = isset($request['log_change']) && $request['log_change'] === 't';
     if (is_verifier($account) && (!isset($request['self']) || $request['self'] !== 't')) {
       if (!isset($request['id'])) {
         die_json(400, "Invalid id");
@@ -77,6 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $old_name = $target->name;
       $target->name = $new_name;
+
+      if ($old_name !== $new_name && $log_change) {
+        Change::create_change($DB, "player", $target->id, "Renamed from '{$old_name}' to '{$new_name}'");
+      }
+
 
       if ($target->update($DB) === false) {
         log_error("Failed to update {$target} in database", "Player");
@@ -112,6 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $target = $account->player;
       $old_name = $target->name;
+
+      if ($old_name !== $new_name && $log_change) {
+        Change::create_change($DB, "player", $target->id, "Renamed from '{$old_name}' to '{$new_name}'");
+      }
+
       $target->name = $new_name;
 
       if ($target->update($DB) === false) {

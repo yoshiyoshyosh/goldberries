@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
@@ -119,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old_challenge = Challenge::get_by_id($DB, $data['id']);
     if ($challenge->update($DB)) {
       Challenge::generate_changelog($DB, $old_challenge, $challenge);
+      log_info("'{$account->player->name}' updated {$challenge}", "Challenge");
       api_write($challenge);
     } else {
       die_json(500, "Failed to update challenge");
@@ -128,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert
     $challenge->date_created = new JsonDateTime();
     if ($challenge->insert($DB)) {
+      log_info("'{$account->player->name}' created {$challenge}", "Challenge");
       api_write($challenge);
     } else {
       die_json(500, "Failed to create challenge");
@@ -149,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $challenge = new Challenge();
     $challenge->id = $id;
     if ($challenge->delete($DB)) {
+      log_info("'{$account->player->name}' deleted {$challenge}", "Challenge");
       api_write($challenge);
     } else {
       die_json(500, "Failed to delete challenge");
