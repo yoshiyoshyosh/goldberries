@@ -71,7 +71,7 @@ class Player extends DbObject
 
     //For player, expand structure is for the profile customization that isn't needed for all pages
     //extract the fields: links, input_method, about_me, name_color_start, name_color_end
-    if ($expand_structure) {
+    if ($expand_structure === true) {
       $this->account['links'] = $account->links;
       $this->account['input_method'] = $account->input_method;
       $this->account['about_me'] = $account->about_me;

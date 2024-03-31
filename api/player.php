@@ -166,3 +166,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   http_response_code(200);
 }
+
+// Delete Request
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $account = get_user_data();
+  if ($account === null) {
+    die_json(401, "Not logged in");
+  } else if (!is_verifier($account)) {
+    die_json(403, "Not authorized");
+  }
+
+  $id = $_REQUEST['id'] ?? null;
+  if ($id === null) {
+    die_json(400, "Missing parameter 'id'");
+  }
+
+  $id = intval($id);
+  if ($id === 0) {
+    die_json(400, "Invalid id");
+  }
+  if ($id === $account->player_id) {
+    die_json(400, "Cannot delete own player");
+  }
+
+  $player = Player::get_by_id($DB, $id);
+  if ($player === false) {
+    die_json(404, "Player not found");
+  }
+
+  if ($player->delete($DB) === false) {
+    log_error("'{$account->player->name}' failed to delete {$player} from database", "Player");
+    die_json(500, "Failed to delete player from database");
+  }
+
+  log_info("'{$account->player->name}' deleted {$player}", "Player");
+  http_response_code(200);
+}

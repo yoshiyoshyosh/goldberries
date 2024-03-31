@@ -59,20 +59,25 @@ class Change extends DbObject
     if ($expand_structure) {
       if ($this->campaign_id !== null) {
         $this->campaign = Campaign::get_by_id($DB, $this->campaign_id);
+        $this->campaign->expand_foreign_keys($DB, $depth - 1, $expand_structure);
       }
       if ($this->map_id !== null) {
         $this->map = Map::get_by_id($DB, $this->map_id);
+        $this->map->expand_foreign_keys($DB, $depth - 1, $expand_structure);
       }
       if ($this->challenge_id !== null) {
         $this->challenge = Challenge::get_by_id($DB, $this->challenge_id);
+        $this->challenge->expand_foreign_keys($DB, $depth - 1, $expand_structure);
       }
       if ($this->player_id !== null) {
-        $this->player = Player::get_by_id($DB, $this->player_id);
+        $this->player = Player::get_by_id($DB, $this->player_id, 2, false);
+        $this->player->expand_foreign_keys($DB, $depth - 1, false);
       }
     }
 
     if ($this->author_id !== null) {
-      $this->author = Player::get_by_id($DB, $this->author_id);
+      $this->author = Player::get_by_id($DB, $this->author_id, 2, false);
+      $this->author->expand_foreign_keys($DB, $depth - 1, false);
     }
   }
 
@@ -90,6 +95,67 @@ class Change extends DbObject
     }
 
     return $logs;
+  }
+
+  static function get_paginated($DB, $page, $per_page, $type = "all")
+  {
+    $query = "SELECT * FROM change";
+
+    $where = array();
+    if ($type === "campaign") {
+      $where[] = "campaign_id IS NOT NULL";
+    } else if ($type === "map") {
+      $where[] = "map_id IS NOT NULL";
+    } else if ($type === "challenge") {
+      $where[] = "challenge_id IS NOT NULL";
+    } else if ($type === "player") {
+      $where[] = "player_id IS NOT NULL";
+    } else if ($type !== "all") {
+      return false;
+    }
+
+    if (count($where) > 0) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
+
+    $query .= " ORDER BY date DESC";
+
+    $query = "
+    WITH changes AS (
+      " . $query . "
+    )
+    SELECT *, count(*) OVER () AS total_count
+    FROM changes";
+
+    if ($per_page !== -1) {
+      $query .= " LIMIT " . $per_page . " OFFSET " . ($page - 1) * $per_page;
+    }
+
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Failed to query database");
+    }
+
+    $maxCount = 0;
+    $changes = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $change = new Change();
+      $change->apply_db_data($row);
+      $change->expand_foreign_keys($DB, 4, true);
+      $changes[] = $change;
+
+      if ($maxCount === 0) {
+        $maxCount = intval($row['total_count']);
+      }
+    }
+
+    return array(
+      'changes' => $changes,
+      'max_count' => $maxCount,
+      'max_page' => ceil($maxCount / $per_page),
+      'page' => $page,
+      'per_page' => $per_page,
+    );
   }
 
   // === Utility Functions ===
