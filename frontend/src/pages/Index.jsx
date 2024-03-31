@@ -200,7 +200,7 @@ export function TeamMemberList() {
   const verifiers = getQueryData(query);
 
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="row" spacing={1}>
       {verifiers.map((verifier) => (
         <PlayerChip key={verifier.id} player={verifier} size="small" />
       ))}

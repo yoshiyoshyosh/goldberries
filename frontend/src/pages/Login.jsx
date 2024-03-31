@@ -116,7 +116,7 @@ export function PageRegister() {
     return (
       <LoginBox title="Register" titleColor="green">
         <Typography variant="body2" color="green" textAlign="center">
-          Check you inbox (and spam folder!) for the activation email
+          Check your inbox (and spam folder!) for the activation email
         </Typography>
       </LoginBox>
     );

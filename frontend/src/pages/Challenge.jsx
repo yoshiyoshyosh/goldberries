@@ -18,11 +18,17 @@ import {
   TableHead,
   TableRow,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { DifficultyChip } from "../components/GoldberriesComponents";
-import { getChallengeNameShort, getGamebananaEmbedUrl, getPlayerNameColorStyle } from "../util/data_util";
+import {
+  getChallengeNameShort,
+  getDifficultyName,
+  getGamebananaEmbedUrl,
+  getPlayerNameColorStyle,
+} from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -40,6 +46,8 @@ import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
 import { getQueryData, useGetChallenge } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
+import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import { getDifficultyColors } from "../util/constants";
 
 const displayNoneOnMobile = {
   display: {
@@ -75,6 +83,33 @@ export function ChallengeDisplay({ id }) {
   const challenge = getQueryData(query);
   const title = challenge.map.name + " - " + getChallengeNameShort(challenge);
 
+  //Pie Chart Stuff
+  let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
+  allSuggestedDiffs = allSuggestedDiffs.filter((diff) => diff !== null);
+
+  const difficulties = {}; // count of each difficulty
+  allSuggestedDiffs.forEach((diff) => {
+    if (difficulties[diff.id] === undefined) {
+      difficulties[diff.id] = {
+        id: diff.id,
+        value: 1,
+        label: getDifficultyName(diff),
+      };
+    } else {
+      difficulties[diff.id].value += 1;
+    }
+  });
+  const data = Object.entries(difficulties).map(([id, value]) => {
+    return {
+      id: id,
+      value: value.value,
+      label: value.label,
+      color: getDifficultyColors(id).group_color,
+    };
+  });
+  //Sort by difficulty.sort DESC
+  data.sort((a, b) => b.id - a.id);
+
   return (
     <>
       <HeadTitle title={title} />
@@ -92,6 +127,45 @@ export function ChallengeDisplay({ id }) {
         <Chip label="Submissions" size="small" />
       </Divider>
       <ChallengeSubmissionTable challenge={challenge} />
+
+      <Divider sx={{ my: 2 }}>
+        <Chip label="Difficulty Suggestions" size="small" />
+      </Divider>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {allSuggestedDiffs.length === 0 ? (
+          <Typography variant="body2">No difficulty suggestions</Typography>
+        ) : (
+          <PieChart
+            series={[
+              {
+                arcLabel: (item) => `${item.label} (${item.value})`,
+                arcLabelMinAngle: 60,
+                data: data,
+                innerRadius: 25,
+                outerRadius: 150,
+                cornerRadius: 5,
+                paddingAngle: 2,
+                cx: 150,
+                highlightScope: { faded: "global", highlighted: "item" },
+                faded: { innerRadius: 30, additionalRadius: -10, color: "gray" },
+              },
+            ]}
+            slotProps={{
+              legend: {
+                hidden: true,
+              },
+            }}
+            sx={{
+              [`& .${pieArcLabelClasses.root}`]: {
+                fill: "white",
+                fontWeight: "bold",
+              },
+            }}
+            height={300}
+            width={310}
+          />
+        )}
+      </div>
 
       <Divider sx={{ my: 2 }} />
       <Changelog type="challenge" id={id} />

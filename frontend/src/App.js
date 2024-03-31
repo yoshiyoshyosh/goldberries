@@ -97,6 +97,7 @@ import { PageAccount } from "./pages/Account";
 import { PageSearch } from "./pages/Search";
 import { PageRejectedMaps } from "./pages/RejectedMaps";
 import { Helmet } from "react-helmet";
+import { getPlayerNameColorStyle } from "./util/data_util";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -373,11 +374,7 @@ export function Layout() {
     leftMenu.push(menus.admin);
   }
   rightMenu.push(menus.submit);
-  if (auth.isLoggedIn) {
-    rightMenu.push(menus.user);
-  } else {
-    rightMenu.push(menus.notUser);
-  }
+  const userMenu = auth.isLoggedIn ? menus.user : menus.notUser;
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -441,10 +438,10 @@ export function Layout() {
             "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
           }}
         >
-          <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} />
+          <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
         </Drawer>
       </Box>
-      <DesktopNav leftMenu={leftMenu} rightMenu={rightMenu} />
+      <DesktopNav leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
       <Box
         component="main"
         sx={{
@@ -462,7 +459,10 @@ export function Layout() {
   );
 }
 
-function MobileDrawer({ leftMenu, rightMenu }) {
+function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
+  const auth = useAuth();
+  const nameStyle = getPlayerNameColorStyle(auth.user?.player);
+
   return (
     <div>
       <Toolbar>
@@ -488,11 +488,21 @@ function MobileDrawer({ leftMenu, rightMenu }) {
           return <MobileMenuItem key={index} item={entry} />;
         }
       })}
+      {userMenu.items === undefined ? (
+        <MobileMenuItem item={userMenu} />
+      ) : (
+        <MobileSubMenu
+          name={userMenu.name}
+          icon={userMenu.icon}
+          items={userMenu.items}
+          nameStyle={nameStyle}
+        />
+      )}
     </div>
   );
 }
 
-function MobileSubMenu({ name, icon, items }) {
+function MobileSubMenu({ name, icon, items, nameStyle = {} }) {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
 
@@ -505,7 +515,7 @@ function MobileSubMenu({ name, icon, items }) {
       <Divider />
       <ListItemButton selected={isItemSelected} onClick={() => setOpen(!open)} sx={{ py: "2px" }}>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={name} />
+        <ListItemText primary={<span style={nameStyle}>{name}</span>} />
         <ListItemIcon sx={{ minWidth: 0 }}>
           <FontAwesomeIcon icon={open ? faChevronDown : faChevronLeft} />
         </ListItemIcon>
@@ -547,8 +557,11 @@ function MobileMenuItem({ item, indent = 0 }) {
   );
 }
 
-function DesktopNav({ leftMenu, rightMenu }) {
+function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   const auth = useAuth();
+  const nameStyle = getPlayerNameColorStyle(auth.user?.player);
+
+  console.log("DesktopNav, userMenu", userMenu, "auth.user", auth.user);
 
   return (
     <Box
@@ -599,6 +612,16 @@ function DesktopNav({ leftMenu, rightMenu }) {
             return <DesktopItem key={index} item={entry} />;
           }
         })}
+        {userMenu.items === undefined ? (
+          <DesktopItem item={userMenu} />
+        ) : (
+          <DesktopSubMenu
+            name={userMenu.name}
+            icon={userMenu.icon}
+            items={userMenu.items}
+            nameStyle={nameStyle}
+          />
+        )}
       </Toolbar>
     </Box>
   );
@@ -624,7 +647,7 @@ function DesktopItem({ item }) {
   );
 }
 
-function DesktopSubMenu({ name, icon, items }) {
+function DesktopSubMenu({ name, icon, items, nameStyle = {} }) {
   return (
     <PopupState variant="popover" popupId="demoMenu">
       {(popupState) => (
@@ -645,7 +668,7 @@ function DesktopSubMenu({ name, icon, items }) {
               },
             }}
           >
-            {name}
+            <span style={nameStyle}>{name}</span>
           </Button>
           <HoverMenu {...bindMenu(popupState)} disableScrollLock transitionDuration={0}>
             {items.map((item, index) => (

@@ -60,6 +60,10 @@ export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props
             xs: 1,
             sm: 3,
           },
+          pb: {
+            xs: 1,
+            sm: 3,
+          },
           mt: {
             xs: 5,
             sm: 1,

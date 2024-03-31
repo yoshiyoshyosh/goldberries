@@ -185,6 +185,9 @@ export function getAccountName(account) {
 }
 
 export function getPlayerNameColorStyle(player) {
+  if (player === null || player === undefined) {
+    return {};
+  }
   const hasColor = player.account.name_color_start !== null && player.account.name_color_start !== undefined;
   const nameColorStart = player.account.name_color_start ?? "#000000";
   const nameColorEnd = player.account.name_color_end ?? nameColorStart;
