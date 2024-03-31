@@ -21,13 +21,14 @@ import {
   SubmissionIcon,
   VerificationStatusChip,
 } from "../components/GoldberriesComponents";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { FAQData } from "../util/other_data";
+import { FAQData, Rules } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { faScroll } from "@fortawesome/free-solid-svg-icons";
+import Markdown from "react-markdown";
 
 export function PageIndex() {
   return (
@@ -40,7 +41,7 @@ export function PageIndex() {
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
-              <FAQComponent />
+              <RulesComponent />
             </BorderedBox>
           </Stack>
         </Grid>
@@ -51,6 +52,9 @@ export function PageIndex() {
             </BorderedBox>
             <BorderedBox>
               <UsefulLinksComponent />
+            </BorderedBox>
+            <BorderedBox>
+              <FAQComponent />
             </BorderedBox>
           </Stack>
         </Grid>
@@ -198,10 +202,11 @@ export function TeamMemberList() {
   }
 
   const verifiers = getQueryData(query);
+  const verfiersSorted = verifiers.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Stack direction="row" spacing={1}>
-      {verifiers.map((verifier) => (
+      {verfiersSorted.map((verifier) => (
         <PlayerChip key={verifier.id} player={verifier} size="small" />
       ))}
     </Stack>
@@ -251,27 +256,35 @@ export function UsefulLinksComponent() {
 }
 
 export function RulesComponent() {
+  const [markdown, setMarkdown] = useState("");
+
+  const MarginH1 = ({ children }) => <h1 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h1>;
+  const MarginH2 = ({ children }) => <h2 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h2>;
+  const MarginOl = ({ children }) => <ol style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ol>;
+  const MarginUl = ({ children }) => <ul style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ul>;
+
+  useEffect(() => {
+    fetch("/md/rules.md")
+      .then((response) => response.text())
+      .then((text) => setMarkdown(text));
+  }, []);
+
+  if (markdown === "") return <LoadingSpinner />;
+
+  return (
+    <Markdown components={{ h1: MarginH1, ol: MarginOl, ul: MarginUl, h2: MarginH2 }}>{markdown}</Markdown>
+  );
+}
+export function RulesSection({ title, entries, isOrdered = false }) {
+  const ListType = isOrdered ? "ol" : "ul";
   return (
     <>
-      <Typography variant="h4">Rules</Typography>
-      <Typography variant="h6">Submissions</Typography>
-      <ul>
-        <li>Rule 1</li>
-        <li>Rule 2</li>
-        <li>Rule 3</li>
-      </ul>
-      <Typography variant="h6">Maps</Typography>
-      <ul>
-        <li>Rule 1</li>
-        <li>Rule 2</li>
-        <li>Rule 3</li>
-      </ul>
-      <Typography variant="h6">Other Stuff</Typography>
-      <ul>
-        <li>Rule 1</li>
-        <li>Rule 2</li>
-        <li>Rule 3</li>
-      </ul>
+      <Typography variant="h6">{title}</Typography>
+      <ListType>
+        {entries.map((entry, index) => (
+          <li key={index}>{entry}</li>
+        ))}
+      </ListType>
     </>
   );
 }

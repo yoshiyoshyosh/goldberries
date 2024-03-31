@@ -233,7 +233,7 @@ export function UserAccountLoginMethodsForm() {
               Linked <FontAwesomeIcon icon={faCheckSquare} color="green" />
             </Typography>
           ) : (
-            <Link to={API_URL + "/auth/discord_auth.php?link_account=true"}>
+            <a href={API_URL + "/auth/discord_auth.php?link_account=true"}>
               <Button
                 startIcon={<FontAwesomeIcon icon={faLink} />}
                 endIcon={<FontAwesomeIcon icon={faDiscord} />}
@@ -242,7 +242,7 @@ export function UserAccountLoginMethodsForm() {
               >
                 Link Discord
               </Button>
-            </Link>
+            </a>
           )}
         </Grid>
         {canUnlink && (
