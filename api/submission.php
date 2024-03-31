@@ -3,21 +3,21 @@
 require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  $queue = isset ($_REQUEST['queue']) && $_REQUEST['queue'] === 'true';
+  $queue = isset($_REQUEST['queue']) && $_REQUEST['queue'] === 'true';
   if ($queue) {
     $submissions = Submission::get_submission_queue($DB);
     api_write($submissions);
     exit();
   }
 
-  $recent = isset ($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
+  $recent = isset($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
   if ($recent) {
-    $type = isset ($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
-    $page = isset ($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
-    $per_page = isset ($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
+    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
+    $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
+    $per_page = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
     // $per_page = min($per_page, 500);
-    $search = isset ($_REQUEST['search']) ? $_REQUEST['search'] : null;
-    $player = isset ($_REQUEST['player']) ? intval($_REQUEST['player']) : null;
+    $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : null;
+    $player = isset($_REQUEST['player']) ? intval($_REQUEST['player']) : null;
     $result = Submission::get_recent_submissions($DB, $type, $page, $per_page, $search, $player);
     api_write($result);
     exit();
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
   $id = $_REQUEST['id'];
-  $depth = isset ($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 2;
+  $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 2;
 
   $submissions = Submission::get_request($DB, $id);
   if (is_array($submissions)) {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   //If $submission->id is set, then this is an update request
-  if (isset ($data['id'])) {
+  if (isset($data['id'])) {
     $old_submission = Submission::get_by_id($DB, $submission->id);
     if ($old_submission === false) {
       die_json(400, "Submission with id {$submission->id} does not exist");
@@ -106,6 +106,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $old_submission->is_verified = $submission->is_verified;
       $old_submission->is_rejected = $submission->is_rejected;
       $old_submission->player_notes = $submission->player_notes;
+      if ($submission->suggested_difficulty_id !== null) {
+        $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
+        if ($difficulty === false) {
+          die_json(400, "Difficulty with id {$submission->suggested_difficulty_id} does not exist");
+        } else if ($difficulty->id === 13) {
+          die_json(400, "Cannot suggest 'Guard Tier 3' as difficulty");
+        } else if ($difficulty->id === 19) {
+          die_json(400, "Cannot suggest 'Undetermined' as difficulty");
+        }
+      }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       $old_submission->verifier_notes = $submission->verifier_notes;
       $old_submission->new_challenge_id = $submission->is_verified || $submission->is_rejected ? null : $submission->new_challenge_id;
@@ -120,6 +130,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       //Only carry over the fields that the user is allowed to change
       $old_submission->player_notes = $submission->player_notes;
+      if ($submission->suggested_difficulty_id !== null) {
+        $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
+        if ($difficulty === false) {
+          die_json(400, "Difficulty with id {$submission->suggested_difficulty_id} does not exist");
+        } else if ($difficulty->id === 13) {
+          die_json(400, "Cannot suggest 'Guard Tier 3' as difficulty");
+        } else if ($difficulty->id === 19) {
+          die_json(400, "Cannot suggest 'Undetermined' as difficulty");
+        }
+      }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       if ($old_submission->update($DB)) {
         api_write($old_submission);
@@ -132,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Create a new submission
 
     //new challenge stuff
-    if (isset ($data['new_challenge'])) {
+    if (isset($data['new_challenge'])) {
       $new_challenge = new NewChallenge();
       $new_challenge->apply_db_data($data['new_challenge']);
       if (!$new_challenge->insert($DB)) {
@@ -140,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $submission->new_challenge_id = $new_challenge->id;
 
-    } else if (isset ($data['challenge_id'])) {
+    } else if (isset($data['challenge_id'])) {
       $challenge = Challenge::get_by_id($DB, $data['challenge_id']);
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
