@@ -275,19 +275,6 @@ export function RulesComponent() {
     <Markdown components={{ h1: MarginH1, ol: MarginOl, ul: MarginUl, h2: MarginH2 }}>{markdown}</Markdown>
   );
 }
-export function RulesSection({ title, entries, isOrdered = false }) {
-  const ListType = isOrdered ? "ol" : "ul";
-  return (
-    <>
-      <Typography variant="h6">{title}</Typography>
-      <ListType>
-        {entries.map((entry, index) => (
-          <li key={index}>{entry}</li>
-        ))}
-      </ListType>
-    </>
-  );
-}
 
 export function FAQComponent() {
   return (

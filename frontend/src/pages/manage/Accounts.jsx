@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import {
   getQueryData,
+  useDeletePlayer,
   useGetAllAccounts,
   useGetAllPlayerClaims,
   useGetAllPlayers,
@@ -69,10 +70,12 @@ export function PageManageAccounts({}) {
         <Tab label="Accounts" value="accounts" />
         <Tab label="Player Claims" value="player-claims" />
         <Tab label="Player Rename" value="player-rename" />
+        <Tab label="Player Delete" value="player-delete" />
       </Tabs>
       {activeTab === "accounts" && <ManageAccountsTab />}
       {activeTab === "player-claims" && <ManagePlayerClaimsTab />}
       {activeTab === "player-rename" && <ManagePlayerNamesTab />}
+      {activeTab === "player-delete" && <ManagePlayerDeleteTab />}
     </BasicContainerBox>
   );
 }
@@ -259,6 +262,72 @@ function ManagePlayerNamesTab() {
               sx={{ mt: 2 }}
             >
               Rename Player
+            </Button>
+          </Stack>
+        </>
+      )}
+    </>
+  );
+}
+
+function ManagePlayerDeleteTab() {
+  const auth = useAuth();
+  const query = useGetAllPlayers();
+  const [player, setPlayer] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const { mutate: deletePlayer } = useDeletePlayer(() => {
+    toast.success("Player deleted");
+    if (auth.user && player.id === auth.user.player_id) {
+      auth.checkSession();
+    }
+    setPlayer(null);
+  });
+  const onSubmit = () => {
+    deletePlayer(player.id);
+  };
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const allPlayers = getQueryData(query);
+  const playerName = player ? "'" + player.name + "'" : "";
+
+  return (
+    <>
+      <Typography variant="body1" color="error" sx={{ mt: 2 }}>
+        Deleting a player cannot be undone and will remove all associated submissions!
+      </Typography>
+      <Autocomplete
+        options={allPlayers}
+        getOptionLabel={(option) => option.name}
+        onChange={(event, newValue) => setPlayer(newValue)}
+        renderInput={(params) => <TextField {...params} label="Select a Player" />}
+        sx={{ mt: 2 }}
+      />
+      {player && (
+        <>
+          <Divider sx={{ my: 2 }} />
+          <Stack direction="column" spacing={2}>
+            <FormControlLabel
+              checked={confirmDelete}
+              onChange={(event) => setConfirmDelete(event.target.checked)}
+              control={<Checkbox />}
+              color="error"
+              label="I understand that this action is irreversible"
+            />
+            <Button
+              variant="contained"
+              color="error"
+              fullWidth
+              onClick={onSubmit}
+              disabled={!confirmDelete}
+              sx={{ mt: 2 }}
+            >
+              Delete Player {playerName}
             </Button>
           </Stack>
         </>

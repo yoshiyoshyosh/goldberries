@@ -361,6 +361,14 @@ export function deleteSubmission(id) {
   });
 }
 
+export function deletePlayer(id) {
+  return axios.delete("/player.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+
 export function deleteChangelogEntry(id) {
   return axios.delete("/change.php", {
     params: {

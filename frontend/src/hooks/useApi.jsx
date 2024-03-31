@@ -39,6 +39,7 @@ import {
   deleteChangelogEntry,
   fetchLogs,
   deleteLogEntry,
+  deletePlayer,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -106,6 +107,20 @@ export function useDeleteSubmission(onSuccess) {
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response, id);
       else toast.success("Submission deleted");
+    },
+    onError: errorToast,
+  });
+}
+
+export function useDeletePlayer(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deletePlayer(id),
+    onSuccess: (response, id) => {
+      queryClient.invalidateQueries(["player", id]);
+      queryClient.invalidateQueries(["all_players"]);
+      if (onSuccess) onSuccess(response, id);
+      else toast.success("Player deleted");
     },
     onError: errorToast,
   });
