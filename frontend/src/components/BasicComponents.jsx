@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet";
 import { get } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { APP_NAME_LONG } from "../util/constants";
+import { useTheme } from "@emotion/react";
 
 export function LoadingSpinner({ ...props }) {
   return (
@@ -186,5 +187,18 @@ export function HeadTitle({ title }) {
         {title} - {APP_NAME_LONG}
       </title>
     </Helmet>
+  );
+}
+
+export function StyledLink({ to, children, underline = true, style, ...props }) {
+  const theme = useTheme();
+  return (
+    <Link
+      to={to}
+      style={{ textDecoration: underline ? "underline" : "none", color: theme.palette.links.main, ...style }}
+      {...props}
+    >
+      {children}
+    </Link>
   );
 }

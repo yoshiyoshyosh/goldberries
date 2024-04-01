@@ -37,6 +37,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { useTheme } from "@emotion/react";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -177,9 +178,17 @@ export function DifficultySelect({ defaultValue, ...props }) {
 }
 
 export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
+  const theme = useTheme();
   const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
   const colors = getDifficultyColors(difficulty?.id);
-  return <Chip label={prefix + text} size="small" {...props} sx={{ ...sx, bgcolor: colors.group_color }} />;
+  return (
+    <Chip
+      label={prefix + text}
+      size="small"
+      {...props}
+      sx={{ bgcolor: colors.group_color, color: colors.contrast_color, ...sx }}
+    />
+  );
 }
 
 export function DifficultySelectControlled({ difficultyId, setDifficultyId, isSuggestion, ...props }) {
@@ -384,8 +393,9 @@ export function PlayerChip({ player, ...props }) {
 }
 
 export function SubmissionIcon({ submission }) {
+  const theme = useTheme();
   return (
-    <Link to={"/submission/" + submission.id}>
+    <Link to={"/submission/" + submission.id} style={{ color: theme.palette.links.main }}>
       <FontAwesomeIcon icon={faBook} />
     </Link>
   );

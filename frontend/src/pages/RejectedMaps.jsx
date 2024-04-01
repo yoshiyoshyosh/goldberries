@@ -8,7 +8,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledLink,
+} from "../components/BasicComponents";
 import { getQueryData, useGetRejectedMapList } from "../hooks/useApi";
 import { Link } from "react-router-dom";
 import { getCampaignName } from "../util/data_util";
@@ -63,10 +69,10 @@ function RejectedMapsTable({ maps }) {
             {maps.map((map) => (
               <TableRow key={map.id}>
                 <TableCell>
-                  <Link to={"/campaign/" + map.campaign.id}>{getCampaignName(map.campaign)}</Link>
+                  <StyledLink to={"/campaign/" + map.campaign.id}>{getCampaignName(map.campaign)}</StyledLink>
                 </TableCell>
                 <TableCell>
-                  <Link to={"/map/" + map.id}>{map.name}</Link>
+                  <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>
                 </TableCell>
                 <TableCell>{map.rejection_reason}</TableCell>
               </TableRow>

@@ -1,4 +1,10 @@
-import { BorderedBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BorderedBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledLink,
+} from "../components/BasicComponents";
 import {
   Container,
   Grid,
@@ -29,6 +35,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
+import { useTheme } from "@emotion/react";
 
 export function PageIndex() {
   return (
@@ -110,6 +117,7 @@ export function RecentSubmissions({ playerId = null }) {
 }
 
 export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPage, hasPlayer = false }) {
+  const theme = useTheme();
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -125,11 +133,13 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
             <TableRow key={submission.id}>
               <TableCell>
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <Link to={"/campaign/" + submission.challenge.map.campaign.id}>
+                  <StyledLink to={"/campaign/" + submission.challenge.map.campaign.id}>
                     {submission.challenge.map.campaign.name}
-                  </Link>
+                  </StyledLink>
                   <Typography>-</Typography>
-                  <Link to={"/map/" + submission.challenge.map.id}>{submission.challenge.map.name}</Link>
+                  <StyledLink to={"/map/" + submission.challenge.map.id}>
+                    {submission.challenge.map.name}
+                  </StyledLink>
                   <Typography>-</Typography>
                   <SubmissionIcon submission={submission} />
                 </Stack>
@@ -256,12 +266,18 @@ export function UsefulLinksComponent() {
 }
 
 export function RulesComponent() {
+  const theme = useTheme();
   const [markdown, setMarkdown] = useState("");
 
   const MarginH1 = ({ children }) => <h1 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h1>;
   const MarginH2 = ({ children }) => <h2 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h2>;
   const MarginOl = ({ children }) => <ol style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ol>;
   const MarginUl = ({ children }) => <ul style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ul>;
+  const Anchor = ({ children, href }) => (
+    <a href={href} target="_blank" rel="noreferrer" style={{ color: theme.palette.links.main }}>
+      {children}
+    </a>
+  );
 
   useEffect(() => {
     fetch("/md/rules.md")
@@ -272,7 +288,9 @@ export function RulesComponent() {
   if (markdown === "") return <LoadingSpinner />;
 
   return (
-    <Markdown components={{ h1: MarginH1, ol: MarginOl, ul: MarginUl, h2: MarginH2 }}>{markdown}</Markdown>
+    <Markdown components={{ h1: MarginH1, ol: MarginOl, ul: MarginUl, h2: MarginH2, a: Anchor }}>
+      {markdown}
+    </Markdown>
   );
 }
 

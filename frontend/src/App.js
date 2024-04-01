@@ -36,9 +36,11 @@ import {
   ListItemText,
   MenuItem,
   Stack,
+  ThemeProvider,
   Toolbar,
   Tooltip,
   Typography,
+  createTheme,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -61,6 +63,7 @@ import {
   faList,
   faMailBulk,
   faMailForward,
+  faMoon,
   faPerson,
   faPlayCircle,
   faPlus,
@@ -68,6 +71,7 @@ import {
   faSearch,
   faSignIn,
   faSignOut,
+  faSun,
   faTooth,
   faUser,
   faUserAlt,
@@ -96,8 +100,8 @@ import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
 import { PageSearch } from "./pages/Search";
 import { PageRejectedMaps } from "./pages/RejectedMaps";
-import { Helmet } from "react-helmet";
 import { getPlayerNameColorStyle } from "./util/data_util";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -208,14 +212,56 @@ const router = createBrowserRouter([
   },
 ]);
 
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    background: {
+      default: "#121212",
+      paper: "#212121",
+    },
+    links: {
+      main: "#1e90ff",
+    },
+  },
+  components: {
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
+    MuiListSubheader: {
+      styleOverrides: {
+        root: {
+          background: "#121212",
+        },
+      },
+    },
+  },
+});
+
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    links: {
+      main: "#1e90ff",
+    },
+  },
+});
+
 export default function App() {
+  const [darkmode, setDarkmode] = useLocalStorage("darkmode", true);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>
-      <ToastContainer position="bottom-right" closeOnClick />
-      <ReactQueryDevtools initialIsOpen={false} />
-      <CssBaseline />
-    </QueryClientProvider>
+    <ThemeProvider theme={darkmode ? darkTheme : lightTheme}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router}></RouterProvider>
+        <ToastContainer position="bottom-right" closeOnClick />
+        <ReactQueryDevtools initialIsOpen={false} />
+        <CssBaseline />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
@@ -559,6 +605,7 @@ function MobileMenuItem({ item, indent = 0 }) {
 
 function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   const auth = useAuth();
+  const [darkmode, setDarkmode] = useLocalStorage("darkmode", true);
   const nameStyle = getPlayerNameColorStyle(auth.user?.player);
 
   console.log("DesktopNav, userMenu", userMenu, "auth.user", auth.user);
@@ -566,14 +613,14 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   return (
     <Box
       sx={{
-        bgcolor: "#3e3e3e",
+        bgcolor: "#353535",
         display: {
           xs: "none",
           sm: "block",
         },
         width: "100%",
         pr: "calc(-100vw + 100%)",
-        color: "primary.contrastText",
+        color: darkmode ? "unset" : "primary.contrastText",
 
         position: "fixed",
         top: "0",
@@ -622,6 +669,11 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
             nameStyle={nameStyle}
           />
         )}
+        <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
+          <IconButton onClick={() => setDarkmode(!darkmode)} sx={{ color: "#fff", p: 0 }}>
+            <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
     </Box>
   );
