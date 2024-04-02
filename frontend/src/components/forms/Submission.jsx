@@ -23,6 +23,7 @@ import {
   VerificationStatusChip,
   PlayerSelect,
   PlayerChip,
+  DifficultySelectControlled,
 } from "../GoldberriesComponents";
 import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -250,12 +251,19 @@ export function FormSubmission({ submission, onSave, ...props }) {
         InputLabelProps={{ shrink: true }}
       />
 
-      <DifficultySelect
-        label="Suggested Difficulty"
-        {...form.register("suggested_difficulty_id")}
-        sx={{ mt: 2 }}
-        fullWidth
-        defaultValue={submission.suggested_difficulty_id ?? null}
+      <Controller
+        control={form.control}
+        name="suggested_difficulty_id"
+        render={({ field }) => (
+          <DifficultySelectControlled
+            label="Suggested Difficulty"
+            difficultyId={field.value}
+            setDifficultyId={field.onChange}
+            isSuggestion
+            sx={{ mt: 2 }}
+            fullWidth
+          />
+        )}
       />
 
       <List dense sx={{ pb: 0 }}>

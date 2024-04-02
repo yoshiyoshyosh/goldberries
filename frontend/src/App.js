@@ -776,6 +776,7 @@ function DesktopItem({ item }) {
       variant="text"
       color="inherit"
       sx={{
+        textTransform: "none",
         px: 1,
         "&:hover": {
           backgroundColor: "#555",
@@ -799,6 +800,7 @@ function DesktopSubMenu({ name, icon, items, nameStyle = {} }) {
             startIcon={icon}
             endIcon={<FontAwesomeIcon size="2xs" icon={faChevronDown} />}
             sx={{
+              textTransform: "none",
               px: 2,
               "&:hover": {
                 backgroundColor: "#555",

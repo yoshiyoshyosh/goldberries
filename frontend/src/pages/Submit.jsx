@@ -46,6 +46,7 @@ import {
 } from "../components/GoldberriesComponents";
 import { usePostSubmission } from "../hooks/useApi";
 import { Helmet } from "react-helmet";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -298,6 +299,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
 export function MultiUserSubmission() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [darkmode, _] = useLocalStorage("darkmode", true);
 
   const [campaign, setCampaign] = useState(null);
   const [sortMajorIndex, setSortMajorIndex] = useState(null);
@@ -534,6 +536,7 @@ export function MultiUserSubmission() {
                     index={index}
                     updateMapDataRow={updateMapDataRow}
                     deleteRow={deleteRow}
+                    darkmode={darkmode}
                   />
                 ))}
               </TableBody>
@@ -709,7 +712,7 @@ export function NewChallengeUserSubmission({}) {
 
 /* COMPONENTS */
 
-export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow }) {
+export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow, darkmode }) {
   const [expanded, setExpanded] = useState(mapData.challenge?.difficulty.id <= 13 ? true : false);
 
   const lobbyInfo = getMapLobbyInfo(mapData.map);
@@ -718,7 +721,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
 
   const needsRawSession = mapData.challenge && mapData.challenge.difficulty.id <= 13;
   const hasRawSession = mapData.raw_session_url !== "" && mapData.raw_session_url !== null;
-  const bgColor = needsRawSession && !hasRawSession ? "#ffe7e7" : "inherit";
+  const bgColor = needsRawSession && !hasRawSession ? (darkmode ? "#4a0000" : "#ffe7e7") : "inherit";
 
   return (
     <>

@@ -79,7 +79,7 @@ export function SubmissionDisplay({ id, onDelete }) {
     { actions: [ModalButtons.Cancel, ModalButtons.Delete] }
   );
 
-  if (query.isLoading || query.isFetching) {
+  if (query.isLoading) {
     return <LoadingSpinner />;
   } else if (query.isError) {
     return <ErrorDisplay error={query.error} />;
@@ -89,26 +89,33 @@ export function SubmissionDisplay({ id, onDelete }) {
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 
-  const title =
-    submission.challenge.map.name +
-    " - " +
-    getChallengeNameShort(submission.challenge) +
-    " by '" +
-    submission.player.name +
-    "'";
+  let title = "";
+  if (submission.new_challenge !== null) {
+    title = submission.new_challenge.name + " by '" + submission.player.name + "'";
+  } else {
+    title =
+      submission.challenge.map.name +
+      " - " +
+      getChallengeNameShort(submission.challenge) +
+      " by '" +
+      submission.player.name +
+      "'";
+  }
 
   return (
     <>
       <HeadTitle title={title} />
       {submission.challenge !== null && (
-        <GoldberriesBreadcrumbs
-          campaign={submission.challenge.map.campaign}
-          map={submission.challenge.map}
-          challenge={submission.challenge}
-          submission={submission}
-        />
+        <>
+          <GoldberriesBreadcrumbs
+            campaign={submission.challenge.map.campaign}
+            map={submission.challenge.map}
+            challenge={submission.challenge}
+            submission={submission}
+          />
+          <Divider sx={{ my: 2 }}></Divider>
+        </>
       )}
-      <Divider sx={{ my: 2 }}></Divider>
       <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
         <Grid item xs={12} sm="auto">
           <Typography variant="h4">Submission</Typography>

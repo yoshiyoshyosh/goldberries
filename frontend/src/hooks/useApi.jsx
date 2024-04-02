@@ -183,7 +183,7 @@ export function usePostCampaign(onSuccess) {
   return useMutation({
     mutationFn: (campaign) => postCampaign(campaign),
     onSuccess: (response, campaign) => {
-      queryClient.setQueryData(["campaign", response.data.id], response.data);
+      queryClient.invalidateQueries(["campaign", response.data.id]);
       queryClient.invalidateQueries(["all_campaigns"]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
@@ -197,7 +197,7 @@ export function usePostMap(onSuccess) {
   return useMutation({
     mutationFn: (map) => postMap(map),
     onSuccess: (response, map) => {
-      queryClient.setQueryData(["map", response.data.id], response.data);
+      queryClient.invalidateQueries(["map", response.data.id]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },
@@ -210,7 +210,7 @@ export function usePostChallenge(onSuccess) {
   return useMutation({
     mutationFn: (challenge) => postChallenge(challenge),
     onSuccess: (response, challenge) => {
-      queryClient.setQueryData(["challenge", response.data.id], response.data);
+      queryClient.invalidateQueries(["challenge", response.data.id]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },
@@ -223,7 +223,8 @@ export function usePostSubmission(onSuccess) {
   return useMutation({
     mutationFn: (submission) => postSubmission(submission),
     onSuccess: (response, submission) => {
-      queryClient.setQueryData(["submission", response.data.id], response.data);
+      queryClient.invalidateQueries(["recent_submissions"]);
+      queryClient.invalidateQueries(["submission", response.data.id]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },
@@ -236,7 +237,7 @@ export function usePostAccount(onSuccess, self = false) {
   return useMutation({
     mutationFn: (account) => postAccount(self, account),
     onSuccess: (response, account) => {
-      queryClient.setQueryData(["account", response.data.id], response.data);
+      queryClient.invalidateQueries(["account", response.data.id]);
       queryClient.invalidateQueries(["all_accounts"]);
       queryClient.invalidateQueries(["accounts_player_claims"]);
       queryClient.invalidateQueries(["overall_stats", "verifier"]);
