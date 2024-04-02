@@ -2,19 +2,20 @@ import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import { Box, Button, Checkbox, FormControlLabel, Stack, Tooltip, Typography } from "@mui/material";
-import { getDifficultyColors } from "../util/constants";
+import { getDifficultyColors, getDifficultyColorsTheme } from "../util/constants";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faEdit, faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeFcShort, getChallengeObjectiveSuffix, getMapName } from "../util/data_util";
-import { DifficultyChip } from "../components/GoldberriesComponents";
+import { CampaignIcon, DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData } from "../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormChallengeWrapper } from "./forms/Challenge";
+import { useTheme } from "@emotion/react";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
@@ -98,7 +99,8 @@ function TopGoldenListGroup({
   useSuggested = false,
   openEditChallenge,
 }) {
-  const colors = getDifficultyColors(tier[0].id);
+  const theme = useTheme();
+  const colors = getDifficultyColorsTheme(theme, tier[0].id);
 
   const headerStyle = {
     backgroundColor: colors.group_color,
@@ -122,7 +124,7 @@ function TopGoldenListGroup({
       <TopGoldenListGroupHeader tier={tier} />
       <table style={tableStyle} cellSpacing={0}>
         <thead style={borderStyle}>
-          <tr>
+          <tr style={{ color: colors.contrast_color }}>
             <th style={{ minWidth: "100px", borderRight: "1px solid black" }}>
               <Typography fontWeight="bold">Map</Typography>
             </th>
@@ -176,9 +178,14 @@ function TopGoldenListGroupHeader({ tier }) {
   const borderStyle = {
     borderBottom: "2px solid black",
   };
+  const theme = useTheme();
+  const colors = getDifficultyColorsTheme(theme, tier[0].id);
   return (
     <div style={borderStyle}>
-      <Typography variant="h6" sx={{ mx: 5, may: 3, whiteSpace: "nowrap", textAlign: "center" }}>
+      <Typography
+        variant="h6"
+        sx={{ mx: 5, may: 3, whiteSpace: "nowrap", textAlign: "center", color: colors.contrast_color }}
+      >
         {/* {group.isRanked !== null ? (
           <span>
             {group.tier} [{group.isRanked ? "Ranked" : "Unranked"}]
@@ -193,11 +200,13 @@ function TopGoldenListGroupHeader({ tier }) {
 
 function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested, openEditChallenge }) {
   const auth = useAuth();
-  const colors = getDifficultyColors(subtier.id);
+  const theme = useTheme();
+  const colors = getDifficultyColorsTheme(theme, subtier.id);
 
   const rowStyle = {
     backgroundColor: colors.color,
     borderBottom: "1px solid black",
+    color: colors.contrast_color,
   };
   const cellStyle = {
     borderLeft: "1px solid black",
@@ -217,8 +226,13 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
         }}
       >
         <Link style={{ color: "inherit", textDecoration: "none" }} to={"/map/" + map.id}>
-          {getMapName(map, campaign)} {getChallengeFcShort(challenge, true)}{" "}
-          {getChallengeObjectiveSuffix(challenge)}
+          <Stack direction="row" gap={1} alignItems="center">
+            <CampaignIcon campaign={campaign} height="1em" />
+            <span>
+              {getMapName(map, campaign)} {getChallengeFcShort(challenge, true)}{" "}
+              {getChallengeObjectiveSuffix(challenge)}
+            </span>
+          </Stack>
         </Link>
       </td>
       <td

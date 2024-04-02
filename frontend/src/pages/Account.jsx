@@ -413,7 +413,11 @@ export function UserAccountProfileForm() {
       <Divider sx={{ my: 2 }} />
 
       <Typography variant="h6">About Me</Typography>
-      <TextField {...form.register("about_me")} fullWidth multiline minRows={4} placeholder="Empty" />
+      <Controller
+        name="about_me"
+        control={form.control}
+        render={({ field }) => <TextField {...field} fullWidth multiline minRows={4} placeholder="Empty" />}
+      />
 
       <Divider sx={{ my: 2 }} />
 
@@ -492,7 +496,7 @@ export function ManageUserLinks({ links, setLinks }) {
     setLinks(links.filter((_, i) => i !== index));
   };
   const addLink = () => {
-    setLinks([...links, ""]);
+    setLinks(links === null ? [""] : [...links, ""]);
   };
   const changeLink = (index, value) => {
     setLinks(links.map((link, i) => (i === index ? value : link)));

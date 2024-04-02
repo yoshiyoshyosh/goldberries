@@ -40,7 +40,9 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  alpha,
   createTheme,
+  darken,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -212,6 +214,61 @@ const router = createBrowserRouter([
   },
 ]);
 
+const darkenDiffColor = (color, amount) => {
+  return {
+    color: darken(color.color, amount),
+    group_color: darken(color.group_color, amount),
+    contrast_color: "#ffffff",
+  };
+};
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    links: {
+      main: "#1e90ff",
+    },
+    difficulty: {
+      //Tier 0
+      1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+      2: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+      3: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+
+      //Tier 1
+      4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000" },
+      5: { color: "#ff9989", group_color: "#ff7b67", contrast_color: "#000000" },
+      6: { color: "#fcb6ab", group_color: "#ff7b67", contrast_color: "#000000" },
+
+      //Tier 2
+      7: { color: "#ffc874", group_color: "#ffc874", contrast_color: "#000000" },
+      8: { color: "#ffd595", group_color: "#ffc874", contrast_color: "#000000" },
+      9: { color: "#f8dcb2", group_color: "#ffc874", contrast_color: "#000000" },
+
+      //Tier 3
+      10: { color: "#ffec87", group_color: "#ffec87", contrast_color: "#000000" },
+      11: { color: "#ffebb0", group_color: "#ffec87", contrast_color: "#000000" },
+      12: { color: "#fbf3cf", group_color: "#ffec87", contrast_color: "#000000" },
+      13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
+
+      //Tier 4
+      14: { color: "#b0ff78", group_color: "#b0ff78", contrast_color: "#000000" },
+
+      //Tier 5
+      15: { color: "#85e191", group_color: "#85e191", contrast_color: "#000000" },
+
+      //Tier 6
+      16: { color: "#8fdeff", group_color: "#8fdeff", contrast_color: "#000000" },
+
+      //Tier 7
+      17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000" },
+
+      //Standard
+      18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+
+      //Undetermined
+      19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
+    },
+  },
+});
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -221,6 +278,46 @@ const darkTheme = createTheme({
     },
     links: {
       main: "#1e90ff",
+    },
+    difficulty: {
+      //Tier 0
+      1: darkenDiffColor(lightTheme.palette.difficulty[1], 0.6),
+      2: darkenDiffColor(lightTheme.palette.difficulty[2], 0.6),
+      3: darkenDiffColor(lightTheme.palette.difficulty[3], 0.6),
+
+      //Tier 1
+      4: darkenDiffColor(lightTheme.palette.difficulty[4], 0.6),
+      5: darkenDiffColor(lightTheme.palette.difficulty[5], 0.6),
+      6: darkenDiffColor(lightTheme.palette.difficulty[6], 0.6),
+
+      //Tier 2
+      7: darkenDiffColor(lightTheme.palette.difficulty[7], 0.6),
+      8: darkenDiffColor(lightTheme.palette.difficulty[8], 0.6),
+      9: darkenDiffColor(lightTheme.palette.difficulty[9], 0.6),
+
+      //Tier 3
+      10: darkenDiffColor(lightTheme.palette.difficulty[10], 0.6),
+      11: darkenDiffColor(lightTheme.palette.difficulty[11], 0.6),
+      12: darkenDiffColor(lightTheme.palette.difficulty[12], 0.6),
+      13: darkenDiffColor(lightTheme.palette.difficulty[13], 0.6),
+
+      //Tier 4
+      14: darkenDiffColor(lightTheme.palette.difficulty[14], 0.6),
+
+      //Tier 5
+      15: darkenDiffColor(lightTheme.palette.difficulty[15], 0.6),
+
+      //Tier 6
+      16: darkenDiffColor(lightTheme.palette.difficulty[16], 0.6),
+
+      //Tier 7
+      17: darkenDiffColor(lightTheme.palette.difficulty[17], 0.6),
+
+      //Standard
+      18: darkenDiffColor(lightTheme.palette.difficulty[18], 0.6),
+
+      //Undetermined
+      19: darkenDiffColor(lightTheme.palette.difficulty[19], 0.6),
     },
   },
   components: {
@@ -237,15 +334,6 @@ const darkTheme = createTheme({
           background: "#121212",
         },
       },
-    },
-  },
-});
-
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    links: {
-      main: "#1e90ff",
     },
   },
 });

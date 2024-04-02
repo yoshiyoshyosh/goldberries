@@ -196,6 +196,8 @@ export function getPlayerNameColorStyle(player) {
         background: "text linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",
         WebkitTextFillColor: "transparent",
         fontWeight: "bold",
+        filter:
+          "drop-shadow(0.5px 0.5px 0px #ffffff) drop-shadow(-0.5px -0.5px 0px #ffffff) drop-shadow(-0.5px 0.5px 0px #ffffff) drop-shadow(0.5px -0.5px 0px #ffffff)",
       }
     : {};
 

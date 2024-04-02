@@ -25,6 +25,7 @@ import { APP_NAME_LONG, getDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
 import { Helmet } from "react-helmet";
+import { CampaignIcon } from "../components/GoldberriesComponents";
 
 const STYLE_CONSTS = {
   player: {
@@ -89,7 +90,8 @@ export function CampaignDisplay({ id }) {
           }}
         >
           <Stack direction="row" alignItems="center" gap={1}>
-            <FontAwesomeIcon icon={faBook} size="2x" />
+            {campaign.icon_url === null && <FontAwesomeIcon icon={faBook} size="2x" />}
+            <CampaignIcon campaign={campaign} height="1.7em" />
             <Typography variant="h4">{campaign.name}</Typography>
           </Stack>
           <CampaignDetailsList campaign={campaign} sx={{}} />

@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { getQueryData, useGetRecentSubmissions, useGetVerifierList } from "../hooks/useApi";
 import {
+  CampaignIcon,
   DifficultyChip,
   PlayerChip,
   SubmissionIcon,
@@ -133,6 +134,7 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
             <TableRow key={submission.id}>
               <TableCell>
                 <Stack direction="row" spacing={1} alignItems="center">
+                  <CampaignIcon campaign={submission.challenge.map.campaign} />
                   <StyledLink to={"/campaign/" + submission.challenge.map.campaign.id}>
                     {submission.challenge.map.campaign.name}
                   </StyledLink>

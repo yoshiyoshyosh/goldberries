@@ -424,6 +424,24 @@ export function SuspendedIcon({ reason }) {
   );
 }
 
+export function CampaignIcon({ campaign, height = "1.3em" }) {
+  const iconUrl = campaign.icon_url;
+  if (iconUrl === null) return null;
+
+  return (
+    <img
+      src={iconUrl}
+      alt={campaign.name}
+      style={{
+        height: height,
+        filter:
+          "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+      }}
+      loading="lazy"
+    />
+  );
+}
+
 const INPUT_METHOD_ICONS = {
   keyboard: faKeyboard,
   controller: faGamepad,
