@@ -49,7 +49,15 @@ export function getErrorFromMultiple(...queries) {
 
 export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, ...props }) {
   return (
-    <Container maxWidth={maxWidth}>
+    <Container
+      maxWidth={maxWidth}
+      sx={{
+        "&&": {
+          pl: 0,
+          pr: 0,
+        },
+      }}
+    >
       <Box
         {...props}
         sx={{

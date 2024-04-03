@@ -43,6 +43,9 @@ import {
   alpha,
   createTheme,
   darken,
+  decomposeColor,
+  emphasize,
+  useMediaQuery,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -104,6 +107,7 @@ import { PageSearch } from "./pages/Search";
 import { PageRejectedMaps } from "./pages/RejectedMaps";
 import { getPlayerNameColorStyle } from "./util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { light } from "@mui/material/styles/createPalette";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -214,13 +218,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-const darkenDiffColor = (color, amount) => {
-  return {
-    color: darken(color.color, amount),
-    group_color: darken(color.group_color, amount),
-    contrast_color: "#ffffff",
-  };
-};
 const lightTheme = createTheme({
   palette: {
     mode: "light",
@@ -268,8 +265,30 @@ const lightTheme = createTheme({
       19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
     },
     tableDivider: "#e0e0e0",
+    background: {
+      // paper: "rgba(255,255,255,0.4)",
+    },
+  },
+  components: {
+    // MuiContainer: {
+    //   styleOverrides: {
+    //     root: {
+    //       background: "rgba(255,255,255,0.71)",
+    //       borderRadius: "10px",
+    //     },
+    //   },
+    // },
   },
 });
+const darkThemeDarken = 0.45;
+const darkenDiffColor = (color, amount) => {
+  console.log("Decompose color:", color, " -> ", decomposeColor(color.color));
+  return {
+    color: darken(color.color, amount),
+    group_color: darken(color.group_color, amount),
+    contrast_color: lightTheme.palette.getContrastText(darken(color.color, amount)),
+  };
+};
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -282,47 +301,54 @@ const darkTheme = createTheme({
     },
     difficulty: {
       //Tier 0
-      1: darkenDiffColor(lightTheme.palette.difficulty[1], 0.6),
-      2: darkenDiffColor(lightTheme.palette.difficulty[2], 0.6),
-      3: darkenDiffColor(lightTheme.palette.difficulty[3], 0.6),
+      1: darkenDiffColor(lightTheme.palette.difficulty[1], darkThemeDarken),
+      2: darkenDiffColor(lightTheme.palette.difficulty[2], darkThemeDarken),
+      3: darkenDiffColor(lightTheme.palette.difficulty[3], darkThemeDarken),
 
       //Tier 1
-      4: darkenDiffColor(lightTheme.palette.difficulty[4], 0.6),
-      5: darkenDiffColor(lightTheme.palette.difficulty[5], 0.6),
-      6: darkenDiffColor(lightTheme.palette.difficulty[6], 0.6),
+      4: darkenDiffColor(lightTheme.palette.difficulty[4], darkThemeDarken),
+      5: darkenDiffColor(lightTheme.palette.difficulty[5], darkThemeDarken),
+      6: darkenDiffColor(lightTheme.palette.difficulty[6], darkThemeDarken),
 
       //Tier 2
-      7: darkenDiffColor(lightTheme.palette.difficulty[7], 0.6),
-      8: darkenDiffColor(lightTheme.palette.difficulty[8], 0.6),
-      9: darkenDiffColor(lightTheme.palette.difficulty[9], 0.6),
+      7: darkenDiffColor(lightTheme.palette.difficulty[7], darkThemeDarken),
+      8: darkenDiffColor(lightTheme.palette.difficulty[8], darkThemeDarken),
+      9: darkenDiffColor(lightTheme.palette.difficulty[9], darkThemeDarken),
 
       //Tier 3
-      10: darkenDiffColor(lightTheme.palette.difficulty[10], 0.6),
-      11: darkenDiffColor(lightTheme.palette.difficulty[11], 0.6),
-      12: darkenDiffColor(lightTheme.palette.difficulty[12], 0.6),
-      13: darkenDiffColor(lightTheme.palette.difficulty[13], 0.6),
+      10: darkenDiffColor(lightTheme.palette.difficulty[10], darkThemeDarken),
+      11: darkenDiffColor(lightTheme.palette.difficulty[11], darkThemeDarken),
+      12: darkenDiffColor(lightTheme.palette.difficulty[12], darkThemeDarken),
+      13: darkenDiffColor(lightTheme.palette.difficulty[13], darkThemeDarken),
 
       //Tier 4
-      14: darkenDiffColor(lightTheme.palette.difficulty[14], 0.6),
+      14: darkenDiffColor(lightTheme.palette.difficulty[14], darkThemeDarken),
 
       //Tier 5
-      15: darkenDiffColor(lightTheme.palette.difficulty[15], 0.6),
+      15: darkenDiffColor(lightTheme.palette.difficulty[15], darkThemeDarken),
 
       //Tier 6
-      16: darkenDiffColor(lightTheme.palette.difficulty[16], 0.6),
+      16: darkenDiffColor(lightTheme.palette.difficulty[16], darkThemeDarken),
 
       //Tier 7
-      17: darkenDiffColor(lightTheme.palette.difficulty[17], 0.6),
+      17: darkenDiffColor(lightTheme.palette.difficulty[17], darkThemeDarken),
 
       //Standard
-      18: darkenDiffColor(lightTheme.palette.difficulty[18], 0.6),
+      18: darkenDiffColor(lightTheme.palette.difficulty[18], darkThemeDarken),
 
       //Undetermined
-      19: darkenDiffColor(lightTheme.palette.difficulty[19], 0.6),
+      19: darkenDiffColor(lightTheme.palette.difficulty[19], darkThemeDarken),
     },
     tableDivider: "#515151",
   },
   components: {
+    // MuiContainer: {
+    //   styleOverrides: {
+    //     root: {
+    //       background: "rgba(0,0,0,0.5)",
+    //     },
+    //   },
+    // },
     MuiAccordion: {
       styleOverrides: {
         root: {
@@ -341,7 +367,8 @@ const darkTheme = createTheme({
 });
 
 export default function App() {
-  const [darkmode, setDarkmode] = useLocalStorage("darkmode", true);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [darkmode, setDarkmode] = useLocalStorage("darkmode", prefersDarkMode);
 
   return (
     <ThemeProvider theme={darkmode ? darkTheme : lightTheme}>
@@ -377,8 +404,8 @@ function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirec
 }
 
 export function Layout() {
+  const [darkmode, _] = useLocalStorage("darkmode", true);
   const auth = useAuth();
-  const { pathname } = useLocation();
   const drawerWidth = 260;
   const menus = {
     home: {
@@ -531,67 +558,90 @@ export function Layout() {
   };
 
   return (
-    <Box display="flex" flexDirection="column">
-      <AppBar
-        position="fixed"
+    <>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+
+          // background: "white url(/img/" + (darkmode ? "dmr" : "cg") + ".png) 0 0 / cover no-repeat",
+          filter: "blur(5px) " + (darkmode ? "brightness(0.3)" : ""),
+          width: "100vw",
+          height: "100vh",
+        }}
+      ></div>
+      <Box
+        display="flex"
+        flexDirection="column"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          display: { xs: "block", sm: "none" },
-          bgcolor: "#3e3e3e",
+          minHeight: "100vh",
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Goldberries.net
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }, display: { xs: "block", sm: "none" } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+        <AppBar
+          position="fixed"
           sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
             display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+            bgcolor: "#3e3e3e",
           }}
         >
-          <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
-        </Drawer>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Goldberries.net
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }, display: { xs: "block", sm: "none" } }}
+          aria-label="mailbox folders"
+        >
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+            }}
+          >
+            <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
+          </Drawer>
+        </Box>
+        <DesktopNav leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
+        <Box
+          component="main"
+          sx={{
+            mt: {
+              xs: 8,
+              sm: "65px",
+            },
+            mb: 3,
+            flexGrow: 1,
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
-      <DesktopNav leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
-      <Box
-        component="main"
-        sx={{
-          mt: {
-            xs: 8,
-            sm: "65px",
-          },
-          mb: 3,
-          flexGrow: 1,
-        }}
-      >
-        <Outlet />
-      </Box>
-    </Box>
+    </>
   );
 }
 
