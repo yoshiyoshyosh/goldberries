@@ -267,6 +267,7 @@ const lightTheme = createTheme({
       //Undetermined
       19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
     },
+    tableDivider: "#e0e0e0",
   },
 });
 const darkTheme = createTheme({
@@ -319,6 +320,7 @@ const darkTheme = createTheme({
       //Undetermined
       19: darkenDiffColor(lightTheme.palette.difficulty[19], 0.6),
     },
+    tableDivider: "#515151",
   },
   components: {
     MuiAccordion: {
