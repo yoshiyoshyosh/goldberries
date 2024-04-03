@@ -134,7 +134,7 @@ if (!$result) {
 }
 
 
-$queryDifficulties = "SELECT * FROM difficulty WHERE difficulty.id != 18 ORDER BY sort DESC";
+$queryDifficulties = "SELECT * FROM difficulty WHERE difficulty.id != 18 AND difficulty.id != 13 ORDER BY sort DESC";
 $resultDifficulties = pg_query($DB, $queryDifficulties);
 if (!$resultDifficulties) {
   die_json(500, "Failed to query database");

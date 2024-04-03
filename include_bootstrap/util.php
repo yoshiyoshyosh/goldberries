@@ -116,6 +116,8 @@ function get_subtier_index($difficulty)
         return 1;
       case "low":
         return 2;
+      case "guard":
+        return 3;
     }
   }
 
