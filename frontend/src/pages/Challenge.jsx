@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import { ErrorDisplay, HeadTitle, LoadingSpinner, StyledLink } from "../components/BasicComponents";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import {
   getChallengeNameShort,
@@ -291,12 +291,12 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
       </TableCell>
       <TableCell width={compact ? 1 : undefined}>
         <Stack direction="row" gap={1}>
-          <Link to={"/submission/" + submission.id}>
+          <StyledLink to={"/submission/" + submission.id}>
             <FontAwesomeIcon icon={faBook} />
-          </Link>
-          <Link to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
+          </StyledLink>
+          <StyledLink to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
             {submission.player.name}
-          </Link>
+          </StyledLink>
         </Stack>
       </TableCell>
       {compact ? null : (
@@ -309,9 +309,9 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
         </TableCell>
       )}
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
-        <Link to={submission.proof_url} target="_blank">
+        <StyledLink to={submission.proof_url} target="_blank">
           <FontAwesomeIcon icon={faExternalLinkAlt} />
-        </Link>
+        </StyledLink>
       </TableCell>
       {compact ? null : (
         <TableCell width={1} align="center">

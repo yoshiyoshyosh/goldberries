@@ -2,10 +2,8 @@ import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import {
-  Box,
   Button,
   Checkbox,
-  Divider,
   FormControlLabel,
   Paper,
   Stack,
@@ -18,9 +16,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { getDifficultyColors, getDifficultyColorsTheme } from "../util/constants";
+import { getDifficultyColorsTheme } from "../util/constants";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
@@ -31,13 +29,13 @@ import {
   faListNumeric,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
+import { getChallengeDescription, getChallengeIsArbitrary, getMapName } from "../util/data_util";
 import {
-  getChallengeFcShort,
-  getChallengeObjectiveSuffix,
-  getDifficultyName,
-  getMapName,
-} from "../util/data_util";
-import { CampaignIcon, DifficultyChip } from "../components/GoldberriesComponents";
+  CampaignIcon,
+  ChallengeFcIcon,
+  DifficultyChip,
+  OtherIcon,
+} from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData } from "../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -99,7 +97,13 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
           />
         </Stack>
       )}
-      <Stack direction="row" gap={1}>
+      <Stack
+        direction={{
+          xs: "column",
+          sm: "row",
+        }}
+        gap={1}
+      >
         {topGoldenList.tiers.map((tier, index) => (
           <TopGoldenListGroup
             key={index}
@@ -128,32 +132,85 @@ function TopGoldenListGroup({
   openEditChallenge,
 }) {
   const theme = useTheme();
-  const colors = getDifficultyColorsTheme(theme, tier[0].id);
+  const name = tier[0].name;
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <>
       <Stack direction="column" gap={1}>
-        {tier.map((subtier) => {
-          const tierChallenges = challenges.filter(
-            (challenge) =>
-              (useSuggested
-                ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-                : challenge.difficulty.id) === subtier.id
-          );
+        <TableContainer component={Paper} elevation={2}>
+          <Table size="small">
+            <TableHead onClick={() => setCollapsed(!collapsed)}>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    p: 0,
+                    pl: 1,
+                  }}
+                >
+                  <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+                    <OtherIcon
+                      name={tier[0].id % 2 === 1 ? "frank" : "terry"}
+                      title="frank"
+                      alt="frank"
+                      height="1.5em"
+                    />
+                  </Stack>
+                </TableCell>
+                <TableCell colSpan={1} sx={{ pl: 1 }}>
+                  <Typography fontWeight="bold" sx={{ textTransform: "capitalize" }}>
+                    {name}
+                  </Typography>
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderLeft: "1px solid " + theme.palette.tableDivider,
+                  }}
+                  align="center"
+                >
+                  <Typography fontWeight="bold" textAlign="center">
+                    <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
+                  </Typography>
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderLeft: "1px solid " + theme.palette.tableDivider,
+                  }}
+                  align="center"
+                >
+                  <Typography fontWeight="bold">
+                    <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            {collapsed ? null : (
+              <TableBody>
+                {tier.map((subtier) => {
+                  const tierChallenges = challenges.filter(
+                    (challenge) =>
+                      (useSuggested
+                        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+                        : challenge.difficulty.id) === subtier.id
+                  );
 
-          return (
-            <TopGoldenListSubtier
-              key={subtier.id}
-              subtier={subtier}
-              challenges={tierChallenges}
-              maps={maps}
-              campaigns={campaigns}
-              isPlayer={isPlayer}
-              useSuggested={useSuggested}
-              openEditChallenge={openEditChallenge}
-            />
-          );
-        })}
+                  return (
+                    <TopGoldenListSubtier
+                      key={subtier.id}
+                      subtier={subtier}
+                      challenges={tierChallenges}
+                      maps={maps}
+                      campaigns={campaigns}
+                      isPlayer={isPlayer}
+                      useSuggested={useSuggested}
+                      openEditChallenge={openEditChallenge}
+                    />
+                  );
+                })}
+              </TableBody>
+            )}
+          </Table>
+        </TableContainer>
       </Stack>
     </>
   );
@@ -169,69 +226,45 @@ function TopGoldenListSubtier({
   openEditChallenge,
 }) {
   const theme = useTheme();
+  const colors = getDifficultyColorsTheme(theme, subtier.id);
+  const rowStyle = {
+    backgroundColor: colors.color,
+    color: colors.contrast_color,
+  };
+  const cellStyle = {
+    padding: "3px 16px",
+  };
   const name = subtier.name;
   const subtierAddition = subtier.subtier ? ` - ${subtier.subtier}` : "";
 
   return (
-    <TableContainer component={Paper} elevation={2}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography fontWeight="bold" sx={{ textTransform: "capitalize" }}>
-                {name + subtierAddition}
-              </Typography>
-            </TableCell>
-            <TableCell
-              sx={{
-                borderLeft: "1px solid " + theme.palette.tableDivider,
-              }}
-              align="center"
-            >
-              <Typography fontWeight="bold" textAlign="center">
-                <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
-              </Typography>
-            </TableCell>
-            <TableCell
-              sx={{
-                borderLeft: "1px solid " + theme.palette.tableDivider,
-              }}
-              align="center"
-            >
-              <Typography fontWeight="bold">
-                <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {challenges.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={3}>
-                <Typography>No challenges in tier</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-          {challenges.map((challenge) => {
-            const map = maps[challenge.map_id];
-            const campaign = campaigns[map.campaign_id];
+    <>
+      {
+        challenges.length === 0 && null
+        // <TableRow style={rowStyle}>
+        //   <TableCell colSpan={3} style={{ ...rowStyle, ...cellStyle }}>
+        //     No challenges in {name + subtierAddition}
+        //   </TableCell>
+        // </TableRow>
+      }
+      {challenges.map((challenge) => {
+        const map = maps[challenge.map_id];
+        const campaign = campaigns[map.campaign_id];
 
-            return (
-              <TopGoldenListRow
-                key={challenge.id}
-                subtier={subtier}
-                challenge={challenge}
-                campaign={campaign}
-                map={map}
-                isPlayer={isPlayer}
-                useSuggested={useSuggested}
-                openEditChallenge={openEditChallenge}
-              />
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        return (
+          <TopGoldenListRow
+            key={challenge.id}
+            subtier={subtier}
+            challenge={challenge}
+            campaign={campaign}
+            map={map}
+            isPlayer={isPlayer}
+            useSuggested={useSuggested}
+            openEditChallenge={openEditChallenge}
+          />
+        );
+      })}
+    </>
   );
 }
 
@@ -248,12 +281,9 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
     padding: "2px 8px",
   };
 
-  const name =
-    getChallengeFcShort(challenge, true) +
-    " " +
-    getMapName(map, campaign) +
-    " " +
-    getChallengeObjectiveSuffix(challenge);
+  const name = getMapName(map, campaign);
+  const nameSuffix = challenge.description === null ? "" : ` [${getChallengeDescription(challenge)}]`;
+  const arbitrarySuffix = getChallengeIsArbitrary(challenge) ? " (A)" : "";
 
   return (
     <TableRow style={rowStyle}>
@@ -261,8 +291,21 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
         sx={{
           ...rowStyle,
           ...cellStyle,
+          p: 0,
+          pl: 1,
+        }}
+        align="center"
+      >
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+          <ChallengeFcIcon challenge={challenge} height="1.3em" />
+        </Stack>
+      </TableCell>
+      <TableCell
+        sx={{
+          ...rowStyle,
+          ...cellStyle,
           textAlign: "left",
-          pl: 2,
+          pl: 1,
         }}
       >
         <Link
@@ -272,23 +315,45 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
           }}
           to={"/map/" + map.id}
         >
-          <Stack direction="row" gap={1} alignItems="center" sx={{ width: "200px" }}>
-            <CampaignIcon campaign={campaign} height="1em" />
+          <Stack
+            direction="row"
+            gap={1}
+            alignItems="center"
+            sx={
+              {
+                // width: "200px"
+              }
+            }
+          >
+            {/* <ChallengeFcIcon challenge={challenge} height="1.3em" /> */}
             <span
               style={{
-                width: "200px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                // width: "200px",
+                // overflow: "hidden",
+                // textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
               }}
             >
               <Tooltip title={name} enterTouchDelay={0} leaveTouchDelay={0} leaveDelay={200}>
-                {name}
+                <span>{name}</span>
+                <span color="">{nameSuffix + arbitrarySuffix}</span>
               </Tooltip>
             </span>
+            <CampaignIcon campaign={campaign} height="1em" />
           </Stack>
         </Link>
       </TableCell>
+      {/* <TableCell
+        sx={{
+          p: 0,
+          pr: 1,
+        }}
+        align="center"
+      >
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+          <ChallengeFcIcon challenge={challenge} height="1.3em" />
+        </Stack>
+      </TableCell> */}
       <TableCell
         style={{
           ...rowStyle,
@@ -364,8 +429,11 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
       <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>
         <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
           {challenge.submissions.length === 0 ? null : (
-            <Link style={{ color: "black", textDecoration: "none" }} to={challenge.submissions[0].proof_url}>
-              ▶
+            <Link
+              style={{ color: "inherit", textDecoration: "none", lineHeight: "1" }}
+              to={challenge.submissions[0].proof_url}
+            >
+              {/* <ChallengeFcIcon challenge={challenge} height="1.3em" /> */}▶
             </Link>
           )}
           {isPlayer ? (

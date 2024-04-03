@@ -11,6 +11,8 @@ import {
 import { toast } from "react-toastify";
 import {
   getCampaignName,
+  getChallengeFcLong,
+  getChallengeFcShort,
   getChallengeName,
   getDifficultyName,
   getObjectiveName,
@@ -480,6 +482,47 @@ export function LinkIcon({ url }) {
       <a href={url} target="_blank" rel="noopener">
         {linkIconElement}
       </a>
+    </Tooltip>
+  );
+}
+
+export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
+  const icon = challenge.requires_fc
+    ? "fullclear.png"
+    : challenge.has_fc
+    ? "clear-fullclear.png"
+    : "clear.png";
+  const alt = getChallengeFcLong(challenge);
+  const transform = challenge.requires_fc ? "scaleX(-1)" : "none";
+
+  if (!challenge.requires_fc && !challenge.has_fc) return null;
+
+  return (
+    <Tooltip title={alt}>
+      <img
+        src={"/icons/" + icon}
+        alt={alt}
+        style={{
+          height: height,
+          filter:
+            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+          // transform: transform,
+        }}
+        {...props}
+        loading="lazy"
+      />
+    </Tooltip>
+  );
+}
+
+export function OtherIcon({ name, title, alt, height = "1em" }) {
+  if (title === undefined) {
+    return <img src={"/icons/" + name + ".png"} alt={alt} style={{ height: height }} />;
+  }
+
+  return (
+    <Tooltip title={title}>
+      <img src={"/icons/" + name + ".png"} alt={alt} style={{ height: height }} />
     </Tooltip>
   );
 }

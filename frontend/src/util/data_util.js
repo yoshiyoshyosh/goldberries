@@ -41,6 +41,10 @@ export function getChallengeName(challenge) {
   );
 }
 
+export function getChallengeDescription(challenge) {
+  return challenge.description === null ? "" : challenge.description;
+}
+
 export function getChallengeNameShort(challenge) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
