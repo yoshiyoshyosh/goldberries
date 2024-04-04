@@ -40,7 +40,12 @@ import { useTheme } from "@emotion/react";
 
 export function PageIndex() {
   return (
-    <Container maxWidth="xl">
+    <Container
+      maxWidth="xl"
+      sx={{
+        pb: 3,
+      }}
+    >
       <HeadTitle title="Welcome!" />
       <Grid container spacing={2}>
         <Grid item xs={12} lg={6}>

@@ -1,3 +1,6 @@
+import { darken } from "@mui/material";
+import { lightTheme } from "../App";
+
 export const APP_URL = process.env.REACT_APP_URL;
 export const API_URL = process.env.REACT_APP_API_URL;
 export const DISCORD_AUTH_URL = API_URL + "/auth/discord_auth.php";
@@ -131,4 +134,23 @@ export function getDifficultyColors(id) {
 export function getDifficultyColorsTheme(theme, id) {
   if (id === null || id === undefined) return theme.palette.difficulty[19];
   return theme.palette.difficulty[id];
+}
+
+function darkenDiffColor(color, amount) {
+  return {
+    color: darken(color.color, amount),
+    group_color: darken(color.group_color, amount),
+    contrast_color: lightTheme.palette.getContrastText(darken(color.color, amount)),
+  };
+}
+export function getDifficultyColorsSettings(settings, id) {
+  let entry = null;
+  if (id === null || id === undefined) entry = DIFFICULTY_COLORS[19];
+  else entry = DIFFICULTY_COLORS[id];
+
+  if (settings.visual.darkmode) {
+    return darkenDiffColor(entry, settings.visual.topGoldenList.darkenTierColors);
+  } else {
+    return entry;
+  }
 }

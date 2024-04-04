@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
 import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import {
+  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -15,33 +16,23 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  darken,
 } from "@mui/material";
-import { getDifficultyColorsTheme } from "../util/constants";
+import { getDifficultyColorsSettings } from "../util/constants";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBook,
-  faEdit,
-  faExternalLink,
-  faHashtag,
-  faList,
-  faListNumeric,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBook, faEdit, faExternalLink, faHashtag, faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeDescription, getChallengeIsArbitrary, getMapName } from "../util/data_util";
-import {
-  CampaignIcon,
-  ChallengeFcIcon,
-  DifficultyChip,
-  OtherIcon,
-} from "../components/GoldberriesComponents";
+import { CampaignIcon, ChallengeFcIcon, DifficultyChip } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData } from "../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormChallengeWrapper } from "./forms/Challenge";
 import { useTheme } from "@emotion/react";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
@@ -133,7 +124,10 @@ function TopGoldenListGroup({
 }) {
   const theme = useTheme();
   const name = tier[0].name;
+  const { settings } = useAppSettings();
+  const colors = getDifficultyColorsSettings(settings, tier[0].id);
   const [collapsed, setCollapsed] = useState(false);
+  const glowColor = darken(colors.group_color, 0.5);
 
   return (
     <>
@@ -148,17 +142,30 @@ function TopGoldenListGroup({
                     pl: 1,
                   }}
                 >
-                  <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
-                    <OtherIcon
-                      name={tier[0].id % 2 === 1 ? "frank" : "terry"}
-                      title="frank"
-                      alt="frank"
-                      height="1.5em"
-                    />
-                  </Stack>
+                  {/* <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+                    <Typography
+                      sx={{
+                        color: colors.group_color,
+                        fontWeight: "bold",
+                        fontSize: "1.75em",
+                        filter:
+                          "drop-shadow(1px 1px 0 " +
+                          glowColor +
+                          ") drop-shadow(-1px -1px 0 " +
+                          glowColor +
+                          ") drop-shadow(1px -1px 0 " +
+                          glowColor +
+                          ") drop-shadow(-1px 1px 0 " +
+                          glowColor +
+                          ")",
+                      }}
+                    >
+                      {name.charAt(name.length - 1)}
+                    </Typography>
+                  </Stack> */}
                 </TableCell>
                 <TableCell colSpan={1} sx={{ pl: 1 }}>
-                  <Typography fontWeight="bold" sx={{ textTransform: "capitalize" }}>
+                  <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
                     {name}
                   </Typography>
                 </TableCell>
@@ -226,7 +233,8 @@ function TopGoldenListSubtier({
   openEditChallenge,
 }) {
   const theme = useTheme();
-  const colors = getDifficultyColorsTheme(theme, subtier.id);
+  const { settings } = useAppSettings();
+  const colors = getDifficultyColorsSettings(settings, subtier.id);
   const rowStyle = {
     backgroundColor: colors.color,
     color: colors.contrast_color,
@@ -239,14 +247,6 @@ function TopGoldenListSubtier({
 
   return (
     <>
-      {
-        challenges.length === 0 && null
-        // <TableRow style={rowStyle}>
-        //   <TableCell colSpan={3} style={{ ...rowStyle, ...cellStyle }}>
-        //     No challenges in {name + subtierAddition}
-        //   </TableCell>
-        // </TableRow>
-      }
       {challenges.map((challenge) => {
         const map = maps[challenge.map_id];
         const campaign = campaigns[map.campaign_id];
@@ -271,7 +271,8 @@ function TopGoldenListSubtier({
 function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested, openEditChallenge }) {
   const auth = useAuth();
   const theme = useTheme();
-  const colors = getDifficultyColorsTheme(theme, subtier.id);
+  const { settings } = useAppSettings();
+  const colors = getDifficultyColorsSettings(settings, subtier.id);
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -315,51 +316,28 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
           }}
           to={"/map/" + map.id}
         >
-          <Stack
-            direction="row"
-            gap={1}
-            alignItems="center"
-            sx={
-              {
-                // width: "200px"
-              }
-            }
-          >
-            {/* <ChallengeFcIcon challenge={challenge} height="1.3em" /> */}
-            <span
-              style={{
-                // width: "200px",
-                // overflow: "hidden",
-                // textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+          <Stack direction="row" gap={1} alignItems="center">
+            <Box
+              component="span"
+              sx={{
+                whiteSpace: {
+                  xs: "normal",
+                  sm: "nowrap",
+                },
               }}
             >
-              <Tooltip title={name} enterTouchDelay={0} leaveTouchDelay={0} leaveDelay={200}>
-                <span>{name}</span>
-                <span color="">{nameSuffix + arbitrarySuffix}</span>
-              </Tooltip>
-            </span>
+              <span>{name}</span>
+              <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
+            </Box>
             <CampaignIcon campaign={campaign} height="1em" />
           </Stack>
         </Link>
       </TableCell>
-      {/* <TableCell
-        sx={{
-          p: 0,
-          pr: 1,
-        }}
-        align="center"
-      >
-        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
-          <ChallengeFcIcon challenge={challenge} height="1.3em" />
-        </Stack>
-      </TableCell> */}
       <TableCell
         style={{
           ...rowStyle,
           ...cellStyle,
           display: useSuggested ? "none" : "table-cell",
-          // fontWeight: "bold",
           fontSize: "1em",
           borderLeft: "1px solid " + theme.palette.tableDivider,
         }}

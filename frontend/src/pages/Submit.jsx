@@ -47,6 +47,7 @@ import {
 import { usePostSubmission } from "../hooks/useApi";
 import { Helmet } from "react-helmet";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -299,7 +300,8 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
 export function MultiUserSubmission() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [darkmode, _] = useLocalStorage("darkmode", true);
+  const { settings } = useAppSettings();
+  const darkmode = settings.visual.darkmode;
 
   const [campaign, setCampaign] = useState(null);
   const [sortMajorIndex, setSortMajorIndex] = useState(null);

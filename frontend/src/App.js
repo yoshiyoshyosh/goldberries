@@ -108,6 +108,7 @@ import { PageRejectedMaps } from "./pages/RejectedMaps";
 import { getPlayerNameColorStyle } from "./util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { light } from "@mui/material/styles/createPalette";
+import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -125,9 +126,11 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     element: (
-      <AuthWrapper>
-        <Layout />
-      </AuthWrapper>
+      <ThemeWrapper>
+        <AuthWrapper>
+          <Layout />
+        </AuthWrapper>
+      </ThemeWrapper>
     ),
     children: [
       { index: true, element: <PageIndex /> },
@@ -218,51 +221,11 @@ const router = createBrowserRouter([
   },
 ]);
 
-const lightTheme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     mode: "light",
     links: {
       main: "#1e90ff",
-    },
-    difficulty: {
-      //Tier 0
-      1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-      2: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-      3: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-
-      //Tier 1
-      4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000" },
-      5: { color: "#ff9989", group_color: "#ff7b67", contrast_color: "#000000" },
-      6: { color: "#fcb6ab", group_color: "#ff7b67", contrast_color: "#000000" },
-
-      //Tier 2
-      7: { color: "#ffc874", group_color: "#ffc874", contrast_color: "#000000" },
-      8: { color: "#ffd595", group_color: "#ffc874", contrast_color: "#000000" },
-      9: { color: "#f8dcb2", group_color: "#ffc874", contrast_color: "#000000" },
-
-      //Tier 3
-      10: { color: "#ffec87", group_color: "#ffec87", contrast_color: "#000000" },
-      11: { color: "#ffebb0", group_color: "#ffec87", contrast_color: "#000000" },
-      12: { color: "#fbf3cf", group_color: "#ffec87", contrast_color: "#000000" },
-      13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
-
-      //Tier 4
-      14: { color: "#b0ff78", group_color: "#b0ff78", contrast_color: "#000000" },
-
-      //Tier 5
-      15: { color: "#85e191", group_color: "#85e191", contrast_color: "#000000" },
-
-      //Tier 6
-      16: { color: "#8fdeff", group_color: "#8fdeff", contrast_color: "#000000" },
-
-      //Tier 7
-      17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000" },
-
-      //Standard
-      18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
-
-      //Undetermined
-      19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
     },
     tableDivider: "#e0e0e0",
     background: {
@@ -270,25 +233,16 @@ const lightTheme = createTheme({
     },
   },
   components: {
-    // MuiContainer: {
-    //   styleOverrides: {
-    //     root: {
-    //       background: "rgba(255,255,255,0.71)",
-    //       borderRadius: "10px",
-    //     },
-    //   },
-    // },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          background: "rgba(255,255,255,0.71)",
+          borderRadius: "10px",
+        },
+      },
+    },
   },
 });
-const darkThemeDarken = 0.45;
-const darkenDiffColor = (color, amount) => {
-  console.log("Decompose color:", color, " -> ", decomposeColor(color.color));
-  return {
-    color: darken(color.color, amount),
-    group_color: darken(color.group_color, amount),
-    contrast_color: lightTheme.palette.getContrastText(darken(color.color, amount)),
-  };
-};
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -299,56 +253,16 @@ const darkTheme = createTheme({
     links: {
       main: "#1e90ff",
     },
-    difficulty: {
-      //Tier 0
-      1: darkenDiffColor(lightTheme.palette.difficulty[1], darkThemeDarken),
-      2: darkenDiffColor(lightTheme.palette.difficulty[2], darkThemeDarken),
-      3: darkenDiffColor(lightTheme.palette.difficulty[3], darkThemeDarken),
-
-      //Tier 1
-      4: darkenDiffColor(lightTheme.palette.difficulty[4], darkThemeDarken),
-      5: darkenDiffColor(lightTheme.palette.difficulty[5], darkThemeDarken),
-      6: darkenDiffColor(lightTheme.palette.difficulty[6], darkThemeDarken),
-
-      //Tier 2
-      7: darkenDiffColor(lightTheme.palette.difficulty[7], darkThemeDarken),
-      8: darkenDiffColor(lightTheme.palette.difficulty[8], darkThemeDarken),
-      9: darkenDiffColor(lightTheme.palette.difficulty[9], darkThemeDarken),
-
-      //Tier 3
-      10: darkenDiffColor(lightTheme.palette.difficulty[10], darkThemeDarken),
-      11: darkenDiffColor(lightTheme.palette.difficulty[11], darkThemeDarken),
-      12: darkenDiffColor(lightTheme.palette.difficulty[12], darkThemeDarken),
-      13: darkenDiffColor(lightTheme.palette.difficulty[13], darkThemeDarken),
-
-      //Tier 4
-      14: darkenDiffColor(lightTheme.palette.difficulty[14], darkThemeDarken),
-
-      //Tier 5
-      15: darkenDiffColor(lightTheme.palette.difficulty[15], darkThemeDarken),
-
-      //Tier 6
-      16: darkenDiffColor(lightTheme.palette.difficulty[16], darkThemeDarken),
-
-      //Tier 7
-      17: darkenDiffColor(lightTheme.palette.difficulty[17], darkThemeDarken),
-
-      //Standard
-      18: darkenDiffColor(lightTheme.palette.difficulty[18], darkThemeDarken),
-
-      //Undetermined
-      19: darkenDiffColor(lightTheme.palette.difficulty[19], darkThemeDarken),
-    },
     tableDivider: "#515151",
   },
   components: {
-    // MuiContainer: {
-    //   styleOverrides: {
-    //     root: {
-    //       background: "rgba(0,0,0,0.5)",
-    //     },
-    //   },
-    // },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          background: "rgba(0,0,0,0.5)",
+        },
+      },
+    },
     MuiAccordion: {
       styleOverrides: {
         root: {
@@ -367,21 +281,26 @@ const darkTheme = createTheme({
 });
 
 export default function App() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [darkmode, setDarkmode] = useLocalStorage("darkmode", prefersDarkMode);
-
   return (
-    <ThemeProvider theme={darkmode ? darkTheme : lightTheme}>
+    <AppSettingsProvider>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router}></RouterProvider>
         <ToastContainer position="bottom-right" closeOnClick />
         <ReactQueryDevtools initialIsOpen={false} />
-        <CssBaseline />
       </QueryClientProvider>
-    </ThemeProvider>
+    </AppSettingsProvider>
   );
 }
 
+export function ThemeWrapper({ children }) {
+  const { settings } = useAppSettings();
+  return (
+    <ThemeProvider theme={settings.visual.darkmode ? darkTheme : lightTheme}>
+      {children}
+      <CssBaseline />
+    </ThemeProvider>
+  );
+}
 export function AuthWrapper({ children }) {
   return <AuthProvider>{children}</AuthProvider>;
 }
@@ -404,7 +323,8 @@ function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirec
 }
 
 export function Layout() {
-  const [darkmode, _] = useLocalStorage("darkmode", true);
+  const { settings } = useAppSettings();
+  const darkmode = settings.visual.darkmode;
   const auth = useAuth();
   const drawerWidth = 260;
   const menus = {
@@ -557,6 +477,13 @@ export function Layout() {
     }
   };
 
+  let background = "rgba(0,0,0,0)";
+  if (darkmode && settings.visual.general.backgroundDark !== null) {
+    background = "black url(/img/" + settings.visual.general.backgroundDark + ".png) 0 0 / cover no-repeat";
+  } else if (!darkmode && settings.visual.general.backgroundLight !== null) {
+    background = "white url(/img/" + settings.visual.general.backgroundLight + ".png) 0 0 / cover no-repeat";
+  }
+
   return (
     <>
       <div
@@ -568,7 +495,7 @@ export function Layout() {
           bottom: 0,
           zIndex: -1,
 
-          // background: "white url(/img/" + (darkmode ? "dmr" : "cg") + ".png) 0 0 / cover no-repeat",
+          background: background,
           filter: "blur(5px) " + (darkmode ? "brightness(0.3)" : ""),
           width: "100vw",
           height: "100vh",
@@ -745,10 +672,19 @@ function MobileMenuItem({ item, indent = 0 }) {
 
 function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   const auth = useAuth();
-  const [darkmode, setDarkmode] = useLocalStorage("darkmode", true);
+  const { settings, setSettings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(auth.user?.player);
 
-  console.log("DesktopNav, userMenu", userMenu, "auth.user", auth.user);
+  const darkmode = settings.visual.darkmode;
+  const toggleDarkmode = () => {
+    setSettings({
+      ...settings,
+      visual: {
+        ...settings.visual,
+        darkmode: !darkmode,
+      },
+    });
+  };
 
   return (
     <Box
@@ -810,7 +746,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
           />
         )}
         <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
-          <IconButton onClick={() => setDarkmode(!darkmode)} sx={{ color: "#fff", p: 0 }}>
+          <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
             <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
           </IconButton>
         </Tooltip>

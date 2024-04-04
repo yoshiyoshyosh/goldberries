@@ -3,8 +3,7 @@ import { useLocalStorage } from "./useStorage";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { APP_URL, DISCORD_AUTH_URL, getOAuthUrl as getDiscordAuthUrl } from "../util/constants";
-import { get, set } from "react-hook-form";
+import { APP_URL, DISCORD_AUTH_URL } from "../util/constants";
 import { getErrorMessage } from "../components/BasicComponents";
 
 const AuthContext = createContext();
