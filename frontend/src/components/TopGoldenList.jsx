@@ -309,29 +309,31 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
           pl: 1,
         }}
       >
-        <Link
-          style={{
-            color: "inherit",
-            textDecoration: "none",
-          }}
-          to={"/map/" + map.id}
-        >
-          <Stack direction="row" gap={1} alignItems="center">
-            <Box
-              component="span"
-              sx={{
-                whiteSpace: {
-                  xs: "normal",
-                  sm: "nowrap",
-                },
+        <Stack direction="row" gap={1} alignItems="center">
+          <Box
+            component="span"
+            sx={{
+              whiteSpace: {
+                xs: "normal",
+                sm: "nowrap",
+              },
+            }}
+          >
+            <Link
+              style={{
+                color: "inherit",
+                textDecoration: "none",
               }}
+              to={"/map/" + map.id}
             >
               <span>{name}</span>
               <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
-            </Box>
+            </Link>
+          </Box>
+          {settings.visual.topGoldenList.showCampaignIcons && (
             <CampaignIcon campaign={campaign} height="1em" />
-          </Stack>
-        </Link>
+          )}
+        </Stack>
       </TableCell>
       <TableCell
         style={{

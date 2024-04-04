@@ -109,6 +109,7 @@ import { getPlayerNameColorStyle } from "./util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { light } from "@mui/material/styles/createPalette";
 import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
+import { PageAppSettings } from "./pages/AppSettings";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -171,11 +172,13 @@ const router = createBrowserRouter([
           },
         ],
       },
+
       { path: "login/:redirect?", element: <PageLogin /> },
       { path: "register/:error?", element: <PageRegister /> },
       { path: "verify-email/:verify", element: <PageVerifyEmail /> },
       { path: "forgot-password/:token?", element: <PageForgotPassword /> },
       { path: "post-oauth/:redirect?", element: <PagePostOAuthLogin /> },
+
       {
         path: "my-account/:tab?",
         element: (
@@ -214,6 +217,8 @@ const router = createBrowserRouter([
       { path: "campaign/:id/:tab?", element: <PageCampaign /> },
 
       { path: "search/:q?", element: <PageSearch /> },
+
+      { path: "app-settings/:tab?", element: <PageAppSettings /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -260,13 +265,14 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           background: "rgba(0,0,0,0.5)",
+          borderRadius: "10px",
         },
       },
     },
     MuiAccordion: {
       styleOverrides: {
         root: {
-          backgroundImage: "none",
+          // background: "none",
         },
       },
     },
@@ -388,6 +394,7 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
+        { name: "App Settings", path: "/app-settings", icon: <FontAwesomeIcon icon={faCog} /> },
         {
           name: "Logout",
           action: () => {
@@ -479,9 +486,11 @@ export function Layout() {
 
   let background = "rgba(0,0,0,0)";
   if (darkmode && settings.visual.general.backgroundDark !== null) {
-    background = "black url(/img/" + settings.visual.general.backgroundDark + ".png) 0 0 / cover no-repeat";
+    background = "black url(/img/" + settings.visual.general.backgroundDark + ") 0 0 / cover no-repeat";
+    // background = "black url(/img/" + settings.visual.general.backgroundDark + ") 0 0 / 100% 100% no-repeat";
   } else if (!darkmode && settings.visual.general.backgroundLight !== null) {
-    background = "white url(/img/" + settings.visual.general.backgroundLight + ".png) 0 0 / cover no-repeat";
+    background = "white url(/img/" + settings.visual.general.backgroundLight + ") 0 0 / cover no-repeat";
+    // background = "white url(/img/" + settings.visual.general.backgroundLight + ") 0 0 / 100% 100% no-repeat";
   }
 
   return (
@@ -490,15 +499,16 @@ export function Layout() {
         style={{
           position: "fixed",
           top: 0,
+          // top: "42px",
           left: 0,
           right: 0,
           bottom: 0,
           zIndex: -1,
 
           background: background,
-          filter: "blur(5px) " + (darkmode ? "brightness(0.3)" : ""),
-          width: "100vw",
-          height: "100vh",
+          filter:
+            "blur(" + settings.visual.general.backgroundBlur + "px) " + (darkmode ? "brightness(0.35)" : ""),
+          transform: "scale(1.015)",
         }}
       ></div>
       <Box

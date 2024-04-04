@@ -11,7 +11,7 @@ export function AppSettingsProvider({ children }) {
         darkmode: prefersDarkMode ?? true,
         topGoldenList: {
           showCampaignIcons: true,
-          darkenTierColors: 0.45,
+          darkenTierColors: 45,
         },
         general: {
           backgroundDark: null, //Indicates default, solid color background. Otherwise this is the image name

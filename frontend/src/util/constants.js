@@ -149,7 +149,7 @@ export function getDifficultyColorsSettings(settings, id) {
   else entry = DIFFICULTY_COLORS[id];
 
   if (settings.visual.darkmode) {
-    return darkenDiffColor(entry, settings.visual.topGoldenList.darkenTierColors);
+    return darkenDiffColor(entry, settings.visual.topGoldenList.darkenTierColors / 100);
   } else {
     return entry;
   }
