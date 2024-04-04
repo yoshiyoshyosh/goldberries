@@ -64,24 +64,13 @@ export function AppSettingsGeneralForm() {
   const form = useForm({
     defaultValues: settings.general,
   });
-  const errors = form.formState.errors;
-  const onSubmit = form.handleSubmit((data) => {
-    toast.success("Settings saved");
-    setSettings({ ...settings, general: data });
-  });
 
   return (
     <form>
       <Divider sx={{ my: 2 }} />
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        startIcon={<FontAwesomeIcon icon={faSave} />}
-        onClick={onSubmit}
-      >
-        Save Changes
-      </Button>
+      <Typography variant="body2">
+        <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
+      </Typography>
     </form>
   );
 }
@@ -131,6 +120,10 @@ const backgroundsDark = [
     name: "Waterbear Mountain",
     file: "wountain.jpg",
   },
+  {
+    name: "Terry",
+    file: "terry.png",
+  },
 ];
 const backgroundsLight = [
   {
@@ -157,10 +150,13 @@ const backgroundsLight = [
     name: "EHS-2",
     file: "ehs-2.jpg",
   },
+  {
+    name: "Frank",
+    file: "frank.png",
+  },
 ];
 export function AppSettingsVisualForm() {
   const { settings, setSettings } = useAppSettings();
-  console.log("Settings: ", settings);
 
   const form = useForm({
     defaultValues: {
@@ -172,8 +168,7 @@ export function AppSettingsVisualForm() {
       },
     },
   });
-  const errors = form.formState.errors;
-  const onSubmit = form.handleSubmit((data) => {
+  const doSubmit = (data) => {
     setSettings({
       ...settings,
       visual: {
@@ -185,14 +180,18 @@ export function AppSettingsVisualForm() {
         },
       },
     });
-    toast.success("Settings saved");
-  });
+  };
 
   useEffect(() => {
     if (form.watch("darkmode" !== settings.visual.darkmode)) {
       form.setValue("darkmode", settings.visual.darkmode, { shouldDirty: true });
     }
   }, [settings]);
+
+  useEffect(() => {
+    const subscription = form.watch(form.handleSubmit(doSubmit));
+    return () => subscription.unsubscribe();
+  }, [form.handleSubmit, form.watch]);
 
   return (
     <form>
@@ -309,15 +308,9 @@ export function AppSettingsVisualForm() {
       </SettingsEntry>
 
       <Divider sx={{ my: 2 }} />
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        startIcon={<FontAwesomeIcon icon={faSave} />}
-        onClick={onSubmit}
-      >
-        Save Changes
-      </Button>
+      <Typography variant="body2">
+        <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
+      </Typography>
     </form>
   );
 }

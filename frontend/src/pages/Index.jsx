@@ -3,6 +3,7 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
 import {
@@ -43,7 +44,11 @@ export function PageIndex() {
     <Container
       maxWidth="xl"
       sx={{
+        mt: 2,
         pb: 3,
+        "&&": {
+          // p: 0,
+        },
       }}
     >
       <HeadTitle title="Welcome!" />
@@ -237,35 +242,35 @@ export function UsefulLinksComponent() {
       <ul style={{ listStyleType: "none" }}>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <a href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
+          <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
             Celeste's Discord
-          </a>
+          </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <a href="https://discord.gg/GeJvmMycaC" target="_blank" rel="noreferrer">
+          <StyledExternalLink href="https://discord.gg/GeJvmMycaC" target="_blank" rel="noreferrer">
             Modded Golden Team Discord
-          </a>
+          </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faScroll} />{" "}
-          <a
+          <StyledExternalLink
             href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=0"
             target="_blank"
             rel="noreferrer"
           >
             Farewell Golden Collectors' List
-          </a>
+          </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faScroll} />{" "}
-          <a
+          <StyledExternalLink
             href="https://docs.google.com/spreadsheets/d/1a32h6LErb1PAyYGsIO8hY-Y1pd-3r4co3M6RnuIRTZE/edit?usp=drivesdk"
             target="_blank"
             rel="noreferrer"
           >
             Celeste Survivors List (Deathless runs of vanilla Celeste)
-          </a>
+          </StyledExternalLink>
         </li>
       </ul>
     </>
@@ -281,9 +286,14 @@ export function RulesComponent() {
   const MarginOl = ({ children }) => <ol style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ol>;
   const MarginUl = ({ children }) => <ul style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ul>;
   const Anchor = ({ children, href }) => (
-    <a href={href} target="_blank" rel="noreferrer" style={{ color: theme.palette.links.main }}>
+    <StyledExternalLink
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      style={{ color: theme.palette.links.main }}
+    >
       {children}
-    </a>
+    </StyledExternalLink>
   );
 
   useEffect(() => {

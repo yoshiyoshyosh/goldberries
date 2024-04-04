@@ -210,3 +210,16 @@ export function StyledLink({ to, children, underline = true, style, ...props }) 
     </Link>
   );
 }
+
+export function StyledExternalLink({ href, children, underline = true, style, ...props }) {
+  const theme = useTheme();
+  return (
+    <a
+      href={href}
+      style={{ textDecoration: underline ? "underline" : "none", color: theme.palette.links.main, ...style }}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+}
