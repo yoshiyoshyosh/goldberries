@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
-import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
+import { BasicBox, ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import {
   Box,
   Button,
@@ -33,6 +33,7 @@ import { CustomModal, useModal } from "../hooks/useModal";
 import { FormChallengeWrapper } from "./forms/Challenge";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { MapDisplay } from "../pages/Map";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
@@ -55,19 +56,33 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
   }, []);
 
   const modalRefs = {
+    map: {
+      show: useRef(),
+    },
     challenge: {
       edit: useRef(),
     },
   };
 
+  const showMap = (id) => {
+    modalRefs.map.show.current.open({ id });
+  };
   const openEditChallenge = (id) => {
     modalRefs.challenge.edit.current.open({ id });
   };
 
   if (query.isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <BasicBox sx={{ width: "fit-content" }}>
+        <LoadingSpinner />
+      </BasicBox>
+    );
   } else if (query.isError) {
-    return <ErrorDisplay error={query.error} />;
+    return (
+      <BasicBox sx={{ width: "fit-content" }}>
+        <ErrorDisplay error={query.error} />
+      </BasicBox>
+    );
   }
 
   const topGoldenList = getQueryData(query);
@@ -76,17 +91,19 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
   return (
     <Stack direction="column" gap={1}>
       {isPlayer && (
-        <Stack direction="row" spacing={2}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={useSuggestedDifficulties}
-                onChange={(e) => setUseSuggestedDifficulties(e.target.checked)}
-              />
-            }
-            label="Use Suggested Difficulties for ranking"
-          />
-        </Stack>
+        <BasicBox>
+          <Stack direction="row" spacing={2} sx={{ py: 0 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={useSuggestedDifficulties}
+                  onChange={(e) => setUseSuggestedDifficulties(e.target.checked)}
+                />
+              }
+              label="Use Suggested Difficulties for ranking"
+            />
+          </Stack>
+        </BasicBox>
       )}
       <Stack
         direction={{
@@ -105,6 +122,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
             isPlayer={isPlayer}
             useSuggested={useSuggestedDifficulties}
             openEditChallenge={openEditChallenge}
+            showMap={showMap}
           />
         ))}
       </Stack>
@@ -121,6 +139,7 @@ function TopGoldenListGroup({
   isPlayer = false,
   useSuggested = false,
   openEditChallenge,
+  showMap,
 }) {
   const theme = useTheme();
   const name = tier[0].name;
@@ -141,29 +160,7 @@ function TopGoldenListGroup({
                     p: 0,
                     pl: 1,
                   }}
-                >
-                  {/* <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
-                    <Typography
-                      sx={{
-                        color: colors.group_color,
-                        fontWeight: "bold",
-                        fontSize: "1.75em",
-                        filter:
-                          "drop-shadow(1px 1px 0 " +
-                          glowColor +
-                          ") drop-shadow(-1px -1px 0 " +
-                          glowColor +
-                          ") drop-shadow(1px -1px 0 " +
-                          glowColor +
-                          ") drop-shadow(-1px 1px 0 " +
-                          glowColor +
-                          ")",
-                      }}
-                    >
-                      {name.charAt(name.length - 1)}
-                    </Typography>
-                  </Stack> */}
-                </TableCell>
+                ></TableCell>
                 <TableCell colSpan={1} sx={{ pl: 1 }}>
                   <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
                     {name}
@@ -176,7 +173,7 @@ function TopGoldenListGroup({
                   align="center"
                 >
                   <Typography fontWeight="bold" textAlign="center">
-                    <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
+                    {isPlayer ? "Sug." : <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />}
                   </Typography>
                 </TableCell>
                 <TableCell
@@ -211,6 +208,7 @@ function TopGoldenListGroup({
                       isPlayer={isPlayer}
                       useSuggested={useSuggested}
                       openEditChallenge={openEditChallenge}
+                      showMap={showMap}
                     />
                   );
                 })}
@@ -231,20 +229,8 @@ function TopGoldenListSubtier({
   isPlayer,
   useSuggested,
   openEditChallenge,
+  showMap,
 }) {
-  const theme = useTheme();
-  const { settings } = useAppSettings();
-  const colors = getDifficultyColorsSettings(settings, subtier.id);
-  const rowStyle = {
-    backgroundColor: colors.color,
-    color: colors.contrast_color,
-  };
-  const cellStyle = {
-    padding: "3px 16px",
-  };
-  const name = subtier.name;
-  const subtierAddition = subtier.subtier ? ` - ${subtier.subtier}` : "";
-
   return (
     <>
       {challenges.map((challenge) => {
@@ -261,6 +247,7 @@ function TopGoldenListSubtier({
             isPlayer={isPlayer}
             useSuggested={useSuggested}
             openEditChallenge={openEditChallenge}
+            showMap={showMap}
           />
         );
       })}
@@ -268,10 +255,20 @@ function TopGoldenListSubtier({
   );
 }
 
-function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSuggested, openEditChallenge }) {
+function TopGoldenListRow({
+  subtier,
+  challenge,
+  campaign,
+  map,
+  isPlayer,
+  useSuggested,
+  openEditChallenge,
+  showMap,
+}) {
   const auth = useAuth();
   const theme = useTheme();
   const { settings } = useAppSettings();
+  const darkmode = settings.visual.darkmode;
   const colors = getDifficultyColorsSettings(settings, subtier.id);
 
   const rowStyle = {
@@ -319,19 +316,25 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
               },
             }}
           >
-            <Link
-              style={{
+            <Box
+              component="span"
+              sx={{
+                cursor: "pointer",
                 color: "inherit",
                 textDecoration: "none",
+                transition: "background-color 0.2s",
+                "&:hover": {
+                  backgroundColor: darkmode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)",
+                },
               }}
-              to={"/map/" + map.id}
+              onClick={() => showMap(map.id)}
             >
               <span>{name}</span>
               <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
-            </Link>
+            </Box>
           </Box>
           {settings.visual.topGoldenList.showCampaignIcons && (
-            <CampaignIcon campaign={campaign} height="1em" />
+            <CampaignIcon campaign={campaign} height="1em" doLink />
           )}
         </Stack>
       </TableCell>
@@ -339,7 +342,7 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
         style={{
           ...rowStyle,
           ...cellStyle,
-          display: useSuggested ? "none" : "table-cell",
+          display: useSuggested ? "table-cell" : "table-cell",
           fontSize: "1em",
           borderLeft: "1px solid " + theme.palette.tableDivider,
         }}
@@ -399,7 +402,10 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
                 </>
               }
             >
-              <Typography color="info.dark" sx={{ cursor: "pointer" }}>
+              <Typography
+                color="info.dark"
+                sx={{ cursor: "pointer", filter: "drop-shadow(0px 0px 1px white)" }}
+              >
                 <FontAwesomeIcon icon={faList} />
               </Typography>
             </Tooltip>
@@ -428,13 +434,19 @@ function TopGoldenListRow({ subtier, challenge, campaign, map, isPlayer, useSugg
 }
 
 function ModalContainer({ modalRefs }) {
+  const showMapModal = useModal();
   const editChallengeModal = useModal();
 
   // Setting the refs
+  modalRefs.map.show.current = showMapModal;
   modalRefs.challenge.edit.current = editChallengeModal;
 
   return (
     <>
+      <CustomModal modalHook={showMapModal} options={{ hideFooter: true }}>
+        {showMapModal.data?.id == null ? <LoadingSpinner /> : <MapDisplay id={showMapModal.data.id} />}
+      </CustomModal>
+
       <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
         {editChallengeModal.data?.id == null ? (
           <LoadingSpinner />

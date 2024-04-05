@@ -11,6 +11,10 @@
 
 import { jsonDateToJsDate } from "./util";
 
+export function getChallengeIsFullGame(challenge) {
+  return challenge.map === null;
+}
+
 export function getChallengeFcShort(challenge, noC = false) {
   if (challenge.requires_fc) return "[FC]";
   else if (challenge.has_fc) return "[C/FC]";

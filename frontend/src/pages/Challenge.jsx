@@ -21,8 +21,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { ErrorDisplay, HeadTitle, LoadingSpinner, StyledLink } from "../components/BasicComponents";
-import { DifficultyChip } from "../components/GoldberriesComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledLink,
+} from "../components/BasicComponents";
+import { DifficultyChip, SubmissionFcIcon } from "../components/GoldberriesComponents";
 import {
   getChallengeNameShort,
   getDifficultyName,
@@ -60,11 +66,9 @@ export function PageChallenge({}) {
   const { id } = useParams();
 
   return (
-    <Container maxWidth="md">
-      <Paper elevation={2} sx={{ p: 2 }}>
-        <ChallengeDisplay id={parseInt(id)} />
-      </Paper>
-    </Container>
+    <BasicContainerBox maxWidth="md">
+      <ChallengeDisplay id={parseInt(id)} />
+    </BasicContainerBox>
   );
 }
 
@@ -290,13 +294,14 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
         #{index + 1}
       </TableCell>
       <TableCell width={compact ? 1 : undefined}>
-        <Stack direction="row" gap={1}>
+        <Stack direction="row" gap={1} alignItems="center">
           <StyledLink to={"/submission/" + submission.id}>
             <FontAwesomeIcon icon={faBook} />
           </StyledLink>
           <StyledLink to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
             {submission.player.name}
           </StyledLink>
+          <SubmissionFcIcon submission={submission} height="1.3em" />
         </Stack>
       </TableCell>
       {compact ? null : (

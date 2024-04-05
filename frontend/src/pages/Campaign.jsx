@@ -1,6 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { getQueryData, useGetCampaignView } from "../hooks/useApi";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BasicBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledExternalLink,
+  StyledLink,
+} from "../components/BasicComponents";
 import {
   Box,
   Checkbox,
@@ -20,12 +27,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faLink, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
 import { useEffect } from "react";
-import { getCampaignName, getGamebananaEmbedUrl, getMapAuthor, getMapLobbyInfo } from "../util/data_util";
-import { APP_NAME_LONG, getDifficultyColors } from "../util/constants";
+import { getCampaignName, getGamebananaEmbedUrl, getMapLobbyInfo } from "../util/data_util";
+import { getDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
-import { Helmet } from "react-helmet";
 import { CampaignIcon } from "../components/GoldberriesComponents";
+import { useTheme } from "@emotion/react";
 
 const STYLE_CONSTS = {
   player: {
@@ -61,6 +68,7 @@ export function PageCampaign() {
 
 export function CampaignDisplay({ id }) {
   const [showArchived, setShowArchived] = useLocalStorage("campaign_filter_archived", false);
+  const theme = useTheme();
   const query = useGetCampaignView(id, showArchived);
 
   if (query.isLoading) {
@@ -80,6 +88,7 @@ export function CampaignDisplay({ id }) {
         <Box
           sx={{
             p: 2,
+            background: theme.palette.background.other,
             borderRadius: "10px",
             border: "1px solid #cccccc99",
             boxShadow: 1,
@@ -98,10 +107,12 @@ export function CampaignDisplay({ id }) {
           <Changelog type="campaign" id={id} />
         </Box>
         <Divider sx={{ my: 2 }} />
-        <FormControlLabel
-          control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-          label="Show Archived"
-        />
+        <BasicBox sx={{ mb: 1 }}>
+          <FormControlLabel
+            control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
+            label="Show Archived"
+          />
+        </BasicBox>
       </Box>
       <CampaignTableView campaign={campaign} players={players} submissions={submissions} />
     </>
@@ -131,9 +142,9 @@ export function CampaignDetailsList({ campaign, ...props }) {
               },
             }}
           >
-            <Link to={campaign.url} target="_blank">
+            <StyledExternalLink to={campaign.url} target="_blank">
               <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
-            </Link>
+            </StyledExternalLink>
           </ListItemSecondaryAction>
         )}
       </ListItem>
@@ -144,7 +155,9 @@ export function CampaignDetailsList({ campaign, ...props }) {
         <ListItemText
           primary={
             author.name !== null ? (
-              <Link to={"https://gamebanana.com/members/" + author.id}>{author.name}</Link>
+              <StyledExternalLink to={"https://gamebanana.com/members/" + author.id}>
+                {author.name}
+              </StyledExternalLink>
             ) : (
               "<Unknown Author>"
             )
@@ -157,7 +170,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
           <FontAwesomeIcon icon={faLink} />
         </ListItemIcon>
         <ListItemText
-          primary={<Link to={`/campaign/${campaign.id}/top-golden-list`}>Top Golden List</Link>}
+          primary={<StyledLink to={`/campaign/${campaign.id}/top-golden-list`}>Top Golden List</StyledLink>}
         />
       </ListItem>
     </List>
@@ -660,18 +673,28 @@ export function PageCampaignTopGoldenList({ id }) {
   const query = useGetCampaignView(id);
 
   if (query.isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <BasicBox>
+        <LoadingSpinner />
+      </BasicBox>
+    );
   } else if (query.isError) {
-    return <ErrorDisplay error={query.error} />;
+    return (
+      <BasicBox>
+        <ErrorDisplay error={query.error} />
+      </BasicBox>
+    );
   }
 
   const response = getQueryData(query);
 
   return (
     <Box sx={{ mx: 2 }}>
-      <Typography variant="h4">
-        Top Golden List: <Link to={`/campaign/${id}`}>{response.campaign.name}</Link>
-      </Typography>
+      <BasicBox sx={{ mb: 1 }}>
+        <Typography variant="h4">
+          Top Golden List: <StyledLink to={`/campaign/${id}`}>{response.campaign.name}</StyledLink>
+        </Typography>
+      </BasicBox>
       <TopGoldenList type="campaign" id={id} />
     </Box>
   );

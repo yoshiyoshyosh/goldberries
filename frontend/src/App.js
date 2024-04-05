@@ -235,6 +235,7 @@ export const lightTheme = createTheme({
     tableDivider: "#e0e0e0",
     background: {
       // paper: "rgba(255,255,255,0.4)",
+      other: "rgba(255,255,255,0.75)",
     },
   },
   components: {
@@ -257,6 +258,9 @@ const darkTheme = createTheme({
     },
     links: {
       main: "#1e90ff",
+    },
+    background: {
+      other: "rgba(0,0,0,0.5)",
     },
     tableDivider: "#515151",
   },
@@ -507,12 +511,11 @@ export function Layout() {
       <div
         style={{
           position: "fixed",
-          top: 0,
-          // top: "42px",
-          left: 0,
-          right: 0,
-          bottom: 0,
           zIndex: -1,
+
+          width: "100vw",
+          height: "100vh",
+          scrollbarGutter: "stable",
 
           background: background,
           filter:
@@ -713,8 +716,9 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
           xs: "none",
           sm: "block",
         },
-        width: "100%",
-        pr: "calc(-100vw + 100%)",
+        width: "100vw",
+        pr: "10px",
+        scrollbarGutter: "stable",
         color: darkmode ? "unset" : "primary.contrastText",
 
         position: "fixed",

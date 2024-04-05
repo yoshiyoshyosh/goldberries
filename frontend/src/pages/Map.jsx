@@ -22,7 +22,7 @@ import {
   getMapAuthor,
   getMapLobbyInfo,
 } from "../util/data_util";
-import { ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
@@ -35,11 +35,9 @@ export function PageMap() {
   const { id } = useParams();
 
   return (
-    <Container maxWidth="md">
-      <Paper elevation={2} sx={{ p: 2 }}>
-        <MapDisplay id={parseInt(id)} />
-      </Paper>
-    </Container>
+    <BasicContainerBox maxWidth="md">
+      <MapDisplay id={parseInt(id)} />
+    </BasicContainerBox>
   );
 }
 

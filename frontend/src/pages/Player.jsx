@@ -1,9 +1,11 @@
 import { Box, Checkbox, Divider, FormControlLabel, Stack, Typography } from "@mui/material";
 import {
+  BasicBox,
   BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  StyledLink,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
 import { getQueryData, useGetAllDifficulties, useGetPlayer, useGetPlayerStats } from "../hooks/useApi";
@@ -121,9 +123,17 @@ export function PagePlayerTopGoldenList({ id }) {
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
 
   if (query.isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <BasicBox>
+        <LoadingSpinner />
+      </BasicBox>
+    );
   } else if (query.isError) {
-    return <ErrorDisplay error={query.error} />;
+    return (
+      <BasicBox>
+        <ErrorDisplay error={query.error} />
+      </BasicBox>
+    );
   }
 
   const player = getQueryData(query);
@@ -134,20 +144,24 @@ export function PagePlayerTopGoldenList({ id }) {
   return (
     <Box sx={{ mx: 2 }}>
       <HeadTitle title={title} />
-      <Typography variant="h4">
-        <Link to={`/player/${id}`}>{player.name}</Link>
-        {apostrophe} Top Golden List
-      </Typography>
-      <Stack direction="row" spacing={2}>
-        <FormControlLabel
-          control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-          label="Show Archived"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />}
-          label="Show Arbitrary"
-        />
-      </Stack>
+      <BasicBox sx={{ mb: 1 }}>
+        <Typography variant="h4">
+          <StyledLink to={`/player/${id}`}>{player.name}</StyledLink>
+          {apostrophe} Top Golden List
+        </Typography>
+        <Stack direction="row" spacing={2}>
+          <FormControlLabel
+            control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
+            label="Show Archived"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
+            }
+            label="Show Arbitrary"
+          />
+        </Stack>
+      </BasicBox>
       <TopGoldenList type="player" id={id} archived={showArchived} arbitrary={showArbitrary} />
     </Box>
   );

@@ -107,6 +107,28 @@ export function BorderedBox({ children, sx = {}, ...props }) {
     </Box>
   );
 }
+export function BasicBox({ children, sx = {}, ...props }) {
+  const theme = useTheme();
+  return (
+    <Box
+      sx={{
+        width: {
+          xs: "100%",
+          sm: "fit-content",
+        },
+        background: theme.palette.background.other,
+        borderRadius: "10px",
+        p: 1,
+        border: "1px solid #cccccc99",
+        boxShadow: 1,
+        ...sx,
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  );
+}
 
 export function ProofEmbed({ url, ...props }) {
   if (url === undefined || url === null || url === "") {

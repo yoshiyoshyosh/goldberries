@@ -426,21 +426,35 @@ export function SuspendedIcon({ reason }) {
   );
 }
 
-export function CampaignIcon({ campaign, height = "1.3em" }) {
+export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
   const iconUrl = campaign.icon_url;
   if (iconUrl === null) return null;
 
+  const comp = (
+    <Tooltip title={getCampaignName(campaign)}>
+      <img
+        src={iconUrl}
+        alt={campaign.name}
+        style={{
+          height: height,
+          filter:
+            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+        }}
+        loading="lazy"
+      />
+    </Tooltip>
+  );
+
   return (
-    <img
-      src={iconUrl}
-      alt={campaign.name}
-      style={{
-        height: height,
-        filter:
-          "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
-      }}
-      loading="lazy"
-    />
+    <>
+      {doLink ? (
+        <Link to={"/campaign/" + campaign.id} style={{ height: height }}>
+          {comp}
+        </Link>
+      ) : (
+        comp
+      )}
+    </>
   );
 }
 
@@ -493,9 +507,30 @@ export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
     ? "clear-fullclear.png"
     : "clear.png";
   const alt = getChallengeFcLong(challenge);
-  const transform = challenge.requires_fc ? "scaleX(-1)" : "none";
 
   if (!challenge.requires_fc && !challenge.has_fc) return null;
+
+  return (
+    <Tooltip title={alt}>
+      <img
+        src={"/icons/" + icon}
+        alt={alt}
+        style={{
+          height: height,
+          filter:
+            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+          // transform: transform,
+        }}
+        {...props}
+        loading="lazy"
+      />
+    </Tooltip>
+  );
+}
+export function SubmissionFcIcon({ submission, height = "1em", ...props }) {
+  if (!submission.is_fc) return null;
+  const icon = "fullclear.png";
+  const alt = "Full Clear";
 
   return (
     <Tooltip title={alt}>

@@ -1,13 +1,13 @@
-import { Breadcrumbs, Typography } from "@mui/material";
+import { Breadcrumbs } from "@mui/material";
 import { getCampaignName, getChallengeName } from "../util/data_util";
-import { Link } from "react-router-dom";
+import { StyledLink } from "./BasicComponents";
 
 export function GoldberriesBreadcrumbs({ campaign, map, challenge, submission, ...props }) {
   return (
     <Breadcrumbs {...props}>
-      <Link to={"/campaign/" + campaign.id}>{getCampaignName(campaign)}</Link>
-      {map && <Link to={"/map/" + map.id}>{map.name}</Link>}
-      {challenge && <Link to={"/challenge/" + challenge.id}>{getChallengeName(challenge)}</Link>}
+      <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign)}</StyledLink>
+      {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
+      {challenge && <StyledLink to={"/challenge/" + challenge.id}>{getChallengeName(challenge)}</StyledLink>}
     </Breadcrumbs>
   );
 }
