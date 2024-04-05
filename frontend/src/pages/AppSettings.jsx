@@ -1,12 +1,10 @@
 import {
-  Button,
   Checkbox,
   Divider,
   FormControlLabel,
   Grid,
   MenuItem,
   Slider,
-  Stack,
   Tab,
   Tabs,
   TextField,
@@ -17,10 +15,9 @@ import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfo, faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { toast } from "react-toastify";
 
 export function PageAppSettings() {
   const { tab } = useParams();
@@ -30,17 +27,17 @@ export function PageAppSettings() {
   const setTab = (tab) => {
     setSelectedTab(tab);
     if (tab === "general") {
-      navigate("/app-settings", { replace: true });
+      navigate("/settings", { replace: true });
     } else {
-      navigate(`/app-settings/${tab}`, { replace: true });
+      navigate(`/settings/${tab}`, { replace: true });
     }
   };
 
   return (
     <BasicContainerBox maxWidth="md">
-      <HeadTitle title="App Settings" />
+      <HeadTitle title="Settings" />
       <Typography variant="h4" gutterBottom>
-        App Settings
+        Settings
       </Typography>
       <Tabs
         value={selectedTab}
@@ -75,6 +72,40 @@ export function AppSettingsGeneralForm() {
   );
 }
 
+const testBackgrounds = [
+  {
+    name: "9D Cloud Room",
+    file: "9d-cloom.png",
+  },
+  {
+    name: "9D FGFG",
+    file: "9d-fgfg.png",
+  },
+  {
+    name: "9D Moonberry",
+    file: "9d-mb.png",
+  },
+  {
+    name: "Frank",
+    file: "frank.png",
+  },
+  {
+    name: "Frank 2",
+    file: "frank-2.png",
+  },
+  {
+    name: "Frank Wide",
+    file: "frank-3.png",
+  },
+  {
+    name: "Terry",
+    file: "terry.png",
+  },
+  {
+    name: "Banana Mountain",
+    file: "banana.jpg",
+  },
+];
 const backgroundsDark = [
   {
     name: "DMR",
@@ -121,8 +152,8 @@ const backgroundsDark = [
     file: "wountain.jpg",
   },
   {
-    name: "Terry",
-    file: "terry.png",
+    name: "SJ AHS",
+    file: "ahs.png",
   },
 ];
 const backgroundsLight = [
@@ -135,12 +166,8 @@ const backgroundsLight = [
     file: "fwg.jpg",
   },
   {
-    name: "Solaris",
-    file: "solaris.jpg",
-  },
-  {
-    name: "Ogmo",
-    file: "ogmo.jpg",
+    name: "9D-2",
+    file: "9d-2.png",
   },
   {
     name: "EHS-1",
@@ -150,34 +177,18 @@ const backgroundsLight = [
     name: "EHS-2",
     file: "ehs-2.jpg",
   },
-  {
-    name: "Frank",
-    file: "frank.png",
-  },
 ];
 export function AppSettingsVisualForm() {
   const { settings, setSettings } = useAppSettings();
 
   const form = useForm({
-    defaultValues: {
-      ...settings.visual,
-      general: {
-        ...settings.visual.general,
-        backgroundDark: settings.visual.general.backgroundDark ?? "",
-        backgroundLight: settings.visual.general.backgroundLight ?? "",
-      },
-    },
+    defaultValues: settings.visual,
   });
   const doSubmit = (data) => {
     setSettings({
       ...settings,
       visual: {
         ...data,
-        general: {
-          ...data.general,
-          backgroundDark: data.general.backgroundDark === "" ? null : data.general.backgroundDark,
-          backgroundLight: data.general.backgroundLight === "" ? null : data.general.backgroundLight,
-        },
       },
     });
   };
@@ -195,8 +206,28 @@ export function AppSettingsVisualForm() {
 
   return (
     <form>
-      <Typography variant="h6">General</Typography>
-      <SettingsEntry title="Background [Light Mode]">
+      <Typography variant="h5">General</Typography>
+      <SettingsEntry title="Background Blur" tooltip="Guassian Blur applied to the background">
+        <Controller
+          name="general.backgroundBlur"
+          control={form.control}
+          render={({ field }) => (
+            <Slider
+              value={field.value}
+              onChange={(e, v) => field.onChange(v)}
+              min={0}
+              max={50}
+              step={1}
+              marks
+              valueLabelDisplay="auto"
+              valueLabelFormat={(v) => `${v}px`}
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <Typography variant="h6">Light Mode</Typography>
+      <SettingsEntry title="Background">
         <Controller
           name="general.backgroundLight"
           control={form.control}
@@ -218,11 +249,22 @@ export function AppSettingsVisualForm() {
                   {bg.name}
                 </MenuItem>
               ))}
+              <Divider />
+              {testBackgrounds.map((bg) => (
+                <MenuItem key={bg.file} value={bg.file}>
+                  {bg.name}
+                </MenuItem>
+              ))}
             </TextField>
           )}
         />
       </SettingsEntry>
-      <SettingsEntry title="Background [Dark Mode]">
+      <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
+        <TextField fullWidth {...form.register("general.backgroundLightCustom")} placeholder="URL to image" />
+      </SettingsEntry>
+
+      <Typography variant="h6">Dark Mode</Typography>
+      <SettingsEntry title="Background">
         <Controller
           name="general.backgroundDark"
           control={form.control}
@@ -244,31 +286,22 @@ export function AppSettingsVisualForm() {
                   {bg.name}
                 </MenuItem>
               ))}
+              <Divider />
+              {testBackgrounds.map((bg) => (
+                <MenuItem key={bg.file} value={bg.file}>
+                  {bg.name}
+                </MenuItem>
+              ))}
             </TextField>
           )}
         />
       </SettingsEntry>
-      <SettingsEntry title="Background Blur" tooltip="Guassian Blur applied to the background">
-        <Controller
-          name="general.backgroundBlur"
-          control={form.control}
-          render={({ field }) => (
-            <Slider
-              value={field.value}
-              onChange={(e, v) => field.onChange(v)}
-              min={0}
-              max={50}
-              step={1}
-              marks
-              valueLabelDisplay="auto"
-              valueLabelFormat={(v) => `${v}px`}
-            />
-          )}
-        />
+      <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
+        <TextField fullWidth {...form.register("general.backgroundDarkCustom")} placeholder="URL to image" />
       </SettingsEntry>
 
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h6">Top Golden List</Typography>
+      <Typography variant="h5">Top Golden List</Typography>
       <SettingsEntry>
         <Controller
           name="topGoldenList.showCampaignIcons"

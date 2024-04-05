@@ -218,7 +218,7 @@ const router = createBrowserRouter([
 
       { path: "search/:q?", element: <PageSearch /> },
 
-      { path: "app-settings/:tab?", element: <PageAppSettings /> },
+      { path: "settings/:tab?", element: <PageAppSettings /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -241,7 +241,7 @@ export const lightTheme = createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          background: "rgba(255,255,255,0.71)",
+          background: "rgba(255,255,255,0.75)",
           borderRadius: "10px",
         },
       },
@@ -394,7 +394,7 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
-        { name: "App Settings", path: "/app-settings", icon: <FontAwesomeIcon icon={faCog} /> },
+        { name: "Settings", path: "/settings", icon: <FontAwesomeIcon icon={faCog} /> },
         {
           name: "Logout",
           action: () => {
@@ -485,12 +485,21 @@ export function Layout() {
   };
 
   let background = "rgba(0,0,0,0)";
-  if (darkmode && settings.visual.general.backgroundDark !== null) {
-    background = "black url(/img/" + settings.visual.general.backgroundDark + ") 0 0 / cover no-repeat";
-    // background = "black url(/img/" + settings.visual.general.backgroundDark + ") 0 0 / 100% 100% no-repeat";
-  } else if (!darkmode && settings.visual.general.backgroundLight !== null) {
-    background = "white url(/img/" + settings.visual.general.backgroundLight + ") 0 0 / cover no-repeat";
-    // background = "white url(/img/" + settings.visual.general.backgroundLight + ") 0 0 / 100% 100% no-repeat";
+  const general = settings.visual.general;
+  if (!darkmode) {
+    if (general.backgroundLightCustom !== "") {
+      background = 'white url("' + general.backgroundLightCustom + '") 0 0 / cover no-repeat';
+    } else if (general.backgroundLight !== "") {
+      background = 'white url("/img/' + general.backgroundLight + '") 0 0 / cover no-repeat';
+      // background = "white url(/img/" + general.backgroundLight + ") 0 0 / 100% 100% no-repeat";
+    }
+  } else {
+    if (general.backgroundDarkCustom !== "") {
+      background = 'black url("' + general.backgroundDarkCustom + '") 0 0 / cover no-repeat';
+    } else if (general.backgroundDark !== "") {
+      background = 'black url("/img/' + general.backgroundDark + '") 0 0 / cover no-repeat';
+      // background = "black url(/img/" + general.backgroundDark + ") 0 0 / 100% 100% no-repeat";
+    }
   }
 
   return (
@@ -508,7 +517,7 @@ export function Layout() {
           background: background,
           filter:
             "blur(" + settings.visual.general.backgroundBlur + "px) " + (darkmode ? "brightness(0.35)" : ""),
-          transform: "scale(1.015)",
+          transform: "scale(1.03)",
         }}
       ></div>
       <Box

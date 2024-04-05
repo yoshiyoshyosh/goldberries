@@ -14,9 +14,11 @@ export function AppSettingsProvider({ children }) {
           darkenTierColors: 45,
         },
         general: {
-          backgroundDark: null, //Indicates default, solid color background. Otherwise this is the image name
-          backgroundLight: null, //Same
-          backgroundBlur: 15,
+          backgroundDark: "", //Indicates default, solid color background. Otherwise this is the image name
+          backgroundDarkCustom: "",
+          backgroundLight: "", //Same
+          backgroundLightCustom: "",
+          backgroundBlur: 5,
         },
       },
     };
