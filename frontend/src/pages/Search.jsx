@@ -69,7 +69,7 @@ function SearchResultsCampaigns({ campaigns }) {
 
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Campaigns ({campaigns.length})</Typography>
+      <Typography variant="h5">Campaigns ({filteredCampaigns.length})</Typography>
       {filteredCampaigns.length === 0 && (
         <Typography variant="body1" color="gray">
           No campaigns found

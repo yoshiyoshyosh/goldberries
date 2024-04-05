@@ -308,6 +308,7 @@ export function MultiUserSubmission() {
   const [sortMinorIndex, setSortMinorIndex] = useState(null);
   const [preferFc, setPreferFc] = useState(false);
   const [mapDataList, setMapDataList] = useState([]); // [{map: map, challenge: challenge, is_fc: false, player_notes: "", suggested_difficulty_id: null}]
+  const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
 
   const { mutateAsync: submitRun } = usePostSubmission();
 
@@ -336,7 +337,7 @@ export function MultiUserSubmission() {
       const mapData = mapDataList[index];
       submitRun({
         challenge_id: mapData.challenge.id,
-        player_id: auth.user.player.id,
+        player_id: selectedPlayer.id,
         is_fc: mapData.is_fc,
         player_notes: mapData.player_notes,
         raw_session_url: mapData.raw_session_url,
@@ -550,6 +551,18 @@ export function MultiUserSubmission() {
       <h4>Compilation Video</h4>
       <form>
         <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            {auth.hasVerifierPriv ? (
+              <PlayerSelect
+                type="all"
+                label="[Verifier Only] Submit for Player"
+                value={selectedPlayer}
+                onChange={(e, v) => setSelectedPlayer(v)}
+              />
+            ) : (
+              <PlayerChip player={selectedPlayer} />
+            )}
+          </Grid>
           <Grid item xs={12}>
             <TextField
               label="Proof URL *"
@@ -588,6 +601,7 @@ export function MultiUserSubmission() {
 export function NewChallengeUserSubmission({}) {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
 
   const { mutate: submitRun } = usePostSubmission((submission) => {
     navigate("/submission/" + submission.id);
@@ -611,7 +625,7 @@ export function NewChallengeUserSubmission({}) {
   const onSubmit = form.handleSubmit((data) => {
     console.log("Form data:", data);
     submitRun({
-      player_id: auth.user.player.id,
+      player_id: selectedPlayer.id,
       ...data,
     });
   });
@@ -655,6 +669,18 @@ export function NewChallengeUserSubmission({}) {
         <Divider sx={{ my: 3 }} />
         <h4>Your Run</h4>
         <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            {auth.hasVerifierPriv ? (
+              <PlayerSelect
+                type="all"
+                label="[Verifier Only] Submit for Player"
+                value={selectedPlayer}
+                onChange={(e, v) => setSelectedPlayer(v)}
+              />
+            ) : (
+              <PlayerChip player={selectedPlayer} />
+            )}
+          </Grid>
           <Grid item xs={12}>
             <TextField
               label="Proof URL *"

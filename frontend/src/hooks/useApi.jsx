@@ -52,7 +52,7 @@ export function invalidateJointQueries(queryClient) {
 }
 
 export function getQueryData(query) {
-  return query.data?.data ?? query.data;
+  return query.data?.data ?? query.data ?? null;
 }
 
 //#region ===== DELETE =====

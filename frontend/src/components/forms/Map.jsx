@@ -12,9 +12,10 @@ import {
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
+import { getQueryData } from "../../hooks/useApi";
 
 export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
   const query = useQuery({
@@ -24,6 +25,27 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
     cacheTime: 0,
     enabled: id !== null,
   });
+
+  const data = getQueryData(query);
+  const map = useMemo(() => {
+    return (
+      data ?? {
+        id: null,
+        campaign: null,
+        name: defaultMapName ?? "",
+        url: "",
+        has_fc: false,
+        is_rejected: false,
+        rejection_reason: "",
+        is_archived: false,
+        sort_major: null,
+        sort_minor: null,
+        sort_order: null,
+        author_gb_id: "",
+        author_gb_name: "",
+      }
+    );
+  }, [data]);
 
   if (query.isLoading || query.isFetching) {
     return (
@@ -40,22 +62,6 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
       </>
     );
   }
-
-  const map = query.data?.data ?? {
-    id: null,
-    campaign: null,
-    name: defaultMapName ?? "",
-    url: "",
-    has_fc: false,
-    is_rejected: false,
-    rejection_reason: "",
-    is_archived: false,
-    sort_major: null,
-    sort_minor: null,
-    sort_order: null,
-    author_gb_id: "",
-    author_gb_name: "",
-  };
 
   return <FormMap map={map} onSave={onSave} {...props} />;
 }

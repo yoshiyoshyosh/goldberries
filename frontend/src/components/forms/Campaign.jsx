@@ -17,9 +17,9 @@ import {
 } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormOptions } from "../../util/constants";
-import { useDeleteMap, usePostCampaign, usePostMap } from "../../hooks/useApi";
+import { getQueryData, useDeleteMap, usePostCampaign, usePostMap } from "../../hooks/useApi";
 import { fetchCampaign } from "../../util/api";
 import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,6 +43,26 @@ export function FormCampaignWrapper({
     enabled: id !== null,
   });
 
+  const data = getQueryData(query);
+  const campaign = useMemo(() => {
+    return (
+      data ?? {
+        id: null,
+        name: defaultCampaignName ?? "",
+        url: defaultCampaignUrl ?? "",
+        icon_url: "",
+        sort_major_name: "",
+        sort_major_labels: [],
+        sort_major_colors: [],
+        sort_minor_name: "",
+        sort_minor_labels: [],
+        sort_minor_colors: [],
+        author_gb_id: "",
+        author_gb_name: "",
+      }
+    );
+  }, [data]);
+
   if (query.isLoading || query.isFetching) {
     return (
       <>
@@ -58,21 +78,6 @@ export function FormCampaignWrapper({
       </>
     );
   }
-
-  const campaign = query.data?.data ?? {
-    id: null,
-    name: defaultCampaignName ?? "",
-    url: defaultCampaignUrl ?? "",
-    icon_url: "",
-    sort_major_name: "",
-    sort_major_labels: [],
-    sort_major_colors: [],
-    sort_minor_name: "",
-    sort_minor_labels: [],
-    sort_minor_colors: [],
-    author_gb_id: "",
-    author_gb_name: "",
-  };
 
   if (isEditMaps) return <FormCampaignEditMaps campaign={campaign} onSave={onSave} {...props} />;
   return <FormCampaign campaign={campaign} onSave={onSave} {...props} />;

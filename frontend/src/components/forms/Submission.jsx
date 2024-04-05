@@ -36,6 +36,7 @@ export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const query = useQuery({
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
+    staleTime: 0,
   });
 
   if (query.isLoading || query.isFetching) {

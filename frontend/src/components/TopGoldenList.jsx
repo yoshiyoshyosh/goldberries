@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
-import { BasicBox, ErrorDisplay, LoadingSpinner } from "./BasicComponents";
+import { BasicBox, ErrorDisplay, LoadingSpinner, StyledExternalLink } from "./BasicComponents";
 import {
   Box,
   Button,
@@ -353,74 +353,80 @@ function TopGoldenListRow({
             <DifficultyChip difficulty={challenge.submissions[0].suggested_difficulty} />
           </Stack>
         ) : (
-          <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
-            {challenge.submissions.length}
-            <Tooltip
-              componentsProps={{
-                tooltip: {
-                  sx: {
-                    width: {
-                      xs: "95vw",
-                      sm: "auto",
-                    },
-                    maxWidth: {
-                      xs: "95vw",
-                      sm: "none",
-                    },
-                    maxHeight: "400px",
-                    overflowY: "scroll",
+          <Tooltip
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  width: {
+                    xs: "95vw",
+                    sm: "auto",
                   },
+                  maxWidth: {
+                    xs: "95vw",
+                    sm: "none",
+                  },
+                  maxHeight: "400px",
+                  overflowY: "scroll",
                 },
-              }}
-              enterTouchDelay={0}
-              leaveTouchDelay={0}
-              leaveDelay={200}
-              title={
-                <>
-                  {auth.hasPlayerClaimed ? (
-                    <Stack direction="column" gap="2px" sx={{ mb: "2px" }}>
-                      <Link to={"/submit/single-challenge/" + challenge.id}>
-                        <Button variant="contained" size="small" fullWidth color="info">
-                          Submit
-                        </Button>
-                      </Link>
-                      {auth.hasVerifierPriv && (
-                        <Button
-                          variant="contained"
-                          size="small"
-                          fullWidth
-                          color="info"
-                          startIcon={<FontAwesomeIcon icon={faEdit} />}
-                          onClick={() => openEditChallenge(challenge.id)}
-                        >
-                          Edit
-                        </Button>
-                      )}
-                    </Stack>
-                  ) : null}
-                  <ChallengeSubmissionTable challenge={challenge} compact />
-                </>
-              }
+              },
+            }}
+            enterTouchDelay={0}
+            leaveTouchDelay={0}
+            leaveDelay={200}
+            title={
+              <>
+                {auth.hasPlayerClaimed ? (
+                  <Stack direction="column" gap="2px" sx={{ mb: "2px" }}>
+                    <Link to={"/submit/single-challenge/" + challenge.id}>
+                      <Button variant="contained" size="small" fullWidth color="info">
+                        Submit
+                      </Button>
+                    </Link>
+                    {auth.hasVerifierPriv && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        fullWidth
+                        color="info"
+                        startIcon={<FontAwesomeIcon icon={faEdit} />}
+                        onClick={() => openEditChallenge(challenge.id)}
+                      >
+                        Edit
+                      </Button>
+                    )}
+                  </Stack>
+                ) : null}
+                <ChallengeSubmissionTable challenge={challenge} compact />
+              </>
+            }
+            enterDelay={500}
+          >
+            <Stack
+              direction="row"
+              gap={1}
+              alignItems="center"
+              justifyContent="flex-end"
+              sx={{ cursor: "pointer" }}
             >
-              <Typography
-                color="info.dark"
-                sx={{ cursor: "pointer", filter: "drop-shadow(0px 0px 1px white)" }}
-              >
+              {challenge.submissions.length}
+              <Typography color="info.dark" sx={{ filter: "drop-shadow(0px 0px 1px white)" }}>
                 <FontAwesomeIcon icon={faList} />
               </Typography>
-            </Tooltip>
-          </Stack>
+            </Stack>
+          </Tooltip>
         )}
       </TableCell>
       <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>
         <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
           {challenge.submissions.length === 0 ? null : (
-            <Link
+            <StyledExternalLink
               style={{ color: "inherit", textDecoration: "none", lineHeight: "1" }}
-              to={challenge.submissions[0].proof_url}
+              href={challenge.submissions[0].proof_url}
+              target="_blank"
+              rel="noreferrer"
             >
-              {/* <ChallengeFcIcon challenge={challenge} height="1.3em" /> */}▶
-            </Link>
+              ▶
+            </StyledExternalLink>
           )}
           {isPlayer ? (
             <Link to={"/submission/" + challenge.submissions[0].id}>

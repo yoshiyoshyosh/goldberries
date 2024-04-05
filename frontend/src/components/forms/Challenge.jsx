@@ -4,8 +4,9 @@ import { Button, Checkbox, Divider, FormControlLabel, TextField, Typography } fr
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { DifficultySelectControlled, ObjectiveSelect, FullMapSelect } from "../GoldberriesComponents";
+import { getQueryData } from "../../hooks/useApi";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
   const query = useQuery({
@@ -15,6 +16,22 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
     cacheTime: 0,
     enabled: id !== null,
   });
+
+  const data = getQueryData(query);
+  const challenge = useMemo(() => {
+    return (
+      data ?? {
+        id: null,
+        map: null,
+        objective_id: 1,
+        description: "",
+        requires_fc: false,
+        has_fc: false,
+        is_arbitrary: false,
+        difficulty_id: defaultDifficultyId ?? 19, //Undetermined
+      }
+    );
+  }, [data]);
 
   if (query.isLoading || query.isFetching) {
     return (
@@ -31,17 +48,6 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
       </>
     );
   }
-
-  const challenge = query.data?.data ?? {
-    id: null,
-    map: null,
-    objective_id: 1,
-    description: "",
-    requires_fc: false,
-    has_fc: false,
-    is_arbitrary: false,
-    difficulty_id: defaultDifficultyId ?? 19, //Undetermined
-  };
 
   return <FormChallenge challenge={challenge} onSave={onSave} {...props} />;
 }

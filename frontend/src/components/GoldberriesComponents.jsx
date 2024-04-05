@@ -181,8 +181,9 @@ export function DifficultySelect({ defaultValue, ...props }) {
 
 export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
   const theme = useTheme();
-  const text = difficulty === null ? "<none>" : getDifficultyName(difficulty);
+  const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
   const colors = getDifficultyColors(difficulty?.id);
+  if (difficulty === null) return null;
   return (
     <Chip
       label={prefix + text}
