@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BasicBox,
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+} from "../components/BasicComponents";
 import { getQueryData, useSearch } from "../hooks/useApi";
 import { Stack, TextField, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -60,16 +66,19 @@ export function SearchDisplay({ search }) {
       {data.players && <SearchResultsPlayers players={data.players} />}
       {data.campaigns && <SearchResultsCampaigns campaigns={data.campaigns} />}
       {data.maps && <SearchResultsMaps maps={data.maps} />}
+      {data.authors && <SearchResultsAuthors authors={data.authors} />}
     </Stack>
   );
 }
 
-function SearchResultsCampaigns({ campaigns }) {
-  const filteredCampaigns = campaigns.filter((campaign) => campaign.maps.length > 1);
+function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = true }) {
+  const filteredCampaigns = filterStandalone
+    ? campaigns.filter((campaign) => campaign.maps.length > 1)
+    : campaigns;
 
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Campaigns ({filteredCampaigns.length})</Typography>
+      <Typography variant={heading}>Campaigns - {filteredCampaigns.length}</Typography>
       {filteredCampaigns.length === 0 && (
         <Typography variant="body1" color="gray">
           No campaigns found
@@ -119,10 +128,10 @@ function SearchResultsCampaigns({ campaigns }) {
   );
 }
 
-function SearchResultsMaps({ maps }) {
+function SearchResultsMaps({ maps, heading = "h5" }) {
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Maps ({maps.length})</Typography>
+      <Typography variant={heading}>Maps - {maps.length}</Typography>
       {maps.length === 0 && (
         <Typography variant="body1" color="gray">
           No maps found
@@ -148,14 +157,41 @@ function SearchResultsMaps({ maps }) {
 function SearchResultsPlayers({ players }) {
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Players ({players.length})</Typography>
-      {players.length === 0 && (
+      <Typography variant="h5">Players - {players.length}</Typography>
+      {players.length === 0 ? (
         <Typography variant="body1" color="gray">
           No players found
         </Typography>
+      ) : (
+        <Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
+          {players.map((player) => (
+            <PlayerChip key={player.id} player={player} />
+          ))}
+        </Stack>
       )}
-      {players.map((player) => (
-        <PlayerChip key={player.id} player={player} />
+    </Stack>
+  );
+}
+
+function SearchResultsAuthors({ authors }) {
+  return (
+    <Stack direction="column" gap={1}>
+      <Typography variant="h5">Authors - {authors.length}</Typography>
+      {authors.length === 0 && (
+        <Typography variant="body1" color="gray">
+          No authors found
+        </Typography>
+      )}
+      {authors.map((author) => (
+        <BasicBox key={author.id} sx={{ width: "100%", px: 2 }}>
+          <Stack direction="column" gap={1}>
+            <Typography variant="h6">{author.name}</Typography>
+            {author.campaigns.length > 0 && (
+              <SearchResultsCampaigns campaigns={author.campaigns} heading="body1" filterStandalone={false} />
+            )}
+            {author.maps.length > 0 && <SearchResultsMaps maps={author.maps} heading="body1" />}
+          </Stack>
+        </BasicBox>
       ))}
     </Stack>
   );
