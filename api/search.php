@@ -84,12 +84,22 @@ if (in_array("authors", $in)) {
 
   //Now, list all maps and campaigns for each author
   foreach ($response['authors'] as $name => $value) {
+    $response['authors'][$name]['name'] = $name;
+
     $campaigns = Campaign::find_by_author($DB, $name);
     $response['authors'][$name]['campaigns'] = $campaigns;
 
     $maps = Map::find_by_author($DB, $name);
     $response['authors'][$name]['maps'] = $maps;
   }
+
+  //Flatten the authors array
+  $response['authors'] = array_values($response['authors']);
+
+  //Sort the authors array by name alphabetically
+  usort($response['authors'], function ($a, $b) {
+    return strcasecmp($a['name'], $b['name']);
+  });
 }
 
 api_write($response);
