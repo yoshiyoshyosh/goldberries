@@ -9,8 +9,6 @@ class Account extends DbObject
   public ?string $email = null;
   public ?string $password = null;
   public ?string $discord_id = null;
-  public ?string $session_token = null;
-  public ?JsonDateTime $session_created = null;
   public ?JsonDateTime $date_created;
   public bool $is_verifier = false;
   public bool $is_admin = false;
@@ -57,10 +55,6 @@ class Account extends DbObject
       $this->password = $arr[$prefix . 'password'];
     if (isset($arr[$prefix . 'discord_id']))
       $this->discord_id = $arr[$prefix . 'discord_id'];
-    if (isset($arr[$prefix . 'session_token']))
-      $this->session_token = $arr[$prefix . 'session_token'];
-    if (isset($arr[$prefix . 'session_created']))
-      $this->session_created = new JsonDateTime($arr[$prefix . 'session_created']);
     if (isset($arr[$prefix . 'suspension_reason']))
       $this->suspension_reason = $arr[$prefix . 'suspension_reason'];
     if (isset($arr[$prefix . 'email_verified']))
@@ -125,8 +119,6 @@ class Account extends DbObject
       'email' => $this->email,
       'password' => $this->password,
       'discord_id' => $this->discord_id,
-      'session_token' => $this->session_token,
-      'session_created' => $this->session_created,
       'suspension_reason' => $this->suspension_reason,
       'email_verified' => $this->email_verified,
       'email_verify_code' => $this->email_verify_code,
@@ -156,7 +148,14 @@ class Account extends DbObject
   static function find_by_session_token($DB, string $session_token)
   {
     global $session_expire_days;
-    return find_in_db($DB, 'Account', "session_token = $1 AND session_created > NOW() - INTERVAL '$session_expire_days days'", array($session_token), new Account());
+    $sessions = Session::find_by_token($DB, $session_token);
+    if ($sessions === false || count($sessions) === 0 || count($sessions) > 1) {
+      return false;
+    }
+
+    $session = $sessions[0];
+    $session->expand_foreign_keys($DB);
+    return $session->account;
   }
 
   static function find_by_email_verify_code($DB, string $email_verify_code)

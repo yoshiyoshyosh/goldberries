@@ -15,7 +15,6 @@ if (getenv('DEBUG') === 'true') {
   DEFINE('REDIRECT_POST_LOGIN', 'https://goldberries.vi-home.de');
   DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://goldberries.vi-home.de/my-account');
 }
-$session_expire_days = 7;
 
 session_start();
 
@@ -37,14 +36,16 @@ function successful_login($account, $method)
   global $DB;
 
   $token = create_session_token();
-  $account->session_token = $token;
-  $account->session_created = new JsonDateTime();
-  $account->expand_foreign_keys($DB);
 
-  if (!$account->update($DB)) {
+  $session = new Session();
+  $session->token = $token;
+  $session->account_id = $account->id;
+  $session->created = new JsonDateTime();
+  if (!$session->insert($DB)) {
     return false;
   }
 
+  $account->expand_foreign_keys($DB);
   $methodStr = $method === "mail" ? "email" : "Discord";
   log_debug("User logged in to {$account} via {$methodStr}", "Login");
 
@@ -60,10 +61,25 @@ function logout()
     return false;
   }
 
-  $account->session_token = null;
-  $account->session_created = null;
+  if (!isset($_SESSION['token'])) {
+    return false;
+  }
 
-  if ($account->update($DB)) {
+  $token = $_SESSION['token'];
+  $sessions = Session::find_by_token($DB, $token);
+  if ($sessions === false) {
+    return false;
+  }
+  if (count($sessions) === 0) {
+    return false;
+  }
+
+  $session = $sessions[0];
+  if ($session->account_id !== $account->id) {
+    return false;
+  }
+
+  if ($session->delete($DB)) {
     session_destroy();
     return true;
   } else {
@@ -85,23 +101,17 @@ function generate_random_token($length)
 function get_user_data()
 {
   global $DB;
-  global $session_expire_days;
 
-  if (!isset ($_SESSION['token'])) {
+  if (!isset($_SESSION['token'])) {
     return null;
   }
 
   //Fetch account from database
   //Respect the expire time of the session
-  $accounts = Account::find_by_session_token($DB, $_SESSION['token']);
-  if ($accounts == false) {
+  $account = Account::find_by_session_token($DB, $_SESSION['token']);
+  if ($account == false) {
     return null;
   }
-  if (count($accounts) == 0 || count($accounts) > 1) {
-    return null;
-  }
-
-  $account = $accounts[0];
   $account->expand_foreign_keys($DB);
   return $account;
 }

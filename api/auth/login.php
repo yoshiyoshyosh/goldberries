@@ -1,6 +1,6 @@
 <?php
 
-require_once('../api_bootstrap.inc.php');
+require_once ('../api_bootstrap.inc.php');
 
 $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
@@ -32,6 +32,9 @@ if (is_suspended($account)) {
 if (successful_login($account, "mail")) {
   $account->remove_sensitive_info();
   $account->expand_foreign_keys($DB);
+  if ($account->player_id != null) {
+    $account->player->expand_foreign_keys($DB, 2, true);
+  }
   api_write($account);
 } else {
   die_json(500, "Failed to login");

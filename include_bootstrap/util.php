@@ -68,6 +68,11 @@ class JsonDateTime extends \DateTime implements \JsonSerializable
   {
     return $this->format("c");
   }
+
+  public function __toString()
+  {
+    return $this->format("c");
+  }
 }
 
 
