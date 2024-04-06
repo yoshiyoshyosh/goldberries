@@ -19,23 +19,25 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { getQueryData, useGetRecentSubmissions, useGetVerifierList } from "../hooks/useApi";
 import {
+  ArbitraryIcon,
   CampaignIcon,
   DifficultyChip,
   PlayerChip,
+  SubmissionFcIcon,
   SubmissionIcon,
   VerificationStatusChip,
 } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { FAQData, Rules } from "../util/other_data";
+import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faScroll } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { useTheme } from "@emotion/react";
 
@@ -140,32 +142,53 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.submissions.map((submission) => (
-            <TableRow key={submission.id}>
-              <TableCell>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <CampaignIcon campaign={submission.challenge.map.campaign} />
-                  <StyledLink to={"/campaign/" + submission.challenge.map.campaign.id}>
-                    {submission.challenge.map.campaign.name}
-                  </StyledLink>
-                  <Typography>-</Typography>
-                  <StyledLink to={"/map/" + submission.challenge.map.id}>
-                    {submission.challenge.map.name}
-                  </StyledLink>
-                  <Typography>-</Typography>
-                  <SubmissionIcon submission={submission} />
-                </Stack>
-              </TableCell>
-              {!hasPlayer && (
-                <TableCell align="center">
-                  <PlayerChip player={submission.player} size="small" />
+          {data.submissions.map((submission) => {
+            const campaignNameSame = submission.challenge.map.campaign.name === submission.challenge.map.name;
+            return (
+              <TableRow key={submission.id}>
+                <TableCell>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <CampaignIcon campaign={submission.challenge.map.campaign} />
+                    {!campaignNameSame && (
+                      <>
+                        <StyledLink to={"/campaign/" + submission.challenge.map.campaign.id}>
+                          {submission.challenge.map.campaign.name}
+                        </StyledLink>
+                        <Typography>-</Typography>
+                      </>
+                    )}
+                    <StyledLink to={"/map/" + submission.challenge.map.id}>
+                      {submission.challenge.map.name}
+                    </StyledLink>
+                    {submission.challenge.description && (
+                      <>
+                        <Typography>-</Typography>
+                        <Tooltip title={submission.challenge.description} arrow>
+                          <ArbitraryIcon />{" "}
+                          <FontAwesomeIcon
+                            icon={faInfoCircle}
+                            color={theme.palette.text.secondary}
+                            style={{ height: "1em" }}
+                          />
+                        </Tooltip>
+                      </>
+                    )}
+                    <Typography>-</Typography>
+                    <SubmissionIcon submission={submission} />
+                    <SubmissionFcIcon submission={submission} />
+                  </Stack>
                 </TableCell>
-              )}
-              <TableCell align="center">
-                <DifficultyChip difficulty={submission.challenge.difficulty} />
-              </TableCell>
-            </TableRow>
-          ))}
+                {!hasPlayer && (
+                  <TableCell align="center">
+                    <PlayerChip player={submission.player} size="small" />
+                  </TableCell>
+                )}
+                <TableCell align="center">
+                  <DifficultyChip difficulty={submission.challenge.difficulty} />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <TablePagination

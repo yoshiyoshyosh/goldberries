@@ -458,14 +458,10 @@ export function Layout() {
     menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
   }
 
-  // const menu = [menus.home, menus.lists, menus.campaigns, menus.otherChallenges];
-  const leftMenu = [menus.lists, menus.campaigns, /*menus.otherChallenges,*/ menus.search];
+  const leftMenu = [menus.lists, menus.campaigns, menus.search];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);
-  }
-  if (auth.isAdmin) {
-    leftMenu.push(menus.admin);
   }
   rightMenu.push(menus.submit);
   const userMenu = auth.isLoggedIn ? menus.user : menus.notUser;

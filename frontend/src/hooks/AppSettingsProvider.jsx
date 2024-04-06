@@ -11,6 +11,7 @@ export function AppSettingsProvider({ children }) {
         darkmode: prefersDarkMode ?? true,
         topGoldenList: {
           showCampaignIcons: true,
+          useTextFcIcons: false,
           darkenTierColors: 45,
         },
         general: {

@@ -40,6 +40,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -502,29 +503,36 @@ export function LinkIcon({ url }) {
 }
 
 export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
+  const { settings } = useAppSettings();
   const icon = challenge.requires_fc
     ? "fullclear.png"
     : challenge.has_fc
     ? "clear-fullclear.png"
     : "clear.png";
   const alt = getChallengeFcLong(challenge);
+  const shortAlt = getChallengeFcShort(challenge);
 
-  if (!challenge.requires_fc && !challenge.has_fc) return null;
+  if (!challenge.requires_fc && !challenge.has_fc && !settings.visual.topGoldenList.useTextFcIcons)
+    return null;
 
   return (
     <Tooltip title={alt}>
-      <img
-        src={"/icons/" + icon}
-        alt={alt}
-        style={{
-          height: height,
-          filter:
-            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
-          // transform: transform,
-        }}
-        {...props}
-        loading="lazy"
-      />
+      {settings.visual.topGoldenList.useTextFcIcons ? (
+        <span style={{ whiteSpace: "nowrap" }}>{shortAlt}</span>
+      ) : (
+        <img
+          src={"/icons/" + icon}
+          alt={alt}
+          style={{
+            height: height,
+            filter:
+              "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+            // transform: transform,
+          }}
+          {...props}
+          loading="lazy"
+        />
+      )}
     </Tooltip>
   );
 }
@@ -561,4 +569,8 @@ export function OtherIcon({ name, title, alt, height = "1em" }) {
       <img src={"/icons/" + name + ".png"} alt={alt} style={{ height: height }} />
     </Tooltip>
   );
+}
+
+export function ArbitraryIcon({ height = "1em" }) {
+  return <Tooltip title="Arbitrary">(A)</Tooltip>;
 }

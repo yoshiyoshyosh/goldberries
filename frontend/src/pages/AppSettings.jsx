@@ -316,6 +316,20 @@ export function AppSettingsVisualForm() {
           )}
         />
       </SettingsEntry>
+      <SettingsEntry note="This will replace the flag icons with [C], [FC] and [C/FC] 'icons'">
+        <Controller
+          name="topGoldenList.useTextFcIcons"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Use Text FC Icons"
+            />
+          )}
+        />
+      </SettingsEntry>
 
       <SettingsEntry
         title="Darken Tier Colors"
