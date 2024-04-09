@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Container, Divider, Menu, MenuItem, Typography } from "@mui/material";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
-import { get } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { APP_NAME_LONG } from "../util/constants";
 import { useTheme } from "@emotion/react";
@@ -119,7 +118,7 @@ export function BasicBox({ children, sx = {}, ...props }) {
         background: theme.palette.background.other,
         borderRadius: "10px",
         p: 1,
-        border: "1px solid #cccccc99",
+        border: "1px solid " + theme.palette.box.border,
         boxShadow: 1,
         ...sx,
       }}

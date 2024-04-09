@@ -24,7 +24,6 @@ import {
   Box,
   Button,
   Collapse,
-  Container,
   CssBaseline,
   Divider,
   Drawer,
@@ -40,12 +39,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  alpha,
   createTheme,
-  darken,
-  decomposeColor,
-  emphasize,
-  useMediaQuery,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -72,6 +66,7 @@ import {
   faPerson,
   faPlayCircle,
   faPlus,
+  faPoll,
   faRegistered,
   faSearch,
   faSignIn,
@@ -110,6 +105,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { light } from "@mui/material/styles/createPalette";
 import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
 import { PageAppSettings } from "./pages/AppSettings";
+import { PageSuggestions } from "./pages/Suggestions";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -217,6 +213,7 @@ const router = createBrowserRouter([
       { path: "campaign/:id/:tab?", element: <PageCampaign /> },
 
       { path: "search/:q?", element: <PageSearch /> },
+      { path: "suggestions/:id?", element: <PageSuggestions /> },
 
       { path: "settings/:tab?", element: <PageAppSettings /> },
 
@@ -233,10 +230,14 @@ export const lightTheme = createTheme({
       main: "#1e90ff",
     },
     tableDivider: "#e0e0e0",
+    box: {
+      border: "#cccccc99",
+      hover: "#f0f0f0",
+    },
     background: {
-      // paper: "rgba(255,255,255,0.4)",
       other: "rgba(255,255,255,0.75)",
     },
+    errorBackground: "rgba(255,215,215,0.75)",
   },
   components: {
     MuiContainer: {
@@ -259,10 +260,15 @@ const darkTheme = createTheme({
     links: {
       main: "#1e90ff",
     },
+    tableDivider: "#515151",
+    box: {
+      border: "#cccccc99",
+      hover: "#333",
+    },
     background: {
       other: "rgba(0,0,0,0.5)",
     },
-    tableDivider: "#515151",
+    errorBackground: "rgba(40,0,0,0.5)",
   },
   components: {
     MuiContainer: {
@@ -450,6 +456,11 @@ export function Layout() {
       path: "/search",
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
+    suggestions: {
+      name: "Suggestions",
+      path: "/suggestions",
+      icon: <FontAwesomeIcon icon={faPoll} />,
+    },
   };
 
   if (auth.hasPlayerClaimed === true) {
@@ -458,7 +469,7 @@ export function Layout() {
     menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
   }
 
-  const leftMenu = [menus.lists, menus.campaigns, menus.search];
+  const leftMenu = [menus.lists, menus.campaigns, menus.search, menus.suggestions];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);

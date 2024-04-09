@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//#region ===== GET =====
+//#region == GET ==
 
 //type: "hard", "standard", "campaign", "map", "challenge", "player"
 export function fetchGoldenList(
@@ -250,9 +250,28 @@ export function fetchLogs(page, perPage, level, topic, search, start_date, end_d
     },
   });
 }
+
+export function fetchSuggestions(page, perPage, expired = null, challengeId = null) {
+  const params = {
+    page: page,
+    per_page: perPage,
+  };
+  if (expired !== null) params.expired = expired;
+  if (challengeId !== null) params.challenge = challengeId;
+  return axios.get("/suggestion.php", {
+    params: params,
+  });
+}
+export function fetchSuggestion(id) {
+  return axios.get("/suggestion.php", {
+    params: {
+      id: id,
+    },
+  });
+}
 //#endregion
 
-//#region ===== POST =====
+//#region == POST ==
 export function postCampaign(data) {
   return axios.post("/campaign.php", formatDataForApi(data));
 }
@@ -326,9 +345,16 @@ export function forgotPasswordVerify(data) {
     },
   });
 }
+
+export function postSuggestion(data) {
+  return axios.post("/suggestion.php", formatDataForApi(data));
+}
+export function postSuggestionVote(data) {
+  return axios.post("/suggestion-vote.php", formatDataForApi(data));
+}
 //#endregion
 
-//#region ===== DELETE =====
+//#region == DELETE ==
 export function deleteCampaign(id) {
   return axios.delete("/campaign.php", {
     params: {
@@ -399,9 +425,24 @@ export function deleteLogEntry(id) {
     },
   });
 }
+
+export function deleteSuggestion(id) {
+  return axios.delete("/suggestion.php", {
+    params: {
+      id: id,
+    },
+  });
+}
+export function deleteSuggestionVote(id) {
+  return axios.delete("/suggestion-vote.php", {
+    params: {
+      id: id,
+    },
+  });
+}
 //#endregion
 
-//#region ===== Utility =====
+//#region == Utility ==
 export function formatDataForApi(data) {
   //Loop through all props in data
   //If prop is a string, trim it. if its empty, set it to null
