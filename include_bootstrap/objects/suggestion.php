@@ -85,13 +85,6 @@ class Suggestion extends DbObject
     $query = "SELECT * FROM suggestion";
 
     $where = array();
-    if ($account === null) {
-      $where[] = "is_verified = true";
-    } else {
-      if (!is_verifier($account) && $account->player_id !== null) {
-        $where[] = "(is_verified = true OR author_id = " . $account->player_id . ")";
-      }
-    }
     if ($challenge !== null) {
       $where[] = "challenge_id = " . $challenge;
     }
@@ -102,6 +95,16 @@ class Suggestion extends DbObject
         $where[] = "date_created >= NOW() - INTERVAL '" . self::$expiration_days . " days'";
         $where[] = "is_accepted IS NULL";
         $where[] = "(is_verified = true OR is_verified IS NULL)";
+      }
+    }
+
+    if ($account === null || (!is_verifier($account) && $account->player_id === null)) {
+      $where[] = "is_verified = true";
+    } else {
+      if (is_verifier($account)) {
+        //$where[] = "is_verified IS NOT NULL";
+      } else {
+        $where[] = "(is_verified = true OR author_id = " . $account->player_id . ")";
       }
     }
 

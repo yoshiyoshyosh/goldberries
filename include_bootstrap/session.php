@@ -163,12 +163,12 @@ function is_suspended($account = null)
 function check_access($account, $needs_player = true, $reject_suspended = true)
 {
   if ($account === null) {
-    die_json(401, "not logged in");
+    die_json(401, "Not logged in");
   }
   if ($reject_suspended && $account->is_suspended) {
-    die_json(403, "account is suspended");
+    die_json(403, "Account is suspended");
   }
   if ($needs_player && $account->player === null) {
-    die_json(403, "account does not have a player claimed yet");
+    die_json(403, "Account does not have a player claimed yet");
   }
 }

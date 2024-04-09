@@ -54,12 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(403, "Not authorized");
     }
 
-    if ($old_suggestion->is_verified === null && $suggestion->is_verified !== null) {
+    if ($old_suggestion->is_verified !== true && $old_suggestion->is_verified !== $suggestion->is_verified) {
       $toLog = $suggestion->is_verified ? "verified" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_verified = $suggestion->is_verified;
     }
-    if ($old_suggestion->is_accepted === null && $suggestion->is_accepted !== null) {
+    if ($old_suggestion->is_accepted !== $suggestion->is_accepted) {
       $toLog = $suggestion->is_accepted ? "verified" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_accepted = $suggestion->is_accepted;
@@ -84,6 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $suggestion->author_id = $account->player_id;
     $suggestion->date_created = new JsonDateTime();
 
+    //Skip verification process
+    //$suggestion->is_verified = true;
+
     if ($suggestion->insert($DB)) {
       $suggestion->expand_foreign_keys($DB, 5);
       api_write($suggestion);
@@ -95,9 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // ===== DELETE Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-  if ($account === null || (!is_verifier($account))) {
-    die_json(403, "Not authorized");
-  }
+  check_access($account, true);
 
   $id = $_REQUEST['id'] ?? null;
   if ($id === null) {
@@ -108,10 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($suggestion === false) {
     die_json(404, "Suggestion not found");
   }
+  if (!is_verifier($account)) {
+    if ($suggestion->author_id !== $account->player_id) {
+      die_json(403, "You can only delete your own suggestions");
+    }
+    if ($suggestion->is_verified === true) {
+      die_json(403, "You cannot delete in-progress suggestions");
+    }
+    if ($suggestion->is_accepted !== null) {
+      die_json(403, "You cannot delete completed suggestions");
+    }
+  }
 
   if (!$suggestion->delete($DB)) {
     die_json(500, "Failed to delete suggestion");
   }
 
+  log_info("{$suggestion} was deleted by '{$account->player->name}'", "Suggestion");
   http_response_code(200);
 }

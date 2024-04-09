@@ -75,7 +75,7 @@ class SuggestionVote extends DbObject
     if ($suggestion->challenge_id === null)
       return;
 
-    $query = "SELECT * FROM submission WHERE player_id = $1 AND challenge_id = $2";
+    $query = "SELECT * FROM submission WHERE player_id = $1 AND challenge_id = $2 AND is_verified = true";
     $result = pg_query_params($DB, $query, array($this->player_id, $suggestion->challenge_id));
     if (pg_num_rows($result) === 0)
       return;
