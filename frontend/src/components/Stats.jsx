@@ -83,7 +83,7 @@ export function SuggestedDifficultyChart({ challenge }) {
   );
 }
 
-export function SuggestedDifficultyTierCounts({ challenge, sx, direction = "row" }) {
+export function SuggestedDifficultyTierCounts({ challenge, sx, direction = "row", nowrap = true }) {
   let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
   allSuggestedDiffs = allSuggestedDiffs.filter((diff) => diff !== null);
 
@@ -109,7 +109,11 @@ export function SuggestedDifficultyTierCounts({ challenge, sx, direction = "row"
 
   return (
     <Stack direction={direction} flexWrap="wrap" gap={2} sx={sx} alignItems="center">
-      {sortedDifficulties.length === 0 && <Typography variant="body2">No suggestions yet.</Typography>}
+      {sortedDifficulties.length === 0 && (
+        <Typography variant="body2" whiteSpace={nowrap ? "nowrap" : "initial"}>
+          No suggestions yet.
+        </Typography>
+      )}
       {sortedDifficulties.map((diff) => (
         <Stack key={diff.difficulty.id} direction="row" spacing={1}>
           <Typography variant="body1">{diff.value}x</Typography>

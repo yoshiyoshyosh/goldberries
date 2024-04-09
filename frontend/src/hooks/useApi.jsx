@@ -148,6 +148,7 @@ export function useGetChallenge(id) {
     queryKey: ["challenge", id],
     queryFn: () => fetchChallenge(id),
     onError: errorToast,
+    enabled: !!id,
   });
 }
 

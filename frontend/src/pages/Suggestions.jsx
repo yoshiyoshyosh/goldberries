@@ -3,8 +3,10 @@ import {
   getQueryData,
   useDeleteSuggestion,
   useDeleteSuggestionVote,
+  useGetChallenge,
   useGetSuggestion,
   useGetSuggestions,
+  usePostSuggestion,
   usePostSuggestionVote,
 } from "../hooks/useApi";
 import { useEffect, useRef, useState } from "react";
@@ -23,16 +25,18 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
+  Pagination,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { getCampaignName, getChallengeName, getMapName } from "../util/data_util";
-import { DifficultyChip, PlayerChip } from "../components/GoldberriesComponents";
+import { DifficultyChip, FullChallengeSelect, PlayerChip } from "../components/GoldberriesComponents";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useTheme } from "@emotion/react";
-import { jsonDateToJsDate } from "../util/util";
+import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
 import {
   faArrowTurnUp,
   faBook,
@@ -41,6 +45,7 @@ import {
   faCircleXmark,
   faComment,
   faCross,
+  faEquals,
   faEyeSlash,
   faHorse,
   faHorseHead,
@@ -50,19 +55,26 @@ import {
   faQuestionCircle,
   faThumbsDown,
   faThumbsUp,
+  faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Helmet } from "react-helmet";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
-import { set } from "react-hook-form";
 import { ChallengeSubmissionTable } from "./Challenge";
+import { toast } from "react-toastify";
+import { Controller, useForm } from "react-hook-form";
 
 export function PageSuggestions({}) {
   const { id } = useParams();
 
+  const newSuggestion = () => {
+    modalRefs.create.current.open();
+  };
+
   const modalRefs = {
+    create: useRef(),
     delete: useRef(),
     view: useRef(),
   };
@@ -79,25 +91,26 @@ export function PageSuggestions({}) {
           </Typography>
         </Grid>
         <Grid item xs="auto">
-          <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />}>
+          <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} onClick={newSuggestion}>
             New
           </Button>
         </Grid>
       </Grid>
-      <SuggestionsList expired={false} modalRefs={modalRefs} />
+      <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" gutterBottom>
         Expired Suggestions
       </Typography>
-      <SuggestionsList expired={true} modalRefs={modalRefs} />
+      <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} />
       <SuggestionsModalContainer modalRefs={modalRefs} />
     </BasicContainerBox>
   );
 }
 
-function SuggestionsList({ expired, modalRefs }) {
+//#region == Suggestions List ==
+function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(defaultPerPage);
 
   const query = useGetSuggestions(page, perPage, expired);
 
@@ -108,27 +121,47 @@ function SuggestionsList({ expired, modalRefs }) {
   }
 
   const response = getQueryData(query);
-  const suggestions = response.suggestions;
+  const { suggestions, max_page, max_count } = response;
 
   return (
     <Stack direction="column" gap={2}>
       {!expired && <HeadTitle title={"(" + suggestions.length + ") Suggestions"} />}
       {suggestions.map((suggestion) => (
-        <SuggestionDisplay suggestion={suggestion} expired={expired} modalRefs={modalRefs} />
+        <SuggestionDisplay
+          key={suggestion.id}
+          suggestion={suggestion}
+          expired={expired}
+          modalRefs={modalRefs}
+        />
       ))}
+      <Stack direction="row" gap={2} alignItems="center">
+        <Typography variant="body2">
+          Showing {(page - 1) * perPage + 1}-{(page - 1) * perPage + suggestions.length} of {max_count} total
+          suggestions
+        </Typography>
+        <Pagination count={max_page} page={page} onChange={(e, value) => setPage(value)} />
+      </Stack>
     </Stack>
   );
 }
 
 function SuggestionDisplay({ suggestion, expired, modalRefs }) {
   const theme = useTheme();
+  const auth = useAuth();
 
-  const viewSuggestion = (e) => {
+  const viewSuggestion = () => {
     modalRefs.view.current.open(suggestion.id);
   };
-  const deleteSuggestion = () => {
-    modalRefs.delete.current.open(suggestion.id);
+  const askDeleteSuggestion = (e) => {
+    e.stopPropagation();
+    modalRefs.delete.current.open(suggestion);
   };
+
+  const canDelete =
+    auth.hasVerifierPriv ||
+    (suggestion.author_id !== null &&
+      auth.user?.player_id === suggestion.author_id &&
+      suggestion.is_verified !== true);
 
   const isGeneral = suggestion.challenge_id === null;
   const votesSubmission = suggestion.votes.filter((vote) => vote.submission !== null);
@@ -170,9 +203,18 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
             sm: "right",
           }}
         >
-          {suggestion.challenge_id !== null && (
-            <DifficultyChip difficulty={suggestion.challenge.difficulty} />
-          )}
+          <Stack direction="row" gap={1} alignItems="center" justifyContent="space-between">
+            <Box component="span" sx={{ flex: 1 }}>
+              {suggestion.challenge_id !== null && (
+                <DifficultyChip difficulty={suggestion.challenge.difficulty} />
+              )}
+            </Box>
+            {canDelete && (
+              <IconButton color="error" onClick={askDeleteSuggestion} size="small">
+                <FontAwesomeIcon icon={faTrash} />
+              </IconButton>
+            )}
+          </Stack>
         </Grid>
       </Grid>
 
@@ -199,7 +241,9 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
           }}
         >
           <Typography variant="body2">
-            {jsonDateToJsDate(suggestion.date_created).toLocaleString()}
+            <Tooltip title={jsonDateToJsDate(suggestion.date_created).toLocaleString()} arrow placement="top">
+              <span>{dateToTimeAgoString(jsonDateToJsDate(suggestion.date_created))}</span>
+            </Tooltip>
           </Typography>
         </Grid>
       </Grid>
@@ -262,7 +306,9 @@ function SuggestionName({ suggestion, expired }) {
             </Stack>
           </>
         )}
-        {expired && <SuggestionAcceptedIcon isAccepted={suggestion.is_accepted} />}
+        {suggestion.is_verified !== false && expired && (
+          <SuggestionAcceptedIcon isAccepted={suggestion.is_accepted} />
+        )}
         {suggestion.is_verified === null && (
           <Tooltip title="Pending Verification" arrow placement="top">
             <FontAwesomeIcon icon={faEyeSlash} />
@@ -320,7 +366,7 @@ function VotesDisplay({ votes, hasSubmission }) {
 
 function VoteDisplay({ type, count, hasSubmission }) {
   const theme = useTheme();
-  const icon = type === "+" ? faThumbsUp : type === "-" ? faThumbsDown : faQuestionCircle;
+  const icon = type === "+" ? faThumbsUp : type === "-" ? faThumbsDown : faEquals;
   const color = type === "+" ? theme.palette.success.main : type === "-" ? theme.palette.error.main : "gray";
 
   const tooltip = hasSubmission
@@ -364,7 +410,9 @@ function SuggestionAcceptedIcon({ isAccepted, height = "1.5em" }) {
     </Tooltip>
   );
 }
+//#endregion
 
+//#region == View Suggestion Modal
 function ViewSuggestionModal({ id }) {
   const auth = useAuth();
   const [userText, setUserText] = useState("");
@@ -375,6 +423,10 @@ function ViewSuggestionModal({ id }) {
   const { mutate: postVote } = usePostSuggestionVote(() => {
     query.refetch();
   });
+  const { mutate: postSuggestion } = usePostSuggestion(() => {
+    query.refetch();
+    toast.success("Suggestion updated");
+  });
 
   const query = useGetSuggestion(id);
   const suggestion = getQueryData(query);
@@ -382,7 +434,9 @@ function ViewSuggestionModal({ id }) {
   useEffect(() => {
     if (query.isSuccess) {
       //Find the users vote
-      const userVote = suggestion.votes.find((vote) => vote.player_id === auth.user.player.id);
+      const userVote = !auth.hasPlayerClaimed
+        ? null
+        : suggestion.votes.find((vote) => vote.player_id === auth.user.player.id);
       if (userVote) {
         setUserText(userVote.comment ?? "");
       } else {
@@ -400,6 +454,7 @@ function ViewSuggestionModal({ id }) {
   const dateCreated = jsonDateToJsDate(suggestion.date_created);
   const isExpired =
     suggestion.is_accepted !== null || dateCreated < new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const isGeneral = suggestion.challenge_id === null;
 
   const hasVoted =
     auth.hasPlayerClaimed && suggestion.votes.some((vote) => vote.player_id === auth.user.player.id);
@@ -421,56 +476,102 @@ function ViewSuggestionModal({ id }) {
     });
   };
 
+  const isUnverified = suggestion.is_verified !== true;
+  const updateSuggestion = (accept) => {
+    if (isUnverified) {
+      postSuggestion({
+        ...suggestion,
+        is_verified: accept,
+      });
+    } else {
+      postSuggestion({
+        ...suggestion,
+        is_accepted: suggestion.is_accepted === accept ? null : accept,
+      });
+    }
+  };
+  const acceptVariant = suggestion.is_accepted === true ? "contained" : "outlined";
+  const rejectVariant =
+    suggestion.is_verified === false || suggestion.is_accepted === false ? "contained" : "outlined";
+
   return (
     <>
       <Grid container rowSpacing={2} columnSpacing={1}>
         <Grid item xs={12} sm>
           <SuggestionName suggestion={suggestion} expired={isExpired} />
         </Grid>
-        <Grid item xs={12} sm="auto">
-          <ButtonGroup variant="outlined">
-            <Button color="success">
-              <FontAwesomeIcon icon={faCheck} style={{ height: "1.5em" }} />
-            </Button>
-            <Button color="error">
-              <FontAwesomeIcon icon={faXmark} style={{ height: "1.5em" }} />
-            </Button>
-          </ButtonGroup>
-        </Grid>
+        {auth.hasVerifierPriv && (
+          <Grid item xs={12} sm="auto">
+            <ButtonGroup>
+              <Tooltip title={isUnverified ? "Verify" : "Accept Change"} arrow>
+                <Button variant={acceptVariant} color="success" onClick={() => updateSuggestion(true)}>
+                  <FontAwesomeIcon icon={faCheck} style={{ height: "1.5em" }} />
+                </Button>
+              </Tooltip>
+              <Tooltip title={isUnverified ? "Reject Verification" : "Reject Change"} arrow>
+                <Button variant={rejectVariant} color="error" onClick={() => updateSuggestion(false)}>
+                  <FontAwesomeIcon icon={faXmark} style={{ height: "1.5em" }} />
+                </Button>
+              </Tooltip>
+            </ButtonGroup>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Typography variant="body2" gutterBottom>
-            Comment: {suggestion.comment ?? "-"}
+            {suggestion.comment ?? "-"}
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <ButtonGroup variant="contained" fullWidth>
-            <Button
-              color="success"
-              disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "+")}
-              fullWidth
-              startIcon={<FontAwesomeIcon icon={faThumbsUp} />}
-              onClick={() => vote("+")}
-            >
-              For
-            </Button>
-            <Button
-              color="error"
-              disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "-")}
-              fullWidth
-              startIcon={<FontAwesomeIcon icon={faThumbsDown} />}
-              onClick={() => vote("-")}
-            >
-              Against
-            </Button>
-            <Button
-              disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "i")}
-              fullWidth
-              startIcon={<FontAwesomeIcon icon={faHorse} />}
-              onClick={() => vote("i")}
-            >
-              Indifferent
-            </Button>
-          </ButtonGroup>
+          <Typography variant="body2">
+            {suggestion.author_id === null ? (
+              "(deleted player)"
+            ) : (
+              <PlayerChip player={suggestion.author} size="small" />
+            )}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack direction="column" gap={0.25}>
+            <ButtonGroup variant="contained" fullWidth>
+              <Button
+                color="success"
+                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "+")}
+                fullWidth
+                onClick={() => vote("+")}
+              >
+                <FontAwesomeIcon icon={faThumbsUp} style={{ height: "1.4em" }} />
+                <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
+                  For
+                </Box>
+              </Button>
+              <Button
+                color="error"
+                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "-")}
+                fullWidth
+                onClick={() => vote("-")}
+              >
+                <FontAwesomeIcon icon={faThumbsDown} style={{ height: "1.4em" }} />
+                <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
+                  Against
+                </Box>
+              </Button>
+              <Button
+                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "i")}
+                fullWidth
+                onClick={() => vote("i")}
+              >
+                <FontAwesomeIcon icon={faHorse} style={{ height: "1.4em" }} />
+                <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
+                  Indifferent
+                </Box>
+              </Button>
+            </ButtonGroup>
+            {!auth.hasPlayerClaimed && (
+              <Typography variant="body2" gutterBottom>
+                Claim a player to be able to vote on suggestions!
+              </Typography>
+            )}
+          </Stack>
         </Grid>
         {auth.hasPlayerClaimed && (
           <Grid item xs={12}>
@@ -495,13 +596,15 @@ function ViewSuggestionModal({ id }) {
               </Divider>
             </Grid>
             <Grid item xs={12}>
-              <ChallengeSubmissionTable challenge={suggestion.challenge} />
+              <ChallengeSubmissionTable challenge={suggestion.challenge} hideSubmissionIcon />
             </Grid>
             <Grid item xs={12}>
               <Divider />
             </Grid>
             <Grid item xs={12} sm={9}>
-              <SuggestedDifficultyChart challenge={suggestion.challenge} />
+              <Stack direction="row" justifyContent="space-around">
+                <SuggestedDifficultyChart challenge={suggestion.challenge} />
+              </Stack>
             </Grid>
             <Grid item xs={12} sm>
               <Divider orientation="vertical" />
@@ -519,25 +622,29 @@ function ViewSuggestionModal({ id }) {
             <Chip label="Votes" size="small" />
           </Divider>
         </Grid>
+        {!isGeneral && (
+          <>
+            <Grid item xs={12} sm={12}>
+              <Typography variant="body1">Done Challenge</Typography>
+              <Grid container columnSpacing={1}>
+                <Grid item xs={12} sm={4}>
+                  <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={true} />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <VotesDetailsDisplay votes={suggestion.votes} voteType="-" hasSubmission={true} />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <VotesDetailsDisplay votes={suggestion.votes} voteType="i" hasSubmission={true} />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+          </>
+        )}
         <Grid item xs={12} sm={12}>
-          <Typography variant="body1">Done Challenge</Typography>
-          <Grid container columnSpacing={1}>
-            <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={true} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="-" hasSubmission={true} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="i" hasSubmission={true} />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <Typography variant="body1">Not Done Challenge</Typography>
+          {!isGeneral && <Typography variant="body1">Not Done Challenge</Typography>}
           <Grid container columnSpacing={1}>
             <Grid item xs={12} sm={4}>
               <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={false} />
@@ -560,15 +667,18 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
     (vote) => vote.vote === voteType && (hasSubmission ? vote.submission !== null : vote.submission === null)
   );
   const count = votesFiltered.length;
-  const voteIcon = voteType === "+" ? faThumbsUp : voteType === "-" ? faThumbsDown : faQuestionCircle;
+  const voteIcon = voteType === "+" ? faThumbsUp : voteType === "-" ? faThumbsDown : faEquals;
   const voteColor = voteType === "+" ? "green" : voteType === "-" ? "red" : "gray";
+  const s = count === 1 ? "" : "s";
 
   return (
     <Stack direction="column" gap={1} alignItems="center">
       <Typography variant="body1">
         <FontAwesomeIcon icon={voteIcon} color={voteColor} />
       </Typography>
-      <Typography variant="body2">{count} votes</Typography>
+      <Typography variant="body2">
+        {count} vote{s}
+      </Typography>
       {votesFiltered.map((vote) => (
         <Stack direction="row" gap={0.5} alignItems="center">
           <PlayerChip player={vote.player} size="small" />
@@ -582,10 +692,127 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
     </Stack>
   );
 }
+//#endregion
+
+//#region == Create Suggestion Modal ==
+function CreateSuggestionModal({ onSuccess }) {
+  const { mutate: postSuggestion } = usePostSuggestion(() => {
+    toast.success("Suggestion created");
+    if (onSuccess) onSuccess();
+  });
+
+  const form = useForm({
+    defaultValues: {
+      challenge: null,
+      comment: "",
+    },
+  });
+  const onSubmit = form.handleSubmit((data) => {
+    postSuggestion({
+      ...data,
+      challenge: undefined,
+      challenge_id: data.challenge?.id,
+    });
+  });
+
+  const selectedChallenge = form.watch("challenge");
+  const comment = form.watch("comment");
+
+  const query = useGetChallenge(selectedChallenge?.id);
+  const fetchedChallenge = getQueryData(query);
+
+  return (
+    <Grid container rowSpacing={1} columnSpacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="h5" gutterBottom>
+          Create Suggestion
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider>
+          <Chip label="Select Challenge" size="small" />
+        </Divider>
+      </Grid>
+      <Grid item xs={12}>
+        <Controller
+          name="challenge"
+          control={form.control}
+          render={({ field }) => (
+            <FullChallengeSelect
+              challenge={field.value}
+              setChallenge={(c) => {
+                field.onChange(c);
+              }}
+            />
+          )}
+        />
+      </Grid>
+      {selectedChallenge === null && (
+        <Grid item xs={12}>
+          <Typography variant="body2">Not selecting a challenge will create a general suggestion.</Typography>
+        </Grid>
+      )}
+      {query.isLoading && <LoadingSpinner />}
+      {query.isError && <ErrorDisplay error={query.error} />}
+      {fetchedChallenge !== null && (
+        <>
+          <Grid item xs={12}>
+            <Divider>
+              <Chip label="Challenge Details" size="small" />
+            </Divider>
+          </Grid>
+          <Grid item xs={12}>
+            <DifficultyChip difficulty={fetchedChallenge.difficulty} />
+          </Grid>
+          <Grid item xs={12}>
+            <ChallengeSubmissionTable challenge={fetchedChallenge} hideSubmissionIcon />
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <Stack direction="row" justifyContent="space-around">
+              <SuggestedDifficultyChart challenge={fetchedChallenge} />
+            </Stack>
+          </Grid>
+          <Grid item xs={12} sm>
+            <Typography variant="body1" gutterBottom>
+              Total for each (sub-)tier
+            </Typography>
+            <SuggestedDifficultyTierCounts challenge={fetchedChallenge} direction="row" />
+          </Grid>
+        </>
+      )}
+
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          label="Comment"
+          placeholder="Explain why you think something should be changed"
+          required
+          multiline
+          minRows={3}
+          variant="outlined"
+          {...form.register("comment")}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="contained" color="primary" onClick={onSubmit} disabled={comment.length < 5}>
+          Create
+        </Button>
+      </Grid>
+    </Grid>
+  );
+}
+//#endregion
 
 function SuggestionsModalContainer({ modalRefs }) {
   const { mutate: deleteSuggestion } = useDeleteSuggestion();
 
+  const createSuggestionModal = useModal();
   const viewSuggestionModal = useModal();
   const deleteSuggestionModal = useModal(null, (cancelled, data) => {
     if (cancelled) return;
@@ -593,13 +820,15 @@ function SuggestionsModalContainer({ modalRefs }) {
   });
 
   // Setting the refs
+  modalRefs.create.current = createSuggestionModal;
   modalRefs.delete.current = deleteSuggestionModal;
   modalRefs.view.current = viewSuggestionModal;
 
-  console.log("modalRefs", modalRefs);
-
   return (
     <>
+      <CustomModal modalHook={createSuggestionModal} maxWidth="sm" options={{ hideFooter: true }}>
+        <CreateSuggestionModal id={createSuggestionModal.data} onSuccess={createSuggestionModal.close} />
+      </CustomModal>
       <CustomModal modalHook={viewSuggestionModal} maxWidth="md" options={{ hideFooter: true }}>
         {viewSuggestionModal.data == null ? (
           <LoadingSpinner />

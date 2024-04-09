@@ -178,13 +178,18 @@ export function ChallengeDetailsList({ challenge }) {
   );
 }
 
-export function ChallengeSubmissionTable({ challenge, compact = false, ...props }) {
+export function ChallengeSubmissionTable({
+  challenge,
+  compact = false,
+  hideSubmissionIcon = false,
+  ...props
+}) {
   return (
     <TableContainer component={Paper} {...props}>
       <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell width={1}></TableCell>
+            <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
             <TableCell width={compact ? 1 : undefined}>Player</TableCell>
             {compact ? null : (
               <TableCell width={1} align="center" sx={displayNoneOnMobile}>
@@ -212,7 +217,13 @@ export function ChallengeSubmissionTable({ challenge, compact = false, ...props 
         </TableHead>
         <TableBody>
           {challenge.submissions.map((submission, index) => (
-            <ChallengeSubmissionRow submission={submission} index={index} compact={compact} />
+            <ChallengeSubmissionRow
+              key={submission.id}
+              submission={submission}
+              index={index}
+              compact={compact}
+              hideSubmissionIcon={hideSubmissionIcon}
+            />
           ))}
           {challenge.submissions.length === 0 && (
             <TableRow>
@@ -225,18 +236,20 @@ export function ChallengeSubmissionTable({ challenge, compact = false, ...props 
   );
 }
 
-export function ChallengeSubmissionRow({ submission, index, compact }) {
+export function ChallengeSubmissionRow({ submission, index, compact, hideSubmissionIcon }) {
   const nameStyle = getPlayerNameColorStyle(submission.player);
   return (
     <TableRow>
-      <TableCell width={1} sx={{ pr: 0 }}>
+      <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile }}>
         #{index + 1}
       </TableCell>
       <TableCell width={compact ? 1 : undefined}>
         <Stack direction="row" gap={1} alignItems="center">
-          <StyledLink to={"/submission/" + submission.id}>
-            <FontAwesomeIcon icon={faBook} />
-          </StyledLink>
+          {!hideSubmissionIcon && (
+            <StyledLink to={"/submission/" + submission.id}>
+              <FontAwesomeIcon icon={faBook} />
+            </StyledLink>
+          )}
           <StyledLink to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
             {submission.player.name}
           </StyledLink>
