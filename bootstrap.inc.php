@@ -19,7 +19,9 @@ $requireObjects = array(
   "session",
   "logging",
   "change",
-  "newchallenge"
+  "newchallenge",
+  "suggestion",
+  "suggestion_vote"
 );
 
 foreach ($requireObjects as $obj) {

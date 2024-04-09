@@ -2,6 +2,7 @@
 
 require_once ('api_bootstrap.inc.php');
 
+// ===== GET Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $queue = isset($_REQUEST['queue']) && $_REQUEST['queue'] === 'true';
   if ($queue) {
@@ -40,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 
+// ===== POST Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $account = get_user_data();
   check_access($account, true);
@@ -182,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
+// ===== DELETE Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   $account = get_user_data();
   if ($account === null) {
