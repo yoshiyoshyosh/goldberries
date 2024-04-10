@@ -162,6 +162,23 @@ export function ProofEmbed({ url, ...props }) {
         </div>
       </div>
     );
+  } else if (url.includes("bilibili.com")) {
+    //get video id, which is after the last slash, and before a possible question mark
+    const videoId = url.split("/").pop().split("?")[0];
+    url = `https://player.bilibili.com/player.html?bvid=${videoId}&page=1&high_quality=1&autoplay=false`;
+
+    return (
+      <div {...props}>
+        <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%" }}>
+          <iframe
+            src={url}
+            title="Bilibili video player"
+            allowFullScreen
+            style={{ width: "100%", height: "100%", position: "absolute", top: "0", left: "0" }}
+          ></iframe>
+        </div>
+      </div>
+    );
   }
 
   return (

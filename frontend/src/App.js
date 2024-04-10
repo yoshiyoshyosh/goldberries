@@ -457,7 +457,7 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
     suggestions: {
-      name: "Suggestions",
+      name: "Suggestion Box",
       path: "/suggestions",
       icon: <FontAwesomeIcon icon={faPoll} />,
     },

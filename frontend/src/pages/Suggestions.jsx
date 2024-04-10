@@ -82,12 +82,12 @@ export function PageSuggestions({}) {
   return (
     <BasicContainerBox maxWidth="md">
       <Helmet>
-        <title>Suggestions</title>
+        <title>Suggestion</title>
       </Helmet>
       <Grid container>
         <Grid item xs>
           <Typography variant="h4" gutterBottom>
-            Suggestions
+            #suggestion-box
           </Typography>
         </Grid>
         <Grid item xs="auto">
