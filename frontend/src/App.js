@@ -63,6 +63,7 @@ import {
   faMailBulk,
   faMailForward,
   faMoon,
+  faOtter,
   faPerson,
   faPlayCircle,
   faPlus,
@@ -203,6 +204,7 @@ const router = createBrowserRouter([
       { path: "top-golden-list/:type?/:id?", element: <PageTopGoldenList /> },
       { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
       { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
+      { path: "all-campaigns", element: <PageGoldenList type={null} /> },
 
       { path: "rejected-maps", element: <PageRejectedMaps /> },
 
@@ -363,6 +365,11 @@ export function Layout() {
           name: "Standard Golden List",
           path: "/standard-golden-list",
           icon: <FontAwesomeIcon icon={faHeart} />,
+        },
+        {
+          name: "All Campaigns",
+          path: "/all-campaigns",
+          icon: <FontAwesomeIcon icon={faOtter} />,
         },
         {
           name: "Rejected Maps",

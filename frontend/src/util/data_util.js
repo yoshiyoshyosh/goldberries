@@ -142,11 +142,12 @@ export function getMapLobbyInfo(map, campaign = null) {
   return lobbyInfo;
 }
 
-export function getMapName(map, campaign) {
+export function getMapName(map, campaign, includeMapWithSide = true) {
   campaign = campaign || map.campaign;
 
   const mapName =
-    map.name === "A-Side" || map.name === "B-Side" || map.name === "C-Side" || map.name === "D-Side"
+    (map.name === "A-Side" || map.name === "B-Side" || map.name === "C-Side" || map.name === "D-Side") &&
+    includeMapWithSide
       ? campaign.name + " " + map.name
       : map.name;
 

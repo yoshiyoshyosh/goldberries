@@ -127,8 +127,14 @@ export const DIFFICULTY_COLORS = {
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
 };
 export function getDifficultyColors(id) {
-  if (id === null || id === undefined) return DIFFICULTY_COLORS[19];
-  return DIFFICULTY_COLORS[id];
+  let colors = DIFFICULTY_COLORS[19];
+  if (id !== null && id !== undefined) colors = DIFFICULTY_COLORS[id];
+  // return {
+  //   color: colors.color,
+  //   group_color: colors.group_color,
+  //   contrast_color: lightTheme.palette.getContrastText(colors.color),
+  // };
+  return colors;
 }
 
 export function getDifficultyColorsTheme(theme, id) {

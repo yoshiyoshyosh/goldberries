@@ -24,6 +24,9 @@ export function fetchGoldenList(
     data.player = id;
   }
 
+  if (options.include_archived) data.archived = true;
+  if (options.include_arbitrary) data.arbitrary = true;
+
   return axios.get("/golden-list.php", { params: data });
 }
 

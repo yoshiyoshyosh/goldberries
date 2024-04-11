@@ -1,41 +1,58 @@
-.golden-list-info-box {
-  height: 50px;
-  width: 200px;
-  min-width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+.campaign-box {
+  padding-top: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
 }
 
-.golden-list-info-box.campaign {
-  background-color: black;
-  color: rgb(25, 118, 210);
-  border: 1px solid white;
+.campaign-box.dark .campaign-box-header {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 8px;
+  color: #6d9eeb;
+}
+
+.campaign-box .campaign-box-header {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 8px 8px;
+  color: #2a74eb;
+}
+
+
+
+.map-select-entry {
+  background-color: transparent;
+  color: inherit;
+  width: 100%;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.map-select-entry.selected {
+  background-color: rgba(255, 255, 255, 0.11);
+  color: rgba(255, 95, 95, 1);
+}
+
+.submission-link {
+  color: #4dafe4;
+  text-decoration: none;
+}
+
+.submission-player-name {
+  white-space: nowrap;
+}
+
+
+.campaign-box .difficulty-bar {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 5px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 5px;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  line-height: 18px;
+  font-size: 16px;
+  cursor: default;
 }
 
-.golden-list-info-box.map {
-  background-color: black;
-  color: white;
-  border: 1px solid white;
-  padding: 5px;
-}
-
-.golden-list-info-box.challenge {
-  min-width: 150px;
-  width: 150px;
-  border: 1px solid white;
-}
-
-.golden-list-info-box.submission {
-  color: rgb(25, 118, 210);
-  border: 1px solid gray;
-  width: 150px;
-  min-width: 150px;
-  padding: 5px;
-  font-weight: bold;
+.campaign-box.dark .difficulty-bar {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0);
 }

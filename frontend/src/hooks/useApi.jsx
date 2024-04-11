@@ -46,6 +46,7 @@ import {
   deleteSuggestion,
   deleteSuggestionVote,
   fetchSuggestion,
+  fetchGoldenList,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -62,6 +63,17 @@ export function getQueryData(query) {
 }
 
 //#region == GET ==
+export function useGetGoldenList(type, id = null, include_archived = false, include_arbitrary = false) {
+  return useQuery({
+    queryKey: ["goldenList", type, id, include_arbitrary, include_archived],
+    queryFn: () =>
+      fetchGoldenList(type, id, { include_arbitrary: include_arbitrary, include_archived: include_archived }),
+    onError: errorToast,
+    cacheTime: type === "hard" || type === "standard" || type === null ? 0 : 60 * 1000,
+    staleTime: type === "hard" || type === "standard" || type === null ? 0 : 60 * 1000,
+  });
+}
+
 export function useGetAllPlayerClaims() {
   return useQuery({
     queryKey: ["accounts_player_claims"],
