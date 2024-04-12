@@ -6,15 +6,14 @@
 }
 
 .campaign-box.dark .campaign-box-header {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 8px 8px;
-  color: #6d9eeb;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
 }
 
 .campaign-box .campaign-box-header {
   background: rgba(255, 255, 255, 0.75);
-  padding: 8px 8px;
-  color: #2a74eb;
+  padding: 0px 8px;
+  color: #000000;
 }
 
 
@@ -33,12 +32,16 @@
 }
 
 .submission-link {
-  color: #4dafe4;
+  color: #2383b6;
   text-decoration: none;
 }
 
 .submission-player-name {
   white-space: nowrap;
+}
+
+.campaign-box.dark .submission-link {
+  color: #4dafe4;
 }
 
 

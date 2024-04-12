@@ -246,7 +246,6 @@ export function useGetSuggestions(page, perPage, expired = null, challengeId = n
   });
 }
 export function useGetSuggestion(id) {
-  console.log("useGetSuggestion", id);
   return useQuery({
     queryKey: ["suggestion", id],
     queryFn: () => fetchSuggestion(id),

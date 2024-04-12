@@ -51,7 +51,17 @@ export function PageGoldenList({ type }) {
 
   return (
     <>
-      <Box sx={{ mx: { xs: 1, sm: 2 }, "&&": { mr: 4 } }}>
+      <Box
+        sx={{
+          mx: { xs: 1, sm: 2 },
+          "&&": {
+            mr: {
+              xs: 1,
+              sm: 3,
+            },
+          },
+        }}
+      >
         <HeadTitle title={title} />
         <BasicBox sx={{ pb: 0, mb: 1 }}>
           <Typography variant="h4">{title}</Typography>
@@ -109,7 +119,7 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   let lastCampaign = null;
 
   return (
-    <Stack direction="column" alignItems="stretch" gap={3}>
+    <Stack direction="column" alignItems="stretch" gap={1.5}>
       <BasicBox>
         <Typography variant="body2">
           {totalSubmissionCount} submissions across {campaigns.length} campaigns
@@ -147,31 +157,60 @@ function CampaignEntry({ campaign, type }) {
           item
           xs={12}
           className="campaign-box-header"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
+          // display="flex"
+          // alignItems="center"
+          // justifyContent="space-between"
+          // flexWrap="wrap"
+          // columnGap={1}
         >
-          <Stack direction="row" gap={1} alignItems="center">
-            <CampaignIcon campaign={campaign} />
-            <Link to={"/campaign/" + campaign.id} style={{ color: "inherit", textDecoration: "none" }}>
-              <Typography variant="h6">{campaign.name}</Typography>
-            </Link>
-            <Link
-              to={"/search/" + campaign.author_gb_name}
-              style={{ color: "inherit", textDecoration: "none" }}
-            >
-              <Typography variant="body2">by {campaign.author_gb_name}</Typography>
-            </Link>
-            <StyledExternalLink href={campaign.url}>
-              <FontAwesomeIcon icon={faLemon} fontSize="1em" />
-            </StyledExternalLink>
-          </Stack>
-          {campaign.maps.length > 1 && (
-            <CampaignGoldenDifficultiesBar campaign={campaign} sx={{ width: "300px" }} />
-          )}
+          {/* <Stack direction="row" gap={1} alignItems="center" minWidth={0}> */}
+          <Grid container columnGap={1} sx={{ minHeight: "49px" }}>
+            <Grid item xs={12} md="auto" display="flex" alignItems="center" flexWrap="nowrap" columnGap={1}>
+              <CampaignIcon campaign={campaign} />
+              <Link
+                to={"/campaign/" + campaign.id}
+                style={{ color: "inherit", textDecoration: "none", whiteSpace: "nowrap" }}
+              >
+                <Typography variant="h6">{campaign.name}</Typography>
+              </Link>
+              <Link
+                to={"/search/" + campaign.author_gb_name}
+                style={{ color: "inherit", textDecoration: "none", whiteSpace: "nowrap" }}
+              >
+                <Typography variant="body2">by {campaign.author_gb_name}</Typography>
+              </Link>
+              <StyledExternalLink href={campaign.url}>
+                <FontAwesomeIcon icon={faLemon} fontSize="1em" />
+              </StyledExternalLink>
+            </Grid>
+            <Grid item xs={12} md order={{ xs: 3, md: 2 }}>
+              {(campaign.maps.length > 1 || campaign.name !== campaign.maps[0].name) && (
+                <MapSelectAlt
+                  campaign={campaign}
+                  type={type}
+                  selectedMap={selectedMapIndex}
+                  onSelectMap={setSelectedMapIndex}
+                />
+              )}
+            </Grid>
+            {/* </Stack> */}
+            {campaign.maps.length > 1 && (
+              <Grid
+                item
+                xs={12}
+                md={2}
+                display={{ xs: "none", md: "flex" }}
+                alignItems="center"
+                justifyContent="stretch"
+                order={{ xs: 2, md: 3 }}
+              >
+                <CampaignGoldenDifficultiesBar campaign={campaign} sx={{ flex: "1" }} />
+              </Grid>
+            )}
+          </Grid>
         </Grid>
         <Grid container item xs={12} rowSpacing={1} columnSpacing={1} sx={{ pr: 1 }}>
-          {campaign.maps.length > 1 && (
+          {/* {(campaign.maps.length > 1 || campaign.name !== campaign.maps[0].name) && (
             <Grid item xs={12}>
               <MapSelectAlt
                 campaign={campaign}
@@ -180,7 +219,7 @@ function CampaignEntry({ campaign, type }) {
                 onSelectMap={setSelectedMapIndex}
               />
             </Grid>
-          )}
+          )} */}
           <Grid item xs={12} sm={12} sx={{ pr: 2 }}>
             {selectedMapIndex !== null && (
               <MapEntry campaign={campaign} map={campaign.maps[selectedMapIndex]} type={type} />
@@ -193,19 +232,21 @@ function CampaignEntry({ campaign, type }) {
 }
 
 function LetterDivider({ letter }) {
+  const theme = useTheme();
+  const backgroundColor = theme.palette.mode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.75)";
   return (
     <Divider sx={{ my: 0 }}>
-      <Chip label={letter} />
+      <Chip label={letter} sx={{ backgroundColor: backgroundColor }} />
     </Divider>
   );
 }
 
 function MapSelectAlt({ campaign, type, selectedMap, onSelectMap }) {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Box sx={{ borderBottom: 1, borderColor: "divider", width: "fit-content" }}>
       <Tabs variant="scrollable" value={selectedMap} onChange={(e, v) => onSelectMap(v)}>
         {campaign.maps.map((map, index) => (
-          <Tab key={map.id} label={getMapName(map, campaign, false)} />
+          <Tab key={map.id} label={getMapName(map, campaign, false)} sx={{ textTransform: "none" }} />
         ))}
       </Tabs>
     </Box>
@@ -234,24 +275,33 @@ function MapEntry({ campaign, map, type }) {
 }
 
 function ChallengeEntry({ challenge, type }) {
+  const s = challenge.submissions.length === 1 ? "" : "s";
   return (
     <Grid container rowSpacing={1} columnSpacing={1}>
-      <Grid component={Stack} item xs={12} sm={1} direction="row" gap={1}>
+      <Grid component={Stack} item xs={12} md={1} direction="row" gap={1}>
         <DifficultyChip difficulty={challenge.difficulty} sx={{ width: "100%", textAlign: "center" }} />
       </Grid>
+      {challenge.description !== null && (
+        <Grid item xs={12} md={1}>
+          {challenge.description}
+        </Grid>
+      )}
       <Grid
         component={Stack}
         item
         xs={12}
-        sm={challenge.description !== null ? 2 : 1}
+        md={1}
         direction="row"
         gap={1}
+        // alignItems="center"
       >
-        {getChallengeFcShort(challenge)}
-        <span>({challenge.submissions.length})</span>
-        {challenge.description !== null && <span>{challenge.description}</span>}
+        {/* {getChallengeFcShort(challenge)} */}
+        <Stack direction="row" alignItems="center" gap={1} style={{ margin: "auto", marginTop: 0 }}>
+          <ChallengeFcIcon challenge={challenge} showClear height="1.3em" />
+          <span>{challenge.submissions.length}</span>
+        </Stack>
       </Grid>
-      <Grid item xs={12} sm={challenge.description !== null ? 9 : 10}>
+      <Grid item xs={12} md={challenge.description !== null ? 9 : 10}>
         <Stack direction="row" columnGap={3} rowGap={1} flexWrap="wrap">
           {challenge.submissions.map((submission) => (
             <SubmissionEntry key={submission.id} submission={submission} />
@@ -265,10 +315,15 @@ function ChallengeEntry({ challenge, type }) {
 function SubmissionEntry({ submission }) {
   return (
     <Link className="submission-link" to={"/submission/" + submission.id}>
-      <span className="submission-player-name" style={{ ...getPlayerNameColorStyle(submission.player) }}>
-        {submission.player.name}
-      </span>
-      {submission.is_fc ? <span> [FC]</span> : null}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span className="submission-player-name" style={{ ...getPlayerNameColorStyle(submission.player) }}>
+          {submission.player.name}
+        </span>
+        {/* {submission.is_fc ? <span> [FC]</span> : null} */}
+        {submission.is_fc ? (
+          <SubmissionFcIcon submission={submission} disableTooltip style={{ marginLeft: "4px" }} />
+        ) : null}
+      </div>
     </Link>
   );
 }

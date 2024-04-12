@@ -502,7 +502,7 @@ export function LinkIcon({ url }) {
   );
 }
 
-export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
+export function ChallengeFcIcon({ challenge, height = "1em", showClear = false, style = {}, ...props }) {
   const { settings } = useAppSettings();
   const icon = challenge.requires_fc
     ? "fullclear.png"
@@ -512,7 +512,12 @@ export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
   const alt = getChallengeFcLong(challenge);
   const shortAlt = getChallengeFcShort(challenge);
 
-  if (!challenge.requires_fc && !challenge.has_fc && !settings.visual.topGoldenList.useTextFcIcons)
+  if (
+    !challenge.requires_fc &&
+    !challenge.has_fc &&
+    !settings.visual.topGoldenList.useTextFcIcons &&
+    !showClear
+  )
     return null;
 
   return (
@@ -528,6 +533,7 @@ export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
             filter:
               "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
             // transform: transform,
+            ...style,
           }}
           {...props}
           loading="lazy"
@@ -536,27 +542,30 @@ export function ChallengeFcIcon({ challenge, height = "1em", ...props }) {
     </Tooltip>
   );
 }
-export function SubmissionFcIcon({ submission, height = "1em", ...props }) {
+export function SubmissionFcIcon({ submission, height = "1em", disableTooltip = false, style, ...props }) {
   if (!submission.is_fc) return null;
   const icon = "fullclear.png";
   const alt = "Full Clear";
 
-  return (
-    <Tooltip title={alt}>
-      <img
-        src={"/icons/" + icon}
-        alt={alt}
-        style={{
-          height: height,
-          filter:
-            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
-          // transform: transform,
-        }}
-        {...props}
-        loading="lazy"
-      />
-    </Tooltip>
+  const comp = (
+    <img
+      src={"/icons/" + icon}
+      alt={alt}
+      style={{
+        height: height,
+        filter:
+          "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+        // transform: transform,
+        ...style,
+      }}
+      {...props}
+      loading="lazy"
+    />
   );
+
+  if (disableTooltip) return comp;
+
+  return <Tooltip title={alt}>{comp}</Tooltip>;
 }
 
 export function OtherIcon({ name, title, alt, height = "1em" }) {
