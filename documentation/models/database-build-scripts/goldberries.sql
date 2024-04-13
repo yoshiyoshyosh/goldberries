@@ -169,6 +169,7 @@ CREATE TABLE challenge
  requires_fc   boolean NOT NULL DEFAULT false,
  has_fc        boolean NOT NULL DEFAULT false,
  is_arbitrary  boolean NULL,
+ sort          integer NULL,
  CONSTRAINT challenge_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT challenge_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT challenge_difficulty_id_fkey FOREIGN KEY ( difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -189,8 +190,7 @@ CREATE TABLE submission
  raw_session_url         text NULL,
  player_notes            text NULL,
  suggested_difficulty_id integer NULL,
- is_verified             boolean NOT NULL DEFAULT false,
- is_rejected             boolean NOT NULL DEFAULT false,
+ is_verified             boolean NULL,
  date_verified           timestamptz NULL,
  verifier_notes          text NULL,
  verifier_id             integer NULL,
@@ -315,6 +315,7 @@ CREATE VIEW "view_submissions" AS SELECT
   challenge.requires_fc AS challenge_requires_fc,
   challenge.has_fc AS challenge_has_fc,
   challenge.is_arbitrary AS challenge_is_arbitrary,
+  challenge.sort AS challenge_sort,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -345,9 +346,21 @@ CREATE VIEW "view_submissions" AS SELECT
 
   p.id AS player_id,
   p.name AS player_name,
+  pa.is_verifier AS player_account_is_verifier,
+  pa.is_admin AS player_account_is_admin,
+  pa.is_suspended AS player_account_is_suspended,
+  pa.suspension_reason AS player_account_suspension_reason,
+  pa.name_color_start AS player_account_name_color_start,
+  pa.name_color_end AS player_account_name_color_end,
 
   v.id AS verifier_id,
   v.name AS verifier_name,
+  va.is_verifier AS verifier_account_is_verifier,
+  va.is_admin AS verifier_account_is_admin,
+  va.is_suspended AS verifier_account_is_suspended,
+  va.suspension_reason AS verifier_account_suspension_reason,
+  va.name_color_start AS verifier_account_name_color_start,
+  va.name_color_end AS verifier_account_name_color_end,
 
   pd.id AS suggested_difficulty_id,
   pd.name AS suggested_difficulty_name,
@@ -363,8 +376,10 @@ JOIN submission  ON challenge.id = submission.challenge_id
 JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
+LEFT JOIN account pa ON p.id = pa.player_id
+LEFT JOIN account va ON v.id = va.player_id
 
-ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort DESC, submission.id ;
+ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_created, submission.id ;
 
 
 
@@ -408,6 +423,7 @@ CREATE VIEW "view_challenges" AS SELECT
   challenge.requires_fc AS challenge_requires_fc,
   challenge.has_fc AS challenge_has_fc,
   challenge.is_arbitrary AS challenge_is_arbitrary,
+  challenge.sort AS challenge_sort,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -430,4 +446,4 @@ JOIN objective  ON challenge.objective_id = objective.id
 LEFT JOIN submission  ON challenge.id = submission.challenge_id
 
 GROUP BY campaign.id, map.id, challenge.id, cd.id, objective.id
-ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, cd.sort DESC ;
+ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC ;
