@@ -190,14 +190,14 @@ export function fetchChangelog(type, id) {
   });
 }
 
-export function fetchRecentSubmissions(type, page, perPage, search = null, playerId = null) {
+export function fetchRecentSubmissions(verified, page, perPage, search = null, playerId = null) {
   const data = {
     recent: true,
-    type: type,
     page: page,
     per_page: perPage,
   };
 
+  if (verified !== null) data.verified = verified;
   if (search) data.search = search;
   if (playerId) data.player = playerId;
 

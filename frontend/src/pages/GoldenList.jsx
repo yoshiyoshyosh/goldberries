@@ -5,13 +5,16 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  MenuItem,
+  Select,
   Stack,
   Tab,
   Tabs,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/GoldenList.css";
 import {
   BasicBox,
@@ -37,17 +40,38 @@ import {
   DifficultyChip,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getDifficultyColors } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLemon } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
-export function PageGoldenList({ type }) {
-  const [showArchived, setShowArchived] = useState(false);
-  const [showArbitrary, setShowArbitrary] = useState(false);
+export function PageGoldenList({}) {
+  const { type } = useParams();
+  const navigate = useNavigate();
+  const [showArchived, setShowArchived] = useLocalStorage("golden_list_show_archived", false);
+  const [showArbitrary, setShowArbitrary] = useLocalStorage("golden_list_show_arbitrary", false);
+  const [selectedType, setSelectedType] = useState(type ?? "hard");
   const title =
-    type === "hard" ? "Hard Golden List" : type === null ? "All Campaigns" : "Standard Golden List";
+    selectedType === "hard"
+      ? "Hard Golden List"
+      : selectedType === "all"
+      ? "All Campaigns"
+      : "Standard Golden List";
+
+  const onChangeType = (type) => {
+    if (type === "all") {
+      navigate("/campaign-list", { replace: true });
+    } else {
+      navigate("/campaign-list/" + type, { replace: true });
+    }
+    setSelectedType(type);
+  };
+
+  useEffect(() => {
+    setSelectedType(type);
+  }, [type]);
 
   return (
     <>
@@ -64,25 +88,58 @@ export function PageGoldenList({ type }) {
       >
         <HeadTitle title={title} />
         <BasicBox sx={{ pb: 0, mb: 1 }}>
-          <Typography variant="h4">{title}</Typography>
-          <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <FormControlLabel
-              checked={showArchived}
-              onChange={(e) => setShowArchived(e.target.checked)}
-              control={<Checkbox />}
-              label="Show Archived"
-            />
-            <FormControlLabel
-              checked={showArbitrary}
-              onChange={(e) => setShowArbitrary(e.target.checked)}
-              control={<Checkbox />}
-              label="Show Arbitrary"
+          <Stack direction="column" gap={1}>
+            <Typography variant="h4">Campaign List</Typography>
+            <GoldenListFilter
+              type={selectedType}
+              setType={onChangeType}
+              showArchived={showArchived}
+              setShowArchived={setShowArchived}
+              showArbitrary={showArbitrary}
+              setShowArbitrary={setShowArbitrary}
             />
           </Stack>
         </BasicBox>
-        <GoldenList type={type} showArchived={showArchived} showArbitrary={showArbitrary} />
+        <GoldenList type={selectedType} showArchived={showArchived} showArbitrary={showArbitrary} />
       </Box>
     </>
+  );
+}
+
+function GoldenListFilter({ type, setType, showArchived, setShowArchived, showArbitrary, setShowArbitrary }) {
+  return (
+    <Stack direction="column" gap={1}>
+      <TextField
+        label="List Type"
+        select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        sx={{ mt: 1 }}
+        SelectProps={{
+          MenuProps: {
+            disableScrollLock: true,
+          },
+        }}
+      >
+        <MenuItem value="all">All Campaigns</MenuItem>
+        <MenuItem value="standard">Standard Golden List</MenuItem>
+        <MenuItem value="hard">Hard Golden List</MenuItem>
+      </TextField>
+      <Stack direction="row" gap={1} alignItems="center">
+        <FormControlLabel
+          checked={showArchived}
+          onChange={(e) => setShowArchived(e.target.checked)}
+          control={<Checkbox />}
+          label="Show Archived"
+        />
+        <FormControlLabel
+          checked={showArbitrary}
+          onChange={(e) => setShowArbitrary(e.target.checked)}
+          control={<Checkbox />}
+          label="Show Arbitrary"
+        />
+      </Stack>
+    </Stack>
   );
 }
 
@@ -119,7 +176,7 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   let lastCampaign = null;
 
   return (
-    <Stack direction="column" alignItems="stretch" gap={1.5}>
+    <Stack direction="column" alignItems="stretch" gap={1.25}>
       <BasicBox>
         <Typography variant="body2">
           {totalSubmissionCount} submissions across {campaigns.length} campaigns
@@ -283,7 +340,7 @@ function ChallengeEntry({ challenge, type }) {
       </Grid>
       {challenge.description !== null && (
         <Grid item xs={12} md={1}>
-          {challenge.description}
+          <div style={{ textAlign: "center" }}>{challenge.description}</div>
         </Grid>
       )}
       <Grid

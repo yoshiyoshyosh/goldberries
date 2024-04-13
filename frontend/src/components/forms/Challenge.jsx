@@ -28,6 +28,7 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
         requires_fc: false,
         has_fc: false,
         is_arbitrary: false,
+        sort: null,
         difficulty_id: defaultDifficultyId ?? 19, //Undetermined
       }
     );
@@ -170,6 +171,10 @@ export function FormChallenge({ challenge, onSave, ...props }) {
           />
         )}
       />
+
+      <Divider sx={{ my: 2 }} />
+
+      <TextField label="Sort Order" type="number" fullWidth {...form.register("sort")} />
 
       <Divider sx={{ my: 2 }} />
 

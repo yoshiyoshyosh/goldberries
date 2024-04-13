@@ -80,7 +80,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
     onUpdateSubmit();
   };
   const onRejectSubmit = () => {
-    form.setValue("is_rejected", true);
+    form.setValue("is_verified", false);
     onUpdateSubmit();
   };
 
@@ -114,11 +114,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
     <form {...props}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography variant="h6">Submission ({submission.id})</Typography>
-        <VerificationStatusChip
-          isVerified={submission.is_verified}
-          isRejected={submission.is_rejected}
-          prefix="Status: "
-        />
+        <VerificationStatusChip isVerified={submission.is_verified} prefix="Status: " />
       </Stack>
 
       {isVerifier ? (
@@ -274,7 +270,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             secondary="Date Submitted"
           />
         </ListItem>
-        {submission.is_verified ? (
+        {submission.is_verified !== null ? (
           <>
             <ListItem>
               <ListItemText
@@ -309,7 +305,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
       <Divider sx={{ my: 2 }} />
 
       {isVerifier ? (
-        submission.is_verified || submission.is_rejected ? (
+        submission.is_verified !== null ? (
           <Button
             type="submit"
             fullWidth

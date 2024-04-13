@@ -89,12 +89,12 @@ export function RecentSubmissions({ playerId = null }) {
     "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
     10
   );
-  const [type, setType] = useLocalStorage("recent_submissions_type", "verified");
-  const query = useGetRecentSubmissions(type, page, perPage, null, playerId);
+  const [verified, setVerified] = useLocalStorage("recent_submissions_verified", true);
+  const query = useGetRecentSubmissions(verified, page, perPage, null, playerId);
 
   const onChangeType = (event) => {
     setPage(1);
-    setType(event.target.checked ? "verified" : "pending");
+    setVerified(event.target.checked ? true : null);
   };
 
   const data = getQueryData(query);
@@ -107,9 +107,9 @@ export function RecentSubmissions({ playerId = null }) {
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" spacing={1} alignItems="center">
-            <VerificationStatusChip size="small" />
-            <Switch checked={type === "verified"} onChange={onChangeType} />
-            <VerificationStatusChip isVerified size="small" />
+            <VerificationStatusChip isVerified={null} size="small" />
+            <Switch checked={verified === "verified"} onChange={onChangeType} />
+            <VerificationStatusChip isVerified={true} size="small" />
           </Stack>
         </Grid>
       </Grid>

@@ -202,9 +202,7 @@ const router = createBrowserRouter([
       },
 
       { path: "top-golden-list/:type?/:id?", element: <PageTopGoldenList /> },
-      { path: "hard-golden-list", element: <PageGoldenList type="hard" /> },
-      { path: "standard-golden-list", element: <PageGoldenList type="standard" /> },
-      { path: "all-campaigns", element: <PageGoldenList type={null} /> },
+      { path: "campaign-list/:type?", element: <PageGoldenList /> },
 
       { path: "rejected-maps", element: <PageRejectedMaps /> },
 
@@ -357,19 +355,9 @@ export function Layout() {
       items: [
         { name: "Top Golden List", path: "/top-golden-list", icon: <FontAwesomeIcon icon={faArrowUp} /> },
         {
-          name: "Hard Golden List",
-          path: "/hard-golden-list",
-          icon: <FontAwesomeIcon icon={faWeightHanging} />,
-        },
-        {
-          name: "Standard Golden List",
-          path: "/standard-golden-list",
-          icon: <FontAwesomeIcon icon={faHeart} />,
-        },
-        {
-          name: "All Campaigns",
-          path: "/all-campaigns",
-          icon: <FontAwesomeIcon icon={faOtter} />,
+          name: "Campaign List",
+          path: "/campaign-list/hard",
+          icon: <FontAwesomeIcon icon={faBook} />,
         },
         {
           name: "Rejected Maps",

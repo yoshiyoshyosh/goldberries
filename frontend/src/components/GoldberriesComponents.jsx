@@ -262,13 +262,10 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
   );
 }
 
-export function VerificationStatusChip({ isVerified, isRejected, prefix = "", ...props }) {
-  if (isVerified) {
-    return <Chip label={prefix + "Verified"} color="success" {...props} />;
-  } else if (isRejected) {
-    return <Chip label={prefix + "Rejected"} color="error" {...props} />;
-  }
-  return <Chip label={prefix + "Pending"} color="warning" {...props} />;
+export function VerificationStatusChip({ isVerified, prefix = "", ...props }) {
+  const text = isVerified === null ? "Pending" : isVerified ? "Verified" : "Rejected";
+  const color = isVerified === null ? "warning" : isVerified ? "success" : "error";
+  return <Chip label={prefix + text} color={color} {...props} />;
 }
 
 // ===== Full Select Components =====

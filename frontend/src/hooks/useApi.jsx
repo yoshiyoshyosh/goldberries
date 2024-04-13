@@ -205,10 +205,10 @@ export function useGetChangelog(type, id) {
   });
 }
 
-export function useGetRecentSubmissions(type, page, perPage, search = null, playerId = null) {
+export function useGetRecentSubmissions(verified, page, perPage, search = null, playerId = null) {
   return useQuery({
-    queryKey: ["recent_submissions", type, page, perPage, search, playerId],
-    queryFn: () => fetchRecentSubmissions(type, page, perPage, search, playerId),
+    queryKey: ["recent_submissions", verified, page, perPage, search, playerId],
+    queryFn: () => fetchRecentSubmissions(verified, page, perPage, search, playerId),
     onError: errorToast,
   });
 }

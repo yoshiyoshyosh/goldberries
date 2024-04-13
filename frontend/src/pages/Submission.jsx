@@ -121,7 +121,7 @@ export function SubmissionDisplay({ id, onDelete }) {
           <Typography variant="h4">Submission</Typography>
         </Grid>
         <Grid item xs={6} sm>
-          <VerificationStatusChip isVerified={submission.is_verified} isRejected={submission.is_rejected} />
+          <VerificationStatusChip isVerified={submission.is_verified} />
         </Grid>
         {isVerifier || isOwnSubmission ? (
           <Grid item xs={6} sm="auto">
