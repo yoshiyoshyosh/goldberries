@@ -8,8 +8,7 @@ class Submission extends DbObject
   public string $proof_url;
   public ?string $raw_session_url = null;
   public ?string $player_notes = null;
-  public bool $is_verified = false;
-  public bool $is_rejected = false;
+  public ?bool $is_verified = null;
   public ?JsonDateTime $date_verified = null;
   public ?string $verifier_notes = null;
   public bool $is_fc = false;
@@ -40,7 +39,6 @@ class Submission extends DbObject
       'raw_session_url' => $this->raw_session_url,
       'player_notes' => $this->player_notes,
       'is_verified' => $this->is_verified,
-      'is_rejected' => $this->is_rejected,
       'date_verified' => $this->date_verified,
       'verifier_notes' => $this->verifier_notes,
       'is_fc' => $this->is_fc,
@@ -57,10 +55,10 @@ class Submission extends DbObject
     $this->id = intval($arr[$prefix . 'id']);
     $this->player_id = intval($arr[$prefix . 'player_id']);
     $this->proof_url = $arr[$prefix . 'proof_url'];
-    $this->is_verified = $arr[$prefix . 'is_verified'] === 't';
-    $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_fc = $arr[$prefix . 'is_fc'] === 't';
 
+    if (isset($arr[$prefix . 'is_verified']))
+      $this->is_verified = $arr[$prefix . 'is_verified'] === 't';
     if (isset($arr[$prefix . 'challenge_id']))
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
     if (isset($arr[$prefix . 'date_created']))
@@ -138,7 +136,7 @@ class Submission extends DbObject
   // === Find Functions ===
   static function get_submission_queue($DB)
   {
-    $result = pg_query($DB, "SELECT * FROM submission WHERE is_verified = false AND is_rejected = false ORDER BY date_created ASC, id ASC;");
+    $result = pg_query($DB, "SELECT * FROM submission WHERE is_verified IS NULL ORDER BY date_created ASC, id ASC;");
     if ($result === false)
       die_json(500, "Failed to query database");
 
@@ -152,18 +150,31 @@ class Submission extends DbObject
     return $submissions;
   }
 
-  static function get_recent_submissions($DB, $type, $page, $per_page, $search = null, $player = null)
+  static function get_recent_submissions($DB, $verified, $page, $per_page, $search = null, $player = null)
   {
-    $query = "SELECT * FROM view_submissions WHERE submission_is_verified = " . ($type === 'verified' ? 'true' : 'false') . " AND submission_is_rejected = false";
+    $query = "SELECT * FROM view_submissions";
 
+    $where = array();
+
+    if ($verified === null) {
+      $where[] = "submission_is_verified IS NULL";
+    } else if ($verified === true) {
+      $where[] = "submission_is_verified = true";
+    } else if ($verified === false) {
+      $where[] = "submission_is_verified = false";
+    }
     if ($search !== null) {
       $search = pg_escape_string($search);
-      $query .= " AND campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%'";
+      $where[] = "(campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%')";
     }
     if ($player !== null) {
-      $query .= " AND player_id = " . $player;
+      $where = "player_id = " . $player;
     }
 
+
+    if (count($where) > 0) {
+      $query .= " WHERE " . implode(" AND ", $where);
+    }
     $query .= " ORDER BY submission_date_created DESC";
 
     $query = "

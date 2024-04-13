@@ -13,13 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   $recent = isset($_REQUEST['recent']) && $_REQUEST['recent'] === 'true';
   if ($recent) {
-    $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'verified';
+    $verified = !isset($_REQUEST['verified']) ? null : $_REQUEST['verified'] === "true";
     $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
     $per_page = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10;
     // $per_page = min($per_page, 500);
     $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : null;
     $player = isset($_REQUEST['player']) ? intval($_REQUEST['player']) : null;
-    $result = Submission::get_recent_submissions($DB, $type, $page, $per_page, $search, $player);
+    $result = Submission::get_recent_submissions($DB, $verified, $page, $per_page, $search, $player);
     api_write($result);
     exit();
   }
@@ -97,8 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       if (
         $old_submission->verifier_id === null
-        && !$old_submission->is_verified && !$old_submission->is_rejected
-        && ($submission->is_verified || $submission->is_rejected)
+        && $old_submission->is_verified !== $submission->is_verified
       ) {
         $toLog = $submission->is_verified ? "verified" : "rejected";
         log_info("{$old_submission} was {$toLog} by '{$account->player->name}'", "Submission");
@@ -106,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->verifier_id = $account->player->id;
       }
       $old_submission->is_verified = $submission->is_verified;
-      $old_submission->is_rejected = $submission->is_rejected;
       $old_submission->player_notes = $submission->player_notes;
       if ($submission->suggested_difficulty_id !== null) {
         $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
@@ -120,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       $old_submission->verifier_notes = $submission->verifier_notes;
-      $old_submission->new_challenge_id = $submission->is_verified || $submission->is_rejected ? null : $submission->new_challenge_id;
+      $old_submission->new_challenge_id = $submission->is_verified !== null ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
         $old_submission->expand_foreign_keys($DB, 5);

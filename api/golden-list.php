@@ -43,6 +43,7 @@ SELECT
   challenge.requires_fc AS challenge_requires_fc,
   challenge.has_fc AS challenge_has_fc,
   challenge.is_arbitrary AS challenge_is_arbitrary,
+  challenge.sort AS challenge_sort,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -65,7 +66,6 @@ SELECT
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
   submission.is_verified AS submission_is_verified,
-  submission.is_rejected AS submission_is_rejected,
   submission.date_verified AS submission_date_verified,
   submission.verifier_notes AS submission_verifier_notes,
   submission.verifier_id AS submission_verifier_id,
@@ -107,7 +107,7 @@ LEFT JOIN account pa ON p.id = pa.player_id
 LEFT JOIN account va ON v.id = va.player_id
 ";
 
-$where = "WHERE submission.is_verified = true AND submission.is_rejected = false";
+$where = "WHERE submission.is_verified = true";
 if (isset($_GET['campaign'])) {
   $where .= " AND campaign.id = " . intval($_GET['campaign']);
 } else if (isset($_GET['map'])) {

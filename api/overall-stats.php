@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if (isset($_REQUEST['verifier']) && $_REQUEST['verifier'] === "true") {
   $account = get_user_data();
@@ -12,7 +12,7 @@ if (isset($_REQUEST['verifier']) && $_REQUEST['verifier'] === "true") {
 
   $query = "
   SELECT
-    (SELECT COUNT(*) FROM submission WHERE is_verified = FALSE AND is_rejected = FALSE) AS submissions_in_queue,
+    (SELECT COUNT(*) FROM submission WHERE is_verified IS NULL) AS submissions_in_queue,
     (SELECT COUNT(*) FROM account WHERE claimed_player_id IS NOT NULL) AS open_player_claims
   ";
   $result = pg_query($DB, $query);

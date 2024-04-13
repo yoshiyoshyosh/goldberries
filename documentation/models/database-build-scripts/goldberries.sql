@@ -338,7 +338,6 @@ CREATE VIEW "view_submissions" AS SELECT
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
   submission.is_verified AS submission_is_verified,
-  submission.is_rejected AS submission_is_rejected,
   submission.date_verified AS submission_date_verified,
   submission.verifier_notes AS submission_verifier_notes,
   submission.verifier_id AS submission_verifier_id,
