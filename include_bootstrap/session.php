@@ -61,11 +61,13 @@ function logout()
     return false;
   }
 
-  if (!isset($_SESSION['token'])) {
+  $token = get_token();
+  //Currently, this check is unnecessary, as the token is always set if the account is set
+  //In the future, get_user_data() for an API token might return an account, while not owning a session token
+  if ($token === null) {
     return false;
   }
 
-  $token = $_SESSION['token'];
   $sessions = Session::find_by_token($DB, $token);
   if ($sessions === false) {
     return false;
@@ -80,6 +82,9 @@ function logout()
   }
 
   if ($session->delete($DB)) {
+    //Unset cookie
+    setcookie('token', '', time() - 3600, '/');
+    unset($_COOKIE['token']);
     session_destroy();
     return true;
   } else {
@@ -90,7 +95,8 @@ function logout()
 function create_session_token($length = 32)
 {
   $token = generate_random_token($length);
-  $_SESSION['token'] = $token;
+  //Set cookie for 30 days
+  setcookie('token', $token, time() + 60 * 60 * 24 * 30, '/');
   return $token;
 }
 function generate_random_token($length)
@@ -98,17 +104,26 @@ function generate_random_token($length)
   return bin2hex(random_bytes($length));
 }
 
+
+function get_token()
+{
+  if (!isset($_COOKIE['token']))
+    return null;
+  return $_COOKIE['token'];
+}
+
 function get_user_data()
 {
   global $DB;
 
-  if (!isset($_SESSION['token'])) {
+  $token = get_token();
+  if ($token == null) {
     return null;
   }
 
   //Fetch account from database
   //Respect the expire time of the session
-  $account = Account::find_by_session_token($DB, $_SESSION['token']);
+  $account = Account::find_by_session_token($DB, $token);
   if ($account == false) {
     return null;
   }
