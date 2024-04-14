@@ -174,6 +174,19 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   );
 
   let lastCampaign = null;
+  const groupsCount = 20;
+
+  //Split campaigns into 10 groups with (length / 10) campaigns each
+  const groupLength = Math.ceil(campaigns.length / groupsCount);
+  const campaignsGroups = campaigns.reduce((acc, campaign, index) => {
+    const groupIndex = Math.floor(index / groupLength);
+    if (!acc[groupIndex]) {
+      acc[groupIndex] = [];
+    }
+    acc[groupIndex].push(campaign);
+    return acc;
+  }, []);
+  console.log("campaignGroups: ", campaignsGroups);
 
   return (
     <Stack direction="column" alignItems="stretch" gap={1.25}>
@@ -182,7 +195,7 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
           {totalSubmissionCount} submissions across {campaigns.length} campaigns
         </Typography>
       </BasicBox>
-      {campaigns.map((campaign, index) => {
+      {/* {campaigns.map((campaign, index) => {
         if (
           lastCampaign === null ||
           lastCampaign.name.toUpperCase().charAt(0) !== campaign.name.toUpperCase().charAt(0)
@@ -198,8 +211,64 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
         }
         lastCampaign = campaign;
         return <CampaignEntry key={campaign.id} campaign={campaign} type={type} />;
+      })} */}
+      {campaignsGroups.map((campaignsGroup, index) => {
+        const lastCampaignInPreviousGroup = lastCampaign;
+        lastCampaign = campaignsGroup[campaignsGroup.length - 1];
+        return (
+          <DynamicRenderCampaignList
+            key={index}
+            index={index}
+            campaignsGroup={campaignsGroup}
+            type={type}
+            lastCampaign={lastCampaignInPreviousGroup}
+          />
+        );
       })}
     </Stack>
+  );
+}
+
+function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign }) {
+  const [render, setRender] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setRender(true);
+    }, index * campaignsGroup.length * 25);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (!render)
+    return (
+      <Stack direction="row" gap={1} alignItems="center">
+        <span>Loading... ({index + 1} / 20)</span>
+        <LoadingSpinner />
+      </Stack>
+    );
+
+  let previousCampaign = lastCampaign;
+
+  return (
+    <>
+      {campaignsGroup.map((campaign) => {
+        if (
+          previousCampaign === null ||
+          previousCampaign.name.toUpperCase().charAt(0) !== campaign.name.toUpperCase().charAt(0)
+        ) {
+          previousCampaign = campaign;
+          const newLetter = campaign.name.charAt(0).toUpperCase();
+          return (
+            <>
+              <LetterDivider key={newLetter} letter={newLetter} />
+              <CampaignEntry key={campaign.id} campaign={campaign} type={type} />
+            </>
+          );
+        }
+        previousCampaign = campaign;
+        return <CampaignEntry key={campaign.id} campaign={campaign} type={type} />;
+      })}
+    </>
   );
 }
 
