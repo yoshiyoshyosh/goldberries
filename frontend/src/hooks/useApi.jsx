@@ -47,6 +47,7 @@ import {
   deleteSuggestionVote,
   fetchSuggestion,
   fetchGoldenList,
+  fetchAllChallengesInMap,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -151,6 +152,14 @@ export function useGetRejectedMapList() {
   return useQuery({
     queryKey: ["rejected_map_list"],
     queryFn: () => fetchRejectedMapList(),
+    onError: errorToast,
+  });
+}
+
+export function useGetChallengesInMap(id) {
+  return useQuery({
+    queryKey: ["all_challenges", id],
+    queryFn: () => fetchAllChallengesInMap(id),
     onError: errorToast,
   });
 }

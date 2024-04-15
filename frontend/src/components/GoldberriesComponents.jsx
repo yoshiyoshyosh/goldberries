@@ -18,7 +18,7 @@ import {
   getObjectiveName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
-import { Autocomplete, Avatar, Chip, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
+import { Autocomplete, Avatar, Chip, Menu, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -41,6 +41,7 @@ import {
 import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { getQueryData, useGetChallengesInMap } from "../hooks/useApi";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -143,6 +144,40 @@ export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabe
         );
       }}
     />
+  );
+}
+
+export function ChallengeSelectTf({ map, selected, setSelected, disabled, hideLabel = false }) {
+  const query = useGetChallengesInMap(map.id);
+  const challenges = getQueryData(query)?.challenges ?? [];
+  const [selectedId, setSelectedId] = useState(selected?.id ?? "");
+
+  const onUpdateSelectedId = (id) => {
+    setSelectedId(id);
+    setSelected(challenges.find((c) => c.id === id));
+  };
+
+  return (
+    <TextField
+      select
+      fullWidth
+      disabled={disabled}
+      value={selectedId}
+      onChange={(e) => onUpdateSelectedId(e.target.value)}
+      label={hideLabel ? undefined : "Challenge"}
+      SelectProps={{
+        MenuProps: { disableScrollLock: true },
+      }}
+    >
+      <MenuItem value="">
+        <em>No Selection</em>
+      </MenuItem>
+      {challenges.map((challenge) => (
+        <MenuItem key={challenge.id} value={challenge.id}>
+          {getChallengeName(challenge)}
+        </MenuItem>
+      ))}
+    </TextField>
   );
 }
 

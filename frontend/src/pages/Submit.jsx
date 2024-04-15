@@ -23,13 +23,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { fetchChallenge, postSubmission } from "../util/api";
 import { getChallengeFlags, getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
-import { APP_NAME_LONG, FormOptions } from "../util/constants";
+import { Controller, useForm } from "react-hook-form";
+import { FormOptions } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
@@ -45,8 +45,6 @@ import {
   PlayerChip,
 } from "../components/GoldberriesComponents";
 import { usePostSubmission } from "../hooks/useApi";
-import { Helmet } from "react-helmet";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PageSubmit() {
@@ -262,15 +260,18 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  defaultChecked={challenge !== null && challenge.requires_fc}
+            <Controller
+              name="is_fc"
+              control={form.control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="Run is FC"
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
                   disabled={challenge === null || challenge.requires_fc || !challenge.has_fc}
                 />
-              }
-              {...form.register("is_fc")}
-              label="Run is FC"
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -299,9 +300,6 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
 
 export function MultiUserSubmission() {
   const auth = useAuth();
-  const navigate = useNavigate();
-  const { settings } = useAppSettings();
-  const darkmode = settings.visual.darkmode;
 
   const [campaign, setCampaign] = useState(null);
   const [sortMajorIndex, setSortMajorIndex] = useState(null);
@@ -351,13 +349,8 @@ export function MultiUserSubmission() {
           addRunRecursive(index + 1);
         })
         .catch((e) => {
-          toast.update(toastId, {
-            render: "Error creating run: " + e.message,
-            isLoading: false,
-            type: "error",
-            autoClose: 15000,
-            closeOnClick: true,
-          });
+          //Skip ahead to next submission
+          addRunRecursive(index + 1);
         });
     };
 
@@ -422,16 +415,18 @@ export function MultiUserSubmission() {
     setMapDataList(mapDataList);
   };
 
-  const updateMapDataRow = (index, data) => {
-    const newMapDataList = [...mapDataList];
-    newMapDataList[index] = data;
-    setMapDataList(newMapDataList);
-  };
-  const deleteRow = (index) => {
-    const newMapDataList = [...mapDataList];
-    newMapDataList.splice(index, 1);
-    setMapDataList(newMapDataList);
-  };
+  const updateMapDataRow = useCallback((index, data) => {
+    setMapDataList((mapDataList) => {
+      mapDataList[index] = data;
+      return [...mapDataList];
+    });
+  }, []);
+  const deleteRow = useCallback((index) => {
+    setMapDataList((mapDataList) => {
+      mapDataList.splice(index, 1);
+      return [...mapDataList];
+    });
+  }, []);
 
   useEffect(() => {
     resetMapDataList();
@@ -532,16 +527,17 @@ export function MultiUserSubmission() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {mapDataList.map((mapData, index) => (
-                  <MultiUserSubmissionMapRow
-                    key={mapData.map.id}
-                    mapData={mapData}
-                    index={index}
-                    updateMapDataRow={updateMapDataRow}
-                    deleteRow={deleteRow}
-                    darkmode={darkmode}
-                  />
-                ))}
+                {mapDataList.map((mapData, index) => {
+                  return (
+                    <MemoMultiUserSubmissionMapRow
+                      key={mapData.map.id}
+                      mapData={mapData}
+                      index={index}
+                      updateMapDataRow={updateMapDataRow}
+                      deleteRow={deleteRow}
+                    />
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -740,7 +736,21 @@ export function NewChallengeUserSubmission({}) {
 
 /* COMPONENTS */
 
-export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow, darkmode }) {
+const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps, newProps) => {
+  const propsEqual =
+    prevProps.mapData.map.id === newProps.mapData.map.id &&
+    prevProps.mapData.challenge?.id === newProps.mapData.challenge?.id &&
+    prevProps.mapData.is_fc === newProps.mapData.is_fc &&
+    prevProps.mapData.player_notes === newProps.mapData.player_notes &&
+    prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
+    prevProps.index === newProps.index;
+
+  console.log("ListItem propsEqual:", propsEqual);
+  return propsEqual;
+});
+export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow }) {
+  const { settings } = useAppSettings();
+  const darkmode = settings.visual.darkmode;
   const [expanded, setExpanded] = useState(mapData.challenge?.difficulty.id <= 13 ? true : false);
 
   const lobbyInfo = getMapLobbyInfo(mapData.map);

@@ -235,7 +235,7 @@ function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign }
   useEffect(() => {
     const timeout = setTimeout(() => {
       setRender(true);
-    }, index * campaignsGroup.length * 25);
+    }, index * campaignsGroup.length * 20);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -279,19 +279,17 @@ function CampaignEntry({ campaign, type }) {
   return (
     <BasicBox className={"campaign-box" + (theme.palette.mode === "dark" ? " dark" : "")}>
       <Grid container rowSpacing={0} columnSpacing={1}>
-        <Grid
-          item
-          xs={12}
-          className="campaign-box-header"
-          // display="flex"
-          // alignItems="center"
-          // justifyContent="space-between"
-          // flexWrap="wrap"
-          // columnGap={1}
-        >
-          {/* <Stack direction="row" gap={1} alignItems="center" minWidth={0}> */}
-          <Grid container columnGap={1} sx={{ minHeight: "49px" }}>
-            <Grid item xs={12} md="auto" display="flex" alignItems="center" flexWrap="nowrap" columnGap={1}>
+        <Grid item xs={12} className="campaign-box-header">
+          <Grid container columnGap={1} sx={{ minHeight: "49px" }} wrap="nowrap">
+            <Grid
+              item
+              xs={12}
+              md={10}
+              display="flex"
+              alignItems="center"
+              flexWrap={{ xs: "wrap", md: "nowrap" }}
+              columnGap={1}
+            >
               <CampaignIcon campaign={campaign} />
               <Link
                 to={"/campaign/" + campaign.id}
@@ -308,8 +306,6 @@ function CampaignEntry({ campaign, type }) {
               <StyledExternalLink href={campaign.url}>
                 <FontAwesomeIcon icon={faLemon} fontSize="1em" />
               </StyledExternalLink>
-            </Grid>
-            <Grid item xs={12} md order={{ xs: 3, md: 2 }}>
               {(campaign.maps.length > 1 || campaign.name !== campaign.maps[0].name) && (
                 <MapSelectAlt
                   campaign={campaign}
@@ -319,7 +315,6 @@ function CampaignEntry({ campaign, type }) {
                 />
               )}
             </Grid>
-            {/* </Stack> */}
             {campaign.maps.length > 1 && (
               <Grid
                 item
@@ -336,16 +331,6 @@ function CampaignEntry({ campaign, type }) {
           </Grid>
         </Grid>
         <Grid container item xs={12} rowSpacing={1} columnSpacing={1} sx={{ pr: 1 }}>
-          {/* {(campaign.maps.length > 1 || campaign.name !== campaign.maps[0].name) && (
-            <Grid item xs={12}>
-              <MapSelectAlt
-                campaign={campaign}
-                type={type}
-                selectedMap={selectedMapIndex}
-                onSelectMap={setSelectedMapIndex}
-              />
-            </Grid>
-          )} */}
           <Grid item xs={12} sm={12} sx={{ pr: 2 }}>
             {selectedMapIndex !== null && (
               <MapEntry campaign={campaign} map={campaign.maps[selectedMapIndex]} type={type} />
@@ -369,13 +354,16 @@ function LetterDivider({ letter }) {
 
 function MapSelectAlt({ campaign, type, selectedMap, onSelectMap }) {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: "divider", width: "fit-content" }}>
-      <Tabs variant="scrollable" value={selectedMap} onChange={(e, v) => onSelectMap(v)}>
-        {campaign.maps.map((map, index) => (
-          <Tab key={map.id} label={getMapName(map, campaign, false)} sx={{ textTransform: "none" }} />
-        ))}
-      </Tabs>
-    </Box>
+    <Tabs
+      variant="scrollable"
+      value={selectedMap}
+      onChange={(e, v) => onSelectMap(v)}
+      sx={{ borderBottom: 1, borderColor: "divider" }}
+    >
+      {campaign.maps.map((map, index) => (
+        <Tab key={map.id} label={getMapName(map, campaign, false)} sx={{ textTransform: "none" }} />
+      ))}
+    </Tabs>
   );
 }
 
@@ -405,29 +393,21 @@ function ChallengeEntry({ challenge, type }) {
   return (
     <Grid container rowSpacing={1} columnSpacing={1}>
       <Grid component={Stack} item xs={12} md={1} direction="row" gap={1}>
-        <DifficultyChip difficulty={challenge.difficulty} sx={{ width: "100%", textAlign: "center" }} />
+        <Stack direction="column" alignItems="stretch" gap={1} width="100%">
+          <DifficultyChip difficulty={challenge.difficulty} sx={{ width: "100%", textAlign: "center" }} />
+          {challenge.description !== null && (
+            <div style={{ textAlign: "center" }}>{challenge.description}</div>
+          )}
+        </Stack>
       </Grid>
-      {challenge.description !== null && (
-        <Grid item xs={12} md={1}>
-          <div style={{ textAlign: "center" }}>{challenge.description}</div>
-        </Grid>
-      )}
-      <Grid
-        component={Stack}
-        item
-        xs={12}
-        md={1}
-        direction="row"
-        gap={1}
-        // alignItems="center"
-      >
+      <Grid component={Stack} item xs={12} md={1} direction="row" gap={1}>
         {/* {getChallengeFcShort(challenge)} */}
         <Stack direction="row" alignItems="center" gap={1} style={{ margin: "auto", marginTop: 0 }}>
           <ChallengeFcIcon challenge={challenge} showClear height="1.3em" />
           <span>{challenge.submissions.length}</span>
         </Stack>
       </Grid>
-      <Grid item xs={12} md={challenge.description !== null ? 9 : 10}>
+      <Grid item xs={12} md={challenge.description !== null ? 10 : 10}>
         <Stack direction="row" columnGap={3} rowGap={1} flexWrap="wrap">
           {challenge.submissions.map((submission) => (
             <SubmissionEntry key={submission.id} submission={submission} />
