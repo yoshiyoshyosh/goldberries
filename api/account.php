@@ -190,6 +190,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     if (isset($request['links']) && $request['links'] !== $account->links) {
+      $linkList = $request['links'];
+      if ($linkList !== null && !is_array($linkList)) {
+        die_json(400, "Invalid links");
+      }
+      if ($linkList !== null && count($linkList) > 10) {
+        die_json(400, "Too many links");
+      }
       $account->links = $request['links'];
       $linksStr = $account->links === null ? "null" : implode("\t", $account->links);
       $changes .= "links (new list: {$linksStr}), ";

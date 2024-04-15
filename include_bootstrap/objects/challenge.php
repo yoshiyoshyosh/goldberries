@@ -9,6 +9,7 @@ class Challenge extends DbObject
   public bool $requires_fc = false;
   public bool $has_fc = false;
   public ?bool $is_arbitrary = null;
+  public ?int $sort = null;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -42,6 +43,7 @@ class Challenge extends DbObject
       'map_id' => $this->map_id,
       'objective_id' => $this->objective_id,
       'difficulty_id' => $this->difficulty_id,
+      'sort' => $this->sort,
     );
   }
 
@@ -63,6 +65,8 @@ class Challenge extends DbObject
       $this->description = $arr[$prefix . 'description'];
     if (isset($arr[$prefix . 'is_arbitrary']))
       $this->is_arbitrary = $arr[$prefix . 'is_arbitrary'] === 't';
+    if (isset($arr[$prefix . 'sort']))
+      $this->sort = intval($arr[$prefix . 'sort']);
   }
 
   function expand_foreign_keys($DB, $depths = 2, $expand_structure = true)
@@ -117,6 +121,19 @@ class Challenge extends DbObject
     return true;
   }
 
+  function get_player_submission($DB, $player_id)
+  {
+    $query = "SELECT * FROM submission WHERE challenge_id = $1 AND player_id = $2 AND (is_verified = true OR is_verified IS NULL)";
+    $result = pg_query_params($DB, $query, array($this->id, $player_id));
+    if ($result === false)
+      return null;
+
+    $row = pg_fetch_assoc($result);
+    $submission = new Submission();
+    $submission->apply_db_data($row);
+    return $submission;
+  }
+
   // === Utility Functions ===
   function is_challenge_arbitrary(): bool
   {
@@ -162,6 +179,11 @@ class Challenge extends DbObject
     if ($old->is_arbitrary !== $new->is_arbitrary) {
       $stateNow = $new->is_arbitrary ? "Arbitrary challenge" : "Non-arbitrary challenge";
       Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
+    }
+    if ($old->sort !== $new->sort) {
+      $oldVal = $old->sort === null ? "null" : $old->sort;
+      $newVal = $new->sort === null ? "null" : $new->sort;
+      Change::create_change($DB, 'challenge', $new->id, "Changed sort order from '{$oldVal}' to '{$newVal}'");
     }
 
     return true;
