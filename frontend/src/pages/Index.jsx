@@ -28,6 +28,7 @@ import {
   ArbitraryIcon,
   CampaignIcon,
   DifficultyChip,
+  ObjectiveIcon,
   PlayerChip,
   SubmissionFcIcon,
   SubmissionIcon,
@@ -41,6 +42,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { faInfoCircle, faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { useTheme } from "@emotion/react";
+import { getChallengeIsArbitrary } from "../util/data_util";
 
 export function PageIndex() {
   return (
@@ -194,17 +196,14 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
                     <StyledLink to={"/map/" + submission.challenge.map.id}>
                       {submission.challenge.map.name}
                     </StyledLink>
-                    {submission.challenge.description && (
+                    <ObjectiveIcon
+                      objective={submission.challenge.objective}
+                      challengeDescription={submission.challenge.description}
+                      height="1.3em"
+                    />
+                    {getChallengeIsArbitrary(submission.challenge) && (
                       <>
-                        <Typography>-</Typography>
-                        <Tooltip title={submission.challenge.description} arrow>
-                          <ArbitraryIcon />{" "}
-                          <FontAwesomeIcon
-                            icon={faInfoCircle}
-                            color={theme.palette.text.secondary}
-                            style={{ height: "1em" }}
-                          />
-                        </Tooltip>
+                        <ArbitraryIcon />
                       </>
                     )}
                     <Typography>-</Typography>

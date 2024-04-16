@@ -31,6 +31,7 @@ import {
   faChildCombatant,
   faGamepad,
   faHammer,
+  faInfoCircle,
   faKeyboard,
   faLink,
   faPersonDrowning,
@@ -615,4 +616,31 @@ export function OtherIcon({ name, title, alt, height = "1em" }) {
 
 export function ArbitraryIcon({ height = "1em" }) {
   return <Tooltip title="Arbitrary">(A)</Tooltip>;
+}
+
+export function ObjectiveIcon({ objective, challengeDescription, height = "1em" }) {
+  const description = challengeDescription
+    ? objective.name + ": " + challengeDescription
+    : objective.description;
+  if (objective.icon_url === null || objective.icon_url === undefined)
+    return (
+      <Tooltip title={description}>
+        <FontAwesomeIcon icon={faInfoCircle} height={height} />
+      </Tooltip>
+    );
+
+  return (
+    <Tooltip title={description}>
+      <img
+        src={objective.icon_url}
+        alt={objective.name}
+        style={{
+          height: height,
+          // filter:
+          //   "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+        }}
+        loading="lazy"
+      />
+    </Tooltip>
+  );
 }

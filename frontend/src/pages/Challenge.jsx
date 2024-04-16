@@ -26,7 +26,7 @@ import {
   LoadingSpinner,
   StyledLink,
 } from "../components/BasicComponents";
-import { DifficultyChip, SubmissionFcIcon } from "../components/GoldberriesComponents";
+import { DifficultyChip, ObjectiveIcon, SubmissionFcIcon } from "../components/GoldberriesComponents";
 import { getChallengeNameShort, getGamebananaEmbedUrl, getPlayerNameColorStyle } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -159,10 +159,8 @@ export function ChallengeDetailsList({ challenge }) {
         <ListItemText
           primary={
             <Stack direction="row" spacing={1} useFlexGap alignItems="center">
-              {challenge.objective.name}
-              <Tooltip title={challenge.objective.description}>
-                <FontAwesomeIcon icon={faInfoCircle} />
-              </Tooltip>
+              <span>{challenge.objective.name}</span>
+              <ObjectiveIcon objective={challenge.objective} height="1.3em" />
             </Stack>
           }
           secondary="Objective"
