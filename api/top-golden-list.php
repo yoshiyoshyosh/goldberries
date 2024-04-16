@@ -55,6 +55,7 @@ SELECT
   objective.description AS objective_description,
   objective.display_name_suffix AS objective_display_name_suffix,
   objective.is_arbitrary AS objective_is_arbitrary,
+  objective.icon_url AS objective_icon_url,
 
   submission.id AS submission_id,
   submission.challenge_id AS submission_challenge_id,

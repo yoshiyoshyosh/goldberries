@@ -8,6 +8,7 @@ class Objective extends DbObject
   public string $description;
   public ?string $display_name_suffix = null;
   public bool $is_arbitrary;
+  public ?string $icon_url = null;
 
 
   // === Abstract Functions ===
@@ -18,6 +19,7 @@ class Objective extends DbObject
       'description' => $this->description,
       'display_name_suffix' => $this->display_name_suffix,
       'is_arbitrary' => $this->is_arbitrary,
+      'icon_url' => $this->icon_url
     );
   }
 
@@ -30,6 +32,8 @@ class Objective extends DbObject
 
     if (isset($arr[$prefix . 'display_name_suffix']))
       $this->display_name_suffix = $arr[$prefix . 'display_name_suffix'];
+    if (isset($arr[$prefix . 'icon_url']))
+      $this->icon_url = $arr[$prefix . 'icon_url'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
