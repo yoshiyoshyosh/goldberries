@@ -289,7 +289,8 @@ const darkTheme = createTheme({
     MuiListSubheader: {
       styleOverrides: {
         root: {
-          background: "#121212",
+          background: "rgba(0,0,0,0)",
+          // background: "#121212",
         },
       },
     },
@@ -356,7 +357,7 @@ export function Layout() {
         { name: "Top Golden List", path: "/top-golden-list", icon: <FontAwesomeIcon icon={faArrowUp} /> },
         {
           name: "Campaign List",
-          path: "/campaign-list/hard",
+          path: "/campaign-list",
           icon: <FontAwesomeIcon icon={faBook} />,
         },
         {

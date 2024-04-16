@@ -513,6 +513,7 @@ const LINK_ICONS = {
   discord: { icon: faDiscord, color: "#5460ef", identifier: ["discord.gg/"] },
 };
 export function LinkIcon({ url }) {
+  const theme = useTheme();
   let linkIconElement = null;
   for (const [key, value] of Object.entries(LINK_ICONS)) {
     if (value.identifier.some((i) => url.includes(i))) {
@@ -522,7 +523,7 @@ export function LinkIcon({ url }) {
   }
 
   if (linkIconElement === null) {
-    linkIconElement = <FontAwesomeIcon icon={faLink} />;
+    linkIconElement = <FontAwesomeIcon icon={faLink} color={theme.palette.links.main} />;
   }
 
   return (

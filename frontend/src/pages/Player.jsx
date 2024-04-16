@@ -94,7 +94,7 @@ export function PlayerDisplay({ id }) {
             ))}
           </Stack>
         ) : null}
-        <Link to={`/player/${id}/top-golden-list`}>Top Golden List</Link>
+        <StyledLink to={`/player/${id}/top-golden-list`}>Top Golden List</StyledLink>
 
         {player.account.about_me && (
           <>

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
-import { BasicBox, ErrorDisplay, LoadingSpinner, StyledExternalLink } from "./BasicComponents";
+import { BasicBox, ErrorDisplay, LoadingSpinner, StyledExternalLink, StyledLink } from "./BasicComponents";
 import {
   Box,
   Button,
@@ -429,9 +429,9 @@ function TopGoldenListRow({
             </StyledExternalLink>
           )}
           {isPlayer ? (
-            <Link to={"/submission/" + challenge.submissions[0].id}>
+            <StyledLink to={"/submission/" + challenge.submissions[0].id}>
               <FontAwesomeIcon icon={faBook} />
-            </Link>
+            </StyledLink>
           ) : null}
         </Stack>
       </TableCell>

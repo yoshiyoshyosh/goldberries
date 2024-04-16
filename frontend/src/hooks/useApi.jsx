@@ -70,8 +70,6 @@ export function useGetGoldenList(type, id = null, include_archived = false, incl
     queryFn: () =>
       fetchGoldenList(type, id, { include_arbitrary: include_arbitrary, include_archived: include_archived }),
     onError: errorToast,
-    cacheTime: type === "hard" || type === "standard" || type === null ? 0 : 60 * 1000,
-    staleTime: type === "hard" || type === "standard" || type === null ? 0 : 60 * 1000,
   });
 }
 

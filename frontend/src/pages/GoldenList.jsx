@@ -61,17 +61,13 @@ export function PageGoldenList({}) {
       : "Standard Golden List";
 
   const onChangeType = (type) => {
-    if (type === "all") {
+    if (type === "hard") {
       navigate("/campaign-list", { replace: true });
     } else {
       navigate("/campaign-list/" + type, { replace: true });
     }
     setSelectedType(type);
   };
-
-  useEffect(() => {
-    setSelectedType(type);
-  }, [type]);
 
   return (
     <>
@@ -174,16 +170,14 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   );
 
   let lastCampaign = null;
-  const groupsCount = 20;
+  const groupSize = 15;
 
-  //Split campaigns into 10 groups with (length / 10) campaigns each
-  const groupLength = Math.ceil(campaigns.length / groupsCount);
-  const campaignsGroups = campaigns.reduce((acc, campaign, index) => {
-    const groupIndex = Math.floor(index / groupLength);
-    if (!acc[groupIndex]) {
-      acc[groupIndex] = [];
+  //Split campaigns into groups of 10
+  const campaignsGroups = campaigns.reduce((acc, campaign) => {
+    if (acc.length === 0 || acc[acc.length - 1].length >= groupSize) {
+      acc.push([]);
     }
-    acc[groupIndex].push(campaign);
+    acc[acc.length - 1].push(campaign);
     return acc;
   }, []);
   console.log("campaignGroups: ", campaignsGroups);
@@ -195,29 +189,12 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
           {totalSubmissionCount} submissions across {campaigns.length} campaigns
         </Typography>
       </BasicBox>
-      {/* {campaigns.map((campaign, index) => {
-        if (
-          lastCampaign === null ||
-          lastCampaign.name.toUpperCase().charAt(0) !== campaign.name.toUpperCase().charAt(0)
-        ) {
-          lastCampaign = campaign;
-          const newLetter = campaign.name.charAt(0).toUpperCase();
-          return (
-            <>
-              <LetterDivider key={newLetter} letter={newLetter} />
-              <CampaignEntry key={campaign.id} campaign={campaign} type={type} />
-            </>
-          );
-        }
-        lastCampaign = campaign;
-        return <CampaignEntry key={campaign.id} campaign={campaign} type={type} />;
-      })} */}
       {campaignsGroups.map((campaignsGroup, index) => {
         const lastCampaignInPreviousGroup = lastCampaign;
         lastCampaign = campaignsGroup[campaignsGroup.length - 1];
         return (
           <DynamicRenderCampaignList
-            key={index}
+            key={type + index}
             index={index}
             campaignsGroup={campaignsGroup}
             type={type}

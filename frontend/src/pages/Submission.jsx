@@ -258,7 +258,7 @@ export function SubmissionDetailsDisplay({ submission }) {
           </ListItem>
         </List>
       </Grid>
-      {submission.is_verified || submission.is_rejected ? (
+      {submission.is_verified !== null ? (
         <Grid item xs={12} sm={6}>
           <List dense>
             <ListSubheader>Verification Details</ListSubheader>

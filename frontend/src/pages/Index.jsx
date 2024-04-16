@@ -9,9 +9,9 @@ import {
 import {
   Container,
   Grid,
+  MenuItem,
   Paper,
   Stack,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +19,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -84,13 +85,20 @@ export function PageIndex() {
 }
 
 export function RecentSubmissions({ playerId = null }) {
+  const theme = useTheme();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useLocalStorage(
     "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
     10
   );
-  const [verified, setVerified] = useLocalStorage("recent_submissions_verified", true);
-  const query = useGetRecentSubmissions(verified, page, perPage, null, playerId);
+  const [verified, setVerified] = useLocalStorage("recent_submissions_verified", 1);
+  const query = useGetRecentSubmissions(
+    verified === 0 ? null : verified === -1 ? false : true,
+    page,
+    perPage,
+    null,
+    playerId
+  );
 
   const onChangeType = (event) => {
     setPage(1);
@@ -106,10 +114,36 @@ export function RecentSubmissions({ playerId = null }) {
           <Typography variant="h5">Recent Submissions</Typography>
         </Grid>
         <Grid item xs={12} sm="auto">
-          <Stack direction="row" spacing={1} alignItems="center">
-            <VerificationStatusChip isVerified={null} size="small" />
-            <Switch checked={verified === "verified"} onChange={onChangeType} />
-            <VerificationStatusChip isVerified={true} size="small" />
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ pb: 1 }}>
+            <Typography variant="body1">Show:</Typography>
+            <TextField
+              select
+              variant="standard"
+              value={verified}
+              onChange={(e) => setVerified(e.target.value)}
+              SelectProps={{
+                MenuProps: {
+                  disableScrollLock: true,
+                },
+              }}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              sx={{
+                border: "1px solid " + theme.palette.box.border,
+                borderRadius: "5px",
+              }}
+            >
+              <MenuItem value={1}>
+                <VerificationStatusChip isVerified={true} size="small" sx={{ mx: 1 }} />
+              </MenuItem>
+              <MenuItem value={0}>
+                <VerificationStatusChip isVerified={null} size="small" sx={{ mx: 1 }} />
+              </MenuItem>
+              <MenuItem value={-1}>
+                <VerificationStatusChip isVerified={false} size="small" sx={{ mx: 1 }} />
+              </MenuItem>
+            </TextField>
           </Stack>
         </Grid>
       </Grid>

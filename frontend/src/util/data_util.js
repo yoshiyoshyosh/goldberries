@@ -158,7 +158,7 @@ export function getMapName(map, campaign, includeMapWithSide = true) {
 }
 
 export function getSubmissionVerifier(submission) {
-  if (!submission.is_verified && !submission.is_rejected) {
+  if (submission.is_verified === null) {
     return null;
   }
   if (submission.verifier) {
