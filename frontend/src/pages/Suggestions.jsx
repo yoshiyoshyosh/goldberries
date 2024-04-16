@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getQueryData,
   useDeleteSuggestion,
@@ -23,6 +23,8 @@ import {
   Button,
   ButtonGroup,
   Chip,
+  Dialog,
+  DialogContent,
   Divider,
   Grid,
   IconButton,
@@ -68,9 +70,17 @@ import { Controller, useForm } from "react-hook-form";
 
 export function PageSuggestions({}) {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const newSuggestion = () => {
     modalRefs.create.current.open();
+  };
+
+  const onCloseSuggestion = () => {
+    navigate("/suggestions");
+  };
+  const openSuggestion = (id) => {
+    navigate("/suggestions/" + id);
   };
 
   const modalRefs = {
@@ -78,6 +88,7 @@ export function PageSuggestions({}) {
     delete: useRef(),
     view: useRef(),
   };
+  modalRefs.view.current = openSuggestion;
 
   return (
     <BasicContainerBox maxWidth="md">
@@ -102,7 +113,7 @@ export function PageSuggestions({}) {
         Expired Suggestions
       </Typography>
       <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} />
-      <SuggestionsModalContainer modalRefs={modalRefs} />
+      <SuggestionsModalContainer modalRefs={modalRefs} suggestionId={id} closeModal={onCloseSuggestion} />
     </BasicContainerBox>
   );
 }
@@ -150,7 +161,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
   const auth = useAuth();
 
   const viewSuggestion = () => {
-    modalRefs.view.current.open(suggestion.id);
+    modalRefs.view.current(suggestion.id);
   };
   const askDeleteSuggestion = (e) => {
     e.stopPropagation();
@@ -219,7 +230,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
       </Grid>
 
       <Typography variant="body2" gutterBottom>
-        Comment: {suggestion.comment ?? "-"}
+        <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
       </Typography>
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs={12} sm={8}>
@@ -809,11 +820,10 @@ function CreateSuggestionModal({ onSuccess }) {
 }
 //#endregion
 
-function SuggestionsModalContainer({ modalRefs }) {
+function SuggestionsModalContainer({ modalRefs, suggestionId, closeModal }) {
   const { mutate: deleteSuggestion } = useDeleteSuggestion();
 
   const createSuggestionModal = useModal();
-  const viewSuggestionModal = useModal();
   const deleteSuggestionModal = useModal(null, (cancelled, data) => {
     if (cancelled) return;
     deleteSuggestion(data.id);
@@ -822,20 +832,26 @@ function SuggestionsModalContainer({ modalRefs }) {
   // Setting the refs
   modalRefs.create.current = createSuggestionModal;
   modalRefs.delete.current = deleteSuggestionModal;
-  modalRefs.view.current = viewSuggestionModal;
 
   return (
     <>
       <CustomModal modalHook={createSuggestionModal} maxWidth="sm" options={{ hideFooter: true }}>
         <CreateSuggestionModal id={createSuggestionModal.data} onSuccess={createSuggestionModal.close} />
       </CustomModal>
-      <CustomModal modalHook={viewSuggestionModal} maxWidth="md" options={{ hideFooter: true }}>
-        {viewSuggestionModal.data == null ? (
-          <LoadingSpinner />
-        ) : (
-          <ViewSuggestionModal id={viewSuggestionModal.data} />
-        )}
-      </CustomModal>
+
+      <Dialog
+        onClose={closeModal}
+        open={suggestionId !== undefined}
+        maxWidth="md"
+        fullWidth
+        disableScrollLock
+        disableRestoreFocus
+      >
+        <DialogContent dividers>
+          {suggestionId !== undefined && <ViewSuggestionModal id={suggestionId} />}
+        </DialogContent>
+      </Dialog>
+
       <CustomModal
         modalHook={deleteSuggestionModal}
         options={{ title: "Delete Suggestion?" }}
