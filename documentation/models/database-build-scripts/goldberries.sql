@@ -52,6 +52,7 @@ CREATE TABLE objective
  description         text NOT NULL,
  display_name_suffix varchar(32) NULL,
  is_arbitrary        boolean NOT NULL DEFAULT false,
+ icon_url            text NULL,
  CONSTRAINT objective_pkey PRIMARY KEY ( "id" )
 );
 
