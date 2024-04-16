@@ -168,7 +168,7 @@ class Submission extends DbObject
       $where[] = "(campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%')";
     }
     if ($player !== null) {
-      $where = "player_id = " . $player;
+      $where[] = "player_id = " . $player;
     }
 
 
