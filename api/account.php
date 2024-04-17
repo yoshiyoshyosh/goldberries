@@ -202,10 +202,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $changes .= "links (new list: {$linksStr}), ";
     }
     if (array_key_exists("name_color_start", $request) && $request['name_color_start'] !== $account->name_color_start) {
+      if ($request['name_color_start'] !== null && strlen($request['name_color_start']) > 30) {
+        die_json(400, "Invalid name_color_start");
+      }
       $account->name_color_start = $request['name_color_start'];
       $changes .= "name_color_start ({$account->name_color_start}), ";
     }
     if (array_key_exists("name_color_end", $request) && $request['name_color_end'] !== $account->name_color_end) {
+      if ($request['name_color_end'] !== null && strlen($request['name_color_end']) > 30) {
+        die_json(400, "Invalid name_color_end");
+      }
       $account->name_color_end = $request['name_color_end'];
       $changes .= "name_color_end ({$account->name_color_end}), ";
     }
@@ -214,6 +220,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $changes .= "input_method ({$account->input_method}), ";
     }
     if (array_key_exists("about_me", $request) && $request['about_me'] !== $account->about_me) {
+      if ($request['about_me'] !== null && strlen($request['about_me']) > 5000) {
+        die_json(400, "About me can't be longer than 5000 characters");
+      }
       $account->about_me = $request['about_me'];
       $changes .= "about_me ({$account->about_me}), ";
     }
