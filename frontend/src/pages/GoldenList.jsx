@@ -117,9 +117,9 @@ function GoldenListFilter({ type, setType, showArchived, setShowArchived, showAr
           },
         }}
       >
-        <MenuItem value="all">All Campaigns</MenuItem>
-        <MenuItem value="standard">Standard Golden List</MenuItem>
         <MenuItem value="hard">Hard Golden List</MenuItem>
+        <MenuItem value="standard">Standard Golden List</MenuItem>
+        <MenuItem value="all">All Campaigns</MenuItem>
       </TextField>
       <Stack direction="row" gap={1} alignItems="center">
         <FormControlLabel
@@ -219,7 +219,7 @@ function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign }
   if (!render)
     return (
       <Stack direction="row" gap={1} alignItems="center">
-        <span>Loading... ({index + 1} / 20)</span>
+        <span>({index + 1})</span>
         <LoadingSpinner />
       </Stack>
     );
@@ -341,14 +341,6 @@ function MapSelectAlt({ campaign, type, selectedMap, onSelectMap }) {
         <Tab key={map.id} label={getMapName(map, campaign, false)} sx={{ textTransform: "none" }} />
       ))}
     </Tabs>
-  );
-}
-
-function MapSelectEntry({ campaign, map, type, selected, onClick }) {
-  return (
-    <div className={"map-select-entry" + (selected ? " selected" : "")} onClick={onClick}>
-      <Typography fontWeight="bold">{getMapName(map, campaign)}</Typography>
-    </div>
   );
 }
 

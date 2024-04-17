@@ -26,11 +26,12 @@ export function PageNoPlayerClaimed() {
 
 export function Page404() {
   return (
-    <Container sx={{ p: 5 }} maxWidth="sm">
+    <BasicContainerBox maxWidth="sm">
       <Typography variant="h3" color="error">
         404
       </Typography>
-      <Typography color="error.main">Page not found.</Typography>
-    </Container>
+      <Typography color="error.main">The requested page does not exist</Typography>
+      <img src="/emotes/boomeline.gif" alt="boomeline" style={{ width: "100%" }} />
+    </BasicContainerBox>
   );
 }

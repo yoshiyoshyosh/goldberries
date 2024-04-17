@@ -229,13 +229,13 @@ export const lightTheme = createTheme({
     links: {
       main: "#1e90ff",
     },
+    background: {
+      other: "rgba(255,255,255,0.75)",
+    },
     tableDivider: "#e0e0e0",
     box: {
       border: "#cccccc99",
       hover: "#f0f0f0",
-    },
-    background: {
-      other: "rgba(255,255,255,0.75)",
     },
     errorBackground: "rgba(255,215,215,0.75)",
   },
@@ -253,20 +253,16 @@ export const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    background: {
-      default: "#121212",
-      paper: "#212121",
-    },
     links: {
       main: "#1e90ff",
+    },
+    background: {
+      other: "rgba(0,0,0,0.5)",
     },
     tableDivider: "#515151",
     box: {
       border: "#cccccc99",
       hover: "#333",
-    },
-    background: {
-      other: "rgba(0,0,0,0.5)",
     },
     errorBackground: "rgba(40,0,0,0.5)",
   },
@@ -599,7 +595,8 @@ export function Layout() {
 
 function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
   const auth = useAuth();
-  const nameStyle = getPlayerNameColorStyle(auth.user?.player);
+  const { settings } = useAppSettings();
+  const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
 
   return (
     <div>
@@ -698,7 +695,7 @@ function MobileMenuItem({ item, indent = 0 }) {
 function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   const auth = useAuth();
   const { settings, setSettings } = useAppSettings();
-  const nameStyle = getPlayerNameColorStyle(auth.user?.player);
+  const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
 
   const darkmode = settings.visual.darkmode;
   const toggleDarkmode = () => {

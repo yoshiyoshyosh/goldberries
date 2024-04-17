@@ -9,9 +9,7 @@ import {
   getErrorFromMultiple,
 } from "../components/BasicComponents";
 import { getQueryData, useGetAllDifficulties, useGetPlayer, useGetPlayerStats } from "../hooks/useApi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
   AdminIcon,
@@ -20,7 +18,7 @@ import {
   SuspendedIcon,
   VerifierIcon,
 } from "../components/GoldberriesComponents";
-import { RecentSubmissions } from "./Index";
+import { RecentSubmissions } from "../components/RecentSubmissions";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";

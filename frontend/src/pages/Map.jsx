@@ -22,7 +22,13 @@ import {
   getMapAuthor,
   getMapLobbyInfo,
 } from "../util/data_util";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledExternalLink,
+} from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
@@ -135,7 +141,9 @@ export function MapDetailsList({ map }) {
         <ListItemText
           primary={
             author.name !== null ? (
-              <Link to={"https://gamebanana.com/members/" + author.id}>{author.name}</Link>
+              <StyledExternalLink href={"https://gamebanana.com/members/" + author.id}>
+                {author.name}
+              </StyledExternalLink>
             ) : (
               "<Unknown Author>"
             )

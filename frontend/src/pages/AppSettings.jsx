@@ -207,6 +207,36 @@ export function AppSettingsVisualForm() {
   return (
     <form>
       <Typography variant="h5">General</Typography>
+      <Typography variant="h6">Player Name Colors</Typography>
+      <SettingsEntry>
+        <Controller
+          name="general.showNameColors"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Show Player Name Colors"
+            />
+          )}
+        />
+      </SettingsEntry>
+      <SettingsEntry>
+        <Controller
+          name="general.preferSingleOverGradientColor"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Prefer Solid Color Over Gradient Color"
+            />
+          )}
+        />
+      </SettingsEntry>
+      <Typography variant="h6">Background</Typography>
       <SettingsEntry title="Background Blur" tooltip="Guassian Blur applied to the background">
         <Controller
           name="general.backgroundBlur"

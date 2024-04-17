@@ -20,6 +20,8 @@ export function AppSettingsProvider({ children }) {
           backgroundLight: "", //Same
           backgroundLightCustom: "",
           backgroundBlur: 5,
+          showNameColors: true,
+          preferSingleOverGradientColor: false,
         },
       },
     };

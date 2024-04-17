@@ -1,14 +1,3 @@
-//Assumes that the challenge has foreign keys fully expanded
-// export function getChallengeName(campaign, map, challenge) {
-//   const objectiveSuffix = getChallengeObjectiveSuffix(challenge);
-//   if (challenge.campaign_id !== null) {
-//     return campaign.name + " - " + challenge.description + objectiveSuffix;
-//   }
-//   const fc = getChallengeFcAddition(challenge);
-//   const campaignPre = campaign.name === map.name ? "" : campaign.name + " - ";
-//   return campaignPre + map.name + objectiveSuffix + fc;
-// }
-
 import { jsonDateToJsDate } from "./util";
 
 export function getChallengeIsFullGame(challenge) {
@@ -193,13 +182,20 @@ export function getAccountName(account) {
   return `(${account.id}) <no player>`;
 }
 
-export function getPlayerNameColorStyle(player) {
-  if (player === null || player === undefined) {
+export function getPlayerNameColorStyle(player, settings = null) {
+  if (
+    player === null ||
+    player === undefined ||
+    (settings !== null && settings.visual.general.showNameColors === false)
+  ) {
     return {};
   }
   const hasColor = player.account.name_color_start !== null && player.account.name_color_start !== undefined;
   const nameColorStart = player.account.name_color_start ?? "#000000";
-  const nameColorEnd = player.account.name_color_end ?? nameColorStart;
+  let nameColorEnd = player.account.name_color_end ?? nameColorStart;
+  if (settings !== null && settings.visual.general.preferSingleOverGradientColor) {
+    nameColorEnd = nameColorStart;
+  }
   const style = hasColor
     ? {
         background: "text linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",

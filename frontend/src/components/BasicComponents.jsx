@@ -236,14 +236,10 @@ export function HeadTitle({ title }) {
   );
 }
 
-export function StyledLink({ to, children, underline = true, style, ...props }) {
+export function StyledLink({ to, children, underline = false, style, ...props }) {
   const theme = useTheme();
   return (
-    <Link
-      to={to}
-      style={{ textDecoration: underline ? "underline" : "none", color: theme.palette.links.main, ...style }}
-      {...props}
-    >
+    <Link to={to} style={{ color: theme.palette.links.main, ...style }} {...props} className="styled-link">
       {children}
     </Link>
   );
@@ -252,11 +248,7 @@ export function StyledLink({ to, children, underline = true, style, ...props }) 
 export function StyledExternalLink({ href, children, underline = true, style, ...props }) {
   const theme = useTheme();
   return (
-    <a
-      href={href}
-      style={{ textDecoration: underline ? "underline" : "none", color: theme.palette.links.main, ...style }}
-      {...props}
-    >
+    <a href={href} style={{ color: theme.palette.links.main, ...style }} {...props} className="styled-link">
       {children}
     </a>
   );

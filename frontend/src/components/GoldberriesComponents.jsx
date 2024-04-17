@@ -407,11 +407,12 @@ export function PlayerSelect({ type, value, onChange, label = "Player", ...props
 }
 
 export function PlayerChip({ player, ...props }) {
+  const { settings } = useAppSettings();
   if (player === undefined || player === null) {
     return <Chip label="<none>" sx={{ mr: 1 }} {...props} />;
   }
 
-  const style = getPlayerNameColorStyle(player);
+  const style = getPlayerNameColorStyle(player, settings);
 
   return (
     <Link to={"/player/" + player.id}>
@@ -636,8 +637,8 @@ export function ObjectiveIcon({ objective, challengeDescription, height = "1em" 
         alt={objective.name}
         style={{
           height: height,
-          // filter:
-          //   "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
+          filter:
+            "drop-shadow(1px 1px 0 rgba(255,255,255,0.6)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.6)) drop-shadow(1px -1px 0 rgba(255,255,255,0.6)) drop-shadow(-1px 1px 0 rgba(255,255,255,0.6))",
         }}
         loading="lazy"
       />

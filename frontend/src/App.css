@@ -4,6 +4,13 @@
   text-overflow: ellipsis;
 }
 
+.styled-link {
+  text-decoration: none;
+}
+
+.styled-link:hover {
+  text-decoration: underline;
+}
 
 /* spin animation */
 @keyframes spin {

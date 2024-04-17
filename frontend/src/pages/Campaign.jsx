@@ -155,7 +155,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
         <ListItemText
           primary={
             author.name !== null ? (
-              <StyledExternalLink to={"https://gamebanana.com/members/" + author.id}>
+              <StyledExternalLink href={"https://gamebanana.com/members/" + author.id}>
                 {author.name}
               </StyledExternalLink>
             ) : (
