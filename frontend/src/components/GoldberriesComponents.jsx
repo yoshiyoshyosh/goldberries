@@ -20,7 +20,7 @@ import {
 } from "../util/data_util";
 import { Autocomplete, Avatar, Chip, Menu, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
 import { getDifficultyColors } from "../util/constants";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -645,3 +645,54 @@ export function ObjectiveIcon({ objective, challengeDescription, height = "1em" 
     </Tooltip>
   );
 }
+
+export const EMOTES = [
+  {
+    img: "golden-control.png",
+    alt: "Goldberries.net",
+  },
+  {
+    img: "chart_with_sideways_trend.png",
+    alt: "Chart with Sideways Trend",
+  },
+  {
+    img: "chart_with_midwards_trend.png",
+    alt: "Chart with Midwards Trend",
+  },
+  {
+    img: "chart_with_awesome_trend.png",
+    alt: "Chart with Awesome Trend",
+  },
+  {
+    img: "chart_with_no_trend.png",
+    alt: "Chart with No Trend",
+  },
+  {
+    img: "chart_with_dunning_kruger_trend.png",
+    alt: "Chart with Dunning Kruger Trend",
+  },
+  {
+    img: "chart_with_horse_trend.png",
+    alt: "Chart with Horse Trend",
+  },
+];
+export function WebsiteIcon({ height = "1em", preventFunny = false }) {
+  let icon = EMOTES[0];
+
+  const rand = Math.random();
+  if (!preventFunny && rand < 0.01) {
+    const randomIndex = Math.floor(1 + Math.random() * (EMOTES.length - 1));
+    icon = EMOTES[randomIndex];
+  }
+
+  return (
+    <img
+      src={"/emotes/" + icon.img}
+      alt={icon.alt}
+      style={{
+        height: height,
+      }}
+    />
+  );
+}
+export const MemoWebsiteIcon = memo(WebsiteIcon);

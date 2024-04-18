@@ -736,18 +736,6 @@ export function NewChallengeUserSubmission({}) {
 
 /* COMPONENTS */
 
-const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps, newProps) => {
-  const propsEqual =
-    prevProps.mapData.map.id === newProps.mapData.map.id &&
-    prevProps.mapData.challenge?.id === newProps.mapData.challenge?.id &&
-    prevProps.mapData.is_fc === newProps.mapData.is_fc &&
-    prevProps.mapData.player_notes === newProps.mapData.player_notes &&
-    prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
-    prevProps.index === newProps.index;
-
-  console.log("ListItem propsEqual:", propsEqual);
-  return propsEqual;
-});
 export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow }) {
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
@@ -880,3 +868,15 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
     </>
   );
 }
+const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps, newProps) => {
+  const propsEqual =
+    prevProps.mapData.map.id === newProps.mapData.map.id &&
+    prevProps.mapData.challenge?.id === newProps.mapData.challenge?.id &&
+    prevProps.mapData.is_fc === newProps.mapData.is_fc &&
+    prevProps.mapData.player_notes === newProps.mapData.player_notes &&
+    prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
+    prevProps.index === newProps.index;
+
+  console.log("ListItem propsEqual:", propsEqual);
+  return propsEqual;
+});

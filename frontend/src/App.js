@@ -107,6 +107,7 @@ import { light } from "@mui/material/styles/createPalette";
 import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
 import { PageAppSettings } from "./pages/AppSettings";
 import { PageSuggestions } from "./pages/Suggestions";
+import { MemoWebsiteIcon, WebsiteIcon } from "./components/GoldberriesComponents";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -733,7 +734,10 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
       >
         <Typography variant="h6" noWrap letterSpacing={0.6} component="div">
           <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-            Goldberries.net
+            <Stack direction="row" gap={0.5} alignItems="center">
+              <MemoWebsiteIcon />
+              <span>Goldberries.net</span>
+            </Stack>
           </Link>
         </Typography>
         {leftMenu.map((entry, index) => {
