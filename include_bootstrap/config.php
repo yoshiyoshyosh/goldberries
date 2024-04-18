@@ -9,7 +9,7 @@ if (getenv('DEBUG') === 'true') {
   DEFINE("BASE_URL_API", "http://localhost/api");
   DEFINE("REGISTER_URL", "http://localhost:3000/register");
 } else {
-  DEFINE("BASE_URL", "https://goldberries.vi-home.de");
-  DEFINE("BASE_URL_API", "https://goldberries.vi-home.de/api");
-  DEFINE("REGISTER_URL", "https://goldberries.vi-home.de/register");
+  DEFINE("BASE_URL", "https://goldberries.net");
+  DEFINE("BASE_URL_API", "https://goldberries.net/api");
+  DEFINE("REGISTER_URL", "https://goldberries.net/register");
 }

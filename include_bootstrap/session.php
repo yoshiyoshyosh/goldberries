@@ -10,10 +10,10 @@ if (getenv('DEBUG') === 'true') {
   DEFINE('REDIRECT_POST_LOGIN', 'http://localhost:3000');
   DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'http://localhost:3000/my-account');
 } else {
-  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fgoldberries.vi-home.de%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
-  DEFINE('DISCORD_REDIRECT_URI', 'https://goldberries.vi-home.de/api/auth/discord_auth.php');
-  DEFINE('REDIRECT_POST_LOGIN', 'https://goldberries.vi-home.de');
-  DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://goldberries.vi-home.de/my-account');
+  DEFINE('DISCORD_OAUTH_URL', 'https://discord.com/oauth2/authorize?client_id=1196814348203593729&response_type=code&redirect_uri=https%3A%2F%2Fgoldberries.net%2Fapi%2Fauth%2Fdiscord_auth.php&scope=identify');
+  DEFINE('DISCORD_REDIRECT_URI', 'https://goldberries.net/api/auth/discord_auth.php');
+  DEFINE('REDIRECT_POST_LOGIN', 'https://goldberries.net');
+  DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://goldberries.net/my-account');
 }
 
 session_start();
