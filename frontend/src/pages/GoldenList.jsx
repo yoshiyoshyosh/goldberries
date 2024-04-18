@@ -46,6 +46,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLemon } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PageGoldenList({}) {
   const { type } = useParams();
@@ -388,10 +389,14 @@ function ChallengeEntry({ challenge, type }) {
 }
 
 function SubmissionEntry({ submission }) {
+  const { settings } = useAppSettings();
   return (
     <Link className="submission-link" to={"/submission/" + submission.id}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <span className="submission-player-name" style={{ ...getPlayerNameColorStyle(submission.player) }}>
+        <span
+          className="submission-player-name"
+          style={{ ...getPlayerNameColorStyle(submission.player, settings) }}
+        >
           {submission.player.name}
         </span>
         {/* {submission.is_fc ? <span> [FC]</span> : null} */}

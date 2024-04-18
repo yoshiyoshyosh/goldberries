@@ -46,6 +46,7 @@ import { FormChallengeWrapper } from "../components/forms/Challenge";
 import { getQueryData, useGetChallenge } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 const displayNoneOnMobile = {
   display: {
@@ -235,7 +236,8 @@ export function ChallengeSubmissionTable({
 }
 
 export function ChallengeSubmissionRow({ submission, index, compact, hideSubmissionIcon }) {
-  const nameStyle = getPlayerNameColorStyle(submission.player);
+  const { settings } = useAppSettings();
+  const nameStyle = getPlayerNameColorStyle(submission.player, settings);
   return (
     <TableRow>
       <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile }}>

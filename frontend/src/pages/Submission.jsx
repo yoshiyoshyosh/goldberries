@@ -39,6 +39,7 @@ import {
   LoadingSpinner,
   ProofEmbed,
   HeadTitle,
+  StyledLink,
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
@@ -281,7 +282,7 @@ export function SubmissionDetailsDisplay({ submission }) {
               <ListItemText
                 primary={
                   verifier.id ? (
-                    <Link to={"/player/" + verifier.id}>{verifier.name}</Link>
+                    <StyledLink to={"/player/" + verifier.id}>{verifier.name}</StyledLink>
                   ) : (
                     <>{verifier.name}</>
                   )

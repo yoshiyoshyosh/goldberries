@@ -186,23 +186,25 @@ export function getPlayerNameColorStyle(player, settings = null) {
   if (
     player === null ||
     player === undefined ||
-    (settings !== null && settings.visual.general.showNameColors === false)
+    (settings !== null && settings.visual.playerNames.showColors === false)
   ) {
     return {};
   }
   const hasColor = player.account.name_color_start !== null && player.account.name_color_start !== undefined;
   const nameColorStart = player.account.name_color_start ?? "#000000";
   let nameColorEnd = player.account.name_color_end ?? nameColorStart;
-  if (settings !== null && settings.visual.general.preferSingleOverGradientColor) {
+  if (settings !== null && settings.visual.playerNames.preferSingleOverGradientColor) {
     nameColorEnd = nameColorStart;
   }
+  const outline = settings?.visual.playerNames.showOutline
+    ? "drop-shadow(1px 1px 0px #ffffff) drop-shadow(-1px -1px 0px #ffffff) drop-shadow(-1px 1px 0px #ffffff) drop-shadow(1px -1px 0px #ffffff)"
+    : "";
   const style = hasColor
     ? {
         background: "text linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",
         WebkitTextFillColor: "transparent",
         fontWeight: "bold",
-        filter:
-          "drop-shadow(1px 1px 0px #ffffff) drop-shadow(-1px -1px 0px #ffffff) drop-shadow(-1px 1px 0px #ffffff) drop-shadow(1px -1px 0px #ffffff)",
+        filter: outline,
       }
     : {};
 

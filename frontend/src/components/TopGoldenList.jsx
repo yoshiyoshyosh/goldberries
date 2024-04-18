@@ -378,7 +378,13 @@ function TopGoldenListRow({
                 {auth.hasPlayerClaimed ? (
                   <Stack direction="column" gap="2px" sx={{ mb: "2px" }}>
                     <Link to={"/submit/single-challenge/" + challenge.id}>
-                      <Button variant="contained" size="small" fullWidth color="info">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        fullWidth
+                        color="info"
+                        startIcon={<FontAwesomeIcon icon={faBook} />}
+                      >
                         Submit
                       </Button>
                     </Link>

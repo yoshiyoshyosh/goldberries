@@ -488,19 +488,19 @@ export function Layout() {
   };
 
   let background = "rgba(0,0,0,0)";
-  const general = settings.visual.general;
+  const backgroundSettings = settings.visual.background;
   if (!darkmode) {
-    if (general.backgroundLightCustom !== "") {
-      background = 'white url("' + general.backgroundLightCustom + '") 0 0 / cover no-repeat';
-    } else if (general.backgroundLight !== "") {
-      background = 'white url("/img/' + general.backgroundLight + '") 0 0 / cover no-repeat';
+    if (backgroundSettings.lightCustom !== "") {
+      background = 'white url("' + backgroundSettings.lightCustom + '") 0 0 / cover no-repeat';
+    } else if (backgroundSettings.light !== "") {
+      background = 'white url("/img/' + backgroundSettings.light + '") 0 0 / cover no-repeat';
       // background = "white url(/img/" + general.backgroundLight + ") 0 0 / 100% 100% no-repeat";
     }
   } else {
-    if (general.backgroundDarkCustom !== "") {
-      background = 'black url("' + general.backgroundDarkCustom + '") 0 0 / cover no-repeat';
-    } else if (general.backgroundDark !== "") {
-      background = 'black url("/img/' + general.backgroundDark + '") 0 0 / cover no-repeat';
+    if (backgroundSettings.darkCustom !== "") {
+      background = 'black url("' + backgroundSettings.darkCustom + '") 0 0 / cover no-repeat';
+    } else if (backgroundSettings.dark !== "") {
+      background = 'black url("/img/' + backgroundSettings.dark + '") 0 0 / cover no-repeat';
       // background = "black url(/img/" + general.backgroundDark + ") 0 0 / 100% 100% no-repeat";
     }
   }
@@ -517,8 +517,7 @@ export function Layout() {
           scrollbarGutter: "stable",
 
           background: background,
-          filter:
-            "blur(" + settings.visual.general.backgroundBlur + "px) " + (darkmode ? "brightness(0.35)" : ""),
+          filter: "blur(" + backgroundSettings.blur + "px) " + (darkmode ? "brightness(0.35)" : ""),
           transform: "scale(1.03)",
         }}
       ></div>

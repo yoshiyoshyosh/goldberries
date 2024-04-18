@@ -24,6 +24,7 @@ import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -40,6 +41,7 @@ export function PagePlayer() {
 }
 
 export function PlayerDisplay({ id }) {
+  const { settings } = useAppSettings();
   const query = useGetPlayer(id);
   const statsQuery = useGetPlayerStats(id);
 
@@ -54,7 +56,7 @@ export function PlayerDisplay({ id }) {
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
 
-  const nameStyle = getPlayerNameColorStyle(player);
+  const nameStyle = getPlayerNameColorStyle(player, settings);
   const aboutMeSplit = player.account.about_me?.split("\n") || [];
 
   const title = `${player.name} - Profile`;

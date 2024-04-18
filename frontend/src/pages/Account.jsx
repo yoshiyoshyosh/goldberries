@@ -38,6 +38,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { isValidHttpUrl, jsonDateToJsDate } from "../util/util";
 import { MuiColorInput } from "mui-color-input";
 import { getPlayerNameColorStyle } from "../util/data_util";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PageAccount() {
   const auth = useAuth();
@@ -278,6 +279,7 @@ export function UserAccountLoginMethodsForm() {
 
 export function UserAccountProfileForm() {
   const auth = useAuth();
+  const { settings } = useAppSettings();
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
     toast.success("Account updated");
@@ -325,16 +327,28 @@ export function UserAccountProfileForm() {
     form.setValue("name_color_end", start);
   };
 
-  const nameColorStyle = getPlayerNameColorStyle({
-    account: {
-      name_color_start: formAccount.name_color_start === "rgb(0, 0, 0)" ? null : formAccount.name_color_start,
-      name_color_end: useGradient
-        ? formAccount.name_color_end === "rgb(0, 0, 0)"
-          ? null
-          : formAccount.name_color_end
-        : null,
+  const nameColorStyle = getPlayerNameColorStyle(
+    {
+      account: {
+        name_color_start:
+          formAccount.name_color_start === "rgb(0, 0, 0)" ? null : formAccount.name_color_start,
+        name_color_end: useGradient
+          ? formAccount.name_color_end === "rgb(0, 0, 0)"
+            ? null
+            : formAccount.name_color_end
+          : null,
+      },
     },
-  });
+    {
+      visual: {
+        playerNames: {
+          showColors: true,
+          preferSingleOverGradientColor: false,
+          showOutline: settings.visual.playerNames.showOutline,
+        },
+      },
+    }
+  );
 
   return (
     <form>

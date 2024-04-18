@@ -206,11 +206,10 @@ export function AppSettingsVisualForm() {
 
   return (
     <form>
-      <Typography variant="h5">General</Typography>
-      <Typography variant="h6">Player Name Colors</Typography>
+      <Typography variant="h5">Player Name Colors</Typography>
       <SettingsEntry>
         <Controller
-          name="general.showNameColors"
+          name="playerNames.showColors"
           control={form.control}
           render={({ field }) => (
             <FormControlLabel
@@ -224,7 +223,7 @@ export function AppSettingsVisualForm() {
       </SettingsEntry>
       <SettingsEntry>
         <Controller
-          name="general.preferSingleOverGradientColor"
+          name="playerNames.preferSingleOverGradientColor"
           control={form.control}
           render={({ field }) => (
             <FormControlLabel
@@ -236,10 +235,27 @@ export function AppSettingsVisualForm() {
           )}
         />
       </SettingsEntry>
-      <Typography variant="h6">Background</Typography>
+      <SettingsEntry>
+        <Controller
+          name="playerNames.showOutline"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Show Outline"
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="h5">Background</Typography>
       <SettingsEntry title="Background Blur" tooltip="Guassian Blur applied to the background">
         <Controller
-          name="general.backgroundBlur"
+          name="background.blur"
           control={form.control}
           render={({ field }) => (
             <Slider
@@ -259,7 +275,7 @@ export function AppSettingsVisualForm() {
       <Typography variant="h6">Light Mode</Typography>
       <SettingsEntry title="Background">
         <Controller
-          name="general.backgroundLight"
+          name="background.light"
           control={form.control}
           render={({ field }) => (
             <TextField
@@ -290,13 +306,13 @@ export function AppSettingsVisualForm() {
         />
       </SettingsEntry>
       <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
-        <TextField fullWidth {...form.register("general.backgroundLightCustom")} placeholder="URL to image" />
+        <TextField fullWidth {...form.register("background.lightCustom")} placeholder="URL to image" />
       </SettingsEntry>
 
       <Typography variant="h6">Dark Mode</Typography>
       <SettingsEntry title="Background">
         <Controller
-          name="general.backgroundDark"
+          name="background.dark"
           control={form.control}
           render={({ field }) => (
             <TextField
@@ -327,10 +343,11 @@ export function AppSettingsVisualForm() {
         />
       </SettingsEntry>
       <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
-        <TextField fullWidth {...form.register("general.backgroundDarkCustom")} placeholder="URL to image" />
+        <TextField fullWidth {...form.register("background.darkCustom")} placeholder="URL to image" />
       </SettingsEntry>
 
       <Divider sx={{ my: 2 }} />
+
       <Typography variant="h5">Top Golden List</Typography>
       <SettingsEntry>
         <Controller

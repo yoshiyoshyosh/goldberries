@@ -14,14 +14,17 @@ export function AppSettingsProvider({ children }) {
           useTextFcIcons: false,
           darkenTierColors: 45,
         },
-        general: {
-          backgroundDark: "", //Indicates default, solid color background. Otherwise this is the image name
-          backgroundDarkCustom: "",
-          backgroundLight: "", //Same
-          backgroundLightCustom: "",
-          backgroundBlur: 5,
-          showNameColors: true,
+        background: {
+          dark: "", //Indicates default, solid color background. Otherwise this is the image name
+          darkCustom: "",
+          light: "", //Same
+          lightCustom: "",
+          blur: 5,
+        },
+        playerNames: {
+          showColors: true,
           preferSingleOverGradientColor: false,
+          showOutline: true,
         },
       },
     };
