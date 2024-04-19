@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge->requires_fc) {
         $submission->is_fc = true;
       }
-      $player_submission = $challenge->get_player_submission($DB, $account->player->id);
+      $player_submission = $challenge->get_player_submission($DB, $data['player_id']);
       if ($player_submission !== null) {
         die_json(400, "You already have a submission for this challenge");
       }
