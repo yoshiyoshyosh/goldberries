@@ -128,6 +128,10 @@ class Challenge extends DbObject
     if ($result === false)
       return null;
 
+
+    if (pg_num_rows($result) === 0)
+      return null;
+
     $row = pg_fetch_assoc($result);
     $submission = new Submission();
     $submission->apply_db_data($row);

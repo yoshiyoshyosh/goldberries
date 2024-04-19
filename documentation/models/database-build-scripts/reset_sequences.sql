@@ -12,3 +12,6 @@ SELECT setval('difficulty_id_seq', (SELECT MAX(id) FROM difficulty)+1);
 SELECT setval('new_challenge_id_seq', (SELECT MAX(id) FROM new_challenge)+1);
 SELECT setval('change_id_seq', (SELECT MAX(id) FROM change)+1);
 SELECT setval('logging_id_seq', (SELECT MAX(id) FROM logging)+1);
+
+SELECT setval('suggestion_id_seq', (SELECT MAX(id) FROM suggestion)+1);
+SELECT setval('suggestion_vote_id_seq', (SELECT MAX(id) FROM suggestion_vote)+1);
