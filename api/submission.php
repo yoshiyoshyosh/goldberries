@@ -99,6 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->verifier_id === null
         && $old_submission->is_verified !== $submission->is_verified
       ) {
+        if ($old_submission->challenge_id === null) {
+          die_json(400, "Cannot verify a submission without a challenge");
+        }
         $toLog = $submission->is_verified ? "verified" : "rejected";
         log_info("{$old_submission} was {$toLog} by '{$account->player->name}'", "Submission");
         $old_submission->date_verified = new JsonDateTime();
