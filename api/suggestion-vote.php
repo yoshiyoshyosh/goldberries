@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $vote = new SuggestionVote();
   $vote->apply_db_data($data);
 
+  if ($vote->comment !== null && strlen($vote->comment) > 1500) {
+    die_json(400, "Comment can't be longer than 1500 characters");
+  }
+
   //Create a new vote
   $suggestion = Suggestion::get_by_id($DB, $data['suggestion_id']);
   if ($suggestion === false) {

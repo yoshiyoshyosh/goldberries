@@ -108,6 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->verifier_id = $account->player->id;
       }
       $old_submission->is_verified = $submission->is_verified;
+      if ($submission->player_notes !== null && strlen($submission->player_notes) > 5000) {
+        die_json(400, "Notes can't be longer than 5000 characters");
+      }
       $old_submission->player_notes = $submission->player_notes;
       if ($submission->suggested_difficulty_id !== null) {
         $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
@@ -120,6 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+      if ($submission->verifier_notes !== null && strlen($submission->verifier_notes) > 5000) {
+        die_json(400, "Verifier notes can't be longer than 5000 characters");
+      }
       $old_submission->verifier_notes = $submission->verifier_notes;
       $old_submission->new_challenge_id = $submission->is_verified !== null ? null : $submission->new_challenge_id;
 
@@ -132,7 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } else {
       //Only carry over the fields that the user is allowed to change
+      if ($submission->player_notes !== null && strlen($submission->player_notes) > 5000) {
+        die_json(400, "Notes can't be longer than 5000 characters");
+      }
       $old_submission->player_notes = $submission->player_notes;
+
       if ($submission->suggested_difficulty_id !== null) {
         $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
         if ($difficulty === false) {
@@ -180,6 +190,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     } else {
       die_json(400, "challenge_id or new_challenge is missing");
+    }
+
+    if (isset($data['player_notes']) && strlen($data['player_notes']) > 5000) {
+      die_json(400, "Notes can't be longer than 5000 characters");
     }
 
     $submission->date_created = new JsonDateTime();
