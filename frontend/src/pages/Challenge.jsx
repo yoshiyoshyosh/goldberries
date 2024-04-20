@@ -33,10 +33,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
   faComment,
+  faEdit,
   faExternalLinkAlt,
   faFlagCheckered,
   faInfoCircle,
   faLandmark,
+  faPlus,
   faShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
@@ -88,9 +90,21 @@ export function ChallengeDisplay({ id }) {
         <Chip label="Challenge" size="small" />
       </Divider>
       {auth.hasVerifierPriv && (
-        <Button onClick={editChallengeModal.open} variant="outlined">
+        <Button
+          onClick={editChallengeModal.open}
+          variant="outlined"
+          sx={{ mr: 1 }}
+          startIcon={<FontAwesomeIcon icon={faEdit} />}
+        >
           Verifier - Edit Challenge
         </Button>
+      )}
+      {auth.hasPlayerClaimed && (
+        <Link to={"/submit/single-challenge/" + id}>
+          <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faPlus} />}>
+            Submit A Golden
+          </Button>
+        </Link>
       )}
       <ChallengeDetailsList challenge={challenge} />
       <Divider sx={{ my: 2 }}>
