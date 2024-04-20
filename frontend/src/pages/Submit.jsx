@@ -375,6 +375,8 @@ export function MultiUserSubmission() {
       });
     }
     setCampaign(campaign);
+    setSortMajorIndex(null);
+    setSortMinorIndex(null);
   };
 
   const resetMapDataList = () => {
