@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
+import { BasicContainerBox, HeadTitle, StyledLink } from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
 import { useDeleteOwnAccount, usePostAccount, usePostPlayerSelf } from "../hooks/useApi";
 import { toast } from "react-toastify";
@@ -55,11 +55,7 @@ export function PageAccount() {
     }
   };
 
-  //   const { mutate: renamePlayer } = usePostPlayerSelf(() => {
-  //   toast.success("Rename successful");
-  //   auth.checkSession();
-  //   setPlayer({ ...player, name: newName });
-  // });
+  const claimVerified = auth.user.claimed_player !== null ? null : auth.user.player !== null;
 
   return (
     <BasicContainerBox maxWidth="md">
@@ -71,8 +67,8 @@ export function PageAccount() {
       {auth.user.player === null && auth.user.claimed_player === null ? (
         <>
           <Typography>
-            You haven't claimed a player yet. Head over to <Link to="/claim-player">this page</Link> to create
-            or claim one!
+            You haven't claimed a player yet. Head over to{" "}
+            <StyledLink to="/claim-player">this page</StyledLink> to create or claim one!
           </Typography>
         </>
       ) : (
@@ -81,7 +77,7 @@ export function PageAccount() {
             <Stack direction="row" alignItems="center" spacing={1}>
               <Typography>{auth.user.claimed_player === null ? "Player: " : "Player: "}</Typography>
               <PlayerChip player={auth.user.player ?? auth.user.claimed_player} />
-              <VerificationStatusChip isVerified={auth.user.player !== null} prefix="Claim: " />
+              <VerificationStatusChip isVerified={claimVerified} prefix="Claim: " />
             </Stack>
           </Grid>
         </Grid>
