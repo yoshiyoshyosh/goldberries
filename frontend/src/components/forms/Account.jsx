@@ -135,8 +135,8 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       <Divider sx={{ my: 2 }} />
 
       <TextField
-        label="Email"
-        {...form.register("email", FormOptions.EmailOptional)}
+        label="New Email"
+        {...form.register("new_email", FormOptions.EmailOptional)}
         InputLabelProps={{ shrink: true }}
         fullWidth
       />
