@@ -185,12 +185,13 @@ class Account extends DbObject
     return "(Account, id: {$this->id}, name: {$player_name})";
   }
 
-  function remove_sensitive_info()
+  function remove_sensitive_info($remove_email = true)
   {
     $this->password = null;
-    // $this->discord_id = null;
-    $this->session_token = null;
-    $this->session_created = null;
     $this->email_verify_code = null;
+
+    if ($remove_email) {
+      $this->email = null;
+    }
   }
 }

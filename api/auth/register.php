@@ -67,7 +67,7 @@ if ($account->insert($DB) === false) {
   die_json(500, "Failed to create account");
 }
 
-log_info("User registered {$account} via email ({$account->email})", "Login");
+log_info("User registered {$account} via email", "Registration");
 
 //Send a confirmation email with code
 $subject = "Verify Your Email | Goldberries.net";

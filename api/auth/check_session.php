@@ -9,5 +9,5 @@ if ($account == null) {
 }
 
 $account->expand_foreign_keys($DB, 3);
-$account->remove_sensitive_info();
+$account->remove_sensitive_info(false);
 api_write($account);

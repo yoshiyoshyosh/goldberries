@@ -73,11 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $target->input_method = $accountReq->input_method;
     $target->about_me = $accountReq->about_me;
 
-    if ($accountReq->email !== null) {
-      if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+    $new_email = isset($request['new_email']) ? $request['new_email'] : null;
+    if ($new_email !== null) {
+      if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
         die_json(400, "Invalid email");
       }
-      $accounts = Account::find_by_email($DB, $request['email']);
+      $accounts = Account::find_by_email($DB, $new_email);
       if ($accounts === false) {
         die_json(500, "Failed to check if email is already registered");
       }
@@ -86,8 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
           die_json(401, "Email is already registered");
         }
       }
+
+      //Only update email if new_email is set
+      $target->email = $new_email;
     }
-    $target->email = $accountReq->email;
     if (isset($request['unlink_discord']) && $request['unlink_discord'] === 't') {
       $target->discord_id = null;
     }
