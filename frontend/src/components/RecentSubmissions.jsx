@@ -47,6 +47,11 @@ export function RecentSubmissions({ playerId = null }) {
     playerId
   );
 
+  const onChangeVerified = (value) => {
+    setVerified(value);
+    setPage(1);
+  };
+
   const data = getQueryData(query) ?? {
     submissions: null,
     page: 1,
@@ -66,7 +71,7 @@ export function RecentSubmissions({ playerId = null }) {
               select
               variant="standard"
               value={verified}
-              onChange={(e) => setVerified(e.target.value)}
+              onChange={(e) => onChangeVerified(e.target.value)}
               SelectProps={{
                 MenuProps: {
                   disableScrollLock: true,
