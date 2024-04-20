@@ -248,7 +248,14 @@ export function StyledLink({ to, children, underline = false, style, ...props })
 export function StyledExternalLink({ href, children, underline = true, style, ...props }) {
   const theme = useTheme();
   return (
-    <a href={href} style={{ color: theme.palette.links.main, ...style }} {...props} className="styled-link">
+    <a
+      href={href}
+      style={{ color: theme.palette.links.main, ...style }}
+      {...props}
+      className="styled-link"
+      target="_blank"
+      rel="noopener"
+    >
       {children}
     </a>
   );

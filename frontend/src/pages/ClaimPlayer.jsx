@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
-import { PlayerSelect } from "../components/GoldberriesComponents";
+import { PlayerChip, PlayerSelect } from "../components/GoldberriesComponents";
 import { useClaimPlayer } from "../hooks/useApi";
 
 export function PageClaimPlayer() {
@@ -63,17 +63,20 @@ export function ClaimPlayerClaimMade() {
         Player claim submitted!
       </Typography>
       <Typography variant="body1">
-        Your claim has been submitted! Please contact a team member on Discord (or any other means) to verify
-        your claim.
+        Your claim has been submitted! Please contact one of the verifiers on Discord (or some other way) to
+        verify your claim.
       </Typography>
 
       <List dense>
         <ListSubheader>Your Data</ListSubheader>
         <ListItem>
-          <ListItemText primary={"Claimed Player: " + auth.user.claimed_player.name} />
+          <ListItemText primary={"Account ID: " + auth.user.id} />
         </ListItem>
         <ListItem>
-          <ListItemText primary={"Account ID: " + auth.user.id} />
+          <Stack direction="row" gap={1} alignItems="center">
+            <Typography variant="body2">Claimed Player:</Typography>
+            <PlayerChip player={auth.user.claimed_player} size="small" />
+          </Stack>
         </ListItem>
       </List>
 
@@ -84,7 +87,7 @@ export function ClaimPlayerClaimMade() {
           <ListSubheader>Verifiers</ListSubheader>
           {query.data.data.map((player) => (
             <ListItem key={player.id}>
-              <ListItemText primary={player.name} />
+              <PlayerChip player={player} size="small" />
             </ListItem>
           ))}
         </List>
@@ -256,8 +259,8 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
         If you have made submission for the old spreadsheet, you can claim these for your account.
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        After making a claim, you will have to contact a team member to verify that you are who you claim to
-        be!
+        After making a claim, you will have to contact a team member directly, in order to verify that you are
+        who you claim to be!
       </Typography>
       <PlayerSelect
         type="unclaimed"

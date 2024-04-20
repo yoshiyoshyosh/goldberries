@@ -8,13 +8,14 @@ import { faDiscord, faRaspberryPi } from "@fortawesome/free-brands-svg-icons";
 
 import "@mui/material";
 import { Alert, Avatar, Box, Button, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
-import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
+import { BasicContainerBox, HeadTitle, StyledLink } from "../components/BasicComponents";
 import {
   useForgotPasswordRequest,
   useForgotPasswordVerify,
   useRegister,
   useVerifyEmail,
 } from "../hooks/useApi";
+import { MemoWebsiteIcon, WebsiteIcon } from "../components/GoldberriesComponents";
 
 export function PageLogin() {
   const auth = useAuth();
@@ -54,14 +55,14 @@ export function PageLogin() {
         </Button>
         <Grid container>
           <Grid item xs>
-            <Link to="/forgot-password" variant="body2">
+            <StyledLink to="/forgot-password" variant="body2">
               Forgot password?
-            </Link>
+            </StyledLink>
           </Grid>
           <Grid item>
-            <Link to="/register" variant="body2">
+            <StyledLink to="/register" variant="body2">
               Sign Up
-            </Link>
+            </StyledLink>
           </Grid>
         </Grid>
       </Box>
@@ -165,9 +166,9 @@ export function PageRegister() {
         </Button>
         <Grid container>
           <Grid item>
-            <Link to="/login" variant="body2">
+            <StyledLink to="/login" variant="body2">
               Have an account? Sign In instead!
-            </Link>
+            </StyledLink>
           </Grid>
         </Grid>
       </Box>
@@ -209,7 +210,7 @@ export function PageVerifyEmail() {
         <Typography variant="body2" color="green" textAlign="center">
           Your email has been verified! You can now login to your account.
         </Typography>
-        <Link to="/login">Go to the Login</Link>
+        <StyledLink to="/login">Go to the Login</StyledLink>
       </LoginBox>
     );
   }
@@ -317,7 +318,7 @@ export function PageForgotPasswordVerify({ token }) {
         <Typography variant="body2" color="green" textAlign="center">
           Your password has been reset! You can now login with your new password.
         </Typography>
-        <Link to="/login">Go to the Login</Link>
+        <StyledLink to="/login">Go to the Login</StyledLink>
       </LoginBox>
     );
   }
@@ -369,9 +370,7 @@ function LoginBox({ children, title, titleColor }) {
 function LoginHeader({ title, titleColor }) {
   return (
     <>
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-        <FontAwesomeIcon icon={faRaspberryPi} />
-      </Avatar>
+      <MemoWebsiteIcon preventFunny height="3em" style={{ marginBottom: "4px" }} />
       <Typography component="h1" variant="h5" color={titleColor}>
         {title}
       </Typography>
@@ -384,9 +383,7 @@ function AlreadyLoggedInBox({ title }) {
     <BasicContainerBox maxWidth="xs" sx={{ mt: 8 }}>
       <HeadTitle title={title} />
       <Stack direction="column" justifyContent="center" alignItems="center">
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <FontAwesomeIcon icon={faRaspberryPi} />
-        </Avatar>
+        <MemoWebsiteIcon preventFunny height="3em" style={{ marginBottom: "4px" }} />
         <Typography component="h1" variant="h5">
           {title}
         </Typography>

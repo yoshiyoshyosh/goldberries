@@ -415,7 +415,7 @@ function TopGoldenListRow({
               sx={{ cursor: "pointer" }}
             >
               {challenge.submissions.length}
-              <Typography color="info.dark" sx={{ filter: "drop-shadow(0px 0px 1px white)" }}>
+              <Typography color="info.dark" sx={{}}>
                 <FontAwesomeIcon icon={faList} />
               </Typography>
             </Stack>

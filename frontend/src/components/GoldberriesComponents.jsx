@@ -676,7 +676,7 @@ export const EMOTES = [
     alt: "Chart with Horse Trend",
   },
 ];
-export function WebsiteIcon({ height = "1em", preventFunny = false }) {
+export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false }) {
   let icon = EMOTES[0];
 
   const rand = Math.random();
@@ -691,6 +691,7 @@ export function WebsiteIcon({ height = "1em", preventFunny = false }) {
       alt={icon.alt}
       style={{
         height: height,
+        ...style,
       }}
     />
   );

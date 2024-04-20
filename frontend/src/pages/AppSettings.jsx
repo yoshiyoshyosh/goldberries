@@ -22,11 +22,11 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 export function PageAppSettings() {
   const { tab } = useParams();
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(tab ?? "general");
+  const [selectedTab, setSelectedTab] = useState(tab ?? "visual");
 
   const setTab = (tab) => {
     setSelectedTab(tab);
-    if (tab === "general") {
+    if (tab === "visual") {
       navigate("/settings", { replace: true });
     } else {
       navigate(`/settings/${tab}`, { replace: true });
@@ -46,10 +46,10 @@ export function PageAppSettings() {
         scrollButtons="auto"
         sx={{ mb: 2 }}
       >
-        <Tab label="General" value="general" />
+        {/* <Tab label="General" value="general" /> */}
         <Tab label="Visual" value="visual" />
       </Tabs>
-      {selectedTab === "general" && <AppSettingsGeneralForm />}
+      {/* {selectedTab === "general" && <AppSettingsGeneralForm />} */}
       {selectedTab === "visual" && <AppSettingsVisualForm />}
     </BasicContainerBox>
   );

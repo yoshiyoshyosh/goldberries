@@ -53,6 +53,7 @@ import {
   faChevronDown,
   faChevronLeft,
   faCog,
+  faCogs,
   faEdit,
   faEye,
   faHammer,
@@ -108,6 +109,7 @@ import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider
 import { PageAppSettings } from "./pages/AppSettings";
 import { PageSuggestions } from "./pages/Suggestions";
 import { MemoWebsiteIcon, WebsiteIcon } from "./components/GoldberriesComponents";
+import { StyledLink } from "./components/BasicComponents";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -397,7 +399,6 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
-        { name: "Settings", path: "/settings", icon: <FontAwesomeIcon icon={faCog} /> },
         {
           name: "Logout",
           action: () => {
@@ -633,6 +634,9 @@ function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
           nameStyle={nameStyle}
         />
       )}
+      <MobileMenuItem
+        item={{ name: "Settings", path: "/settings", icon: <FontAwesomeIcon icon={faCogs} /> }}
+      />
     </div>
   );
 }
@@ -771,6 +775,13 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
             nameStyle={nameStyle}
           />
         )}
+        <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}>
+          <Tooltip title="Settings">
+            <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }}>
+              <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
+            </IconButton>
+          </Tooltip>
+        </StyledLink>
         <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
           <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
             <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />

@@ -10,11 +10,13 @@ import {
   Grid,
   Paper,
   Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
+  Tabs,
   Typography,
 } from "@mui/material";
 import { getQueryData, useGetVerifierList } from "../hooks/useApi";
@@ -35,15 +37,18 @@ export function PageIndex() {
       sx={{
         mt: 2,
         pb: 3,
-        "&&": {
-          // p: 0,
-        },
       }}
     >
       <HeadTitle title="Welcome!" />
       <Grid container spacing={2}>
         <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
+            <BorderedBox>
+              <PublicTestNotice />
+            </BorderedBox>
+            <BorderedBox>
+              <IssueTrackerNotice />
+            </BorderedBox>
             <BorderedBox>
               <WelcomeComponent />
             </BorderedBox>
@@ -155,6 +160,21 @@ export function UsefulLinksComponent() {
   );
 }
 
+function RulesFaqContainer() {
+  const [tab, setTab] = useState("rules");
+
+  return (
+    <>
+      <Tabs value={tab} onChange={(_, newTab) => setTab(newTab)}>
+        <Tab label="Rules" value="rules" />
+        <Tab label="FAQ" value="faq" />
+      </Tabs>
+      {tab === "rules" && <RulesComponent />}
+      {tab === "faq" && <FAQComponent />}
+    </>
+  );
+}
+
 export function RulesComponent() {
   const theme = useTheme();
   const [markdown, setMarkdown] = useState("");
@@ -207,6 +227,65 @@ export function FAQComponent() {
           </TableBody>
         </Table>
       </TableContainer>
+    </>
+  );
+}
+
+function PublicTestNotice() {
+  return (
+    <>
+      <Typography variant="h5">Public Test</Typography>
+      <Typography variant="body1" gutterBottom>
+        The public test for this website has started! If you want to help test the website, please do so!
+        Create an account, claim your player (from the data migrated from the spreadsheet) and just look
+        around and checkout all the features. Other than for the player-claiming process feel free to make
+        meme submissions/suggestions, as the data currently in the system will be wiped for the actual release
+        anyways.
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Things you can test:
+      </Typography>
+      <ul>
+        <li>Create an account</li>
+        <li>Claim your player, or create a new one (pls no meme with this)</li>
+        <li>Top Golden List</li>
+        <li>Campaign List</li>
+        <li>Create Submissions</li>
+        <li>Change your account settings</li>
+        <li>Change app settings</li>
+        <li>Create Suggestions and vote on them</li>
+        <li>Search for stuff</li>
+        <li>... and a lot more</li>
+      </ul>
+      <Typography variant="body1" gutterBottom>
+        Please note that the current data is outdated by ~6 months and the accuracy distorted through many
+        tests.
+      </Typography>
+    </>
+  );
+}
+
+function IssueTrackerNotice() {
+  return (
+    <>
+      <Typography variant="h5">Report Issues</Typography>
+      <Typography variant="body1" gutterBottom>
+        If you find any issues, please report them by either creating a{" "}
+        <StyledExternalLink href="https://github.com/yoshiyoshyosh/goldberries/issues">
+          new issue on GitHub
+        </StyledExternalLink>{" "}
+        or by @-ing viddie in the Modded Golden Team Discord server, preferably in the{" "}
+        <StyledExternalLink href="https://discord.com/channels/790156040653897749/1196193088843030708">
+          dedicated channel
+        </StyledExternalLink>{" "}
+        for this website.
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Known Issues (that aren't tracked on GitHub):
+      </Typography>
+      <ul>
+        <li>The navigation kinda sucks, needs to be revamped entirely</li>
+      </ul>
     </>
   );
 }

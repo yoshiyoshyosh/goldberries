@@ -136,7 +136,7 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
 
   return (
     <Stack direction="column" gap={2}>
-      {!expired && <HeadTitle title={"(" + suggestions.length + ") Suggestions"} />}
+      {!expired && <HeadTitle title={"Suggestions"} />}
       {suggestions.map((suggestion) => (
         <SuggestionDisplay
           key={suggestion.id}
@@ -358,7 +358,7 @@ function VotesDisplay({ votes, hasSubmission }) {
   const countFor = votes.filter((vote) => vote.vote === "+").length;
   const countAgainst = votes.filter((vote) => vote.vote === "-").length;
   const countIndifferent = votes.filter((vote) => vote.vote === "i").length;
-  const hideEmpty = true;
+  const hideEmpty = false;
 
   return (
     <Stack direction="row" gap={2}>

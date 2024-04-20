@@ -42,7 +42,9 @@ export function CustomModal({ modalHook, maxWidth = "sm", actions, children, opt
       disableRestoreFocus
     >
       {title !== null ? <DialogTitle>{title}</DialogTitle> : null}
-      <DialogContent dividers>{children}</DialogContent>
+      <DialogContent dividers sx={{ px: { xs: 1.5, sm: 2 }, py: { xs: 1.5, sm: 3 } }}>
+        {children}
+      </DialogContent>
       {hideFooter ? null : (
         <DialogActions>
           {buttons.map((button, i) => (

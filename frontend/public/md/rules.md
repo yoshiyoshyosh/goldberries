@@ -38,7 +38,7 @@
 
 # Full Game Runs
 
-- Those are challenge runs that involve completing multiple maps <b>(3 or more, runs that involve 2 maps can be accepted on case by case basis)</b> in a row without dying. Generally, they resemble one of the following (including but not limited to):
+- Those are challenge runs that involve completing multiple maps **(3 or more, runs that involve 2 maps can be accepted on case by case basis)** in a row without dying. Generally, they resemble one of the following (including but not limited to):
   - All A-Sides of the map pack without dying (All A-Sides Deathless) / All B-Sides of the map pack without dying (All B-Sides Deathless) / All C-Sides of the map pack without dying (All C-Sides Deathless);
   - All the A-Sides (or B-Sides/C-Sides/etc) of the map pack with all red berries/all collectibles without dying (All Red Berries deathless, All Full Clears Deathless);
   - Completing one lobby without dying, if the map pack uses lobby system (Lobby Deathless)
@@ -57,7 +57,7 @@
 5. If the run has forced deaths, you must not have more deaths than the minimum it takes to progress (for example, dying 2 times to one death warp isn't allowed if only 1 death is enough to progress).
 6. Runs must be done in one play session.
 7. Layout must not cover essential parts of the screen: timer, total berry counter in top left, berry tracker at the bottom, and save icon in bottom right.
-8. Have <b>Full File Timer</b> enabled.
+8. Have **Full File Timer** enabled.
 9. Refrain from long breaks if you're on menu (AFK during gameplay is acceptable but such breaks may cause suspicion if they are too long).
 
 ## Notes
