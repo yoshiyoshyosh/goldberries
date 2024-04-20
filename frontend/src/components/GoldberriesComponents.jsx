@@ -34,6 +34,7 @@ import {
   faInfoCircle,
   faKeyboard,
   faLink,
+  faPerson,
   faPersonDrowning,
   faQuestion,
   faShield,
@@ -494,17 +495,19 @@ export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
   );
 }
 
-const INPUT_METHOD_ICONS = {
-  keyboard: faKeyboard,
-  controller: faGamepad,
-  hybrid: faPersonDrowning,
-  other: faChildCombatant,
+export const INPUT_METHODS = {
+  keyboard: { name: "Keyboard", icon: faKeyboard },
+  dpad: { name: "D-Pad", icon: faGamepad },
+  analog: { name: "Analog", icon: faGamepad },
+  hybrid: { name: "Hybrid", icon: faPersonDrowning },
+  other: { name: "Other", icon: faChildCombatant },
 };
 export function InputMethodIcon({ method, ...props }) {
-  const inputMethodName = method.charAt(0).toUpperCase() + method.slice(1);
+  const icon = INPUT_METHODS[method];
+  const inputMethodName = icon.name;
   return (
     <Tooltip title={inputMethodName}>
-      <FontAwesomeIcon icon={INPUT_METHOD_ICONS[method]} {...props} />
+      <FontAwesomeIcon icon={icon.icon} {...props} />
     </Tooltip>
   );
 }

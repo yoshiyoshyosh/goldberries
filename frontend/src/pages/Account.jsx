@@ -454,9 +454,13 @@ export function UserAccountProfileForm() {
                   Keyboard
                   <InputMethodIcon method="keyboard" style={{ marginLeft: "8px" }} />
                 </MenuItem>
-                <MenuItem value="controller">
-                  Controller
-                  <InputMethodIcon method="controller" style={{ marginLeft: "8px" }} />
+                <MenuItem value="dpad">
+                  Controller: D-Pad
+                  <InputMethodIcon method="dpad" style={{ marginLeft: "8px" }} />
+                </MenuItem>
+                <MenuItem value="analog">
+                  Controller: Analog
+                  <InputMethodIcon method="analog" style={{ marginLeft: "8px" }} />
                 </MenuItem>
                 <MenuItem value="hybrid">
                   Hybrid

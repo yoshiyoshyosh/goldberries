@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
   AdminIcon,
+  INPUT_METHODS,
   InputMethodIcon,
   LinkIcon,
   SuspendedIcon,
@@ -82,7 +83,9 @@ export function PlayerDisplay({ id }) {
           <Box flexGrow={1} />
           {player.account.input_method && (
             <>
-              <Typography variant="body1">Input Method </Typography>
+              <Typography variant="body1">
+                Play Style: {INPUT_METHODS[player.account.input_method].name}
+              </Typography>
               <InputMethodIcon method={player.account.input_method} />
             </>
           )}

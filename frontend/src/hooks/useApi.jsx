@@ -322,6 +322,7 @@ export function usePostAccount(onSuccess, self = false) {
   return useMutation({
     mutationFn: (account) => postAccount(self, account),
     onSuccess: (response, account) => {
+      queryClient.invalidateQueries(["player", response.data.player_id]);
       queryClient.invalidateQueries(["account", response.data.id]);
       queryClient.invalidateQueries(["all_accounts"]);
       queryClient.invalidateQueries(["accounts_player_claims"]);
