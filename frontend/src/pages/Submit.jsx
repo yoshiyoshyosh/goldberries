@@ -875,8 +875,9 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
     prevProps.mapData.is_fc === newProps.mapData.is_fc &&
     prevProps.mapData.player_notes === newProps.mapData.player_notes &&
     prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
+    prevProps.mapData.raw_session_url === newProps.mapData.raw_session_url &&
     prevProps.index === newProps.index;
 
-  console.log("ListItem propsEqual:", propsEqual);
+  // console.log("ListItem propsEqual:", propsEqual);
   return propsEqual;
 });
