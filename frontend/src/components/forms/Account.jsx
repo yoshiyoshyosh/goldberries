@@ -134,12 +134,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField
-        label="New Email"
-        {...form.register("new_email", FormOptions.EmailOptional)}
-        InputLabelProps={{ shrink: true }}
-        fullWidth
-      />
+      <TextField label="New Email" {...form.register("new_email", FormOptions.EmailOptional)} fullWidth />
       <Controller
         control={form.control}
         name="email_verified"

@@ -89,8 +89,8 @@ export const FormOptions = {
 export const DIFFICULTY_COLORS = {
   //Tier 0
   1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-  2: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-  3: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
+  2: { color: "#ff97d8", group_color: "#f874c6", contrast_color: "#000000" },
+  3: { color: "#fcb5e0", group_color: "#f874c6", contrast_color: "#000000" },
 
   //Tier 1
   4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000" },

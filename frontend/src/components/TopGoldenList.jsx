@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { getDifficultyColorsSettings } from "../util/constants";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faEdit, faExternalLink, faHashtag, faList } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeSubmissionTable } from "../pages/Challenge";
@@ -34,21 +34,32 @@ import { FormChallengeWrapper } from "./forms/Challenge";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
+import { set } from "react-hook-form";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
     "top_golden_list_useSuggestedDifficulties",
     false
   );
+  const currentKey = "" + type + id + archived + arbitrary;
+  const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
+
+  console.log("Rendering TopGoldenList", currentKey, renderUpTo);
 
   const query = useQuery({
     queryKey: ["top_golden_list", type, id, archived, arbitrary],
     queryFn: () => fetchTopGoldenList(type, id, archived, arbitrary),
-    cacheTime: 0,
-    staleTime: 0,
   });
 
+  // Reset the render up to index when the key changes
   useEffect(() => {
+    console.log("useEffect resetting renderUpTo", currentKey);
+    setRenderUpTo({ key: currentKey, index: 0 });
+  }, [type, id, archived, arbitrary]);
+
+  // Set horizontal overflow only for this page
+  useEffect(() => {
+    console.log("useEffect scrolling");
     document.body.parentElement.style.overflowX = "auto";
     return () => {
       document.body.parentElement.style.overflowX = "hidden";
@@ -64,12 +75,20 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
     },
   };
 
-  const showMap = (id) => {
+  const onFinishRendering = useCallback((index) => {
+    if (index !== renderUpTo.index) return;
+    setTimeout(() => {
+      setRenderUpTo((prev) => {
+        return { key: prev.key, index: prev.index + 1 };
+      });
+    }, 50);
+  });
+  const showMap = useCallback((id) => {
     modalRefs.map.show.current.open({ id });
-  };
-  const openEditChallenge = (id) => {
+  });
+  const openEditChallenge = useCallback((id) => {
     modalRefs.challenge.edit.current.open({ id });
-  };
+  });
 
   if (query.isLoading) {
     return (
@@ -112,19 +131,25 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
         }}
         gap={1}
       >
-        {topGoldenList.tiers.map((tier, index) => (
-          <TopGoldenListGroup
-            key={index}
-            tier={tier}
-            campaigns={topGoldenList.campaigns}
-            maps={topGoldenList.maps}
-            challenges={topGoldenList.challenges}
-            isPlayer={isPlayer}
-            useSuggested={useSuggestedDifficulties}
-            openEditChallenge={openEditChallenge}
-            showMap={showMap}
-          />
-        ))}
+        {topGoldenList.tiers.map((tier, index) => {
+          if (currentKey !== renderUpTo.key) return null;
+          return (
+            <MemoTopGoldenListGroup
+              key={currentKey + index}
+              index={index}
+              tier={tier}
+              campaigns={topGoldenList.campaigns}
+              maps={topGoldenList.maps}
+              challenges={topGoldenList.challenges}
+              isPlayer={isPlayer}
+              useSuggested={useSuggestedDifficulties}
+              openEditChallenge={openEditChallenge}
+              showMap={showMap}
+              render={index <= renderUpTo.index}
+              onFinishRendering={onFinishRendering}
+            />
+          );
+        })}
       </Stack>
       <ModalContainer modalRefs={modalRefs} />
     </Stack>
@@ -132,6 +157,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
 }
 
 function TopGoldenListGroup({
+  index,
   tier,
   campaigns,
   maps,
@@ -140,6 +166,8 @@ function TopGoldenListGroup({
   useSuggested = false,
   openEditChallenge,
   showMap,
+  render,
+  onFinishRendering,
 }) {
   const theme = useTheme();
   const name = tier[0].name;
@@ -147,6 +175,18 @@ function TopGoldenListGroup({
   const colors = getDifficultyColorsSettings(settings, tier[0].id);
   const [collapsed, setCollapsed] = useState(false);
   const glowColor = darken(colors.group_color, 0.5);
+
+  useEffect(() => {
+    if (render) onFinishRendering(index);
+  }, [render]);
+
+  if (render) {
+    console.log("Rendering TopGoldenListGroup", index, name);
+  } else {
+    console.log("Not rendering TopGoldenListGroup", index, name);
+  }
+
+  if (!render) return null;
 
   return (
     <>
@@ -173,7 +213,19 @@ function TopGoldenListGroup({
                   align="center"
                 >
                   <Typography fontWeight="bold" textAlign="center">
-                    {isPlayer ? "Sug." : <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />}
+                    {isPlayer ? (
+                      <Tooltip title="Suggested difficulties of this player" arrow placement="top">
+                        Sug.
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        title="This column shows the number of people who did a challenge"
+                        arrow
+                        placement="top"
+                      >
+                        <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
+                      </Tooltip>
+                    )}
                   </Typography>
                 </TableCell>
                 <TableCell
@@ -183,12 +235,18 @@ function TopGoldenListGroup({
                   align="center"
                 >
                   <Typography fontWeight="bold">
-                    <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
+                    <Tooltip
+                      title="These links lead to the video of the first clear of a challenge"
+                      arrow
+                      placement="top"
+                    >
+                      <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
+                    </Tooltip>
                   </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
-            {collapsed ? null : (
+            {collapsed || !render ? null : (
               <TableBody>
                 {tier.map((subtier) => {
                   const tierChallenges = challenges.filter(
@@ -220,6 +278,10 @@ function TopGoldenListGroup({
     </>
   );
 }
+const MemoTopGoldenListGroup = memo(TopGoldenListGroup, (prevProps, newProps) => {
+  console.log("Memo comparison called");
+  return prevProps.index === newProps.index && prevProps.render === newProps.render;
+});
 
 function TopGoldenListSubtier({
   subtier,
@@ -283,6 +345,19 @@ function TopGoldenListRow({
   const nameSuffix = challenge.description === null ? "" : ` [${getChallengeDescription(challenge)}]`;
   const arbitrarySuffix = getChallengeIsArbitrary(challenge) ? " (A)" : "";
 
+  const [overflowActive, setOverflowActive] = useState(false);
+  const mapNameRef = useRef();
+  function isOverflowActive(event) {
+    return event.offsetWidth < event.scrollWidth;
+  }
+  useEffect(() => {
+    if (isOverflowActive(mapNameRef.current)) {
+      setOverflowActive(true);
+      return;
+    }
+    setOverflowActive(false);
+  }, [isOverflowActive]);
+
   return (
     <TableRow style={rowStyle}>
       <TableCell
@@ -316,8 +391,9 @@ function TopGoldenListRow({
               },
             }}
           >
-            <Box
-              component="span"
+            <Stack
+              direction="row"
+              gap={0.5}
               sx={{
                 cursor: "pointer",
                 color: "inherit",
@@ -326,12 +402,28 @@ function TopGoldenListRow({
                 "&:hover": {
                   backgroundColor: darkmode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)",
                 },
+                maxWidth: "250px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
               onClick={() => showMap(map.id)}
             >
-              <span>{name}</span>
-              <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
-            </Box>
+              {overflowActive ? (
+                <Tooltip title={name} arrow placement="top">
+                  <span ref={mapNameRef} style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {name}
+                  </span>
+                </Tooltip>
+              ) : (
+                <span ref={mapNameRef} style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {name}
+                </span>
+              )}
+              {nameSuffix !== "" ||
+                (arbitrarySuffix !== "" && (
+                  <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
+                ))}
+            </Stack>
           </Box>
           {settings.visual.topGoldenList.showCampaignIcons && (
             <CampaignIcon campaign={campaign} height="1em" doLink />

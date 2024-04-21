@@ -3,15 +3,12 @@ import { TopGoldenList } from "../components/TopGoldenList";
 import { useParams } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useStorage";
 import { BasicBox, HeadTitle } from "../components/BasicComponents";
-import { useTheme } from "@emotion/react";
+import { ChallengeFcIcon } from "../components/GoldberriesComponents";
 
 export function PageTopGoldenList({}) {
   const { type, id } = useParams();
-  const theme = useTheme();
   const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
-
-  const selectedType = type ? type : "all";
 
   const title = "Top Golden List";
 
@@ -25,26 +22,49 @@ export function PageTopGoldenList({}) {
       }}
     >
       <HeadTitle title={title} />
-      <BasicBox
+      <Stack
+        direction="row"
+        spacing={2}
         sx={{
           pb: 0,
           mb: 1,
         }}
+        alignItems="flex-start"
       >
-        <Typography variant="h4">Top Golden List</Typography>
-        <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-          <FormControlLabel
-            control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-            label="Show Archived"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
-            }
-            label="Show Arbitrary"
-          />
-        </Stack>
-      </BasicBox>
+        <BasicBox sx={{ height: "fit-content" }}>
+          <Typography variant="h4">Top Golden List</Typography>
+          <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+            <FormControlLabel
+              control={
+                <Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
+              }
+              label="Show Archived"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
+              }
+              label="Show Arbitrary"
+            />
+          </Stack>
+        </BasicBox>
+        <BasicBox>
+          <Stack direction="column" spacing={2}>
+            <Stack direction="row" gap={1} alignItems="center">
+              <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.5em" />
+              <span>- Golden clear with all optional collectibles (red berries, cassette, etc)</span>
+            </Stack>
+            <Stack direction="row" gap={1} alignItems="center">
+              <ChallengeFcIcon challenge={{ requires_fc: false, has_fc: true }} height="1.5em" />
+              <span>- Regular clear and Full Clear are the same difficulty placement</span>
+            </Stack>
+            <Stack direction="row" gap={1} alignItems="center">
+              <span>[New]/[Old]</span>
+              <span>- New or Old version of the map</span>
+            </Stack>
+          </Stack>
+        </BasicBox>
+      </Stack>
       <TopGoldenList type={type} id={id} archived={showArchived} arbitrary={showArbitrary} />
     </Box>
   );

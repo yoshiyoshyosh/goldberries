@@ -14,7 +14,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import "../css/GoldenList.css";
 import {
   BasicBox,
@@ -43,10 +43,11 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getDifficultyColors } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLemon } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCheckCircle, faLemon } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { set } from "react-hook-form";
 
 export function PageGoldenList({}) {
   const { type } = useParams();
@@ -142,6 +143,27 @@ function GoldenListFilter({ type, setType, showArchived, setShowArchived, showAr
 
 export function GoldenList({ type, id = null, showArchived = false, showArbitrary = false }) {
   const query = useGetGoldenList(type, id, showArchived, showArbitrary);
+  const currentKey = "" + type + id + showArchived + showArbitrary;
+  const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
+
+  const groupSize = 7;
+  const renderDelay = 21;
+
+  useEffect(() => {
+    setRenderUpTo({ key: currentKey, index: 0 });
+  }, [type, id, showArchived, showArbitrary]);
+
+  // console.log("rendering GoldenList (" + type + ") with renderUpTo", renderUpTo);
+  const onFinishRender = useCallback((index) => {
+    if (index === renderUpTo.index) {
+      setTimeout(() => {
+        // console.log("onFinishRender: incrementing the current renderUpTo", renderUpTo);
+        setRenderUpTo((prev) => {
+          return { key: prev.key, index: prev.index + 1 };
+        });
+      }, renderDelay);
+    }
+  });
 
   if (query.isLoading || query.isFetching) {
     return (
@@ -171,9 +193,7 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   );
 
   let lastCampaign = null;
-  const groupSize = 15;
-
-  //Split campaigns into groups of 10
+  //Split campaigns into groups of groupSize
   const campaignsGroups = campaigns.reduce((acc, campaign) => {
     if (acc.length === 0 || acc[acc.length - 1].length >= groupSize) {
       acc.push([]);
@@ -181,25 +201,40 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
     acc[acc.length - 1].push(campaign);
     return acc;
   }, []);
-  console.log("campaignGroups: ", campaignsGroups);
+  // console.log("campaignGroups: ", campaignsGroups);
 
   return (
     <Stack direction="column" alignItems="stretch" gap={1.25}>
       <BasicBox>
-        <Typography variant="body2">
-          {totalSubmissionCount} submissions across {campaigns.length} campaigns
-        </Typography>
+        <Stack direction="column" gap={1}>
+          <Typography variant="body2">
+            {totalSubmissionCount} submissions across {campaigns.length} campaigns
+          </Typography>
+          {renderUpTo.index < campaignsGroups.length && (
+            <Typography variant="body2">
+              Loading campaigns {renderUpTo.index * groupSize}/{campaigns.length}
+            </Typography>
+          )}
+          {renderUpTo.index >= campaignsGroups.length && (
+            <Typography variant="body2" color={(theme) => theme.palette.success.main}>
+              Done loading <FontAwesomeIcon icon={faCheckCircle} />
+            </Typography>
+          )}
+        </Stack>
       </BasicBox>
       {campaignsGroups.map((campaignsGroup, index) => {
         const lastCampaignInPreviousGroup = lastCampaign;
         lastCampaign = campaignsGroup[campaignsGroup.length - 1];
+        if (currentKey !== renderUpTo.key) return null;
         return (
-          <DynamicRenderCampaignList
+          <MemoDynamicRenderCampaignList
             key={type + index}
             index={index}
             campaignsGroup={campaignsGroup}
             type={type}
             lastCampaign={lastCampaignInPreviousGroup}
+            render={index <= renderUpTo.index}
+            onFinishRender={onFinishRender}
           />
         );
       })}
@@ -207,24 +242,23 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
   );
 }
 
-function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign }) {
-  const [render, setRender] = useState(false);
-
+function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign, render, onFinishRender }) {
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setRender(true);
-    }, index * campaignsGroup.length * 20);
-    return () => clearTimeout(timeout);
-  }, []);
+    if (render) {
+      onFinishRender(index);
+    }
+  }, [render]);
 
-  if (!render)
+  if (!render) {
     return (
       <Stack direction="row" gap={1} alignItems="center">
         <span>({index + 1})</span>
         <LoadingSpinner />
       </Stack>
     );
+  }
 
+  // console.log("--- Actually rendering DynamicRenderCampaignList", index);
   let previousCampaign = lastCampaign;
 
   return (
@@ -249,6 +283,12 @@ function DynamicRenderCampaignList({ index, campaignsGroup, type, lastCampaign }
     </>
   );
 }
+const MemoDynamicRenderCampaignList = memo(DynamicRenderCampaignList, (prevProps, newProps) => {
+  const isSame = prevProps.index === newProps.index && prevProps.render === newProps.render; //&&
+  // prevProps.campaignsGroup.length === newProps.campaignsGroup.length &&
+  // prevProps.campaignsGroup.every((c, i) => c.id === newProps.campaignsGroup[i].id);
+  return isSame;
+});
 
 function CampaignEntry({ campaign, type }) {
   const theme = useTheme();
@@ -350,7 +390,7 @@ function MapEntry({ campaign, map, type }) {
     <Stack direction="column" spacing={1}>
       {map.challenges.map((challenge, index) => (
         <>
-          {index !== 0 ? <Divider key={challenge.id + 99999} /> : null}
+          {index !== 0 ? <Divider key={challenge.id + "div"} /> : null}
           <ChallengeEntry key={challenge.id} challenge={challenge} type={type} />
         </>
       ))}
