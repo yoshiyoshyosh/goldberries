@@ -110,7 +110,7 @@ export function TeamMemberList() {
   const verfiersSorted = verifiers.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" gap={1} flexWrap="wrap">
       {verfiersSorted.map((verifier) => (
         <PlayerChip key={verifier.id} player={verifier} size="small" />
       ))}

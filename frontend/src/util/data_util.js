@@ -197,12 +197,16 @@ export function getPlayerNameColorStyle(player, settings = null) {
     nameColorEnd = nameColorStart;
   }
   const outline = settings?.visual.playerNames.showOutline
-    ? "drop-shadow(1px 1px 0px #ffffff) drop-shadow(-1px -1px 0px #ffffff) drop-shadow(-1px 1px 0px #ffffff) drop-shadow(1px -1px 0px #ffffff)"
+    ? "drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px)"
     : "";
   const style = hasColor
     ? {
-        background: "text linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",
+        backgroundImage: "linear-gradient(90deg, " + nameColorStart + " 0%, " + nameColorEnd + " 100%)",
+        backgroundOrigin: "padding-box",
+        backgroundClip: "text",
+        WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
+        color: "transparent",
         fontWeight: "bold",
         filter: outline,
       }

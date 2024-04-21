@@ -472,10 +472,9 @@ export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
       <img
         src={iconUrl}
         alt={campaign.name}
+        className="outlined"
         style={{
           height: height,
-          filter:
-            "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
         }}
         loading="lazy"
       />
@@ -566,11 +565,9 @@ export function ChallengeFcIcon({ challenge, height = "1em", showClear = false, 
         <img
           src={"/icons/" + icon}
           alt={alt}
+          className="outlined"
           style={{
             height: height,
-            filter:
-              "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
-            // transform: transform,
             ...style,
           }}
           {...props}
@@ -589,11 +586,9 @@ export function SubmissionFcIcon({ submission, height = "1em", disableTooltip = 
     <img
       src={"/icons/" + icon}
       alt={alt}
+      className="outlined"
       style={{
         height: height,
-        filter:
-          "drop-shadow(1px 1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px 1px 0 white)",
-        // transform: transform,
         ...style,
       }}
       {...props}
@@ -638,10 +633,9 @@ export function ObjectiveIcon({ objective, challengeDescription, height = "1em" 
       <img
         src={objective.icon_url}
         alt={objective.name}
+        className="outlined"
         style={{
           height: height,
-          filter:
-            "drop-shadow(1px 1px 0 rgba(255,255,255,0.6)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.6)) drop-shadow(1px -1px 0 rgba(255,255,255,0.6)) drop-shadow(-1px 1px 0 rgba(255,255,255,0.6))",
         }}
         loading="lazy"
       />

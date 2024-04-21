@@ -419,10 +419,9 @@ function TopGoldenListRow({
                   {name}
                 </span>
               )}
-              {nameSuffix !== "" ||
-                (arbitrarySuffix !== "" && (
-                  <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
-                ))}
+              {(nameSuffix !== "" || arbitrarySuffix !== "") && (
+                <span style={{ color: theme.palette.text.secondary }}>{nameSuffix + arbitrarySuffix}</span>
+              )}
             </Stack>
           </Box>
           {settings.visual.topGoldenList.showCampaignIcons && (

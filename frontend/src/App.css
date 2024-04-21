@@ -12,6 +12,11 @@
   text-decoration: underline;
 }
 
+.outlined {
+  filter: drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px);
+  -webkit-filter: drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px);
+}
+
 /* spin animation */
 @keyframes spin {
   0% {
