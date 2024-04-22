@@ -374,7 +374,7 @@ export function Layout() {
           objective={{
             name: "Top Golden List",
             description: "Top Golden List",
-            icon_url: "/icons/goldenberry.png",
+            icon_url: "/icons/goldenberry-8x.png",
           }}
         />
       ),
