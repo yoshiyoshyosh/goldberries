@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { getCampaignName, getMapLobbyInfo } from "../util/data_util";
 
-export function PageSearch() {
+export function PageSearch({ isDirectSearch = false }) {
   const { q } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState(q || "");
@@ -23,23 +23,30 @@ export function PageSearch() {
   const updateSearch = (newSearch) => {
     setSearch(newSearch);
     //Also adjust URL
-    if (newSearch === "" || newSearch === undefined) {
-      navigate("/search", { replace: true });
-    } else {
-      navigate("/search/" + newSearch, { replace: true });
+    if (!isDirectSearch) {
+      if (newSearch === "" || newSearch === undefined) {
+        navigate("/search", { replace: true });
+      } else {
+        navigate("/search/" + newSearch, { replace: true });
+      }
     }
   };
 
   const title = search ? "Search '" + search + "'" : "Search";
 
   return (
-    <BasicContainerBox maxWidth="md">
+    <BasicContainerBox maxWidth="md" sx={{ mt: 0 }}>
       <HeadTitle title={title} />
       <Typography variant="h4">Search Goldberries Database</Typography>
       <Typography variant="body1" color="gray" gutterBottom>
         Search for players, campaigns, and maps by name.
       </Typography>
-      <DebouncedTextField value={search} setValue={updateSearch} label="Search" />
+      <DebouncedTextField
+        value={search}
+        setValue={updateSearch}
+        label="Search"
+        isDirectSearch={isDirectSearch}
+      />
       {search && search.length >= 3 && <SearchDisplay search={search} />}
       {search && search.length < 3 && search.length > 0 && (
         <Typography variant="body1" color="gray">
@@ -72,9 +79,8 @@ export function SearchDisplay({ search }) {
 }
 
 function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = true }) {
-  const filteredCampaigns = filterStandalone
-    ? campaigns.filter((campaign) => campaign.maps.length > 1)
-    : campaigns;
+  const showCampaign = (campaign) => campaign.maps.length > 1 || campaign.maps[0].name !== campaign.name;
+  const filteredCampaigns = filterStandalone ? campaigns.filter(showCampaign) : campaigns;
 
   return (
     <Stack direction="column" gap={1}>
@@ -91,7 +97,7 @@ function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = 
               <Typography variant="h6">{getCampaignName(campaign)}</Typography>
             </Link>
           </Stack>
-          {campaign.maps.length > 1 && (
+          {showCampaign(campaign) && (
             <Stack direction="column" gap={1}>
               {campaign.maps.map((map) => {
                 const lobbyInfo = getMapLobbyInfo(map, campaign);
@@ -142,12 +148,14 @@ function SearchResultsMaps({ maps, heading = "h5" }) {
           <Link to={"/map/" + map.id} style={{ color: "var(--toastify-color-info)" }}>
             <Typography variant="h6">{map.name}</Typography>
           </Link>
-          <Typography variant="body2" sx={{ pl: 2 }}>
-            <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-              <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
-              {getCampaignName(map.campaign)}
-            </Link>
-          </Typography>
+          {map.campaign && map.campaign.name !== map.name && (
+            <Typography variant="body2" sx={{ pl: 2 }}>
+              <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
+                <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
+                {getCampaignName(map.campaign)}
+              </Link>
+            </Typography>
+          )}
         </Stack>
       ))}
     </Stack>
@@ -197,9 +205,20 @@ function SearchResultsAuthors({ authors }) {
   );
 }
 
-function DebouncedTextField({ value, setValue, label, clearOnFocus = false }) {
+function DebouncedTextField({ value, setValue, label, clearOnFocus = false, isDirectSearch }) {
   const [valueInternal, setValueInternal] = useState(value);
   const setValueDebounced = useDebouncedCallback(setValue, 250);
+  const navigate = useNavigate();
+
+  const onKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (isDirectSearch) {
+        navigate("/search/" + valueInternal);
+      } else {
+        setValue(valueInternal);
+      }
+    }
+  };
 
   return (
     <TextField
@@ -209,6 +228,7 @@ function DebouncedTextField({ value, setValue, label, clearOnFocus = false }) {
         setValueInternal(event.target.value);
         setValueDebounced(event.target.value);
       }}
+      onKeyDown={onKeyDown}
       sx={{ mb: 2, mt: { xs: 2, sm: 0 } }}
       fullWidth
       onFocus={(e) => {
@@ -217,6 +237,7 @@ function DebouncedTextField({ value, setValue, label, clearOnFocus = false }) {
           setValueDebounced("");
         }
       }}
+      autoFocus
     />
   );
 }

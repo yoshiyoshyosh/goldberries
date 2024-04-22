@@ -25,8 +25,11 @@ import {
   Button,
   Collapse,
   CssBaseline,
+  Dialog,
+  DialogContent,
   Divider,
   Drawer,
+  Grid,
   IconButton,
   List,
   ListItem,
@@ -34,6 +37,7 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
+  Modal,
   Stack,
   ThemeProvider,
   Toolbar,
@@ -82,7 +86,7 @@ import {
   faWeight,
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
@@ -108,7 +112,12 @@ import { light } from "@mui/material/styles/createPalette";
 import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
 import { PageAppSettings } from "./pages/AppSettings";
 import { PageSuggestions } from "./pages/Suggestions";
-import { MemoWebsiteIcon, WebsiteIcon } from "./components/GoldberriesComponents";
+import {
+  CampaignIcon,
+  MemoWebsiteIcon,
+  ObjectiveIcon,
+  WebsiteIcon,
+} from "./components/GoldberriesComponents";
 import { StyledLink } from "./components/BasicComponents";
 
 axios.defaults.withCredentials = true;
@@ -229,6 +238,7 @@ const router = createBrowserRouter([
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
+    contrastThreshold: 4.5,
     links: {
       main: "#1e90ff",
     },
@@ -342,6 +352,13 @@ export function Layout() {
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const auth = useAuth();
+  const location = useLocation();
+
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  useEffect(() => {
+    setSearchModalOpen(false);
+  }, [location.pathname]);
+
   const drawerWidth = 260;
   const menus = {
     home: {
@@ -350,10 +367,21 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faHome} />,
     },
     lists: {
-      name: "Lists",
-      icon: <FontAwesomeIcon icon={faList} />,
+      name: "Top Golden List",
+      path: "/top-golden-list",
+      icon: (
+        <ObjectiveIcon
+          objective={{
+            name: "Top Golden List",
+            description: "Top Golden List",
+            icon_url: "/icons/goldenberry.png",
+          }}
+        />
+      ),
+    },
+    campaigns: {
+      name: "Campaigns",
       items: [
-        { name: "Top Golden List", path: "/top-golden-list", icon: <FontAwesomeIcon icon={faArrowUp} /> },
         {
           name: "Campaign List",
           path: "/campaign-list",
@@ -364,25 +392,38 @@ export function Layout() {
           path: "/rejected-maps",
           icon: <FontAwesomeIcon icon={faBan} />,
         },
-      ],
-    },
-    campaigns: {
-      name: "Campaigns",
-      icon: <FontAwesomeIcon icon={faBook} />,
-      items: [
-        { name: "Strawberry Jam", path: "/campaign/935", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        { divider: true },
+        {
+          name: "Strawberry Jam",
+          path: "/campaign/935",
+          icon: <CampaignIcon campaign={{ name: "Strawberry Jam", icon_url: "/icons/campaigns/sj.png" }} />,
+        },
         {
           name: "Celeste 2021 Winter Collab",
           path: "/campaign/778",
-          icon: <FontAwesomeIcon icon={faBlackberry} />,
+          icon: (
+            <CampaignIcon
+              campaign={{
+                name: "Celeste 2021 Winter Collab",
+                icon_url: "/icons/campaigns/winter-collab-21.png",
+              }}
+            />
+          ),
         },
-        { name: "D-Sides", path: "/campaign/238", icon: <FontAwesomeIcon icon={faBlackberry} /> },
-        { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBlackberry} /> },
+        {
+          name: "Monika's D-Sides",
+          path: "/campaign/238",
+          icon: (
+            <CampaignIcon
+              campaign={{ name: "Monika's D-Sides", icon_url: "/icons/campaigns/d-sides-monika.png" }}
+            />
+          ),
+        },
+        { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBook} /> },
       ],
     },
     otherChallenges: {
       name: "Other Challenges",
-      icon: <FontAwesomeIcon icon={faTooth} />,
       items: [
         { name: "Full Game Runs", path: "/full-game", icon: <FontAwesomeIcon icon={faHome} /> },
         { name: "Archieved List", path: "/archieve", icon: <FontAwesomeIcon icon={faHome} /> },
@@ -399,6 +440,7 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
+        { divider: true },
         {
           name: "Logout",
           action: () => {
@@ -409,9 +451,8 @@ export function Layout() {
       ],
     },
     submit: {
-      name: "Submit A Golden",
+      name: "Submit",
       path: "/submit",
-      icon: <FontAwesomeIcon icon={faPlus} />,
     },
     notUser: {
       name: "Login",
@@ -419,7 +460,6 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faSignIn} />,
     },
     verifier: {
-      icon: <FontAwesomeIcon icon={faEye} />,
       name: "Internal",
       items: [
         { name: "Logs", path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
@@ -447,13 +487,15 @@ export function Layout() {
     },
     search: {
       name: "Search",
-      path: "/search",
+      action: () => {
+        console.log("Clicked search");
+        setSearchModalOpen(true);
+      },
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
     suggestions: {
       name: "Suggestion Box",
       path: "/suggestions",
-      icon: <FontAwesomeIcon icon={faPoll} />,
     },
   };
 
@@ -463,12 +505,13 @@ export function Layout() {
     menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
   }
 
-  const leftMenu = [menus.lists, menus.campaigns, menus.search, menus.suggestions];
+  const leftMenu = [menus.lists, menus.campaigns, menus.suggestions];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);
   }
   rightMenu.push(menus.submit);
+  rightMenu.push(menus.search);
   const userMenu = auth.isLoggedIn ? menus.user : menus.notUser;
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -590,6 +633,7 @@ export function Layout() {
           <Outlet />
         </Box>
       </Box>
+      <SearchModal open={searchModalOpen} onClose={() => setSearchModalOpen(false)} />
     </>
   );
 }
@@ -715,84 +759,110 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
   return (
     <Box
       sx={{
-        bgcolor: "#353535",
+        bgcolor: "#181818",
         display: {
           xs: "none",
           sm: "block",
         },
         width: "100vw",
-        pr: "10px",
+        px: 3,
         scrollbarGutter: "stable",
         color: darkmode ? "unset" : "primary.contrastText",
 
         position: "fixed",
         top: "0",
         zIndex: "1000", //Above everything but dropdown popups, which are 1300
+        minHeight: "48px",
+        height: "48px",
       }}
     >
-      <Toolbar
-        sx={{
-          gap: 1,
-        }}
-        variant="dense"
-      >
-        <Typography variant="h6" noWrap letterSpacing={0.6} component="div">
-          <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-            <Stack direction="row" gap={0.5} alignItems="center">
-              <MemoWebsiteIcon />
-              <span>Goldberries.net</span>
-            </Stack>
-          </Link>
-        </Typography>
-        {leftMenu.map((entry, index) => {
-          if (entry.items) {
-            return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
-          } else {
-            return <DesktopItem key={index} item={entry} />;
-          }
-        })}
-        <Divider
-          sx={{
-            flexGrow: 1,
-            borderColor: "#00000000",
-          }}
-        />
-        {auth.hasVerifierPriv && <VerifierStatsNavDesktop />}
-        {rightMenu.map((entry, index) => {
-          if (entry.items) {
-            return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
-          } else {
-            return <DesktopItem key={index} item={entry} />;
-          }
-        })}
-        {userMenu.items === undefined ? (
-          <DesktopItem item={userMenu} />
-        ) : (
-          <DesktopSubMenu
-            name={userMenu.name}
-            icon={userMenu.icon}
-            items={userMenu.items}
-            nameStyle={nameStyle}
-          />
-        )}
-        <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}>
-          <Tooltip title="Settings">
-            <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }}>
-              <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
-            </IconButton>
-          </Tooltip>
-        </StyledLink>
-        <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
-          <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
-            <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
-          </IconButton>
-        </Tooltip>
-      </Toolbar>
+      <Grid container spacing={1} sx={{ mt: 0, height: "100%", alignItems: "center" }}>
+        <Grid item sm={5} sx={{ pt: "0 !important" }}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            {leftMenu.map((entry, index) => {
+              if (entry.items) {
+                return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
+              } else {
+                return <DesktopItem key={index} item={entry} />;
+              }
+            })}
+          </Stack>
+        </Grid>
+        <Grid item sm={2} sx={{ pt: "0 !important" }}>
+          <Typography
+            variant="h6"
+            noWrap
+            letterSpacing={0.6}
+            component="div"
+            sx={{ display: "flex", justifyContent: "space-around" }}
+          >
+            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+              <Stack direction="row" gap={0.5} alignItems="center">
+                <MemoWebsiteIcon />
+                <span>goldberries.net</span>
+              </Stack>
+            </Link>
+          </Typography>
+        </Grid>
+        <Grid item sm={5} sx={{ pt: "0 !important" }}>
+          <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+            {auth.hasVerifierPriv && <VerifierStatsNavDesktop />}
+            {rightMenu.map((entry, index) => {
+              if (entry.items) {
+                return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
+              } else {
+                return <DesktopItem key={index} item={entry} />;
+              }
+            })}
+            {userMenu.items === undefined ? (
+              <DesktopItem item={userMenu} />
+            ) : (
+              <DesktopSubMenu
+                name={userMenu.name}
+                icon={userMenu.icon}
+                items={userMenu.items}
+                nameStyle={nameStyle}
+              />
+            )}
+            <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}>
+              <Tooltip title="Settings">
+                <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }}>
+                  <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
+                </IconButton>
+              </Tooltip>
+            </StyledLink>
+            <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
+              <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
+                <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Grid>
+      </Grid>
     </Box>
   );
 }
 
 function DesktopItem({ item }) {
+  if (item.action !== undefined) {
+    return (
+      <Button
+        variant="text"
+        color="inherit"
+        startIcon={item.icon}
+        sx={{
+          textTransform: "none",
+          px: 1,
+          "&:hover": {
+            backgroundColor: "#555",
+          },
+        }}
+        onClick={item.action}
+      >
+        {item.name}
+      </Button>
+    );
+  }
   return (
     <Button
       component={Link}
@@ -823,7 +893,7 @@ function DesktopSubMenu({ name, icon, items, nameStyle = {} }) {
             color="inherit"
             {...bindHover(popupState)}
             startIcon={icon}
-            endIcon={<FontAwesomeIcon size="2xs" icon={faChevronDown} />}
+            // endIcon={<FontAwesomeIcon size="2xs" icon={faChevronDown} />}
             sx={{
               textTransform: "none",
               px: 2,
@@ -849,6 +919,10 @@ function DesktopSubMenu({ name, icon, items, nameStyle = {} }) {
 }
 
 function DesktopSubMenuItem({ item, closeMenu }) {
+  if (item.divider === true) {
+    return <Divider />;
+  }
+
   if (item.action !== undefined) {
     return (
       <MenuItem
@@ -898,4 +972,23 @@ function VerifierStatsNavDesktop() {
 
 function pathMatchesItem(pathname, itemPath) {
   return (itemPath === "/" && pathname === "/") || (itemPath !== "/" && pathname.startsWith(itemPath));
+}
+
+function SearchModal({ open, onClose }) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      disableScrollLock
+      maxWidth="md"
+      fullWidth
+      sx={{ background: "transparent" }}
+      PaperProps={{
+        sx: { borderRadius: "10px" },
+      }}
+      disableRestoreFocus
+    >
+      <PageSearch isDirectSearch />
+    </Dialog>
+  );
 }

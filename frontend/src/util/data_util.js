@@ -21,14 +21,14 @@ export function getChallengeObjectiveSuffix(challenge) {
   return " " + challenge.objective.display_name_suffix;
 }
 
-export function getChallengeName(challenge) {
+export function getChallengeName(challenge, includeFc = true) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
+  const challengeFc = includeFc ? getChallengeFcLong(challenge) + ": " : "";
   const challengeDescriptionSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
   return (
     oldPrefix +
-    getChallengeFcLong(challenge) +
-    ": " +
+    challengeFc +
     challenge.objective.name +
     getChallengeObjectiveSuffix(challenge) +
     challengeDescriptionSuffix
@@ -197,18 +197,21 @@ export function getPlayerNameColorStyle(player, settings = null) {
   if (settings !== null && settings.visual.playerNames.preferSingleOverGradientColor) {
     nameColorEnd = nameColorStart;
   }
-  let contrastColor = lightTheme.palette.getContrastText(nameColorStart);
+  let contrastColorStart = lightTheme.palette.getContrastText(nameColorStart);
+  let contrastColorEnd = lightTheme.palette.getContrastText(nameColorEnd);
+  const outlineColor = contrastColorStart === contrastColorEnd ? contrastColorStart : "rgba(0, 0, 0, 0.87)";
+  // const outlineColor = contrastColorStart;
   const outline = settings?.visual.playerNames.showOutline
     ? "drop-shadow(" +
-      contrastColor +
+      outlineColor +
       " 0 0 0.5px) drop-shadow(" +
-      contrastColor +
+      outlineColor +
       " 0 0 0.5px) drop-shadow(" +
-      contrastColor +
+      outlineColor +
       " 0 0 0.5px) drop-shadow(" +
-      contrastColor +
+      outlineColor +
       " 0 0 0.5px) drop-shadow(" +
-      contrastColor +
+      outlineColor +
       " 0 0 0.5px)"
     : "";
   const style = hasColor

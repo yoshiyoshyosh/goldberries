@@ -10,13 +10,22 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
+  Stack,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { ChallengeSubmissionTable } from "./Challenge";
-import { faBook, faFlagCheckered, faLandmark, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faExternalLink,
+  faFlagCheckered,
+  faLandmark,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   getCampaignName,
+  getChallengeFcLong,
+  getChallengeFcShort,
   getChallengeName,
   getGamebananaEmbedUrl,
   getMapAuthor,
@@ -30,7 +39,7 @@ import {
   StyledExternalLink,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import { DifficultyChip } from "../components/GoldberriesComponents";
+import { ChallengeFcIcon, DifficultyChip } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
@@ -80,10 +89,14 @@ export function MapDisplay({ id }) {
           <>
             <Divider sx={{ my: 2 }}>
               <Link to={"/challenge/" + challenge.id}>
-                <Chip label={"Challenge - " + getChallengeName(challenge)} size="small" />
+                <Chip label={getChallengeName(challenge, false)} size="small" />
               </Link>
             </Divider>
-            <DifficultyChip difficulty={challenge.difficulty} prefix="Difficulty: " sx={{ mb: 1 }} />
+            <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 1 }}>
+              <ChallengeFcIcon challenge={challenge} showClear height="1.3em" />
+              <span>{getChallengeFcShort(challenge)}</span>
+              <DifficultyChip difficulty={challenge.difficulty} />
+            </Stack>
             <ChallengeSubmissionTable key={challenge.id} challenge={challenge} />
           </>
         );
@@ -127,6 +140,15 @@ export function MapDetailsList({ map }) {
             </Link>
           </ListItemSecondaryAction>
         )}
+      </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <FontAwesomeIcon icon={faExternalLink} />
+        </ListItemIcon>
+        <ListItemText
+          primary={<StyledExternalLink href={map.campaign.url}>{map.campaign.url}</StyledExternalLink>}
+          secondary="URL"
+        />
       </ListItem>
       <ListItem>
         <ListItemIcon>
