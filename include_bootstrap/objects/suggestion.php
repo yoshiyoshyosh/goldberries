@@ -7,6 +7,7 @@ class Suggestion extends DbObject
 
   public ?int $author_id = null;
   public ?int $challenge_id = null;
+  public ?int $suggested_difficulty_id = null;
   public ?string $comment = null;
   public ?bool $is_verified = null;
   public JsonDateTime $date_created;
@@ -15,6 +16,7 @@ class Suggestion extends DbObject
   // Linked Objects
   public ?Player $author = null;
   public ?Challenge $challenge = null;
+  public ?Difficulty $suggested_difficulty = null;
 
   // Associative Objects
   public ?array $votes = null; /* SuggestionVote[] */
@@ -25,6 +27,7 @@ class Suggestion extends DbObject
     return array(
       'author_id' => $this->author_id,
       'challenge_id' => $this->challenge_id,
+      'suggested_difficulty_id' => $this->suggested_difficulty_id,
       'comment' => $this->comment,
       'is_verified' => $this->is_verified,
       'date_created' => $this->date_created,
@@ -41,6 +44,8 @@ class Suggestion extends DbObject
       $this->author_id = intval($arr[$prefix . 'author_id']);
     if (isset($arr[$prefix . 'challenge_id']))
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
+    if (isset($arr[$prefix . 'suggested_difficulty_id']))
+      $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
     if (isset($arr[$prefix . 'comment']))
       $this->comment = $arr[$prefix . 'comment'];
     if (isset($arr[$prefix . 'is_verified']))
@@ -61,6 +66,9 @@ class Suggestion extends DbObject
     }
     if ($this->author_id !== null) {
       $this->author = Player::get_by_id($DB, $this->author_id, 3, false);
+    }
+    if ($this->suggested_difficulty_id !== null) {
+      $this->suggested_difficulty = Difficulty::get_by_id($DB, $this->suggested_difficulty_id);
     }
   }
 
