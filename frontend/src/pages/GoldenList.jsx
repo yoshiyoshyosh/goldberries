@@ -222,6 +222,29 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
           )}
         </Stack>
       </BasicBox>
+      <BasicBox>
+        <Stack direction="row" gap={0.5} alignItems="center" flexWrap="wrap" maxWidth={425}>
+          {"abcdefghijklmnopqrstuvwxyz".split("").map((l) => {
+            const letter = l.toUpperCase();
+            const countCampaigns = campaigns.filter((c) => c.name.toUpperCase().charAt(0) === letter).length;
+            return (
+              <StyledExternalLink
+                key={letter}
+                href={"#" + letter}
+                target="_self"
+                style={{ textDecoration: "none" }}
+              >
+                <BasicBox sx={{ p: 0.5, borderRadius: 0, minWidth: "29px" }}>
+                  <Stack direction="column" gap={0} alignItems="center">
+                    <span>{letter}</span>
+                    <span>{countCampaigns}</span>
+                  </Stack>
+                </BasicBox>
+              </StyledExternalLink>
+            );
+          })}
+        </Stack>
+      </BasicBox>
       {campaignsGroups.map((campaignsGroup, index) => {
         const lastCampaignInPreviousGroup = lastCampaign;
         lastCampaign = campaignsGroup[campaignsGroup.length - 1];
@@ -364,9 +387,11 @@ function LetterDivider({ letter }) {
   const theme = useTheme();
   const backgroundColor = theme.palette.mode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.75)";
   return (
-    <Divider sx={{ my: 0 }}>
-      <Chip label={letter} sx={{ backgroundColor: backgroundColor }} />
-    </Divider>
+    <a id={letter}>
+      <Divider sx={{ my: 0 }}>
+        <Chip label={letter} sx={{ backgroundColor: backgroundColor }} />
+      </Divider>
+    </a>
   );
 }
 

@@ -375,10 +375,10 @@ export function UserAccountProfileForm() {
             control={form.control}
             render={({ field }) => (
               <MuiColorInput
-                format="rgb"
+                format="hex"
                 isAlphaHidden
                 value={field.value}
-                onChange={(c) => field.onChange(c)}
+                onChange={(value, colors) => field.onChange(colors.hex)}
                 PopoverProps={{
                   disableScrollLock: true,
                 }}
@@ -405,10 +405,10 @@ export function UserAccountProfileForm() {
                 control={form.control}
                 render={({ field }) => (
                   <MuiColorInput
-                    format="rgb"
+                    format="hex"
                     isAlphaHidden
                     value={field.value}
-                    onChange={(c) => field.onChange(c)}
+                    onChange={(value, colors) => field.onChange(colors.hex)}
                     PopoverProps={{
                       disableScrollLock: true,
                     }}

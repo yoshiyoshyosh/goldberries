@@ -694,3 +694,18 @@ export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false }
   );
 }
 export const MemoWebsiteIcon = memo(WebsiteIcon);
+
+export function JournalIcon({ height = "1em", alt = "Generic Campaign Icon", style = {}, ...props }) {
+  return (
+    <img
+      src={"/icons/journal.png"}
+      alt={alt}
+      className="outlined"
+      style={{
+        height: height,
+        ...style,
+      }}
+      {...props}
+    />
+  );
+}

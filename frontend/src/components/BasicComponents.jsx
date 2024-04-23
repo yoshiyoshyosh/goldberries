@@ -245,7 +245,7 @@ export function StyledLink({ to, children, underline = false, style, ...props })
   );
 }
 
-export function StyledExternalLink({ href, children, underline = true, style, ...props }) {
+export function StyledExternalLink({ href, children, underline = true, target = "_blank", style, ...props }) {
   const theme = useTheme();
   return (
     <a
@@ -253,8 +253,8 @@ export function StyledExternalLink({ href, children, underline = true, style, ..
       style={{ color: theme.palette.links.main, ...style }}
       {...props}
       className="styled-link"
-      target="_blank"
-      rel="noopener"
+      target={target}
+      rel={target === "_blank" ? "noopener" : ""}
     >
       {children}
     </a>

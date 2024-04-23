@@ -114,6 +114,7 @@ import { PageAppSettings } from "./pages/AppSettings";
 import { PageSuggestions } from "./pages/Suggestions";
 import {
   CampaignIcon,
+  JournalIcon,
   MemoWebsiteIcon,
   ObjectiveIcon,
   WebsiteIcon,
@@ -385,7 +386,7 @@ export function Layout() {
         {
           name: "Campaign List",
           path: "/campaign-list",
-          icon: <FontAwesomeIcon icon={faBook} />,
+          icon: <JournalIcon height="1.3em" />,
         },
         {
           name: "Rejected Maps",
@@ -419,7 +420,7 @@ export function Layout() {
             />
           ),
         },
-        { name: "Lunar Ruins", path: "/campaign/869", icon: <FontAwesomeIcon icon={faBook} /> },
+        { name: "Lunar Ruins", path: "/campaign/869", icon: <JournalIcon height="1.3em" /> },
       ],
     },
     otherChallenges: {
@@ -576,9 +577,9 @@ export function Layout() {
         <AppBar
           position="fixed"
           sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
-            display: { xs: "block", sm: "none" },
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            ml: { md: `${drawerWidth}px` },
+            display: { xs: "block", md: "none" },
             bgcolor: "#3e3e3e",
           }}
         >
@@ -588,18 +589,21 @@ export function Layout() {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+              sx={{ mr: 2, display: { md: "none" } }}
             >
               <FontAwesomeIcon icon={faBars} />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              Goldberries.net
+              <Stack direction="row" gap={0.5} alignItems="center">
+                <WebsiteIcon />
+                <span>goldberries.net</span>
+              </Stack>
             </Typography>
           </Toolbar>
         </AppBar>
         <Box
           component="nav"
-          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }, display: { xs: "block", sm: "none" } }}
+          sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 }, display: { xs: "block", md: "none" } }}
           aria-label="mailbox folders"
         >
           <Drawer
@@ -611,7 +615,7 @@ export function Layout() {
               keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-              display: { xs: "block", sm: "none" },
+              display: { xs: "block", md: "none" },
               "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
             }}
           >
@@ -624,7 +628,7 @@ export function Layout() {
           sx={{
             mt: {
               xs: 8,
-              sm: "65px",
+              md: "65px",
             },
             mb: 3,
             flexGrow: 1,
@@ -648,7 +652,10 @@ function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
       <Toolbar>
         <Typography variant="h5" noWrap letterSpacing={0.6} component="div">
           <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-            Goldberries.net
+            <Stack direction="row" gap={0.5} alignItems="center">
+              <WebsiteIcon />
+              <span>goldberries.net</span>
+            </Stack>
           </Link>
         </Typography>
       </Toolbar>
@@ -717,6 +724,11 @@ function MobileSubMenu({ name, icon, items, nameStyle = {} }) {
 function MobileMenuItem({ item, indent = 0 }) {
   const { pathname } = useLocation();
   const selected = item.action ? false : pathMatchesItem(pathname, item.path);
+
+  if (item.divider) {
+    return <Divider sx={{ ml: 2 }} />;
+  }
+
   return (
     <ListItem disablePadding>
       {item.action !== undefined && (
@@ -762,7 +774,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
         bgcolor: "#181818",
         display: {
           xs: "none",
-          sm: "block",
+          md: "block",
         },
         width: "100vw",
         px: 3,
