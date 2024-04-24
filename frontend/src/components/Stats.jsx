@@ -83,7 +83,13 @@ export function SuggestedDifficultyChart({ challenge }) {
   );
 }
 
-export function SuggestedDifficultyTierCounts({ challenge, sx, direction = "row", nowrap = true }) {
+export function SuggestedDifficultyTierCounts({
+  challenge,
+  sx,
+  direction = "row",
+  nowrap = true,
+  useSubtierColors = false,
+}) {
   let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
   allSuggestedDiffs = allSuggestedDiffs.filter((diff) => diff !== null);
 
@@ -117,7 +123,7 @@ export function SuggestedDifficultyTierCounts({ challenge, sx, direction = "row"
       {sortedDifficulties.map((diff) => (
         <Stack key={diff.difficulty.id} direction="row" spacing={1}>
           <Typography variant="body1">{diff.value}x</Typography>
-          <DifficultyChip difficulty={diff.difficulty} />
+          <DifficultyChip difficulty={diff.difficulty} useSubtierColors={useSubtierColors} />
         </Stack>
       ))}
     </Stack>

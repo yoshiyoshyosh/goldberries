@@ -19,13 +19,15 @@ import { faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 
-export function PageAppSettings() {
+export function PageAppSettings({ isModal = false }) {
   const { tab } = useParams();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(tab ?? "visual");
 
   const setTab = (tab) => {
     setSelectedTab(tab);
+    if (isModal) return;
+
     if (tab === "visual") {
       navigate("/settings", { replace: true });
     } else {
@@ -34,7 +36,7 @@ export function PageAppSettings() {
   };
 
   return (
-    <BasicContainerBox maxWidth="md">
+    <BasicContainerBox maxWidth="md" sx={{ mt: 0 }}>
       <HeadTitle title="Settings" />
       <Typography variant="h4" gutterBottom>
         Settings
@@ -396,6 +398,21 @@ export function AppSettingsVisualForm() {
               marks
               valueLabelDisplay="auto"
               valueLabelFormat={(v) => `${v}%`}
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <SettingsEntry>
+        <Controller
+          name="topGoldenList.switchMapAndChallenge"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Switch Map and Challenge"
             />
           )}
         />

@@ -229,3 +229,29 @@ export function getPlayerNameColorStyle(player, settings = null) {
 
   return style;
 }
+
+export function getSortedSuggestedDifficulties(challenge) {
+  let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
+  allSuggestedDiffs = allSuggestedDiffs.filter((diff) => diff !== null);
+
+  const difficulties = {}; // count of each difficulty
+  allSuggestedDiffs.forEach((diff) => {
+    if (difficulties[diff.id] === undefined) {
+      difficulties[diff.id] = {
+        difficulty: diff,
+        value: 1,
+      };
+    } else {
+      difficulties[diff.id].value += 1;
+    }
+  });
+  //Sort difficulties by count DESC
+  const sortedDifficulties = Object.entries(difficulties).map(([id, value]) => {
+    return {
+      difficulty: value.difficulty,
+      value: value.value,
+    };
+  });
+  sortedDifficulties.sort((a, b) => b.value - a.value);
+  return sortedDifficulties;
+}

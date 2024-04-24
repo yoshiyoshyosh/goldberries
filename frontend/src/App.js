@@ -86,7 +86,7 @@ import {
   faWeight,
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
@@ -355,10 +355,8 @@ export function Layout() {
   const auth = useAuth();
   const location = useLocation();
 
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
-  useEffect(() => {
-    setSearchModalOpen(false);
-  }, [location.pathname]);
+  const searchOpenRef = createRef();
+  const settingsOpenRef = createRef();
 
   const drawerWidth = 260;
   const menus = {
@@ -490,7 +488,7 @@ export function Layout() {
       name: "Search",
       action: () => {
         console.log("Clicked search");
-        setSearchModalOpen(true);
+        searchOpenRef.current(true);
       },
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
@@ -517,7 +515,6 @@ export function Layout() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -622,7 +619,12 @@ export function Layout() {
             <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
           </Drawer>
         </Box>
-        <DesktopNav leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
+        <DesktopNav
+          leftMenu={leftMenu}
+          rightMenu={rightMenu}
+          userMenu={userMenu}
+          settingsOpenRef={settingsOpenRef}
+        />
         <Box
           component="main"
           sx={{
@@ -637,7 +639,26 @@ export function Layout() {
           <Outlet />
         </Box>
       </Box>
-      <SearchModal open={searchModalOpen} onClose={() => setSearchModalOpen(false)} />
+      <ModalContainer searchOpenRef={searchOpenRef} settingsOpenRef={settingsOpenRef} />
+    </>
+  );
+}
+
+function ModalContainer({ searchOpenRef, settingsOpenRef }) {
+  const location = useLocation();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [location.pathname]);
+
+  searchOpenRef.current = setSearchOpen;
+  settingsOpenRef.current = setSettingsOpen;
+
+  return (
+    <>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }
@@ -752,7 +773,7 @@ function MobileMenuItem({ item, indent = 0 }) {
   );
 }
 
-function DesktopNav({ leftMenu, rightMenu, userMenu }) {
+function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
   const auth = useAuth();
   const { settings, setSettings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
@@ -836,13 +857,13 @@ function DesktopNav({ leftMenu, rightMenu, userMenu }) {
                 nameStyle={nameStyle}
               />
             )}
-            <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}>
-              <Tooltip title="Settings">
-                <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }}>
-                  <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
-                </IconButton>
-              </Tooltip>
-            </StyledLink>
+            {/* <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}> */}
+            <Tooltip title="Settings">
+              <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }} onClick={() => settingsOpenRef.current(true)}>
+                <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
+              </IconButton>
+            </Tooltip>
+            {/* </StyledLink> */}
             <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
               <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
                 <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
@@ -1001,6 +1022,25 @@ function SearchModal({ open, onClose }) {
       disableRestoreFocus
     >
       <PageSearch isDirectSearch />
+    </Dialog>
+  );
+}
+
+function SettingsModal({ open, onClose }) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      disableScrollLock
+      maxWidth="md"
+      fullWidth
+      sx={{ background: "transparent" }}
+      PaperProps={{
+        sx: { borderRadius: "10px" },
+      }}
+      disableRestoreFocus
+    >
+      <PageAppSettings isModal />
     </Dialog>
   );
 }

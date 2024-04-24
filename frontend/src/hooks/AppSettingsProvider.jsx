@@ -13,6 +13,7 @@ export function AppSettingsProvider({ children }) {
           showCampaignIcons: true,
           useTextFcIcons: false,
           darkenTierColors: 45,
+          switchMapAndChallenge: false,
         },
         background: {
           dark: "", //Indicates default, solid color background. Otherwise this is the image name

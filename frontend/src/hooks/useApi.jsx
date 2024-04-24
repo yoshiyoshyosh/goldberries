@@ -425,7 +425,7 @@ export function usePostSuggestionVote(onSuccess) {
   return useMutation({
     mutationFn: (data) => postSuggestionVote(data),
     onSuccess: (response, data) => {
-      queryClient.invalidateQueries(["suggestion"]);
+      // queryClient.invalidateQueries(["suggestion"]);
       queryClient.invalidateQueries(["suggestions"]);
       if (onSuccess) onSuccess(response.data);
     },
@@ -573,7 +573,7 @@ export function useDeleteSuggestionVote(onSuccess) {
   return useMutation({
     mutationFn: (id) => deleteSuggestionVote(id),
     onSuccess: (response) => {
-      queryClient.invalidateQueries(["suggestion"]);
+      // queryClient.invalidateQueries(["suggestion"]);
       queryClient.invalidateQueries(["suggestions"]);
       if (onSuccess) onSuccess(response);
       else toast.success("Vote deleted");

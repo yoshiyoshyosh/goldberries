@@ -217,7 +217,7 @@ export function DifficultySelect({ defaultValue, ...props }) {
   );
 }
 
-export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
+export function DifficultyChip({ difficulty, prefix = "", useSubtierColors = false, sx = {}, ...props }) {
   const theme = useTheme();
   const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
   const colors = getDifficultyColors(difficulty?.id);
@@ -227,12 +227,21 @@ export function DifficultyChip({ difficulty, prefix = "", sx = {}, ...props }) {
       label={prefix + text}
       size="small"
       {...props}
-      sx={{ bgcolor: colors.group_color, color: colors.contrast_color, ...sx }}
+      sx={{
+        bgcolor: useSubtierColors ? colors.color : colors.group_color,
+        color: colors.contrast_color,
+        ...sx,
+      }}
     />
   );
 }
 
-export function DifficultySelectControlled({ difficultyId, setDifficultyId, isSuggestion, ...props }) {
+export function DifficultySelectControlled({
+  difficultyId,
+  setDifficultyId,
+  isSuggestion = false,
+  ...props
+}) {
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
@@ -251,7 +260,7 @@ export function DifficultySelectControlled({ difficultyId, setDifficultyId, isSu
       {...props}
       select
       value={difficultyId ?? ""}
-      onChange={(e) => setDifficultyId(e.target.value)}
+      onChange={(e) => setDifficultyId(e.target.value === "" ? null : e.target.value)}
       SelectProps={{
         ...props.SelectProps,
         MenuProps: { disableScrollLock: true },

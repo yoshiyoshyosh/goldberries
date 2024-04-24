@@ -22,10 +22,13 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Checkbox,
   Chip,
   Dialog,
   DialogContent,
   Divider,
+  FormControlLabel,
+  FormHelperText,
   Grid,
   IconButton,
   Pagination,
@@ -34,12 +37,23 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { getCampaignName, getChallengeName, getMapName } from "../util/data_util";
-import { DifficultyChip, FullChallengeSelect, PlayerChip } from "../components/GoldberriesComponents";
+import {
+  getCampaignName,
+  getChallengeName,
+  getMapName,
+  getSortedSuggestedDifficulties,
+} from "../util/data_util";
+import {
+  DifficultyChip,
+  DifficultySelectControlled,
+  FullChallengeSelect,
+  PlayerChip,
+} from "../components/GoldberriesComponents";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useTheme } from "@emotion/react";
 import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
 import {
+  faArrowRight,
   faArrowTurnUp,
   faBook,
   faCheck,
@@ -186,6 +200,10 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
   const borderWidth = suggestion.is_accepted === null ? "1px" : "3px";
   const unverified = suggestion.is_verified !== true;
 
+  const difficultiesSorted =
+    suggestion.challenge_id !== null ? getSortedSuggestedDifficulties(suggestion.challenge) : [];
+  const difficultiesCountTotal = difficultiesSorted ? difficultiesSorted.reduce((a, b) => a + b.value, 0) : 0;
+
   return (
     <BasicBox
       sx={{
@@ -202,45 +220,56 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
       onClick={viewSuggestion}
     >
       <Grid container sx={{ mb: 1 }}>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm>
           <SuggestionName suggestion={suggestion} expired={expired} />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={2}
-          textAlign={{
-            xs: "left",
-            sm: "right",
-          }}
-        >
-          <Stack direction="row" gap={1} alignItems="center" justifyContent="space-between">
-            <Box component="span" sx={{ flex: 1 }}>
-              {suggestion.challenge_id !== null && (
-                <DifficultyChip difficulty={suggestion.challenge.difficulty} />
-              )}
-            </Box>
-            {canDelete && (
-              <IconButton color="error" onClick={askDeleteSuggestion} size="small">
-                <FontAwesomeIcon icon={faTrash} />
-              </IconButton>
-            )}
-          </Stack>
-        </Grid>
+        {canDelete && (
+          <Grid item xs={12} sm="auto">
+            <IconButton color="error" onClick={askDeleteSuggestion} size="small">
+              <FontAwesomeIcon icon={faTrash} />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
 
-      <Typography variant="body2" gutterBottom>
-        <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
-      </Typography>
-      <Grid container sx={{ mt: 1 }}>
+      {suggestion.challenge !== null && suggestion.suggested_difficulty !== null && (
+        <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 1.5 }}>
+          <DifficultyMoveDisplay
+            from={suggestion.challenge.difficulty}
+            to={suggestion.suggested_difficulty}
+          />
+          {difficultiesSorted.length > 0 && (
+            <Stack direction="row" gap={1}>
+              ( {((difficultiesSorted[0].value / difficultiesCountTotal) * 100).toFixed(0)}%{" "}
+              {difficultiesSorted.map((d, index) => {
+                if (d.value !== difficultiesSorted[0].value) return null;
+                return (
+                  <>
+                    {index > 0 && " / "}
+                    <DifficultyChip difficulty={d.difficulty} useSubtierColors />
+                  </>
+                );
+              })}
+              )
+            </Stack>
+          )}
+        </Stack>
+      )}
+
+      <Grid container sx={{ mb: 1 }}>
         <Grid item xs={12} sm={8}>
-          <Typography variant="body2">
-            {suggestion.author_id === null ? (
-              "(deleted player)"
-            ) : (
-              <PlayerChip player={suggestion.author} size="small" />
-            )}
-          </Typography>
+          <Stack direction="row" gap={1} alignItems="center">
+            <Typography variant="body2">
+              {suggestion.author_id === null ? (
+                "(deleted player)"
+              ) : (
+                <PlayerChip player={suggestion.author} size="small" />
+              )}
+            </Typography>
+            <Typography variant="body2">
+              <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
+            </Typography>
+          </Stack>
         </Grid>
         <Grid
           item
@@ -259,15 +288,15 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
         </Grid>
       </Grid>
 
-      {suggestion.challenge_id !== null && (
+      {/* {suggestion.challenge_id !== null && (
         <>
           <Divider sx={{ my: 1 }} />
           <Stack direction="row" gap={2}>
             <span>Community Suggestions:</span>
-            <SuggestedDifficultyTierCounts challenge={suggestion.challenge} />
+            <SuggestedDifficultyTierCounts challenge={suggestion.challenge} useSubtierColors />
           </Stack>
         </>
-      )}
+      )} */}
 
       <Divider sx={{ my: 1 }} />
       {suggestion.votes.length === 0 ? (
@@ -286,6 +315,16 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
         </Grid>
       )}
     </BasicBox>
+  );
+}
+
+function DifficultyMoveDisplay({ from, to, ...props }) {
+  return (
+    <Stack direction="row" gap={1} alignItems="center" {...props}>
+      <DifficultyChip difficulty={from} useSubtierColors />
+      <FontAwesomeIcon icon={faArrowRight} />
+      <DifficultyChip difficulty={to} useSubtierColors />
+    </Stack>
   );
 }
 
@@ -391,6 +430,7 @@ function VoteDisplay({ type, count, hasSubmission }) {
           borderRadius: "5px",
           px: 1,
           py: 0.5,
+          opacity: count === 0 ? 0.3 : 1,
         }}
       >
         <Stack direction="row" gap={1} alignItems="center">
@@ -428,19 +468,19 @@ function ViewSuggestionModal({ id }) {
   const auth = useAuth();
   const [userText, setUserText] = useState("");
 
-  const { mutate: deleteVote } = useDeleteSuggestionVote(() => {
-    query.refetch();
+  const query = useGetSuggestion(id);
+  const suggestion = getQueryData(query);
+
+  const { mutateAsync: deleteVote } = useDeleteSuggestionVote(() => {
+    // query.refetch();
   });
-  const { mutate: postVote } = usePostSuggestionVote(() => {
+  const { mutateAsync: postVote } = usePostSuggestionVote(() => {
     query.refetch();
   });
   const { mutate: postSuggestion } = usePostSuggestion(() => {
     query.refetch();
     toast.success("Suggestion updated");
   });
-
-  const query = useGetSuggestion(id);
-  const suggestion = getQueryData(query);
 
   useEffect(() => {
     if (query.isSuccess) {
@@ -474,17 +514,28 @@ function ViewSuggestionModal({ id }) {
     : null;
 
   const vote = (vote) => {
-    if (hasVoted && userVote === vote) {
-      const vote = suggestion.votes.find((vote) => vote.player_id === auth.user.player.id);
-      deleteVote(vote.id);
+    if (hasVoted) {
+      const voteObj = suggestion.votes.find((vote) => vote.player_id === auth.user.player.id);
+      deleteVote(voteObj.id).then(() => {
+        if (vote !== userVote) {
+          postVote({
+            suggestion_id: suggestion.id,
+            vote: vote,
+            comment: userText === "" ? null : userText,
+          });
+        } else {
+          //Refetch manually
+          query.refetch();
+        }
+      });
       return;
+    } else {
+      postVote({
+        suggestion_id: suggestion.id,
+        vote: vote,
+        comment: userText === "" ? null : userText,
+      });
     }
-
-    postVote({
-      suggestion_id: suggestion.id,
-      vote: vote,
-      comment: userText === "" ? null : userText,
-    });
   };
 
   const isUnverified = suggestion.is_verified !== true;
@@ -507,7 +558,7 @@ function ViewSuggestionModal({ id }) {
 
   return (
     <>
-      <Grid container rowSpacing={2} columnSpacing={1}>
+      <Grid container rowSpacing={1.5} columnSpacing={1}>
         <Grid item xs={12} sm>
           <SuggestionName suggestion={suggestion} expired={isExpired} />
         </Grid>
@@ -527,26 +578,34 @@ function ViewSuggestionModal({ id }) {
             </ButtonGroup>
           </Grid>
         )}
+        {suggestion.challenge !== null && suggestion.suggested_difficulty !== null && (
+          <Grid item xs={12}>
+            <DifficultyMoveDisplay
+              from={suggestion.challenge.difficulty}
+              to={suggestion.suggested_difficulty}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
-          <Typography variant="body2" gutterBottom>
-            {suggestion.comment ?? "-"}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body2">
-            {suggestion.author_id === null ? (
-              "(deleted player)"
-            ) : (
-              <PlayerChip player={suggestion.author} size="small" />
-            )}
-          </Typography>
+          <Stack direction="row" gap={1} alignItems="center">
+            <Typography variant="body2">
+              {suggestion.author_id === null ? (
+                "(deleted player)"
+              ) : (
+                <PlayerChip player={suggestion.author} size="small" />
+              )}
+            </Typography>
+            <Typography variant="body2">
+              <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
+            </Typography>
+          </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack direction="column" gap={0.25}>
-            <ButtonGroup variant="contained" fullWidth>
+            <Stack direction="row" gap={0.5}>
               <Button
+                variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "+" ? "outlined" : "contained"}
                 color="success"
-                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "+")}
                 fullWidth
                 onClick={() => vote("+")}
               >
@@ -556,8 +615,8 @@ function ViewSuggestionModal({ id }) {
                 </Box>
               </Button>
               <Button
+                variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "-" ? "outlined" : "contained"}
                 color="error"
-                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "-")}
                 fullWidth
                 onClick={() => vote("-")}
               >
@@ -567,7 +626,7 @@ function ViewSuggestionModal({ id }) {
                 </Box>
               </Button>
               <Button
-                disabled={!auth.hasPlayerClaimed || (hasVoted && userVote !== "i")}
+                variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "i" ? "outlined" : "contained"}
                 fullWidth
                 onClick={() => vote("i")}
               >
@@ -576,7 +635,7 @@ function ViewSuggestionModal({ id }) {
                   Indifferent
                 </Box>
               </Button>
-            </ButtonGroup>
+            </Stack>
             {!auth.hasPlayerClaimed && (
               <Typography variant="body2" gutterBottom>
                 Claim a player to be able to vote on suggestions!
@@ -596,6 +655,10 @@ function ViewSuggestionModal({ id }) {
               value={userText}
               onChange={(e) => setUserText(e.target.value)}
             />
+            <Typography variant="body2" color={(t) => t.palette.text.secondary} sx={{ mt: 0.25 }}>
+              <FontAwesomeIcon icon={faInfoCircle} /> To change your comment after you voted, remove your vote
+              and vote again.
+            </Typography>
           </Grid>
         )}
 
@@ -624,7 +687,11 @@ function ViewSuggestionModal({ id }) {
               <Typography variant="body1" gutterBottom>
                 Totals
               </Typography>
-              <SuggestedDifficultyTierCounts challenge={suggestion.challenge} direction="column" />
+              <SuggestedDifficultyTierCounts
+                challenge={suggestion.challenge}
+                direction="column"
+                useSubtierColors
+              />
             </Grid>
           </>
         )}
@@ -707,6 +774,7 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
 
 //#region == Create Suggestion Modal ==
 function CreateSuggestionModal({ onSuccess }) {
+  const theme = useTheme();
   const { mutate: postSuggestion } = usePostSuggestion(() => {
     toast.success("Suggestion created");
     if (onSuccess) onSuccess();
@@ -715,6 +783,8 @@ function CreateSuggestionModal({ onSuccess }) {
   const form = useForm({
     defaultValues: {
       challenge: null,
+      suggested_difficulty_id: null,
+      is_general_challenge_suggestion: false,
       comment: "",
     },
   });
@@ -722,12 +792,19 @@ function CreateSuggestionModal({ onSuccess }) {
     postSuggestion({
       ...data,
       challenge: undefined,
+      is_general_challenge_suggestion: undefined,
       challenge_id: data.challenge?.id,
     });
   });
 
   const selectedChallenge = form.watch("challenge");
   const comment = form.watch("comment");
+  const isGeneral = form.watch("is_general_challenge_suggestion");
+  const selectedDifficulty = form.watch("suggested_difficulty_id");
+  const isDisabled =
+    (selectedChallenge !== null && selectedDifficulty === null && !isGeneral) ||
+    (selectedDifficulty !== null && isGeneral) ||
+    (comment.length < 10 && (isGeneral || selectedChallenge === null));
 
   const query = useGetChallenge(selectedChallenge?.id);
   const fetchedChallenge = getQueryData(query);
@@ -758,6 +835,56 @@ function CreateSuggestionModal({ onSuccess }) {
           )}
         />
       </Grid>
+      {selectedChallenge !== null && (
+        <>
+          <Grid item xs={12}>
+            <Divider>
+              <Chip label="Suggestion Type" size="small" />
+            </Divider>
+          </Grid>
+          <Grid item xs={12}>
+            <Controller
+              name="suggested_difficulty_id"
+              control={form.control}
+              render={({ field }) => (
+                <DifficultySelectControlled
+                  label="Suggested Difficulty"
+                  fullWidth
+                  isSuggestion
+                  difficultyId={field.value}
+                  setDifficultyId={(d) => {
+                    field.onChange(d);
+                  }}
+                  sx={{ mt: 1 }}
+                />
+              )}
+            />
+            {isGeneral && selectedDifficulty !== null && (
+              <FormHelperText sx={{ color: theme.palette.error.main }}>
+                Cannot select a difficulty when making a general challenge suggestion.
+              </FormHelperText>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <Controller
+              name="is_general_challenge_suggestion"
+              control={form.control}
+              render={({ field }) => (
+                <FormControlLabel
+                  label="Not a placement suggestion"
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  control={<Checkbox />}
+                  sx={{ mt: 0 }}
+                />
+              )}
+            />
+            <FormHelperText>
+              Checking this means not suggesting a difficulty, e.g. when split a C/FC challenge into C and FC.
+            </FormHelperText>
+          </Grid>
+        </>
+      )}
       {selectedChallenge === null && (
         <Grid item xs={12}>
           <Typography variant="body2">Not selecting a challenge will create a general suggestion.</Typography>
@@ -809,9 +936,14 @@ function CreateSuggestionModal({ onSuccess }) {
           variant="outlined"
           {...form.register("comment")}
         />
+        {(isGeneral || selectedChallenge === null) && comment.length < 10 && (
+          <FormHelperText sx={{ color: theme.palette.error.main }}>
+            Comment is required for general suggestions.
+          </FormHelperText>
+        )}
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={onSubmit} disabled={comment.length < 5}>
+        <Button variant="contained" color="primary" onClick={onSubmit} disabled={isDisabled}>
           Create
         </Button>
       </Grid>

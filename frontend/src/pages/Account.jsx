@@ -644,7 +644,7 @@ export function UserAccountRenameForm() {
   const formatTime = (time) => {
     const hours = Math.floor(time / 60 / 60 / 1000);
     const minutes = Math.floor((time - hours * 60 * 60 * 1000) / 60 / 1000);
-    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+    return `${hours}h ${minutes}m`;
   };
 
   return (
@@ -667,7 +667,7 @@ export function UserAccountRenameForm() {
         </Typography>
       ) : (
         <Typography variant="body2" color="error" gutterBottom>
-          You can rename your player in {formatTime(timeUntilRename)}h.
+          You can rename your player in {formatTime(timeUntilRename)}.
         </Typography>
       )}
 
