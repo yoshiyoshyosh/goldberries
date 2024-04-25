@@ -151,7 +151,9 @@ export function UserAccountLoginMethodsForm() {
     <form>
       <FormHelperText>Note: One of the login methods must always be active!</FormHelperText>
 
-      <Typography variant="h6">Email</Typography>
+      <Typography variant="h6" gutterBottom>
+        Email
+      </Typography>
       <Grid container spacing={2} sx={{ mt: 0 }}>
         <Grid item xs={12} sm={hasEmail || addEmail ? 9 : 3} style={{ paddingTop: 2 }}>
           <Stack direction="column" gap={2}>
