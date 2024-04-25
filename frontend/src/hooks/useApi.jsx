@@ -296,6 +296,9 @@ export function usePostChallenge(onSuccess) {
     mutationFn: (challenge) => postChallenge(challenge),
     onSuccess: (response, challenge) => {
       queryClient.invalidateQueries(["challenge", response.data.id]);
+      queryClient.invalidateQueries(["submission_queue"]);
+      queryClient.invalidateQueries(["manage_challenges"]);
+      queryClient.invalidateQueries(["top_golden_list"]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },

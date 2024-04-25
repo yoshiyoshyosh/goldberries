@@ -22,7 +22,7 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 export function PageAppSettings({ isModal = false }) {
   const { tab } = useParams();
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(tab ?? "visual");
+  const [selectedTab, setSelectedTab] = useState(isModal ? "visual" : tab ?? "visual");
 
   const setTab = (tab) => {
     setSelectedTab(tab);

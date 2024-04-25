@@ -40,6 +40,7 @@ import { FormMapWrapper } from "../../components/forms/Map";
 import { useDeleteCampaign, useDeleteChallenge, useDeleteMap } from "../../hooks/useApi";
 import { FormCampaignWrapper } from "../../components/forms/Campaign";
 import { FormCampaignMassAddMaps } from "../../components/forms/CampaignMassAddMaps";
+import { FormCreateFullChallengeWrapper } from "../../components/forms/CreateFullChallenge";
 
 export function PageManageChallenges() {
   const [page, setPage] = useLocalStorage("manage_challenges_page", 1);
@@ -452,11 +453,23 @@ export function CreateAnyButton({
   defaultCampaignUrl,
   defaultMapName,
   defaultDifficultyId,
+  onCreateChallenge,
 }) {
   const createCampaignModal = useModal();
   const campaignMassAddMapsModal = useModal();
   const createMapModal = useModal();
   const createChallengeModal = useModal();
+
+  const createFullChallengeModal = useModal();
+
+  const onCreatedChallenge = (data) => {
+    createChallengeModal.close();
+    if (onCreateChallenge) onCreateChallenge(data);
+  };
+  const onCreatedFullChallenge = (data) => {
+    createFullChallengeModal.close();
+    if (onCreateChallenge) onCreateChallenge(data);
+  };
 
   return (
     <>
@@ -478,6 +491,11 @@ export function CreateAnyButton({
         <MenuItem disableRipple onClick={createChallengeModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
           New Challenge
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem disableRipple onClick={createFullChallengeModal.open}>
+          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
+          Create Full Challenge
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem disableRipple onClick={campaignMassAddMapsModal.open}>
@@ -506,7 +524,16 @@ export function CreateAnyButton({
       <CustomModal modalHook={createChallengeModal} options={{ hideFooter: true }}>
         <FormChallengeWrapper
           id={null}
-          onSave={createChallengeModal.close}
+          onSave={onCreatedChallenge}
+          defaultDifficultyId={defaultDifficultyId}
+        />
+      </CustomModal>
+
+      <CustomModal modalHook={createFullChallengeModal} options={{ hideFooter: true }}>
+        <FormCreateFullChallengeWrapper
+          onSuccess={onCreatedFullChallenge}
+          defaultName={defaultMapName}
+          defaultUrl={defaultCampaignUrl}
           defaultDifficultyId={defaultDifficultyId}
         />
       </CustomModal>

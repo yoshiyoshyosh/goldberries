@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner, ProofEmbed } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, ProofEmbed, StyledLink } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -94,6 +94,11 @@ export function FormSubmission({ submission, onSave, ...props }) {
     setPlayer(submission.player ?? null);
   }, [submission]);
 
+  const onCreateChallenge = (challenge) => {
+    console.log("Submission Form: Challenge created!", challenge);
+    setChallenge(challenge);
+  };
+
   const isVerifier = auth.hasVerifierPriv;
   const submitDisabled = player === null || (challenge === null && !submission.new_challenge_id);
 
@@ -113,7 +118,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
   return (
     <form {...props}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Typography variant="h6">Submission ({submission.id})</Typography>
+        <Typography variant="h6">
+          Submission (<StyledLink to={"/submission/" + submission.id}>{submission.id}</StyledLink>)
+        </Typography>
         <VerificationStatusChip isVerified={submission.is_verified} prefix="Status: " />
       </Stack>
 
@@ -135,6 +142,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
                   defaultCampaignUrl={submission.new_challenge?.url}
                   defaultMapName={submission.new_challenge?.name}
                   defaultDifficultyId={submission.suggested_difficulty_id ?? undefined}
+                  onCreateChallenge={onCreateChallenge}
                 />
               </Stack>
             ) : null}

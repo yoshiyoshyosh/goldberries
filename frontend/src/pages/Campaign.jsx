@@ -695,7 +695,7 @@ export function PageCampaignTopGoldenList({ id }) {
           Top Golden List: <StyledLink to={`/campaign/${id}`}>{response.campaign.name}</StyledLink>
         </Typography>
       </BasicBox>
-      <TopGoldenList type="campaign" id={id} />
+      <TopGoldenList type="campaign" id={id} arbitrary archived />
     </Box>
   );
 }
