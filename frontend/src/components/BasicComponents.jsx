@@ -6,7 +6,21 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, Container, Divider, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -245,8 +259,57 @@ export function StyledLink({ to, children, underline = false, style, ...props })
   );
 }
 
-export function StyledExternalLink({ href, children, underline = true, target = "_blank", style, ...props }) {
+const SafeExternalDomains = [
+  "https://www.youtube.com",
+  "https://youtu.be",
+  "https://discord.com",
+  "https://discord.gg",
+  "https://twitch.tv",
+  "https://bilibili.com",
+  "https://github.com",
+  "https://archive.org",
+  "https://gamebanana.com",
+  "https://docs.google.com",
+  "https://www.google.com",
+];
+export function StyledExternalLink({
+  href,
+  children,
+  underline = true,
+  target = "_blank",
+  style,
+  isSafe = false,
+  ...props
+}) {
   const theme = useTheme();
+
+  //url has to start with one of the safe domains
+  const isSafeLink = SafeExternalDomains.some((domain) => href.startsWith(domain)) || href.startsWith("#");
+  const [openModal, setOpenModal] = useState(false);
+
+  if (!isSafeLink && !isSafe) {
+    const onCloseModal = () => {
+      setOpenModal(false);
+    };
+    return (
+      <>
+        <a
+          href={href}
+          style={{ color: theme.palette.links.main, ...style }}
+          onClick={(e) => {
+            e.preventDefault();
+            setOpenModal(true);
+          }}
+          {...props}
+          className="styled-link"
+        >
+          {children}
+        </a>
+        <OpenExternalLinkModal href={href} isOpen={openModal} onClose={onCloseModal} />
+      </>
+    );
+  }
+
   return (
     <a
       href={href}
@@ -258,5 +321,21 @@ export function StyledExternalLink({ href, children, underline = true, target = 
     >
       {children}
     </a>
+  );
+}
+function OpenExternalLinkModal({ href, isOpen, onClose }) {
+  return (
+    <Dialog open={isOpen} onClose={onClose} disableScrollLock>
+      <DialogContent dividers>
+        <DialogContentText>
+          <Stack direction="column" gap={1} alignItems="center">
+            <span>You are about to open an external link. Click this to continue:</span>
+            <StyledExternalLink href={href} isSafe>
+              {href}
+            </StyledExternalLink>
+          </Stack>
+        </DialogContentText>
+      </DialogContent>
+    </Dialog>
   );
 }

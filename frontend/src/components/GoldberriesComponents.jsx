@@ -44,6 +44,7 @@ import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { getQueryData, useGetChallengesInMap } from "../hooks/useApi";
+import { StyledExternalLink } from "./BasicComponents";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const query = useQuery({
@@ -541,9 +542,7 @@ export function LinkIcon({ url }) {
 
   return (
     <Tooltip title={url}>
-      <a href={url} target="_blank" rel="noopener">
-        {linkIconElement}
-      </a>
+      <StyledExternalLink href={url}>{linkIconElement}</StyledExternalLink>
     </Tooltip>
   );
 }

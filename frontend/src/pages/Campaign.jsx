@@ -142,7 +142,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
               },
             }}
           >
-            <StyledExternalLink to={campaign.url} target="_blank">
+            <StyledExternalLink href={campaign.url} target="_blank">
               <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
             </StyledExternalLink>
           </ListItemSecondaryAction>
