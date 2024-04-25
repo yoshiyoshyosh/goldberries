@@ -200,6 +200,14 @@ function TopGoldenListGroup({
 
   if (!render) return null;
 
+  const tierMap = tier.map((subtier) => subtier.id);
+  const isEmptyTier =
+    challenges.filter((challenge) => tierMap.includes(challenge.difficulty.id)).length === 0;
+
+  if (settings.visual.topGoldenList.hideEmptyTiers && isEmptyTier) {
+    return null;
+  }
+
   return (
     <>
       <Stack direction="column" gap={1}>
@@ -260,6 +268,15 @@ function TopGoldenListGroup({
             </TableHead>
             {collapsed || !render ? null : (
               <TableBody>
+                {isEmptyTier && (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center" style={{ padding: "2px 8px" }}>
+                      <Typography variant="body2" color="textSecondary">
+                        -
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
                 {tier.map((subtier) => {
                   const tierChallenges = challenges.filter(
                     (challenge) =>

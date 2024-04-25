@@ -14,6 +14,7 @@ export function AppSettingsProvider({ children }) {
           useTextFcIcons: false,
           darkenTierColors: 45,
           switchMapAndChallenge: false,
+          hideEmptyTiers: false,
         },
         background: {
           dark: "", //Indicates default, solid color background. Otherwise this is the image name

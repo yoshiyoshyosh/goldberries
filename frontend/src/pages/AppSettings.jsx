@@ -18,11 +18,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageAppSettings({ isModal = false }) {
-  const { tab } = useParams();
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(isModal ? "visual" : tab ?? "visual");
+  const [selectedTab, setSelectedTab] = useLocalStorage("settings_tab", "visual");
 
   const setTab = (tab) => {
     setSelectedTab(tab);
@@ -413,6 +413,24 @@ export function AppSettingsVisualForm() {
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
               label="Switch Map and Challenge"
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Typography variant="h5">Personal Top Golden Lists</Typography>
+      <SettingsEntry>
+        <Controller
+          name="topGoldenList.hideEmptyTiers"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label="Hide Empty Tiers"
             />
           )}
         />
