@@ -219,7 +219,7 @@ CREATE TABLE suggestion
  CONSTRAINT suggestion_author_id_fkey FOREIGN KEY ( author_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT suggestion_challenge_id_fkey FOREIGN KEY ( challenge_id ) REFERENCES challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT suggestion_suggested_difficulty_id_fkey FOREIGN KEY ( suggested_difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
- CONSTRAINT check_suggestion_suggested_difficulty_id CHECK ( (challenge_id IS NULL) = (suggested_difficulty_id IS NULL) )
+ CONSTRAINT check_suggestion_suggested_difficulty_id CHECK ( (challenge_id IS NOT NULL) OR (suggested_difficulty_id IS NULL) )
 );
 
 -- ====== suggestion_vote ======

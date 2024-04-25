@@ -80,6 +80,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
       }
+      if (isset($data['suggested_difficulty_id'])) {
+        $difficulty = Difficulty::get_by_id($DB, $data['suggested_difficulty_id']);
+        if ($difficulty === false) {
+          die_json(400, "Difficulty with id {$data['suggested_difficulty_id']} does not exist");
+        }
+        if ($difficulty->id === 13) {
+          die_json(400, "Tier 3 (guard) difficulty is not allowed for suggestions");
+        }
+      }
+    } else {
+      if (isset($data['suggested_difficulty_id'])) {
+        die_json(400, "General suggestions must not have a difficulty suggestion set");
+      }
+    }
+
+    if (isset($data['comment']) && strlen($data['comment']) > 1000) {
+      die_json(400, "Comment cannot be longer than 1000 characters");
     }
     $suggestion->author_id = $account->player_id;
     $suggestion->date_created = new JsonDateTime();
@@ -89,6 +106,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($suggestion->insert($DB)) {
       $suggestion->expand_foreign_keys($DB, 5);
+
+      //Create a vote for the suggestion
+      $vote = new SuggestionVote();
+      $vote->suggestion_id = $suggestion->id;
+      $vote->player_id = $account->player_id;
+      $vote->vote = "+";
+      if (!$vote->insert($DB)) {
+        log_error("Created suggestion but failed to create own vote for suggestion {$suggestion->id}", "Suggestion");
+      }
+
       api_write($suggestion);
     } else {
       die_json(500, "Failed to create suggestion");
