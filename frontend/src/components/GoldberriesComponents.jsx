@@ -548,7 +548,14 @@ export function LinkIcon({ url }) {
   );
 }
 
-export function ChallengeFcIcon({ challenge, height = "1em", showClear = false, style = {}, ...props }) {
+export function ChallengeFcIcon({
+  challenge,
+  height = "1em",
+  showClear = false,
+  isTopGoldenList = false,
+  style = {},
+  ...props
+}) {
   const { settings } = useAppSettings();
   const icon = challenge.requires_fc
     ? "fullclear.png"
@@ -561,14 +568,16 @@ export function ChallengeFcIcon({ challenge, height = "1em", showClear = false, 
   if (
     !challenge.requires_fc &&
     !challenge.has_fc &&
+    isTopGoldenList &&
     !settings.visual.topGoldenList.useTextFcIcons &&
     !showClear
-  )
+  ) {
     return null;
+  }
 
   return (
     <Tooltip title={alt}>
-      {settings.visual.topGoldenList.useTextFcIcons ? (
+      {isTopGoldenList && settings.visual.topGoldenList.useTextFcIcons ? (
         <span style={{ whiteSpace: "nowrap" }}>{shortAlt}</span>
       ) : (
         <img
