@@ -130,6 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $challenge->date_created = new JsonDateTime();
     if ($challenge->insert($DB)) {
       log_info("'{$account->player->name}' created {$challenge}", "Challenge");
+      $challenge->expand_foreign_keys($DB, 5);
       api_write($challenge);
     } else {
       die_json(500, "Failed to create challenge");
