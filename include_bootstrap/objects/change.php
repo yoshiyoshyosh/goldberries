@@ -56,6 +56,8 @@ class Change extends DbObject
     if ($depth <= 1)
       return;
 
+    $isFromSqlResult = is_array($DB);
+
     if ($expand_structure) {
       if ($this->campaign_id !== null) {
         $this->campaign = Campaign::get_by_id($DB, $this->campaign_id);
@@ -66,8 +68,13 @@ class Change extends DbObject
         $this->map->expand_foreign_keys($DB, $depth - 1, $expand_structure);
       }
       if ($this->challenge_id !== null) {
-        $this->challenge = Challenge::get_by_id($DB, $this->challenge_id);
-        $this->challenge->expand_foreign_keys($DB, $depth - 1, $expand_structure);
+        if ($isFromSqlResult) {
+          $this->challenge = new Challenge();
+          $this->challenge->apply_db_data($DB, "challenge_");
+          $this->challenge->expand_foreign_keys($DB, $depth - 1);
+        } else {
+          $this->challenge = Challenge::get_by_id($DB, $this->challenge_id, $depth - 1);
+        }
       }
       if ($this->player_id !== null) {
         $this->player = Player::get_by_id($DB, $this->player_id, 2, false);
@@ -76,8 +83,13 @@ class Change extends DbObject
     }
 
     if ($this->author_id !== null) {
-      $this->author = Player::get_by_id($DB, $this->author_id, 2, false);
-      $this->author->expand_foreign_keys($DB, $depth - 1, false);
+      if ($isFromSqlResult) {
+        $this->author = new Player();
+        $this->author->apply_db_data($DB, "author_");
+      } else {
+        $this->author = Player::get_by_id($DB, $this->author_id, 2, false);
+        $this->author->expand_foreign_keys($DB, $depth - 1, false);
+      }
     }
   }
 
