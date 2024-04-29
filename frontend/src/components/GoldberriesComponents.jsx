@@ -18,8 +18,8 @@ import {
   getObjectiveName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
-import { Autocomplete, Avatar, Chip, Menu, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
-import { getDifficultyColors } from "../util/constants";
+import { Autocomplete, Avatar, Chip, Grid, Menu, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
+import { getDifficultyColors, getDifficultyColorsSettings } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -218,14 +218,22 @@ export function DifficultySelect({ defaultValue, ...props }) {
   );
 }
 
-export function DifficultyChip({ difficulty, prefix = "", useSubtierColors = false, sx = {}, ...props }) {
-  const theme = useTheme();
+export function DifficultyChip({
+  difficulty,
+  prefix = "",
+  suffix = "",
+  useSubtierColors = false,
+  useDarkening = false,
+  sx = {},
+  ...props
+}) {
+  const { settings } = useAppSettings();
   const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
-  const colors = getDifficultyColors(difficulty?.id);
+  const colors = getDifficultyColorsSettings(settings, difficulty?.id, !useDarkening);
   if (difficulty === null) return null;
   return (
     <Chip
-      label={prefix + text}
+      label={prefix + text + suffix}
       size="small"
       {...props}
       sx={{
@@ -234,6 +242,53 @@ export function DifficultyChip({ difficulty, prefix = "", useSubtierColors = fal
         ...sx,
       }}
     />
+  );
+}
+export function DifficultyValueChip({
+  difficulty,
+  value,
+  prefix = "",
+  suffix = "",
+  useSubtierColors = false,
+  useDarkening = false,
+  sx = {},
+  ...props
+}) {
+  const { settings } = useAppSettings();
+  const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
+  const colors = getDifficultyColorsSettings(settings, difficulty?.id, !useDarkening);
+  if (difficulty === null) return null;
+  return (
+    <Grid container columnSpacing={0.75}>
+      <Grid item xs>
+        <Chip
+          label={prefix + text + suffix}
+          size="small"
+          {...props}
+          sx={{
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+            bgcolor: useSubtierColors ? colors.color : colors.group_color,
+            color: colors.contrast_color,
+            ...sx,
+          }}
+        />
+      </Grid>
+      <Grid item xs="auto" minWidth="50px">
+        <Chip
+          label={value}
+          size="small"
+          {...props}
+          sx={{
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+            bgcolor: useSubtierColors ? colors.color : colors.group_color,
+            color: colors.contrast_color,
+            ...sx,
+          }}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
@@ -528,6 +583,16 @@ const LINK_ICONS = {
 };
 export function LinkIcon({ url }) {
   const theme = useTheme();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const openTooltip = () => {
+    console.log("Opening tooltip");
+    setTooltipOpen(true);
+  };
+  const closeTooltip = () => {
+    console.log("Closing tooltip");
+    setTooltipOpen(false);
+  };
+
   let linkIconElement = null;
   for (const [key, value] of Object.entries(LINK_ICONS)) {
     if (value.identifier.some((i) => url.includes(i))) {
@@ -541,8 +606,10 @@ export function LinkIcon({ url }) {
   }
 
   return (
-    <Tooltip title={url}>
-      <StyledExternalLink href={url}>{linkIconElement}</StyledExternalLink>
+    <Tooltip title={url} open={tooltipOpen} onOpen={openTooltip} onClose={closeTooltip}>
+      <StyledExternalLink href={url} onMouseEnter={openTooltip} onMouseLeave={closeTooltip}>
+        {linkIconElement}
+      </StyledExternalLink>
     </Tooltip>
   );
 }

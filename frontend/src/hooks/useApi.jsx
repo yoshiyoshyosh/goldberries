@@ -48,6 +48,7 @@ import {
   fetchSuggestion,
   fetchGoldenList,
   fetchAllChallengesInMap,
+  fetchStats,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -258,6 +259,14 @@ export function useGetSuggestion(id) {
     queryFn: () => fetchSuggestion(id),
     onError: errorToast,
     refetchInterval: 5 * 1000,
+  });
+}
+
+export function useGetStats(type, month = null) {
+  return useQuery({
+    queryKey: ["stats", type, month],
+    queryFn: () => fetchStats(type, month),
+    onError: errorToast,
   });
 }
 //#endregion

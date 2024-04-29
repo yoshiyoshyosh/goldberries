@@ -264,7 +264,7 @@ const SafeExternalDomains = [
   "https://youtu.be",
   "https://discord.com",
   "https://discord.gg",
-  "https://twitch.tv",
+  "https://www.twitch.tv",
   "https://bilibili.com",
   "https://github.com",
   "https://archive.org",
@@ -330,7 +330,7 @@ function OpenExternalLinkModal({ href, isOpen, onClose }) {
         <DialogContentText>
           <Stack direction="column" gap={1} alignItems="center">
             <span>You are about to open an external link. Click this to continue:</span>
-            <StyledExternalLink href={href} isSafe>
+            <StyledExternalLink href={href} isSafe style={{ wordBreak: "break-all" }}>
               {href}
             </StyledExternalLink>
           </Stack>

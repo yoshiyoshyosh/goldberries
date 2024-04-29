@@ -149,14 +149,14 @@ function darkenDiffColor(color, amount) {
     contrast_color: lightTheme.palette.getContrastText(darken(color.color, amount)),
   };
 }
-export function getDifficultyColorsSettings(settings, id) {
+export function getDifficultyColorsSettings(settings, id, ignoreDarkening = false) {
   let entry = null;
   if (id === null || id === undefined) entry = DIFFICULTY_COLORS[19];
   else entry = DIFFICULTY_COLORS[id];
 
-  if (settings.visual.darkmode) {
+  if (settings.visual.darkmode && !ignoreDarkening) {
     return darkenDiffColor(entry, settings.visual.topGoldenList.darkenTierColors / 100);
   } else {
-    return entry;
+    return darkenDiffColor(entry, 0);
   }
 }

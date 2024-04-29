@@ -272,6 +272,15 @@ export function fetchSuggestion(id) {
     },
   });
 }
+
+export function fetchStats(type, month = null) {
+  const params = { type: type };
+  if (month) params.month = month;
+
+  return axios.get("/stats.php", {
+    params: params,
+  });
+}
 //#endregion
 
 //#region == POST ==

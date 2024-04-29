@@ -4,6 +4,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledExternalLink,
+  getErrorFromMultiple,
 } from "../components/BasicComponents";
 import {
   Container,
@@ -19,16 +20,17 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { getQueryData, useGetVerifierList } from "../hooks/useApi";
-import { PlayerChip } from "../components/GoldberriesComponents";
+import { getQueryData, useGetAllDifficulties, useGetStats, useGetVerifierList } from "../hooks/useApi";
+import { DifficultyChip, DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
-import { useTheme } from "@emotion/react";
+import { Global, useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
+import { DIFFICULTY_COLORS } from "../util/constants";
 
 export function PageIndex() {
   return (
@@ -44,17 +46,17 @@ export function PageIndex() {
         <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
             <BorderedBox>
-              <PublicTestNotice />
-            </BorderedBox>
-            <BorderedBox>
-              <IssueTrackerNotice />
-            </BorderedBox>
-            <BorderedBox>
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
-              <RulesComponent />
+              <GlobalStatsComponent />
             </BorderedBox>
+            <BorderedBox>
+              <PublicTestNotice />
+            </BorderedBox>
+            {/* <BorderedBox>
+              <RulesComponent />
+            </BorderedBox> */}
           </Stack>
         </Grid>
         <Grid item xs={12} lg={6}>
@@ -66,8 +68,11 @@ export function PageIndex() {
               <UsefulLinksComponent />
             </BorderedBox>
             <BorderedBox>
-              <FAQComponent />
+              <IssueTrackerNotice />
             </BorderedBox>
+            {/* <BorderedBox>
+              <FAQComponent />
+            </BorderedBox> */}
           </Stack>
         </Grid>
       </Grid>
@@ -284,8 +289,95 @@ function IssueTrackerNotice() {
         Known Issues (that aren't tracked on GitHub):
       </Typography>
       <ul>
-        <li>The navigation kinda sucks, needs to be revamped entirely</li>
+        <li>The navigation kinda sucks on mobile, needs to be revamped entirely</li>
       </ul>
     </>
+  );
+}
+
+export function GlobalStatsComponent() {
+  const query = useGetStats("all");
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const { overall, difficulty } = getQueryData(query);
+  const { campaigns, maps, challenges, submissions, players, real_campaigns } = overall;
+
+  //difficulty is an object with key => value being id => submission count
+
+  return (
+    <>
+      <Typography variant="h6">Global Stats</Typography>
+      <TableContainer component={Paper} sx={{ mb: 1 }}>
+        <Table size="small">
+          <TableBody>
+            <TableRow>
+              <TableCell align="center">Total Campaigns</TableCell>
+              <TableCell align="center">
+                <b>{campaigns}</b> with <b>{campaigns - real_campaigns}</b> stand-alone maps
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">Total Maps</TableCell>
+              <TableCell align="center">
+                <b>{maps}</b> with <b>{challenges}</b> Challenges
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">Total Submissions</TableCell>
+              <TableCell align="center">
+                <b>{submissions}</b> from <b>{players}</b> Players
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Typography variant="h6">Difficulty Stats</Typography>
+      <Typography variant="body2" gutterBottom>
+        Number of submissions in each tier
+      </Typography>
+      <TiersCountDisplay stats={difficulty} />
+    </>
+  );
+}
+
+export function TiersCountDisplay({ stats, hideEmpty = false, equalWidths = 0 }) {
+  const query = useGetAllDifficulties();
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const difficulties = getQueryData(query);
+
+  return (
+    <Grid container rowSpacing={1} columnSpacing={2}>
+      {difficulties.map((diff) => {
+        if (diff.id === 13) return null; //Skip "tier 3 (guard)"
+        const count = stats[diff.id] || 0;
+        const isEmpty = count === 0;
+        let width = 12;
+        if (diff.id === 18 || diff.id === 19) width = 6;
+        else if (diff.sort > 6) width = 4;
+        else if (diff.sort > 2) width = 3;
+        return (
+          <Grid item key={diff.id} xs={12} md={width}>
+            <DifficultyValueChip
+              difficulty={diff}
+              value={count}
+              useSubtierColors
+              useDarkening
+              sx={{ width: 1, fontSize: "1em", opacity: isEmpty && hideEmpty ? 0.15 : 1 }}
+            />
+          </Grid>
+        );
+      })}
+    </Grid>
   );
 }

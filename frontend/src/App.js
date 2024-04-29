@@ -107,8 +107,6 @@ import { PageAccount } from "./pages/Account";
 import { PageSearch } from "./pages/Search";
 import { PageRejectedMaps } from "./pages/RejectedMaps";
 import { getPlayerNameColorStyle } from "./util/data_util";
-import { useLocalStorage } from "@uidotdev/usehooks";
-import { light } from "@mui/material/styles/createPalette";
 import { AppSettingsProvider, useAppSettings } from "./hooks/AppSettingsProvider";
 import { PageAppSettings } from "./pages/AppSettings";
 import { PageSuggestions } from "./pages/Suggestions";
@@ -119,7 +117,7 @@ import {
   ObjectiveIcon,
   WebsiteIcon,
 } from "./components/GoldberriesComponents";
-import { StyledLink } from "./components/BasicComponents";
+import { PageMonthlyRecap } from "./pages/Stats";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -227,6 +225,7 @@ const router = createBrowserRouter([
 
       { path: "search/:q?", element: <PageSearch /> },
       { path: "suggestions/:id?", element: <PageSuggestions /> },
+      { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
 
       { path: "settings/:tab?", element: <PageAppSettings /> },
 
