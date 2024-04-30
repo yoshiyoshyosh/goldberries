@@ -146,7 +146,7 @@ const backgroundsDark = [
     file: "ehs-2.jpg",
   },
   {
-    name: "9D",
+    name: "9BB",
     file: "9d.jpg",
   },
   {
@@ -156,6 +156,10 @@ const backgroundsDark = [
   {
     name: "SJ AHS",
     file: "ahs.png",
+  },
+  {
+    name: "CG Dark",
+    file: "cg-dark.png",
   },
 ];
 const backgroundsLight = [

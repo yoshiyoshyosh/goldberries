@@ -25,10 +25,15 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArchway,
+  faArrowDown,
+  faArrowRight,
+  faArrowUp,
   faBan,
   faBook,
   faChild,
   faChildCombatant,
+  faCircle,
+  faDiamond,
   faGamepad,
   faHammer,
   faInfoCircle,
@@ -38,6 +43,7 @@ import {
   faPersonDrowning,
   faQuestion,
   faShield,
+  faSquare,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
@@ -218,6 +224,29 @@ export function DifficultySelect({ defaultValue, ...props }) {
   );
 }
 
+const SUBTIER_ICONS = {
+  high: { icon: "subtier-high.png", alt: "High", faIcon: faArrowUp, color: "black" },
+  mid: { icon: "subtier-mid.png", alt: "Mid", faIcon: faArrowRight, color: "black" },
+  low: { icon: "subtier-low.png", alt: "Low", faIcon: faArrowDown, color: "black" },
+};
+export function SubtierIcon({ subtier, height = "1em" }) {
+  if (subtier === null) return null;
+  const entry = SUBTIER_ICONS[subtier];
+
+  if (true) {
+    return <FontAwesomeIcon icon={entry.faIcon} style={{ height: height }} />;
+  }
+
+  return (
+    <img
+      src={"/icons/" + entry.icon}
+      alt={entry.alt}
+      style={{
+        height: height,
+      }}
+    />
+  );
+}
 export function DifficultyChip({
   difficulty,
   prefix = "",

@@ -54,6 +54,7 @@ import {
   faBook,
   faBullseye,
   faBurger,
+  faCheckToSlot,
   faChevronDown,
   faChevronLeft,
   faCog,
@@ -77,6 +78,7 @@ import {
   faSearch,
   faSignIn,
   faSignOut,
+  faSquarePollHorizontal,
   faSun,
   faTooth,
   faUser,
@@ -491,10 +493,22 @@ export function Layout() {
       },
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
-    suggestions: {
-      name: "Suggestion Box",
-      path: "/suggestions",
+    other: {
+      name: "Other",
+      items: [
+        {
+          name: "Suggestion Box",
+          path: "/suggestions",
+          icon: <FontAwesomeIcon icon={faCheckToSlot} />,
+        },
+        {
+          name: "Monthly Recap",
+          path: "/monthly-recap",
+          icon: <FontAwesomeIcon icon={faSquarePollHorizontal} />,
+        },
+      ],
     },
+    suggestions: {},
   };
 
   if (auth.hasPlayerClaimed === true) {
@@ -503,7 +517,7 @@ export function Layout() {
     menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
   }
 
-  const leftMenu = [menus.lists, menus.campaigns, menus.suggestions];
+  const leftMenu = [menus.lists, menus.campaigns, menus.other];
   const rightMenu = [];
   if (auth.isVerifier) {
     leftMenu.push(menus.verifier);
