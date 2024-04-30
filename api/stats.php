@@ -79,7 +79,7 @@ SELECT
 FROM submission
 JOIN challenge ON submission.challenge_id = challenge.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-WHERE $time_filter AND submission_is_verified = true
+WHERE $time_filter AND submission.is_verified = true
 GROUP BY date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC', difficulty.id
 ORDER BY date_achieved DESC, difficulty.id
   ";
@@ -151,8 +151,9 @@ ORDER BY date_achieved DESC, difficulty.id
     $challenge = $submission->challenge;
     $challenge->fetch_submissions($DB);
     $newly_cleared = true;
-    foreach ($submissions as $sub) {
-      if ($sub->date_created < $month . "-01") {
+    foreach ($challenge->submissions as $sub) {
+      $date = $sub->date_created; //Format: JsonDateTime (which is just DateTime with a custom __toString method)
+      if ($date < $month . "-01") {
         $newly_cleared = false;
         break;
       }
