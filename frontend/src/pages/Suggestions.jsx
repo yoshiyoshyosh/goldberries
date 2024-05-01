@@ -258,7 +258,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 
       <Grid container sx={{ mb: 1 }}>
         <Grid item xs={12} sm={8}>
-          <Stack direction="row" gap={1} alignItems="center">
+          <Stack direction="row" gap={1}>
             <Typography variant="body2">
               {suggestion.author_id === null ? (
                 "(deleted player)"
@@ -266,7 +266,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
                 <PlayerChip player={suggestion.author} size="small" />
               )}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{ mt: 0.25 }}>
               <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
             </Typography>
           </Stack>
@@ -287,16 +287,6 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
           </Typography>
         </Grid>
       </Grid>
-
-      {/* {suggestion.challenge_id !== null && (
-        <>
-          <Divider sx={{ my: 1 }} />
-          <Stack direction="row" gap={2}>
-            <span>Community Suggestions:</span>
-            <SuggestedDifficultyTierCounts challenge={suggestion.challenge} useSubtierColors />
-          </Stack>
-        </>
-      )} */}
 
       <Divider sx={{ my: 1 }} />
       {suggestion.votes.length === 0 ? (
@@ -344,7 +334,6 @@ function SuggestionName({ suggestion, expired }) {
           </>
         ) : (
           <>
-            <FontAwesomeIcon icon={faList} />
             <Stack direction="column" gap={1}>
               <Typography variant="h6">
                 {sameMapName

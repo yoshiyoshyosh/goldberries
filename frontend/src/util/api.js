@@ -273,9 +273,11 @@ export function fetchSuggestion(id) {
   });
 }
 
-export function fetchStats(type, month = null) {
+export function fetchStats(type, month = null, allClearsTierSort = null, firstClearsTierSort = null) {
   const params = { type: type };
   if (month) params.month = month;
+  if (allClearsTierSort) params.all_clears_tier_sort = allClearsTierSort;
+  if (firstClearsTierSort) params.first_clears_tier_sort = firstClearsTierSort;
 
   return axios.get("/stats.php", {
     params: params,

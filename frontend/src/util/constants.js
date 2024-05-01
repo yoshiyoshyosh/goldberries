@@ -86,6 +86,46 @@ export const FormOptions = {
   },
 };
 
+// export const DIFFICULTY_COLORS = {
+//   //Tier 0
+//   1: { color: "#ff4d70", group_color: "#ff00d4", contrast_color: "#000000" },
+//   2: { color: "#ff4d4d", group_color: "#ff00d4", contrast_color: "#000000" },
+//   3: { color: "#ff794d", group_color: "#ff00d4", contrast_color: "#000000" },
+
+//   //Tier 1
+//   4: { color: "#ffaf4d", group_color: "#ff0000", contrast_color: "#000000" },
+//   5: { color: "#ffbe4d", group_color: "#ff0000", contrast_color: "#000000" },
+//   6: { color: "#ffd24d", group_color: "#ff0000", contrast_color: "#000000" },
+
+//   //Tier 2
+//   7: { color: "#ffed4d", group_color: "#ffff00", contrast_color: "#000000" },
+//   8: { color: "#f9ff4d", group_color: "#ffff00", contrast_color: "#000000" },
+//   9: { color: "#e1ff4d", group_color: "#ffff00", contrast_color: "#000000" },
+
+//   //Tier 3
+//   10: { color: "#79ff4d", group_color: "#00ff00", contrast_color: "#000000" },
+//   11: { color: "#4dff5b", group_color: "#00ff00", contrast_color: "#000000" },
+//   12: { color: "#4dff85", group_color: "#00ff00", contrast_color: "#000000" },
+//   13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
+
+//   //Tier 4
+//   14: { color: "#4dffc1", group_color: "#00ffff", contrast_color: "#000000" },
+
+//   //Tier 5
+//   15: { color: "#4dffff", group_color: "#00aaff", contrast_color: "#000000" },
+
+//   //Tier 6
+//   16: { color: "#4dc3ff", group_color: "#0051ff", contrast_color: "#000000" },
+
+//   //Tier 7
+//   17: { color: "#4d85ff", group_color: "#6f00ff", contrast_color: "#000000" },
+
+//   //Standard
+//   18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+
+//   //Undetermined
+//   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
+// };
 export const DIFFICULTY_COLORS = {
   //Tier 0
   1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },

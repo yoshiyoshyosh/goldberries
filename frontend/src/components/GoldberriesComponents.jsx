@@ -324,7 +324,10 @@ export function DifficultyValueChip({
 export function DifficultySelectControlled({
   difficultyId,
   setDifficultyId,
+  setDifficulty,
   isSuggestion = false,
+  minSort = null,
+  maxSort = null,
   ...props
 }) {
   const query = useQuery({
@@ -334,10 +337,23 @@ export function DifficultySelectControlled({
       toast.error(error.message);
     },
   });
+
+  const onChangeDifficulty = (id) => {
+    const difficulty = query.data?.data.find((d) => d.id === id);
+    if (setDifficulty) setDifficulty(difficulty);
+    if (setDifficultyId) setDifficultyId(id);
+  };
+
   let difficulties = query.data?.data ?? [];
   //filter out id 13 (fwg) and 19 (undetermined)
   if (isSuggestion) {
     difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+  }
+  if (minSort !== null) {
+    difficulties = difficulties.filter((d) => d.sort >= minSort);
+  }
+  if (maxSort !== null) {
+    difficulties = difficulties.filter((d) => d.sort <= maxSort);
   }
 
   return (
@@ -345,7 +361,7 @@ export function DifficultySelectControlled({
       {...props}
       select
       value={difficultyId ?? ""}
-      onChange={(e) => setDifficultyId(e.target.value === "" ? null : e.target.value)}
+      onChange={(e) => onChangeDifficulty(e.target.value === "" ? null : e.target.value)}
       SelectProps={{
         ...props.SelectProps,
         MenuProps: { disableScrollLock: true },

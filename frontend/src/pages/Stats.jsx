@@ -1,6 +1,7 @@
 import {
   Button,
   Divider,
+  Grid,
   Stack,
   Table,
   TableBody,
@@ -21,7 +22,13 @@ import {
 import { GlobalStatsComponent, TiersCountDisplay } from "./Index";
 import { getQueryData, useGetStats } from "../hooks/useApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChallengeFcIcon, DifficultyChip, PlayerChip } from "../components/GoldberriesComponents";
+import {
+  ChallengeFcIcon,
+  DifficultyChip,
+  DifficultySelect,
+  DifficultySelectControlled,
+  PlayerChip,
+} from "../components/GoldberriesComponents";
 import { getCampaignName, getMapName } from "../util/data_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faBook } from "@fortawesome/free-solid-svg-icons";
@@ -34,21 +41,21 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineOppositeContent, { timelineOppositeContentClasses } from "@mui/lab/TimelineOppositeContent";
 import { useEffect, useState } from "react";
+import { all } from "axios";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageMonthlyRecap() {
   const { month } = useParams();
   const navigate = useNavigate();
 
   const sliceMonth = (date) => date.toISOString().slice(0, 7);
-
-  //month is in format: YYYY-MM
   const [selectedMonth, setSelectedMonth] = useState(month ? month : sliceMonth(new Date()));
+  //month is in format: YYYY-MM
 
   const newerMonth = new Date(selectedMonth + "-02");
   newerMonth.setMonth(newerMonth.getMonth() + 1);
   const olderMonth = new Date(selectedMonth + "-02");
   olderMonth.setMonth(olderMonth.getMonth() - 1);
-
   const hasNewerMonth = newerMonth <= new Date();
 
   const setMonth = (date) => {
@@ -64,39 +71,78 @@ export function PageMonthlyRecap() {
 
   return (
     <BasicContainerBox maxWidth="md">
-      {/* <BasicBox sx={{ width: "100%" }}>
-        <GlobalStatsComponent />
-      </BasicBox>
-
-      <Divider sx={{ my: 2 }} /> */}
-
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button disabled={!hasNewerMonth} variant="outlined" onClick={() => setMonth(newerMonth)}>
+        <Button variant="outlined" onClick={() => setMonth(olderMonth)}>
           <Stack direction="row" alignItems="center" gap={1}>
             <FontAwesomeIcon icon={faArrowLeft} />
-            Newer Month '{sliceMonth(newerMonth)}'
+            Less Recent '{sliceMonth(olderMonth)}'
           </Stack>
         </Button>
         <span style={{ flex: 1 }}></span>
-        <Button variant="outlined" onClick={() => setMonth(olderMonth)}>
+        <Button disabled={!hasNewerMonth} variant="outlined" onClick={() => setMonth(newerMonth)}>
           <Stack direction="row" alignItems="center" gap={1}>
-            Older Month '{sliceMonth(olderMonth)}'
+            More Recent '{sliceMonth(newerMonth)}'
             <FontAwesomeIcon icon={faArrowRight} />
           </Stack>
         </Button>
       </Stack>
+
       <MonthlyRecap month={selectedMonth} />
     </BasicContainerBox>
   );
 }
 
 function MonthlyRecap({ month }) {
-  const query = useGetStats("monthly_recap", month);
+  const [allClearsDifficulty, setAllClearsDifficulty] = useLocalStorage(
+    "monthly_recap_all_clears_tier_sort",
+    null
+  );
+  const [firstClearsDifficulty, setFirstClearsDifficulty] = useLocalStorage(
+    "monthly_recap_first_clears_tier_sort",
+    null
+  );
+
+  const query = useGetStats("monthly_recap", month, allClearsDifficulty?.sort, firstClearsDifficulty?.sort);
+
+  const diffGrid = (
+    <Grid container spacing={2} sx={{ mb: 1 }}>
+      <Grid item xs={12} md={6}>
+        <DifficultySelectControlled
+          label="Normal Clears Min. Difficulty"
+          fullWidth
+          difficultyId={allClearsDifficulty?.id ?? 3}
+          setDifficulty={setAllClearsDifficulty}
+          minSort={8}
+          maxSort={19}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <DifficultySelectControlled
+          label="First Clears Min. Difficulty"
+          fullWidth
+          difficultyId={firstClearsDifficulty?.id ?? 12}
+          setDifficulty={setFirstClearsDifficulty}
+          minSort={3}
+          maxSort={19}
+        />
+      </Grid>
+    </Grid>
+  );
 
   if (query.isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <>
+        {diffGrid}
+        <LoadingSpinner />
+      </>
+    );
   } else if (query.isError) {
-    return <ErrorDisplay error={query.error} />;
+    return (
+      <>
+        {diffGrid}
+        <ErrorDisplay error={query.error} />
+      </>
+    );
   }
 
   const data = getQueryData(query);
@@ -105,6 +151,8 @@ function MonthlyRecap({ month }) {
 
   return (
     <>
+      {diffGrid}
+
       <Typography variant="h5">Monthly Recap for '{month}'</Typography>
 
       <Typography variant="h6" sx={{ mt: 1 }}>

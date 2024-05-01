@@ -262,10 +262,10 @@ export function useGetSuggestion(id) {
   });
 }
 
-export function useGetStats(type, month = null) {
+export function useGetStats(type, month = null, allClearsTierSort = null, firstClearsTierSort = null) {
   return useQuery({
-    queryKey: ["stats", type, month],
-    queryFn: () => fetchStats(type, month),
+    queryKey: ["stats", type, month, allClearsTierSort, firstClearsTierSort],
+    queryFn: () => fetchStats(type, month, allClearsTierSort, firstClearsTierSort),
     onError: errorToast,
   });
 }
