@@ -68,6 +68,21 @@ ORDER BY difficulty.id
   }
   //$month is a string in the format 'YYYY-MM'
 
+  $all_clears_tier_sort = isset($_REQUEST['all_clears_tier_sort']) ? intval($_REQUEST['all_clears_tier_sort']) : 17;
+  $first_clears_tier_sort = isset($_REQUEST['first_clears_tier_sort']) ? intval($_REQUEST['first_clears_tier_sort']) : 7;
+
+  if ($all_clears_tier_sort < 7) {
+    die_json(400, 'all_clears_tier_sort has to be at least Low Tier 3');
+  } else if ($all_clears_tier_sort > 19) {
+    die_json(400, 'all_clears_tier_sort has to be at most High Tier 0');
+  }
+  if ($first_clears_tier_sort < 3) {
+    die_json(400, 'first_clears_tier_sort has to be at least Tier 7');
+  } else if ($first_clears_tier_sort > 19) {
+    die_json(400, 'first_clears_tier_sort has to be at most High Tier 0');
+  }
+
+
 
   //Tier clears
   $time_filter = "date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC' = '$month-01'";
@@ -101,7 +116,7 @@ ORDER BY date_achieved DESC, difficulty.id
 
   //t0+ submissions
   $time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort > 16 AND $time_filter ORDER BY submission_date_created DESC";
+  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort >= $all_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Failed to query database");
@@ -115,25 +130,9 @@ ORDER BY date_achieved DESC, difficulty.id
   }
 
 
-  //Challenge changes
-  $time_filter = "change_date >= '$month-01' AND change_date < '$month-01'::date + INTERVAL '1 month'";
-  $query = "SELECT * FROM view_challenge_changes WHERE $time_filter AND change_description ILIKE 'Moved%'";
-  $result = pg_query($DB, $query);
-  if (!$result) {
-    die_json(500, "Failed to query database");
-  }
-  $challenge_changes = array();
-  while ($row = pg_fetch_assoc($result)) {
-    $change = new Change();
-    $change->apply_db_data($row, "change_");
-    $change->expand_foreign_keys($row, 5);
-    $challenge_changes[] = $change;
-  }
-
-
   //Newly cleared t3+ challenges
   $time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort > 6 AND $time_filter ORDER BY submission_date_created DESC";
+  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort >= $first_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Failed to query database");
@@ -151,14 +150,8 @@ ORDER BY date_achieved DESC, difficulty.id
     $challenge = $submission->challenge;
     $challenge->fetch_submissions($DB);
     $newly_cleared = true;
-    foreach ($challenge->submissions as $sub) {
-      $date = $sub->date_created; //Format: JsonDateTime (which is just DateTime with a custom __toString method)
-      if ($date < $month . "-01") {
-        $newly_cleared = false;
-        break;
-      }
-    }
-    if ($newly_cleared) {
+    $first_submission = $challenge->submissions[0];
+    if ($first_submission->date_created >= $month . "-01") {
       //Check if the challenge has already been added
       $already_added = false;
       foreach ($newly_cleared_t3 as $c) {
@@ -170,6 +163,32 @@ ORDER BY date_achieved DESC, difficulty.id
       if (!$already_added)
         $newly_cleared_t3[] = $challenge;
     }
+  }
+  //Loop through newly cleared t3 challenges and remove the first submission from the t0 submissions, if it exists
+  foreach ($newly_cleared_t3 as $challenge) {
+    foreach ($submissions_t0 as $key => $t0_submission) {
+      if ($challenge->submissions[0]->id === $t0_submission->id) {
+        //Remove the submission, without breaking the array structure. Dont just unset, as it will transform it into an object
+        array_splice($submissions_t0, $key, 1);
+        break;
+      }
+    }
+  }
+
+
+  //Challenge changes
+  $time_filter = "change_date >= '$month-01' AND change_date < '$month-01'::date + INTERVAL '1 month'";
+  $query = "SELECT * FROM view_challenge_changes WHERE $time_filter AND change_description ILIKE 'Moved%'";
+  $result = pg_query($DB, $query);
+  if (!$result) {
+    die_json(500, "Failed to query database");
+  }
+  $challenge_changes = array();
+  while ($row = pg_fetch_assoc($result)) {
+    $change = new Change();
+    $change->apply_db_data($row, "change_");
+    $change->expand_foreign_keys($row, 5);
+    $challenge_changes[] = $change;
   }
 
 
