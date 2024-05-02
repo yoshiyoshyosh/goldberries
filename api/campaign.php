@@ -18,6 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $campaigns->fetch_maps($DB, $challenges, $submissions);
     }
   }
+  if ($challenges) {
+    if (is_array($campaigns)) {
+      foreach ($campaigns as $campaign) {
+        $campaign->fetch_challenges($DB, $submissions);
+      }
+    } else {
+      $campaigns->fetch_challenges($DB, $submissions);
+    }
+  }
 
   api_write($campaigns);
 }

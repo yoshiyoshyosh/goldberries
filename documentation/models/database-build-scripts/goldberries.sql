@@ -280,19 +280,19 @@ CREATE TABLE fwg_data
 
 -- =========== VIEWS ===========
 CREATE VIEW "view_submissions" AS SELECT                                                                   
-  campaign.id AS campaign_id,                                            
-  campaign.name AS campaign_name,                                        
-  campaign.url AS campaign_url,                                          
-  campaign.date_added AS campaign_date_added,                            
-  campaign.icon_url AS campaign_icon_url,                                
-  campaign.sort_major_name AS campaign_sort_major_name,                  
-  campaign.sort_major_labels AS campaign_sort_major_labels,              
-  campaign.sort_major_colors AS campaign_sort_major_colors,
-  campaign.sort_minor_name AS campaign_sort_minor_name,                  
-  campaign.sort_minor_labels AS campaign_sort_minor_labels,              
-  campaign.sort_minor_colors AS campaign_sort_minor_colors,
-  campaign.author_gb_id AS campaign_author_gb_id,                        
-  campaign.author_gb_name AS campaign_author_gb_name,                    
+  COALESCE(campaign.id, fg_campaign.id) AS campaign_id,                                            
+  COALESCE(campaign.name, fg_campaign.name) AS campaign_name,                                        
+  COALESCE(campaign.url, fg_campaign.url) AS campaign_url,                                          
+  COALESCE(campaign.date_added, fg_campaign.date_added) AS campaign_date_added,                            
+  COALESCE(campaign.icon_url, fg_campaign.icon_url) AS campaign_icon_url,                                
+  COALESCE(campaign.sort_major_name, fg_campaign.sort_major_name) AS campaign_sort_major_name,                  
+  COALESCE(campaign.sort_major_labels, fg_campaign.sort_major_labels) AS campaign_sort_major_labels,              
+  COALESCE(campaign.sort_major_colors, fg_campaign.sort_major_colors) AS campaign_sort_major_colors,
+  COALESCE(campaign.sort_minor_name, fg_campaign.sort_minor_name) AS campaign_sort_minor_name,                  
+  COALESCE(campaign.sort_minor_labels, fg_campaign.sort_minor_labels) AS campaign_sort_minor_labels,              
+  COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
+  COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,                        
+  COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,                  
                                                                          
   map.id AS map_id,                                                      
   map.campaign_id AS map_campaign_id,                                    
@@ -369,38 +369,47 @@ CREATE VIEW "view_submissions" AS SELECT
   pd.id AS suggested_difficulty_id,
   pd.name AS suggested_difficulty_name,
   pd.subtier AS suggested_difficulty_subtier,
-  pd.sort AS suggested_difficulty_sort
+  pd.sort AS suggested_difficulty_sort,
+  
+  new_challenge.id AS new_challenge_id,
+  new_challenge.url AS new_challenge_url,
+  new_challenge.name AS new_challenge_name,
+  new_challenge.description AS new_challenge_description
+  
 
-FROM campaign
-JOIN map  ON campaign.id = map.campaign_id
-JOIN challenge  ON map.id = challenge.map_id
-JOIN difficulty cd ON challenge.difficulty_id = cd.id
-JOIN objective  ON challenge.objective_id = objective.id
-JOIN submission  ON challenge.id = submission.challenge_id
+FROM submission
+LEFT JOIN challenge  ON submission.challenge_id = challenge.id
+LEFT JOIN map ON challenge.map_id = map.id
+LEFT JOIN campaign  ON map.campaign_id = campaign.id
+LEFT JOIN campaign fg_campaign ON challenge.campaign_id = fg_campaign.id
+
+LEFT JOIN difficulty cd ON challenge.difficulty_id = cd.id
+LEFT JOIN objective  ON challenge.objective_id = objective.id
 JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
 LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
 LEFT JOIN account pa ON p.id = pa.player_id
 LEFT JOIN account va ON v.id = va.player_id
+LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
 
-ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_created, submission.id ;
+ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_created, submission.id ;
 
 
 
 CREATE VIEW "view_challenges" AS SELECT                                                                   
-  campaign.id AS campaign_id,                                            
-  campaign.name AS campaign_name,                                        
-  campaign.url AS campaign_url,                                          
-  campaign.date_added AS campaign_date_added,                            
-  campaign.icon_url AS campaign_icon_url,                                
-  campaign.sort_major_name AS campaign_sort_major_name,                  
-  campaign.sort_major_labels AS campaign_sort_major_labels,              
-  campaign.sort_major_colors AS campaign_sort_major_colors,
-  campaign.sort_minor_name AS campaign_sort_minor_name,                  
-  campaign.sort_minor_labels AS campaign_sort_minor_labels,              
-  campaign.sort_minor_colors AS campaign_sort_minor_colors,
-  campaign.author_gb_id AS campaign_author_gb_id,                        
-  campaign.author_gb_name AS campaign_author_gb_name,                    
+  COALESCE(campaign.id, fg_campaign.id) AS campaign_id,                                            
+  COALESCE(campaign.name, fg_campaign.name) AS campaign_name,                                        
+  COALESCE(campaign.url, fg_campaign.url) AS campaign_url,                                          
+  COALESCE(campaign.date_added, fg_campaign.date_added) AS campaign_date_added,                            
+  COALESCE(campaign.icon_url, fg_campaign.icon_url) AS campaign_icon_url,                                
+  COALESCE(campaign.sort_major_name, fg_campaign.sort_major_name) AS campaign_sort_major_name,                  
+  COALESCE(campaign.sort_major_labels, fg_campaign.sort_major_labels) AS campaign_sort_major_labels,              
+  COALESCE(campaign.sort_major_colors, fg_campaign.sort_major_colors) AS campaign_sort_major_colors,
+  COALESCE(campaign.sort_minor_name, fg_campaign.sort_minor_name) AS campaign_sort_minor_name,                  
+  COALESCE(campaign.sort_minor_labels, fg_campaign.sort_minor_labels) AS campaign_sort_minor_labels,              
+  COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
+  COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,                        
+  COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,                  
                                                                          
   map.id AS map_id,                                                      
   map.campaign_id AS map_campaign_id,                                    
@@ -443,33 +452,34 @@ CREATE VIEW "view_challenges" AS SELECT
 
   COUNT(submission.id) AS count_submissions
 
-FROM campaign
-JOIN map  ON campaign.id = map.campaign_id
-JOIN challenge  ON map.id = challenge.map_id
+FROM challenge
+LEFT JOIN map  ON challenge.map_id = map.id
+LEFT JOIN campaign  ON map.campaign_id = campaign.id
+LEFT JOIN campaign fg_campaign ON challenge.campaign_id = fg_campaign.id
 JOIN difficulty cd ON challenge.difficulty_id = cd.id
 JOIN objective  ON challenge.objective_id = objective.id
 LEFT JOIN submission  ON challenge.id = submission.challenge_id
 
-GROUP BY campaign.id, map.id, challenge.id, cd.id, objective.id
-ORDER BY campaign.name, campaign.id, map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC ;
+GROUP BY campaign.id, fg_campaign.id, map.id, challenge.id, cd.id, objective.id
+ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC ;
 
 
 
 
 CREATE VIEW "view_challenge_changes" AS SELECT
-  campaign.id AS campaign_id,                                            
-  campaign.name AS campaign_name,                                        
-  campaign.url AS campaign_url,                                          
-  campaign.date_added AS campaign_date_added,                            
-  campaign.icon_url AS campaign_icon_url,                                
-  campaign.sort_major_name AS campaign_sort_major_name,                  
-  campaign.sort_major_labels AS campaign_sort_major_labels,              
-  campaign.sort_major_colors AS campaign_sort_major_colors,
-  campaign.sort_minor_name AS campaign_sort_minor_name,                  
-  campaign.sort_minor_labels AS campaign_sort_minor_labels,              
-  campaign.sort_minor_colors AS campaign_sort_minor_colors,
-  campaign.author_gb_id AS campaign_author_gb_id,                        
-  campaign.author_gb_name AS campaign_author_gb_name,                    
+  COALESCE(campaign.id, fg_campaign.id) AS campaign_id,                                            
+  COALESCE(campaign.name, fg_campaign.name) AS campaign_name,                                        
+  COALESCE(campaign.url, fg_campaign.url) AS campaign_url,                                          
+  COALESCE(campaign.date_added, fg_campaign.date_added) AS campaign_date_added,                            
+  COALESCE(campaign.icon_url, fg_campaign.icon_url) AS campaign_icon_url,                                
+  COALESCE(campaign.sort_major_name, fg_campaign.sort_major_name) AS campaign_sort_major_name,                  
+  COALESCE(campaign.sort_major_labels, fg_campaign.sort_major_labels) AS campaign_sort_major_labels,              
+  COALESCE(campaign.sort_major_colors, fg_campaign.sort_major_colors) AS campaign_sort_major_colors,
+  COALESCE(campaign.sort_minor_name, fg_campaign.sort_minor_name) AS campaign_sort_minor_name,                  
+  COALESCE(campaign.sort_minor_labels, fg_campaign.sort_minor_labels) AS campaign_sort_minor_labels,              
+  COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
+  COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,                        
+  COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,                  
                                                                          
   map.id AS map_id,                                                      
   map.campaign_id AS map_campaign_id,                                    
@@ -530,8 +540,9 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   
 FROM change
 JOIN challenge ON change.challenge_id = challenge.id
-JOIN map ON challenge.map_id = map.id
-JOIN campaign ON map.campaign_id = campaign.id
+LEFT JOIN map ON challenge.map_id = map.id
+LEFT JOIN campaign ON map.campaign_id = campaign.id
+LEFT JOIN campaign fg_campaign ON challenge.campaign_id = fg_campaign.id
 JOIN difficulty cd ON challenge.difficulty_id = cd.id
 JOIN objective  ON challenge.objective_id = objective.id 
 LEFT JOIN player p ON change.author_id = p.id

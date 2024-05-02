@@ -101,7 +101,7 @@ class Submission extends DbObject
       if ($isFromSqlResult) {
         $this->player = new Player();
         $this->player->apply_db_data($DB, "player_");
-        $this->player->expand_foreign_keys($DB, $depth - 1);
+        // $this->player->expand_foreign_keys($DB, $depth - 1);
       } else {
         $this->player = Player::get_by_id($DB, $this->player_id);
       }
@@ -110,7 +110,7 @@ class Submission extends DbObject
       if ($isFromSqlResult) {
         $this->verifier = new Player();
         $this->verifier->apply_db_data($DB, "verifier_");
-        $this->verifier->expand_foreign_keys($DB, $depth - 1);
+        // $this->verifier->expand_foreign_keys($DB, $depth - 1);
       } else {
         $this->verifier = Player::get_by_id($DB, $this->verifier_id);
       }
@@ -145,6 +145,11 @@ class Submission extends DbObject
       $submission = new Submission();
       $submission->apply_db_data($row);
       $submission->expand_foreign_keys($DB, 4);
+      if ($submission->challenge->map_id !== null) {
+        $submission->challenge->map->campaign->fetch_challenges($DB);
+      } else if ($submission->challenge->campaign_id !== null) {
+        $submission->challenge->campaign->fetch_challenges($DB);
+      }
       $submissions[] = $submission;
     }
     return $submissions;

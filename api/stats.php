@@ -116,7 +116,7 @@ ORDER BY date_achieved DESC, difficulty.id
 
   //t0+ submissions
   $time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort >= $all_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
+  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND submission_new_challenge_id IS NULL AND difficulty_sort >= $all_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Failed to query database");
@@ -132,7 +132,7 @@ ORDER BY date_achieved DESC, difficulty.id
 
   //Newly cleared t3+ challenges
   $time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND difficulty_sort >= $first_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
+  $query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND submission_new_challenge_id IS NULL AND difficulty_sort >= $first_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Failed to query database");

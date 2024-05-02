@@ -138,6 +138,15 @@ class Challenge extends DbObject
     return $submission;
   }
 
+  function attach_campaign_challenges($DB, $with_submissions = false, $include_arbitrary = false)
+  {
+    if ($this->campaign_id === null) {
+      $this->map->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
+    } else {
+      $this->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
+    }
+  }
+
   // === Utility Functions ===
   function is_challenge_arbitrary(): bool
   {

@@ -19,6 +19,7 @@ class Campaign extends DbObject
 
   /* Associative objects */
   public ?array $maps = null;
+  public ?array $challenges = null;
 
 
   // === Abstract Functions ===
@@ -47,36 +48,36 @@ class Campaign extends DbObject
     $this->url = $arr[$prefix . 'url'];
     $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
 
-    if (isset ($arr[$prefix . 'icon_url']))
+    if (isset($arr[$prefix . 'icon_url']))
       $this->icon_url = $arr[$prefix . 'icon_url'];
 
-    if (isset ($arr[$prefix . 'sort_major_name'])) {
+    if (isset($arr[$prefix . 'sort_major_name'])) {
       $this->sort_major_name = $arr[$prefix . 'sort_major_name'];
     }
-    if (isset ($arr[$prefix . 'sort_major_labels'])) {
+    if (isset($arr[$prefix . 'sort_major_labels'])) {
       $sort_major_labels = $arr[$prefix . 'sort_major_labels'];
       $this->sort_major_labels = is_array($sort_major_labels) ? $sort_major_labels : explode("\t", $sort_major_labels);
     }
-    if (isset ($arr[$prefix . 'sort_major_colors'])) {
+    if (isset($arr[$prefix . 'sort_major_colors'])) {
       $sort_major_colors = $arr[$prefix . 'sort_major_colors'];
       $this->sort_major_colors = is_array($sort_major_colors) ? $sort_major_colors : explode("\t", $sort_major_colors);
     }
 
-    if (isset ($arr['sort_minor_name'])) {
+    if (isset($arr['sort_minor_name'])) {
       $this->sort_minor_name = $arr[$prefix . 'sort_minor_name'];
     }
-    if (isset ($arr[$prefix . 'sort_minor_labels'])) {
+    if (isset($arr[$prefix . 'sort_minor_labels'])) {
       $sort_minor_labels = $arr[$prefix . 'sort_minor_labels'];
       $this->sort_minor_labels = is_array($sort_minor_labels) ? $sort_minor_labels : explode("\t", $sort_minor_labels);
     }
-    if (isset ($arr[$prefix . 'sort_minor_colors'])) {
+    if (isset($arr[$prefix . 'sort_minor_colors'])) {
       $sort_minor_colors = $arr[$prefix . 'sort_minor_colors'];
       $this->sort_minor_colors = is_array($sort_minor_colors) ? $sort_minor_colors : explode("\t", $sort_minor_colors);
     }
 
-    if (isset ($arr[$prefix . 'author_gb_id']))
+    if (isset($arr[$prefix . 'author_gb_id']))
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
-    if (isset ($arr[$prefix . 'author_gb_name']))
+    if (isset($arr[$prefix . 'author_gb_name']))
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
   }
 
@@ -99,6 +100,22 @@ class Campaign extends DbObject
     }
     return true;
   }
+
+  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true): bool
+  {
+    $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
+    $challenges = $this->fetch_list($DB, 'campaign_id', Challenge::class, $whereAddition);
+    if ($challenges === false)
+      return false;
+    $this->challenges = $challenges;
+    foreach ($this->challenges as $challenge) {
+      if ($with_submissions)
+        $challenge->fetch_submissions($DB);
+      $challenge->expand_foreign_keys($DB, 3, false);
+    }
+    return true;
+  }
+
 
   static function search_by_name($DB, $search)
   {
