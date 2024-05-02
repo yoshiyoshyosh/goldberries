@@ -101,7 +101,8 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
       });
     }, 50);
   });
-  const showMap = useCallback((id) => {
+  const showMap = useCallback((id, campaignId) => {
+    if (id === null || id === undefined) return null;
     modalRefs.map.show.current.open({ id });
   });
   const openEditChallenge = useCallback((id) => {
@@ -329,8 +330,8 @@ function TopGoldenListSubtier({
   challenges.sort((a, b) => {
     const mapA = maps[a.map_id];
     const mapB = maps[b.map_id];
-    const campaignA = campaigns[mapA.campaign_id];
-    const campaignB = campaigns[mapB.campaign_id];
+    const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
+    const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
     return getMapName(mapA, campaignA).localeCompare(getMapName(mapB, campaignB));
   });
 
@@ -338,7 +339,7 @@ function TopGoldenListSubtier({
     <>
       {challenges.map((challenge) => {
         const map = maps[challenge.map_id];
-        const campaign = campaigns[map.campaign_id];
+        const campaign = map === undefined ? campaigns[challenge.campaign_id] : campaigns[map.campaign_id];
 
         return (
           <TopGoldenListRow
@@ -468,7 +469,7 @@ function TopGoldenListRow({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
-              onClick={() => showMap(map.id)}
+              onClick={() => showMap(map?.id, campaign.id)}
             >
               {overflowActive ? (
                 <Tooltip title={name} arrow placement="top">

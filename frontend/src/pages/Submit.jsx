@@ -43,6 +43,7 @@ import {
   DifficultySelect,
   PlayerSelect,
   PlayerChip,
+  CampaignChallengeSelect,
 } from "../components/GoldberriesComponents";
 import { usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -177,8 +178,24 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       <Stack gap={2}>
         <h4 style={{ marginBottom: "0" }}>Select a Challenge</h4>
         <CampaignSelect selected={campaign} setSelected={onCampaignSelect} />
-        {campaign && <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} />}
+        {campaign && (
+          <>
+            <MapSelect campaign={campaign} selected={map} setSelected={onMapSelect} />
+          </>
+        )}
         {map && <ChallengeSelect map={map} selected={challenge} setSelected={onChallengeSelect} />}
+        {campaign && map === null && campaign.challenges?.length > 0 && (
+          <>
+            <Divider>
+              <Chip label="Select Map OR Full Game Challenge" size="small" />
+            </Divider>
+            <CampaignChallengeSelect
+              campaign={campaign}
+              selected={challenge}
+              setSelected={onChallengeSelect}
+            />
+          </>
+        )}
       </Stack>
       {challenge && (
         <>

@@ -20,6 +20,7 @@ import { getQueryData, useGetSubmissionQueue } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
+import { getChallengeCampaign } from "../../util/data_util";
 
 export function PageSubmissionQueue() {
   const { submission } = useParams();
@@ -90,9 +91,9 @@ export function PageSubmissionQueue() {
       return;
     }
     let nextSubmission = queue[currentIndex + 1];
-    if (nextSubmission === null) {
+    if (nextSubmission === undefined) {
       nextSubmission = queue[currentIndex];
-      if (nextSubmission === null) {
+      if (nextSubmission === undefined) {
         updateSubmissionId(null);
         return;
       }
@@ -167,50 +168,57 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
           {(rowsPerPage === -1
             ? queue
             : queue.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          ).map((submission) => (
-            <TableRow
-              key={submission.id}
-              selected={submission.id === selectedSubmissionId}
-              onClick={() => {
-                setSubmissionId(submission.id);
-              }}
-              sx={{ cursor: "pointer" }}
-            >
-              <TableCell>
-                {submission.challenge !== null ? (
-                  <>
-                    <Stack direction="row">
-                      <Typography variant="body1" sx={{ flex: 1 }}>
-                        {submission.player.name} - {submission.challenge.map.name}
-                      </Typography>
-                      <Typography variant="body1">{submission.id}</Typography>
-                    </Stack>
-                    <Stack direction="row">
-                      <Typography variant="body2" sx={{ flex: 1 }}>
-                        {submission.challenge.map.campaign.name}
-                      </Typography>
-                      <DifficultyChip difficulty={submission.challenge.difficulty} />{" "}
-                    </Stack>
-                  </>
-                ) : (
-                  <>
-                    <Stack direction="row">
-                      <Typography variant="body1" sx={{ flex: 1 }}>
-                        {submission.player.name}
-                      </Typography>
-                      <Typography variant="body1">{submission.id}</Typography>
-                    </Stack>
-                    <Stack direction="row">
-                      <Typography variant="body2" sx={{ flex: 1 }}>
-                        New Challenge: {submission.new_challenge.name}
-                      </Typography>
-                      <DifficultyChip difficulty={submission.suggested_difficulty} />{" "}
-                    </Stack>
-                  </>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
+          ).map((submission) => {
+            const challenge = submission.challenge;
+            const map = challenge !== null ? challenge.map : null;
+            const campaign = getChallengeCampaign(challenge);
+            return (
+              <TableRow
+                key={submission.id}
+                selected={submission.id === selectedSubmissionId}
+                onClick={() => {
+                  setSubmissionId(submission.id);
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                <TableCell>
+                  {submission.challenge !== null ? (
+                    <>
+                      <Stack direction="row">
+                        <Typography variant="body1" sx={{ flex: 1 }}>
+                          {submission.player.name}
+                          {" - "}
+                          {map === null ? challenge.description : map.name}
+                        </Typography>
+                        <Typography variant="body1">{submission.id}</Typography>
+                      </Stack>
+                      <Stack direction="row">
+                        <Typography variant="body2" sx={{ flex: 1 }}>
+                          {campaign.name}
+                        </Typography>
+                        <DifficultyChip difficulty={submission.challenge.difficulty} />{" "}
+                      </Stack>
+                    </>
+                  ) : (
+                    <>
+                      <Stack direction="row">
+                        <Typography variant="body1" sx={{ flex: 1 }}>
+                          {submission.player.name}
+                        </Typography>
+                        <Typography variant="body1">{submission.id}</Typography>
+                      </Stack>
+                      <Stack direction="row">
+                        <Typography variant="body2" sx={{ flex: 1 }}>
+                          New Challenge: {submission.new_challenge.name}
+                        </Typography>
+                        <DifficultyChip difficulty={submission.suggested_difficulty} />{" "}
+                      </Stack>
+                    </>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <TablePagination

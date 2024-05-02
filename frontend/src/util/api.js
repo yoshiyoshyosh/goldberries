@@ -83,6 +83,14 @@ export function fetchAllChallengesInMap(mapId) {
     },
   });
 }
+export function fetchAllChallengesInCampaign(campaignId) {
+  return axios.get("/campaign.php", {
+    params: {
+      id: campaignId,
+      challenges: true,
+    },
+  });
+}
 
 export function fetchAllObjectives() {
   return axios.get("/objective.php?id=all");

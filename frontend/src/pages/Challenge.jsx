@@ -27,7 +27,12 @@ import {
   StyledLink,
 } from "../components/BasicComponents";
 import { DifficultyChip, ObjectiveIcon, SubmissionFcIcon } from "../components/GoldberriesComponents";
-import { getChallengeNameShort, getGamebananaEmbedUrl, getPlayerNameColorStyle } from "../util/data_util";
+import {
+  getChallengeCampaign,
+  getChallengeNameShort,
+  getGamebananaEmbedUrl,
+  getPlayerNameColorStyle,
+} from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -80,12 +85,14 @@ export function ChallengeDisplay({ id }) {
   }
 
   const challenge = getQueryData(query);
-  const title = challenge.map.name + " - " + getChallengeNameShort(challenge);
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  const title = (map?.name ?? campaign.name) + " - " + getChallengeNameShort(challenge);
 
   return (
     <>
       <HeadTitle title={title} />
-      <GoldberriesBreadcrumbs campaign={challenge.map.campaign} map={challenge.map} challenge={challenge} />
+      <GoldberriesBreadcrumbs campaign={campaign} map={map} challenge={challenge} />
       <Divider sx={{ my: 2 }}>
         <Chip label="Challenge" size="small" />
       </Divider>
@@ -136,7 +143,9 @@ export function ChallengeDisplay({ id }) {
 }
 
 export function ChallengeDetailsList({ challenge }) {
-  const embedUrl = getGamebananaEmbedUrl(challenge.map.campaign.url);
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  const embedUrl = getGamebananaEmbedUrl(campaign.url);
 
   return (
     <List dense>
@@ -145,7 +154,7 @@ export function ChallengeDetailsList({ challenge }) {
         <ListItemIcon>
           <FontAwesomeIcon icon={faBook} />
         </ListItemIcon>
-        <ListItemText primary={challenge.map.campaign.name} secondary="Campaign" />
+        <ListItemText primary={campaign.name} secondary="Campaign" />
         {embedUrl && (
           <ListItemSecondaryAction
             sx={{
@@ -155,18 +164,20 @@ export function ChallengeDetailsList({ challenge }) {
               },
             }}
           >
-            <Link to={challenge.map.campaign.url} target="_blank">
+            <Link to={campaign.url} target="_blank">
               <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
             </Link>
           </ListItemSecondaryAction>
         )}
       </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faLandmark} />
-        </ListItemIcon>
-        <ListItemText primary={challenge.map.name} secondary="Map" />
-      </ListItem>
+      {map && (
+        <ListItem>
+          <ListItemIcon>
+            <FontAwesomeIcon icon={faLandmark} />
+          </ListItemIcon>
+          <ListItemText primary={challenge.map.name} secondary="Map" />
+        </ListItem>
+      )}
       <ListItem>
         <ListItemIcon>
           <FontAwesomeIcon icon={faFlagCheckered} />

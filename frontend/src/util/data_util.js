@@ -4,6 +4,10 @@ import { jsonDateToJsDate } from "./util";
 export function getChallengeIsFullGame(challenge) {
   return challenge.map === null;
 }
+export function getChallengeCampaign(challenge) {
+  if (challenge === null) return null;
+  return challenge.map?.campaign ?? challenge.campaign;
+}
 
 export function getChallengeFcShort(challenge, noC = false) {
   if (challenge.requires_fc) return "[FC]";
@@ -134,6 +138,11 @@ export function getMapLobbyInfo(map, campaign = null) {
 
 export function getMapName(map, campaign, includeMapWithSide = true) {
   campaign = campaign || map.campaign;
+
+  if (map === null || map === undefined) {
+    //For full game runs
+    return campaign.name;
+  }
 
   const mapName =
     (map.name === "A-Side" || map.name === "B-Side" || map.name === "C-Side" || map.name === "D-Side") &&

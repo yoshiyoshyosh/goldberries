@@ -16,6 +16,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
@@ -29,7 +30,7 @@ import {
   VerificationStatusChip,
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
-import { getChallengeDescription, getChallengeIsArbitrary } from "../util/data_util";
+import { getChallengeCampaign, getChallengeDescription, getChallengeIsArbitrary } from "../util/data_util";
 
 export function RecentSubmissions({ playerId = null }) {
   const theme = useTheme();
@@ -185,27 +186,41 @@ function RecentSubmissionsTableRowFakeout({ hasPlayer }) {
 }
 function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const theme = useTheme();
-  const campaignNameSame = submission.challenge.map.campaign.name === submission.challenge.map.name;
+  const challenge = submission.challenge;
+  const new_challenge = submission.new_challenge;
+  const map = challenge?.map;
+  const campaign = getChallengeCampaign(challenge);
+  const campaignNameSame = campaign?.name === map?.name;
   return (
     <TableRow key={submission.id}>
       <TableCell sx={{ width: "99%" }}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <CampaignIcon campaign={submission.challenge.map.campaign} />
-          {!campaignNameSame && (
+          {challenge ? (
             <>
-              <StyledLink to={"/campaign/" + submission.challenge.map.campaign.id}>
-                {submission.challenge.map.campaign.name}
-              </StyledLink>
-              <Typography>-</Typography>
+              <CampaignIcon campaign={campaign} />
+              {!campaignNameSame && (
+                <>
+                  <StyledLink to={"/campaign/" + campaign.id}>{campaign.name}</StyledLink>
+                  {map && <Typography>-</Typography>}
+                </>
+              )}
+              {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
+              {challenge.description && (
+                <Typography variant="body2" color={theme.palette.text.secondary}>
+                  [{getChallengeDescription(challenge)}]
+                </Typography>
+              )}
+              <ObjectiveIcon objective={challenge.objective} height="1.3em" />
             </>
-          )}
-          <StyledLink to={"/map/" + submission.challenge.map.id}>{submission.challenge.map.name}</StyledLink>
-          {submission.challenge.description && (
+          ) : (
             <Typography variant="body2" color={theme.palette.text.secondary}>
-              [{getChallengeDescription(submission.challenge)}]
+              <Tooltip
+                title={new_challenge.description ?? "This is a new challenge not yet in the database!"}
+              >
+                New Challenge: {new_challenge.name}
+              </Tooltip>
             </Typography>
           )}
-          <ObjectiveIcon objective={submission.challenge.objective} height="1.3em" />
           <SubmissionFcIcon submission={submission} height="1.3em" />
         </Stack>
       </TableCell>
@@ -224,7 +239,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
         </TableCell>
       )}
       <TableCell align="center">
-        <DifficultyChip difficulty={submission.challenge.difficulty} />
+        <DifficultyChip difficulty={challenge ? challenge.difficulty : submission.suggested_difficulty} />
       </TableCell>
     </TableRow>
   );

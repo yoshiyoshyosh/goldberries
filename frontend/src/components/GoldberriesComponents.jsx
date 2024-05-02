@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import {
   fetchAllCampaigns,
+  fetchAllChallengesInCampaign,
   fetchAllChallengesInMap,
   fetchAllDifficulties,
   fetchAllMapsInCampaign,
@@ -18,7 +19,18 @@ import {
   getObjectiveName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
-import { Autocomplete, Avatar, Chip, Grid, Menu, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
+import {
+  Autocomplete,
+  Avatar,
+  Chip,
+  Divider,
+  Grid,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { getDifficultyColors, getDifficultyColorsSettings } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -122,6 +134,43 @@ export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabe
   const query = useQuery({
     queryKey: ["all_challenges", map.id],
     queryFn: () => fetchAllChallengesInMap(map.id),
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const challenges = query.data?.data?.challenges ?? [];
+
+  const getOptionLabel = (challenge) => {
+    return getChallengeName(challenge);
+  };
+
+  return (
+    <Autocomplete
+      fullWidth
+      disabled={disabled}
+      getOptionKey={(challenge) => challenge.id}
+      getOptionLabel={getOptionLabel}
+      options={challenges}
+      disableListWrap
+      value={selected}
+      onChange={(event, newValue) => {
+        setSelected(newValue);
+      }}
+      renderInput={(params) => <TextField {...params} label={hideLabel ? undefined : "Challenge"} />}
+      renderOption={(props, challenge) => {
+        return (
+          <Stack direction="row" gap={1} {...props}>
+            {getChallengeName(challenge)}
+          </Stack>
+        );
+      }}
+    />
+  );
+}
+export function CampaignChallengeSelect({ campaign, selected, setSelected, disabled, hideLabel = false }) {
+  const query = useQuery({
+    queryKey: ["all_challenges_campaign", campaign.id],
+    queryFn: () => fetchAllChallengesInCampaign(campaign.id),
     onError: (error) => {
       toast.error(error.message);
     },
@@ -417,7 +466,7 @@ export function VerificationStatusChip({ isVerified, prefix = "", ...props }) {
 
 // ===== Full Select Components =====
 export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
-  const [campaign, setCampaign] = useState(challenge?.map?.campaign ?? null);
+  const [campaign, setCampaign] = useState(challenge?.map?.campaign ?? challenge?.campaign ?? null);
   const [map, setMap] = useState(challenge?.map ?? null);
 
   const onCampaignSelect = (campaign) => {
@@ -447,6 +496,9 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
     if (challenge !== null && challenge.map !== null) {
       setCampaign(challenge.map?.campaign);
       setMap(challenge.map);
+    } else if (challenge !== null && challenge.campaign !== null) {
+      setCampaign(challenge.campaign);
+      setMap(null);
     }
   }, [challenge]);
 
@@ -458,6 +510,14 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
       )}
       {campaign && map && (
         <ChallengeSelect map={map} selected={challenge} setSelected={setChallenge} disabled={disabled} />
+      )}
+      {campaign && map === null && campaign.challenges?.length > 0 && (
+        <>
+          <Divider>
+            <Chip label="Select Map OR Full Game Challenge" size="small" />
+          </Divider>
+          <CampaignChallengeSelect campaign={campaign} selected={challenge} setSelected={setChallenge} />
+        </>
       )}
     </Stack>
   );

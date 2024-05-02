@@ -26,6 +26,7 @@ import { useAuth } from "../hooks/AuthProvider";
 import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
 import {
   displayDate,
+  getChallengeCampaign,
   getChallengeFlags,
   getChallengeName,
   getChallengeNameShort,
@@ -90,12 +91,16 @@ export function SubmissionDisplay({ id, onDelete }) {
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
   const isVerifier = auth.hasVerifierPriv;
 
+  const challenge = submission.challenge;
+  const map = challenge?.map;
+  const campaign = getChallengeCampaign(challenge);
+
   let title = "";
   if (submission.new_challenge !== null) {
     title = submission.new_challenge.name + " by '" + submission.player.name + "'";
   } else {
     title =
-      submission.challenge.map.name +
+      (map?.name ?? campaign.name) +
       " - " +
       getChallengeNameShort(submission.challenge) +
       " by '" +
@@ -109,9 +114,9 @@ export function SubmissionDisplay({ id, onDelete }) {
       {submission.challenge !== null && (
         <>
           <GoldberriesBreadcrumbs
-            campaign={submission.challenge.map.campaign}
-            map={submission.challenge.map}
-            challenge={submission.challenge}
+            campaign={campaign}
+            map={map}
+            challenge={challenge}
             submission={submission}
           />
           <Divider sx={{ my: 2 }}></Divider>
@@ -171,18 +176,27 @@ export function SubmissionDisplay({ id, onDelete }) {
 }
 
 export function FullChallengeDisplay({ challenge }) {
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableBody>
           <TableRow>
             <TableCell sx={{ fontWeight: "bold" }}>Campaign</TableCell>
-            <TableCell>{challenge.map.campaign.name}</TableCell>
+            <TableCell>{campaign.name}</TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Map</TableCell>
-            <TableCell>{challenge.map.name}</TableCell>
-          </TableRow>
+          {map === null ? (
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Is Full Game?</TableCell>
+              <TableCell>Yes</TableCell>
+            </TableRow>
+          ) : (
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Map</TableCell>
+              <TableCell>{challenge.map.name}</TableCell>
+            </TableRow>
+          )}
           <TableRow>
             <TableCell sx={{ fontWeight: "bold" }}>Challenge</TableCell>
             <TableCell>
