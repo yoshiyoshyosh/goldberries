@@ -39,6 +39,7 @@ import { FormChallengeWrapper } from "./forms/Challenge";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
+import Color from "color";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const { settings } = useAppSettings();
@@ -386,13 +387,18 @@ function TopGoldenListRow({
 
   let nameSuffix = challenge.description === null ? "" : `${getChallengeDescription(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
-
   if (nameSuffix !== "") {
     if (tpgSettings.switchMapAndChallenge) {
       nameSuffix = ` [${nameSuffix}]`;
     } else {
       name = ` [${name}]`;
     }
+  }
+  let suffixColor = new Color(colors.contrast_color);
+  if (suffixColor.isDark()) {
+    suffixColor = suffixColor.lightness(25).string();
+  } else {
+    suffixColor = suffixColor.lightness(75).string();
   }
 
   const firstSubmission = challenge.submissions[0];
@@ -479,9 +485,7 @@ function TopGoldenListRow({
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       color:
-                        nameSuffix !== "" && !tpgSettings.switchMapAndChallenge
-                          ? theme.palette.text.secondary
-                          : "inherit",
+                        nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
                       order: tpgSettings.switchMapAndChallenge ? 1 : 2,
                     }}
                   >
@@ -494,10 +498,7 @@ function TopGoldenListRow({
                   style={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    color:
-                      nameSuffix !== "" && !tpgSettings.switchMapAndChallenge
-                        ? theme.palette.text.secondary
-                        : "inherit",
+                    color: nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
                     order: tpgSettings.switchMapAndChallenge ? 1 : 2,
                   }}
                 >
@@ -512,7 +513,7 @@ function TopGoldenListRow({
                       style={{
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        color: tpgSettings.switchMapAndChallenge ? theme.palette.text.secondary : "inherit",
+                        color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
                         order: tpgSettings.switchMapAndChallenge ? 2 : 1,
                       }}
                     >
@@ -525,7 +526,7 @@ function TopGoldenListRow({
                     style={{
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      color: tpgSettings.switchMapAndChallenge ? theme.palette.text.secondary : "inherit",
+                      color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
                       order: tpgSettings.switchMapAndChallenge ? 2 : 1,
                     }}
                   >
