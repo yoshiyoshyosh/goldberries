@@ -265,3 +265,21 @@ export function getSortedSuggestedDifficulties(challenge) {
   sortedDifficulties.sort((a, b) => b.value - a.value);
   return sortedDifficulties;
 }
+
+export function extractDifficultiesFromChangelog(entry, difficulties) {
+  const description = entry.description;
+  //Description will look like this: "Moved from 'Tier 7' to 'High Tier 3'
+  //Find the two strings enclosed in single quotes
+  const regex = /'([^']+)'/g;
+  const matches = description.match(regex);
+
+  if (matches.length !== 2) return false;
+
+  const [from, to] = matches.map((match) => match.replace(/'/g, ""));
+
+  //Then, find the associated difficulties
+  const fromDiff = difficulties.find((diff) => getDifficultyName(diff) === from);
+  const toDiff = difficulties.find((diff) => getDifficultyName(diff) === to);
+
+  return [fromDiff, toDiff];
+}

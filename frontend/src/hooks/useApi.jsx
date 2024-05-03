@@ -205,11 +205,12 @@ export function useGetVerifierList() {
   });
 }
 
-export function useGetChangelog(type, id) {
+export function useGetChangelog(type, id, disabled) {
   return useQuery({
     queryKey: ["change_log", type, id],
     queryFn: () => fetchChangelog(type, id),
     onError: errorToast,
+    enabled: !disabled,
   });
 }
 

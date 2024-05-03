@@ -1,6 +1,8 @@
 import {
   Button,
+  Checkbox,
   Divider,
+  FormControlLabel,
   Grid,
   Stack,
   Table,
@@ -20,7 +22,7 @@ import {
   StyledLink,
 } from "../components/BasicComponents";
 import { GlobalStatsComponent, TiersCountDisplay } from "./Index";
-import { getQueryData, useGetStats } from "../hooks/useApi";
+import { getQueryData, useGetAllDifficulties, useGetStats } from "../hooks/useApi";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChallengeFcIcon,
@@ -29,7 +31,12 @@ import {
   DifficultySelectControlled,
   PlayerChip,
 } from "../components/GoldberriesComponents";
-import { getCampaignName, getChallengeCampaign, getMapName } from "../util/data_util";
+import {
+  extractDifficultiesFromChangelog,
+  getCampaignName,
+  getChallengeCampaign,
+  getMapName,
+} from "../util/data_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faBook } from "@fortawesome/free-solid-svg-icons";
 
@@ -43,6 +50,8 @@ import TimelineOppositeContent, { timelineOppositeContentClasses } from "@mui/la
 import { useEffect, useState } from "react";
 import { all } from "axios";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { Changelog } from "../components/Changelog";
+import { DifficultyMoveDisplay } from "./Suggestions";
 
 export function PageMonthlyRecap() {
   const { month } = useParams();
@@ -101,11 +110,12 @@ function MonthlyRecap({ month }) {
     "monthly_recap_first_clears_tier_sort",
     null
   );
+  const [hideChangelog, setHideChangelog] = useLocalStorage("monthly_recap_hide_changelog", false);
 
   const query = useGetStats("monthly_recap", month, allClearsDifficulty?.sort, firstClearsDifficulty?.sort);
 
   const diffGrid = (
-    <Grid container spacing={2} sx={{ mb: 1 }}>
+    <Grid container columnSpacing={2} sx={{ mb: 1 }}>
       <Grid item xs={12} md={6}>
         <DifficultySelectControlled
           label="Normal Clears Min. Difficulty"
@@ -124,6 +134,14 @@ function MonthlyRecap({ month }) {
           setDifficulty={setFirstClearsDifficulty}
           minSort={3}
           maxSort={19}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <FormControlLabel
+          control={<Checkbox />}
+          label="Hide Changelog"
+          checked={hideChangelog}
+          onChange={(e) => setHideChangelog(e.target.checked)}
         />
       </Grid>
     </Grid>
@@ -163,12 +181,17 @@ function MonthlyRecap({ month }) {
         Timeline
       </Typography>
 
-      <MonthlyRecapTimeline submissions_t0={submissions_t0} newly_cleared_t3={newly_cleared_t3} />
+      <MonthlyRecapTimeline
+        submissions_t0={submissions_t0}
+        newly_cleared_t3={newly_cleared_t3}
+        challenge_changes={challenge_changes}
+        hideChangelog={hideChangelog}
+      />
     </>
   );
 }
 
-function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3 }) {
+function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3, challenge_changes, hideChangelog }) {
   //Group submissions and newly cleared challenges by the day they were submitted
   //submissions_t0 is a list of submissions, where the date field is submission.date_created
   //newly_cleared_t3 is a list of challenges, where the date field is the first submission's date_created, so challenge.submissions[0].date_created
@@ -193,15 +216,28 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3 }) {
     return acc;
   }, {});
 
+  //Group challenge changes by date
+  const challengeChangesByDate = challenge_changes.reduce((acc, change) => {
+    const date = new Date(change.date).setHours(0, 0, 0, 0);
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(change);
+    return acc;
+  }, {});
+
   //Combine the two groups into a single list of items, sorted by date
-  let timelineDates = Object.keys(submissionsByDate).concat(Object.keys(newlyClearedByDate));
+  let timelineDates = Object.keys(submissionsByDate)
+    .concat(Object.keys(newlyClearedByDate))
+    .concat(Object.keys(challengeChangesByDate));
   timelineDates = [...new Set(timelineDates)]; //Remove duplicates
   const timelineItems = timelineDates
     .sort((a, b) => parseInt(b) - parseInt(a))
     .map((date) => {
       const submissions_t0 = submissionsByDate[date] || [];
       const newly_cleared_t3 = newlyClearedByDate[date] || [];
-      return { date: new Date(parseInt(date)), submissions_t0, newly_cleared_t3 };
+      const challenge_changes = challengeChangesByDate[date] || [];
+      return { date: new Date(parseInt(date)), submissions_t0, newly_cleared_t3, challenge_changes };
     });
 
   //Remove duplicates
@@ -217,12 +253,26 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3 }) {
       }}
     >
       {timelineItems.map((item, index) => (
-        <MonthlyRecapTimelineItem key={item.date} {...item} isLast={index === timelineItems.length - 1} />
+        <MonthlyRecapTimelineItem
+          key={item.date}
+          {...item}
+          isLast={index === timelineItems.length - 1}
+          hideChangelog={hideChangelog}
+        />
       ))}
     </Timeline>
   );
 }
-function MonthlyRecapTimelineItem({ date, submissions_t0, newly_cleared_t3, isLast = false }) {
+function MonthlyRecapTimelineItem({
+  date,
+  submissions_t0,
+  newly_cleared_t3,
+  challenge_changes,
+  isLast = false,
+  hideChangelog = false,
+}) {
+  if (submissions_t0.length + newly_cleared_t3.length + (hideChangelog ? 0 : challenge_changes.length) === 0)
+    return null;
   //Show date as locale date string with month and day numbers
   const dateStr = date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   return (
@@ -230,21 +280,12 @@ function MonthlyRecapTimelineItem({ date, submissions_t0, newly_cleared_t3, isLa
       <TimelineOppositeContent color="text.secondary">{dateStr}</TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineDot />
-        {isLast && submissions_t0.length + newly_cleared_t3.length < 2 ? null : <TimelineConnector />}
+        {isLast && submissions_t0.length + newly_cleared_t3.length + challenge_changes.length < 2 ? null : (
+          <TimelineConnector />
+        )}
       </TimelineSeparator>
       <TimelineContent>
         <Stack direction="column" gap={1}>
-          {submissions_t0.map((submission) => {
-            return (
-              <TimelineSubmission
-                key={submission.id}
-                submission={submission}
-                challenge={submission.challenge}
-              />
-            );
-          })}
-        </Stack>
-        <Stack direction="column" gap={1} sx={{ mt: submissions_t0.length === 0 ? 0 : 1 }}>
           {newly_cleared_t3.map((submission) => {
             const actualSubmission = submission.submissions[0];
             const challenge = submission;
@@ -256,6 +297,30 @@ function MonthlyRecapTimelineItem({ date, submissions_t0, newly_cleared_t3, isLa
                 isFirstClear
               />
             );
+          })}
+        </Stack>
+        <Stack direction="column" gap={1} sx={{ mt: newly_cleared_t3.length === 0 ? 0 : 1 }}>
+          {submissions_t0.map((submission) => {
+            return (
+              <TimelineSubmission
+                key={submission.id}
+                submission={submission}
+                challenge={submission.challenge}
+              />
+            );
+          })}
+        </Stack>
+        <Stack
+          direction="column"
+          gap={1}
+          sx={{
+            mt: newly_cleared_t3.length === 0 && submissions_t0.length === 0 ? 0 : 1,
+            display: hideChangelog ? "none" : "flex",
+          }}
+        >
+          {challenge_changes.map((change) => {
+            const challenge = change.challenge;
+            return <TimelineChangelogEntry key={change.id} change={change} challenge={challenge} />;
           })}
         </Stack>
       </TimelineContent>
@@ -295,6 +360,46 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
           <ChallengeFcIcon challenge={challenge} height="1.3em" />
         </StyledLink>
       </Stack>
+    </Stack>
+  );
+}
+
+function TimelineChangelogEntry({ change, challenge }) {
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  const nameIsSame = map?.name === campaign.name;
+
+  const query = useGetAllDifficulties();
+  if (query.isLoading) return <LoadingSpinner />;
+  else if (query.isError) return <ErrorDisplay error={query.error} />;
+  const result = extractDifficultiesFromChangelog(change, getQueryData(query));
+  if (!result) return null;
+  const [fromDiff, toDiff] = result;
+
+  return (
+    <Stack direction="row" columnGap={1} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
+      <PlayerChip player={change.author} size="small" />
+      <Typography variant="body2" color="textSecondary" sx={{ mt: 0.5 }}>
+        Moved
+      </Typography>
+      <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
+        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
+        {!nameIsSame && map && (
+          <>
+            {"/"}
+            <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
+          </>
+        )}
+        {challenge.description && (
+          <Typography variant="body2" color="textSecondary">
+            [{challenge.description}]
+          </Typography>
+        )}
+        <StyledLink to={"/challenge/" + challenge.id} style={{ lineHeight: "1px" }}>
+          <ChallengeFcIcon challenge={challenge} height="1.3em" />
+        </StyledLink>
+      </Stack>
+      <DifficultyMoveDisplay from={fromDiff} to={toDiff} />
     </Stack>
   );
 }
