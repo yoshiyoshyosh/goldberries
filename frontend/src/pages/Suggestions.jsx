@@ -308,7 +308,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
   );
 }
 
-function DifficultyMoveDisplay({ from, to, ...props }) {
+export function DifficultyMoveDisplay({ from, to, ...props }) {
   return (
     <Stack direction="row" gap={1} alignItems="center" {...props}>
       <DifficultyChip difficulty={from} useSubtierColors />
