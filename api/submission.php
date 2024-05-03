@@ -32,11 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if (is_array($submissions)) {
     foreach ($submissions as $submission) {
       $submission->expand_foreign_keys($DB, $depth);
-      $submission->challenge->attach_campaign_challenges($DB);
+      if ($submission->challenge !== null) {
+        $submission->challenge->attach_campaign_challenges($DB);
+      }
     }
   } else {
     $submissions->expand_foreign_keys($DB, $depth);
-    $submissions->challenge->attach_campaign_challenges($DB);
+    if ($submissions->challenge !== null) {
+      $submissions->challenge->attach_campaign_challenges($DB);
+    }
   }
 
   api_write($submissions);

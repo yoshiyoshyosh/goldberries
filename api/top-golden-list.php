@@ -16,7 +16,7 @@ if (isset($_GET['player'])) {
 }
 
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
-  $where .= " AND map_is_archived = false";
+  $where .= " AND (map_is_archived = false OR map_is_archived IS NULL)";
 }
 if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
   $where .= " AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
