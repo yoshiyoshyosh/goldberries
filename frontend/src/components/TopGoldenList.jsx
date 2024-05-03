@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faEdit, faExternalLink, faHashtag, faList } from "@fortawesome/free-solid-svg-icons";
-import { ChallengeSubmissionTable } from "../pages/Challenge";
+import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
 import { getChallengeDescription, getChallengeIsArbitrary, getMapName } from "../util/data_util";
 import {
   CampaignIcon,
@@ -40,6 +40,7 @@ import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
 import Color from "color";
+import { CampaignDisplay } from "../pages/Campaign";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
   const { settings } = useAppSettings();
@@ -102,9 +103,8 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
       });
     }, 50);
   });
-  const showMap = useCallback((id, campaignId) => {
-    if (id === null || id === undefined) return null;
-    modalRefs.map.show.current.open({ id });
+  const showMap = useCallback((id, isCampaign) => {
+    modalRefs.map.show.current.open({ id, isCampaign: isCampaign });
   });
   const openEditChallenge = useCallback((id) => {
     modalRefs.challenge.edit.current.open({ id });
@@ -475,7 +475,7 @@ function TopGoldenListRow({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
-              onClick={() => showMap(map?.id, campaign.id)}
+              onClick={() => showMap(map?.id ?? challenge.id, map === null || map === undefined)}
             >
               {overflowActive ? (
                 <Tooltip title={name} arrow placement="top">
@@ -667,10 +667,18 @@ function ModalContainer({ modalRefs }) {
   modalRefs.map.show.current = showMapModal;
   modalRefs.challenge.edit.current = editChallengeModal;
 
+  console.log("ModalContainer, showMapModal data", showMapModal.data);
+
   return (
     <>
       <CustomModal modalHook={showMapModal} options={{ hideFooter: true }}>
-        {showMapModal.data?.id == null ? <LoadingSpinner /> : <MapDisplay id={showMapModal.data.id} />}
+        {showMapModal.data?.id == null ? (
+          <LoadingSpinner />
+        ) : showMapModal.data?.isCampaign ? (
+          <ChallengeDisplay id={showMapModal.data.id} />
+        ) : (
+          <MapDisplay id={showMapModal.data.id} />
+        )}
       </CustomModal>
 
       <CustomModal modalHook={editChallengeModal} options={{ hideFooter: true }}>
