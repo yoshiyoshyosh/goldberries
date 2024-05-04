@@ -17,6 +17,7 @@ import {
   BasicBox,
   BasicContainerBox,
   ErrorDisplay,
+  HeadTitle,
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
@@ -168,6 +169,7 @@ function MonthlyRecap({ month }) {
 
   return (
     <>
+      <HeadTitle title={`Monthly Recap '${month}'`} />
       {diffGrid}
 
       <Typography variant="h5">Monthly Recap for '{month}'</Typography>
@@ -231,7 +233,7 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3, challenge_chan
     .concat(Object.keys(newlyClearedByDate))
     .concat(Object.keys(challengeChangesByDate));
   timelineDates = [...new Set(timelineDates)]; //Remove duplicates
-  const timelineItems = timelineDates
+  let timelineItems = timelineDates
     .sort((a, b) => parseInt(b) - parseInt(a))
     .map((date) => {
       const submissions_t0 = submissionsByDate[date] || [];
@@ -240,8 +242,15 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3, challenge_chan
       return { date: new Date(parseInt(date)), submissions_t0, newly_cleared_t3, challenge_changes };
     });
 
-  //Remove duplicates
-  // console.log("Timeline Items:", timelineItems);
+  //Filter out empty entries
+  timelineItems = timelineItems.filter((item) => {
+    return (
+      item.submissions_t0.length +
+        item.newly_cleared_t3.length +
+        (hideChangelog ? 0 : item.challenge_changes.length) >
+      0
+    );
+  });
 
   return (
     <Timeline
@@ -271,18 +280,17 @@ function MonthlyRecapTimelineItem({
   isLast = false,
   hideChangelog = false,
 }) {
-  if (submissions_t0.length + newly_cleared_t3.length + (hideChangelog ? 0 : challenge_changes.length) === 0)
-    return null;
   //Show date as locale date string with month and day numbers
   const dateStr = date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  const totalEntries =
+    submissions_t0.length + newly_cleared_t3.length + (hideChangelog ? 0 : challenge_changes.length);
+
   return (
     <TimelineItem>
       <TimelineOppositeContent color="text.secondary">{dateStr}</TimelineOppositeContent>
       <TimelineSeparator>
         <TimelineDot />
-        {isLast && submissions_t0.length + newly_cleared_t3.length + challenge_changes.length < 2 ? null : (
-          <TimelineConnector />
-        )}
+        {(totalEntries > 1 || !isLast) && <TimelineConnector />}
       </TimelineSeparator>
       <TimelineContent>
         <Stack direction="column" gap={1}>
@@ -299,7 +307,11 @@ function MonthlyRecapTimelineItem({
             );
           })}
         </Stack>
-        <Stack direction="column" gap={1} sx={{ mt: newly_cleared_t3.length === 0 ? 0 : 1 }}>
+        <Stack
+          direction="column"
+          gap={1}
+          sx={{ mt: newly_cleared_t3.length === 0 || submissions_t0.length === 0 ? 0 : 1 }}
+        >
           {submissions_t0.map((submission) => {
             return (
               <TimelineSubmission

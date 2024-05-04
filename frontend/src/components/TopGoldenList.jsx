@@ -439,7 +439,7 @@ function TopGoldenListRow({
         align="center"
       >
         <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
-          <ChallengeFcIcon challenge={challenge} height="1.3em" />
+          <ChallengeFcIcon challenge={challenge} height="1.3em" isTopGoldenList />
         </Stack>
       </TableCell>
       <TableCell

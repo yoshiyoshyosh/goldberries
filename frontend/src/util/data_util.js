@@ -43,15 +43,18 @@ export function getChallengeDescription(challenge) {
   return challenge.description === null ? "" : challenge.description;
 }
 
-export function getChallengeNameShort(challenge) {
+export function getChallengeNameShort(challenge, withDescription = false) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
+  const challengeDescriptionSuffix =
+    withDescription && challenge.description !== null ? " [" + challenge.description + "]" : "";
   return (
     oldPrefix +
     challenge.objective.name +
     " " +
     getChallengeFcShort(challenge) +
-    getChallengeObjectiveSuffix(challenge)
+    getChallengeObjectiveSuffix(challenge) +
+    challengeDescriptionSuffix
   );
 }
 
