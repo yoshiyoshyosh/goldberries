@@ -3,7 +3,10 @@ import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../.
 import { FormSubmissionWrapper } from "../../components/forms/Submission";
 import {
   Box,
+  Button,
+  Checkbox,
   Divider,
+  Grid,
   Paper,
   Stack,
   Table,
@@ -13,10 +16,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getQueryData, useGetSubmissionQueue } from "../../hooks/useApi";
+import { getQueryData, useGetSubmissionQueue, usePostSubmission } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
@@ -137,6 +141,8 @@ export function PageSubmissionQueue() {
 
 function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) {
   const [rowsPerPage, setRowsPerPage] = useLocalStorage("submission_queue_rows_per_page", 10);
+  const [selected, setSelected] = useState([]);
+  const { mutateAsync: updateSubmission } = usePostSubmission();
 
   let defaultPage = 0;
   if (selectedSubmissionId !== null) {
@@ -147,20 +153,76 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
   }
   const [page, setPage] = useState(defaultPage);
 
+  const onSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = queue.map((submission) => submission.id);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+  const onSelectSubmission = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+    }
+
+    setSelected(newSelected);
+  };
+
+  const verifyAll = () => {
+    const submissions = queue.filter((submission) => selected.includes(submission.id));
+    const promises = submissions.map((submission) => {
+      return updateSubmission({ ...submission, is_verified: true });
+    });
+    Promise.all(promises).then(() => {
+      setSelected([]);
+      toast.success("All selected submissions have been verified.");
+    });
+  };
+  const rejectAll = () => {
+    const submissions = queue.filter((submission) => selected.includes(submission.id));
+    const promises = submissions.map((submission) => {
+      return updateSubmission({ ...submission, is_verified: false });
+    });
+    Promise.all(promises).then(() => {
+      setSelected([]);
+      toast.success("All selected submissions have been rejected.");
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>
-              <Typography variant="h5">Submissions ({queue.length} total)</Typography>
+            <TableCell sx={{ p: 0 }}>
+              <Checkbox
+                indeterminate={selected.length > 0 && selected.length < queue.length}
+                onClick={onSelectAllClick}
+              />
+            </TableCell>
+            <TableCell sx={{ pl: 1 }}>
+              {selected.length > 0 ? (
+                <Typography variant="h6">Selected {selected.length}</Typography>
+              ) : (
+                <Typography variant="h6">Submissions ({queue.length} total)</Typography>
+              )}
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {queue.length === 0 && (
             <TableRow>
-              <TableCell>
+              <TableCell colSpan={2}>
                 <Typography variant="body1">No submissions in queue</Typography>
               </TableCell>
             </TableRow>
@@ -168,57 +230,16 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
           {(rowsPerPage === -1
             ? queue
             : queue.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          ).map((submission) => {
-            const challenge = submission.challenge;
-            const map = challenge !== null ? challenge.map : null;
-            const campaign = getChallengeCampaign(challenge);
-            return (
-              <TableRow
-                key={submission.id}
-                selected={submission.id === selectedSubmissionId}
-                onClick={() => {
-                  setSubmissionId(submission.id);
-                }}
-                sx={{ cursor: "pointer" }}
-              >
-                <TableCell>
-                  {submission.challenge !== null ? (
-                    <>
-                      <Stack direction="row">
-                        <Typography variant="body1" sx={{ flex: 1 }}>
-                          {submission.player.name}
-                          {" - "}
-                          {map === null ? challenge.description : map.name}
-                        </Typography>
-                        <Typography variant="body1">{submission.id}</Typography>
-                      </Stack>
-                      <Stack direction="row">
-                        <Typography variant="body2" sx={{ flex: 1 }}>
-                          {campaign.name}
-                        </Typography>
-                        <DifficultyChip difficulty={submission.challenge.difficulty} />{" "}
-                      </Stack>
-                    </>
-                  ) : (
-                    <>
-                      <Stack direction="row">
-                        <Typography variant="body1" sx={{ flex: 1 }}>
-                          {submission.player.name}
-                        </Typography>
-                        <Typography variant="body1">{submission.id}</Typography>
-                      </Stack>
-                      <Stack direction="row">
-                        <Typography variant="body2" sx={{ flex: 1 }}>
-                          New Challenge: {submission.new_challenge.name}
-                        </Typography>
-                        <DifficultyChip difficulty={submission.suggested_difficulty} />{" "}
-                      </Stack>
-                    </>
-                  )}
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          ).map((submission) => (
+            <SubmissionQueueTableRow
+              key={submission.id}
+              submission={submission}
+              selectedSubmissionId={selectedSubmissionId}
+              setSubmissionId={setSubmissionId}
+              isSelected={selected.includes(submission.id)}
+              onSelect={onSelectSubmission}
+            />
+          ))}
         </TableBody>
       </Table>
       <TablePagination
@@ -241,6 +262,67 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
           },
         }}
       />
+      {selected.length > 0 && (
+        <Grid container columnSpacing={1} sx={{ p: 1 }}>
+          <Grid item xs={12} md={12}>
+            <Button variant="contained" fullWidth color="success" onClick={verifyAll}>
+              Verify '{selected.length}' Selected
+            </Button>
+          </Grid>
+          {/* <Grid item xs={12} md={6}>
+            <Button variant="contained" fullWidth color="error" onClick={rejectAll}>
+              Reject All
+            </Button>
+          </Grid> */}
+        </Grid>
+      )}
     </TableContainer>
+  );
+}
+
+function SubmissionQueueTableRow({
+  submission,
+  selectedSubmissionId,
+  setSubmissionId,
+  isSelected,
+  onSelect,
+}) {
+  const challenge = submission.challenge;
+  const map = challenge !== null ? challenge.map : null;
+  const campaign = getChallengeCampaign(challenge);
+  const textTop =
+    submission.player.name +
+    (challenge === null ? "" : " - " + (map === null ? challenge.description : map.name));
+  const textBottom = challenge === null ? "New Challenge: " + submission.new_challenge.name : campaign.name;
+  const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;
+  return (
+    <TableRow
+      key={submission.id}
+      selected={submission.id === selectedSubmissionId}
+      sx={{ cursor: "pointer" }}
+    >
+      <TableCell sx={{ p: 0 }}>
+        <Checkbox checked={isSelected} onClick={(event) => onSelect(event, submission.id)} />
+      </TableCell>
+      <TableCell
+        onClick={() => {
+          setSubmissionId(submission.id);
+        }}
+        sx={{ pl: 1 }}
+      >
+        <Stack direction="row">
+          <Typography variant="body1" sx={{ flex: 1 }}>
+            {textTop}
+          </Typography>
+          <Typography variant="body1">{submission.id}</Typography>
+        </Stack>
+        <Stack direction="row">
+          <Typography variant="body2" sx={{ flex: 1 }}>
+            {textBottom}
+          </Typography>
+          <DifficultyChip difficulty={diff} />
+        </Stack>
+      </TableCell>
+    </TableRow>
   );
 }
