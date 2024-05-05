@@ -21,6 +21,7 @@ import {
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
+  getErrorFromMultiple,
 } from "../components/BasicComponents";
 import { GlobalStatsComponent, TiersCountDisplay } from "./Index";
 import { getQueryData, useGetAllDifficulties, useGetStats } from "../hooks/useApi";
@@ -114,6 +115,7 @@ function MonthlyRecap({ month }) {
   const [hideChangelog, setHideChangelog] = useLocalStorage("monthly_recap_hide_changelog", false);
 
   const query = useGetStats("monthly_recap", month, allClearsDifficulty?.sort, firstClearsDifficulty?.sort);
+  const snapshotQuery = useGetStats("all", month);
 
   const diffGrid = (
     <Grid container columnSpacing={2} sx={{ mb: 1 }}>
@@ -148,41 +150,46 @@ function MonthlyRecap({ month }) {
     </Grid>
   );
 
-  if (query.isLoading) {
+  if (query.isLoading || snapshotQuery.isLoading) {
     return (
       <>
         {diffGrid}
         <LoadingSpinner />
       </>
     );
-  } else if (query.isError) {
+  } else if (query.isError || snapshotQuery.isError) {
+    const error = getErrorFromMultiple(query, snapshotQuery);
     return (
       <>
         {diffGrid}
-        <ErrorDisplay error={query.error} />
+        <ErrorDisplay error={error} />
       </>
     );
   }
 
   const data = getQueryData(query);
   const { tier_clears, submissions_t0, challenge_changes, newly_cleared_t3 } = data;
+  const { overall, difficulty } = getQueryData(snapshotQuery);
 
   return (
     <>
       <HeadTitle title={`Monthly Recap '${month}'`} />
       {diffGrid}
 
-      <Typography variant="h5">Monthly Recap for '{month}'</Typography>
+      <Divider sx={{ mt: 1, mb: 2 }} />
 
-      <Typography variant="h6" sx={{ mt: 1 }}>
-        New Clears
+      <Typography variant="h5" textAlign="center">
+        Monthly Recap for '{month}'
       </Typography>
-      <TiersCountDisplay stats={tier_clears} hideEmpty equalWidths={3} />
+
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Total clears this month
+      </Typography>
+      <TiersCountDisplay stats={difficulty} differences={tier_clears} hideEmpty equalWidths={3} />
 
       <Typography variant="h6" sx={{ mt: 3 }}>
         Timeline
       </Typography>
-
       <MonthlyRecapTimeline
         submissions_t0={submissions_t0}
         newly_cleared_t3={newly_cleared_t3}

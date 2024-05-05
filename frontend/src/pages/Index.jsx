@@ -345,7 +345,7 @@ export function GlobalStatsComponent() {
   );
 }
 
-export function TiersCountDisplay({ stats, hideEmpty = false, equalWidths = 0 }) {
+export function TiersCountDisplay({ stats, differences, hideEmpty = false, equalWidths = 0 }) {
   const query = useGetAllDifficulties();
 
   if (query.isLoading) {
@@ -361,6 +361,7 @@ export function TiersCountDisplay({ stats, hideEmpty = false, equalWidths = 0 })
       {difficulties.map((diff) => {
         if (diff.id === 13) return null; //Skip "tier 3 (guard)"
         const count = stats[diff.id] || 0;
+        const difference = differences ? differences[diff.id] : null;
         const isEmpty = count === 0;
         let width = 12;
         if (diff.id === 18 || diff.id === 19) width = 6;
@@ -370,7 +371,7 @@ export function TiersCountDisplay({ stats, hideEmpty = false, equalWidths = 0 })
           <Grid item key={diff.id} xs={12} md={width}>
             <DifficultyValueChip
               difficulty={diff}
-              value={count}
+              value={count + (difference ? ` (+${difference})` : "")}
               useSubtierColors
               useDarkening
               sx={{ width: 1, fontSize: "1em", opacity: isEmpty && hideEmpty ? 0.15 : 1 }}
