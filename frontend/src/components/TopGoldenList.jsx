@@ -29,6 +29,7 @@ import {
   CampaignIcon,
   ChallengeFcIcon,
   DifficultyChip,
+  ObjectiveIcon,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
@@ -42,7 +43,7 @@ import { MapDisplay } from "../pages/Map";
 import Color from "color";
 import { CampaignDisplay } from "../pages/Campaign";
 
-export function TopGoldenList({ type, id, archived = false, arbitrary = false }) {
+export function TopGoldenList({ type, id, archived = false, arbitrary = false, isOverallList = false }) {
   const { settings } = useAppSettings();
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
     "top_golden_list_useSuggestedDifficulties",
@@ -167,6 +168,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false })
               showMap={showMap}
               render={index <= renderUpTo.index}
               onFinishRendering={onFinishRendering}
+              isOverallList={isOverallList}
             />
           );
         })}
@@ -188,6 +190,7 @@ function TopGoldenListGroup({
   showMap,
   render,
   onFinishRendering,
+  isOverallList,
 }) {
   const theme = useTheme();
   const name = tier[0].name;
@@ -298,6 +301,7 @@ function TopGoldenListGroup({
                       useSuggested={useSuggested}
                       openEditChallenge={openEditChallenge}
                       showMap={showMap}
+                      isOverallList={isOverallList}
                     />
                   );
                 })}
@@ -326,6 +330,7 @@ function TopGoldenListSubtier({
   useSuggested,
   openEditChallenge,
   showMap,
+  isOverallList,
 }) {
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
   challenges.sort((a, b) => {
@@ -335,6 +340,8 @@ function TopGoldenListSubtier({
     const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
     return getMapName(mapA, campaignA).localeCompare(getMapName(mapB, campaignB));
   });
+
+  const isFwgSubtier = subtier.id === 12; //low tier 3 -> add fwg at the end
 
   return (
     <>
@@ -356,6 +363,7 @@ function TopGoldenListSubtier({
           />
         );
       })}
+      {isFwgSubtier && isOverallList ? <TopGoldenListFwgRow /> : null}
     </>
   );
 }
@@ -653,6 +661,132 @@ function TopGoldenListRow({
               )}
             </StyledLink>
           ) : null}
+        </Stack>
+      </TableCell>
+    </TableRow>
+  );
+}
+function TopGoldenListFwgRow({}) {
+  const theme = useTheme();
+  const { settings } = useAppSettings();
+  const tpgSettings = settings.visual.topGoldenList;
+  const colors = getDifficultyColorsSettings(settings, 13); // guard tier 3 ID
+
+  const rowStyle = {
+    backgroundColor: colors.color,
+    color: colors.contrast_color,
+  };
+  const cellStyle = {
+    padding: "2px 8px",
+  };
+
+  let name = "Farewell";
+
+  return (
+    <TableRow style={rowStyle}>
+      <TableCell
+        sx={{
+          ...rowStyle,
+          ...cellStyle,
+          p: 0,
+          pl: 1,
+        }}
+        align="center"
+      >
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+          <ChallengeFcIcon challenge={{ requires_fc: false, has_fc: true }} height="1.3em" isTopGoldenList />
+        </Stack>
+      </TableCell>
+      <TableCell
+        sx={{
+          ...rowStyle,
+          ...cellStyle,
+          textAlign: "left",
+          pl: 1,
+        }}
+      >
+        <Stack direction="row" gap={1} alignItems="center">
+          <Box
+            component="span"
+            sx={{
+              whiteSpace: {
+                xs: "normal",
+                sm: "nowrap",
+              },
+            }}
+          >
+            <Stack
+              direction="row"
+              gap={0.5}
+              sx={{
+                cursor: "pointer",
+                color: "inherit",
+                textDecoration: "none",
+                transition: "background-color 0.2s",
+                maxWidth: "250px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              alignItems="center"
+            >
+              <StyledExternalLink
+                style={{ color: "inherit", textDecoration: "none" }}
+                href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=583834938"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    color: "inherit",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {name}
+                </span>
+              </StyledExternalLink>
+              <ObjectiveIcon
+                objective={{
+                  name: "Farewell Golden",
+                  description: "Chapter 9 of vanilla Celeste",
+                  icon_url: "/icons/goldenberry-8x.png",
+                }}
+                height="1em"
+              />
+            </Stack>
+          </Box>
+        </Stack>
+      </TableCell>
+      <TableCell
+        style={{
+          ...rowStyle,
+          ...cellStyle,
+          display: "table-cell",
+          fontSize: "1em",
+          borderLeft: "1px solid " + theme.palette.tableDivider,
+        }}
+        align="center"
+      >
+        <StyledExternalLink
+          style={{ color: "inherit", textDecoration: "none" }}
+          href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=583834938"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Typography>&gt;650</Typography>
+        </StyledExternalLink>
+      </TableCell>
+      <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+          <StyledExternalLink
+            style={{ color: "inherit", textDecoration: "none", lineHeight: "1" }}
+            href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=583834938"
+            target="_blank"
+            rel="noreferrer"
+          >
+            ▶
+          </StyledExternalLink>
         </Stack>
       </TableCell>
     </TableRow>

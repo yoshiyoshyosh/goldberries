@@ -61,7 +61,7 @@ export function PageTopGoldenList({}) {
           </BasicBox>
         </Grid>
       </Grid>
-      <TopGoldenList type={type} id={id} archived={showArchived} arbitrary={showArbitrary} />
+      <TopGoldenList type={type} id={id} archived={showArchived} arbitrary={showArbitrary} isOverallList />
     </Box>
   );
 }
