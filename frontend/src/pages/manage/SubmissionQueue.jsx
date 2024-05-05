@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Divider,
   Grid,
   Paper,
@@ -16,6 +17,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -113,13 +115,13 @@ export function PageSubmissionQueue() {
       <BasicContainerBox sx={{ mt: 0, p: 2, position: "relative" }}>
         <Box
           sx={{
-            position: { xs: "relative", lg: "absolute" },
+            position: { xs: "relative", xl: "absolute" },
             mt: 0,
             p: 1,
             pt: 1,
             top: 0,
             left: 0,
-            transform: { xs: "none", lg: "translate(calc(-100% - 20px), 0)" },
+            transform: { xs: "none", xl: "translate(calc(-100% - 20px), 0)" },
           }}
         >
           <SubmissionQueueTable
@@ -127,7 +129,7 @@ export function PageSubmissionQueue() {
             selectedSubmissionId={parseInt(submissionId)}
             setSubmissionId={updateSubmissionId}
           />
-          <Divider sx={{ my: 2, display: { xs: "block", lg: "none" } }} />
+          <Divider sx={{ my: 2, display: { xs: "block", xl: "none" } }} />
         </Box>
         {submissionId !== null ? (
           <FormSubmissionWrapper id={submissionId} onSave={goToNextSubmission} />
@@ -142,6 +144,7 @@ export function PageSubmissionQueue() {
 function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) {
   const [rowsPerPage, setRowsPerPage] = useLocalStorage("submission_queue_rows_per_page", 10);
   const [selected, setSelected] = useState([]);
+  const [note, setNote] = useState("");
   const { mutateAsync: updateSubmission } = usePostSubmission();
 
   let defaultPage = 0;
@@ -178,33 +181,31 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
     setSelected(newSelected);
   };
 
-  const verifyAll = () => {
+  const verifyAll = (verified) => {
     const submissions = queue.filter((submission) => selected.includes(submission.id));
     const promises = submissions.map((submission) => {
-      return updateSubmission({ ...submission, is_verified: true });
+      const data = { ...submission, is_verified: verified };
+      if (note !== undefined && note !== null && note !== "") {
+        data.verifier_notes = note;
+      }
+      return updateSubmission(data);
     });
-    Promise.all(promises).then(() => {
-      setSelected([]);
-      toast.success("All selected submissions have been verified.");
-    });
-  };
-  const rejectAll = () => {
-    const submissions = queue.filter((submission) => selected.includes(submission.id));
-    const promises = submissions.map((submission) => {
-      return updateSubmission({ ...submission, is_verified: false });
-    });
-    Promise.all(promises).then(() => {
-      setSelected([]);
-      toast.success("All selected submissions have been rejected.");
-    });
+    Promise.all(promises)
+      .then(() => {
+        setSelected([]);
+        toast.success(`All selected submissions have been ${verified ? "verified" : "rejected"}.`);
+      })
+      .catch(() => {
+        //Do nothing, error is handled by usePostSubmission
+      });
   };
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ width: { xs: "100%", xl: "400px" } }}>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ p: 0 }}>
+            <TableCell sx={{ p: 0 }} width={1}>
               <Checkbox
                 indeterminate={selected.length > 0 && selected.length < queue.length}
                 onClick={onSelectAllClick}
@@ -263,17 +264,38 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
         }}
       />
       {selected.length > 0 && (
-        <Grid container columnSpacing={1} sx={{ p: 1 }}>
+        <Grid container spacing={1} sx={{ p: 1 }}>
           <Grid item xs={12} md={12}>
-            <Button variant="contained" fullWidth color="success" onClick={verifyAll}>
+            <TextField
+              label="Verifier Note"
+              fullWidth
+              variant="outlined"
+              placeholder="Verify Note / Reject Reason"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Button variant="contained" fullWidth color="success" onClick={() => verifyAll(true)}>
               Verify '{selected.length}' Selected
             </Button>
           </Grid>
-          {/* <Grid item xs={12} md={6}>
-            <Button variant="contained" fullWidth color="error" onClick={rejectAll}>
-              Reject All
+          <Grid item xs={12} md={12}>
+            <Divider>
+              <Chip label="OR" size="small" />
+            </Divider>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Button
+              variant="contained"
+              fullWidth
+              color="error"
+              onClick={() => verifyAll(false)}
+              disabled={note === ""}
+            >
+              Reject '{selected.length}' Selected
             </Button>
-          </Grid> */}
+          </Grid>
         </Grid>
       )}
     </TableContainer>
@@ -301,7 +323,7 @@ function SubmissionQueueTableRow({
       selected={submission.id === selectedSubmissionId}
       sx={{ cursor: "pointer" }}
     >
-      <TableCell sx={{ p: 0 }}>
+      <TableCell sx={{ p: 0 }} width={1}>
         <Checkbox checked={isSelected} onClick={(event) => onSelect(event, submission.id)} />
       </TableCell>
       <TableCell
