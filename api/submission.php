@@ -227,6 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   }
 
   if ($submission->delete($DB)) {
+    log_info("'{$account->player->name}' deleted {$submission}", "Submission");
     http_response_code(200);
   } else {
     die_json(500, "Failed to delete submission");

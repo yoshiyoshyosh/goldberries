@@ -147,17 +147,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     die_json(403, "Not authorized");
   }
 
-  if (isset($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
-    $challenge = new Challenge();
-    $challenge->id = $id;
-    if ($challenge->delete($DB)) {
-      log_info("'{$account->player->name}' deleted {$challenge}", "Challenge");
-      api_write($challenge);
-    } else {
-      die_json(500, "Failed to delete challenge");
-    }
-  } else {
+  if (!isset($_REQUEST['id'])) {
     die_json(400, "Missing id");
+
+  }
+
+  $id = intval($_REQUEST['id']);
+  if ($id === 0 || $id < 0) {
+    die_json(400, "Invalid id");
+  }
+
+  $challenge = Challenge::get_by_id($DB, $id);
+  if ($challenge === false) {
+    die_json(404, "Challenge not found");
+  }
+  if ($challenge->delete($DB)) {
+    log_info("'{$account->player->name}' deleted {$challenge}", "Challenge");
+    api_write($challenge);
+  } else {
+    die_json(500, "Failed to delete challenge");
   }
 }

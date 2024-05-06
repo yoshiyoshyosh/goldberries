@@ -76,17 +76,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     die_json(403, "Not authorized");
   }
 
-  if (isset($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
-    $campaign = new Campaign();
-    $campaign->id = $id;
-    if ($campaign->delete($DB)) {
-      log_info("'{$account->player->name}' deleted {$campaign}", "Campaign");
-      api_write($campaign);
-    } else {
-      die_json(500, "Failed to delete campaign");
-    }
-  } else {
+  if (!isset($_REQUEST['id'])) {
     die_json(400, "Missing id");
+  }
+
+  $id = intval($_REQUEST['id']);
+  if ($id === 0 || $id < 0) {
+    die_json(400, "Invalid id");
+  }
+
+  $campaign = Campaign::get_by_id($DB, $id);
+  if ($campaign === false) {
+    die_json(404, "Campaign not found");
+  }
+  if ($campaign->delete($DB)) {
+    log_info("'{$account->player->name}' deleted {$campaign}", "Campaign");
+    api_write($campaign);
+  } else {
+    die_json(500, "Failed to delete campaign");
   }
 }

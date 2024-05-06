@@ -91,17 +91,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     die_json(403, "Not authorized");
   }
 
-  if (isset($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
-    $map = new Map();
-    $map->id = $id;
-    if ($map->delete($DB)) {
-      log_info("'{$account->player->name}' deleted {$map}", "Map");
-      api_write($map);
-    } else {
-      die_json(500, "Failed to delete map");
-    }
-  } else {
+  if (!isset($_REQUEST['id'])) {
     die_json(400, "Missing id");
+  }
+
+  $id = intval($_REQUEST['id']);
+  if ($id === 0 || $id < 0) {
+    die_json(400, "Invalid id");
+  }
+
+  $map = Map::get_by_id($DB, $id);
+  if ($map === false) {
+    die_json(404, "Map not found");
+  }
+
+  if ($map->delete($DB)) {
+    log_info("'{$account->player->name}' deleted {$map}", "Map");
+    api_write($map);
+  } else {
+    die_json(500, "Failed to delete map");
   }
 }
