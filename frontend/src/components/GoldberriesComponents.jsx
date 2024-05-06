@@ -790,14 +790,14 @@ export function SubmissionFcIcon({ submission, height = "1em", disableTooltip = 
   return <Tooltip title={alt}>{comp}</Tooltip>;
 }
 
-export function OtherIcon({ name, title, alt, height = "1em" }) {
+export function OtherIcon({ url, title, alt, height = "1em" }) {
   if (title === undefined) {
-    return <img src={"/icons/" + name + ".png"} alt={alt} style={{ height: height }} />;
+    return <img src={url} className="outlined" alt={alt} style={{ height: height }} />;
   }
 
   return (
     <Tooltip title={title}>
-      <img src={"/icons/" + name + ".png"} alt={alt} style={{ height: height }} />
+      <img src={url} className="outlined" alt={alt} style={{ height: height }} />
     </Tooltip>
   );
 }

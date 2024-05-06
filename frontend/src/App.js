@@ -247,7 +247,7 @@ export const lightTheme = createTheme({
     background: {
       other: "rgba(255,255,255,0.75)",
     },
-    tableDivider: "#e0e0e0",
+    tableDivider: "#949494",
     box: {
       border: "#cccccc99",
       hover: "#f0f0f0",
@@ -1030,7 +1030,7 @@ function SearchModal({ open, onClose }) {
       fullWidth
       sx={{ background: "transparent" }}
       PaperProps={{
-        sx: { borderRadius: "10px" },
+        sx: { borderRadius: "10px", border: "1px solid #cccccc99" },
       }}
       disableRestoreFocus
     >
@@ -1049,7 +1049,7 @@ function SettingsModal({ open, onClose }) {
       fullWidth
       sx={{ background: "transparent" }}
       PaperProps={{
-        sx: { borderRadius: "10px" },
+        sx: { borderRadius: "10px", border: "1px solid #cccccc99" },
       }}
       disableRestoreFocus
     >

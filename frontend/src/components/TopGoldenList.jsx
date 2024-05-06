@@ -30,6 +30,7 @@ import {
   ChallengeFcIcon,
   DifficultyChip,
   ObjectiveIcon,
+  OtherIcon,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
@@ -163,7 +164,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
               maps={topGoldenList.maps}
               challenges={topGoldenList.challenges}
               isPlayer={isPlayer}
-              useSuggested={useSuggestedDifficulties}
+              useSuggested={isPlayer && useSuggestedDifficulties}
               openEditChallenge={openEditChallenge}
               showMap={showMap}
               render={index <= renderUpTo.index}
@@ -207,11 +208,21 @@ function TopGoldenListGroup({
 
   const tierMap = tier.map((subtier) => subtier.id);
   const isEmptyTier =
-    challenges.filter((challenge) => tierMap.includes(challenge.difficulty.id)).length === 0;
+    challenges.filter((challenge) =>
+      tierMap.includes(
+        useSuggested
+          ? challenge.submissions[0].suggested_difficulty.id ?? challenge.difficulty.id
+          : challenge.difficulty.id
+      )
+    ).length === 0;
 
   if (settings.visual.topGoldenList.hideEmptyTiers && isEmptyTier) {
     return null;
   }
+
+  const cellStyle = {
+    borderBottom: "1px solid " + theme.palette.tableDivider,
+  };
 
   return (
     <>
@@ -222,17 +233,19 @@ function TopGoldenListGroup({
               <TableRow>
                 <TableCell
                   sx={{
+                    ...cellStyle,
                     p: 0,
                     pl: 1,
                   }}
                 ></TableCell>
-                <TableCell colSpan={1} sx={{ pl: 1 }}>
+                <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1 }}>
                   <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
                     {name}
                   </Typography>
                 </TableCell>
                 <TableCell
                   sx={{
+                    ...cellStyle,
                     borderLeft: "1px solid " + theme.palette.tableDivider,
                   }}
                   align="center"
@@ -255,6 +268,7 @@ function TopGoldenListGroup({
                 </TableCell>
                 <TableCell
                   sx={{
+                    ...cellStyle,
                     borderLeft: "1px solid " + theme.palette.tableDivider,
                   }}
                   align="center"
@@ -282,13 +296,26 @@ function TopGoldenListGroup({
                     </TableCell>
                   </TableRow>
                 )}
-                {tier.map((subtier) => {
+                {tier.map((subtier, index) => {
                   const tierChallenges = challenges.filter(
                     (challenge) =>
                       (useSuggested
                         ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
                         : challenge.difficulty.id) === subtier.id
                   );
+
+                  let hadEntriesBefore = false;
+                  if (index > 0) {
+                    // Check if the previous subtier had entries
+                    const previousSubtier = tier[index - 1];
+                    const previousTierChallenges = challenges.filter(
+                      (challenge) =>
+                        (useSuggested
+                          ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+                          : challenge.difficulty.id) === previousSubtier.id
+                    );
+                    hadEntriesBefore = previousTierChallenges.length > 0;
+                  }
 
                   return (
                     <TopGoldenListSubtier
@@ -302,6 +329,7 @@ function TopGoldenListGroup({
                       openEditChallenge={openEditChallenge}
                       showMap={showMap}
                       isOverallList={isOverallList}
+                      hadEntriesBefore={hadEntriesBefore}
                     />
                   );
                 })}
@@ -331,6 +359,7 @@ function TopGoldenListSubtier({
   openEditChallenge,
   showMap,
   isOverallList,
+  hadEntriesBefore,
 }) {
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
   challenges.sort((a, b) => {
@@ -345,7 +374,7 @@ function TopGoldenListSubtier({
 
   return (
     <>
-      {challenges.map((challenge) => {
+      {challenges.map((challenge, index) => {
         const map = maps[challenge.map_id];
         const campaign = map === undefined ? campaigns[challenge.campaign_id] : campaigns[map.campaign_id];
 
@@ -360,6 +389,7 @@ function TopGoldenListSubtier({
             useSuggested={useSuggested}
             openEditChallenge={openEditChallenge}
             showMap={showMap}
+            showDivider={index === 0 && hadEntriesBefore}
           />
         );
       })}
@@ -377,6 +407,7 @@ function TopGoldenListRow({
   useSuggested,
   openEditChallenge,
   showMap,
+  showDivider = false,
 }) {
   const auth = useAuth();
   const theme = useTheme();
@@ -391,7 +422,9 @@ function TopGoldenListRow({
   };
   const cellStyle = {
     padding: "2px 8px",
+    borderBottom: "1px solid " + theme.palette.tableDivider,
   };
+  if (showDivider) cellStyle.borderTop = "3px solid " + theme.palette.tableDivider;
 
   let nameSuffix = challenge.description === null ? "" : `${getChallengeDescription(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
@@ -675,6 +708,7 @@ function TopGoldenListFwgRow({}) {
   const rowStyle = {
     backgroundColor: colors.color,
     color: colors.contrast_color,
+    borderTop: "3px solid " + theme.palette.tableDivider,
   };
   const cellStyle = {
     padding: "2px 8px",
@@ -746,13 +780,12 @@ function TopGoldenListFwgRow({}) {
                   {name}
                 </span>
               </StyledExternalLink>
-              <ObjectiveIcon
-                objective={{
-                  name: "Farewell Golden",
-                  description: "Chapter 9 of vanilla Celeste",
-                  icon_url: "/icons/goldenberry-8x.png",
-                }}
-                height="1em"
+              <OtherIcon url={"/icons/bird.png"} title={"Birb"} alt={"Birb"} height="1.2em" />
+              <OtherIcon
+                url="/icons/goldenberry-8x.png"
+                title="Chapter 9 of vanilla Celeste"
+                alt="Farewell Golden"
+                height="1.2em"
               />
             </Stack>
           </Box>
@@ -774,7 +807,7 @@ function TopGoldenListFwgRow({}) {
           target="_blank"
           rel="noreferrer"
         >
-          <Typography>&gt;650</Typography>
+          <Typography>650+</Typography>
         </StyledExternalLink>
       </TableCell>
       <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>

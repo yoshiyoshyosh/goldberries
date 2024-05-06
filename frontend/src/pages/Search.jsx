@@ -34,8 +34,14 @@ export function PageSearch({ isDirectSearch = false }) {
 
   const title = search ? "Search '" + search + "'" : "Search";
 
+  const containerSx = { mt: 0 };
+  if (isDirectSearch) {
+    containerSx.border = "unset";
+    containerSx.borderRadius = "unset";
+  }
+
   return (
-    <BasicContainerBox maxWidth="md" sx={{ mt: 0 }}>
+    <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
       <HeadTitle title={title} />
       <Typography variant="h4">Search Goldberries Database</Typography>
       <Typography variant="body1" color="gray" gutterBottom>

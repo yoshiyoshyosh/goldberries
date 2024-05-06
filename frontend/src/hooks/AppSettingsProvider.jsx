@@ -12,7 +12,7 @@ export function AppSettingsProvider({ children }) {
         topGoldenList: {
           showCampaignIcons: true,
           useTextFcIcons: false,
-          darkenTierColors: 45,
+          darkenTierColors: 55,
           switchMapAndChallenge: false,
           hideEmptyTiers: false,
         },

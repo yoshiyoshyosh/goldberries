@@ -35,8 +35,14 @@ export function PageAppSettings({ isModal = false }) {
     }
   };
 
+  const containerSx = { mt: 0 };
+  if (isModal) {
+    containerSx.border = "unset";
+    containerSx.borderRadius = "unset";
+  }
+
   return (
-    <BasicContainerBox maxWidth="md" sx={{ mt: 0 }}>
+    <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
       <HeadTitle title="Settings" />
       <Typography variant="h4" gutterBottom>
         Settings
