@@ -248,6 +248,7 @@ export const lightTheme = createTheme({
       other: "rgba(255,255,255,0.75)",
     },
     tableDivider: "#949494",
+    tableDividerStrong: "#949494",
     box: {
       border: "#cccccc99",
       hover: "#f0f0f0",
@@ -275,6 +276,7 @@ const darkTheme = createTheme({
       other: "rgba(0,0,0,0.5)",
     },
     tableDivider: "#515151",
+    tableDividerStrong: "#515151",
     box: {
       border: "#cccccc99",
       hover: "#333",
@@ -1049,7 +1051,12 @@ function SettingsModal({ open, onClose }) {
       fullWidth
       sx={{ background: "transparent" }}
       PaperProps={{
-        sx: { borderRadius: "10px", border: "1px solid #cccccc99" },
+        sx: {
+          borderRadius: "10px",
+          border: "1px solid #cccccc99",
+          alignSelf: "flex-start",
+          marginTop: "60px",
+        },
       }}
       disableRestoreFocus
     >

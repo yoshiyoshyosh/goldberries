@@ -18,7 +18,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getDifficultyColorsSettings } from "../util/constants";
+import { getDifficultyColorsSettings, getNewDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,7 +29,6 @@ import {
   CampaignIcon,
   ChallengeFcIcon,
   DifficultyChip,
-  ObjectiveIcon,
   OtherIcon,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
@@ -42,7 +41,6 @@ import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
 import Color from "color";
-import { CampaignDisplay } from "../pages/Campaign";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false, isOverallList = false }) {
   const { settings } = useAppSettings();
@@ -196,7 +194,7 @@ function TopGoldenListGroup({
   const theme = useTheme();
   const name = tier[0].name;
   const { settings } = useAppSettings();
-  const colors = getDifficultyColorsSettings(settings, tier[0].id);
+  const colors = getNewDifficultyColors(settings, tier[0].id, true);
   const [collapsed, setCollapsed] = useState(false);
   const glowColor = darken(colors.group_color, 0.5);
 
@@ -414,7 +412,7 @@ function TopGoldenListRow({
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
   const darkmode = settings.visual.darkmode;
-  const colors = getDifficultyColorsSettings(settings, subtier.id);
+  const colors = getNewDifficultyColors(settings, subtier.id, true);
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -424,7 +422,7 @@ function TopGoldenListRow({
     padding: "2px 8px",
     borderBottom: "1px solid " + theme.palette.tableDivider,
   };
-  if (showDivider) cellStyle.borderTop = "3px solid " + theme.palette.tableDivider;
+  if (showDivider) cellStyle.borderTop = "3px solid " + theme.palette.tableDividerStrong;
 
   let nameSuffix = challenge.description === null ? "" : `${getChallengeDescription(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
@@ -708,7 +706,7 @@ function TopGoldenListFwgRow({}) {
   const rowStyle = {
     backgroundColor: colors.color,
     color: colors.contrast_color,
-    borderTop: "3px solid " + theme.palette.tableDivider,
+    borderTop: "3px solid " + theme.palette.tableDividerStrong,
   };
   const cellStyle = {
     padding: "2px 8px",

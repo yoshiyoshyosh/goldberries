@@ -31,7 +31,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { getDifficultyColors, getDifficultyColorsSettings } from "../util/constants";
+import { getDifficultyColors, getDifficultyColorsSettings, getNewDifficultyColors } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -334,7 +334,7 @@ export function DifficultyValueChip({
 }) {
   const { settings } = useAppSettings();
   const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
-  const colors = getDifficultyColorsSettings(settings, difficulty?.id, !useDarkening);
+  const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
   if (difficulty === null) return null;
   return (
     <Grid container columnSpacing={0.75}>

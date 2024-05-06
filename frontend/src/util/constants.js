@@ -1,5 +1,6 @@
 import { darken } from "@mui/material";
 import { lightTheme } from "../App";
+import Color from "color";
 
 export const APP_URL = process.env.REACT_APP_URL;
 export const API_URL = process.env.REACT_APP_API_URL;
@@ -183,10 +184,21 @@ export function getDifficultyColorsTheme(theme, id) {
 }
 
 function darkenDiffColor(color, amount) {
+  // let newColor = new Color(color.color);
+  // newColor = newColor.black(newColor.black() + amount * 100);
+  // let newGroupColor = new Color(color.group_color);
+  // newGroupColor = newGroupColor.black(newGroupColor.black() + amount * 100);
+  // console.log("darkening colors", newColor);
+  // return {
+  //   color: newColor.hex(),
+  //   group_color: newGroupColor.hex(),
+  //   contrast_color: lightTheme.palette.getContrastText(newColor.hex()),
+  // };
+
   return {
-    color: darken(color.color, amount),
-    group_color: darken(color.group_color, amount),
-    contrast_color: lightTheme.palette.getContrastText(darken(color.color, amount)),
+    color: new Color(darken(color.color, amount)).hex(),
+    group_color: new Color(darken(color.group_color, amount)).hex(),
+    contrast_color: new Color(lightTheme.palette.getContrastText(darken(color.color, amount))).hex(),
   };
 }
 export function getDifficultyColorsSettings(settings, id, ignoreDarkening = false) {
@@ -199,4 +211,104 @@ export function getDifficultyColorsSettings(settings, id, ignoreDarkening = fals
   } else {
     return darkenDiffColor(entry, 0);
   }
+}
+
+export function getNewDifficultyColors(settings, id, useDarkening = false) {
+  const colors = getSettingsDifficultyColor(settings, id);
+  if (useDarkening && settings.visual.darkmode) {
+    return darkenDiffColor(colors, settings.visual.topGoldenList.darkenTierColors / 100);
+  } else {
+    return darkenDiffColor(colors, 0);
+  }
+}
+
+const DIFFICULTY_BASE_COLORS = {
+  2: "#ff97d8",
+  5: "#ff9989",
+  8: "#ffd595",
+  11: "#ffebb0",
+  14: "#b0ff78",
+  15: "#85e191",
+  16: "#8fdeff",
+  17: "#96a6ff",
+  18: "#ffffff",
+  19: "#aaaaaa",
+};
+function getSettingsDifficultyColor(settings, id) {
+  const groupId = getGroupId(id);
+
+  let groupColor = settings.visual.difficultyColors[groupId];
+  if (groupColor === "") {
+    groupColor = DIFFICULTY_BASE_COLORS[groupId];
+  }
+
+  let color = settings.visual.difficultyColors[id];
+  if (color === "") {
+    color = modifyBaseColor(groupColor, id);
+  }
+
+  return { color: color, group_color: groupColor };
+}
+
+const GROUP_ID_MAPPINGS = {
+  1: 2,
+  2: 2,
+  3: 2,
+  4: 5,
+  5: 5,
+  6: 5,
+  7: 8,
+  8: 8,
+  9: 8,
+  10: 11,
+  11: 11,
+  12: 11,
+  13: 11,
+  14: 14,
+  15: 15,
+  16: 16,
+  17: 17,
+  18: 18,
+  19: 19,
+};
+function getGroupId(id) {
+  return GROUP_ID_MAPPINGS[id];
+}
+
+const COLOR_MODIFY_FUNCTIONS = {
+  high: (color) => color.saturationv(color.saturationv() + 13),
+  mid: (color) => color,
+  low: (color) => color.saturationv(color.saturationv() - 13),
+  guard: (color) => color.saturationv(color.saturationv() - 20),
+  none: (color) => color,
+};
+const DIFFICULTY_ID_SUBTIERS = {
+  1: "high",
+  2: "mid",
+  3: "low",
+  4: "high",
+  5: "mid",
+  6: "low",
+  7: "high",
+  8: "mid",
+  9: "low",
+  10: "high",
+  11: "mid",
+  12: "low",
+  13: "guard",
+  14: "none",
+  15: "none",
+  16: "none",
+  17: "none",
+  18: "none",
+  19: "none",
+};
+function getDifficultySubtier(id) {
+  return DIFFICULTY_ID_SUBTIERS[id];
+}
+function modifyBaseColor(color, id) {
+  const subTier = getDifficultySubtier(id);
+  let newColor = new Color(color);
+  newColor = COLOR_MODIFY_FUNCTIONS[subTier](newColor);
+  return newColor.hex();
 }
