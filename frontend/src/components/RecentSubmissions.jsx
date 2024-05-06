@@ -121,10 +121,16 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Submission</TableCell>
+            <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
             <TableCell sx={{ p: "6px 0" }}></TableCell>
-            {!hasPlayer && <TableCell align="center">Player</TableCell>}
-            <TableCell align="center">Difficulty</TableCell>
+            {!hasPlayer && (
+              <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
+                Player
+              </TableCell>
+            )}
+            <TableCell align="center" sx={{ pr: 1, pl: 1 }}>
+              Difficulty
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -167,18 +173,18 @@ export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPag
 function RecentSubmissionsTableRowFakeout({ hasPlayer }) {
   return (
     <TableRow>
-      <TableCell sx={{ width: "99%" }}>
+      <TableCell sx={{ width: "99%", pl: 1.5, pr: 0.5 }}>
         <Skeleton variant="text" width={25 + Math.random() * 75 + "%"} />
       </TableCell>
       <TableCell sx={{ p: "6px 0" }}>
         <Skeleton variant="rect" width={12.25} height={17} />
       </TableCell>
       {!hasPlayer && (
-        <TableCell>
+        <TableCell sx={{ pl: 1, pr: 0.5 }}>
           <Skeleton variant="text" width={90} height={24} />
         </TableCell>
       )}
-      <TableCell>
+      <TableCell sx={{ pl: 0.5, pr: 1 }}>
         <Skeleton variant="text" width={70} height={24} />
       </TableCell>
     </TableRow>
@@ -193,7 +199,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const campaignNameSame = campaign?.name === map?.name;
   return (
     <TableRow key={submission.id}>
-      <TableCell sx={{ width: "99%" }}>
+      <TableCell sx={{ width: "99%", pl: 1.5, pr: 0.5 }}>
         <Stack direction="row" spacing={1} alignItems="center">
           {challenge ? (
             <>
@@ -234,11 +240,11 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
         )}
       </TableCell>
       {!hasPlayer && (
-        <TableCell align="center">
+        <TableCell align="center" sx={{ pl: 1, pr: 0.5 }}>
           <PlayerChip player={submission.player} size="small" />
         </TableCell>
       )}
-      <TableCell align="center">
+      <TableCell align="center" sx={{ pl: 0.5, pr: 1 }}>
         <DifficultyChip difficulty={challenge ? challenge.difficulty : submission.suggested_difficulty} />
       </TableCell>
     </TableRow>
