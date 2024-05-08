@@ -31,5 +31,6 @@ foreach ($requireObjects as $obj) {
 require_once (GB_ROOT_LOCAL . "/include_bootstrap/util.php");
 require_once (GB_ROOT_LOCAL . "/include_bootstrap/logging.php");
 require_once (GB_ROOT_LOCAL . "/include_bootstrap/session.php");
+require_once (GB_ROOT_LOCAL . "/include_bootstrap/discord_webhook.php");
 
 ?>

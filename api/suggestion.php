@@ -58,9 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $toLog = $suggestion->is_verified ? "verified" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_verified = $suggestion->is_verified;
+
+      if ($suggestion->is_verified === true) {
+        send_webhook_suggestion_verified($old_suggestion);
+      }
     }
     if ($old_suggestion->is_accepted !== $suggestion->is_accepted) {
-      $toLog = $suggestion->is_accepted ? "verified" : "rejected";
+      $toLog = $suggestion->is_accepted ? "accepted" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_accepted = $suggestion->is_accepted;
     }

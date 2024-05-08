@@ -169,4 +169,18 @@ class Campaign extends DbObject
     return true;
   }
 
+  function get_gamebanana_mod_id()
+  {
+    //If url is not in the form of https://gamebanana.com/mods/123456, return null
+    if (!preg_match('/\/mods\/(\d+)/', $this->url, $matches))
+      return null;
+
+    preg_match('/\/mods\/(\d+)/', $this->url, $matches);
+    return $matches[1];
+  }
+
+  function get_name()
+  {
+    return $this->name . " (by " . $this->author_gb_name . ")";
+  }
 }

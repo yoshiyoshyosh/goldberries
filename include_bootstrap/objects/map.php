@@ -56,25 +56,25 @@ class Map extends DbObject
     $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
 
-    if (isset ($arr[$prefix . 'date_added']))
+    if (isset($arr[$prefix . 'date_added']))
       $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
-    if (isset ($arr[$prefix . 'url']))
+    if (isset($arr[$prefix . 'url']))
       $this->url = $arr[$prefix . 'url'];
-    if (isset ($arr[$prefix . 'side']))
+    if (isset($arr[$prefix . 'side']))
       $this->side = $arr[$prefix . 'side'];
-    if (isset ($arr[$prefix . 'rejection_reason']))
+    if (isset($arr[$prefix . 'rejection_reason']))
       $this->rejection_reason = $arr[$prefix . 'rejection_reason'];
-    if (isset ($arr[$prefix . 'sort_major']))
+    if (isset($arr[$prefix . 'sort_major']))
       $this->sort_major = intval($arr[$prefix . 'sort_major']);
-    if (isset ($arr[$prefix . 'sort_minor']))
+    if (isset($arr[$prefix . 'sort_minor']))
       $this->sort_minor = intval($arr[$prefix . 'sort_minor']);
-    if (isset ($arr[$prefix . 'sort_order']))
+    if (isset($arr[$prefix . 'sort_order']))
       $this->sort_order = intval($arr[$prefix . 'sort_order']);
-    if (isset ($arr[$prefix . 'author_gb_id']))
+    if (isset($arr[$prefix . 'author_gb_id']))
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
-    if (isset ($arr[$prefix . 'author_gb_name']))
+    if (isset($arr[$prefix . 'author_gb_name']))
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
-    if (isset ($arr[$prefix . 'campaign_id']))
+    if (isset($arr[$prefix . 'campaign_id']))
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
   }
 
@@ -85,7 +85,7 @@ class Map extends DbObject
 
     $isFromSqlResult = is_array($DB);
 
-    if ($expand_structure && isset ($this->campaign_id)) {
+    if ($expand_structure && isset($this->campaign_id)) {
       if ($isFromSqlResult) {
         $this->campaign = new Campaign();
         $this->campaign->apply_db_data($DB, "campaign_");
@@ -195,5 +195,17 @@ class Map extends DbObject
     }
 
     return true;
+  }
+
+  function get_name()
+  {
+    $campaign_name = $this->campaign->name;
+    $campaign_name_with_author = $this->campaign->get_name();
+    $is_same = $campaign_name === $this->name;
+
+    if ($is_same)
+      return $campaign_name_with_author;
+    else
+      return "{$campaign_name_with_author} / {$this->name}";
   }
 }

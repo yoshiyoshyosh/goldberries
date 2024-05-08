@@ -225,4 +225,15 @@ class Submission extends DbObject
   {
     return "(Submission, id:{$this->id}, player_id:{$this->player_id}, challenge_id:{$this->challenge_id})";
   }
+
+  function status_string()
+  {
+    if ($this->is_verified === null) {
+      return "Pending";
+    } else if ($this->is_verified === true) {
+      return "Verified";
+    } else {
+      return "Rejected";
+    }
+  }
 }

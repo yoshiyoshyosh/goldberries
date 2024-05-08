@@ -153,6 +153,11 @@ class Challenge extends DbObject
     return $this->is_arbitrary || $this->objective->is_arbitrary;
   }
 
+  function get_campaign(): ?Campaign
+  {
+    return $this->campaign_id === null ? $this->map->campaign : $this->campaign;
+  }
+
   function __toString()
   {
     return "(Challenge, id:{$this->id}, description:'{$this->description}')";
