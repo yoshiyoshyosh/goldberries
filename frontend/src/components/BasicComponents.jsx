@@ -26,6 +26,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { APP_NAME_LONG } from "../util/constants";
 import { useTheme } from "@emotion/react";
+import { set } from "react-hook-form";
 
 export function LoadingSpinner({ ...props }) {
   return (
@@ -338,5 +339,24 @@ function OpenExternalLinkModal({ href, isOpen, onClose }) {
         </DialogContentText>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function ShareButton({ text, ...props }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
+
+  return (
+    <Button onClick={handleClick} variant="outlined" color={copied ? "success" : "primary"} {...props}>
+      {copied ? "Copied!" : "Copy Link"}
+    </Button>
   );
 }

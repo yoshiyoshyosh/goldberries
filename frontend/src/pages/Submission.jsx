@@ -5,6 +5,7 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -21,7 +22,15 @@ import {
   Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faComment, faEdit, faShield, faUser, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faComment,
+  faEdit,
+  faShield,
+  faUser,
+  faTrash,
+  faShare,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
 import {
@@ -41,10 +50,13 @@ import {
   ProofEmbed,
   HeadTitle,
   StyledLink,
+  StyledExternalLink,
+  ShareButton,
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 import { getQueryData, useDeleteSubmission, useGetSubmission } from "../hooks/useApi";
+import { API_BASE_URL, API_URL, APP_URL } from "../util/constants";
 
 export function PageSubmission({}) {
   const { id } = useParams();
@@ -129,28 +141,31 @@ export function SubmissionDisplay({ id, onDelete }) {
         <Grid item xs={6} sm>
           <VerificationStatusChip isVerified={submission.is_verified} />
         </Grid>
-        {isVerifier || isOwnSubmission ? (
-          <Grid item xs={6} sm="auto">
-            <CustomizedMenu title="Modify">
-              <MenuItem disableRipple onClick={() => editModal.open(submission)}>
-                <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                Edit
-              </MenuItem>
-              <Divider sx={{ my: 0.5 }} />
-              <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
-                <Button
-                  onClick={() => deleteModal.open(submission)}
-                  color="error"
-                  disableRipple
-                  sx={{ px: "16px" }}
-                >
-                  <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                  Delete
-                </Button>
-              </MenuItem>
-            </CustomizedMenu>
-          </Grid>
-        ) : null}
+        <Grid item xs={6} sm="auto">
+          <Stack direction="row" gap={1}>
+            <ShareButton text={API_BASE_URL + "/embed/submission.php?id=" + submission.id} />
+            {isVerifier || isOwnSubmission ? (
+              <CustomizedMenu title="Modify">
+                <MenuItem disableRipple onClick={() => editModal.open(submission)}>
+                  <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                  Edit
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                  <Button
+                    onClick={() => deleteModal.open(submission)}
+                    color="error"
+                    disableRipple
+                    sx={{ px: "16px" }}
+                  >
+                    <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                    Delete
+                  </Button>
+                </MenuItem>
+              </CustomizedMenu>
+            ) : null}
+          </Stack>
+        </Grid>
       </Grid>
       <PlayerChip player={submission.player} sx={{ mb: 2 }} />
       {submission.challenge !== null ? (
