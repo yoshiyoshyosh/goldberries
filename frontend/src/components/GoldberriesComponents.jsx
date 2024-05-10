@@ -306,9 +306,11 @@ export function DifficultyChip({
   ...props
 }) {
   const { settings } = useAppSettings();
-  const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
-  const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
   if (difficulty === null) return null;
+
+  const text = getDifficultyName(difficulty);
+  const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
+
   return (
     <Chip
       label={prefix + text + suffix}
@@ -333,9 +335,10 @@ export function DifficultyValueChip({
   ...props
 }) {
   const { settings } = useAppSettings();
-  const text = difficulty === null ? "N/A" : getDifficultyName(difficulty);
-  const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
   if (difficulty === null) return null;
+
+  const text = getDifficultyName(difficulty);
+  const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
   return (
     <Grid container columnSpacing={0.75}>
       <Grid item xs>

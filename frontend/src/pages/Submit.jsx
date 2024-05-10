@@ -45,7 +45,7 @@ import {
   PlayerChip,
   CampaignChallengeSelect,
 } from "../components/GoldberriesComponents";
-import { usePostSubmission } from "../hooks/useApi";
+import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function PageSubmit() {
@@ -117,6 +117,10 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const [map, setMap] = useState(defaultMap ?? null);
   const [challenge, setChallenge] = useState(defaultChallenge ?? null);
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
+  const [isAddingPlayer, setIsAddingPlayer] = useState(false);
+  const [newPlayerName, setNewPlayerName] = useState("");
+
+  const { mutateAsync: postPlayer } = usePostPlayer();
 
   const { mutate: submitRun } = usePostSubmission((submission) => {
     navigate("/submission/" + submission.id);
@@ -169,6 +173,23 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
     setChallenge(challenge);
     if (challenge !== null) {
       form.setValue("is_fc", challenge.requires_fc);
+    }
+  };
+
+  const addPlayer = () => {
+    if (isAddingPlayer) {
+      if (newPlayerName !== "") {
+        postPlayer({ name: newPlayerName })
+          .then((response) => {
+            setSelectedPlayer(response.data);
+            setIsAddingPlayer(false);
+          })
+          .catch((e) => {});
+      } else {
+        setIsAddingPlayer(false);
+      }
+    } else {
+      setIsAddingPlayer(true);
     }
   };
 
@@ -241,6 +262,28 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               <PlayerChip player={selectedPlayer} />
             )}
           </Grid>
+          {auth.hasVerifierPriv && (
+            <Grid item xs={12} sm={6}>
+              <Stack direction="row" gap={1} alignItems="center" sx={{ height: "100%" }}>
+                {isAddingPlayer && (
+                  <TextField
+                    label="New Player Name"
+                    fullWidth
+                    value={newPlayerName}
+                    onChange={(e) => setNewPlayerName(e.target.value)}
+                  />
+                )}
+                <Button
+                  variant={isAddingPlayer ? "contained" : "outlined"}
+                  color={isAddingPlayer && newPlayerName.length < 3 ? "error" : "primary"}
+                  onClick={addPlayer}
+                  sx={{ whiteSpace: "nowrap" }}
+                >
+                  {isAddingPlayer && newPlayerName.length < 3 ? "Cancel" : "Add Player"}
+                </Button>
+              </Stack>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               label="Proof URL *"
