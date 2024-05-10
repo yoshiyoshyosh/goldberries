@@ -1,12 +1,19 @@
 <?php
 
+$webhooks_enabled = false;
+
 function send_webhook_suggestion_verified($suggestion)
 {
   global $DB;
+  global $webhooks_enabled;
+
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $suggestion->expand_foreign_keys($DB, 5);
 
-  $webhookurl = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
   $timestamp = date("c", strtotime("now"));
 
   $challenge = $suggestion->challenge;
@@ -123,11 +130,16 @@ function send_webhook_suggestion_verified($suggestion)
 
   ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
+  send_webhook($webhook_url, $json_data);
+}
 
-  $ch = curl_init($webhookurl);
+
+function send_webhook($url, $data)
+{
+  $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
   curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   //Create request
-  if ($account->player_id !== null) {
+  if ($account->player_id !== null && !is_verifier($account)) {
     die_json(400, "Account already has a player");
   }
   if (!isset($request['name'])) {
@@ -164,16 +164,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     die_json(500, "Failed to insert player into database");
   }
 
-  log_info("Created {$player} for {$account}", "Account");
 
-  $account->player_id = $player->id;
-  $account->claimed_player_id = null;
-  if ($account->update($DB) === false) {
-    log_error("Failed to update {$account} in database after creating {$player}", "Account");
-    die_json(500, "Failed to update account in database");
+  if ($account->player_id !== null) {
+    //Verifier is adding a new player without an account
+    log_info("'{$account->player->name}' created {$player}", "Player");
+    api_write($player);
+
+  } else {
+    //Account is claiming a new player
+    log_info("Created {$player} for {$account}", "Account");
+    $account->player_id = $player->id;
+    $account->claimed_player_id = null;
+    if ($account->update($DB) === false) {
+      log_error("Failed to update {$account} in database after creating {$player}", "Account");
+      die_json(500, "Failed to update account in database");
+    }
+
+    http_response_code(200);
   }
-
-  http_response_code(200);
 }
 
 // Delete Request

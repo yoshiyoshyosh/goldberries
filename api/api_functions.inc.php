@@ -55,7 +55,7 @@ function is_valid_name($name): bool
     return false;
   }
 
-  return (bool) preg_match('/^[a-zA-Z0-9\p{Han}\p{Katakana}\p{Hiragana}\p{Hangul}_\-\.<>!\?\' ]+$/u', $name);
+  return (bool) preg_match('/^[\x{0020}-\x{007E}\x{00A1}-\x{00FF}\p{Han}\p{Katakana}\p{Hiragana}\p{Hangul}]+$/u', $name);
 }
 
 ////// CHECKS
