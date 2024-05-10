@@ -6,7 +6,6 @@ import {
   FormControlLabel,
   Grid,
   MenuItem,
-  Select,
   Stack,
   Tab,
   Tabs,
@@ -22,17 +21,8 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledExternalLink,
-  StyledLink,
 } from "../components/BasicComponents";
-import {
-  getCampaignName,
-  getChallengeFcShort,
-  getChallengeName,
-  getChallengeNameShort,
-  getDifficultyName,
-  getMapName,
-  getPlayerNameColorStyle,
-} from "../util/data_util";
+import { getDifficultyName, getMapName, getPlayerNameColorStyle } from "../util/data_util";
 import { getQueryData, useGetGoldenList } from "../hooks/useApi";
 import {
   CampaignIcon,
@@ -41,13 +31,12 @@ import {
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getDifficultyColors } from "../util/constants";
+import { getNewDifficultyColors } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faCheckCircle, faLemon } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faLemon } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { set } from "react-hook-form";
 
 export function PageGoldenList({}) {
   const { type } = useParams();
@@ -515,8 +504,10 @@ function CampaignGoldenDifficultiesBar({ campaign, sx = {}, ...props }) {
   );
 }
 function DifficultyBar({ difficulty, count, total }) {
+  const { settings } = useAppSettings();
+
   const width = (count / total) * 100;
-  const colors = getDifficultyColors(difficulty.id);
+  const colors = getNewDifficultyColors(settings, difficulty.id);
   const name = getDifficultyName(difficulty);
   return (
     <Tooltip title={name}>

@@ -28,11 +28,12 @@ import { faBook, faLink, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
 import { useEffect } from "react";
 import { getCampaignName, getGamebananaEmbedUrl, getMapLobbyInfo } from "../util/data_util";
-import { getDifficultyColors } from "../util/constants";
+import { getNewDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
 import { CampaignIcon } from "../components/GoldberriesComponents";
 import { useTheme } from "@emotion/react";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 const STYLE_CONSTS = {
   player: {
@@ -445,6 +446,7 @@ function CampaignTableLobbyBox({ name, color, span }) {
   );
 }
 function CampaignTableMapBox({ campaign, map, submissions }) {
+  const { settings } = useAppSettings();
   const lobbyInfo = getMapLobbyInfo(map, campaign);
 
   if (map.challenges.length === 0) {
@@ -480,7 +482,7 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
 
     for (let i = 0; i < map.challenges.length; i++) {
       let challenge = map.challenges[i];
-      let colors = getDifficultyColors(challenge.difficulty_id);
+      let colors = getNewDifficultyColors(settings, challenge.difficulty_id);
       if (challenge.requires_fc === false) {
         if (!testStyle) {
           regularStyle.color = colors.group_color;
@@ -513,7 +515,7 @@ function CampaignTableMapBox({ campaign, map, submissions }) {
     } else {
       regularCount = submissions.length;
     }
-    let colors = getDifficultyColors(map.challenges[0].difficulty_id);
+    let colors = getNewDifficultyColors(settings, map.challenges[0].difficulty_id);
     if (!testStyle) {
       regularStyle.color = colors.group_color;
       if (hasFC) {

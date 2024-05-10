@@ -18,7 +18,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getDifficultyColorsSettings, getNewDifficultyColors } from "../util/constants";
+import { getNewDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -701,7 +701,7 @@ function TopGoldenListFwgRow({}) {
   const theme = useTheme();
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
-  const colors = getDifficultyColorsSettings(settings, 13); // guard tier 3 ID
+  const colors = getNewDifficultyColors(settings, 13); // guard tier 3 ID
 
   const rowStyle = {
     backgroundColor: colors.color,

@@ -1,11 +1,13 @@
-import { Chip, Stack, Typography } from "@mui/material";
-import { getDifficultyColors } from "../util/constants";
+import { Stack, Typography } from "@mui/material";
+import { getNewDifficultyColors } from "../util/constants";
 import { getDifficultyName } from "../util/data_util";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { useState } from "react";
 import { DifficultyChip } from "./GoldberriesComponents";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 export function SuggestedDifficultyChart({ challenge }) {
+  const { settings } = useAppSettings();
   const [spin, setSpin] = useState(false);
 
   let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
@@ -30,7 +32,7 @@ export function SuggestedDifficultyChart({ challenge }) {
       value: value.value,
       label: value.label,
       arcLabel: value.arcLabel,
-      color: getDifficultyColors(id).group_color,
+      color: getNewDifficultyColors(settings, id).group_color,
     };
   });
   //Sort by difficulty.sort DESC

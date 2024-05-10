@@ -30,7 +30,7 @@ import { faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { Global, useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS } from "../util/constants";
+import { DIFFICULTY_COLORS, getDifficultySubtierShares } from "../util/constants";
 
 export function PageIndex() {
   return (
@@ -364,9 +364,14 @@ export function TiersCountDisplay({ stats, differences, hideEmpty = false, equal
         const difference = differences ? differences[diff.id] : null;
         const isEmpty = count === 0;
         let width = 12;
-        if (diff.id === 18 || diff.id === 19) width = 6;
-        else if (diff.sort > 6) width = 4;
-        else if (diff.sort > 2) width = 3;
+        if (diff.id === 18 || diff.id === 19) {
+          width = 6;
+        } else if (diff.id === 14 || diff.id === 15 || diff.id === 16 || diff.id === 17) {
+          width = 3;
+        } else {
+          const shares = getDifficultySubtierShares(diff.id, true);
+          width = 12 / shares;
+        }
         return (
           <Grid item key={diff.id} xs={12} md={width}>
             <DifficultyValueChip

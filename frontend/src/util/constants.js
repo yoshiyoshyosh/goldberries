@@ -168,50 +168,13 @@ export const DIFFICULTY_COLORS = {
   //Undetermined
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
 };
-export function getDifficultyColors(id) {
-  let colors = DIFFICULTY_COLORS[19];
-  if (id !== null && id !== undefined) colors = DIFFICULTY_COLORS[id];
-  // return {
-  //   color: colors.color,
-  //   group_color: colors.group_color,
-  //   contrast_color: lightTheme.palette.getContrastText(colors.color),
-  // };
-  return colors;
-}
-
-export function getDifficultyColorsTheme(theme, id) {
-  if (id === null || id === undefined) return theme.palette.difficulty[19];
-  return theme.palette.difficulty[id];
-}
 
 function darkenDiffColor(color, amount) {
-  // let newColor = new Color(color.color);
-  // newColor = newColor.black(newColor.black() + amount * 100);
-  // let newGroupColor = new Color(color.group_color);
-  // newGroupColor = newGroupColor.black(newGroupColor.black() + amount * 100);
-  // console.log("darkening colors", newColor);
-  // return {
-  //   color: newColor.hex(),
-  //   group_color: newGroupColor.hex(),
-  //   contrast_color: lightTheme.palette.getContrastText(newColor.hex()),
-  // };
-
   return {
     color: new Color(darken(color.color, amount)).hex(),
     group_color: new Color(darken(color.group_color, amount)).hex(),
     contrast_color: new Color(lightTheme.palette.getContrastText(darken(color.color, amount))).hex(),
   };
-}
-export function getDifficultyColorsSettings(settings, id, ignoreDarkening = false) {
-  let entry = null;
-  if (id === null || id === undefined) entry = DIFFICULTY_COLORS[19];
-  else entry = DIFFICULTY_COLORS[id];
-
-  if (settings.visual.darkmode && !ignoreDarkening) {
-    return darkenDiffColor(entry, settings.visual.topGoldenList.darkenTierColors / 100);
-  } else {
-    return darkenDiffColor(entry, 0);
-  }
 }
 
 export function getNewDifficultyColors(settings, id, useDarkening = false) {
@@ -312,4 +275,33 @@ function modifyBaseColor(color, id) {
   let newColor = new Color(color);
   newColor = COLOR_MODIFY_FUNCTIONS[subTier](newColor);
   return newColor.hex();
+}
+
+const DIFFICULTY_ID_SUBTIER_SHARES = {
+  1: 3,
+  2: 3,
+  3: 3,
+  4: 3,
+  5: 3,
+  6: 3,
+  7: 3,
+  8: 3,
+  9: 3,
+  10: 4,
+  11: 4,
+  12: 4,
+  13: 4,
+  14: 1,
+  15: 1,
+  16: 1,
+  17: 1,
+  18: 1,
+  19: 1,
+};
+export function getDifficultySubtierShares(id, ignoreGuard = false) {
+  let shares = DIFFICULTY_ID_SUBTIER_SHARES[id];
+  if (ignoreGuard && shares === 4) {
+    shares = 3;
+  }
+  return shares;
 }
