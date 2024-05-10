@@ -75,6 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
         die_json(400, "Player name is already taken");
       }
+      if (!is_valid_name($new_name)) {
+        die_json(400, "Invalid name");
+      }
 
       $old_name = $target->name;
       $target->name = $new_name;
@@ -115,6 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
         die_json(400, "Player name is already taken");
       }
+      if (!is_valid_name($new_name)) {
+        die_json(400, "Invalid name");
+      }
 
       $target = $account->player;
       $old_name = $target->name;
@@ -149,6 +155,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $player->name = trim($player->name);
   if (Player::name_exists($DB, $player->name)) {
     die_json(400, "Player name is already taken");
+  }
+  if (!is_valid_name($player->name)) {
+    die_json(400, "Invalid name");
   }
 
   if ($player->insert($DB) === false) {
