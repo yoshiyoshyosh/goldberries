@@ -1,6 +1,6 @@
 <?php
 
-require_once('api_bootstrap.inc.php');
+require_once ('api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $include_archived = isset($_GET['archived']) && $_GET['archived'] === "true";
@@ -35,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $submission->player = null;
         $submissions[$player_id][$map->id] = $submission;
       }
+
+      //Lastly, unset the $challenge->submissions property to save data
+      $challenge->submissions = null;
     }
   }
 

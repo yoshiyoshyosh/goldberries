@@ -1,6 +1,10 @@
 -- Combined Build Script
 
 -- =========== Drop Statements ===========
+DROP VIEW view_challenge_changes;
+DROP VIEW view_challenges;
+DROP VIEW view_submissions;
+
 DROP TABLE fwg_data;
 DROP TABLE suggestion_vote;
 

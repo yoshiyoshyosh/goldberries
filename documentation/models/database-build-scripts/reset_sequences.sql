@@ -15,3 +15,21 @@ SELECT setval('logging_id_seq', (SELECT MAX(id) FROM logging)+1);
 
 SELECT setval('suggestion_id_seq', (SELECT MAX(id) FROM suggestion)+1);
 SELECT setval('suggestion_vote_id_seq', (SELECT MAX(id) FROM suggestion_vote)+1);
+
+-- Set sequences to 0 to start from scratch
+SELECT setval('account_id_seq', 1);
+SELECT setval('player_id_seq', 1);
+
+SELECT setval('campaign_id_seq', 1);
+SELECT setval('map_id_seq', 1);
+SELECT setval('challenge_id_seq', 1);
+SELECT setval('submission_id_seq', 1);
+
+SELECT setval('objective_id_seq', 1);
+SELECT setval('difficulty_id_seq', 1);
+SELECT setval('new_challenge_id_seq', 1);
+SELECT setval('change_id_seq', 1);
+SELECT setval('logging_id_seq', 1);
+
+SELECT setval('suggestion_id_seq', 1);
+SELECT setval('suggestion_vote_id_seq', 1);
