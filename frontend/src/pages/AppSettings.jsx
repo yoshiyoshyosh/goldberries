@@ -534,6 +534,29 @@ function AppSettingsDifficultyColorsForm() {
         18: "",
         19: "",
       });
+    } else if (preset === 1) {
+      //Protanopia
+      form.setValue("difficultyColors", {
+        1: "",
+        2: "#f67dc9",
+        3: "",
+        4: "#a71802",
+        5: "#d44d38",
+        6: "#f28e7d",
+        7: "#4c6603",
+        8: "#abcf44",
+        9: "#dbef9f",
+        10: "#064e29",
+        11: "#45a471",
+        12: "#85ddad",
+        13: "",
+        14: "",
+        15: "#232255",
+        16: "",
+        17: "",
+        18: "",
+        19: "",
+      });
     }
   };
 
@@ -589,7 +612,7 @@ function AppSettingsDifficultyColorsForm() {
       </Stack>
       <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
         <Typography variant="body1">Colorblindness Presets:</Typography>
-        <Button variant="outlined" onClick={() => {}} disabled>
+        <Button variant="outlined" onClick={() => restorePreset(1)}>
           Protanopia
         </Button>
         <Button variant="outlined" onClick={() => {}} disabled>

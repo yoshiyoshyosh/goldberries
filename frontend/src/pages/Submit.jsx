@@ -326,7 +326,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               render={({ field }) => (
                 <FormControlLabel
                   control={<Checkbox />}
-                  label="Run is FC"
+                  label="Run is Full Clear"
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                   disabled={challenge === null || challenge.requires_fc || !challenge.has_fc}
@@ -570,7 +570,7 @@ export function MultiUserSubmission() {
       )}
       <FormControlLabel
         control={<Checkbox />}
-        label="Prefer FC"
+        label="Prefer Full Clear"
         checked={preferFc}
         onChange={(e, v) => setPreferFc(v)}
       />
@@ -775,7 +775,7 @@ export function NewChallengeUserSubmission({}) {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is FC" />
+            <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is Full Clear" />
           </Grid>
           <Grid item xs={12} sm={6}>
             <DifficultySelect
