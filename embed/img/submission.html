@@ -26,47 +26,94 @@
         /* margin-top: -50px; */
       }
 
-      #horizontal-stack {
+      .horizontal-stack {
         width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
-        column-gap: 10px;
       }
-      #horizontal-stack > *:not(:first-child) {
+      .horizontal-stack > *:not(:first-child) {
         margin-left: 10px;
+      }
+      .vertical-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .vertical-stack > *:not(:first-child) {
+        margin-top: 10px;
       }
 
       #container {
-        width: calc(100% - 40px);
+        width: calc(100% - 30px);
         height: calc(100% - 40px);
         margin: 20px;
         padding: 20px;
         background-color: rgba(0, 0, 0, 0.5);
         border-radius: 10px;
-        overflow: hidden;
+        /* overflow: hidden; */
+
+        font-size: 30px;
+        font-weight: bold;
+      
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
-      #playerName {
+      #playerName-h1 {
         margin-top: 0;
         margin-bottom: 0;
       }
-      #diffChip {
+      #playerName {
+        /* background-image: linear-gradient(90deg, red 0%, blue 100%); */
+        background-origin: padding-box;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        font-weight: bold;
+      }
+      #map {
+        font-size: 160%;
+        margin-top: 0;
+        margin-bottom: 4px;
+        color: rgb(255, 255, 255);
+      }
+      #campaign {
+        font-size: 90%;
+        margin-top: 0;
+        margin-bottom: 4px;
+        color: rgb(202, 202, 202);
+      }
+      .chip {
         display: inline-block;
-        padding: 5px 10px;
+        padding: 5px 15px;
         border-radius: 20px;
       }
-      #diffLabel {
+      .chip > .label {
         font-size: 100%;
       }
-      #para {
-        /* font-size: 400%; */
+      /* .outlined-big {
+        filter: drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px);
+        -webkit-filter: drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px) drop-shadow(black 0 0 8px);
+      } */
+      .outlined-big {
+        filter: drop-shadow(black 2px 2px 0) drop-shadow(black 2px -2px 0) drop-shadow(black -2px 2px 0) drop-shadow(black -2px -2px 0) drop-shadow(black 0px -2px 0) drop-shadow(black -2px 0px 0) drop-shadow(black 0px 2px 0) drop-shadow(black 2px 0px 0);
+      }
+
+      .outlined-small {
+        filter: drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px);
       }
     </style>
     <script src="common.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+          const submissionId = getCookie('submission_id');
+          const submissionIsVerified = getCookie('submission_is_verified');
           const modId = getCookie('mod_id');
           const playerName = getCookie('player_name');
+          let playerNameColorStart = getCookie('player_name_color_start');
+          let playerNameColorEnd = getCookie('player_name_color_end');
           const mapName = getCookie('map_name');
           const campaignName = getCookie('campaign_name');
           const campaignAuthor = getCookie('campaign_author');
@@ -74,29 +121,66 @@
           const difficultyId = getCookie('difficulty_id');
 
           sel("#background").style.backgroundImage = "url('cache/"+modId+".jpg')";
+
           sel("#playerName").innerHTML = playerName;
-          sel("#misc").innerHTML = "Mod: " + modId + "<br>" +
-            "Map: " + mapName + "<br>" +
-            "Campaign: " + campaignName + " (by "+campaignAuthor+")<br>" +
-            "Objective Icon: " + objectiveIconUrl + "<br>";
+          if(playerNameColorStart == "") playerNameColorStart = "rgb(255, 255, 255)";
+          if(playerNameColorEnd == "") playerNameColorEnd = "rgb(255, 255, 255)";
+          // sel("#playerName").style.backgroundImage = "linear-gradient(90deg, red 0%, blue 100%)";
+          sel("#playerName").style.backgroundImage = "linear-gradient(90deg, "+playerNameColorStart+" 0%, "+playerNameColorEnd+" 100%)";
+
+
+          sel("#map").innerHTML = mapName;
+          sel("#campaign").innerHTML = campaignName + " (by "+campaignAuthor+")";
 
           const diff = DIFFICULTIES[difficultyId];
           sel("#diffChip").style.backgroundColor = diff.color;
+
           sel("#diffLabel").innerHTML = diff.name;
           sel("#diffLabel").style.color = diff.contrast_color;
+
+          if(submissionIsVerified === "true"){
+            sel("#verifiedChip").style.backgroundColor = "green";
+            sel("#verifiedLabel").innerHTML = "Verified";
+          } else if (submissionIsVerified === "false") {
+            sel("#verifiedChip").style.backgroundColor = "red";
+            sel("#verifiedLabel").innerHTML = "Rejected";
+          } else {
+            sel("#verifiedChip").style.backgroundColor = "orange";
+            sel("#verifiedLabel").innerHTML = "Pending";
+          }
+
+          if(objectiveIconUrl.startsWith("/")){
+            sel("#objectiveIcon").src = "../../"+objectiveIconUrl;
+          } else {
+            sel("#objectiveIcon").src = objectiveIconUrl;
+          }
         });
     </script>
   </head>
   <body>
     <div id="background"></div>
     <div id="container">
-      <h1 id="playerName" style="text-align: center;">Submission</h1>
-      <p id="misc">Paragraph</p>
-      <div id="horizontal-stack">
-        <span>Difficulty:</span>
-        <div id="diffChip">
-          <span id="diffLabel">Difficulty Name</span>
+      <div>
+        <h1 id="playerName-h1" style="text-align: center;"><span id="playerName" class="outlined-big">Player</span></h1>
+        <p id="map" class="detail-small outlined-small">Map</p>
+        <p id="campaign" class="detail-small outlined-small">Campaign</p>
+      </div>
+      <div class="horizontal-stack" style="justify-content: space-between;">
+        <div class="vertical-stack" style="align-self: flex-end;">
+          <div class="horizontal-stack" style="align-self: flex-start;">
+            <span class="outlined-small">Verification:</span>
+            <div id="verifiedChip" class="chip" style="align-self: flex-start;">
+              <span id="verifiedLabel" class="label">Verified</span>
+            </div>
+          </div>
+          <div class="horizontal-stack" style="align-self: flex-start;">
+            <span class="outlined-small">Difficulty:</span>
+            <div id="diffChip" class="chip" style="align-self: flex-start;">
+              <span id="diffLabel" class="label">Difficulty Name</span>
+            </div>
+          </div>
         </div>
+        <img id="objectiveIcon" style="width: 200px; height: 200px" />
       </div>
     </div>
   </body>

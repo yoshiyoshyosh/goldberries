@@ -48,13 +48,16 @@ if ($modId !== null) {
 //pack data into an array
 $data = array(
   "submission_id" => $id,
+  "submission_is_verified" => $submission->is_verified,
   "mod_id" => $modId,
   "player_name" => $player->name,
+  "player_name_color_start" => $player->account['name_color_start'],
+  "player_name_color_end" => $player->account['name_color_end'],
   "campaign_name" => $campaign->name,
   "campaign_author" => $campaign->author_gb_name,
   "objective_icon_url" => $challenge->objective->icon_url,
   "difficulty_id" => $challenge->difficulty_id,
-  "fields" => ["submission_id", "mod_id", "player_name", "campaign_name", "campaign_author", "objective_icon_url", "difficulty_id"],
+  "fields" => ["submission_id", "submission_is_verified", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "objective_icon_url", "difficulty_id"],
 );
 if ($map !== null) {
   $data["map_name"] = $map->name;
