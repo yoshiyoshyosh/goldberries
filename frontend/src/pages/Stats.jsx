@@ -1,6 +1,7 @@
 import {
   Button,
   Checkbox,
+  Chip,
   Divider,
   FormControlLabel,
   Grid,
@@ -357,12 +358,13 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
       direction="row"
       columnGap={1}
       fontWeight={isBold ? "bold" : "inherit"}
+      alignItems="center"
       sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}
     >
-      <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
+      <Chip size="small" label={isFirstClear ? "First Clear" : "Clear"} />
       <PlayerChip player={submission.player} size="small" />
+      <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
-        <span style={{ whiteSpace: "nowrap" }}>{isFirstClear ? "first cleared" : "cleared"}</span>
         <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
         {!nameIsSame && map && (
           <>
@@ -375,7 +377,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
             [{challenge.description}]
           </Typography>
         )}
-        <StyledLink to={"/submission/" + submission.id}>
+        <StyledLink to={"/submission/" + submission.id} style={{ lineHeight: "1" }}>
           <ChallengeFcIcon challenge={challenge} height="1.3em" />
         </StyledLink>
       </Stack>
@@ -397,10 +399,7 @@ function TimelineChangelogEntry({ change, challenge }) {
 
   return (
     <Stack direction="row" columnGap={1} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
-      <PlayerChip player={change.author} size="small" />
-      <Typography variant="body2" color="textSecondary" sx={{ mt: 0.5 }}>
-        Moved
-      </Typography>
+      <Chip label="Moved" size="small" />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
         <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
         {!nameIsSame && map && (
