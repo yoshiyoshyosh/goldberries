@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Submission</title>
+    <style>
+      html, body {
+        width: 1000px;
+        height: 500px;
+        overflow: hidden;
+        color: white;
+        margin: 0;
+      }
+      * {
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      #background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-size: cover;
+        background-position: center;
+        transform: scale(1.03);
+        filter: blur(2px);
+        /* margin-top: -50px; */
+      }
+
+      #horizontal-stack {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 10px;
+      }
+      #horizontal-stack > *:not(:first-child) {
+        margin-left: 10px;
+      }
+
+      #container {
+        width: calc(100% - 40px);
+        height: calc(100% - 40px);
+        margin: 20px;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      #playerName {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      #diffChip {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+      }
+      #diffLabel {
+        font-size: 100%;
+      }
+      #para {
+        /* font-size: 400%; */
+      }
+    </style>
+    <script src="common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const modId = getCookie('mod_id');
+          const playerName = getCookie('player_name');
+          const mapName = getCookie('map_name');
+          const campaignName = getCookie('campaign_name');
+          const campaignAuthor = getCookie('campaign_author');
+          const objectiveIconUrl = getCookie('objective_icon_url');
+          const difficultyId = getCookie('difficulty_id');
+
+          sel("#background").style.backgroundImage = "url('cache/"+modId+".jpg')";
+          sel("#playerName").innerHTML = playerName;
+          sel("#misc").innerHTML = "Mod: " + modId + "<br>" +
+            "Map: " + mapName + "<br>" +
+            "Campaign: " + campaignName + " (by "+campaignAuthor+")<br>" +
+            "Objective Icon: " + objectiveIconUrl + "<br>";
+
+          const diff = DIFFICULTIES[difficultyId];
+          sel("#diffChip").style.backgroundColor = diff.color;
+          sel("#diffLabel").innerHTML = diff.name;
+          sel("#diffLabel").style.color = diff.contrast_color;
+        });
+    </script>
+  </head>
+  <body>
+    <div id="background"></div>
+    <div id="container">
+      <h1 id="playerName" style="text-align: center;">Submission</h1>
+      <p id="misc">Paragraph</p>
+      <div id="horizontal-stack">
+        <span>Difficulty:</span>
+        <div id="diffChip">
+          <span id="diffLabel">Difficulty Name</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
