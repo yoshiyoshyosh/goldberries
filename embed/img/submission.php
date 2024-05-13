@@ -49,15 +49,18 @@ if ($modId !== null) {
 $data = array(
   "submission_id" => $id,
   "submission_is_verified" => $submission->is_verified,
+  "submission_is_fc" => $submission->is_fc,
+  "submission_date_created" => $submission->date_created->format('Y-m-d'),
   "mod_id" => $modId,
   "player_name" => $player->name,
   "player_name_color_start" => $player->account['name_color_start'],
   "player_name_color_end" => $player->account['name_color_end'],
   "campaign_name" => $campaign->name,
   "campaign_author" => $campaign->author_gb_name,
+  "challenge_description" => $challenge->description,
   "objective_icon_url" => $challenge->objective->icon_url,
   "difficulty_id" => $challenge->difficulty_id,
-  "fields" => ["submission_id", "submission_is_verified", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "objective_icon_url", "difficulty_id"],
+  "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_description", "objective_icon_url", "difficulty_id"],
 );
 if ($map !== null) {
   $data["map_name"] = $map->name;
@@ -72,7 +75,7 @@ $encodedData = base64_encode(json_encode($data));
 $command = "python3 submission.py $encodedData 2>&1";
 $output = shell_exec($command);
 
-// error_log("Python output: " . $output . ", is false? " . ($output === false ? "true" : "false") . ", is null? " . ($output === null ? "true" : "false"));
+error_log("Python output: " . $output);
 
 // The output image will be named "{submission_id}.jpg" in the "./submission" directory
 // Output the image

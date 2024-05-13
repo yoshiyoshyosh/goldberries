@@ -26,6 +26,7 @@ $campaign = $challenge->get_campaign();
 $for_str = $map === null ? $campaign->get_name() : $map->get_name();
 
 $real_url = constant("BASE_URL") . "/submission/" . $submission->id;
+$proof_url = $submission->proof_url;
 $embed_image_url = "/embed/img/submission.php?id=" . $submission->id;
 
 ?>
@@ -38,7 +39,7 @@ $embed_image_url = "/embed/img/submission.php?id=" . $submission->id;
 
   <meta name="theme-color" content="#f3d16b" data-react-helmet="true" />
 
-  <meta property="og:url" content="<?php echo $real_url; ?>" />
+  <meta property="og:url" content="<?php echo $proof_url; ?>" />
 
   <meta name="twitter:title" content="Submission by '<?php echo $submission->player->name; ?>'" />
   <meta property="twitter:description" content="for <?php echo $for_str; ?>" />

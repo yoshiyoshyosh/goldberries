@@ -1,9 +1,14 @@
-function getCookie(name) {
+function getCookie(name, dontDecode = false) {
   function escape(s) {
     return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, "\\$1");
   }
   var match = document.cookie.match(RegExp("(?:^|;\\s*)" + escape(name) + "=([^;]*)"));
-  return match ? match[1] : null;
+  var value = match ? match[1] : null;
+
+  if (value && !dontDecode) {
+    return decodeBase64(value);
+  }
+  return value;
 }
 
 function sel(selector) {
@@ -50,3 +55,24 @@ const DIFFICULTIES = {
   //Undetermined
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000", name: "Undetermined" },
 };
+
+function decodeBase64(base64) {
+  // const text = atob(base64);
+  // const length = text.length;
+  // const bytes = new Uint8Array(length);
+  // for (let i = 0; i < length; i++) {
+  //   bytes[i] = text.charCodeAt(i);
+  // }
+  // const decoder = new TextDecoder(); // default is utf-8
+  // return decoder.decode(bytes);
+  // Going backwards: from bytestream, to percent-encoding, to original string.
+
+  return decodeURIComponent(
+    atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+}
