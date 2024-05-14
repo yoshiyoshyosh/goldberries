@@ -44,6 +44,7 @@ if ($modId !== null) {
   }
 }
 
+$wkhtmltoimage_path = constant('WKHTMLTOIMAGE_PATH');
 
 //pack data into an array
 $data = array(
@@ -60,6 +61,9 @@ $data = array(
   "challenge_description" => $challenge->description,
   "objective_icon_url" => $challenge->objective->icon_url,
   "difficulty_id" => $challenge->difficulty_id,
+  "wkhtmltoimage_path" => $wkhtmltoimage_path,
+  "file_name" => $id . "",
+  "folder_name" => "submission",
   "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_description", "objective_icon_url", "difficulty_id"],
 );
 if ($map !== null) {
@@ -72,7 +76,8 @@ $encodedData = base64_encode(json_encode($data));
 // error_log("Encoded data: " . $encodedData);
 
 // Launch python script called "submission.py" in the same directory
-$command = "python3 submission.py $encodedData 2>&1";
+$python_command = constant('PYTHON_COMMAND');
+$command = "$python_command submission.py $encodedData 2>&1";
 $output = shell_exec($command);
 
 error_log("Python output: " . $output);

@@ -118,18 +118,14 @@
       .chip > .label {
         font-size: 100%;
       }
-      .outlined-small-white {
-        filter: drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px);
-      }
       .outlined-big {
         filter: drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px) drop-shadow(black 0 0 5px);
       }
-      /* .outlined-big {
-        filter: drop-shadow(black 2px 2px 0) drop-shadow(black 2px -2px 0) drop-shadow(black -2px 2px 0) drop-shadow(black -2px -2px 0) drop-shadow(black 0px -2px 0) drop-shadow(black -2px 0px 0) drop-shadow(black 0px 2px 0) drop-shadow(black 2px 0px 0);
-      } */
-
       .outlined-small {
         filter: drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px) drop-shadow(black 0 0 4px);
+      }
+      .outlined-small-white {
+        filter: drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px) drop-shadow(white 0 0 4px);
       }
       .outlined-tiny {
         filter: drop-shadow(black 0 0 2px) drop-shadow(black 0 0 2px) drop-shadow(black 0 0 2px) drop-shadow(black 0 0 2px) drop-shadow(black 0 0 2px) drop-shadow(black 0 0 2px) drop-shadow(black 0 0 4px);
@@ -153,11 +149,13 @@
           let playerName = getCookie('player_name');
           let playerNameColorStart = getCookie('player_name_color_start');
           let playerNameColorEnd = getCookie('player_name_color_end');
-          const mapName = getCookie('map_name');
+          let mapName = getCookie('map_name');
           const campaignName = getCookie('campaign_name');
+          let sameNames = mapName === campaignName;
+          const isFullGame = mapName === null;
           const campaignAuthor = getCookie('campaign_author');
           const challengeDescription = getCookie('challenge_description');
-          const objectiveIconUrl = getCookie('objective_icon_url');
+          let objectiveIconUrl = getCookie('objective_icon_url');
           const difficultyId = getCookie('difficulty_id');
 
           sel("#background").style.backgroundImage = "url('cache/"+modId+".jpg')";
@@ -176,9 +174,15 @@
           sel("#playerName").style.backgroundImage = "linear-gradient(90deg, "+playerNameColorStart+" 0%, "+playerNameColorEnd+" 100%)";
 
 
-          sel("#mapName").innerHTML = mapName;
+          if(mapName !== null) {
+            if(mapName.endsWith("-Side") && mapName.length <= 8){
+              mapName = campaignName + " [" + mapName + "]";
+              sameNames = true;
+            }
+          }
+          sel("#mapName").innerHTML = isFullGame ? campaignName : mapName;
           sel("#mapSuffix").innerHTML = challengeDescription === "None" ? "" : " ["+challengeDescription+"]";
-          sel("#campaign").innerHTML = campaignName + " (by "+campaignAuthor+")";
+          sel("#campaign").innerHTML = sameNames || isFullGame ? "by "+campaignAuthor : campaignName + " (by "+campaignAuthor+")";
 
           const diff = DIFFICULTIES[difficultyId];
           sel("#diffChip").style.backgroundColor = diff.color;
@@ -201,6 +205,7 @@
             sel("#verifiedLabel").style.color = "white";
           }
 
+          if (objectiveIconUrl === "None") objectiveIconUrl = "/icons/goldenberry-8x.png";
           if(objectiveIconUrl.startsWith("/")){
             sel("#objectiveIcon").src = "../../"+objectiveIconUrl;
           } else {
@@ -230,13 +235,11 @@
       <div class="horizontal-stack" style="justify-content: space-between;">
         <div class="vertical-stack" style="align-self: flex-end;">
           <div class="horizontal-stack" style="align-self: flex-start;">
-            <span class="outlined-small"></span>
             <div id="verifiedChip" class="chip" style="align-self: flex-start;">
               <span id="verifiedLabel" class="label">别吵菌 - Verified</span>
             </div>
           </div>
           <div class="horizontal-stack" style="align-self: flex-start;">
-            <span class="outlined-small"></span>
             <div id="diffChip" class="chip" style="align-self: flex-start;">
               <span id="diffLabel" class="label">Difficulty Name</span>
             </div>
