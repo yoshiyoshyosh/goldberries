@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: "Renogare", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -20,4 +20,9 @@ code {
     /* width: 100vw; */
     overflow-x: hidden;
   }
+}
+
+@font-face {
+  font-family: "Renogare";
+  src: url(fonts/Renogare-Regular.otf) format("opentype");
 }

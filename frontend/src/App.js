@@ -238,6 +238,16 @@ const router = createBrowserRouter([
 ]);
 
 export const lightTheme = createTheme({
+  // typography: {
+  //   fontFamily: [
+  //     // "Renogare",
+  //     "Roboto",
+  //     "Arial",
+  //     "Droid Sans",
+  //     "Helvetica Neue",
+  //     "sans-serif",
+  //   ].join(","),
+  // },
   palette: {
     mode: "light",
     contrastThreshold: 4.5,
@@ -267,6 +277,15 @@ export const lightTheme = createTheme({
   },
 });
 const darkTheme = createTheme({
+  // typography: {
+  //   fontFamily: [
+  //     // '"Renogare"',
+  //     '"Roboto"',
+  //     '"Helvetica"',
+  //     '"Arial"',
+  //     "sans-serif",
+  //   ].join(","),
+  // },
   palette: {
     mode: "dark",
     links: {
