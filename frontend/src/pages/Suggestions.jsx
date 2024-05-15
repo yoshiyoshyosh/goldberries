@@ -39,14 +39,19 @@ import {
 } from "@mui/material";
 import {
   getCampaignName,
+  getChallengeCampaign,
+  getChallengeIsFullGame,
   getChallengeName,
   getMapName,
+  getMapNameClean,
   getSortedSuggestedDifficulties,
 } from "../util/data_util";
 import {
+  ChallengeFcIcon,
   DifficultyChip,
   DifficultySelectControlled,
   FullChallengeSelect,
+  ObjectiveIcon,
   PlayerChip,
 } from "../components/GoldberriesComponents";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
@@ -320,29 +325,31 @@ export function DifficultyMoveDisplay({ from, to, ...props }) {
 
 function SuggestionName({ suggestion, expired }) {
   const theme = useTheme();
+  const challenge = suggestion.challenge;
+  const map = challenge?.map;
+  const campaign = getChallengeCampaign(challenge);
   const sameMapName =
-    suggestion.challenge_id !== null &&
-    suggestion.challenge.map.name === suggestion.challenge.map.campaign.name;
+    suggestion.challenge_id !== null && challenge.map_id !== null && map.name === campaign.name;
+  const isFullGame = suggestion.challenge_id !== null && getChallengeIsFullGame(challenge);
 
   return (
     <Stack direction="column" gap={0}>
       <Stack direction="row" gap={1} alignItems="center">
         {suggestion.challenge_id === null ? (
           <>
-            <FontAwesomeIcon icon={faInfoCircle} />
+            {/* <FontAwesomeIcon icon={faInfoCircle} /> */}
             <Typography variant="h6">General Suggestion</Typography>
           </>
         ) : (
           <>
             <Stack direction="column" gap={1}>
               <Typography variant="h6">
-                {sameMapName
-                  ? getCampaignName(suggestion.challenge.map.campaign)
-                  : getCampaignName(suggestion.challenge.map.campaign) +
-                    " - " +
-                    getMapName(suggestion.challenge.map)}
+                {getMapNameClean(map, campaign, true)}
+                {challenge.description && " [" + challenge.description + "]"}
               </Typography>
             </Stack>
+            <ObjectiveIcon objective={challenge.objective} height="1.2em" />
+            <ChallengeFcIcon challenge={challenge} height="1.4em" />
           </>
         )}
         {suggestion.is_verified !== false && expired && (
@@ -368,14 +375,17 @@ function SuggestionName({ suggestion, expired }) {
           sx={{
             pl: {
               xs: 0,
-              sm: 1,
+              sm: 0,
             },
+            color: theme.palette.text.secondary,
           }}
         >
-          <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: "rotateZ(90deg)" }} />
-          <StyledLink to={"/challenge/" + suggestion.challenge.id}>
-            {getChallengeName(suggestion.challenge)}
-          </StyledLink>
+          {/* <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: "rotateZ(90deg)" }} /> */}
+          {/* <StyledLink to={"/challenge/" + suggestion.challenge.id}> */}
+          {sameMapName
+            ? "by " + campaign.author_gb_name
+            : "from " + campaign.name + " (by " + campaign.author_gb_name + ")"}
+          {/* </StyledLink> */}
         </Stack>
       )}
     </Stack>

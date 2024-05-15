@@ -180,6 +180,19 @@ export function getObjectiveName(objective) {
   return objective.name + arbitrarySuffix;
 }
 
+export function getMapNameClean(map, campaign, noAuthor = false) {
+  const isFullGame = map === null;
+  if (isFullGame) {
+    return campaign.name + (noAuthor ? "" : " (by " + campaign.author_gb_name + ")");
+  }
+
+  // const isSameName = map.name === campaign.name;
+  const isSide = map.name.endsWith("-Side") && map.name.length <= 8;
+  if (isSide) {
+    return campaign.name + " [" + map.name + "]";
+  }
+  return map.name + (noAuthor ? "" : " (by " + map.author_gb_name + ")");
+}
 export function getCampaignName(campaign, noAuthor = false) {
   if (noAuthor) return campaign.name;
   const authorName = campaign.author_gb_name === null ? "<Unknown Author>" : campaign.author_gb_name;
