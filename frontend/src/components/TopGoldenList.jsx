@@ -18,7 +18,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getNewDifficultyColors } from "../util/constants";
+import { getChallengeReference, getNewDifficultyColors } from "../util/constants";
 import { Link } from "react-router-dom";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -209,7 +209,7 @@ function TopGoldenListGroup({
     challenges.filter((challenge) =>
       tierMap.includes(
         useSuggested
-          ? challenge.submissions[0].suggested_difficulty.id ?? challenge.difficulty.id
+          ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
           : challenge.difficulty.id
       )
     ).length === 0;
@@ -413,6 +413,8 @@ function TopGoldenListRow({
   const tpgSettings = settings.visual.topGoldenList;
   const darkmode = settings.visual.darkmode;
   const colors = getNewDifficultyColors(settings, subtier.id, true);
+  const challengeRef = getChallengeReference(challenge.id);
+  const isReference = challengeRef !== null;
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -466,6 +468,34 @@ function TopGoldenListRow({
     setDescOverflowActive(false);
   }, [isOverflowActive]);
 
+  const nameElement = (
+    <span
+      ref={mapNameRef}
+      style={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        color: nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
+        order: tpgSettings.switchMapAndChallenge ? 1 : 2,
+        // fontWeight: isReference ? "bold" : "normal",
+      }}
+    >
+      {name}
+    </span>
+  );
+  const descriptionElement = (
+    <span
+      ref={descriptionRef}
+      style={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
+        order: tpgSettings.switchMapAndChallenge ? 2 : 1,
+      }}
+    >
+      {nameSuffix}
+    </span>
+  );
+
   return (
     <TableRow style={rowStyle}>
       <TableCell
@@ -518,64 +548,28 @@ function TopGoldenListRow({
             >
               {overflowActive ? (
                 <Tooltip title={name} arrow placement="top">
-                  <span
-                    ref={mapNameRef}
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      color:
-                        nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-                      order: tpgSettings.switchMapAndChallenge ? 1 : 2,
-                    }}
-                  >
-                    {name}
-                  </span>
+                  {nameElement}
                 </Tooltip>
               ) : (
-                <span
-                  ref={mapNameRef}
-                  style={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    color: nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-                    order: tpgSettings.switchMapAndChallenge ? 1 : 2,
-                  }}
-                >
-                  {name}
-                </span>
+                nameElement
               )}
               {nameSuffix !== "" &&
                 (descOverflowActive ? (
                   <Tooltip title={nameSuffix} arrow placement="top">
-                    <span
-                      ref={descriptionRef}
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-                        order: tpgSettings.switchMapAndChallenge ? 2 : 1,
-                      }}
-                    >
-                      {nameSuffix}
-                    </span>
+                    {descriptionElement}
                   </Tooltip>
                 ) : (
-                  <span
-                    ref={descriptionRef}
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-                      order: tpgSettings.switchMapAndChallenge ? 2 : 1,
-                    }}
-                  >
-                    {nameSuffix}
-                  </span>
+                  descriptionElement
                 ))}
             </Stack>
           </Box>
           {settings.visual.topGoldenList.showCampaignIcons && (
             <CampaignIcon campaign={campaign} height="1em" doLink />
+          )}
+          {isReference && (
+            <Tooltip title="This challenge serves as a primary difficulty reference" arrow placement="top">
+              <span style={{ userSelect: "none", cursor: "default" }}>🟊</span>
+            </Tooltip>
           )}
         </Stack>
       </TableCell>
@@ -701,7 +695,7 @@ function TopGoldenListFwgRow({}) {
   const theme = useTheme();
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
-  const colors = getNewDifficultyColors(settings, 13); // guard tier 3 ID
+  const colors = getNewDifficultyColors(settings, 13, true); // guard tier 3 ID
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -778,7 +772,12 @@ function TopGoldenListFwgRow({}) {
                   {name}
                 </span>
               </StyledExternalLink>
-              <OtherIcon url={"/icons/bird.png"} title={"Birb"} alt={"Birb"} height="1.2em" />
+              <OtherIcon
+                url={"/icons/bird.png"}
+                title={"This challenge serves as a primary difficulty reference"}
+                alt={"Birb"}
+                height="1.2em"
+              />
               <OtherIcon
                 url="/icons/goldenberry-8x.png"
                 title="Chapter 9 of vanilla Celeste"

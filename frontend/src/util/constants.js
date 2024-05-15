@@ -305,3 +305,16 @@ export function getDifficultySubtierShares(id, ignoreGuard = false) {
   }
   return shares;
 }
+
+const REFERENCE_CHALLENGES = {
+  2070: [1],
+  2093: [1],
+  1834: [1],
+  1920: [1],
+};
+export const getChallengeReference = (id) => {
+  if (REFERENCE_CHALLENGES[id] === undefined) {
+    return null;
+  }
+  return REFERENCE_CHALLENGES[id];
+};
