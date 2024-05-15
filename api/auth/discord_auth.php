@@ -2,7 +2,7 @@
 
 require_once ('../api_bootstrap.inc.php');
 
-if (isset ($_REQUEST['code'])) {
+if (isset($_REQUEST['code'])) {
   //Got code from discord oauth, now get access token
 
   $state = $_REQUEST['state'];
@@ -56,10 +56,10 @@ if (isset ($_REQUEST['code'])) {
   //Non-linking stuff
   if ($accounts == false) {
     //No account was found
-    if ($_SESSION['login'] == true) {
-      header('Location: ' . constant('REGISTER_URL') . "/" . "Discord ID not linked to an account. Please register an account first.");
-      exit();
-    }
+    // if ($_SESSION['login'] == true) {
+    //   header('Location: ' . constant('REGISTER_URL') . "/" . "Discord ID not linked to an account. Please register an account first.");
+    //   exit();
+    // }
     //User is not in database, create new account
     $account = new Account();
     $account->discord_id = $user_id;
@@ -88,10 +88,10 @@ if (isset ($_REQUEST['code'])) {
 } else {
   //Redirect to discord oauth
   //Rememeber if user was trying to login or register
-  $_SESSION['login'] = isset ($_GET['login']);
+  $_SESSION['login'] = isset($_GET['login']);
 
   //Remember if user is trying to link their existing account to discord
-  $_SESSION['link_account'] = isset ($_GET['link_account']);
+  $_SESSION['link_account'] = isset($_GET['link_account']);
 
   if ($_SESSION['link_account'] == false && is_logged_in()) {
     //User is already logged in and not trying to link account
@@ -99,9 +99,9 @@ if (isset ($_REQUEST['code'])) {
     exit();
   }
 
-  if (isset ($_REQUEST['redirect'])) {
+  if (isset($_REQUEST['redirect'])) {
     $_SESSION['REDIRECT_AFTER_LOGIN'] = $_REQUEST['redirect'];
-  } else if (isset ($_SERVER['HTTP_REFERER'])) {
+  } else if (isset($_SERVER['HTTP_REFERER'])) {
     $_SESSION['REDIRECT_AFTER_LOGIN'] = $_SERVER['HTTP_REFERER'];
   }
 
@@ -123,7 +123,7 @@ function apiRequest($url, $post = FALSE, $headers = array())
   }
   $headers[] = 'Accept: application/json';
 
-  if (isset ($_SESSION['access_token']))
+  if (isset($_SESSION['access_token']))
     $headers[] = 'Authorization: Bearer ' . $_SESSION['access_token'];
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
