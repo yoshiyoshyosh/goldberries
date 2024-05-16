@@ -44,6 +44,17 @@ if ($modId !== null) {
   }
 }
 
+// Check if the embed has already been generated before
+if (file_exists("submission/$id.jpg")) {
+  // Output the image
+  header("Content-type: image/jpg");
+  echo file_get_contents("submission/$id.jpg");
+  die();
+}
+
+
+// Launch python script to generate embed
+
 $wkhtmltoimage_path = constant('WKHTMLTOIMAGE_PATH');
 
 //pack data into an array
@@ -84,5 +95,5 @@ error_log("Python output: " . $output);
 
 // The output image will be named "{submission_id}.jpg" in the "./submission" directory
 // Output the image
-header("Content-type: image/png");
+header("Content-type: image/jpg");
 echo file_get_contents("submission/$id.jpg");

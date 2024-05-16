@@ -16,6 +16,8 @@ SELECT setval('logging_id_seq', (SELECT MAX(id) FROM logging)+1);
 SELECT setval('suggestion_id_seq', (SELECT MAX(id) FROM suggestion)+1);
 SELECT setval('suggestion_vote_id_seq', (SELECT MAX(id) FROM suggestion_vote)+1);
 
+SELECT setval('showcase_id_seq', (SELECT MAX(id) FROM showcase)+1);
+
 -- Set sequences to 0 to start from scratch
 SELECT setval('account_id_seq', 1);
 SELECT setval('player_id_seq', 1);
@@ -33,3 +35,5 @@ SELECT setval('logging_id_seq', 1);
 
 SELECT setval('suggestion_id_seq', 1);
 SELECT setval('suggestion_vote_id_seq', 1);
+
+SELECT setval('showcase_id_seq', 1);
