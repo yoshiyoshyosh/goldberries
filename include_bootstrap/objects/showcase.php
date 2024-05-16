@@ -5,9 +5,9 @@ class Showcase extends DbObject implements JsonSerializable
 {
   public static string $table_name = 'showcase';
 
-  public int $account_id = null;
-  public int $index = null;
-  public int $submission_id = null;
+  public int $account_id;
+  public int $index;
+  public int $submission_id;
 
   // Linked Objects
   public ?Account $account = null;
@@ -41,12 +41,24 @@ class Showcase extends DbObject implements JsonSerializable
         $this->submission = Submission::get_by_id($DB, $this->submission_id, $depth - 1, $expand_structure);
       }
     }
-    if ($this->account_id !== null) {
-      $this->account = Account::get_by_id($DB, $this->account_id, $depth - 1, $expand_structure);
-    }
   }
 
   // === Find Functions ===
+  static function find_all_for_account_id($DB, $account_id)
+  {
+    $query = "SELECT * FROM showcase WHERE account_id = $1 ORDER BY index ASC";
+    $result = pg_query_params($DB, $query, array($account_id));
+
+    $showcase_objs = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $showcase_obj = new Showcase();
+      $showcase_obj->apply_db_data($row);
+      $showcase_obj->expand_foreign_keys($DB, 5);
+      $showcase_objs[] = $showcase_obj;
+    }
+
+    return $showcase_objs;
+  }
 
   // === Utility Functions ===
   function jsonSerialize()
