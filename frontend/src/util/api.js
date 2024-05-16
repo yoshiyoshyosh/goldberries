@@ -214,6 +214,14 @@ export function fetchRecentSubmissions(verified, page, perPage, search = null, p
   });
 }
 
+export function fetchShowcaseSubmissions(playerId) {
+  return axios.get("/showcase.php", {
+    params: {
+      player_id: playerId,
+    },
+  });
+}
+
 export function fetchChallenges(page, perPage, search) {
   return axios.get("/challenge.php", {
     params: {

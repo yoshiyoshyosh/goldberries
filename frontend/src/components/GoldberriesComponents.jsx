@@ -31,7 +31,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { getNewDifficultyColors } from "../util/constants";
+import { API_BASE_URL, getNewDifficultyColors } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -461,10 +461,10 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
   );
 }
 
-export function VerificationStatusChip({ isVerified, prefix = "", ...props }) {
+export function VerificationStatusChip({ isVerified, prefix = "", suffix = "", ...props }) {
   const text = isVerified === null ? "Pending" : isVerified ? "Verified" : "Rejected";
   const color = isVerified === null ? "warning" : isVerified ? "success" : "error";
-  return <Chip label={prefix + text} color={color} {...props} />;
+  return <Chip label={prefix + text + suffix} color={color} {...props} />;
 }
 
 // ===== Full Select Components =====
@@ -900,4 +900,12 @@ export function JournalIcon({ height = "1em", alt = "Generic Campaign Icon", sty
       {...props}
     />
   );
+}
+
+export function SubmissionEmbed({ submission, noBorderRadius = false, style = {}, ...props }) {
+  const url = API_BASE_URL + "/embed/img/submission.php?id=" + submission.id;
+  const imgStyle = {
+    borderRadius: noBorderRadius ? 0 : "10px",
+  };
+  return <img src={url} alt={"Submission"} loading="lazy" style={{ ...imgStyle, ...style }} {...props} />;
 }

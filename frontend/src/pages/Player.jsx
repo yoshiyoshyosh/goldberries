@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, FormControlLabel, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Stack, Typography } from "@mui/material";
 import {
   BasicBox,
   BasicContainerBox,
@@ -8,7 +8,14 @@ import {
   StyledLink,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
-import { getQueryData, useGetAllDifficulties, useGetPlayer, useGetPlayerStats } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetAllDifficulties,
+  useGetPlayer,
+  useGetPlayerStats,
+  useGetRecentSubmissions,
+  useGetShowcaseSubmissions,
+} from "../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
@@ -16,16 +23,20 @@ import {
   INPUT_METHODS,
   InputMethodIcon,
   LinkIcon,
+  SubmissionEmbed,
   SuspendedIcon,
+  VerificationStatusChip,
   VerifierIcon,
 } from "../components/GoldberriesComponents";
-import { RecentSubmissions } from "../components/RecentSubmissions";
+import { RecentSubmissions, RecentSubmissionsHeadless } from "../components/RecentSubmissions";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useAuth } from "../hooks/AuthProvider";
+import { fetchShowcaseSubmissions } from "../util/api";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -66,7 +77,7 @@ export function PlayerDisplay({ id }) {
     <>
       <HeadTitle title={title} />
       <Stack direction="column" gap={1}>
-        <Stack direction="row" alignItems="center" gap={1}>
+        <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
           <Typography
             variant="h4"
             sx={{
@@ -81,14 +92,7 @@ export function PlayerDisplay({ id }) {
           {player.account.is_verifier && <VerifierIcon />}
           {player.account.is_admin && <AdminIcon />}
           <Box flexGrow={1} />
-          {player.account.input_method && (
-            <>
-              <Typography variant="body1">
-                Play Style: {INPUT_METHODS[player.account.input_method].name}
-              </Typography>
-              <InputMethodIcon method={player.account.input_method} />
-            </>
-          )}
+          <StyledLink to={`/player/${id}/top-golden-list`}>Personal Top Golden List</StyledLink>
         </Stack>
         {player.account?.links ? (
           <Stack direction="row" gap={1}>
@@ -97,7 +101,6 @@ export function PlayerDisplay({ id }) {
             ))}
           </Stack>
         ) : null}
-        <StyledLink to={`/player/${id}/top-golden-list`}>Top Golden List</StyledLink>
 
         {player.account.about_me && (
           <>
@@ -107,15 +110,79 @@ export function PlayerDisplay({ id }) {
             ))}
           </>
         )}
+
+        {player.account.input_method && (
+          <Stack direction="row" alignItems="center" gap={1} sx={{ mt: 2 }}>
+            <Typography variant="body1">
+              Input Method: {INPUT_METHODS[player.account.input_method].name}
+            </Typography>
+            <InputMethodIcon method={player.account.input_method} />
+          </Stack>
+        )}
       </Stack>
 
+      <Divider sx={{ my: 2 }} />
+      <SubmissionShowcase id={id} />
+      <Divider sx={{ my: 2 }} />
+      <PlayerRecentSubmissions id={id} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h5">Player Stats</Typography>
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
       <Divider sx={{ my: 2 }} />
-      <RecentSubmissions playerId={id} />
-      <Divider sx={{ my: 2 }} />
       <Changelog type="player" id={id} />
+    </>
+  );
+}
+
+function SubmissionShowcase({ id }) {
+  const query = useGetShowcaseSubmissions(id);
+  const data = getQueryData(query);
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const { type, submissions } = data;
+  const typeStr = type === "custom" ? "Showcase Submissions" : "Hardest Submissions";
+
+  const widths = [12, 6, 6, 4, 4, 4, 4, 4, 4, 4];
+
+  return (
+    <>
+      <Typography variant="h5" gutterBottom>
+        {typeStr}
+      </Typography>
+      <Grid container spacing={2}>
+        {submissions.map((submission, index) => (
+          <Grid item xs={12} md={widths[index]} display="flex" justifyContent="space-around">
+            <StyledLink to={`/submission/${submission.id}`}>
+              <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
+            </StyledLink>
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  );
+}
+
+function PlayerRecentSubmissions({ id }) {
+  const auth = useAuth();
+  const canSeeRejected = auth.hasVerifierPriv || auth.isPlayerWithId(id);
+  return (
+    <>
+      <Typography variant="h5" gutterBottom>
+        Recent Submissions
+      </Typography>
+      <RecentSubmissionsHeadless verified={null} playerId={id} showChip hideIfEmpty />
+      <RecentSubmissionsHeadless verified={true} playerId={id} showChip chipSx={{ mt: 2 }} />
+
+      {canSeeRejected && (
+        <>
+          <RecentSubmissionsHeadless verified={false} playerId={id} showChip hideIfEmpty chipSx={{ mt: 2 }} />
+        </>
+      )}
     </>
   );
 }

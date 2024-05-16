@@ -1,6 +1,6 @@
 import { useTheme } from "@emotion/react";
 import { getQueryData, useGetRecentSubmissions } from "../hooks/useApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import {
   Grid,
@@ -33,30 +33,11 @@ import { ErrorDisplay, StyledLink } from "./BasicComponents";
 import { getChallengeCampaign, getChallengeDescription, getChallengeIsArbitrary } from "../util/data_util";
 
 export function RecentSubmissions({ playerId = null }) {
-  const theme = useTheme();
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useLocalStorage(
-    "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
-    10
-  );
   const [verified, setVerified] = useLocalStorage("recent_submissions_verified", 1);
-  const query = useGetRecentSubmissions(
-    verified === 0 ? null : verified === -1 ? false : true,
-    page,
-    perPage,
-    null,
-    playerId
-  );
+  const verifiedValue = verified === 0 ? null : verified === -1 ? false : true;
 
   const onChangeVerified = (value) => {
     setVerified(value);
-    setPage(1);
-  };
-
-  const data = getQueryData(query) ?? {
-    submissions: null,
-    page: 1,
-    max_count: perPage,
   };
 
   return (
@@ -82,7 +63,7 @@ export function RecentSubmissions({ playerId = null }) {
                 disableUnderline: true,
               }}
               sx={{
-                border: "1px solid " + theme.palette.box.border,
+                border: (t) => "1px solid " + t.palette.box.border,
                 borderRadius: "5px",
               }}
             >
@@ -99,10 +80,54 @@ export function RecentSubmissions({ playerId = null }) {
           </Stack>
         </Grid>
       </Grid>
+      <RecentSubmissionsHeadless verified={verifiedValue} playerId={playerId} />
+    </>
+  );
+}
+
+export function RecentSubmissionsHeadless({
+  verified,
+  playerId,
+  showChip = false,
+  hideIfEmpty = false,
+  chipSx = {},
+}) {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useLocalStorage(
+    "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
+    10
+  );
+  const query = useGetRecentSubmissions(verified, page, perPage, null, playerId);
+
+  useEffect(() => {
+    setPage(1);
+  }, [verified, playerId]);
+
+  const data = getQueryData(query) ?? {
+    submissions: null,
+    page: 1,
+    max_count: perPage,
+  };
+
+  if (hideIfEmpty && data.submissions !== null && data.submissions.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {showChip && (
+        <VerificationStatusChip
+          isVerified={verified}
+          sx={{ mb: 1, ...chipSx }}
+          suffix=" Submissions"
+          size="small"
+        />
+      )}
       {/* {query.isLoading && <LoadingSpinner />} */}
       {query.isError && <ErrorDisplay error={query.error} />}
       {(query.isLoading || query.isSuccess) && (
         <RecentSubmissionsTable
+          verified={verified}
           data={data}
           page={page}
           perPage={perPage}
@@ -114,59 +139,78 @@ export function RecentSubmissions({ playerId = null }) {
     </>
   );
 }
-
-export function RecentSubmissionsTable({ data, page, perPage, setPage, setPerPage, hasPlayer = false }) {
+export function RecentSubmissionsTable({
+  verified,
+  data,
+  page,
+  perPage,
+  setPage,
+  setPerPage,
+  hasPlayer = false,
+}) {
+  const verifiedStr = verified === null ? "pending" : verified ? "verified" : "rejected";
+  const hasMoreThanOnePage = data.max_count > perPage;
   return (
     <TableContainer component={Paper}>
       <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
-            <TableCell sx={{ p: "6px 0" }}></TableCell>
-            {!hasPlayer && (
-              <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
-                Player
+        {data.submissions !== null && data.submissions.length !== 0 && (
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
+              <TableCell sx={{ p: "6px 0" }}></TableCell>
+              {!hasPlayer && (
+                <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
+                  Player
+                </TableCell>
+              )}
+              <TableCell align="center" sx={{ pr: 1, pl: 1 }}>
+                Difficulty
               </TableCell>
-            )}
-            <TableCell align="center" sx={{ pr: 1, pl: 1 }}>
-              Difficulty
-            </TableCell>
-          </TableRow>
-        </TableHead>
+            </TableRow>
+          </TableHead>
+        )}
         <TableBody>
-          {data.submissions === null
-            ? Array.from({ length: perPage }).map((_, index) => (
-                <RecentSubmissionsTableRowFakeout key={index} hasPlayer={hasPlayer} />
-              ))
-            : data.submissions.map((submission) => (
-                <RecentSubmissionsTableRow
-                  key={submission.id}
-                  submission={submission}
-                  hasPlayer={hasPlayer}
-                />
-              ))}
+          {data.submissions === null ? (
+            Array.from({ length: perPage }).map((_, index) => (
+              <RecentSubmissionsTableRowFakeout key={index} hasPlayer={hasPlayer} />
+            ))
+          ) : data.submissions.length === 0 ? (
+            <>
+              <TableRow>
+                <TableCell colSpan={hasPlayer ? 4 : 3} align="center">
+                  <Typography variant="body1">No {verifiedStr} submissions found</Typography>
+                </TableCell>
+              </TableRow>
+            </>
+          ) : (
+            data.submissions.map((submission) => (
+              <RecentSubmissionsTableRow key={submission.id} submission={submission} hasPlayer={hasPlayer} />
+            ))
+          )}
         </TableBody>
       </Table>
-      <TablePagination
-        component="div"
-        count={data.max_count ?? -1}
-        page={page - 1}
-        rowsPerPage={perPage}
-        onPageChange={(event, newPage) => setPage(newPage + 1)}
-        rowsPerPageOptions={[10, 15, 25, 50, 100]}
-        labelRowsPerPage="Submissions per page:"
-        onRowsPerPageChange={(event) => {
-          setPerPage(event.target.value);
-          setPage(1);
-        }}
-        slotProps={{
-          select: {
-            MenuProps: {
-              disableScrollLock: true,
+      {data.submissions !== null && data.submissions.length !== 0 && hasMoreThanOnePage && (
+        <TablePagination
+          component="div"
+          count={data.max_count ?? -1}
+          page={page - 1}
+          rowsPerPage={perPage}
+          onPageChange={(event, newPage) => setPage(newPage + 1)}
+          rowsPerPageOptions={[10, 15, 25, 50, 100]}
+          labelRowsPerPage="Submissions per page:"
+          onRowsPerPageChange={(event) => {
+            setPerPage(event.target.value);
+            setPage(1);
+          }}
+          slotProps={{
+            select: {
+              MenuProps: {
+                disableScrollLock: true,
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      )}
     </TableContainer>
   );
 }
@@ -230,7 +274,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
           <SubmissionFcIcon submission={submission} height="1.3em" />
         </Stack>
       </TableCell>
-      <TableCell sx={{ p: "6px 0" }}>
+      <TableCell sx={{ p: 0 }}>
         {submission.is_fc && false ? (
           <StyledLink to={"/submission/" + submission.id} style={{ display: "flex", alignItems: "center" }}>
             <SubmissionFcIcon submission={submission} disableTooltip height="1.3em" />
@@ -244,7 +288,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
           <PlayerChip player={submission.player} size="small" />
         </TableCell>
       )}
-      <TableCell align="center" sx={{ pl: 0.5, pr: 1 }}>
+      <TableCell align="center" sx={{ pl: !hasPlayer ? 0.5 : 1, pr: 1 }}>
         <DifficultyChip difficulty={challenge ? challenge.difficulty : submission.suggested_difficulty} />
       </TableCell>
     </TableRow>

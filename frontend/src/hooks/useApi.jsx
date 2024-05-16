@@ -49,6 +49,7 @@ import {
   fetchGoldenList,
   fetchAllChallengesInMap,
   fetchStats,
+  fetchShowcaseSubmissions,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -218,6 +219,14 @@ export function useGetRecentSubmissions(verified, page, perPage, search = null, 
   return useQuery({
     queryKey: ["recent_submissions", verified, page, perPage, search, playerId],
     queryFn: () => fetchRecentSubmissions(verified, page, perPage, search, playerId),
+    onError: errorToast,
+  });
+}
+
+export function useGetShowcaseSubmissions(playerId) {
+  return useQuery({
+    queryKey: ["showcase_submissions", playerId],
+    queryFn: () => fetchShowcaseSubmissions(playerId),
     onError: errorToast,
   });
 }

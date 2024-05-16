@@ -81,6 +81,7 @@ export function AuthProvider({ children }) {
   const isAdmin = user !== null && user.is_admin === true;
   const hasVerifierPriv = isVerifier || isAdmin;
   const hasPlayerClaimed = user !== null && user.player_id !== null;
+  const isPlayerWithId = (id) => hasPlayerClaimed && user.player_id === id;
 
   return (
     <AuthContext.Provider
@@ -96,6 +97,7 @@ export function AuthProvider({ children }) {
         registerWithDiscord,
         logout,
         checkSession,
+        isPlayerWithId,
       }}
     >
       {children}
