@@ -50,6 +50,8 @@ import {
   fetchAllChallengesInMap,
   fetchStats,
   fetchShowcaseSubmissions,
+  fetchPlayerSubmissions,
+  postShowcase,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -198,6 +200,14 @@ export function useGetPlayer(id) {
   });
 }
 
+export function useGetPlayerSubmissions(id, archived = false, arbitrary = false) {
+  return useQuery({
+    queryKey: ["player_submissions", id, archived, arbitrary],
+    queryFn: () => fetchPlayerSubmissions(id, archived, arbitrary),
+    onError: errorToast,
+  });
+}
+
 export function useGetVerifierList() {
   return useQuery({
     queryKey: ["player_list", "verifier"],
@@ -228,6 +238,7 @@ export function useGetShowcaseSubmissions(playerId) {
     queryKey: ["showcase_submissions", playerId],
     queryFn: () => fetchShowcaseSubmissions(playerId),
     onError: errorToast,
+    enabled: !!playerId,
   });
 }
 
@@ -449,6 +460,18 @@ export function usePostSuggestionVote(onSuccess) {
     onSuccess: (response, data) => {
       // queryClient.invalidateQueries(["suggestion"]);
       queryClient.invalidateQueries(["suggestions"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function usePostShowcase(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (submissions) => postShowcase(submissions),
+    onSuccess: (response, submissions) => {
+      queryClient.invalidateQueries(["showcase_submissions"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,

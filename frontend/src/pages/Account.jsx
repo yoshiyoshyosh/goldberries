@@ -14,12 +14,31 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox, HeadTitle, StyledLink } from "../components/BasicComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  StyledLink,
+} from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
-import { useDeleteOwnAccount, usePostAccount, usePostPlayerSelf } from "../hooks/useApi";
+import {
+  getQueryData,
+  useDeleteOwnAccount,
+  useGetShowcaseSubmissions,
+  usePostAccount,
+  usePostPlayerSelf,
+  usePostShowcase,
+} from "../hooks/useApi";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
-import { InputMethodIcon, PlayerChip, VerificationStatusChip } from "../components/GoldberriesComponents";
+import {
+  InputMethodIcon,
+  PlayerChip,
+  PlayerSubmissionSelect,
+  SubmissionEmbed,
+  VerificationStatusChip,
+} from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { API_URL, FormOptions } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -94,11 +113,13 @@ export function PageAccount() {
       >
         <Tab label="Login Methods" value="login-methods" />
         <Tab label="Profile" value="profile" />
+        <Tab label="Showcase" value="showcase" />
         <Tab label="Player Rename" value="rename" />
         <Tab label="Danger Zone" value="danger-zone" />
       </Tabs>
       {selectedTab === "login-methods" && <UserAccountLoginMethodsForm />}
       {selectedTab === "profile" && <UserAccountProfileForm />}
+      {selectedTab === "showcase" && <UserAccountShowcaseForm />}
       {selectedTab === "rename" && <UserAccountRenameForm />}
       {selectedTab === "danger-zone" && <UserAccountDangerZoneForm />}
     </BasicContainerBox>
@@ -704,5 +725,115 @@ export function UserAccountRenameForm() {
         </Stack>
       </form>
     </>
+  );
+}
+
+export function UserAccountShowcaseForm() {
+  const auth = useAuth();
+  const query = useGetShowcaseSubmissions(auth.hasPlayerClaimed ? auth.user.player.id : 0);
+
+  if (!auth.hasPlayerClaimed) {
+    return (
+      <>
+        <Typography variant="body1" gutterBottom>
+          You don't have a player claimed yet!
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          Head over to <StyledLink to="/claim-player">this page</StyledLink> to create or claim one!
+        </Typography>
+      </>
+    );
+  }
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const { submissions, type } = getQueryData(query);
+  let selectedSubmissions = [];
+  if (type === "custom") {
+    selectedSubmissions = [...submissions];
+  }
+
+  for (let i = selectedSubmissions.length; i < 9; i++) {
+    selectedSubmissions.push(null);
+  }
+
+  return <UserAccountShowcaseSubForm playerId={auth.user.player.id} submissions={selectedSubmissions} />;
+}
+function UserAccountShowcaseSubForm({ playerId, submissions }) {
+  const [showcase, setShowcase] = useState(submissions);
+
+  const { mutate: postShowcase } = usePostShowcase(() => {
+    toast.success("Showcase updated");
+  });
+
+  const onSubmit = () => {
+    let submissionIds = showcase.filter((s) => s !== null);
+    submissionIds = submissionIds.map((s) => s.id);
+    postShowcase(submissionIds);
+  };
+  const setSubmission = (index, submission) => {
+    setShowcase(showcase.map((s, i) => (i === index ? submission : s)));
+  };
+
+  return (
+    <>
+      <Typography variant="h6">Submission Showcase</Typography>
+      <Typography variant="body2" gutterBottom>
+        Select up to 9 submissions which should be shown on your player profile!
+      </Typography>
+      <Typography variant="body2" color={(t) => t.palette.text.secondary} gutterBottom>
+        Note: Not selecting any submissions will make the 9 highest placed submissions be shown instead.
+      </Typography>
+
+      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+        {showcase.map((submission, index) => (
+          <Stack direction="row" gap={2} alignItems="center">
+            <Typography variant="body1">#{index + 1}</Typography>
+            <UserAccountShowcaseEntry
+              key={index}
+              playerId={playerId}
+              submission={submission}
+              setSubmission={(s) => setSubmission(index, s)}
+            />
+          </Stack>
+        ))}
+        <Button variant="contained" color="primary" onClick={onSubmit}>
+          Save Showcase
+        </Button>
+      </Stack>
+    </>
+  );
+}
+function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
+  const [isAdding, setIsAdding] = useState(false);
+
+  const onSetSubmission = (sub) => {
+    setSubmission(sub);
+    setIsAdding(false);
+  };
+
+  return submission === null ? (
+    isAdding ? (
+      <PlayerSubmissionSelect playerId={playerId} submission={submission} setSubmission={onSetSubmission} />
+    ) : (
+      <Button variant="outlined" color="primary" onClick={() => setIsAdding(true)}>
+        Add Submission
+      </Button>
+    )
+  ) : (
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={4}>
+        <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
+      </Grid>
+      <Grid item xs={12} sm={8} display="flex" alignItems="center">
+        <Button variant="outlined" color="error" onClick={() => setSubmission(null)}>
+          Remove Submission
+        </Button>
+      </Grid>
+    </Grid>
   );
 }

@@ -12,56 +12,45 @@ import {
 import { toast } from "react-toastify";
 import {
   getCampaignName,
+  getChallengeCampaign,
   getChallengeFcLong,
   getChallengeFcShort,
   getChallengeName,
+  getChallengeNameClean,
   getDifficultyName,
+  getMapNameClean,
   getObjectiveName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
-import {
-  Autocomplete,
-  Avatar,
-  Chip,
-  Divider,
-  Grid,
-  Menu,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Autocomplete, Chip, Divider, Grid, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
 import { API_BASE_URL, getNewDifficultyColors } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArchway,
   faArrowDown,
   faArrowRight,
   faArrowUp,
   faBan,
   faBook,
-  faChild,
   faChildCombatant,
-  faCircle,
-  faDiamond,
   faGamepad,
   faHammer,
   faInfoCircle,
   faKeyboard,
   faLink,
-  faPerson,
   faPersonDrowning,
-  faQuestion,
   faShield,
-  faSquare,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { faDiscord, faMix, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { getQueryData, useGetChallengesInMap } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetChallengesInMap,
+  useGetGoldenList,
+  useGetPlayerSubmissions,
+} from "../hooks/useApi";
 import { StyledExternalLink } from "./BasicComponents";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
@@ -270,6 +259,31 @@ export function DifficultySelect({ defaultValue, ...props }) {
         </MenuItem>
       ))}
     </TextField>
+  );
+}
+
+export function PlayerSubmissionSelect({ playerId, submission, setSubmission, ...props }) {
+  const query = useGetPlayerSubmissions(playerId, true, true);
+
+  let submissions = getQueryData(query) ?? [];
+
+  const getOptionLabel = (submission) => {
+    return getChallengeNameClean(submission.challenge);
+  };
+
+  return (
+    <Autocomplete
+      fullWidth
+      getOptionKey={(submission) => submission.id}
+      getOptionLabel={getOptionLabel}
+      options={submissions}
+      value={submission}
+      onChange={(event, newValue) => {
+        setSubmission(newValue);
+      }}
+      renderInput={(params) => <TextField {...params} label="Submission" />}
+      {...props}
+    />
   );
 }
 

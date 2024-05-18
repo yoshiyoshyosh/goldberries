@@ -189,6 +189,16 @@ export function fetchPlayer(id) {
   });
 }
 
+export function fetchPlayerSubmissions(id, archived, arbitrary) {
+  return axios.get("/player-submissions.php", {
+    params: {
+      player_id: id,
+      archived: archived,
+      arbitrary: arbitrary,
+    },
+  });
+}
+
 export function fetchChangelog(type, id) {
   return axios.get("/change.php", {
     params: {
@@ -381,6 +391,10 @@ export function postSuggestion(data) {
 }
 export function postSuggestionVote(data) {
   return axios.post("/suggestion-vote.php", formatDataForApi(data));
+}
+
+export function postShowcase(submissions) {
+  return axios.post("/showcase.php", formatDataForApi(submissions));
 }
 //#endregion
 

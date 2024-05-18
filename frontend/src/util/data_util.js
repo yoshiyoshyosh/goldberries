@@ -180,6 +180,12 @@ export function getObjectiveName(objective) {
   return objective.name + arbitrarySuffix;
 }
 
+export function getChallengeNameClean(challenge) {
+  const challengeSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  return getMapNameClean(map, campaign) + challengeSuffix;
+}
 export function getMapNameClean(map, campaign, noAuthor = false) {
   const isFullGame = map === null;
   if (isFullGame) {
@@ -191,7 +197,7 @@ export function getMapNameClean(map, campaign, noAuthor = false) {
   if (isSide) {
     return campaign.name + " [" + map.name + "]";
   }
-  return map.name + (noAuthor ? "" : " (by " + map.author_gb_name + ")");
+  return map.name + (noAuthor ? "" : " (by " + campaign.author_gb_name + ")");
 }
 export function getCampaignName(campaign, noAuthor = false) {
   if (noAuthor) return campaign.name;
