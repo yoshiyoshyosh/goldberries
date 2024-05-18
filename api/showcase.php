@@ -56,9 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   check_access($account, true);
 
   $submission_ids = parse_post_body_as_json();
+  $checked_submission_ids = array();
   //Check if all submission_ids exist and belong to the player (or the account is verifier)
   $submissions = array();
   foreach ($submission_ids as $submission_id) {
+    if ($submission_id === null) {
+      continue;
+    }
     $submission = Submission::get_by_id($DB, $submission_id);
     if ($submission === false) {
       die_json(404, "Submission with id {$submission_id} does not exist");
@@ -68,6 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(403, "Submission with id {$submission_id} does not belong to you");
     }
 
+    if (in_array($submission_id, $checked_submission_ids)) {
+      //No error, but drop the submission
+      continue;
+    }
+    $checked_submission_ids[] = $submission_id;
     $submissions[] = $submission;
   }
 
@@ -96,6 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $index++;
   }
+
+  api_write($submissions);
 }
 
 // ===== DELETE Request =====
