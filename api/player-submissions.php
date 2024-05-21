@@ -14,10 +14,10 @@ $show_arbitrary = isset($_GET['arbitrary']) ? $_GET['arbitrary'] === "true" : fa
 
 $query .= " AND player_id = $1";
 
-if ($show_archived) {
+if (!$show_archived) {
   $query .= " AND map_is_archived = false";
 }
-if ($show_arbitrary) {
+if (!$show_arbitrary) {
   $query .= " AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 }
 

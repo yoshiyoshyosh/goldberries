@@ -95,8 +95,8 @@ function logout()
 function create_session_token($length = 32)
 {
   $token = generate_random_token($length);
-  //Set cookie for 30 days
-  setcookie('token', $token, time() + 60 * 60 * 24 * 30, '/');
+  //Set cookie for 365 days
+  setcookie('token', $token, time() + 60 * 60 * 24 * 365, '/');
   return $token;
 }
 function generate_random_token($length)
