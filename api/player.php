@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(500, "Failed to update account in database");
       } else {
         log_info("'{$account->player->name}' renamed '{$old_name}' to '{$new_name}'", "Player");
+        submission_embed_change($target->id, "player");
         api_write($target);
         exit();
       }
@@ -140,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_error("Failed to update {$account} in database after renaming self {$target}", "Account");
       }
       log_info("Renamed self  from '{$old_name}' to '{$new_name}'", "Player");
+      submission_embed_change($target->id, "player");
       api_write($target);
       exit();
     }
@@ -217,5 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   }
 
   log_info("'{$account->player->name}' deleted {$player}", "Player");
+  submission_embed_change($player->id, "player");
   http_response_code(200);
 }

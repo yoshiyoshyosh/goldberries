@@ -45,10 +45,11 @@ if ($modId !== null) {
 }
 
 // Check if the embed has already been generated before
+$img_name = submission_embed_get_name($submission);
 if (file_exists("submission/$id.jpg")) {
   // Output the image
   header("Content-type: image/jpg");
-  echo file_get_contents("submission/$id.jpg");
+  echo file_get_contents("submission/$img_name.jpg");
   die();
 }
 
@@ -56,6 +57,38 @@ if (file_exists("submission/$id.jpg")) {
 // Launch python script to generate embed
 
 $wkhtmltoimage_path = constant('WKHTMLTOIMAGE_PATH');
+
+if ($wkhtmltoimage_path === false || $wkhtmltoimage_path === null) {
+  //Read base image from file and output it instead (test server environment)
+  header("Content-type: image/jpg");
+  if ($modId !== null) {
+    $img = imagecreatefromjpeg($cacheFile);
+    $text_color = imagecolorallocate($img, 255, 255, 255);
+  } else {
+    //Create blank 1000x500 image
+    $text_color = imagecolorallocate($img, 0, 0, 0);
+    $img = imagecreatetruecolor(1000, 500);
+    $bg = imagecolorallocate($img, 255, 255, 255);
+    imagefill($img, 0, 0, $bg);
+  }
+  //Write text "Test Environment" in the center middle
+  $text = "(Test Server)";
+  $font_size = 50;
+  $text_box = imagettfbbox($font_size, 0, $font_path, $text);
+  $text_width = $text_box[2] - $text_box[0];
+  $text_height = $text_box[1] - $text_box[7];
+  $x = (1000 - $text_width) / 2;
+  $y = (500 - 20);
+  imagettftext($img, $font_size, 0, $x, $y, $text_color, $font_path, $text);
+  //Save img to file
+  imagejpeg($img, "submission/$img_name.jpg");
+  //Send to client
+  imagejpeg($img);
+  die();
+}
+
+//Put wkhtmltoimage path into the header
+header("X-Wkhtmltoimage-Path: $wkhtmltoimage_path");
 
 //pack data into an array
 $data = array(

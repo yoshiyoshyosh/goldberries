@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(500, "Failed to update map ($map->id)");
       } else {
         Map::generate_changelog($DB, $old_map, $map);
+        submission_embed_change($map->id, "map");
         log_info("'{$account->player->name}' updated {$map}", "Map");
       }
 
@@ -107,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
   if ($map->delete($DB)) {
     log_info("'{$account->player->name}' deleted {$map}", "Map");
+    submission_embed_change($map->id, "map"); //Delete all embeds referencing this map
     api_write($map);
   } else {
     die_json(500, "Failed to delete map");

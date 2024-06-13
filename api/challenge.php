@@ -120,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($challenge->update($DB)) {
       Challenge::generate_changelog($DB, $old_challenge, $challenge);
       log_info("'{$account->player->name}' updated {$challenge}", "Challenge");
+      submission_embed_change($challenge->id, "challenge");
       api_write($challenge);
     } else {
       die_json(500, "Failed to update challenge");
@@ -163,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   }
   if ($challenge->delete($DB)) {
     log_info("'{$account->player->name}' deleted {$challenge}", "Challenge");
+    submission_embed_change($challenge->id, "challenge");
     api_write($challenge);
   } else {
     die_json(500, "Failed to delete challenge");

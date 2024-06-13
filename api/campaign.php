@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($campaign->update($DB)) {
       Campaign::generate_changelog($DB, $old_campaign, $campaign);
       log_info("'{$account->player->name}' updated {$campaign}", "Campaign");
+      submission_embed_change($campaign->id, "campaign");
       api_write($campaign);
     } else {
       die_json(500, "Failed to update campaign");
@@ -91,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   }
   if ($campaign->delete($DB)) {
     log_info("'{$account->player->name}' deleted {$campaign}", "Campaign");
+    submission_embed_change($campaign->id, "campaign"); //Delete all embeds referencing this campaign
     api_write($campaign);
   } else {
     die_json(500, "Failed to delete campaign");

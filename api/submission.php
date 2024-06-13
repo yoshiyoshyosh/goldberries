@@ -136,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $old_submission->new_challenge_id = $submission->is_verified !== null ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
+        submission_embed_change($old_submission->id, "submission");
         $old_submission->expand_foreign_keys($DB, 5);
         api_write($old_submission);
       } else {
@@ -161,6 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       if ($old_submission->update($DB)) {
+        submission_embed_change($old_submission->id, "submission");
         api_write($old_submission);
       } else {
         die_json(500, "Failed to update submission");
