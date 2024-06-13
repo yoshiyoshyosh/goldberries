@@ -57,8 +57,9 @@ if (file_exists("submission/$id.jpg")) {
 // Launch python script to generate embed
 
 $wkhtmltoimage_path = constant('WKHTMLTOIMAGE_PATH');
+$python_command = constant('PYTHON_COMMAND');
 
-if ($wkhtmltoimage_path === false || $wkhtmltoimage_path === null) {
+if ($python_command === false || $python_command === null) {
   //Read base image from file and output it instead (test server environment)
   header("Content-type: image/jpg");
   if ($modId !== null) {
@@ -87,9 +88,6 @@ if ($wkhtmltoimage_path === false || $wkhtmltoimage_path === null) {
   die();
 }
 
-//Put wkhtmltoimage path into the header
-header("X-Wkhtmltoimage-Path: $wkhtmltoimage_path");
-
 //pack data into an array
 $data = array(
   "submission_id" => $id,
@@ -106,7 +104,7 @@ $data = array(
   "objective_icon_url" => $challenge->objective->icon_url,
   "difficulty_id" => $challenge->difficulty_id,
   "wkhtmltoimage_path" => $wkhtmltoimage_path,
-  "file_name" => $id . "",
+  "file_name" => $img_name . "",
   "folder_name" => "submission",
   "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_description", "objective_icon_url", "difficulty_id"],
 );
@@ -120,7 +118,6 @@ $encodedData = base64_encode(json_encode($data));
 // error_log("Encoded data: " . $encodedData);
 
 // Launch python script called "submission.py" in the same directory
-$python_command = constant('PYTHON_COMMAND');
 $command = "$python_command submission.py $encodedData 2>&1";
 $output = shell_exec($command);
 
@@ -129,4 +126,4 @@ error_log("Python output: " . $output);
 // The output image will be named "{submission_id}.jpg" in the "./submission" directory
 // Output the image
 header("Content-type: image/jpg");
-echo file_get_contents("submission/$id.jpg");
+echo file_get_contents("submission/$img_name.jpg");
