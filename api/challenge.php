@@ -106,6 +106,117 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   $data = format_assoc_array_bools(parse_post_body_as_json());
+
+  if ($data["split"] === "t") {
+    //Split request. data is the challenge that is to be split
+    $challenge = Challenge::get_by_id($DB, $data["id"]);
+    if ($challenge === false) {
+      die_json(404, "Challenge not found");
+    }
+    if ($challenge->has_fc === false) {
+      die_json(400, "Only C/FC challenges can be split");
+    }
+
+    //Step 1: Clone challenge and set requires_fc to true
+    $new_challenge = new Challenge();
+    $new_challenge->campaign_id = $challenge->campaign_id;
+    $new_challenge->map_id = $challenge->map_id;
+    $new_challenge->objective_id = $challenge->objective_id;
+    $new_challenge->difficulty_id = $challenge->difficulty_id;
+
+    $new_challenge->description = $challenge->description;
+    $new_challenge->date_created = $challenge->date_created;
+    $new_challenge->sort = $challenge->sort;
+    $new_challenge->requires_fc = true;
+
+    if (!$new_challenge->insert($DB)) {
+      die_json(500, "Failed to create challenge");
+    }
+    log_info("'{$account->player->name}' created {$new_challenge} via challenge splitting", "Challenge");
+
+    //Step 2: Update original challenge to be non-FC
+    $challenge->has_fc = false;
+    if (!$challenge->update($DB)) {
+      die_json(500, "Failed to update challenge");
+    }
+    log_info("'{$account->player->name}' updated {$challenge} via challenge splitting", "Challenge");
+
+    //Step 3: Update FC submissions to point to the new challenge
+    //For this, first get all submissions of the original challenge
+
+    if (!$challenge->fetch_submissions($DB)) {
+      die_json(500, "Failed to fetch submissions");
+    }
+
+    foreach ($challenge->submissions as $submission) {
+      if ($submission->is_fc === false)
+        continue; //Skip non-FC submissions
+      $submission->challenge_id = $new_challenge->id;
+      if (!$submission->update($DB)) {
+        die_json(500, "Failed to move FC submission to newly created challenge ({$new_challenge->id})");
+      }
+    }
+
+    http_response_code(200);
+    die();
+
+  } else if ($data["merge"] === "t") {
+    //Merge request. data contains the fields: "id_a" and "id_b"
+    //The challenge with id_b will be merged into the challenge with id_a
+
+    $challenge_a = Challenge::get_by_id($DB, $data["id_a"]);
+    if ($challenge_a === false) {
+      die_json(404, "Challenge A not found");
+    }
+    $challenge_b = Challenge::get_by_id($DB, $data["id_b"]);
+    if ($challenge_b === false) {
+      die_json(404, "Challenge B not found");
+    }
+
+    if ($challenge_a->campaign_id !== $challenge_b->campaign_id) {
+      die_json(400, "Challenges are not from the same campaign");
+    } else if ($challenge_a->map_id !== $challenge_b->map_id) {
+      die_json(400, "Challenges are not from the same map");
+    }
+
+    //Both challenges need to have has_fc set to false, and only one of them can have requires_fc set to true
+    if ($challenge_a->has_fc || $challenge_b->has_fc) {
+      die_json(400, "Cannot merge has_fc challenges");
+    } else if ($challenge_a->requires_fc && $challenge_b->requires_fc) {
+      die_json(400, "Can only merge a regular clear and an FC challenge");
+    }
+
+    //Reassign submissions from challenge_b to challenge_a
+    if (!$challenge_b->fetch_submissions($DB)) {
+      die_json(500, "Failed to fetch submissions");
+    }
+
+    foreach ($challenge_b->submissions as $submission) {
+      $submission->challenge_id = $challenge_a->id;
+      if (!$submission->update($DB)) {
+        die_json(500, "Failed to move submission to challenge A");
+      }
+    }
+
+    //Delete challenge_b
+    if (!$challenge_b->delete($DB)) {
+      die_json(500, "Failed to delete challenge B");
+    }
+    log_info("'{$account->player->name}' deleted {$challenge_b} via challenge merging", "Challenge");
+
+    //Update challenge_a
+    $challenge_a->has_fc = true;
+    $challenge_a->requires_fc = false;
+    if (!$challenge_a->update($DB)) {
+      die_json(500, "Failed to update challenge A");
+    }
+    log_info("'{$account->player->name}' updated {$challenge_a} via challenge merging", "Challenge");
+
+    http_response_code(200);
+    die();
+  }
+
+
   $challenge = new Challenge();
   $challenge->apply_db_data($data);
 
