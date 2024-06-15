@@ -131,6 +131,8 @@ function LogFilter({ filter, setFilter }) {
     { value: "divider" },
     { value: "Change", label: "Change" },
     { value: "Player", label: "Player" },
+    { value: "divider" },
+    { value: "Server Error", label: "Server Error" },
   ];
 
   const dateInputStyle = {
