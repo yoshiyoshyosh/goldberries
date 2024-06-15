@@ -6,6 +6,12 @@ function die_json(int $code, string $why): string
 {
   http_response_code($code);
   echo json_encode(array('error' => $why));
+
+  //If its an artificial 500 error
+  if ($code >= 500) {
+    log_error($code . ": " . $why, "Server Error");
+  }
+
   exit();
 }
 
