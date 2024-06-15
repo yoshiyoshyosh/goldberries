@@ -52,6 +52,8 @@ import {
   fetchShowcaseSubmissions,
   fetchPlayerSubmissions,
   postShowcase,
+  postChallengeMerge,
+  postChallengeSplit,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -472,6 +474,31 @@ export function usePostShowcase(onSuccess) {
     mutationFn: (submissions) => postShowcase(submissions),
     onSuccess: (response, submissions) => {
       queryClient.invalidateQueries(["showcase_submissions"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function useSplitChallenge(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (challenge) => postChallengeSplit(challenge),
+    onSuccess: (response, challenge) => {
+      queryClient.invalidateQueries(["all_challenges"]);
+      queryClient.invalidateQueries(["manage_challenges"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+export function useMergeChallenges(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => postChallengeMerge(data),
+    onSuccess: (response, data) => {
+      queryClient.invalidateQueries(["all_challenges"]);
+      queryClient.invalidateQueries(["manage_challenges"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,

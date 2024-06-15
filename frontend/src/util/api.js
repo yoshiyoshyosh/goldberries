@@ -323,6 +323,14 @@ export function postMap(data) {
 export function postChallenge(data) {
   return axios.post("/challenge.php", formatDataForApi(data));
 }
+export function postChallengeSplit(data) {
+  data.split = true;
+  return axios.post("/challenge.php", formatDataForApi(data));
+}
+export function postChallengeMerge(data) {
+  data.merge = true;
+  return axios.post("/challenge.php", formatDataForApi(data));
+}
 
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));

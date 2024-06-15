@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -33,14 +34,30 @@ import {
 } from "../../components/BasicComponents";
 import { useLocalStorage } from "../../hooks/useStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsSplitUpAndLeft,
+  faArrowsToDot,
+  faCodeMerge,
+  faEdit,
+  faJoint,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { FormChallengeWrapper } from "../../components/forms/Challenge";
 import { FormMapWrapper } from "../../components/forms/Map";
-import { useDeleteCampaign, useDeleteChallenge, useDeleteMap } from "../../hooks/useApi";
+import {
+  useDeleteCampaign,
+  useDeleteChallenge,
+  useDeleteMap,
+  useMergeChallenges,
+  useSplitChallenge,
+} from "../../hooks/useApi";
 import { FormCampaignWrapper } from "../../components/forms/Campaign";
 import { FormCampaignMassAddMaps } from "../../components/forms/CampaignMassAddMaps";
 import { FormCreateFullChallengeWrapper } from "../../components/forms/CreateFullChallenge";
+import { FullChallengeSelect } from "../../components/GoldberriesComponents";
+import { toast } from "react-toastify";
 
 export function PageManageChallenges() {
   const [page, setPage] = useLocalStorage("manage_challenges_page", 1);
@@ -66,11 +83,9 @@ export function PageManageChallenges() {
       create: useRef(),
       edit: useRef(),
       delete: useRef(),
-    },
-  };
 
-  const openModal = (ref, data) => {
-    ref.current.open(data);
+      merge: useRef(),
+    },
   };
 
   return (
@@ -301,6 +316,16 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
                           Edit
                         </MenuItem>
+                        <MenuItem
+                          disableRipple
+                          onClick={() => openModal(modalRefs.challenge.merge, challenge)}
+                        >
+                          <FontAwesomeIcon
+                            style={{ marginRight: "5px" }}
+                            icon={challenge.has_fc ? faArrowsSplitUpAndLeft : faArrowsToDot}
+                          />
+                          {challenge.has_fc ? "Split Challenge" : "Merge Challenges"}
+                        </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
                           <Button
@@ -375,6 +400,7 @@ function ManageModalContainer({ modalRefs }) {
     if (cancelled) return;
     deleteChallenge(data.id);
   });
+  const mergeChallengeModal = useModal();
 
   // Setting the refs
   modalRefs.campaign.edit.current = editCampaignModal;
@@ -387,6 +413,7 @@ function ManageModalContainer({ modalRefs }) {
 
   modalRefs.challenge.edit.current = editChallengeModal;
   modalRefs.challenge.delete.current = deleteChallengeModal;
+  modalRefs.challenge.merge.current = mergeChallengeModal;
 
   return (
     <>
@@ -455,6 +482,13 @@ function ManageModalContainer({ modalRefs }) {
           <b>'{deleteChallengeModal.data ? getChallengeName(deleteChallengeModal.data) : ""}'</b> for the map{" "}
           <b>'{deleteChallengeModal.data?.map?.name}'</b> and <b>all of the attached submissions</b> ?
         </Typography>
+      </CustomModal>
+
+      <CustomModal modalHook={mergeChallengeModal} options={{ hideFooter: true }}>
+        <MergeJoinChallengesForm
+          defaultChallenge={mergeChallengeModal.data}
+          onSuccess={mergeChallengeModal.close}
+        />
       </CustomModal>
     </>
   );
@@ -550,5 +584,82 @@ export function CreateAnyButton({
         />
       </CustomModal>
     </>
+  );
+}
+
+export function MergeJoinChallengesForm({ defaultChallenge, onSuccess }) {
+  const { mutate: splitChallenge } = useSplitChallenge((data) => {
+    toast.success("Split challenge!");
+    onSuccess(data);
+  });
+  const { mutate: mergeChallenges } = useMergeChallenges((data) => {
+    toast.success("Merged challenges!");
+    onSuccess(data);
+  });
+
+  const [challengeOne, setChallengeOne] = useState(defaultChallenge ?? null);
+  const [challengeTwo, setChallengeTwo] = useState(null);
+
+  const isSplit = challengeOne !== null && challengeOne.has_fc;
+  const cannotMerge =
+    challengeOne !== null && challengeTwo !== null && challengeOne.requires_fc === challengeTwo.requires_fc;
+  const submitDisabled =
+    challengeOne === null || (!challengeOne.has_fc && challengeTwo === null) || cannotMerge;
+
+  const onSubmit = () => {
+    if (challengeOne === null) return;
+
+    if (isSplit) {
+      splitChallenge(challengeOne);
+    } else {
+      mergeChallenges({
+        id_a: challengeOne.id,
+        id_b: challengeTwo.id,
+      });
+    }
+  };
+
+  return (
+    <Stack direction="column" gap={1}>
+      <Typography variant="h6">Split/Merge Challenges</Typography>
+      <Divider sx={{}}>
+        <Chip label="Challenge 1" size="small" />
+      </Divider>
+      <FullChallengeSelect challenge={challengeOne} setChallenge={setChallengeOne} />
+
+      {challengeOne !== null &&
+        (isSplit ? (
+          <>
+            <Divider sx={{ my: 1 }} />
+            <Typography variant="body1">
+              This challenge will be split from a single C/FC challenge into 2 separate challenges. All FC
+              submissions will be automatically moved to the FC challenge.
+            </Typography>
+          </>
+        ) : (
+          <>
+            <Divider sx={{ mt: 1 }}>
+              <Chip label="Challenge 2" size="small" />
+            </Divider>
+            <FullChallengeSelect challenge={challengeTwo} setChallenge={setChallengeTwo} />
+            <Divider sx={{ my: 1 }} />
+            <Typography variant="body1">
+              The submissions of the 2nd challenge will be merged into the first challenge. The first
+              challenge will be modified accordingly, and the 2nd challenge deleted after all submissions have
+              been moved.
+            </Typography>
+          </>
+        ))}
+      {cannotMerge && (
+        <Typography variant="body1" color="error">
+          These challenges cannot be merged. You can only merge a regular clear challenge with an FC
+          challenge.
+        </Typography>
+      )}
+      <Divider sx={{ my: 1 }} />
+      <Button variant="contained" color="primary" disabled={submitDisabled} onClick={onSubmit}>
+        {challengeOne === null ? "Split / Merge" : isSplit ? "Split Challenge" : "Merge Challenges"}
+      </Button>
+    </Stack>
   );
 }
