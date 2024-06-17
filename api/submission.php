@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->player_id = $submission->player_id;
       }
       $old_submission->is_fc = $submission->is_fc;
+      $old_submission->is_ranked = $submission->is_ranked;
       if ($old_submission->proof_url !== $submission->proof_url) {
         check_url($submission->proof_url, 'proof_url');
         $old_submission->proof_url = $submission->proof_url;
@@ -161,8 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+      $old_submission->is_ranked = $submission->is_ranked;
+
       if ($old_submission->update($DB)) {
-        submission_embed_change($old_submission->id, "submission");
+        //Dont need to delete embed, as user changes never appear in the embed anyways
+        // submission_embed_change($old_submission->id, "submission");
         api_write($old_submission);
       } else {
         die_json(500, "Failed to update submission");
