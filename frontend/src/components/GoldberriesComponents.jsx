@@ -316,6 +316,7 @@ export function DifficultyChip({
   suffix = "",
   useSubtierColors = false,
   useDarkening = false,
+  isPersonal = false,
   sx = {},
   ...props
 }) {
@@ -325,7 +326,7 @@ export function DifficultyChip({
   const text = getDifficultyName(difficulty);
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
-  return (
+  const chip = (
     <Chip
       label={prefix + text + suffix}
       size="small"
@@ -333,10 +334,24 @@ export function DifficultyChip({
       sx={{
         bgcolor: useSubtierColors ? colors.color : colors.group_color,
         color: colors.contrast_color,
+        opacity: isPersonal ? 0.25 : 1,
         ...sx,
       }}
     />
   );
+
+  if (isPersonal) {
+    return (
+      <Tooltip
+        title="This difficulty suggestion is personal and should not be used for difficulty placements"
+        placement="top"
+      >
+        {chip}
+      </Tooltip>
+    );
+  }
+
+  return chip;
 }
 export function DifficultyValueChip({
   difficulty,

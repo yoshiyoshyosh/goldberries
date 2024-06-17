@@ -3,6 +3,7 @@ import {
   faChevronDown,
   faEdit,
   faFileExport,
+  faInfoCircle,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,6 +20,7 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -358,5 +360,13 @@ export function ShareButton({ text, ...props }) {
     <Button onClick={handleClick} variant="outlined" color={copied ? "success" : "primary"} {...props}>
       {copied ? "Copied!" : "Copy Link"}
     </Button>
+  );
+}
+
+export function TooltipInfoButton({ title }) {
+  return (
+    <Tooltip title={title}>
+      <FontAwesomeIcon icon={faInfoCircle} />
+    </Tooltip>
   );
 }

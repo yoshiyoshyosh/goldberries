@@ -263,8 +263,10 @@ export function getPlayerNameColorStyle(player, settings = null) {
 }
 
 export function getSortedSuggestedDifficulties(challenge) {
-  let allSuggestedDiffs = challenge.submissions.map((submission) => submission.suggested_difficulty);
-  allSuggestedDiffs = allSuggestedDiffs.filter((diff) => diff !== null);
+  let allSuggestedDiffs = challenge.submissions.filter(
+    (submission) => submission.suggested_difficulty !== null && !submission.is_personal
+  );
+  allSuggestedDiffs = allSuggestedDiffs.map((submission) => submission.suggested_difficulty);
 
   const difficulties = {}; // count of each difficulty
   allSuggestedDiffs.forEach((diff) => {

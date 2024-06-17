@@ -6,6 +6,7 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -13,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner, ProofEmbed, StyledLink } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, ProofEmbed, StyledLink, TooltipInfoButton } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -256,20 +257,38 @@ export function FormSubmission({ submission, onSave, ...props }) {
         InputLabelProps={{ shrink: true }}
       />
 
-      <Controller
-        control={form.control}
-        name="suggested_difficulty_id"
-        render={({ field }) => (
-          <DifficultySelectControlled
-            label="Suggested Difficulty"
-            difficultyId={field.value}
-            setDifficultyId={field.onChange}
-            isSuggestion
-            sx={{ mt: 2 }}
-            fullWidth
+      <Grid container columnSpacing={2} sx={{ mt: 2 }}>
+        <Grid item xs={12} sm>
+          <Controller
+            control={form.control}
+            name="suggested_difficulty_id"
+            render={({ field }) => (
+              <DifficultySelectControlled
+                label="Suggested Difficulty"
+                difficultyId={field.value}
+                setDifficultyId={field.onChange}
+                isSuggestion
+                fullWidth
+              />
+            )}
           />
-        )}
-      />
+        </Grid>
+        <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
+          <Controller
+            control={form.control}
+            name="is_personal"
+            render={({ field }) => (
+              <FormControlLabel
+                onChange={field.onChange}
+                label="Is Personal"
+                checked={field.value}
+                control={<Checkbox />}
+              />
+            )}
+          />
+          <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+        </Grid>
+      </Grid>
 
       <List dense sx={{ pb: 0 }}>
         <ListItem>

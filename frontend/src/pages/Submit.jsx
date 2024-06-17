@@ -32,7 +32,13 @@ import { Controller, useForm } from "react-hook-form";
 import { FormOptions } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  TooltipInfoButton,
+} from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -134,6 +140,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       player_notes: "",
       is_fc: false,
       suggested_difficulty_id: null,
+      is_personal: false,
     },
   });
   const onSubmit = form.handleSubmit((data) => {
@@ -319,7 +326,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               {...form.register("player_notes")}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <Controller
               name="is_fc"
               control={form.control}
@@ -334,15 +341,30 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm>
             <DifficultySelect
               label="Suggested Difficulty"
               fullWidth
               SelectProps={{ ...form.register("suggested_difficulty_id") }}
-              helperText="Please use responsibly, meme suggestions will be removed!"
+              // helperText="Please use responsibly, meme suggestions will be removed!"
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
+            <Controller
+              control={form.control}
+              name="is_personal"
+              render={({ field }) => (
+                <FormControlLabel
+                  onChange={field.onChange}
+                  label="Is Personal"
+                  checked={field.value}
+                  control={<Checkbox />}
+                />
+              )}
+            />
+            <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+          </Grid>
+          <Grid item xs={12} sm={12}>
             <Button
               variant="contained"
               fullWidth
@@ -678,6 +700,7 @@ export function NewChallengeUserSubmission({}) {
       player_notes: "",
       is_fc: false,
       suggested_difficulty_id: null,
+      is_personal: false,
     },
   });
   const onSubmit = form.handleSubmit((data) => {
@@ -774,18 +797,32 @@ export function NewChallengeUserSubmission({}) {
               {...form.register("player_notes")}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is Full Clear" />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm>
             <DifficultySelect
               label="Suggested Difficulty"
               fullWidth
               SelectProps={{ ...form.register("suggested_difficulty_id") }}
-              helperText="Please use responsibly, meme suggestions will be removed!"
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
+            <Controller
+              control={form.control}
+              name="is_personal"
+              render={({ field }) => (
+                <FormControlLabel
+                  onChange={field.onChange}
+                  label="Is Personal"
+                  checked={field.value}
+                  control={<Checkbox />}
+                />
+              )}
+            />
+            <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+          </Grid>
+          <Grid item xs={12} sm={12}>
             <Button variant="contained" fullWidth onClick={onSubmit}>
               Submit
             </Button>

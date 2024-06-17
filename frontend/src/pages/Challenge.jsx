@@ -297,7 +297,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       </TableCell>
       {compact ? null : (
         <TableCell width={1} align="center">
-          <DifficultyChip difficulty={submission.suggested_difficulty} />
+          <DifficultyChip difficulty={submission.suggested_difficulty} isPersonal={submission.is_personal} />
         </TableCell>
       )}
     </TableRow>
