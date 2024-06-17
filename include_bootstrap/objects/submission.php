@@ -8,7 +8,7 @@ class Submission extends DbObject
   public string $proof_url;
   public ?string $raw_session_url = null;
   public ?string $player_notes = null;
-  public bool $is_ranked = true;
+  public bool $is_personal = false;
   public ?bool $is_verified = null;
   public ?JsonDateTime $date_verified = null;
   public ?string $verifier_notes = null;
@@ -39,7 +39,7 @@ class Submission extends DbObject
       'proof_url' => $this->proof_url,
       'raw_session_url' => $this->raw_session_url,
       'player_notes' => $this->player_notes,
-      'is_ranked' => $this->is_ranked,
+      'is_personal' => $this->is_personal,
       'is_verified' => $this->is_verified,
       'date_verified' => $this->date_verified,
       'verifier_notes' => $this->verifier_notes,
@@ -56,7 +56,7 @@ class Submission extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->player_id = intval($arr[$prefix . 'player_id']);
-    $this->is_ranked = $arr[$prefix . 'is_ranked'] === 't';
+    $this->is_personal = $arr[$prefix . 'is_personal'] === 't';
     $this->proof_url = $arr[$prefix . 'proof_url'];
     $this->is_fc = $arr[$prefix . 'is_fc'] === 't';
 

@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->player_id = $submission->player_id;
       }
       $old_submission->is_fc = $submission->is_fc;
-      $old_submission->is_ranked = $submission->is_ranked;
+      $old_submission->is_personal = $submission->is_personal;
       if ($old_submission->proof_url !== $submission->proof_url) {
         check_url($submission->proof_url, 'proof_url');
         $old_submission->proof_url = $submission->proof_url;
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
-      $old_submission->is_ranked = $submission->is_ranked;
+      $old_submission->is_personal = $submission->is_personal;
 
       if ($old_submission->update($DB)) {
         //Dont need to delete embed, as user changes never appear in the embed anyways
