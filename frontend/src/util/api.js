@@ -331,6 +331,10 @@ export function postChallengeMerge(data) {
   data.merge = true;
   return axios.post("/challenge.php", formatDataForApi(data));
 }
+export function postChallengeMarkPersonal(data) {
+  data.mark_personal = true;
+  return axios.post("/challenge.php", formatDataForApi(data));
+}
 
 export function postSubmission(data) {
   return axios.post("/submission.php", formatDataForApi(data));

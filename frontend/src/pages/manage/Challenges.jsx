@@ -22,7 +22,13 @@ import {
 } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 import { useRef, useState } from "react";
-import { getCampaignName, getChallengeCampaign, getChallengeName } from "../../util/data_util";
+import {
+  getCampaignName,
+  getChallengeCampaign,
+  getChallengeName,
+  getChallengeNameShort,
+  getMapName,
+} from "../../util/data_util";
 import { fetchChallenges } from "../../util/api";
 import { useQuery } from "react-query";
 import {
@@ -40,6 +46,7 @@ import {
   faCodeMerge,
   faEdit,
   faJoint,
+  faMarker,
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -47,6 +54,7 @@ import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { FormChallengeWrapper } from "../../components/forms/Challenge";
 import { FormMapWrapper } from "../../components/forms/Map";
 import {
+  useChallengeMarkPersonal,
   useDeleteCampaign,
   useDeleteChallenge,
   useDeleteMap,
@@ -85,6 +93,7 @@ export function PageManageChallenges() {
       delete: useRef(),
 
       merge: useRef(),
+      markPersonal: useRef(),
     },
   };
 
@@ -326,6 +335,15 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                           />
                           {challenge.has_fc ? "Split Challenge" : "Merge Challenges"}
                         </MenuItem>
+                        <MenuItem
+                          disableRipple
+                          onClick={() => openModal(modalRefs.challenge.markPersonal, challenge)}
+                        >
+                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faMarker} />
+                          Mark Suggestions
+                          <br />
+                          as Personal
+                        </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
                           <Button
@@ -401,6 +419,7 @@ function ManageModalContainer({ modalRefs }) {
     deleteChallenge(data.id);
   });
   const mergeChallengeModal = useModal();
+  const markPersonalChallengeModal = useModal();
 
   // Setting the refs
   modalRefs.campaign.edit.current = editCampaignModal;
@@ -414,6 +433,7 @@ function ManageModalContainer({ modalRefs }) {
   modalRefs.challenge.edit.current = editChallengeModal;
   modalRefs.challenge.delete.current = deleteChallengeModal;
   modalRefs.challenge.merge.current = mergeChallengeModal;
+  modalRefs.challenge.markPersonal.current = markPersonalChallengeModal;
 
   return (
     <>
@@ -488,6 +508,16 @@ function ManageModalContainer({ modalRefs }) {
         <MergeJoinChallengesForm
           defaultChallenge={mergeChallengeModal.data}
           onSuccess={mergeChallengeModal.close}
+        />
+      </CustomModal>
+
+      <CustomModal
+        modalHook={markPersonalChallengeModal}
+        options={{ hideFooter: true, title: "Mark As Personal" }}
+      >
+        <MarkPersonalChallengeForm
+          challenge={markPersonalChallengeModal.data}
+          onSuccess={markPersonalChallengeModal.close}
         />
       </CustomModal>
     </>
@@ -661,5 +691,36 @@ export function MergeJoinChallengesForm({ defaultChallenge, onSuccess }) {
         {challengeOne === null ? "Split / Merge" : isSplit ? "Split Challenge" : "Merge Challenges"}
       </Button>
     </Stack>
+  );
+}
+
+export function MarkPersonalChallengeForm({ challenge, onSuccess }) {
+  const { mutate: markSubmissions } = useChallengeMarkPersonal((data) => {
+    toast.success("Marked all submissions as personal!");
+    onSuccess(data);
+  });
+
+  const onSubmit = () => {
+    markSubmissions(challenge);
+  };
+
+  console.log("Challenge to mark: ", challenge);
+
+  return (
+    <>
+      <Typography variant="body1">
+        Mark all difficulty suggestions for{" "}
+        <b>
+          {getMapName(challenge.map)} - {getChallengeNameShort(challenge)}
+        </b>{" "}
+        as personal?
+      </Typography>
+      <Typography variant="body1">
+        At most <b>{challenge.data.count_submissions}</b> submissions will be impacted.
+      </Typography>
+      <Button variant="contained" fullWidth color="primary" onClick={onSubmit} sx={{ mt: 2 }}>
+        Mark as Personal
+      </Button>
+    </>
   );
 }
