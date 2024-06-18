@@ -370,3 +370,25 @@ export function TooltipInfoButton({ title }) {
     </Tooltip>
   );
 }
+
+export function InfoBox({ children }) {
+  return (
+    <Box sx={{ p: 1, borderRadius: 1, bgcolor: "#282828c4" }}>
+      <Stack direction="column" gap={0.25}>
+        {children}
+      </Stack>
+    </Box>
+  );
+}
+export function InfoBoxIconTextLine({ icon, text, isSecondary = false }) {
+  const theme = useTheme();
+  const color = isSecondary ? theme.palette.text.secondary : theme.palette.text.primary;
+  return (
+    <Stack direction="row" gap={1} alignItems="center">
+      {icon}
+      <Typography variant="body1" color={color} fontWeight={isSecondary ? "normal" : "bold"}>
+        {text}
+      </Typography>
+    </Stack>
+  );
+}
