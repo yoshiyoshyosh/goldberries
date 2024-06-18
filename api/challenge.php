@@ -107,6 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $data = format_assoc_array_bools(parse_post_body_as_json());
 
+
+  // ====== Special Challenge Requests =====
+
   if ($data["split"] === "t") {
     //Split request. data is the challenge that is to be split
     $challenge = Challenge::get_by_id($DB, $data["id"]);
@@ -214,8 +217,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     http_response_code(200);
     die();
+
+  } else if ($data["mark_personal"] === 't') {
+    //Request to mark all submissions for a challenge as personal
+    $challenge = Challenge::get_by_id($DB, $data["id"]);
+    if ($challenge === false) {
+      die_json(404, "Challenge not found");
+    }
+
+    if (!$challenge->fetch_submissions($DB)) {
+      die_json(500, "Failed to fetch submissions");
+    }
+
+    foreach ($challenge->submissions as $submission) {
+      //Only mark submissions that have a suggestion set as personal
+      if ($submission->suggested_difficulty_id !== null) {
+        $submission->is_personal = true;
+        if (!$submission->update($DB)) {
+          die_json(500, "Failed to mark submission as personal");
+        }
+      }
+    }
+
+    log_info("'{$account->player->name}' marked all submissions for {$challenge} as personal", "Challenge");
+    http_response_code(200);
+    die();
   }
 
+  // ======================================
+  //Regular challenge creation/update request from here
 
   $challenge = new Challenge();
   $challenge->apply_db_data($data);
