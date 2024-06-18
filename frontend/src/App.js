@@ -460,6 +460,21 @@ export function Layout() {
           path: auth.hasPlayerClaimed ? "/player/" + auth.user.player.id : "/claim-player",
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
+        {
+          name: "My Top Goldens",
+          path: auth.hasPlayerClaimed
+            ? "/player/" + auth.user.player.id + "/top-golden-list"
+            : "/claim-player",
+          icon: (
+            <ObjectiveIcon
+              objective={{
+                name: "Personal Golden List",
+                description: "Personal Golden List",
+                icon_url: "/icons/goldenberry-8x.png",
+              }}
+            />
+          ),
+        },
         { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
         { divider: true },
         {
@@ -536,6 +551,7 @@ export function Layout() {
     menus.user.items = menus.user.items.filter((item) => item.name !== "Claim A Player");
   } else {
     menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
+    menus.user.items = menus.user.items.filter((item) => item.name !== "My Top Goldens");
   }
 
   const leftMenu = [menus.lists, menus.campaigns, menus.other];

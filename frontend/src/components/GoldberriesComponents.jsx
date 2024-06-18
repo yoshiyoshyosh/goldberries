@@ -317,6 +317,7 @@ export function DifficultyChip({
   useSubtierColors = false,
   useDarkening = false,
   isPersonal = false,
+  highlightPersonal = false,
   sx = {},
   ...props
 }) {
@@ -334,7 +335,11 @@ export function DifficultyChip({
       sx={{
         bgcolor: useSubtierColors ? colors.color : colors.group_color,
         color: colors.contrast_color,
-        opacity: isPersonal ? 0.25 : 1,
+        opacity: isPersonal && !highlightPersonal ? 0.25 : 1,
+        boxShadow:
+          isPersonal && highlightPersonal
+            ? "0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red"
+            : "none",
         ...sx,
       }}
     />

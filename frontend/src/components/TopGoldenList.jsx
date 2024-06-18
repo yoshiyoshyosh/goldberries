@@ -22,9 +22,21 @@ import { getChallengeReference, getNewDifficultyColors } from "../util/constants
 import { Link } from "react-router-dom";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faEdit, faExternalLink, faHashtag, faList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faEdit,
+  faExternalLink,
+  faHashtag,
+  faInfoCircle,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
-import { getChallengeDescription, getChallengeIsArbitrary, getMapName } from "../util/data_util";
+import {
+  getChallengeDescription,
+  getChallengeIsArbitrary,
+  getDifficultyName,
+  getMapName,
+} from "../util/data_util";
 import {
   CampaignIcon,
   ChallengeFcIcon,
@@ -79,7 +91,6 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
 
   // Set horizontal overflow only for this page
   useEffect(() => {
-    console.log("useEffect scrolling");
     document.body.parentElement.style.overflowX = "auto";
     return () => {
       document.body.parentElement.style.overflowX = "hidden";
@@ -245,6 +256,7 @@ function TopGoldenListGroup({
                   sx={{
                     ...cellStyle,
                     borderLeft: "1px solid " + theme.palette.tableDivider,
+                    display: useSuggested ? "none" : "table-cell",
                   }}
                   align="center"
                 >
@@ -571,13 +583,29 @@ function TopGoldenListRow({
               <span style={{ userSelect: "none", cursor: "default" }}>🟊</span>
             </Tooltip>
           )}
+          {isPlayer &&
+            useSuggested &&
+            firstSubmission.suggested_difficulty_id !== null &&
+            firstSubmission.suggested_difficulty_id !== challenge.difficulty_id && (
+              <Tooltip
+                title={
+                  <span>
+                    <DifficultyChip difficulty={challenge.difficulty} prefix="Placement Difficulty: " />
+                  </span>
+                }
+                arrow
+                placement="top"
+              >
+                <FontAwesomeIcon icon={faInfoCircle} color="lightgrey" />
+              </Tooltip>
+            )}
         </Stack>
       </TableCell>
       <TableCell
         style={{
           ...rowStyle,
           ...cellStyle,
-          display: useSuggested ? "table-cell" : "table-cell",
+          display: useSuggested ? "none" : "table-cell",
           fontSize: "1em",
           borderLeft: "1px solid " + theme.palette.tableDivider,
         }}
@@ -593,6 +621,8 @@ function TopGoldenListRow({
                     : challenge.difficulty
                   : firstSubmissionSuggestion
               }
+              isPersonal={firstSubmission.is_personal}
+              highlightPersonal
             />
           </Stack>
         ) : (
@@ -830,8 +860,6 @@ function ModalContainer({ modalRefs }) {
   // Setting the refs
   modalRefs.map.show.current = showMapModal;
   modalRefs.challenge.edit.current = editChallengeModal;
-
-  console.log("ModalContainer, showMapModal data", showMapModal.data);
 
   return (
     <>

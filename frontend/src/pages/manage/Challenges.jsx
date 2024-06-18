@@ -704,8 +704,6 @@ export function MarkPersonalChallengeForm({ challenge, onSuccess }) {
     markSubmissions(challenge);
   };
 
-  console.log("Challenge to mark: ", challenge);
-
   return (
     <>
       <Typography variant="body1">
