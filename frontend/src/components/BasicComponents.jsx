@@ -373,7 +373,13 @@ export function TooltipInfoButton({ title }) {
 
 export function InfoBox({ children }) {
   return (
-    <Box sx={{ p: 1, borderRadius: 1, bgcolor: "#282828c4" }}>
+    <Box
+      sx={{
+        p: 1,
+        borderRadius: 1,
+        bgcolor: (t) => t.palette.infoBox,
+      }}
+    >
       <Stack direction="column" gap={0.25}>
         {children}
       </Stack>

@@ -31,6 +31,7 @@ import {
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
 import { getChallengeCampaign, getChallengeDescription, getChallengeIsArbitrary } from "../util/data_util";
+import { Link, useNavigate } from "react-router-dom";
 
 export function RecentSubmissions({ playerId = null }) {
   const [verified, setVerified] = useLocalStorage("recent_submissions_verified", 1);
@@ -157,7 +158,7 @@ export function RecentSubmissionsTable({
           <TableHead>
             <TableRow>
               <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
-              <TableCell sx={{ p: "6px 0" }}></TableCell>
+              {/* <TableCell sx={{ p: "6px 0" }}></TableCell> */}
               {!hasPlayer && (
                 <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
                   Player
@@ -220,9 +221,9 @@ function RecentSubmissionsTableRowFakeout({ hasPlayer }) {
       <TableCell sx={{ width: "99%", pl: 1.5, pr: 0.5 }}>
         <Skeleton variant="text" width={25 + Math.random() * 75 + "%"} />
       </TableCell>
-      <TableCell sx={{ p: "6px 0" }}>
+      {/* <TableCell sx={{ p: "6px 0" }}>
         <Skeleton variant="rect" width={12.25} height={17} />
-      </TableCell>
+      </TableCell> */}
       {!hasPlayer && (
         <TableCell sx={{ pl: 1, pr: 0.5 }}>
           <Skeleton variant="text" width={90} height={24} />
@@ -241,55 +242,83 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const map = challenge?.map;
   const campaign = getChallengeCampaign(challenge);
   const campaignNameSame = campaign?.name === map?.name;
+  const navigate = useNavigate();
+
+  const goToSubmission = (e) => {
+    //Check if the click was on a link. if yes, don't navigate
+    if (e.target.tagName === "A") return;
+    //Also check if the click bubbled up to a link
+    if (e.target.closest("a")) return;
+
+    //Check if ctrl or meta key was pressed, if yes, open in new tab
+    if (e.ctrlKey || e.metaKey) {
+      window.open("/submission/" + submission.id, "_blank");
+      return;
+    }
+
+    navigate("/submission/" + submission.id);
+  };
+
   return (
-    <TableRow key={submission.id}>
-      <TableCell sx={{ width: "99%", pl: 1.5, pr: 0.5 }}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          {challenge ? (
-            <>
-              <CampaignIcon campaign={campaign} />
-              {!campaignNameSame && (
-                <>
-                  <StyledLink to={"/campaign/" + campaign.id}>{campaign.name}</StyledLink>
-                  {map && <Typography>-</Typography>}
-                </>
-              )}
-              {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
-              {challenge.description && (
-                <Typography variant="body2" color={theme.palette.text.secondary}>
-                  [{getChallengeDescription(challenge)}]
-                </Typography>
-              )}
-              <ObjectiveIcon objective={challenge.objective} height="1.3em" />
-            </>
-          ) : (
-            <Typography variant="body2" color={theme.palette.text.secondary}>
-              <Tooltip
-                title={new_challenge.description ?? "This is a new challenge not yet in the database!"}
-              >
-                New Challenge: {new_challenge.name}
-              </Tooltip>
-            </Typography>
-          )}
-          <SubmissionFcIcon submission={submission} height="1.3em" />
-        </Stack>
+    <TableRow
+      key={submission.id}
+      sx={{
+        "&:hover": { backgroundColor: theme.palette.background.lightShade, cursor: "pointer" },
+        transition: "0.1s background",
+      }}
+      // onClick={goToSubmission}
+    >
+      <TableCell sx={{ width: "99%", p: 0 }}>
+        <Link
+          to={"/submission/" + submission.id}
+          style={{ display: "block", textDecoration: "none", color: "inherit", padding: "8px 4px 8px 12px" }}
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            {challenge ? (
+              <>
+                <CampaignIcon campaign={campaign} />
+                {!campaignNameSame && (
+                  <>
+                    <StyledLink to={"/campaign/" + campaign.id}>{campaign.name}</StyledLink>
+                    {map && <Typography>-</Typography>}
+                  </>
+                )}
+                {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
+                {challenge.description && (
+                  <Typography variant="body2" color={theme.palette.text.secondary}>
+                    [{getChallengeDescription(challenge)}]
+                  </Typography>
+                )}
+                <ObjectiveIcon objective={challenge.objective} height="1.3em" />
+              </>
+            ) : (
+              <Typography variant="body2" color={theme.palette.text.secondary}>
+                <Tooltip
+                  title={new_challenge.description ?? "This is a new challenge not yet in the database!"}
+                >
+                  New Challenge: {new_challenge.name}
+                </Tooltip>
+              </Typography>
+            )}
+            <SubmissionFcIcon submission={submission} height="1.3em" />
+          </Stack>
+        </Link>
       </TableCell>
-      <TableCell sx={{ p: 0 }}>
-        {submission.is_fc && false ? (
-          <StyledLink to={"/submission/" + submission.id} style={{ display: "flex", alignItems: "center" }}>
-            <SubmissionFcIcon submission={submission} disableTooltip height="1.3em" />
-          </StyledLink>
-        ) : (
-          <SubmissionIcon submission={submission} />
-        )}
-      </TableCell>
+      {/* <TableCell sx={{ p: 0 }}>
+        <SubmissionIcon submission={submission} />
+      </TableCell> */}
       {!hasPlayer && (
-        <TableCell align="center" sx={{ pl: 1, pr: 0.5 }}>
+        <TableCell align="center" sx={{ pl: 1, pr: 0.5, py: 0 }}>
           <PlayerChip player={submission.player} size="small" />
         </TableCell>
       )}
-      <TableCell align="center" sx={{ pl: !hasPlayer ? 0.5 : 1, pr: 1 }}>
-        <DifficultyChip difficulty={challenge ? challenge.difficulty : submission.suggested_difficulty} />
+      <TableCell align="center" sx={{ p: 0 }}>
+        <Link
+          to={"/submission/" + submission.id}
+          style={{ display: "block", textDecoration: "none", color: "inherit", padding: "4px 8px 4px 8px" }}
+        >
+          <DifficultyChip difficulty={challenge ? challenge.difficulty : submission.suggested_difficulty} />
+        </Link>
       </TableCell>
     </TableRow>
   );

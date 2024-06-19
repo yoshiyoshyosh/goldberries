@@ -256,6 +256,7 @@ export const lightTheme = createTheme({
     },
     background: {
       other: "rgba(255,255,255,0.75)",
+      lightShade: "rgba(0,0,0,10%)",
     },
     tableDivider: "#949494",
     tableDividerStrong: "#949494",
@@ -263,6 +264,7 @@ export const lightTheme = createTheme({
       border: "#cccccc99",
       hover: "#f0f0f0",
     },
+    infoBox: "rgba(215, 215, 215, 0.77)",
     errorBackground: "rgba(255,215,215,0.75)",
   },
   components: {
@@ -293,6 +295,7 @@ const darkTheme = createTheme({
     },
     background: {
       other: "rgba(0,0,0,0.5)",
+      lightShade: "rgba(255,255,255,10%)",
     },
     tableDivider: "#515151",
     tableDividerStrong: "#515151",
@@ -300,6 +303,7 @@ const darkTheme = createTheme({
       border: "#cccccc99",
       hover: "#333",
     },
+    infoBox: "rgba(40, 40, 40, 0.77)",
     errorBackground: "rgba(40,0,0,0.5)",
   },
   components: {
