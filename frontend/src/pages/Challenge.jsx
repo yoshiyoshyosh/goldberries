@@ -2,6 +2,7 @@ import {
   Button,
   Chip,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -10,6 +11,7 @@ import {
   ListSubheader,
   Paper,
   Stack,
+  StyledEngineProvider,
   Table,
   TableBody,
   TableCell,
@@ -17,28 +19,42 @@ import {
   TableHead,
   TableRow,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import {
   BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
+  InfoBox,
+  InfoBoxIconTextLine,
   LoadingSpinner,
+  StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
-import { DifficultyChip, ObjectiveIcon, SubmissionFcIcon } from "../components/GoldberriesComponents";
+import {
+  ChallengeFcIcon,
+  DifficultyChip,
+  GamebananaEmbed,
+  ObjectiveIcon,
+  SubmissionFcIcon,
+} from "../components/GoldberriesComponents";
 import {
   getChallengeCampaign,
   getChallengeNameShort,
   getGamebananaEmbedUrl,
+  getMapLobbyInfo,
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowRight,
   faBook,
+  faCheckCircle,
   faComment,
   faEdit,
+  faExternalLink,
   faExternalLinkAlt,
   faFlagCheckered,
   faInfoCircle,
@@ -93,30 +109,30 @@ export function ChallengeDisplay({ id }) {
     <>
       <HeadTitle title={title} />
       <GoldberriesBreadcrumbs campaign={campaign} map={map} challenge={challenge} />
-      <Divider sx={{ my: 2 }}>
-        <Chip label="Challenge" size="small" />
-      </Divider>
-      {auth.hasVerifierPriv && (
-        <Button
-          onClick={editChallengeModal.open}
-          variant="outlined"
-          sx={{ mr: 1 }}
-          startIcon={<FontAwesomeIcon icon={faEdit} />}
-        >
-          Verifier - Edit Challenge
-        </Button>
-      )}
+      <Divider sx={{ my: 2 }} />
+      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 1.5 }}>
+        <GamebananaEmbed campaign={campaign} size="large" />
+      </Stack>
       {auth.hasPlayerClaimed && (
-        <Link to={"/submit/single-challenge/" + id}>
-          <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faPlus} />}>
-            Submit A Golden
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
+          {auth.hasVerifierPriv && (
+            <Link to={"/submit/single-challenge/" + id}>
+              <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} sx={{ mt: 0, mb: 0 }}>
+                Submit A Run
+              </Button>
+            </Link>
+          )}
+          <Button
+            onClick={editChallengeModal.open}
+            variant="outlined"
+            sx={{ mr: 1, mt: 0 }}
+            startIcon={<FontAwesomeIcon icon={faEdit} />}
+          >
+            Edit Challenge
           </Button>
-        </Link>
+        </Stack>
       )}
-      <ChallengeDetailsList challenge={challenge} />
-      <Divider sx={{ my: 2 }}>
-        <Chip label="Submissions" size="small" />
-      </Divider>
+      <ChallengeDetailsList map={challenge.map} challenge={challenge} sx={{ mb: 1, mt: 0.5 }} />
       <ChallengeSubmissionTable challenge={challenge} />
 
       <Divider sx={{ my: 2 }}>
@@ -142,63 +158,92 @@ export function ChallengeDisplay({ id }) {
   );
 }
 
-export function ChallengeDetailsList({ challenge }) {
-  const map = challenge.map;
-  const campaign = getChallengeCampaign(challenge);
-  const embedUrl = getGamebananaEmbedUrl(campaign.url);
+export function ChallengeDetailsList({ map, challenge = null, ...props }) {
+  const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
+
+  const lobbyInfo = getMapLobbyInfo(map);
+  const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
 
   return (
-    <List dense>
-      <ListSubheader>Challenge Details</ListSubheader>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faBook} />
-        </ListItemIcon>
-        <ListItemText primary={campaign.name} secondary="Campaign" />
-        {embedUrl && (
-          <ListItemSecondaryAction
-            sx={{
-              display: {
-                xs: "none",
-                sm: "block",
-              },
-            }}
-          >
-            <Link to={campaign.url} target="_blank">
-              <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
-            </Link>
-          </ListItemSecondaryAction>
+    <Grid container columnSpacing={1} rowSpacing={1} {...props}>
+      <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text="Campaign" />
+          <InfoBoxIconTextLine text={campaign.name} isSecondary />
+        </InfoBox>
+        {map !== null ? (
+          map.name === campaign.name ? null : (
+            <InfoBox>
+              <InfoBoxIconTextLine text="Map" />
+              <InfoBoxIconTextLine text={map.name} isSecondary />
+            </InfoBox>
+          )
+        ) : (
+          <InfoBox>
+            <InfoBoxIconTextLine text="Full Game?" />
+            <InfoBoxIconTextLine text={<FontAwesomeIcon icon={faCheckCircle} color="green" />} isSecondary />
+          </InfoBox>
         )}
-      </ListItem>
-      {map && (
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faLandmark} />
-          </ListItemIcon>
-          <ListItemText primary={challenge.map.name} secondary="Map" />
-        </ListItem>
+        {challenge !== null && (
+          <InfoBox>
+            <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faFlagCheckered} />} text="Challenge" />
+            <InfoBoxIconTextLine
+              text={
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  {challenge.objective.name} <ObjectiveIcon objective={challenge.objective} />
+                  <ChallengeFcIcon challenge={challenge} />
+                </Stack>
+              }
+              isSecondary
+            />
+            {challenge.description && (
+              <InfoBoxIconTextLine text={"[" + challenge.description + "]"} isSecondary />
+            )}
+          </InfoBox>
+        )}
+      </Grid>
+      <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
+        {hasLobbyInfo && (
+          <InfoBox>
+            <InfoBoxIconTextLine text="Lobby Info" />
+            <InfoBoxIconTextLine text={<LobbyInfoSpan lobbyInfo={lobbyInfo} />} isSecondary />
+          </InfoBox>
+        )}
+        {challenge !== null && (
+          <InfoBox>
+            <InfoBoxIconTextLine text="Difficulty" />
+            <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
+          </InfoBox>
+        )}
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text="URL" />
+          <InfoBoxIconTextLine
+            text={<StyledExternalLink href={campaign.url}>{campaign.url}</StyledExternalLink>}
+            isSecondary
+          />
+        </InfoBox>
+      </Grid>
+    </Grid>
+  );
+}
+
+function LobbyInfoSpan({ lobbyInfo }) {
+  const textShadow =
+    "black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px";
+  return (
+    <Stack direction="row" alignItems="center" gap={0.5}>
+      {lobbyInfo.major && (
+        <Typography variant="body1" color={lobbyInfo.major.color} sx={{ textShadow: textShadow }}>
+          {lobbyInfo.major.label}
+        </Typography>
       )}
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faFlagCheckered} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <Stack direction="row" spacing={1} useFlexGap alignItems="center">
-              <span>{challenge.objective.name}</span>
-              <ObjectiveIcon objective={challenge.objective} height="1.3em" />
-            </Stack>
-          }
-          secondary="Objective"
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faShield} />
-        </ListItemIcon>
-        <ListItemText primary={<DifficultyChip difficulty={challenge.difficulty} prefix="Difficulty: " />} />
-      </ListItem>
-    </List>
+      {lobbyInfo.major && lobbyInfo.minor && <FontAwesomeIcon icon={faArrowRight} />}
+      {lobbyInfo.minor && (
+        <Typography variant="body1" color={lobbyInfo.minor.color} sx={{ textShadow: textShadow }}>
+          {lobbyInfo.minor.label}
+        </Typography>
+      )}
+    </Stack>
   );
 }
 

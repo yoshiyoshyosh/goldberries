@@ -84,7 +84,7 @@ export function displayDate(dateObj) {
   return jsonDateToJsDate(dateObj).toLocaleDateString();
 }
 
-export function getGamebananaEmbedUrl(url) {
+export function getGamebananaEmbedUrl(url, size = "medium") {
   //urls look like: https://gamebanana.com/mods/409812
   if (!url.startsWith("https://gamebanana.com/mods/")) {
     return null;
@@ -96,7 +96,7 @@ export function getGamebananaEmbedUrl(url) {
   const id = split[4];
 
   //Make the embed url: https://gamebanana.com/mods/embeddables/<id>?type=medium
-  return "https://gamebanana.com/mods/embeddables/" + id + "?type=medium";
+  return "https://gamebanana.com/mods/embeddables/" + id + "?type=" + size;
 }
 
 export function getMapAuthor(map) {
@@ -113,6 +113,7 @@ export function getMapAuthor(map) {
 }
 
 export function getMapLobbyInfo(map, campaign = null) {
+  if (map === null) return null;
   campaign = campaign || map.campaign;
 
   const hasMajor = campaign.sort_major_name !== null && map.sort_major !== null;

@@ -32,6 +32,8 @@ import {
   faShare,
   faCheckCircle,
   faExternalLink,
+  faFlagCheckered,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import {
@@ -256,7 +258,7 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
         {challenge !== null ? (
           <>
             <InfoBox>
-              <InfoBoxIconTextLine text="Campaign" />
+              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text="Campaign" />
               <InfoBoxIconTextLine text={campaign.name} isSecondary />
             </InfoBox>
             {map !== null ? (
@@ -276,8 +278,8 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               </InfoBox>
             )}
             <InfoBox>
-              <InfoBoxIconTextLine text="Challenge" />
-              <InfoBoxIconTextLine text={getChallengeName(challenge)} isSecondary />
+              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faFlagCheckered} />} text="Challenge" />
+              <InfoBoxIconTextLine text={getChallengeNameShort(challenge)} isSecondary />
             </InfoBox>
             <InfoBox>
               <InfoBoxIconTextLine text="Difficulty" />

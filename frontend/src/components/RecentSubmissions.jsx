@@ -158,7 +158,6 @@ export function RecentSubmissionsTable({
           <TableHead>
             <TableRow>
               <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
-              {/* <TableCell sx={{ p: "6px 0" }}></TableCell> */}
               {!hasPlayer && (
                 <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
                   Player
@@ -221,9 +220,6 @@ function RecentSubmissionsTableRowFakeout({ hasPlayer }) {
       <TableCell sx={{ width: "99%", pl: 1.5, pr: 0.5 }}>
         <Skeleton variant="text" width={25 + Math.random() * 75 + "%"} />
       </TableCell>
-      {/* <TableCell sx={{ p: "6px 0" }}>
-        <Skeleton variant="rect" width={12.25} height={17} />
-      </TableCell> */}
       {!hasPlayer && (
         <TableCell sx={{ pl: 1, pr: 0.5 }}>
           <Skeleton variant="text" width={90} height={24} />
@@ -242,22 +238,6 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const map = challenge?.map;
   const campaign = getChallengeCampaign(challenge);
   const campaignNameSame = campaign?.name === map?.name;
-  const navigate = useNavigate();
-
-  const goToSubmission = (e) => {
-    //Check if the click was on a link. if yes, don't navigate
-    if (e.target.tagName === "A") return;
-    //Also check if the click bubbled up to a link
-    if (e.target.closest("a")) return;
-
-    //Check if ctrl or meta key was pressed, if yes, open in new tab
-    if (e.ctrlKey || e.metaKey) {
-      window.open("/submission/" + submission.id, "_blank");
-      return;
-    }
-
-    navigate("/submission/" + submission.id);
-  };
 
   return (
     <TableRow
@@ -266,7 +246,6 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
         "&:hover": { backgroundColor: theme.palette.background.lightShade, cursor: "pointer" },
         transition: "0.1s background",
       }}
-      // onClick={goToSubmission}
     >
       <TableCell sx={{ width: "99%", p: 0 }}>
         <Link
@@ -304,9 +283,6 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
           </Stack>
         </Link>
       </TableCell>
-      {/* <TableCell sx={{ p: 0 }}>
-        <SubmissionIcon submission={submission} />
-      </TableCell> */}
       {!hasPlayer && (
         <TableCell align="center" sx={{ pl: 1, pr: 0.5, py: 0 }}>
           <PlayerChip player={submission.player} size="small" />

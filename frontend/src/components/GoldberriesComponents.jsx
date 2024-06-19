@@ -18,6 +18,7 @@ import {
   getChallengeName,
   getChallengeNameClean,
   getDifficultyName,
+  getGamebananaEmbedUrl,
   getMapNameClean,
   getObjectiveName,
   getPlayerNameColorStyle,
@@ -942,4 +943,14 @@ export function SubmissionEmbed({ submission, noBorderRadius = false, style = {}
     borderRadius: noBorderRadius ? 0 : "10px",
   };
   return <img src={url} alt={"Submission"} loading="lazy" style={{ ...imgStyle, ...style }} {...props} />;
+}
+
+export function GamebananaEmbed({ campaign, size = "medium", ...props }) {
+  const embedUrl = getGamebananaEmbedUrl(campaign.url, size);
+
+  return (
+    <Link to={campaign.url} target="_blank" {...props}>
+      <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
+    </Link>
+  );
 }

@@ -13,9 +13,10 @@ import {
   Stack,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { ChallengeSubmissionTable } from "./Challenge";
+import { ChallengeDetailsList, ChallengeSubmissionTable } from "./Challenge";
 import {
   faBook,
+  faEdit,
   faExternalLink,
   faFlagCheckered,
   faLandmark,
@@ -39,7 +40,7 @@ import {
   StyledExternalLink,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import { ChallengeFcIcon, DifficultyChip } from "../components/GoldberriesComponents";
+import { ChallengeFcIcon, DifficultyChip, GamebananaEmbed } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
@@ -69,21 +70,30 @@ export function MapDisplay({ id }) {
   }
 
   const map = getQueryData(query);
+  const campaign = map.campaign;
   const title = map.name + " - " + getCampaignName(map.campaign);
 
   return (
     <>
       <HeadTitle title={title} />
       <GoldberriesBreadcrumbs campaign={map.campaign} map={map} />
-      <Divider sx={{ my: 2 }}>
-        <Chip label="Map" size="small" />
-      </Divider>
+      <Divider sx={{ my: 2 }} />
+      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 1.5 }}>
+        <GamebananaEmbed campaign={campaign} size="large" />
+      </Stack>
       {auth.hasVerifierPriv && (
-        <Button onClick={editMapModal.open} variant="outlined">
-          Verifier - Edit Map
-        </Button>
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
+          <Button
+            onClick={editMapModal.open}
+            variant="outlined"
+            startIcon={<FontAwesomeIcon icon={faEdit} />}
+            sx={{ mb: 1 }}
+          >
+            Edit Map
+          </Button>
+        </Stack>
       )}
-      <MapDetailsList map={map} />
+      <ChallengeDetailsList map={map} />
       {map.challenges.map((challenge) => {
         return (
           <>
