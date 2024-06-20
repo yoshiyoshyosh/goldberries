@@ -263,6 +263,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       Challenge::generate_changelog($DB, $old_challenge, $challenge);
       log_info("'{$account->player->name}' updated {$challenge}", "Challenge");
       submission_embed_change($challenge->id, "challenge");
+      if ($old_challenge->difficulty_id !== $challenge->difficulty_id) {
+        send_webhook_challenge_moved($old_challenge, $challenge->difficulty_id);
+      }
       api_write($challenge);
     } else {
       die_json(500, "Failed to update challenge");

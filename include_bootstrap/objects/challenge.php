@@ -216,6 +216,16 @@ class Challenge extends DbObject
 
     return "{$map_name} / {$objective_name} [{$c_fc}]{$description_addition}";
   }
+  function get_name_for_discord(): string
+  {
+    $map_name = $this->map !== null ? $this->map->get_name_for_discord() : $this->campaign->get_name_for_discord();
+    $objective_name = $this->objective->name;
+    $c_fc = $this->get_c_fc();
+    $description_addition = $this->description !== null ? " [{$this->description}]" : "";
+    $challenge_url = $this->get_url();
+
+    return "{$map_name} / [{$objective_name} [{$c_fc}]{$description_addition}]($challenge_url)";
+  }
 
   function get_c_fc(): string
   {
@@ -225,5 +235,10 @@ class Challenge extends DbObject
       return "C/FC";
     else
       return "C";
+  }
+
+  function get_url(): string
+  {
+    return constant('BASE_URL') . "/challenge/{$this->id}";
   }
 }

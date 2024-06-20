@@ -179,8 +179,18 @@ class Campaign extends DbObject
     return $matches[1];
   }
 
+  function get_url()
+  {
+    return constant('BASE_URL') . "/campaign/{$this->id}";
+  }
+
   function get_name()
   {
     return $this->name . " (by " . $this->author_gb_name . ")";
+  }
+  function get_name_for_discord()
+  {
+    $url = $this->get_url();
+    return "[{$this->name} (by {$this->author_gb_name})]($url)";
   }
 }

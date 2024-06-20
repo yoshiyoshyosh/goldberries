@@ -197,6 +197,11 @@ class Map extends DbObject
     return true;
   }
 
+  function get_url()
+  {
+    return constant('BASE_URL') . "/map/{$this->id}";
+  }
+
   function get_name()
   {
     $campaign_name = $this->campaign->name;
@@ -207,5 +212,19 @@ class Map extends DbObject
       return $campaign_name_with_author;
     else
       return "{$campaign_name_with_author} / {$this->name}";
+  }
+
+  function get_name_for_discord()
+  {
+    $campaign_name = $this->campaign->name;
+    $campaign_name_with_author = $this->campaign->get_name();
+    $is_same = $campaign_name === $this->name;
+    $campaign_url = $this->campaign->get_url();
+    $map_url = $this->get_url();
+
+    if ($is_same)
+      return "[$campaign_name_with_author]($campaign_url)";
+    else
+      return "[{$campaign_name_with_author}]($campaign_url) / [{$this->name}]($map_url)";
   }
 }
