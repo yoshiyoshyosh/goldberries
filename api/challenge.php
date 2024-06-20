@@ -229,9 +229,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(500, "Failed to fetch submissions");
     }
 
+    send_webhook_challenge_marked_personal($challenge);
     foreach ($challenge->submissions as $submission) {
       //Only mark submissions that have a suggestion set as personal
-      if ($submission->suggested_difficulty_id !== null) {
+      if ($submission->suggested_difficulty_id !== null && !$submission->is_personal) {
         $submission->is_personal = true;
         if (!$submission->update($DB)) {
           die_json(500, "Failed to mark submission as personal");

@@ -6,7 +6,6 @@ function send_webhook_suggestion_verified($suggestion)
 {
   global $DB;
   global $webhooks_enabled;
-
   if (!$webhooks_enabled) {
     return;
   }
@@ -66,64 +65,34 @@ function send_webhook_suggestion_verified($suggestion)
 
   $json_data = json_encode([
     "content" => "New Suggestion: $name",
-
-    // Username
     // "username" => "krasin.space",
-
-    // Avatar URL.
-    // Uncoment to replace image set in webhook
     //"avatar_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=512",
-
-    // Text-to-speech
     // "tts" => false,
-
-    // File upload
     // "file" => "",
-
-    // Embeds Array
     "embeds" => [
       [
-        // Embed Title
         "title" => "Suggestion for '$name' by {$suggestion->author->name}",
-
-        // Embed Type
         "type" => "rich",
-
-        // Embed Description
         "description" => $description,
-
-        // URL of title link
         "url" => $suggestion_url,
-
-        // Timestamp of embed must be formatted as ISO8601
         "timestamp" => $timestamp,
-
-        // Embed left border color in HEX
         "color" => hexdec("3333ff"),
 
-        // Footer
         // "footer" => [
         //   "text" => "Footer text",
         //   "icon_url" => $suggestion_url,
         // ],
-
-        // Image to send
         // "image" => [
         //     "url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=600"
         // ],
-
-        // Thumbnail
         //"thumbnail" => [
         //    "url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=400"
         //],
-
-        // Author
         // "author" => [
         //     "name" => "krasin.space",
         //     "url" => "https://krasin.space/"
         // ],
 
-        // Additional Fields array
         "fields" => $fields,
       ]
     ]
@@ -133,7 +102,72 @@ function send_webhook_suggestion_verified($suggestion)
   send_webhook($webhook_url, $json_data);
 }
 
+function send_webhook_submission_verified($submission)
+{
+  global $DB;
+  global $webhooks_enabled;
+  // if (!$webhooks_enabled) {
+  //   return;
+  // }
 
+  $account = $submission->player->get_account($DB);
+  $player_name = "@{$submission->player->name}";
+  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+
+  if ($account !== null && $account->discord_id !== null) {
+    $player_name = "<@{$account->discord_id}>";
+  }
+
+  $challenge_name = $submission->challenge->get_name();
+  $submission_url = $submission->get_url();
+  $message = ":white_check_mark: [Submission]({$submission_url}) for `{$challenge_name}` was verified! ($player_name)";
+  send_simple_webhook_message($webhook_url, $message);
+}
+
+function send_webhook_challenge_marked_personal($challenge)
+{
+  global $DB;
+  global $webhooks_enabled;
+  // if (!$webhooks_enabled) {
+  //   return;
+  // }
+
+  $challenge->expand_foreign_keys($DB, 5);
+  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $challenge_name = $challenge->get_name();
+
+  $list_impacted = [];
+
+  foreach ($challenge->submissions as $submission) {
+    if ($submission->suggested_difficulty_id !== null && !$submission->is_personal) {
+      $submission_url = $submission->get_url();
+      $name = "[{$submission->player->name}]({$submission_url})";
+      $account = $submission->player->get_account($DB);
+      if ($account !== null && $account->discord_id !== null) {
+        $name .= " (<@{$account->discord_id}>)";
+      }
+      $list_impacted[] = $name;
+    }
+  }
+
+  $impacted_str = implode(", ", $list_impacted);
+  if (count($list_impacted) == 0) {
+    $impacted_str = "No Submissions";
+  }
+  $impacted_count = count($list_impacted);
+  $total_count = count($challenge->submissions);
+  $message = ":bangbang: All difficulty suggestions for `{$challenge_name}` were marked as personal, as new strats have been discovered! Impacted submissions (**$impacted_count** out of **$total_count**): {$impacted_str}";
+  send_simple_webhook_message($webhook_url, $message);
+}
+
+
+function send_simple_webhook_message($url, $message)
+{
+  $json_data = json_encode([
+    "content" => $message,
+  ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  send_webhook($url, $json_data);
+}
 function send_webhook($url, $data)
 {
   $ch = curl_init($url);
@@ -145,7 +179,5 @@ function send_webhook($url, $data)
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
   $response = curl_exec($ch);
-  // If you need to debug, or find out why you can't send message uncomment line below, and execute script.
-  // echo $response;
   curl_close($ch);
 }

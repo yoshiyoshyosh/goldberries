@@ -239,4 +239,9 @@ class Submission extends DbObject
       return "Rejected";
     }
   }
+
+  function get_url()
+  {
+    return constant("BASE_URL") . "/submission/" . $this->id;
+  }
 }

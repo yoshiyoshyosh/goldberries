@@ -102,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->raw_session_url = $submission->raw_session_url;
       }
 
+      $was_verified = false;
       if (
         $old_submission->verifier_id === null
         && $old_submission->is_verified !== $submission->is_verified
@@ -111,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $toLog = $submission->is_verified ? "verified" : "rejected";
         log_info("{$old_submission} was {$toLog} by '{$account->player->name}'", "Submission");
+        $was_verified = true;
         $old_submission->date_verified = new JsonDateTime();
         $old_submission->verifier_id = $account->player->id;
       }
@@ -139,6 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($old_submission->update($DB)) {
         submission_embed_change($old_submission->id, "submission");
         $old_submission->expand_foreign_keys($DB, 5);
+        if ($was_verified) {
+          send_webhook_submission_verified($old_submission);
+        }
         api_write($old_submission);
       } else {
         die_json(500, "Failed to update submission");

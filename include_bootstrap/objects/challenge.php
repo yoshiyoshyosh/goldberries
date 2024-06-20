@@ -206,4 +206,24 @@ class Challenge extends DbObject
 
     return true;
   }
+
+  function get_name(): string
+  {
+    $map_name = $this->map !== null ? $this->map->get_name() : $this->campaign->get_name();
+    $objective_name = $this->objective->name;
+    $c_fc = $this->get_c_fc();
+    $description_addition = $this->description !== null ? " [{$this->description}]" : "";
+
+    return "{$map_name} / {$objective_name} [{$c_fc}]{$description_addition}";
+  }
+
+  function get_c_fc(): string
+  {
+    if ($this->requires_fc)
+      return "FC";
+    else if ($this->has_fc)
+      return "C/FC";
+    else
+      return "C";
+  }
 }

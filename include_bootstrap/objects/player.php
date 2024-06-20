@@ -168,6 +168,16 @@ class Player extends DbObject
     return $players;
   }
 
+  function get_account($DB)
+  {
+    $accounts = Account::find_by_player_id($DB, $this->id);
+    if ($accounts === false || count($accounts) === 0) {
+      return null;
+    }
+    $account = $accounts[0];
+    return $account;
+  }
+
 
   // === Utility Functions ===
   function __toString()
