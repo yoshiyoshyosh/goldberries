@@ -229,6 +229,23 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $account->about_me = $request['about_me'];
       $changes .= "about_me ({$account->about_me}), ";
     }
+    //Notification settings
+    if (array_key_exists("n_sub_verified", $request) && $request['n_sub_verified'] !== $account->n_sub_verified) {
+      $account->n_sub_verified = $request['n_sub_verified'] === 't';
+      $changes .= "n_sub_verified ({$account->n_sub_verified}), ";
+    }
+    if (array_key_exists("n_chall_personal", $request) && $request['n_chall_personal'] !== $account->n_chall_personal) {
+      $account->n_chall_personal = $request['n_chall_personal'] === 't';
+      $changes .= "n_chall_personal ({$account->n_chall_personal}), ";
+    }
+    if (array_key_exists("n_suggestion", $request) && $request['n_suggestion'] !== $account->n_suggestion) {
+      $account->n_suggestion = $request['n_suggestion'] === 't';
+      $changes .= "n_suggestion ({$account->n_suggestion}), ";
+    }
+    if (array_key_exists("n_chall_moved", $request) && $request['n_chall_moved'] !== $account->n_chall_moved) {
+      $account->n_chall_moved = $request['n_chall_moved'] === 't';
+      $changes .= "n_chall_moved ({$account->n_chall_moved}), ";
+    }
 
     if ($account->update($DB) === false) {
       log_error("Failed to update {$account} in database with changes: {$changes}", "Account");

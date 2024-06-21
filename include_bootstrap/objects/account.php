@@ -26,6 +26,10 @@ class Account extends DbObject
 
   // Other
   public ?JsonDateTime $last_player_rename = null;
+  public bool $n_sub_verified = true;
+  public bool $n_chall_personal = true;
+  public bool $n_suggestion = true;
+  public bool $n_chall_moved = true;
 
   // Foreign Keys
   public ?int $player_id = null;
@@ -44,6 +48,10 @@ class Account extends DbObject
     $this->is_verifier = $arr[$prefix . 'is_verifier'] === 't';
     $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
+    $this->n_sub_verified = $arr[$prefix . 'n_sub_verified'] === 't';
+    $this->n_chall_personal = $arr[$prefix . 'n_chall_personal'] === 't';
+    $this->n_suggestion = $arr[$prefix . 'n_suggestion'] === 't';
+    $this->n_chall_moved = $arr[$prefix . 'n_chall_moved'] === 't';
 
     if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
@@ -131,6 +139,10 @@ class Account extends DbObject
       'name_color_start' => $this->name_color_start,
       'name_color_end' => $this->name_color_end,
       'last_player_rename' => $this->last_player_rename,
+      'n_sub_verified' => $this->n_sub_verified,
+      'n_chall_personal' => $this->n_chall_personal,
+      'n_suggestion' => $this->n_suggestion,
+      'n_chall_moved' => $this->n_chall_moved
     );
   }
 

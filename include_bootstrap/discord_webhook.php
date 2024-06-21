@@ -114,8 +114,7 @@ function send_webhook_submission_verified($submission)
   $player_name = "@{$submission->player->name}";
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
 
-  if ($account !== null && $account->discord_id !== null) {
-    //Add check for notification
+  if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
     $player_name = "<@{$account->discord_id}>";
   }
 
@@ -144,11 +143,10 @@ function send_webhook_challenge_marked_personal($challenge)
 
   foreach ($challenge->submissions as $submission) {
     if ($submission->suggested_difficulty_id !== null && !$submission->is_personal) {
-      //Add check for notification
       $submission_url = $submission->get_url();
       $name = "[{$submission->player->name}]({$submission_url})";
       $account = $submission->player->get_account($DB);
-      if ($account !== null && $account->discord_id !== null) {
+      if ($account !== null && $account->discord_id !== null && $account->n_chall_personal) {
         $name .= " (<@{$account->discord_id}>)";
       }
       $list_impacted[] = $name;
@@ -185,8 +183,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $ping_list = [];
   foreach ($challenge->submissions as $submission) {
     $account = $submission->player->get_account($DB);
-    if ($account !== null && $account->discord_id !== null) {
-      //Add check for notification
+    if ($account !== null && $account->discord_id !== null && $account->n_chall_moved) {
       $ping_list[] = "<@{$account->discord_id}>";
     }
   }
