@@ -54,6 +54,6 @@ function submission_embed_change($object_id, $object_type)
   }
 
   //Log what has happened
-  log_info("Deleted all embeds referencing '$object_type' with id $object_id", "Embed");
+  log_debug("Deleted all embeds referencing '$object_type' with id $object_id", "Embed");
 }
 

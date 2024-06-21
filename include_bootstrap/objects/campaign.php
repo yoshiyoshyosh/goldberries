@@ -191,6 +191,6 @@ class Campaign extends DbObject
   function get_name_for_discord()
   {
     $url = $this->get_url();
-    return "[{$this->name} (by {$this->author_gb_name})]($url)";
+    return "[{$this->name} (by {$this->author_gb_name})](<$url>)";
   }
 }

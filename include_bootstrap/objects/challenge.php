@@ -224,7 +224,7 @@ class Challenge extends DbObject
     $description_addition = $this->description !== null ? " [{$this->description}]" : "";
     $challenge_url = $this->get_url();
 
-    return "{$map_name} / [{$objective_name} [{$c_fc}]{$description_addition}]($challenge_url)";
+    return "{$map_name} / [{$objective_name} [{$c_fc}]{$description_addition}](<$challenge_url>)";
   }
 
   function get_c_fc(): string

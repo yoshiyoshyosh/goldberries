@@ -223,8 +223,8 @@ class Map extends DbObject
     $map_url = $this->get_url();
 
     if ($is_same)
-      return "[$campaign_name_with_author]($campaign_url)";
+      return "[$campaign_name_with_author](<$campaign_url>)";
     else
-      return "[{$campaign_name_with_author}]($campaign_url) / [{$this->name}]($map_url)";
+      return "[{$campaign_name_with_author}](<$campaign_url>) / [{$this->name}](<$map_url>)";
   }
 }

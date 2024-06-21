@@ -124,7 +124,7 @@ function send_webhook_submission_verified($submission)
   $is_rejected = $submission->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
-  $message = "$emote [Submission]({$submission_url}) for {$challenge_name} was $verified_str! ($player_name)";
+  $message = "$emote [Submission](<{$submission_url}>) for {$challenge_name} was $verified_str! ($player_name)";
   send_simple_webhook_message($webhook_url, $message);
 }
 
@@ -212,6 +212,7 @@ function send_webhook($url, $data)
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
   curl_setopt($ch, CURLOPT_HEADER, 0);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 100); //Doesnt wait for the request to have been received by the server
 
   $response = curl_exec($ch);
   curl_close($ch);
