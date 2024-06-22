@@ -27,6 +27,8 @@ export function PageSearch({ isDirectSearch = false }) {
       if (newSearch === "" || newSearch === undefined) {
         navigate("/search", { replace: true });
       } else {
+        //Url encode the search string
+        newSearch = encodeURIComponent(newSearch);
         navigate("/search/" + newSearch, { replace: true });
       }
     }
