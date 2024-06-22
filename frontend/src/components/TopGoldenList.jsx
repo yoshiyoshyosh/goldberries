@@ -155,6 +155,13 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
           </Stack>
         </BasicBox>
       )}
+      {topGoldenList.challenges.length === 0 && (
+        <BasicBox>
+          <Typography variant="body2" color="textSecondary">
+            Looks pretty empty. Get some goldens from the Top Golden List to populate your own list!
+          </Typography>
+        </BasicBox>
+      )}
       <Stack
         direction={{
           xs: "column",
