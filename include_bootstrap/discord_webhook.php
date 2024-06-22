@@ -6,9 +6,9 @@ function send_webhook_suggestion_verified($suggestion)
 {
   global $DB;
   global $webhooks_enabled;
-  if (!$webhooks_enabled) {
-    return;
-  }
+  // if (!$webhooks_enabled) {
+  //   return;
+  // }
 
   $suggestion->expand_foreign_keys($DB, 5);
 
@@ -18,6 +18,12 @@ function send_webhook_suggestion_verified($suggestion)
   $challenge = $suggestion->challenge;
   $map = $challenge !== null ? $challenge->map : null;
   $campaign = $challenge !== null ? $challenge->get_campaign() : null;
+  if ($challenge !== null) {
+    $challenge->fetch_submissions($DB);
+  }
+
+  //Send notification to the suggestion box
+  send_webhook_suggestion_notification($suggestion);
 
   $name = $map === null ? ($campaign === null ? "General Suggestion" : $campaign->get_name()) : $map->get_name();
   $suggestion_url = constant("BASE_URL") . "/suggestion/" . $suggestion->id;
@@ -38,8 +44,6 @@ function send_webhook_suggestion_verified($suggestion)
       $description += " [" . $challenge->description . "]";
     }
 
-    $challenge->fetch_submissions($DB);
-
     $current_diff_name = $challenge->difficulty->to_tier_name();
     $suggested_diff_name = $suggestion->suggested_difficulty->to_tier_name();
 
@@ -52,6 +56,9 @@ function send_webhook_suggestion_verified($suggestion)
     $submission_index = 0;
     foreach ($challenge->submissions as $submission) {
       $diff_suggestion = $submission->suggested_difficulty;
+      //Not sure if this is the best way to handle personal suggestions in the embed
+      if ($submission->is_personal)
+        $diff_suggestion = null;
       $as_text = $diff_suggestion !== null ? "{$diff_suggestion->to_tier_name()}" : "<none>";
       $fields[] = [
         "name" => $submission->player->name,
@@ -59,12 +66,23 @@ function send_webhook_suggestion_verified($suggestion)
         "inline" => true
       ];
       $submission_index++;
+
+      //If there are 24 submissions at this point, break
+      if (count($fields) >= 24) {
+        $count = count($challenge->submissions) - 24;
+        $fields[] = [
+          "name" => "And more...",
+          "value" => "There are $count more submissions for this challenge",
+          "inline" => false
+        ];
+        break;
+      }
     }
   }
 
 
   $json_data = json_encode([
-    "content" => "New Suggestion: $name",
+    "content" => "", //"New Suggestion: $name",
     // "username" => "krasin.space",
     //"avatar_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=512",
     // "tts" => false,
@@ -101,6 +119,34 @@ function send_webhook_suggestion_verified($suggestion)
 
   send_webhook($webhook_url, $json_data);
 }
+
+function send_webhook_suggestion_notification($suggestion)
+{
+  global $DB;
+  global $webhooks_enabled;
+  // if (!$webhooks_enabled) {
+  //   return;
+  // }
+
+  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+
+  if ($suggestion->challenge_id === null)
+    return;
+  $challenge = $suggestion->challenge;
+  $challenge_name = $challenge->get_name_for_discord();
+
+  $ping_list = [];
+  foreach ($challenge->submissions as $submission) {
+    $account = $submission->player->get_account($DB);
+    if ($account !== null && $account->discord_id !== null && $account->n_suggestion) {
+      $ping_list[] = "<@{$account->discord_id}>";
+    }
+  }
+  $ping_addition = count($ping_list) > 0 ? " " . implode(" ", $ping_list) : "";
+  $message = ":memo: A new suggestion was made for {$challenge_name}!{$ping_addition}";
+  send_simple_webhook_message($webhook_url, $message);
+}
+
 
 function send_webhook_submission_verified($submission)
 {

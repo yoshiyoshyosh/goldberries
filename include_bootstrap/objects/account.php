@@ -28,8 +28,8 @@ class Account extends DbObject
   public ?JsonDateTime $last_player_rename = null;
   public bool $n_sub_verified = true;
   public bool $n_chall_personal = true;
-  public bool $n_suggestion = true;
-  public bool $n_chall_moved = true;
+  public bool $n_suggestion = false;
+  public bool $n_chall_moved = false;
 
   // Foreign Keys
   public ?int $player_id = null;
