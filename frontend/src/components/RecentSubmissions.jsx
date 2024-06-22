@@ -250,7 +250,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
       <TableCell sx={{ width: "99%", p: 0 }}>
         <Link
           to={"/submission/" + submission.id}
-          style={{ display: "block", textDecoration: "none", color: "inherit", padding: "8px 4px 8px 12px" }}
+          style={{ display: "block", textDecoration: "none", color: "inherit", padding: "6px 4px 6px 12px" }}
         >
           <Stack direction="row" spacing={1} alignItems="center">
             {challenge ? (

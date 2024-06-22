@@ -37,6 +37,7 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  StyledLink,
   TooltipInfoButton,
 } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -199,6 +200,8 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       setIsAddingPlayer(true);
     }
   };
+
+  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
 
   return (
     <>
@@ -374,6 +377,22 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               Submit
             </Button>
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="caption" color="error">
+              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
+              <StyledLink to="/">Public Test notice</StyledLink> for more info.
+            </Typography>
+          </Grid>
+          {notifsEnabled && (
+            <Grid item xs={12} sm={12}>
+              <Typography variant="caption" color="textSecondary">
+                Your notification settings:{" "}
+              </Typography>
+              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
+                {notifsEnabled ? "Notification upon verification" : "Disabled"}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </form>
     </>
@@ -530,6 +549,8 @@ export function MultiUserSubmission() {
     }
   });
 
+  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
+
   return (
     <>
       <h1 style={{ marginBottom: "0" }}>Submit a compilation video</h1>
@@ -672,6 +693,22 @@ export function MultiUserSubmission() {
               </Typography>
             </Grid>
           )}
+          <Grid item xs={12} sm={12}>
+            <Typography variant="caption" color="error">
+              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
+              <StyledLink to="/">Public Test notice</StyledLink> for more info.
+            </Typography>
+          </Grid>
+          {notifsEnabled && (
+            <Grid item xs={12} sm={12}>
+              <Typography variant="caption" color="textSecondary">
+                Your notification settings:{" "}
+              </Typography>
+              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
+                {notifsEnabled ? "Notification upon verification" : "Disabled"}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </form>
     </>
@@ -712,6 +749,7 @@ export function NewChallengeUserSubmission({}) {
   });
   const errors = form.formState.errors;
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
+  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
 
   return (
     <>
@@ -827,6 +865,22 @@ export function NewChallengeUserSubmission({}) {
               Submit
             </Button>
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="caption" color="error">
+              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
+              <StyledLink to="/">Public Test notice</StyledLink> for more info.
+            </Typography>
+          </Grid>
+          {notifsEnabled && (
+            <Grid item xs={12} sm={12}>
+              <Typography variant="caption" color="textSecondary">
+                Your notification settings:{" "}
+              </Typography>
+              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
+                {notifsEnabled ? "Notification upon verification" : "Disabled"}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </form>
     </>

@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  Switch,
   Tab,
   Tabs,
   TextField,
@@ -19,6 +20,7 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
 import { useAuth } from "../hooks/AuthProvider";
@@ -58,6 +60,7 @@ import { isValidHttpUrl, jsonDateToJsDate } from "../util/util";
 import { MuiColorInput } from "mui-color-input";
 import { getPlayerNameColorStyle } from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { SettingsEntry } from "./AppSettings";
 
 export function PageAccount() {
   const auth = useAuth();
@@ -73,6 +76,12 @@ export function PageAccount() {
       navigate(`/my-account/${tab}`, { replace: true });
     }
   };
+
+  useEffect(() => {
+    if (tab !== selectedTab && selectedTab !== "login-methods") {
+      setSelectedTab(tab);
+    }
+  }, [tab, selectedTab]);
 
   const claimVerified = auth.user.claimed_player !== null ? null : auth.user.player !== null;
 
@@ -112,12 +121,14 @@ export function PageAccount() {
         sx={{ mb: 2 }}
       >
         <Tab label="Login Methods" value="login-methods" />
+        <Tab label="Notifications" value="notifications" />
         <Tab label="Profile" value="profile" />
         <Tab label="Showcase" value="showcase" />
         <Tab label="Player Rename" value="rename" />
         <Tab label="Danger Zone" value="danger-zone" />
       </Tabs>
       {selectedTab === "login-methods" && <UserAccountLoginMethodsForm />}
+      {selectedTab === "notifications" && <UserAccountNotificationsForm />}
       {selectedTab === "profile" && <UserAccountProfileForm />}
       {selectedTab === "showcase" && <UserAccountShowcaseForm />}
       {selectedTab === "rename" && <UserAccountRenameForm />}
@@ -289,6 +300,122 @@ export function UserAccountLoginMethodsForm() {
         startIcon={<FontAwesomeIcon icon={faSave} />}
         onClick={onSubmit}
         disabled={Object.keys(errors).length > 0}
+      >
+        Save Changes
+      </Button>
+    </form>
+  );
+}
+
+export function UserAccountNotificationsForm() {
+  const auth = useAuth();
+
+  const { mutate: postAccount } = usePostAccount((account) => {
+    if (account.id === auth.user.id) auth.checkSession();
+    toast.success("Notification settings updated");
+  }, true);
+
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      ...auth.user,
+    },
+  });
+  const onSubmit = form.handleSubmit((data) => {
+    postAccount({
+      ...data,
+    });
+  });
+
+  return (
+    <form>
+      <FormHelperText>
+        Note: Currently these notifications will be sent as Discord pings in the official Modded Golden
+        Discord Server. To get a notification, you need to join that server (
+        <StyledExternalLink href="https://discord.gg/GeJvmMycaC">invite link</StyledExternalLink>) AND have
+        your Discord account linked to your goldberries.net account{" "}
+        <StyledLink to={"/my-account/login-methods"}>here</StyledLink>!
+      </FormHelperText>
+
+      <Divider sx={{ my: 2 }} />
+
+      <SettingsEntry
+        note="To get notified when your submission gets verified/rejected"
+        title="Submission Verification"
+        shiftNote
+      >
+        <Controller
+          name="n_sub_verified"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Switch />}
+            />
+          )}
+        />
+      </SettingsEntry>
+      <SettingsEntry
+        note="To get notified when a difficulty suggestion from you gets marked as 'personal', due to new major strats being discovered"
+        title="Difficulty Suggestion Marked Personal"
+        shiftNote
+      >
+        <Controller
+          name="n_chall_personal"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Switch />}
+            />
+          )}
+        />
+      </SettingsEntry>
+      <SettingsEntry
+        note="To get notified when a challenge you have completed gets moved to a different difficulty"
+        title="Challenge Moved"
+        shiftNote
+      >
+        <Controller
+          name="n_chall_moved"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Switch />}
+            />
+          )}
+        />
+      </SettingsEntry>
+      <SettingsEntry
+        note="To get notified when a suggestion for a challenge you have completed is created"
+        title="Suggestion Creation"
+        shiftNote
+      >
+        <Controller
+          name="n_suggestion"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Switch />}
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        startIcon={<FontAwesomeIcon icon={faSave} />}
+        onClick={onSubmit}
       >
         Save Changes
       </Button>

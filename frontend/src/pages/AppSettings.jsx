@@ -645,7 +645,7 @@ function SettingsColorPicker({ id, value, onChange }) {
   );
 }
 
-function SettingsEntry({ title = "", tooltip, note, children }) {
+export function SettingsEntry({ title = "", tooltip, note, children, shiftNote = false }) {
   return (
     <Grid container columnSpacing={2} sx={{ mb: 1 }}>
       <Grid item xs={12} md={3} display="flex" alignItems="center" justifyContent="flex-start">
@@ -662,9 +662,9 @@ function SettingsEntry({ title = "", tooltip, note, children }) {
       <Grid item xs={12} md={9} display="flex" alignItems="center">
         {children}
       </Grid>
-      {note && title === "" && <Grid item xs={12} md={3} />}
+      {note && (title === "" || shiftNote) && <Grid item xs={12} md={3} />}
       {note && (
-        <Grid item xs={12} md={title === "" ? 9 : 12}>
+        <Grid item xs={12} md={title === "" || shiftNote ? 9 : 12}>
           <Typography variant="body2" color={(t) => t.palette.text.secondary} sx={{ mb: 1 }}>
             {note}
           </Typography>
