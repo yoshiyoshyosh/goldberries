@@ -1,14 +1,14 @@
 <?php
 
-$webhooks_enabled = false;
+$webhooks_enabled = true;
 
 function send_webhook_suggestion_verified($suggestion)
 {
   global $DB;
   global $webhooks_enabled;
-  // if (!$webhooks_enabled) {
-  //   return;
-  // }
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $suggestion->expand_foreign_keys($DB, 5);
 
@@ -124,9 +124,9 @@ function send_webhook_suggestion_notification($suggestion)
 {
   global $DB;
   global $webhooks_enabled;
-  // if (!$webhooks_enabled) {
-  //   return;
-  // }
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
 
@@ -152,9 +152,9 @@ function send_webhook_submission_verified($submission)
 {
   global $DB;
   global $webhooks_enabled;
-  // if (!$webhooks_enabled) {
-  //   return;
-  // }
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $account = $submission->player->get_account($DB);
   $player_name = "@{$submission->player->name}";
@@ -177,9 +177,9 @@ function send_webhook_challenge_marked_personal($challenge)
 {
   global $DB;
   global $webhooks_enabled;
-  // if (!$webhooks_enabled) {
-  //   return;
-  // }
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $challenge->expand_foreign_keys($DB, 5);
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
@@ -213,9 +213,9 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
 {
   global $DB;
   global $webhooks_enabled;
-  // if (!$webhooks_enabled) {
-  //   return;
-  // }
+  if (!$webhooks_enabled) {
+    return;
+  }
 
   $challenge->expand_foreign_keys($DB, 5);
   if ($challenge->submissions === null) {
