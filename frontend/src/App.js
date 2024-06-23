@@ -120,6 +120,7 @@ import {
   WebsiteIcon,
 } from "./components/GoldberriesComponents";
 import { PageMonthlyRecap } from "./pages/Stats";
+import { PageServerCosts } from "./pages/ServerCosts";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -230,6 +231,8 @@ const router = createBrowserRouter([
       { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
 
       { path: "settings/:tab?", element: <PageAppSettings /> },
+
+      { path: "server-costs/:status?", element: <PageServerCosts /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
