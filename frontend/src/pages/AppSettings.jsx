@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Checkbox,
   Divider,
@@ -14,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { BasicContainerBox, HeadTitle, LoadingSpinner } from "../components/BasicComponents";
+import { BasicContainerBox, HeadTitle, LanguageFlag, LoadingSpinner } from "../components/BasicComponents";
 import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -102,7 +103,19 @@ export function AppSettingsGeneralForm() {
         <Select fullWidth value={i18n.resolvedLanguage} onChange={(e) => i18n.changeLanguage(e.target.value)}>
           {LANGUAGES.map((lang) => (
             <MenuItem key={lang.code} value={lang.code}>
-              {lang.name}
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Box
+                  sx={{
+                    minWidth: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <LanguageFlag code={lang.code} />
+                </Box>
+                {lang.name}
+              </Stack>
             </MenuItem>
           ))}
         </Select>

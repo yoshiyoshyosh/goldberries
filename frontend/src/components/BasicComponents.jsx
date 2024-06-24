@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import { APP_NAME_LONG } from "../util/constants";
 import { useTheme } from "@emotion/react";
 import { set } from "react-hook-form";
+import { LANGUAGES } from "../i18n/config";
 
 export function LoadingSpinner({ ...props }) {
   return (
@@ -397,4 +398,9 @@ export function InfoBoxIconTextLine({ icon, text, isSecondary = false }) {
       </Typography>
     </Stack>
   );
+}
+
+export function LanguageFlag({ code }) {
+  const alt = LANGUAGES.find((lang) => lang.code === code)?.name;
+  return <img src={`/locales/flags/${code}.png`} height="20" alt={alt} />;
 }

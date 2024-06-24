@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 export const LANGUAGES = [
   { code: "en", name: "English" },
   { code: "de", name: "German" },
-  { code: "cz", name: "Chinese" },
+  { code: "cn", name: "Chinese" },
 ];
 
 i18n
