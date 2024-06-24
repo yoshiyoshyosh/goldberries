@@ -1,3 +1,67 @@
 {
-  "hello_world": "Hallo Welt!"
+  "hello_world": "Hallo Welt!",
+  "server_costs": {
+    "server_costs": {
+      "title": "Server Kosten",
+      "description": "Hi, viddie hier. Es überrascht nicht, dass das Betreiben von Servern Geld kostet, und auch wenn ich so viel Zeit wie ich möchte in die Entwicklung dieses Projekts stecken kann, muss irgendwer die Kosten für den Server tragen. Diese Website hat keine Werbung (und wird niemals welche haben). Ich bin bereit, die Serverkosten alleine zu tragen, wenn es sein muss, aber wenn jemand aus der Community mir helfen möchte, würde ich das sehr schätzen!",
+      "table": {
+        "item": "Artikel",
+        "cost": "Kosten",
+        "VPS": "VPS",
+        "domain": "Domain",
+        "total": "Gesamt",
+        "value": "{{value}}€ / Monat"
+      }
+    },
+    "costs_so_far": {
+      "title": "Kosten Soweit",
+      "description": {
+        "1": "Der Server läuft seit",
+        "2": "April, 2024",
+        "3": "Das sind",
+        "4": "{{months}} Monate",
+        "5": "bis jetzt."
+      },
+      "table": {
+        "total_costs": "Gesamte Kosten",
+        "total_donations": "Gesamte Spenden",
+        "total_difference": "Gesamtdifferenz"
+      },
+      "not_lose": "So viel € brauche ich, um kein Geld zu verlieren"
+    },
+    "stocked_up": {
+      "title": "Aufgestockt",
+      "description": {
+        "1": "Der Server kann für",
+        "2": "{{months}} weitere Monate",
+        "3": "nur über Spenden laufen!"
+      },
+      "additional_months_one": "+ {{count}} weiterer Monat!!!",
+      "additional_months_other": "+ {{count}} weitere Monate!!!"
+    },
+    "you_can_help": {
+      "title": "Du Kannst Helfen",
+      "description": "Wenn du helfen möchtest, den Server am Laufen zu halten, kannst du mit den folgenden Methoden spenden:",
+      "table": {
+        "paypal_donation": "PayPal (Spende, PayPal Gebühren fallen an)",
+        "paypal_direct": "PayPal (Direkt, keine Gebühren)",
+        "paypal_website": "PayPal Website",
+        "note": "* Spenden aktualisieren sich nicht automatisch, es kann eine Weile dauern, bis deine Spende angezeigt wird."
+      }
+    },
+    "thank_you": {
+      "title": "Danke",
+      "description": "Wenn du spendest und auf dieser Seite erwähnt werden möchtest, hinterlasse einen Namen in deiner Spendenmitteilung!",
+      "table": {
+        "date": "Datum",
+        "amount": "Menge",
+        "name": "Name",
+        "no_donations": "Noch keine Spenden"
+      },
+      "post_donation": {
+        "text": "Das bedeutet mir viel! Beachte, dass Spenden nicht automatisch auf der Liste der Unterstützer erscheinen, es kann also eine Weile dauern, bis deine Spende hinzugefügt wird!",
+        "back": "Zurück zu Server Kosten"
+      }
+    }
+  }
 }

@@ -20,9 +20,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import { AnyImage, EmoteImage } from "../components/GoldberriesComponents";
+import { useTranslation } from "react-i18next";
 
 export function PageServerCosts({}) {
   const { status } = useParams();
+  const { t: t_sc } = useTranslation(undefined, { keyPrefix: "server_costs.server_costs" });
+  const { t: t_csf } = useTranslation(undefined, { keyPrefix: "server_costs.costs_so_far" });
+  const { t: t_su } = useTranslation(undefined, { keyPrefix: "server_costs.stocked_up" });
+  const { t: t_ych } = useTranslation(undefined, { keyPrefix: "server_costs.you_can_help" });
+  const { t: t_ty } = useTranslation(undefined, { keyPrefix: "server_costs.thank_you" });
 
   //In euro
   const vpsCostPerMonth = 5.36;
@@ -51,19 +57,16 @@ export function PageServerCosts({}) {
   if (status === "success") {
     return (
       <BasicContainerBox>
-        <HeadTitle title="THANK YOU" />
+        <HeadTitle title={t_ty("title")} />
         <Stack direction="column" gap={2} alignItems="center">
           <Stack direction="column" gap={1} alignItems="center">
             <Typography variant="h4" color="green">
-              Thank You!
+              {t_ty("title")}!
             </Typography>
             <EmoteImage emote="viddieHeart.png" height="5em" />
           </Stack>
-          <Typography variant="body1">
-            I appreciate it! Do note that donations aren't automatically put on the list of Contributors, so
-            it might take a while for your donation to be added!
-          </Typography>
-          <StyledLink to="/server-costs">Back to Server Costs</StyledLink>
+          <Typography variant="body1">{t_ty("post_donation.text")}</Typography>
+          <StyledLink to="/server-costs">{t_ty("post_donation.back")}</StyledLink>
         </Stack>
       </BasicContainerBox>
     );
@@ -71,56 +74,56 @@ export function PageServerCosts({}) {
 
   return (
     <Stack direction="column" gap={1} alignItems="center">
-      <HeadTitle title="Server Costs" />
+      <HeadTitle title={t_sc("title")} />
       <BasicContainerBox sx={{ mt: 0 }}>
-        <Typography variant="h4">Server Costs</Typography>
-        <Typography variant="body1">
-          Hi, viddie here. Unsurprisingly, running servers costs money, and while I can pour in as much time
-          as I like into creating this project, someone has to pay to keep the server running. This website
-          does not (and will never) have ADs, and I am willing to pay for the server costs all by myself if
-          necessary, but if anyone in the community wants to help me out, I would gladly appreciate it!
-        </Typography>
+        <Typography variant="h4">{t_sc("title")}</Typography>
+        <Typography variant="body1">{t_sc("description")}</Typography>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Item</TableCell>
-              <TableCell>Cost</TableCell>
+              <TableCell>{t_sc("table.item")}</TableCell>
+              <TableCell>{t_sc("table.cost")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>VPS</TableCell>
-              <TableCell>{vpsCostPerMonth}€ / month</TableCell>
+              <TableCell>{t_sc("table.VPS")}</TableCell>
+              <TableCell>{t_sc("table.value", { value: vpsCostPerMonth })}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Domain</TableCell>
-              <TableCell>{domainCostPerMonth}€ / month</TableCell>
+              <TableCell>{t_sc("table.domain")}</TableCell>
+              <TableCell>{t_sc("table.value", { value: domainCostPerMonth })}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Total</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>{totalCost.toFixed(2)}€ / month</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>{t_sc("table.total")}</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>
+                {t_sc("table.value", { value: totalCost.toFixed(2) })}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
         <Typography variant="h5" sx={{ mt: 2 }}>
-          Costs so far
+          {t_csf("title")}
         </Typography>
         <Typography variant="body1">
-          The server has been running since <b>April, 2024</b>, that's <b>{months} months</b> so far.
+          {t_csf("description.1")} <b>{t_csf("description.2")}</b>
+          {". "}
+          {t_csf("description.3")} <b>{t_csf("description.4", { months: months })}</b>{" "}
+          {t_csf("description.5")}
         </Typography>
         <Table size="small">
           <TableBody>
             <TableRow>
-              <TableCell>Total Costs</TableCell>
+              <TableCell>{t_csf("table.total_costs")}</TableCell>
               <TableCell>{totalCostSoFar.toFixed(2)}€</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Total Donations</TableCell>
+              <TableCell>{t_csf("table.total_donations")}</TableCell>
               <TableCell>{donationsSoFar}€</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Total Difference</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>{t_csf("table.total_difference")}</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
                 {(totalDifference > 0 ? "+" : "") + totalDifference.toFixed(2)}€
               </TableCell>
@@ -132,7 +135,7 @@ export function PageServerCosts({}) {
         Break Even
       </Typography> */}
         <Typography variant="body1" sx={{ mt: 2 }}>
-          This is the amount of € that I need to not lose money
+          {t_csf("not_lose")}
         </Typography>
         {totalDifference < 0 && (
           <LinearProgressWithLabel
@@ -154,10 +157,11 @@ export function PageServerCosts({}) {
             />
 
             <Typography variant="h5" sx={{ mt: 2 }}>
-              Stocked Up
+              {t_su("title")}
             </Typography>
             <Typography variant="body1">
-              The server can run for <b>{monthsToSpare.toFixed(2)} more months</b> on just donations!
+              {t_su("description.1")} <b>{t_su("description.2", { months: monthsToSpare.toFixed(2) })}</b>{" "}
+              {t_su("description.3")}
             </Typography>
             {
               //For each month the server can run without donations, show a full progress bar. For the last month, show the remaining amount.
@@ -176,7 +180,7 @@ export function PageServerCosts({}) {
             }
             {additionalMonths > 0 && (
               <Typography variant="body1" sx={{ mt: 1 }}>
-                + {additionalMonths} additional months!!!
+                {t_su("additional_months", { count: additionalMonths })}
               </Typography>
             )}
             {
@@ -197,15 +201,13 @@ export function PageServerCosts({}) {
         <Divider sx={{ my: 2 }} />
 
         <Typography variant="h5" sx={{ mt: 2 }}>
-          You Can Help
+          {t_ych("title")}
         </Typography>
-        <Typography variant="body1">
-          If you want to help keep the server running, you can donate using the following methods:
-        </Typography>
+        <Typography variant="body1">{t_ych("description")}</Typography>
         <Table size="small">
           <TableBody>
             <TableRow>
-              <TableCell>PayPal (Donation, PayPal fees apply)</TableCell>
+              <TableCell>{t_ych("table.paypal_donation")}</TableCell>
               <TableCell>
                 <form action="https://www.paypal.com/donate" method="post" target="_top">
                   <input type="hidden" name="hosted_button_id" value="QT3FDWF9P5AZ6" />
@@ -228,37 +230,39 @@ export function PageServerCosts({}) {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>PayPal (Directly to me, no fees)</TableCell>
+              <TableCell>{t_ych("table.paypal_direct")}</TableCell>
               <TableCell>
-                <StyledExternalLink href="https://paypal.me/HannesVI">PayPal Website</StyledExternalLink>
+                <StyledExternalLink href="https://paypal.me/HannesVI">
+                  {t_ych("table.paypal_website")}
+                </StyledExternalLink>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
         <Typography variant="caption" color="textSecondary" sx={{ mt: 1 }}>
-          * Donations do not update automatically, it might take a bit for your donation to show up.
+          {t_ych("table.note")}
         </Typography>
 
         <Divider sx={{ my: 2 }} />
         <Typography variant="h5" sx={{ mt: 2 }}>
-          Thank You
+          {t_ty("title")}
         </Typography>
         <Typography variant="body1" sx={{ mt: 1 }}>
-          If you donate and want to be mentioned on this page, leave a name in your donation message!
+          {t_ty("description")}
         </Typography>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="center">Amount</TableCell>
-              <TableCell>Name</TableCell>
+              <TableCell>{t_ty("table.date")}</TableCell>
+              <TableCell align="center">{t_ty("table.amount")}</TableCell>
+              <TableCell>{t_ty("table.name")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {donations.length === 0 && (
               <TableRow>
                 <TableCell colSpan={3} align="center">
-                  No donations yet
+                  {t_ty("table.no_donations")}
                 </TableCell>
               </TableRow>
             )}
@@ -274,7 +278,7 @@ export function PageServerCosts({}) {
       </BasicContainerBox>
       <Link to="/campaign/645">
         <AnyImage
-          path="img/touhoes-shrimp-station.png"
+          path="/img/touhoes-shrimp-station.png"
           height="100px"
           style={{ width: "600px", maxWidth: "100%" }}
           loading="lazy"

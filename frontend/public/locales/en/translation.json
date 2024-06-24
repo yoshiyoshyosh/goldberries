@@ -1,3 +1,67 @@
 {
-  "hello_world": "Hello World!"
+  "hello_world": "Hello World!",
+  "server_costs": {
+    "server_costs": {
+      "title": "Server Costs",
+      "description": "Hi, viddie here. Unsurprisingly, running servers costs money, and while I can pour in as much time as I like into creating this project, someone has to pay to keep the server running. This website does not (and will never) have ADs. I am willing to pay for the server costs all by myself if necessary, but if anyone in the community wants to help me out, I would gladly appreciate it!",
+      "table": {
+        "item": "Item",
+        "cost": "Cost",
+        "VPS": "VPS",
+        "domain": "Domain",
+        "total": "Total",
+        "value": "{{value}}€ / month"
+      }
+    },
+    "costs_so_far": {
+      "title": "Costs So Far",
+      "description": {
+        "1": "The server has been running since",
+        "2": "April, 2024",
+        "3": "That's",
+        "4": "{{months}} months",
+        "5": "so far"
+      },
+      "table": {
+        "total_costs": "Total Costs",
+        "total_donations": "Total Donations",
+        "total_difference": "Total Difference"
+      },
+      "not_lose": "This is the amount of € that I need to not lose money"
+    },
+    "stocked_up": {
+      "title": "Stocked Up",
+      "description": {
+        "1": "The server can run for ",
+        "2": "{{months}} more months",
+        "3": " on just donations!"
+      },
+      "additional_months_one": "+ {{count}} additional month!!!",
+      "additional_months_other": "+ {{count}} additional months!!!"
+    },
+    "you_can_help": {
+      "title": "You Can Help",
+      "description": "If you want to help keep the server running, you can donate using the following methods:",
+      "table": {
+        "paypal_donation": "PayPal (Donation, PayPal fees apply)",
+        "paypal_direct": "PayPal (Directly to me, no fees)",
+        "paypal_website": "PayPal Website",
+        "note": "* Donations do not update automatically, it might take a bit for your donation to show up."
+      }
+    },
+    "thank_you": {
+      "title": "Thank You",
+      "description": "If you donate and want to be mentioned on this page, leave a name in your donation message!",
+      "table": {
+        "date": "Date",
+        "amount": "Amount",
+        "name": "Name",
+        "no_donations": "No donations yet"
+      },
+      "post_donation": {
+        "text": "I appreciate it! Do note that donations aren't automatically put on the list of Contributors, so it might take a while for your donation to be added!",
+        "back": "Back to Server Costs"
+      }
+    }
+  }
 }

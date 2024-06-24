@@ -169,7 +169,9 @@ export function UsefulLinksComponent() {
         </li>
         <li>
           <FontAwesomeIcon icon={faWrench} />{" "}
-          <Typography variant="body1">Testing translation: {t("hello_world")}</Typography>
+          <Typography variant="body1" display="inline">
+            Testing translation: {t("hello_world")}
+          </Typography>
         </li>
       </ul>
     </>
