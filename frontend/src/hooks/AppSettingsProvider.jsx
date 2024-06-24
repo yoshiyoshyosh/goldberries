@@ -7,6 +7,9 @@ export function AppSettingsProvider({ children }) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const getDefaultSettings = () => {
     return {
+      general: {
+        //language: "en",
+      },
       visual: {
         darkmode: prefersDarkMode ?? true,
         topGoldenList: {

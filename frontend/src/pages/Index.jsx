@@ -5,7 +5,6 @@ import {
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
-  getErrorFromMultiple,
 } from "../components/BasicComponents";
 import {
   Container,
@@ -22,16 +21,17 @@ import {
   Typography,
 } from "@mui/material";
 import { getQueryData, useGetAllDifficulties, useGetStats, useGetVerifierList } from "../hooks/useApi";
-import { DifficultyChip, DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
+import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faMoneyBill1Wave, faScroll } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill1Wave, faScroll, faWrench } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
-import { Global, useTheme } from "@emotion/react";
+import { useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS, getDifficultySubtierShares } from "../util/constants";
+import { getDifficultySubtierShares } from "../util/constants";
+import { useTranslation } from "react-i18next";
 
 export function PageIndex() {
   return (
@@ -125,6 +125,8 @@ export function TeamMemberList() {
 }
 
 export function UsefulLinksComponent() {
+  const { t } = useTranslation();
+
   return (
     <>
       <Typography variant="h6">Useful Links</Typography>
@@ -164,6 +166,10 @@ export function UsefulLinksComponent() {
         <li>
           <FontAwesomeIcon icon={faMoneyBill1Wave} />{" "}
           <StyledLink to="/server-costs">Overview of Server Costs</StyledLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faWrench} />{" "}
+          <Typography variant="body1">Testing translation: {t("hello_world")}</Typography>
         </li>
       </ul>
     </>

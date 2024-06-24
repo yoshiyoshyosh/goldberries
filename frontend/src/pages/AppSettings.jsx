@@ -5,6 +5,7 @@ import {
   FormControlLabel,
   Grid,
   MenuItem,
+  Select,
   Slider,
   Stack,
   Tab,
@@ -23,10 +24,12 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { MuiColorInput } from "mui-color-input";
 import { getNewDifficultyColors } from "../util/constants";
+import i18n, { LANGUAGES } from "../i18n/config";
+import { useTranslation } from "react-i18next";
 
 export function PageAppSettings({ isModal = false }) {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useLocalStorage("settings_tab", "visual");
+  const [selectedTab, setSelectedTab] = useLocalStorage("settings_tab", "general");
 
   const setTab = (tab) => {
     setSelectedTab(tab);
@@ -58,12 +61,12 @@ export function PageAppSettings({ isModal = false }) {
         scrollButtons="auto"
         sx={{ mb: 2 }}
       >
-        {/* <Tab label="General" value="general" /> */}
+        <Tab label="General" value="general" />
         <Tab label="Visual" value="visual" />
         <Tab label="Top Golden list" value="top-golden-list" />
         <Tab label="Difficulty Colors" value="difficulty-colors" />
       </Tabs>
-      {/* {selectedTab === "general" && <AppSettingsGeneralForm />} */}
+      {selectedTab === "general" && <AppSettingsGeneralForm />}
       {selectedTab === "visual" && <AppSettingsVisualForm />}
       {selectedTab === "top-golden-list" && <AppSettingsTopGoldenListForm />}
       {selectedTab === "difficulty-colors" && <AppSettingsDifficultyColorsForm />}
@@ -73,13 +76,37 @@ export function PageAppSettings({ isModal = false }) {
 
 export function AppSettingsGeneralForm() {
   const { settings, setSettings } = useAppSettings();
+  const { t } = useTranslation();
 
   const form = useForm({
     defaultValues: settings.general,
   });
+  const doSubmit = (data) => {
+    setSettings({
+      ...settings,
+      general: {
+        ...data,
+      },
+    });
+  };
+
+  useEffect(() => {
+    const subscription = form.watch(form.handleSubmit(doSubmit));
+    return () => subscription.unsubscribe();
+  }, [form.handleSubmit, form.watch]);
 
   return (
     <form>
+      <SettingsEntry title="Language">
+        {/* We dont set the language to the regular app settings */}
+        <Select fullWidth value={i18n.resolvedLanguage} onChange={(e) => i18n.changeLanguage(e.target.value)}>
+          {LANGUAGES.map((lang) => (
+            <MenuItem key={lang.code} value={lang.code}>
+              {lang.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </SettingsEntry>
       <Divider sx={{ my: 2 }} />
       <Typography variant="body2">
         <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
