@@ -4,6 +4,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledExternalLink,
+  StyledLink,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
 import {
@@ -26,7 +27,7 @@ import { useEffect, useState } from "react";
 import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faScroll } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill1Wave, faScroll } from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { Global, useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
@@ -159,6 +160,10 @@ export function UsefulLinksComponent() {
           >
             Celeste Survivors List (Deathless runs of vanilla Celeste)
           </StyledExternalLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faMoneyBill1Wave} />{" "}
+          <StyledLink to="/server-costs">Overview of Server Costs</StyledLink>
         </li>
       </ul>
     </>

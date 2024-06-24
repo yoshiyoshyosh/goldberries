@@ -35,7 +35,10 @@ export function PageServerCosts({}) {
   const months = Math.ceil((new Date(currentMonth) - new Date(firstMonth)) / (1000 * 60 * 60 * 24 * 30));
 
   const donations = [
-    // { amount: 50, date: "2024-06-23", name: "viddie" }
+    { amount: 20, date: "2024-06-24", name: "winter" },
+    { amount: 50, date: "2024-06-24", name: "Parrot Dash" },
+    { amount: 28.3, date: "2024-06-24", name: "Viva" },
+    { amount: 19.58, date: "2024-06-24", name: "Viva" },
   ];
   const donationsSoFar = donations.reduce((acc, donation) => acc + donation.amount, 0);
 
