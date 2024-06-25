@@ -1,26 +1,9 @@
+import { Button, Checkbox, Chip, Divider, FormControlLabel, Grid, Stack, Typography } from "@mui/material";
 import {
-  Button,
-  Checkbox,
-  Chip,
-  Divider,
-  FormControlLabel,
-  Grid,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import {
-  BasicBox,
   BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
-  StyledExternalLink,
   StyledLink,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
@@ -30,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   ChallengeFcIcon,
   DifficultyChip,
-  DifficultySelect,
   DifficultySelectControlled,
   PlayerChip,
 } from "../components/GoldberriesComponents";

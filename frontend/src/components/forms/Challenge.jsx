@@ -107,12 +107,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         control={form.control}
         name="objective_id"
         render={({ field }) => (
-          <ObjectiveSelect
-            objectiveId={field.value}
-            setObjectiveId={(id) => field.onChange(id)}
-            fullWidth
-            label="Objective"
-          />
+          <ObjectiveSelect objectiveId={field.value} setObjectiveId={(id) => field.onChange(id)} fullWidth />
         )}
       />
 

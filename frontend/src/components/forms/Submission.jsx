@@ -19,7 +19,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import {
-  DifficultySelect,
   FullChallengeSelect,
   VerificationStatusChip,
   PlayerSelect,

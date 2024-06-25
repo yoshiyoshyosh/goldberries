@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
   AdminIcon,
-  INPUT_METHODS,
+  INPUT_METHOD_ICONS,
   InputMethodIcon,
   LinkIcon,
   SubmissionEmbed,
@@ -37,6 +37,7 @@ import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useAuth } from "../hooks/AuthProvider";
 import { fetchShowcaseSubmissions } from "../util/api";
+import { useTranslation } from "react-i18next";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -53,6 +54,7 @@ export function PagePlayer() {
 }
 
 export function PlayerDisplay({ id }) {
+  const { t } = useTranslation();
   const { settings } = useAppSettings();
   const query = useGetPlayer(id);
   const statsQuery = useGetPlayerStats(id);
@@ -114,7 +116,7 @@ export function PlayerDisplay({ id }) {
         {player.account.input_method && (
           <Stack direction="row" alignItems="center" gap={1} sx={{ mt: 2 }}>
             <Typography variant="body1">
-              Input Method: {INPUT_METHODS[player.account.input_method].name}
+              Input Method: {t("components.input_methods." + player.account.input_method)}
             </Typography>
             <InputMethodIcon method={player.account.input_method} />
           </Stack>

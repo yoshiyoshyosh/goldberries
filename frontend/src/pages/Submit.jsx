@@ -47,7 +47,7 @@ import {
   MapSelect,
   ChallengeSelect,
   DifficultyChip,
-  DifficultySelect,
+  SuggestedDifficultySelect,
   PlayerSelect,
   PlayerChip,
   CampaignChallengeSelect,
@@ -345,11 +345,9 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             />
           </Grid>
           <Grid item xs={12} sm>
-            <DifficultySelect
-              label="Suggested Difficulty"
+            <SuggestedDifficultySelect
               fullWidth
               SelectProps={{ ...form.register("suggested_difficulty_id") }}
-              // helperText="Please use responsibly, meme suggestions will be removed!"
             />
           </Grid>
           <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
@@ -839,8 +837,7 @@ export function NewChallengeUserSubmission({}) {
             <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is Full Clear" />
           </Grid>
           <Grid item xs={12} sm>
-            <DifficultySelect
-              label="Suggested Difficulty"
+            <SuggestedDifficultySelect
               fullWidth
               SelectProps={{ ...form.register("suggested_difficulty_id") }}
             />
@@ -969,8 +966,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
                     />
                   </TableCell>
                   <TableCell>
-                    <DifficultySelect
-                      label="Suggested Difficulty"
+                    <SuggestedDifficultySelect
                       fullWidth
                       value={mapData.suggested_difficulty_id}
                       onChange={(e) =>

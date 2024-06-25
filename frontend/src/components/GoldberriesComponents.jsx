@@ -53,8 +53,10 @@ import {
   useGetPlayerSubmissions,
 } from "../hooks/useApi";
 import { StyledExternalLink } from "./BasicComponents";
+import { useTranslation } from "react-i18next";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_campaigns"],
     queryFn: () => fetchAllCampaigns(),
@@ -84,12 +86,13 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
       onChange={(event, newValue) => {
         setSelected(newValue);
       }}
-      renderInput={(params) => <TextField {...params} label="Campaign" />}
+      renderInput={(params) => <TextField {...params} label={t("general.campaign", { count: 1 })} />}
     />
   );
 }
 
 export function MapSelect({ campaign, selected, setSelected, disabled }) {
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_maps", campaign.id],
     queryFn: () => fetchAllMapsInCampaign(campaign.id),
@@ -115,12 +118,13 @@ export function MapSelect({ campaign, selected, setSelected, disabled }) {
       onChange={(event, newValue) => {
         setSelected(newValue);
       }}
-      renderInput={(params) => <TextField {...params} label="Map" />}
+      renderInput={(params) => <TextField {...params} label={t("general.map", { count: 1 })} />}
     />
   );
 }
 
 export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabel = false }) {
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_challenges", map.id],
     queryFn: () => fetchAllChallengesInMap(map.id),
@@ -146,7 +150,9 @@ export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabe
       onChange={(event, newValue) => {
         setSelected(newValue);
       }}
-      renderInput={(params) => <TextField {...params} label={hideLabel ? undefined : "Challenge"} />}
+      renderInput={(params) => (
+        <TextField {...params} label={hideLabel ? undefined : t("general.challenge", { count: 1 })} />
+      )}
       renderOption={(props, challenge) => {
         return (
           <Stack direction="row" gap={1} {...props}>
@@ -158,6 +164,7 @@ export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabe
   );
 }
 export function CampaignChallengeSelect({ campaign, selected, setSelected, disabled, hideLabel = false }) {
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_challenges_campaign", campaign.id],
     queryFn: () => fetchAllChallengesInCampaign(campaign.id),
@@ -183,7 +190,9 @@ export function CampaignChallengeSelect({ campaign, selected, setSelected, disab
       onChange={(event, newValue) => {
         setSelected(newValue);
       }}
-      renderInput={(params) => <TextField {...params} label={hideLabel ? undefined : "Challenge"} />}
+      renderInput={(params) => (
+        <TextField {...params} label={hideLabel ? undefined : t("general.challenge", { count: 1 })} />
+      )}
       renderOption={(props, challenge) => {
         return (
           <Stack direction="row" gap={1} {...props}>
@@ -195,41 +204,8 @@ export function CampaignChallengeSelect({ campaign, selected, setSelected, disab
   );
 }
 
-export function ChallengeSelectTf({ map, selected, setSelected, disabled, hideLabel = false }) {
-  const query = useGetChallengesInMap(map.id);
-  const challenges = getQueryData(query)?.challenges ?? [];
-  const [selectedId, setSelectedId] = useState(selected?.id ?? "");
-
-  const onUpdateSelectedId = (id) => {
-    setSelectedId(id);
-    setSelected(challenges.find((c) => c.id === id));
-  };
-
-  return (
-    <TextField
-      select
-      fullWidth
-      disabled={disabled}
-      value={selectedId}
-      onChange={(e) => onUpdateSelectedId(e.target.value)}
-      label={hideLabel ? undefined : "Challenge"}
-      SelectProps={{
-        MenuProps: { disableScrollLock: true },
-      }}
-    >
-      <MenuItem value="">
-        <em>No Selection</em>
-      </MenuItem>
-      {challenges.map((challenge) => (
-        <MenuItem key={challenge.id} value={challenge.id}>
-          {getChallengeName(challenge)}
-        </MenuItem>
-      ))}
-    </TextField>
-  );
-}
-
-export function DifficultySelect({ defaultValue, ...props }) {
+export function SuggestedDifficultySelect({ defaultValue, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
@@ -244,6 +220,7 @@ export function DifficultySelect({ defaultValue, ...props }) {
   return (
     <TextField
       {...props}
+      label={t("label")}
       select
       defaultValue={defaultValue}
       SelectProps={{
@@ -252,7 +229,7 @@ export function DifficultySelect({ defaultValue, ...props }) {
       }}
     >
       <MenuItem value="">
-        <em>No Suggestion</em>
+        <em>{t("no_suggestion")}</em>
       </MenuItem>
       {difficulties.map((difficulty) => (
         <MenuItem key={difficulty.id} value={difficulty.id}>
@@ -264,6 +241,7 @@ export function DifficultySelect({ defaultValue, ...props }) {
 }
 
 export function PlayerSubmissionSelect({ playerId, submission, setSubmission, ...props }) {
+  const { t } = useTranslation();
   const query = useGetPlayerSubmissions(playerId, true, true);
 
   let submissions = getQueryData(query) ?? [];
@@ -282,7 +260,7 @@ export function PlayerSubmissionSelect({ playerId, submission, setSubmission, ..
       onChange={(event, newValue) => {
         setSubmission(newValue);
       }}
-      renderInput={(params) => <TextField {...params} label="Submission" />}
+      renderInput={(params) => <TextField {...params} label={t("general.submission", { count: 1 })} />}
       {...props}
     />
   );
@@ -322,6 +300,7 @@ export function DifficultyChip({
   sx = {},
   ...props
 }) {
+  const { t } = useTranslation();
   const { settings } = useAppSettings();
   if (difficulty === null) return null;
 
@@ -348,10 +327,7 @@ export function DifficultyChip({
 
   if (isPersonal) {
     return (
-      <Tooltip
-        title="This difficulty suggestion is personal and should not be used for difficulty placements"
-        placement="top"
-      >
+      <Tooltip title={t("components.difficulty_chip.personal_tooltip")} placement="top">
         {chip}
       </Tooltip>
     );
@@ -417,6 +393,7 @@ export function DifficultySelectControlled({
   maxSort = null,
   ...props
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
   const query = useQuery({
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
@@ -455,7 +432,7 @@ export function DifficultySelectControlled({
       }}
     >
       <MenuItem value="">
-        <em>No {isSuggestion ? "Suggestion" : "Selection"}</em>
+        <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
       </MenuItem>
       {difficulties.map((difficulty) => (
         <MenuItem key={difficulty.id} value={difficulty.id}>
@@ -467,6 +444,7 @@ export function DifficultySelectControlled({
 }
 
 export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_objectives"],
     queryFn: () => fetchAllObjectives(),
@@ -479,6 +457,7 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
   return (
     <TextField
       {...props}
+      label={t("general.objective", { count: 1 })}
       select
       value={objectiveId ?? 1}
       onChange={(e) => setObjectiveId(e.target.value)}
@@ -497,13 +476,15 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
 }
 
 export function VerificationStatusChip({ isVerified, prefix = "", suffix = "", ...props }) {
-  const text = isVerified === null ? "Pending" : isVerified ? "Verified" : "Rejected";
+  const { t } = useTranslation(undefined, { keyPrefix: "components.verification_status_chip" });
+  const text = isVerified === null ? t("pending") : isVerified ? t("verified") : t("rejected");
   const color = isVerified === null ? "warning" : isVerified ? "success" : "error";
   return <Chip label={prefix + text + suffix} color={color} {...props} />;
 }
 
 // ===== Full Select Components =====
 export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.full_challenge_select" });
   const [campaign, setCampaign] = useState(challenge?.map?.campaign ?? challenge?.campaign ?? null);
   const [map, setMap] = useState(challenge?.map ?? null);
 
@@ -552,7 +533,7 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
       {campaign && map === null && campaign.challenges?.length > 0 && (
         <>
           <Divider>
-            <Chip label="Select Map OR Full Game Challenge" size="small" />
+            <Chip label={t("full_game_label")} size="small" />
           </Divider>
           <CampaignChallengeSelect campaign={campaign} selected={challenge} setSelected={setChallenge} />
         </>
@@ -588,7 +569,8 @@ export function FullMapSelect({ map, setMap, disabled }) {
 }
 
 // ===== Player Components =====
-export function PlayerSelect({ type, value, onChange, label = "Player", ...props }) {
+export function PlayerSelect({ type, value, onChange, label, ...props }) {
+  const { t } = useTranslation();
   const queryFn = type === "all" ? fetchAllPlayers : () => fetchPlayerList(type);
   const query = useQuery({
     queryKey: ["player_list", type],
@@ -602,6 +584,8 @@ export function PlayerSelect({ type, value, onChange, label = "Player", ...props
   const getOptionLabel = (player) => {
     return player?.name;
   };
+
+  label = label ?? t("general.player", { count: 1 });
 
   return (
     <Autocomplete
@@ -649,21 +633,24 @@ export function SubmissionIcon({ submission }) {
 }
 
 export function VerifierIcon() {
+  const { t } = useTranslation();
   return (
-    <Tooltip title="Part of the Modded Golden Team">
+    <Tooltip title={t("components.verifier_icon")}>
       <FontAwesomeIcon icon={faShield} color="grey" />
     </Tooltip>
   );
 }
 export function AdminIcon() {
+  const { t } = useTranslation();
   return (
-    <Tooltip title="Website Admin">
+    <Tooltip title={t("components.admin_icon")}>
       <FontAwesomeIcon icon={faHammer} color="grey" />
     </Tooltip>
   );
 }
 export function SuspendedIcon({ reason }) {
-  const text = reason ? "This user is suspended: " + reason : "This user is suspended";
+  const { t } = useTranslation(undefined, { keyPrefix: "components.suspended_icon" });
+  const text = reason ? t("with_reason", { reason }) : t("no_reason");
   return (
     <Tooltip title={text}>
       <FontAwesomeIcon icon={faBan} />
@@ -702,19 +689,20 @@ export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
   );
 }
 
-export const INPUT_METHODS = {
-  keyboard: { name: "Keyboard", icon: faKeyboard },
-  dpad: { name: "D-Pad", icon: faGamepad },
-  analog: { name: "Analog", icon: faGamepad },
-  hybrid: { name: "Hybrid", icon: faPersonDrowning },
-  other: { name: "Other", icon: faChildCombatant },
+export const INPUT_METHOD_ICONS = {
+  keyboard: faKeyboard,
+  dpad: faGamepad,
+  analog: faGamepad,
+  hybrid: faPersonDrowning,
+  other: faChildCombatant,
 };
 export function InputMethodIcon({ method, ...props }) {
-  const icon = INPUT_METHODS[method];
-  const inputMethodName = icon.name;
+  const { t } = useTranslation();
+  const icon = INPUT_METHOD_ICONS[method];
+  const inputMethodName = t("components.input_methods." + method);
   return (
     <Tooltip title={inputMethodName}>
-      <FontAwesomeIcon icon={icon.icon} {...props} />
+      <FontAwesomeIcon icon={icon} {...props} />
     </Tooltip>
   );
 }
@@ -728,11 +716,9 @@ export function LinkIcon({ url }) {
   const theme = useTheme();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const openTooltip = () => {
-    console.log("Opening tooltip");
     setTooltipOpen(true);
   };
   const closeTooltip = () => {
-    console.log("Closing tooltip");
     setTooltipOpen(false);
   };
 
@@ -938,19 +924,29 @@ export function JournalIcon({ height = "1em", alt = "Generic Campaign Icon", sty
 }
 
 export function SubmissionEmbed({ submission, noBorderRadius = false, style = {}, ...props }) {
+  const { t } = useTranslation();
   const url = API_BASE_URL + "/embed/img/submission.php?id=" + submission.id;
   const imgStyle = {
     borderRadius: noBorderRadius ? 0 : "10px",
   };
-  return <img src={url} alt={"Submission"} loading="lazy" style={{ ...imgStyle, ...style }} {...props} />;
+  return (
+    <img
+      src={url}
+      alt={t("general.submission", { count: 1 })}
+      loading="lazy"
+      style={{ ...imgStyle, ...style }}
+      {...props}
+    />
+  );
 }
 
 export function GamebananaEmbed({ campaign, size = "medium", ...props }) {
+  const { t } = useTranslation();
   const embedUrl = getGamebananaEmbedUrl(campaign.url, size);
 
   return (
     <Link to={campaign.url} target="_blank" {...props}>
-      <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
+      <img src={embedUrl} alt={t("components.gamebanana_embed.alt")} style={{ borderRadius: "5px" }} />
     </Link>
   );
 }

@@ -1,5 +1,56 @@
 {
   "hello_world": "Hello World!",
+  "general": {
+    "campaign_one": "Campaign",
+    "campaign_other": "Campaigns",
+    "map_one": "Map",
+    "map_other": "Maps",
+    "challenge_one": "Challenge",
+    "challenge_other": "Challenges",
+    "submission_one": "Submission",
+    "submission_other": "Submissions",
+    "player_one": "Player",
+    "player_other": "Players",
+    "difficulty_one": "Difficulty",
+    "difficulty_other": "Difficulties",
+    "objective_one": "Objective",
+    "objective_other": "Objectives"
+  },
+  "components": {
+    "difficulty_select": {
+      "label": "Suggested Difficulty",
+      "no_suggestion": "No Suggestion",
+      "no_selection": "No Selection"
+    },
+    "difficulty_chip": {
+      "personal_tooltip": "This difficulty suggestion is personal and should not be used for difficulty placements"
+    },
+    "verification_status_chip": {
+      "verified": "Verified",
+      "pending": "Pending",
+      "rejected": "Rejected"
+    },
+    "full_challenge_select": {
+      "full_game_label": "Select Map OR Full Game Challenge"
+    },
+    "verifier_icon": "Part of the Modded Golden Team",
+    "admin_icon": "Website Admin",
+    "suspended_icon": {
+      "with_reason": "This user is suspended: {{reason}}",
+      "no_reason": "This user is suspended"
+    },
+    "input_methods": {
+      "keyboard": "Keyboard",
+      "dpad": "Controller (D-Pad)",
+      "analog": "Controller (Analog)",
+      "hybrid": "Hybrid",
+      "other": "Other"
+    },
+    "gamebanana_embed": {
+      "alt": "Campaign Banner"
+    }
+  },
+  "data": {},
   "navigation": {
     "top_golden_list": "Top Golden List",
     "campaigns_menu": {
