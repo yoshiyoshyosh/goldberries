@@ -20,8 +20,10 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ManageUserLinks } from "../../pages/Account";
+import { useTranslation } from "react-i18next";
 
 export function FormAccountWrapper({ account, id, onSave, ...props }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useGetAccount(id, {
     enabled: account === null,
   });
@@ -30,7 +32,9 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
   if (query.isLoading || query.isFetching || playersQuery.isLoading || playersQuery.isFetching) {
     return (
       <>
-        <Typography variant="h6">Account ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("account", { count: 1 })} ({id})
+        </Typography>
         <LoadingSpinner />
       </>
     );
@@ -38,7 +42,9 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
     const error = query.error || playersQuery.error;
     return (
       <>
-        <Typography variant="h6">Account ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("account", { count: 1 })} ({id})
+        </Typography>
         <ErrorDisplay error={error} />
       </>
     );
@@ -56,17 +62,19 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
 
 //This account form is used by team members, not users themselves
 export function FormAccount({ account, allPlayers, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.account" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
-    toast.success("Account updated");
+    toast.success(t("feedback.updated"));
     if (onSave) onSave(account);
   });
 
   const { mutate: deleteAccount } = useDeleteAccount((account) => {
-    toast.success("Account deleted");
+    toast.success(t("feedback.deleted"));
     if (onSave) onSave(null); //Return null to indicate the account was deleted
   });
   const deleteSelectedAccount = () => {
@@ -103,7 +111,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Account: {getAccountName(account)}
+        {t_g("account", { count: 1 })}: {getAccountName(account)}
       </Typography>
 
       <Grid container spacing={2}>
@@ -125,7 +133,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
                 type="all"
                 value={field.value}
                 onChange={(e, v) => field.onChange(v)}
-                label="Claimed Player"
+                label={t("claimed_player")}
               />
             )}
           />
@@ -134,21 +142,25 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label="New Email" {...form.register("new_email", FormOptions.EmailOptional)} fullWidth />
+      <TextField
+        label={t("new_email")}
+        {...form.register("new_email", FormOptions.EmailOptional)}
+        fullWidth
+      />
       <Controller
         control={form.control}
         name="email_verified"
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Email Verified"
+            label={t("email_verified")}
             checked={field.value}
             control={<Checkbox />}
           />
         )}
       />
       <TextField
-        label="New Password"
+        label={t("new_password")}
         {...form.register("password", FormOptions.PasswordOptional)}
         fullWidth
       />
@@ -165,7 +177,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
           render={({ field }) => (
             <FormControlLabel
               onChange={field.onChange}
-              label="Unlink Discord"
+              label={t("unlink_discord")}
               checked={field.value}
               disabled={!formAccount.discord_id}
               control={<Checkbox />}
@@ -177,7 +189,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       <Divider sx={{ my: 2 }} />
 
       <Stack direction="row" spacing={1} alignItems="center">
-        <Typography variant="h6">User Links</Typography>
+        <Typography variant="h6">{t("user_links")}</Typography>
         <FontAwesomeIcon icon={faLink} />
       </Stack>
       <Controller
@@ -194,7 +206,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Suspended"
+            label={t("suspended")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -209,7 +221,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
             render={({ field }) => (
               <FormControlLabel
                 onChange={field.onChange}
-                label="Is Verifier"
+                label={t("is_verifier")}
                 checked={field.value}
                 control={<Checkbox />}
               />
@@ -221,7 +233,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
             render={({ field }) => (
               <FormControlLabel
                 onChange={field.onChange}
-                label="Is Admin"
+                label={t("is_admin")}
                 checked={field.value}
                 control={<Checkbox />}
               />
@@ -232,7 +244,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       {formAccount.is_suspended && (
         <TextField
-          label="Suspension Reason"
+          label={t("suspension_reason")}
           {...form.register("suspension_reason", { required: true })}
           fullWidth
           error={!!errors.suspended_reason}
@@ -246,7 +258,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Logout User"
+            label={t("logout_user")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -254,20 +266,19 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       />
 
       <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
-        Update Account
+        {t("button_update")}
       </Button>
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">Delete Account</Typography>
+      <Typography variant="h6">{t("delete.title")}</Typography>
       <Typography variant="body2" gutterBottom>
-        Deleting an account is permanent and cannot be undone. This does <b>not</b> delete the player
-        associated with the account.
+        {t("delete.description")}
       </Typography>
       <Stack direction="row" spacing={2}>
         <FormControlLabel
           control={<Checkbox checked={confirmDelete} onChange={(e) => setConfirmDelete(e.target.checked)} />}
-          label="Confirm"
+          label={t("delete.confirm")}
         />
         <Button
           startIcon={<FontAwesomeIcon icon={faTrash} />}
@@ -276,7 +287,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
           onClick={deleteSelectedAccount}
           disabled={!confirmDelete}
         >
-          Delete
+          {t("delete.button")}
         </Button>
       </Stack>
     </form>

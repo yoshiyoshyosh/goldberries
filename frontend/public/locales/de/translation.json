@@ -100,6 +100,32 @@
       "placement_difficulty": "Offizielle Schwierigkeit:"
     }
   },
+  "forms": {
+    "account": {
+      "feedback": {
+        "updated": "Account aktualisiert",
+        "deleted": "Account gelöscht"
+      },
+      "button_update": "Account aktualisieren",
+      "claimed_player": "Player Anspruch",
+      "new_email": "Neue Email",
+      "email_verified": "Email Verifiziert",
+      "new_password": "Neues Passwort",
+      "unlink_discord": "Discord Verknüpfung aufheben",
+      "user_links": "Benutzer Links",
+      "suspended": "Suspendiert",
+      "suspension_reason": "Suspendierungsgrund",
+      "is_verifier": "Ist Verifier",
+      "is_admin": "Ist Admin",
+      "logout_user": "Benutzer Abmelden",
+      "delete": {
+        "title": "Account Löschen",
+        "description": "Bist du sicher, dass du diesen Account löschen möchtest? Diese Aktion ist nicht rückgängig zu machen.",
+        "confirm": "Bestätigen",
+        "button": "Account Löschen"
+      }
+    }
+  },
   "navigation": {
     "top_golden_list": "Top Golden Liste",
     "campaigns_menu": {

@@ -15,6 +15,8 @@
     "difficulty_other": "Difficulties",
     "objective_one": "Objective",
     "objective_other": "Objectives",
+    "account_one": "Account",
+    "account_other": "Accounts",
     "table_per_page": "per page:",
     "modals": {
       "buttons": {
@@ -98,6 +100,32 @@
       "note_suggested_difficulties": "Suggested difficulties of this player",
       "note_video_link": "These links lead to the video of the first clear of a challenge",
       "placement_difficulty": "Placement Difficulty:"
+    }
+  },
+  "forms": {
+    "account": {
+      "feedback": {
+        "updated": "Account updated",
+        "deleted": "Account deleted"
+      },
+      "button_update": "Update Account",
+      "claimed_player": "Claimed Player",
+      "new_email": "New Email",
+      "email_verified": "Email Verified",
+      "new_password": "New Password",
+      "unlink_discord": "Unlink Discord",
+      "user_links": "User Links",
+      "suspended": "Suspended",
+      "suspension_reason": "Suspension Reason",
+      "is_verifier": "Is Verifier",
+      "is_admin": "Is Admin",
+      "logout_user": "Logout User",
+      "delete": {
+        "title": "Delete Account",
+        "description": "Are you sure you want to delete this account? This action is irreversible.",
+        "confirm": "Confirm",
+        "button": "Delete Account"
+      }
     }
   },
   "navigation": {
