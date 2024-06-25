@@ -91,7 +91,7 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
   );
 }
 
-export function MapSelect({ campaign, selected, setSelected, disabled }) {
+export function MapSelect({ campaign, selected, setSelected, disabled, ...props }) {
   const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["all_maps", campaign.id],
@@ -118,6 +118,7 @@ export function MapSelect({ campaign, selected, setSelected, disabled }) {
       onChange={(event, newValue) => {
         setSelected(newValue);
       }}
+      {...props}
       renderInput={(params) => <TextField {...params} label={t("general.map", { count: 1 })} />}
     />
   );

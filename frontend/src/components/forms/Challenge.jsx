@@ -4,8 +4,14 @@ import { Button, Checkbox, Divider, FormControlLabel, TextField, Typography } fr
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useEffect, useMemo } from "react";
-import { DifficultySelectControlled, ObjectiveSelect, FullMapSelect } from "../GoldberriesComponents";
+import { useEffect, useMemo, useState } from "react";
+import {
+  DifficultySelectControlled,
+  ObjectiveSelect,
+  FullMapSelect,
+  CampaignSelect,
+  MapSelect,
+} from "../GoldberriesComponents";
 import { getQueryData } from "../../hooks/useApi";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
@@ -22,6 +28,7 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
     return (
       data ?? {
         id: null,
+        campaign: null,
         map: null,
         objective_id: 1,
         description: "",
@@ -55,6 +62,8 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
 
 export function FormChallenge({ challenge, onSave, ...props }) {
   const queryClient = useQueryClient();
+  const [map, setMap] = useState(challenge.map);
+  const [campaign, setCampaign] = useState(challenge.map?.campaign ?? challenge.campaign);
 
   const newChallenge = challenge.id === null;
 
@@ -76,8 +85,11 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   const onUpdateSubmit = form.handleSubmit((data) => {
     const toSubmit = {
       ...data,
-      map_id: data.map.id,
+      map_id: map?.id,
     };
+    if (map === null) {
+      toSubmit.campaign_id = campaign.id;
+    }
     saveChallenge(toSubmit);
   });
 
@@ -85,21 +97,22 @@ export function FormChallenge({ challenge, onSave, ...props }) {
     form.reset(challenge);
   }, [challenge]);
 
-  const map = form.watch("map");
-
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
         Challenge ({newChallenge ? "New" : challenge.id})
       </Typography>
 
-      <Controller
-        control={form.control}
-        name="map"
-        render={({ field }) => (
-          <FullMapSelect map={field.value} setMap={(map) => field.onChange(map)} sx={{ mt: 2 }} />
-        )}
-      />
+      <CampaignSelect selected={campaign} setSelected={(campaign) => setCampaign(campaign)} sx={{ mt: 2 }} />
+      {campaign && (
+        <MapSelect campaign={campaign} selected={map} setSelected={(map) => setMap(map)} sx={{ mt: 2 }} />
+      )}
+
+      {campaign && map === null && (
+        <Typography variant="body1" color="error">
+          Not selecting a map will mean it's a full game challenge.
+        </Typography>
+      )}
 
       <Divider sx={{ my: 2 }} />
 
@@ -178,7 +191,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         fullWidth
         color={newChallenge ? "success" : "primary"}
         onClick={onUpdateSubmit}
-        disabled={map === null}
+        disabled={campaign === null}
       >
         {newChallenge ? "Create" : "Update"} Challenge
       </Button>

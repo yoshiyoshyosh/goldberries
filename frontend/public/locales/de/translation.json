@@ -1,5 +1,55 @@
 {
   "hello_world": "Hallo Welt!",
+  "general": {
+    "campaign_one": "Campaign",
+    "campaign_other": "Campaigns",
+    "map_one": "Map",
+    "map_other": "Maps",
+    "challenge_one": "Challenge",
+    "challenge_other": "Challenges",
+    "submission_one": "Submission",
+    "submission_other": "Submissions",
+    "player_one": "Player",
+    "player_other": "Players",
+    "difficulty_one": "Schwierigkeit",
+    "difficulty_other": "Schwierigkeiten",
+    "objective_one": "Ziel",
+    "objective_other": "Ziele"
+  },
+  "components": {
+    "difficulty_select": {
+      "label": "Empfohlene Schwierigkeit",
+      "no_suggestion": "Keine Empfehlung",
+      "no_selection": "Keine Auswahl"
+    },
+    "difficulty_chip": {
+      "personal_tooltip": "Diese Schwierigkeitsempfehlung ist persönlich und sollte nicht für offizielle Platzierung verwendet werden"
+    },
+    "verification_status_chip": {
+      "verified": "Verifiziert",
+      "pending": "Ausstehend",
+      "rejected": "Abgelehnt"
+    },
+    "full_challenge_select": {
+      "full_game_label": "Wähle Map ODER Full Game Challenge"
+    },
+    "verifier_icon": "Teil des Modded Golden Teams",
+    "admin_icon": "Website Admin",
+    "suspended_icon": {
+      "with_reason": "Dieser Benutzer ist suspendiert: {{reason}}",
+      "no_reason": "Dieser Benutzer ist suspendiert"
+    },
+    "input_methods": {
+      "keyboard": "Tastatur",
+      "dpad": "Controller (D-Pad)",
+      "analog": "Controller (Analog)",
+      "hybrid": "Hybrid",
+      "other": "Andere"
+    },
+    "gamebanana_embed": {
+      "alt": "Campaign Banner"
+    }
+  },
   "navigation": {
     "top_golden_list": "Top Golden Liste",
     "campaigns_menu": {
