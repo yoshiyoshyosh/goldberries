@@ -20,20 +20,20 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ArbitraryIcon,
   CampaignIcon,
   DifficultyChip,
   ObjectiveIcon,
   PlayerChip,
   SubmissionFcIcon,
-  SubmissionIcon,
   VerificationStatusChip,
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
-import { getChallengeCampaign, getChallengeDescription, getChallengeIsArbitrary } from "../util/data_util";
-import { Link, useNavigate } from "react-router-dom";
+import { getChallengeCampaign, getChallengeDescription } from "../util/data_util";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function RecentSubmissions({ playerId = null }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.recent_submissions" });
   const [verified, setVerified] = useLocalStorage("recent_submissions_verified", 1);
   const verifiedValue = verified === 0 ? null : verified === -1 ? false : true;
 
@@ -45,11 +45,11 @@ export function RecentSubmissions({ playerId = null }) {
     <>
       <Grid container>
         <Grid item xs={12} sm>
-          <Typography variant="h5">Recent Submissions</Typography>
+          <Typography variant="h5">{t("title")}</Typography>
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" spacing={1} alignItems="center" sx={{ pb: 1 }}>
-            <Typography variant="body1">Show:</Typography>
+            <Typography variant="body1">{t("show")}</Typography>
             <TextField
               select
               variant="standard"
@@ -93,6 +93,7 @@ export function RecentSubmissionsHeadless({
   hideIfEmpty = false,
   chipSx = {},
 }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useLocalStorage(
     "recent_submissions_per_page_" + (playerId === null ? "general" : "player"),
@@ -120,7 +121,7 @@ export function RecentSubmissionsHeadless({
         <VerificationStatusChip
           isVerified={verified}
           sx={{ mb: 1, ...chipSx }}
-          suffix=" Submissions"
+          suffix={" " + t_g("submission", { count: 30 })}
           size="small"
         />
       )}
@@ -149,7 +150,9 @@ export function RecentSubmissionsTable({
   setPerPage,
   hasPlayer = false,
 }) {
-  const verifiedStr = verified === null ? "pending" : verified ? "verified" : "rejected";
+  const { t } = useTranslation(undefined, { keyPrefix: "components.recent_submissions" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const noFoundStr = verified === null ? t("no_pending") : verified ? t("no_verified") : t("no_rejected");
   const hasMoreThanOnePage = data.max_count > perPage;
   return (
     <TableContainer component={Paper}>
@@ -157,14 +160,14 @@ export function RecentSubmissionsTable({
         {data.submissions !== null && data.submissions.length !== 0 && (
           <TableHead>
             <TableRow>
-              <TableCell sx={{ pl: 1.5, pr: 0.5 }}>Submission</TableCell>
+              <TableCell sx={{ pl: 1.5, pr: 0.5 }}>{t_g("submission", { count: 1 })}</TableCell>
               {!hasPlayer && (
                 <TableCell align="center" sx={{ pr: 0.5, pl: 1 }}>
-                  Player
+                  {t_g("player", { count: 1 })}
                 </TableCell>
               )}
               <TableCell align="center" sx={{ pr: 1, pl: 1 }}>
-                Difficulty
+                {t_g("difficulty", { count: 1 })}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -178,7 +181,7 @@ export function RecentSubmissionsTable({
             <>
               <TableRow>
                 <TableCell colSpan={hasPlayer ? 4 : 3} align="center">
-                  <Typography variant="body1">No {verifiedStr} submissions found</Typography>
+                  <Typography variant="body1">{noFoundStr}</Typography>
                 </TableCell>
               </TableRow>
             </>
@@ -197,7 +200,7 @@ export function RecentSubmissionsTable({
           rowsPerPage={perPage}
           onPageChange={(event, newPage) => setPage(newPage + 1)}
           rowsPerPageOptions={[10, 15, 25, 50, 100]}
-          labelRowsPerPage="Submissions per page:"
+          labelRowsPerPage={t_g("submission", { count: 30 }) + " " + t_g("table_per_page")}
           onRowsPerPageChange={(event) => {
             setPerPage(event.target.value);
             setPage(1);
@@ -232,6 +235,7 @@ function RecentSubmissionsTableRowFakeout({ hasPlayer }) {
   );
 }
 function RecentSubmissionsTableRow({ submission, hasPlayer }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.recent_submissions" });
   const theme = useTheme();
   const challenge = submission.challenge;
   const new_challenge = submission.new_challenge;
@@ -272,10 +276,8 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
               </>
             ) : (
               <Typography variant="body2" color={theme.palette.text.secondary}>
-                <Tooltip
-                  title={new_challenge.description ?? "This is a new challenge not yet in the database!"}
-                >
-                  New Challenge: {new_challenge.name}
+                <Tooltip title={new_challenge.description ?? t("new_challenge_note")}>
+                  {t("new_challenge")} {new_challenge.name}
                 </Tooltip>
               </Typography>
             )}

@@ -14,7 +14,8 @@
     "difficulty_one": "Schwierigkeit",
     "difficulty_other": "Schwierigkeiten",
     "objective_one": "Ziel",
-    "objective_other": "Ziele"
+    "objective_other": "Ziele",
+    "table_per_page": "pro Seite:"
   },
   "components": {
     "difficulty_select": {
@@ -60,6 +61,15 @@
     "share_button": {
       "copy_link": "Link kopieren",
       "copied": "Kopiert!"
+    },
+    "recent_submissions": {
+      "title": "Kürzliche Submissions",
+      "show": "Zeige:",
+      "no_pending": "Keine ausstehenden Submissions gefunden",
+      "no_verified": "Keine verifizierten Submissions gefunden",
+      "no_rejected": "Keine abgelehnten Submissions gefunden",
+      "new_challenge": "Neue Challenge:",
+      "new_challenge_note": "Diese Challenge ist noch nicht in der Datenbank erfasst!"
     }
   },
   "navigation": {
