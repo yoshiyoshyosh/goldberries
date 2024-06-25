@@ -48,6 +48,18 @@
     },
     "gamebanana_embed": {
       "alt": "Campaign Banner"
+    },
+    "loading": "Laden",
+    "error": "Fehler",
+    "video_embed": {
+      "error": "Video konnte nicht eingebettet werden:"
+    },
+    "external_link": {
+      "warning": "Du bist dabei, einen externen Link zu öffnen. Klicke hier, um fortzufahren:"
+    },
+    "share_button": {
+      "copy_link": "Link kopieren",
+      "copied": "Kopiert!"
     }
   },
   "navigation": {

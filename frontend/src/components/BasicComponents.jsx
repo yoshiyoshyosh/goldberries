@@ -1,24 +1,13 @@
-import {
-  faArrowDown,
-  faChevronDown,
-  faEdit,
-  faFileExport,
-  faInfoCircle,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faInfoCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
   Button,
   Container,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-  Divider,
   Menu,
-  MenuItem,
   Stack,
   Tooltip,
   Typography,
@@ -28,23 +17,25 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { APP_NAME_LONG } from "../util/constants";
 import { useTheme } from "@emotion/react";
-import { set } from "react-hook-form";
 import { LANGUAGES } from "../i18n/config";
+import { useTranslation } from "react-i18next";
 
 export function LoadingSpinner({ ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components" });
   return (
     <Typography variant="h6" {...props}>
-      Loading <FontAwesomeIcon icon={faSpinner} spin />
+      {t("loading")} <FontAwesomeIcon icon={faSpinner} spin />
     </Typography>
   );
 }
 
 export function ErrorDisplay({ error }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components" });
   const errorMsg = getErrorMessage(error);
   return (
     <>
       <Typography variant="h4" color="error.main">
-        Error
+        {t("error")}
       </Typography>
       <Typography variant="body1" color="error.main">
         {errorMsg}
@@ -149,6 +140,7 @@ export function BasicBox({ children, sx = {}, ...props }) {
 }
 
 export function ProofEmbed({ url, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components" });
   if (url === undefined || url === null || url === "") {
     return (
       <div {...props}>
@@ -203,7 +195,7 @@ export function ProofEmbed({ url, ...props }) {
   return (
     <div {...props}>
       <Typography color="text.secondary">
-        Couldn't embed video:{" "}
+        {t("video_embed.error")}{" "}
         <Link to={url} target="_blank">
           {url}
         </Link>
@@ -329,12 +321,13 @@ export function StyledExternalLink({
   );
 }
 function OpenExternalLinkModal({ href, isOpen, onClose }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components" });
   return (
     <Dialog open={isOpen} onClose={onClose} disableScrollLock>
       <DialogContent dividers>
         <DialogContentText>
           <Stack direction="column" gap={1} alignItems="center">
-            <span>You are about to open an external link. Click this to continue:</span>
+            <span>{t("external_link.warning")}</span>
             <StyledExternalLink href={href} isSafe style={{ wordBreak: "break-all" }}>
               {href}
             </StyledExternalLink>
@@ -346,6 +339,7 @@ function OpenExternalLinkModal({ href, isOpen, onClose }) {
 }
 
 export function ShareButton({ text, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.share_button" });
   const [copied, setCopied] = useState(false);
 
   const handleClick = () => {
@@ -359,7 +353,7 @@ export function ShareButton({ text, ...props }) {
 
   return (
     <Button onClick={handleClick} variant="outlined" color={copied ? "success" : "primary"} {...props}>
-      {copied ? "Copied!" : "Copy Link"}
+      {t(copied ? "copied" : "copy_link")}
     </Button>
   );
 }
