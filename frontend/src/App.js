@@ -121,6 +121,7 @@ import {
 } from "./components/GoldberriesComponents";
 import { PageMonthlyRecap } from "./pages/Stats";
 import { PageServerCosts } from "./pages/ServerCosts";
+import { useTranslation } from "react-i18next";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -380,6 +381,7 @@ function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirec
 
 export function Layout() {
   const { settings } = useAppSettings();
+  const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const darkmode = settings.visual.darkmode;
   const auth = useAuth();
   const location = useLocation();
@@ -395,7 +397,7 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faHome} />,
     },
     lists: {
-      name: "Top Golden List",
+      name: t("top_golden_list"),
       path: "/top-golden-list",
       icon: (
         <ObjectiveIcon
@@ -408,15 +410,15 @@ export function Layout() {
       ),
     },
     campaigns: {
-      name: "Campaigns",
+      name: t("campaigns_menu.name"),
       items: [
         {
-          name: "Campaign List",
+          name: t("campaigns_menu.campaign_list"),
           path: "/campaign-list",
           icon: <JournalIcon height="1.3em" />,
         },
         {
-          name: "Rejected Maps",
+          name: t("campaigns_menu.rejected_maps"),
           path: "/rejected-maps",
           icon: <FontAwesomeIcon icon={faBan} />,
         },
@@ -458,20 +460,24 @@ export function Layout() {
       ],
     },
     user: {
-      name: auth.hasPlayerClaimed ? auth.user.player.name : "My Account",
+      name: auth.hasPlayerClaimed ? auth.user.player.name : t("player_menu.name"),
       icon: <FontAwesomeIcon icon={faUser} />,
       items: [
-        { name: "Claim A Player", path: "/claim-player", icon: <FontAwesomeIcon icon={faPlayCircle} /> },
         {
-          name: "My Player Page",
-          path: auth.hasPlayerClaimed ? "/player/" + auth.user.player.id : "/claim-player",
+          name: t("player_menu.claim_a_player"),
+          path: "/claim-player",
+          icon: <FontAwesomeIcon icon={faPlayCircle} />,
+        },
+        {
+          name: t("player_menu.my_player_page"),
+          path: auth.hasPlayerClaimed ? "/player/" + auth.user.player.id : "/my-player-page",
           icon: <FontAwesomeIcon icon={faUserAlt} />,
         },
         {
-          name: "My Top Goldens",
+          name: t("player_menu.my_top_goldens"),
           path: auth.hasPlayerClaimed
             ? "/player/" + auth.user.player.id + "/top-golden-list"
-            : "/claim-player",
+            : "/my-top-goldens",
           icon: (
             <ObjectiveIcon
               objective={{
@@ -482,10 +488,10 @@ export function Layout() {
             />
           ),
         },
-        { name: "My Account", path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
+        { name: t("player_menu.name"), path: "/my-account", icon: <FontAwesomeIcon icon={faCog} /> },
         { divider: true },
         {
-          name: "Logout",
+          name: t("player_menu.logout"),
           action: () => {
             auth.logout();
           },
@@ -494,30 +500,30 @@ export function Layout() {
       ],
     },
     submit: {
-      name: "Submit",
+      name: t("submit"),
       path: "/submit",
     },
     notUser: {
-      name: "Login",
+      name: t("login"),
       path: "/login",
       icon: <FontAwesomeIcon icon={faSignIn} />,
     },
     verifier: {
-      name: "Internal",
+      name: t("internal_menu.name"),
       items: [
-        { name: "Logs", path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
+        { name: t("internal_menu.logs"), path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
         {
-          name: "Submission Queue",
+          name: t("internal_menu.submission_queue"),
           path: "/manage/submission-queue",
           icon: <FontAwesomeIcon icon={faMailBulk} />,
         },
         {
-          name: "Manage Challenges",
+          name: t("internal_menu.manage_challenges"),
           path: "/manage/challenges",
           icon: <FontAwesomeIcon icon={faEdit} />,
         },
         {
-          name: "Manage Accounts",
+          name: t("internal_menu.manage_accounts"),
           path: "/manage/accounts",
           icon: <FontAwesomeIcon icon={faUserEdit} />,
         },
@@ -529,7 +535,7 @@ export function Layout() {
       items: [{ name: "Admin Stuff", path: "/admin-panel", icon: <FontAwesomeIcon icon={faHammer} /> }],
     },
     search: {
-      name: "Search",
+      name: t("search"),
       action: () => {
         console.log("Clicked search");
         searchOpenRef.current(true);
@@ -537,15 +543,15 @@ export function Layout() {
       icon: <FontAwesomeIcon icon={faSearch} />,
     },
     other: {
-      name: "Other",
+      name: t("other_menu.name"),
       items: [
         {
-          name: "Suggestion Box",
+          name: t("other_menu.suggestion_box"),
           path: "/suggestions",
           icon: <FontAwesomeIcon icon={faCheckToSlot} />,
         },
         {
-          name: "Monthly Recap",
+          name: t("other_menu.monthly_recap"),
           path: "/monthly-recap",
           icon: <FontAwesomeIcon icon={faSquarePollHorizontal} />,
         },
@@ -555,10 +561,10 @@ export function Layout() {
   };
 
   if (auth.hasPlayerClaimed === true) {
-    menus.user.items = menus.user.items.filter((item) => item.name !== "Claim A Player");
+    menus.user.items = menus.user.items.filter((item) => item.path !== "/claim-player");
   } else {
-    menus.user.items = menus.user.items.filter((item) => item.name !== "My Player Page");
-    menus.user.items = menus.user.items.filter((item) => item.name !== "My Top Goldens");
+    menus.user.items = menus.user.items.filter((item) => item.path !== "/my-player-page");
+    menus.user.items = menus.user.items.filter((item) => item.path !== "/my-top-goldens");
   }
 
   const leftMenu = [menus.lists, menus.campaigns, menus.other];
@@ -832,6 +838,7 @@ function MobileMenuItem({ item, indent = 0 }) {
 
 function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
   const auth = useAuth();
+  const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const { settings, setSettings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
 
@@ -915,13 +922,13 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
               />
             )}
             {/* <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}> */}
-            <Tooltip title="Settings">
+            <Tooltip title={t("settings")}>
               <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }} onClick={() => settingsOpenRef.current(true)}>
                 <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
               </IconButton>
             </Tooltip>
             {/* </StyledLink> */}
-            <Tooltip title={"Switch to " + (darkmode ? "light" : "dark") + " mode"}>
+            <Tooltip title={t(darkmode ? "switch_to_light_mode" : "switch_to_dark_mode")}>
               <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
                 <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
               </IconButton>
@@ -1036,6 +1043,7 @@ function DesktopSubMenuItem({ item, closeMenu }) {
 }
 
 function VerifierStatsNavDesktop() {
+  const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const query = useGetOverallStats(true);
   const data = query.data?.data ?? {
     submissions_in_queue: null,
@@ -1044,13 +1052,13 @@ function VerifierStatsNavDesktop() {
 
   return (
     <Stack direction="row" spacing={2} alignItems="center">
-      <Tooltip title="Submissions in queue">
+      <Tooltip title={t("widgets.submission_queue")}>
         <Link to="/manage/submission-queue" style={{ color: "inherit", textDecoration: "none" }}>
           <FontAwesomeIcon icon={faMailBulk} style={{ marginRight: "5px" }} />
           {query.isError ? "X" : data.submissions_in_queue ?? "..."}
         </Link>
       </Tooltip>
-      <Tooltip title="Open player claims">
+      <Tooltip title={t("widgets.player_claims")}>
         <Link to="/manage/accounts/player-claims" style={{ color: "inherit", textDecoration: "none" }}>
           <FontAwesomeIcon icon={faUserNinja} style={{ marginRight: "5px" }} />
           {query.isError ? "X" : data.open_player_claims ?? "..."}

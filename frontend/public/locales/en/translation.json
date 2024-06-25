@@ -1,5 +1,42 @@
 {
   "hello_world": "Hello World!",
+  "navigation": {
+    "top_golden_list": "Top Golden List",
+    "campaigns_menu": {
+      "name": "Campaigns",
+      "campaign_list": "Campaign List",
+      "rejected_maps": "Rejected Maps"
+    },
+    "other_menu": {
+      "name": "Other",
+      "suggestion_box": "Suggestion Box",
+      "monthly_recap": "Monthly Recap"
+    },
+    "internal_menu": {
+      "name": "Internal",
+      "logs": "Logs",
+      "submission_queue": "Submission Queue",
+      "manage_challenges": "Manage Challenges",
+      "manage_accounts": "Manage Accounts"
+    },
+    "widgets": {
+      "submission_queue": "Submissions in queue",
+      "player_claims": "Open player claims"
+    },
+    "submit": "Submit",
+    "login": "Login",
+    "search": "Search",
+    "settings": "Settings",
+    "switch_to_light_mode": "Switch to Light Mode",
+    "switch_to_dark_mode": "Switch to Dark Mode",
+    "player_menu": {
+      "name": "My Account",
+      "claim_a_player": "Claim a Player",
+      "my_player_page": "My Player Page",
+      "my_top_goldens": "My Top Goldens",
+      "logout": "Logout"
+    }
+  },
   "server_costs": {
     "server_costs": {
       "title": "Server Costs",
