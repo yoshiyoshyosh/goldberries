@@ -87,6 +87,9 @@
       "entry_delete_confirm": "Are you sure you want to delete this changelog entry?",
       "entry_delete_modal_title": "Delete Entry?",
       "moved_from": "Moved from"
+    },
+    "stats": {
+      "no_suggestions_yet": "No difficulty suggestions yet"
     }
   },
   "navigation": {

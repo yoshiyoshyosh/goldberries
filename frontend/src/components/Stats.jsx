@@ -5,8 +5,10 @@ import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { useState } from "react";
 import { DifficultyChip } from "./GoldberriesComponents";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useTranslation } from "react-i18next";
 
 export function SuggestedDifficultyChart({ challenge }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.stats" });
   const { settings } = useAppSettings();
   const [spin, setSpin] = useState(false);
 
@@ -49,7 +51,7 @@ export function SuggestedDifficultyChart({ challenge }) {
   return (
     <>
       {allSuggestedDiffs.length === 0 ? (
-        <Typography variant="body2">No difficulty suggestions</Typography>
+        <Typography variant="body2">{t("no_suggestions_yet")}</Typography>
       ) : (
         <PieChart
           series={[
@@ -94,6 +96,7 @@ export function SuggestedDifficultyTierCounts({
   nowrap = true,
   useSubtierColors = false,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.stats" });
   let allSuggestedDiffs = challenge.submissions.filter(
     (submission) => submission.suggested_difficulty !== null && !submission.is_personal
   );
@@ -123,7 +126,7 @@ export function SuggestedDifficultyTierCounts({
     <Stack direction={direction} flexWrap="wrap" gap={2} sx={sx} alignItems="center">
       {sortedDifficulties.length === 0 && (
         <Typography variant="body2" whiteSpace={nowrap ? "nowrap" : "initial"}>
-          No suggestions yet.
+          {t("no_suggestions_yet")}
         </Typography>
       )}
       {sortedDifficulties.map((diff) => (

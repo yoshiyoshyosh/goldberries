@@ -87,6 +87,9 @@
       "entry_delete_confirm": "Bist du sicher, dass du diese Änderung löschen willst?",
       "entry_delete_modal_title": "Änderung Löschen?",
       "moved_from": "Verschoben von"
+    },
+    "stats": {
+      "no_suggestions_yet": "Keine Schwierigkeitsempfehlungen bisher"
     }
   },
   "navigation": {
