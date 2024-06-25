@@ -31,12 +31,7 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
-import {
-  getChallengeDescription,
-  getChallengeIsArbitrary,
-  getDifficultyName,
-  getMapName,
-} from "../util/data_util";
+import { getChallengeDescription, getMapName } from "../util/data_util";
 import {
   CampaignIcon,
   ChallengeFcIcon,
@@ -53,8 +48,10 @@ import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
 import Color from "color";
+import { useTranslation } from "react-i18next";
 
 export function TopGoldenList({ type, id, archived = false, arbitrary = false, isOverallList = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const { settings } = useAppSettings();
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
     "top_golden_list_useSuggestedDifficulties",
@@ -150,7 +147,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
                   onChange={(e) => setUseSuggestedDifficulties(e.target.checked)}
                 />
               }
-              label="Use Suggested Difficulties for ranking"
+              label={t("use_suggested")}
             />
           </Stack>
         </BasicBox>
@@ -158,7 +155,7 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
       {topGoldenList.challenges.length === 0 && (
         <BasicBox>
           <Typography variant="body2" color="textSecondary">
-            Looks pretty empty. Get some goldens from the Top Golden List to populate your own list!
+            {t("empty")}
           </Typography>
         </BasicBox>
       )}
@@ -209,6 +206,7 @@ function TopGoldenListGroup({
   onFinishRendering,
   isOverallList,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const theme = useTheme();
   const name = tier[0].name;
   const { settings } = useAppSettings();
@@ -269,15 +267,11 @@ function TopGoldenListGroup({
                 >
                   <Typography fontWeight="bold" textAlign="center">
                     {isPlayer ? (
-                      <Tooltip title="Suggested difficulties of this player" arrow placement="top">
+                      <Tooltip title={t("note_suggested_difficulties")} arrow placement="top">
                         {useSuggested ? "Actual" : "Sug."}
                       </Tooltip>
                     ) : (
-                      <Tooltip
-                        title="This column shows the number of people who did a challenge"
-                        arrow
-                        placement="top"
-                      >
+                      <Tooltip title={t("note_number_people")} arrow placement="top">
                         <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
                       </Tooltip>
                     )}
@@ -291,11 +285,7 @@ function TopGoldenListGroup({
                   align="center"
                 >
                   <Typography fontWeight="bold">
-                    <Tooltip
-                      title="These links lead to the video of the first clear of a challenge"
-                      arrow
-                      placement="top"
-                    >
+                    <Tooltip title={t("note_video_link")} arrow placement="top">
                       <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
                     </Tooltip>
                   </Typography>
@@ -426,6 +416,7 @@ function TopGoldenListRow({
   showMap,
   showDivider = false,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const auth = useAuth();
   const theme = useTheme();
   const { settings } = useAppSettings();
@@ -597,7 +588,10 @@ function TopGoldenListRow({
               <Tooltip
                 title={
                   <span>
-                    <DifficultyChip difficulty={challenge.difficulty} prefix="Placement Difficulty: " />
+                    <DifficultyChip
+                      difficulty={challenge.difficulty}
+                      prefix={t("placement_difficulty") + " "}
+                    />
                   </span>
                 }
                 arrow

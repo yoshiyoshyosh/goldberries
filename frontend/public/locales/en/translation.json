@@ -90,6 +90,14 @@
     },
     "stats": {
       "no_suggestions_yet": "No difficulty suggestions yet"
+    },
+    "top_golden_list": {
+      "use_suggested": "Use Suggested Difficulties for ranking",
+      "empty": "Looks pretty empty. Get some goldens from the Top Golden List to populate your own list!",
+      "note_number_people": "This column shows the number of people who did a challenge",
+      "note_suggested_difficulties": "Suggested difficulties of this player",
+      "note_video_link": "These links lead to the video of the first clear of a challenge",
+      "placement_difficulty": "Placement Difficulty:"
     }
   },
   "navigation": {

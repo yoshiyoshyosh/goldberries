@@ -90,6 +90,14 @@
     },
     "stats": {
       "no_suggestions_yet": "Keine Schwierigkeitsempfehlungen bisher"
+    },
+    "top_golden_list": {
+      "use_suggested": "Verwende Schwierigkeitsempfehlungen für das Ranking",
+      "empty": "Ziemlich leer hier. Mach ein paar Goldens von der Top Golden Liste, um deine eigene Liste zu füllen!",
+      "note_number_people": "Diese Spalte zeigt die Anzahl der Personen, die eine Challenge gemacht haben",
+      "note_suggested_difficulties": "Schwierigkeitsempfehlungen dieses Spielers",
+      "note_video_link": "Diese Links führen zu dem Video des Players, der diese Challenge als erstes gemacht hat",
+      "placement_difficulty": "Offizielle Schwierigkeit:"
     }
   },
   "navigation": {
