@@ -447,7 +447,7 @@ function ManageModalContainer({ modalRefs }) {
       <CustomModal
         modalHook={deleteCampaignModal}
         options={{ title: "Delete Campaign?" }}
-        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+        actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
           Are you sure you want to delete the campaign <b>'{deleteCampaignModal.data?.name ?? ""}'</b> and{" "}
@@ -477,7 +477,7 @@ function ManageModalContainer({ modalRefs }) {
       <CustomModal
         modalHook={deleteMapModal}
         options={{ title: "Delete Map?" }}
-        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+        actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
           Are you sure you want to delete the map <b>'{deleteMapModal.data?.name ?? ""}'</b> and{" "}
@@ -495,7 +495,7 @@ function ManageModalContainer({ modalRefs }) {
       <CustomModal
         modalHook={deleteChallengeModal}
         options={{ title: "Delete Challenge?" }}
-        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+        actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
           Are you sure you want to delete the challenge{" "}

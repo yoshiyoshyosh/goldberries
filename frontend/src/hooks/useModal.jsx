@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function useModal(defaultData, onClose, options = { onOpen: undefined, actions: undefined }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -25,6 +26,7 @@ export function useModal(defaultData, onClose, options = { onOpen: undefined, ac
 }
 
 export function CustomModal({ modalHook, maxWidth = "sm", actions, children, options }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "general.modals.buttons" });
   const { isVisible, close, cancel } = modalHook;
 
   let title = options?.title ?? null;
@@ -58,7 +60,7 @@ export function CustomModal({ modalHook, maxWidth = "sm", actions, children, opt
                 else if (button.cancel) cancel();
               }}
             >
-              {button.text}
+              {t(button.key)}
             </Button>
           ))}
         </DialogActions>
@@ -68,33 +70,33 @@ export function CustomModal({ modalHook, maxWidth = "sm", actions, children, opt
 }
 
 export const ModalButtons = {
-  Delete: {
-    text: "Delete",
+  delete: {
+    key: "delete",
     variant: "contained",
     color: "error",
     close: true,
   },
-  Cancel: {
-    text: "Cancel",
+  cancel: {
+    key: "cancel",
     variant: "outlined",
     color: "primary",
     close: false,
     cancel: true,
   },
-  Save: {
-    text: "Save",
+  save: {
+    key: "save",
     variant: "contained",
     color: "primary",
     close: true,
   },
-  Close: {
-    text: "Close",
+  close: {
+    key: "close",
     variant: "outlined",
     color: "primary",
     close: true,
   },
-  Update: {
-    text: "Update",
+  update: {
+    key: "update",
     variant: "contained",
     color: "primary",
     close: true,

@@ -986,7 +986,7 @@ function SuggestionsModalContainer({ modalRefs, suggestionId, closeModal }) {
       <CustomModal
         modalHook={deleteSuggestionModal}
         options={{ title: "Delete Suggestion?" }}
-        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+        actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
           Are you sure you want to delete this suggestion and all attached votes?

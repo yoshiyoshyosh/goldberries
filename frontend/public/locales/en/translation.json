@@ -15,7 +15,16 @@
     "difficulty_other": "Difficulties",
     "objective_one": "Objective",
     "objective_other": "Objectives",
-    "table_per_page": "per page:"
+    "table_per_page": "per page:",
+    "modals": {
+      "buttons": {
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "save": "Save",
+        "close": "Close",
+        "update": "Update"
+      }
+    }
   },
   "components": {
     "difficulty_select": {
@@ -70,6 +79,14 @@
       "no_rejected": "No rejected submissions found",
       "new_challenge": "New Challenge:",
       "new_challenge_note": "This is a new challenge not yet in the database!"
+    },
+    "changelog": {
+      "name": "Changelog",
+      "no_changes_yet": "No changes yet",
+      "entry_deleted": "Changelog entry deleted",
+      "entry_delete_confirm": "Are you sure you want to delete this changelog entry?",
+      "entry_delete_modal_title": "Delete Entry?",
+      "moved_from": "Moved from"
     }
   },
   "navigation": {

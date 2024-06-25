@@ -15,7 +15,16 @@
     "difficulty_other": "Schwierigkeiten",
     "objective_one": "Ziel",
     "objective_other": "Ziele",
-    "table_per_page": "pro Seite:"
+    "table_per_page": "pro Seite:",
+    "modals": {
+      "buttons": {
+        "delete": "Löschen",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "close": "Schließen",
+        "update": "Aktualisieren"
+      }
+    }
   },
   "components": {
     "difficulty_select": {
@@ -70,6 +79,14 @@
       "no_rejected": "Keine abgelehnten Submissions gefunden",
       "new_challenge": "Neue Challenge:",
       "new_challenge_note": "Diese Challenge ist noch nicht in der Datenbank erfasst!"
+    },
+    "changelog": {
+      "name": "Änderungsprotokoll",
+      "no_changes_yet": "Keine Änderungen",
+      "entry_deleted": "Änderung gelöscht",
+      "entry_delete_confirm": "Bist du sicher, dass du diese Änderung löschen willst?",
+      "entry_delete_modal_title": "Änderung Löschen?",
+      "moved_from": "Verschoben von"
     }
   },
   "navigation": {

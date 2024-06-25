@@ -102,7 +102,7 @@ export function SubmissionDisplay({ id, onDelete }) {
       if (cancelled) return;
       deleteSubmission(data.id);
     },
-    { actions: [ModalButtons.Cancel, ModalButtons.Delete] }
+    { actions: [ModalButtons.cancel, ModalButtons.delete] }
   );
 
   if (query.isLoading) {

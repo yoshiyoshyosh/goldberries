@@ -19,14 +19,16 @@ import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 import { PlayerChip } from "./GoldberriesComponents";
 import { displayDate, extractDifficultiesFromChangelog, getDifficultyName } from "../util/data_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faExpand, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { toast } from "react-toastify";
-import { get } from "react-hook-form";
 import { DifficultyMoveDisplay } from "../pages/Suggestions";
+import { useTranslation } from "react-i18next";
 
 export function Changelog({ type, id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.changelog" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const query = useGetChangelog(type, id);
   const { mutate: deleteChangelogEntry } = useDeleteChangelogEntry(() => {
@@ -48,7 +50,7 @@ export function Changelog({ type, id }) {
   const changelogReverse = [...changelog].reverse();
 
   //type but capitalize the first letter
-  const forObj = type.charAt(0).toUpperCase() + type.slice(1);
+  const forObj = t_g(type, { count: 1 });
 
   const canManage = auth.hasVerifierPriv || (type === "player" && id === auth.user?.player_id);
 
@@ -59,11 +61,11 @@ export function Changelog({ type, id }) {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        {forObj} Changelog ({changelog.length})
+        {forObj} {t("name")} ({changelog.length})
       </AccordionSummary>
       <AccordionDetails>
         {changelog.length === 0 ? (
-          <Typography variant="body2">No changes yet</Typography>
+          <Typography variant="body2">{t("no_changes_yet")}</Typography>
         ) : (
           <Stack direction="column" gap={1}>
             {changelogReverse.map((entry) => (
@@ -79,10 +81,10 @@ export function Changelog({ type, id }) {
       </AccordionDetails>
       <CustomModal
         modalHook={deleteEntryModal}
-        options={{ title: "Delete Entry?" }}
-        actions={[ModalButtons.Cancel, ModalButtons.Delete]}
+        options={{ title: t("entry_delete_modal_title") }}
+        actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
-        <Typography variant="body1">Are you sure you want to delete this changelog entry?</Typography>
+        <Typography variant="body1">{t("entry_delete_confirm")}</Typography>
       </CustomModal>
     </Accordion>
   );
@@ -122,6 +124,7 @@ export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
 }
 
 function ChangelogEntryMovedChallenge({ entry, deleteEntry, canManage = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.changelog" });
   const query = useGetAllDifficulties();
 
   if (query.isLoading) return <LoadingSpinner />;
@@ -140,7 +143,7 @@ function ChangelogEntryMovedChallenge({ entry, deleteEntry, canManage = false })
         </Grid>
         <Grid item xs={12} md="auto" display="flex" alignItems="center" sx={{ order: { xs: 5, md: 2 } }}>
           <Stack direction="row" alignItems="center" gap={1} sx={{ ml: { xs: 0, md: 1 } }}>
-            <Typography variant="body1">Moved from</Typography>
+            <Typography variant="body1">{t("moved_from")}</Typography>
             <DifficultyMoveDisplay from={fromDiff} to={toDiff} />
           </Stack>
         </Grid>
