@@ -251,9 +251,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $challenge = new Challenge();
   $challenge->apply_db_data($data);
 
-  $map = Map::get_by_id($DB, $challenge->map_id);
-  if ($map === false) {
-    die_json(400, "Invalid map_id");
+  if ($challenge->map_id === null && $challenge->campaign_id === null) {
+    die_json(400, "Missing map_id or campaign_id");
+  }
+  if ($challenge->map_id !== null) {
+    $map = Map::get_by_id($DB, $challenge->map_id);
+    if ($map === false) {
+      die_json(404, "Map not found");
+    }
+    $challenge->campaign_id = null;
+  } else if ($challenge->campaign_id !== null) {
+    $campaign = Campaign::get_by_id($DB, $challenge->campaign_id);
+    if ($campaign === false) {
+      die_json(404, "Campaign not found");
+    }
+    $challenge->map_id = null;
   }
 
   if (isset($data['id'])) {
