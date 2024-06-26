@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { DifficultySelectControlled, ObjectiveSelect } from "../GoldberriesComponents";
 import { usePostCampaign, usePostChallenge, usePostMap } from "../../hooks/useApi";
 import { FormOptions } from "../../util/constants";
+import { useTranslation } from "react-i18next";
 
 export function FormCreateFullChallengeWrapper({
   onSuccess,
@@ -35,14 +36,18 @@ export function FormCreateFullChallengeWrapper({
 }
 
 export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.create_full_challenge" });
+  const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.create_full_challenge.campaign" });
+  const { t: t_fch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { mutateAsync: postCampaign } = usePostCampaign(() => {
-    toast.success("Campaign created!");
+    toast.success(t("feedback.campaign"));
   });
   const { mutateAsync: postMap } = usePostMap(() => {
-    toast.success("Map created!");
+    toast.success(t("feedback.map"));
   });
   const { mutateAsync: postChallenge } = usePostChallenge((data) => {
-    toast.success("Challenge created!");
+    toast.success(t("feedback.challenge"));
     if (onSuccess) onSuccess(data);
   });
 
@@ -51,7 +56,6 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   });
   const errors = form.formState.errors;
   const onCreateSubmit = form.handleSubmit((data) => {
-    console.log("Data:", data);
     //Create all the data
     const campaign = {
       name: data.campaign_name,
@@ -84,21 +88,21 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Create Full Challenge
+        {t("title")}
       </Typography>
 
       <Divider>
-        <Chip label="Campaign" size="small" sx={{ mb: 1 }} />
+        <Chip label={t_g("campaign", { count: 1 })} size="small" sx={{ mb: 1 }} />
       </Divider>
       <TextField
-        label="Campaign Name *"
+        label={t_ca("name") + " *"}
         fullWidth
         {...form.register("campaign_name", FormOptions.Name128Required)}
         error={!!errors.campaign_name}
         helperText={errors.campaign_name ? errors.campaign_name.message : ""}
       />
       <TextField
-        label="Campaign URL *"
+        label={t_ca("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("campaign_url", FormOptions.UrlRequired)}
@@ -106,23 +110,23 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         helperText={errors.campaign_url ? errors.campaign_url.message : ""}
       />
       <TextField
-        label="Author GameBanana ID"
+        label={t_ca("author_gb_id")}
         fullWidth
         {...form.register("campaign_author_gb_id")}
         sx={{ mt: 2 }}
       />
       <TextField
-        label="Author GameBanana Name"
+        label={t_ca("author_gb_name")}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("campaign_author_gb_name")}
       />
 
       <Divider sx={{ mt: 2, mb: 1 }}>
-        <Chip label="Map" size="small" />
+        <Chip label={t_g("map", { count: 1 })} size="small" />
       </Divider>
       <TextField
-        label="Map Name *"
+        label={t("map_name") + " *"}
         fullWidth
         {...form.register("map_name", FormOptions.Name128Required)}
         error={!!errors.map_name}
@@ -130,7 +134,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       />
 
       <Divider sx={{ mt: 2, mb: 1 }}>
-        <Chip label="Challenge" size="small" />
+        <Chip label={t_g("challenge", { count: 1 })} size="small" />
       </Divider>
       <Controller
         control={form.control}
@@ -140,7 +144,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         )}
       />
 
-      <TextField label="Description" sx={{ mt: 2 }} fullWidth {...form.register("description")} />
+      <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />
 
       <Controller
         control={form.control}
@@ -148,7 +152,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Requires FC"
+            label={t_fch("requires_fc")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -160,7 +164,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Has FC"
+            label={t_fch("has_fc")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -172,7 +176,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Is Arbitrary"
+            label={t_fch("is_arbitrary")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -188,14 +192,14 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
             setDifficultyId={(id) => field.onChange(id)}
             sx={{ mt: 2 }}
             fullWidth
-            label="Difficulty"
+            label={t_g("difficulty", { count: 1 })}
           />
         )}
       />
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label="Sort Order" type="number" fullWidth {...form.register("sort")} />
+      <TextField label={t_fch("sort_order")} type="number" fullWidth {...form.register("sort")} />
 
       <Divider sx={{ my: 2 }} />
 
@@ -206,7 +210,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         onClick={onCreateSubmit}
         disabled={Object.keys(errors).length > 0}
       >
-        Create Challenge
+        {t_fch("buttons.create")}
       </Button>
     </form>
   );

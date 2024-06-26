@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { getCampaignName } from "../../util/data_util";
+import { useTranslation } from "react-i18next";
 
 export function FormCampaignWrapper({
   id,
@@ -35,6 +36,7 @@ export function FormCampaignWrapper({
   defaultCampaignUrl,
   ...props
 }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["campaign", id],
     queryFn: () => fetchCampaign(id),
@@ -66,14 +68,18 @@ export function FormCampaignWrapper({
   if (query.isLoading || query.isFetching) {
     return (
       <>
-        <Typography variant="h6">Campaign ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("campaign", { count: 1 })} ({id})
+        </Typography>
         <LoadingSpinner />
       </>
     );
   } else if (query.isError) {
     return (
       <>
-        <Typography variant="h6">Campaign ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("campaign", { count: 1 })} ({id})
+        </Typography>
         <ErrorDisplay error={query.error} />
       </>
     );
@@ -84,11 +90,13 @@ export function FormCampaignWrapper({
 }
 
 export function FormCampaign({ campaign, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const newCampaign = campaign.id === null;
 
   const { mutate: postCampaign } = usePostCampaign((newCampaign) => {
     const isNew = campaign.id === null;
-    toast.success("Campaign " + (isNew ? "created" : "updated") + "!");
+    toast.success(t(isNew ? "feedback.created" : "feedback.updated"));
     if (onSave) onSave(newCampaign);
   });
 
@@ -113,41 +121,36 @@ export function FormCampaign({ campaign, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Campaign ({newCampaign ? "New" : campaign.id})
+        {t_g("campaign", { count: 1 })} ({newCampaign ? t_g("new") : campaign.id})
       </Typography>
 
       <TextField
-        label="Name *"
+        label={t_g("name") + " *"}
         fullWidth
         {...form.register("name", FormOptions.Name128Required)}
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />
       <TextField
-        label="URL *"
+        label={t("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("url", FormOptions.UrlRequired)}
         error={!!errors.url}
         helperText={errors.url ? errors.url.message : ""}
       />
-      <TextField label="Icon URL" sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
+      <TextField label={t("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label="Author GameBanana ID" fullWidth {...form.register("author_gb_id")} />
-      <TextField
-        label="Author GameBanana Name"
-        sx={{ mt: 2 }}
-        fullWidth
-        {...form.register("author_gb_name")}
-      />
+      <TextField label={t("author_gb_id")} fullWidth {...form.register("author_gb_id")} />
+      <TextField label={t("author_gb_name")} sx={{ mt: 2 }} fullWidth {...form.register("author_gb_name")} />
 
       <Divider sx={{ my: 2 }}>
-        <Chip size="small" label="Map Sort Major" />
+        <Chip size="small" label={t("sort_category_major")} />
       </Divider>
       <TextField
-        label="Name"
+        label={t_g("name")}
         fullWidth
         {...form.register("sort_major_name")}
         error={!!errors.sort_major_name}
@@ -162,10 +165,10 @@ export function FormCampaign({ campaign, onSave, ...props }) {
       />
 
       <Divider sx={{ my: 2 }}>
-        <Chip size="small" label="Map Sort Minor" />
+        <Chip size="small" label={t("sort_category_minor")} />
       </Divider>
       <TextField
-        label="Name"
+        label={t_g("name")}
         fullWidth
         {...form.register("sort_minor_name")}
         error={!!errors.sort_minor_name}
@@ -187,13 +190,15 @@ export function FormCampaign({ campaign, onSave, ...props }) {
         color={newCampaign ? "success" : "primary"}
         onClick={onUpdateSubmit}
       >
-        {newCampaign ? "Create" : "Update"} Campaign
+        {t(newCampaign ? "buttons.create" : "buttons.update")}
       </Button>
     </form>
   );
 }
 
 function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign.sort_editor" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   //labels and colors are arrays of strings, of the same size
   //This component should render the labels and colors as a list, with a button to delete each entry
   //It should also have a button to add a new entry
@@ -202,7 +207,7 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
       {labels.map((label, index) => (
         <Stack direction="row" gap={1} key={index} alignItems="center" sx={{ mt: 2 }}>
           <TextField
-            label="Name"
+            label={t_g("name")}
             fullWidth
             value={label}
             onChange={(e) => {
@@ -235,7 +240,7 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
               setColors(newColors);
             }}
           >
-            Delete
+            {t("delete")}
           </Button>
         </Stack>
       ))}
@@ -249,16 +254,18 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
         }}
         startIcon={<FontAwesomeIcon icon={faPlus} />}
       >
-        Add Label
+        {t("add")}
       </Button>
     </div>
   );
 }
 
 function FormCampaignEditMaps({ campaign, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign.edit_maps" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutateAsync: saveMaps } = usePostMap((response) => {
-    toast.success("Campaign maps updated!");
+    toast.success(t("feedback.updated"));
     if (onSave) onSave(response);
   });
   const { mutateAsync: deleteMap } = useDeleteMap(() => {});
@@ -302,7 +309,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
     const mapsToDelete = data.mapsToDelete;
     if (mapsToDelete.length > 0) {
       Promise.all(mapsToDelete.map((mapId) => deleteMap(mapId))).then(() => {
-        toast.success("Selected map(s) deleted!");
+        toast.success(t("feedback.deleted", { count: mapsToDelete.length }));
       });
     }
   });
@@ -321,7 +328,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        {getCampaignName(campaign)} {">"} Maps
+        {getCampaignName(campaign)} {">"} {t_g("map", { count: 30 })}
       </Typography>
 
       {campaign.maps.map((map, i) => {
@@ -335,7 +342,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
             alignItems="center"
           >
             <TextField
-              label="Name"
+              label={t_g("name")}
               fullWidth
               {...form.register(`maps[${i}].name`, FormOptions.Name128Required)}
               disabled={isMapDeleted}
@@ -375,13 +382,13 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
               />
             )}
             <TextField
-              label="Order"
+              label={t("order")}
               type="number"
               fullWidth
               {...form.register(`maps[${i}].sort_order`)}
               disabled={isMapDeleted}
             />
-            <Tooltip title={isMapDeleted ? "Undo Delete" : "Delete Map"}>
+            <Tooltip title={t(isMapDeleted ? "undo_delete" : "delete_map")}>
               <IconButton
                 color={isMapDeleted ? "success" : "error"}
                 onClick={() => {
@@ -405,21 +412,19 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
       {mapsToDelete.length > 0 && (
         <>
           <FormHelperText sx={{ color: "#ff0000" }}>
-            Please confirm that you want to delete <b>{mapsToDelete.length}</b> maps. This cannot be undone!
+            {t("confirm_delete", { count: mapsToDelete.length })}
           </FormHelperText>
           <FormControlLabel
             control={
               <Checkbox checked={confirmDelete} onChange={(e) => setConfirmDelete(e.target.checked)} />
             }
-            label={
-              "Yes, delete '" + mapsToDelete.length + "' map(s) and all attached challenges & submissions."
-            }
+            label={t("confirm_delete_label", { count: mapsToDelete.length })}
           />
         </>
       )}
 
       <Button variant="contained" fullWidth color="primary" onClick={onUpdateSubmit} disabled={!canSubmit}>
-        Save Maps
+        {t("save_maps")}
       </Button>
     </form>
   );

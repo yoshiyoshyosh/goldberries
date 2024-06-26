@@ -13,8 +13,10 @@ import {
   MapSelect,
 } from "../GoldberriesComponents";
 import { getQueryData } from "../../hooks/useApi";
+import { useTranslation } from "react-i18next";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["challenge", id],
     queryFn: () => fetchChallenge(id),
@@ -44,14 +46,18 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
   if (query.isLoading || query.isFetching) {
     return (
       <>
-        <Typography variant="h6">Challenge ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("challenge", { count: 1 })} ({id})
+        </Typography>
         <LoadingSpinner />
       </>
     );
   } else if (query.isError) {
     return (
       <>
-        <Typography variant="h6">Challenge ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("challenge", { count: 1 })} ({id})
+        </Typography>
         <ErrorDisplay error={query.error} />
       </>
     );
@@ -61,6 +67,8 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
 }
 
 export function FormChallenge({ challenge, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const queryClient = useQueryClient();
   const [map, setMap] = useState(challenge.map);
   const [campaign, setCampaign] = useState(challenge.map?.campaign ?? challenge.campaign);
@@ -74,7 +82,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       queryClient.invalidateQueries(["submission_queue"]);
       queryClient.invalidateQueries(["manage_challenges"]);
       queryClient.invalidateQueries(["top_golden_list"]);
-      toast.success("Challenge " + (newChallenge ? "created" : "updated") + "!");
+      toast.success(t(newChallenge ? "feedback.created" : "feedback.updated"));
       if (onSave) onSave(response.data);
     },
   });
@@ -100,7 +108,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Challenge ({newChallenge ? "New" : challenge.id})
+        {t_g("challenge", { count: 1 })} ({newChallenge ? t_g("new") : challenge.id})
       </Typography>
 
       <CampaignSelect selected={campaign} setSelected={(campaign) => setCampaign(campaign)} sx={{ mt: 2 }} />
@@ -110,7 +118,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
 
       {campaign && map === null && (
         <Typography variant="body1" color="error">
-          Not selecting a map will mean it's a full game challenge.
+          {t("full_game_notice")}
         </Typography>
       )}
 
@@ -124,7 +132,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         )}
       />
 
-      <TextField label="Description" sx={{ mt: 2 }} fullWidth {...form.register("description")} />
+      <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />
 
       <Controller
         control={form.control}
@@ -133,7 +141,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Requires FC"
+            label={t("requires_fc")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -146,7 +154,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Has FC"
+            label={t("has_fc")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -159,7 +167,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Is Arbitrary"
+            label={t("is_arbitrary")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -175,14 +183,14 @@ export function FormChallenge({ challenge, onSave, ...props }) {
             setDifficultyId={(id) => field.onChange(id)}
             sx={{ mt: 2 }}
             fullWidth
-            label="Difficulty"
+            label={t_g("difficulty", { count: 1 })}
           />
         )}
       />
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label="Sort Order" type="number" fullWidth {...form.register("sort")} />
+      <TextField label={t("sort_order")} type="number" fullWidth {...form.register("sort")} />
 
       <Divider sx={{ my: 2 }} />
 
@@ -193,7 +201,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         onClick={onUpdateSubmit}
         disabled={campaign === null}
       >
-        {newChallenge ? "Create" : "Update"} Challenge
+        {t(newChallenge ? "buttons.create" : "buttons.update")}
       </Button>
     </form>
   );

@@ -26,7 +26,10 @@
         "close": "Close",
         "update": "Update"
       }
-    }
+    },
+    "name": "Name",
+    "new": "New",
+    "description": "Description"
   },
   "components": {
     "difficulty_select": {
@@ -126,6 +129,93 @@
         "confirm": "Confirm",
         "button": "Delete Account"
       }
+    },
+    "campaign": {
+      "feedback": {
+        "created": "Campaign created",
+        "updated": "Campaign updated",
+        "deleted": "Campaign deleted"
+      },
+      "url": "URL",
+      "icon_url": "Icon URL",
+      "author_gb_id": "Author GameBanana ID",
+      "author_gb_name": "Author GameBanana Name",
+      "sort_category_major": "Map Sort Major",
+      "sort_category_minor": "Map Sort Minor",
+      "buttons": {
+        "create": "Create Campaign",
+        "update": "Update Campaign"
+      },
+      "sort_editor": {
+        "delete": "Delete",
+        "add": "Add Label"
+      },
+      "edit_maps": {
+        "feedback": {
+          "updated": "Campaign maps updated",
+          "deleted_one": "1 map deleted",
+          "deleted_other": "{{count}} maps deleted"
+        },
+        "order": "Order",
+        "delete_map": "Delete Map",
+        "undo_delete": "Undo Delete",
+        "confirm_delete_one": "Please confirm that you want to delete 1 map. This cannot be undone!",
+        "confirm_delete_other": "Please confirm that you want to delete {{count}} maps. This cannot be undone!",
+        "confirm_delete_label_one": "Yes, delete '1' map and all attached challenges & submissions.",
+        "confirm_delete_label_other": "Yes, delete '{{count}}' maps and all attached challenges & submissions.",
+        "save_maps": "Save Maps"
+      }
+    },
+    "campaign_mass_add_maps": {
+      "feedback": {
+        "adding_one": "Adding map ({{current}}/{{count}})",
+        "adding_other": "Adding maps ({{current}}/{{count}})"
+      },
+      "title": "Mass Add Maps",
+      "step": "Step {{current}} / {{total}}",
+      "next": "Next",
+      "back": "Back",
+      "step_1": {
+        "helper": "Each line corresponds to a map name.",
+        "label": "Map Names"
+      },
+      "step_2": {
+        "helper": "Specify which challenges to generate for each map.",
+        "map_name": "Map Name",
+        "generate_challenges": "Generate Challenges",
+        "c_fc_distinct": "Clear and FC separately",
+        "create_maps": "Create Maps"
+      }
+    },
+    "challenge": {
+      "feedback": {
+        "created": "Challenge created",
+        "updated": "Challenge updated"
+      },
+      "full_game_notice": "Not selecting a map will mean it's a full game challenge.",
+      "requires_fc": "Requires FC",
+      "has_fc": "Has FC",
+      "is_arbitrary": "Is Arbitrary",
+      "sort_order": "Sort Order",
+      "buttons": {
+        "create": "Create Challenge",
+        "update": "Update Challenge"
+      }
+    },
+    "create_full_challenge": {
+      "feedback": {
+        "campaign": "Campaign created",
+        "map": "Map created",
+        "challenge": "Challenge created"
+      },
+      "title": "Create Full Challenge",
+      "campaign": {
+        "name": "Campaign Name",
+        "url": "Campaign URL",
+        "author_gb_id": "Author GameBanana ID",
+        "author_gb_name": "Author GameBanana Name"
+      },
+      "map_name": "Map Name"
     }
   },
   "navigation": {

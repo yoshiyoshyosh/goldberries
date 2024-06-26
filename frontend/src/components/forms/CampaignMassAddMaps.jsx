@@ -4,8 +4,12 @@ import { CampaignSelect } from "../GoldberriesComponents";
 import { useState } from "react";
 import { usePostChallenge, usePostMap } from "../../hooks/useApi";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export function FormCampaignMassAddMaps({ onSave }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign_mass_add_maps" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
   const [formState, setFormState] = useState(0); // 0 = input map names, 1 = input additional map data
   const { mutateAsync: addMapAsync } = usePostMap();
   const { mutateAsync: addChallengeAsync } = usePostChallenge();
@@ -19,12 +23,12 @@ export function FormCampaignMassAddMaps({ onSave }) {
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
     const maps = data.mapObjs;
-    const toastId = toast.loading("Adding maps (0/" + maps.length + ")");
+    const toastId = toast.loading(t("feedback.adding", { current: 0, count: maps.length }));
 
     const addMapRecursive = (mapIndex) => {
       if (mapIndex >= maps.length) {
         toast.update(toastId, {
-          render: "Added maps (" + maps.length + "/" + maps.length + ")",
+          render: t("feedback.adding", { current: maps.length, count: maps.length }),
           isLoading: false,
           type: "success",
           autoClose: true,
@@ -67,7 +71,9 @@ export function FormCampaignMassAddMaps({ onSave }) {
           );
         }
         Promise.all(promises).then(() => {
-          toast.update(toastId, { render: "Adding maps (" + (mapIndex + 1) + "/" + maps.length + ")" });
+          toast.update(toastId, {
+            render: t("feedback.adding", { current: mapIndex + 1, count: maps.length }),
+          });
           addMapRecursive(mapIndex + 1);
         });
       });
@@ -94,17 +100,17 @@ export function FormCampaignMassAddMaps({ onSave }) {
 
   return (
     <>
-      <Typography variant="h6">Mass Add Maps</Typography>
+      <Typography variant="h6">{t("title")}</Typography>
       <CampaignSelect selected={campaign} setSelected={(c) => form.setValue("campaign", c)} />
       <Divider sx={{ my: 2 }}>
-        <Chip label={"Step " + (formState + 1) + " / 2"} size="small" />
+        <Chip label={t("step", { current: formState + 1, total: 2 })} size="small" />
       </Divider>
       {formState === 0 && (
         <>
-          <FormHelperText>Each line corresponds to a map name.</FormHelperText>
+          <FormHelperText>{t("step_1.helper")}</FormHelperText>
           <TextField
             sx={{ mt: 2 }}
-            label="Map Names"
+            label={t("step_1.label")}
             multiline
             rows={10}
             fullWidth
@@ -118,23 +124,23 @@ export function FormCampaignMassAddMaps({ onSave }) {
             fullWidth
             disabled={campaign === null}
           >
-            Next
+            {t("next")}
           </Button>
         </>
       )}
       {formState === 1 && (
         <>
-          <FormHelperText>Specify which challenges to generate for each map.</FormHelperText>
+          <FormHelperText>{t("step_2.helper")}</FormHelperText>
           {mapObjs.map((map, i) => (
             <Stack sx={{ mt: 2 }} direction="row" gap={2} key={i}>
               <TextField
-                label="Map Name"
+                label={t("step_2.map_name")}
                 value={map.name}
                 {...form.register(`mapObjs.${i}.name`)}
                 fullWidth
               />
               <TextField
-                label="Generate Challenges"
+                label={t("step_2.generate_challenges")}
                 select
                 fullWidth
                 defaultValue={"c_fc"}
@@ -142,14 +148,14 @@ export function FormCampaignMassAddMaps({ onSave }) {
               >
                 <MenuItem value="c">Clear</MenuItem>
                 <MenuItem value="c_fc">C/FC</MenuItem>
-                <MenuItem value="c_fc_distinct">Clear and FC separately</MenuItem>
+                <MenuItem value="c_fc_distinct">{t("step_2.c_fc_distinct")}</MenuItem>
               </TextField>
             </Stack>
           ))}
           <Divider sx={{ my: 2 }} />
           <Stack direction="row" gap={2}>
             <Button onClick={() => setFormState(0)} variant="outlined" color="info" fullWidth>
-              Back
+              {t("back")}
             </Button>
             <Button
               onClick={onUpdateSubmit}
@@ -158,7 +164,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
               fullWidth
               disabled={campaign === null}
             >
-              Create Maps
+              {t("step_2.create_maps")}
             </Button>
           </Stack>
         </>
