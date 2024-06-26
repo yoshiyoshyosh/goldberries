@@ -1,24 +1,19 @@
-INSERT INTO Objective(name, description, is_arbitrary, display_name_suffix) 
-VALUES 
-('Golden Berry', 'Collect the golden strawberry of the map', false, NULL),
-('Silver Berry', 'Collect the silver strawberry of the map', false, NULL),
-
-('All Maps Deathless', 'Complete all maps in the campaign without dying', false, NULL),
-('100% Deathless', 'Complete all maps and obtain all collectibles in the campaign without dying', false, NULL),
-('All C-Sides Deathless', 'Complete all C-Sides of the campaign without dying', false, NULL),
-('Void-Side Moon Berry', 'Get the moon berry in Void-Side. This entails doing the Spring-Side, Summer-Side, Winter-Side, Fall-Side and Void-Side golden strawberries in a row without dying, where Void-Side must be last. Void-Side B-Side is not required for this.', false, NULL),
-
-('Bronze Berry', 'Collect the bronze berry (shielded golden berry) of the map. The bronze berry allows you to die a maximum of one time per room.', true, NULL),
-('Segment Golden Berry', 'Collect a golden strawberry by completing a segment of the map without dying', true, NULL),
-('Segment Silver Berry', 'Collect a silver strawberry by completing a segment of the map without dying', true, NULL),
-('Segment Red Berry', 'Collect a red strawberry by completing a segment of the map without dying', true, NULL),
-
-('DTS', 'Collect the golden strawberry while using a Dash-Trigger-Skip', true, NULL),
-('No DTS', 'Collect the golden strawberry without using an existing Dash-Trigger-Skip', true, NULL),
-
-('Quadruple Golden Berry', 'Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.', false, 'Quadruple Golden'),
-('Forwards Golden', 'Collect the start->end golden strawberry', true, 'Forwards'),
-('Backwards Golden', 'Collect the end->start golden strawberry', true, 'Backwards'),
-('Double Golden', 'Collect both the forwards and backwards golden strawberry', true, 'Double Golden'),
-
-('Intermediate Lobby Deathless', 'Complete all maps in the intermediate lobby without dying', false, NULL);
+INSERT INTO "objective" ("id", "name", "description", "display_name_suffix", "is_arbitrary", "icon_url") VALUES
+	(1, 'Golden Berry', 'Collect the golden strawberry of the map', NULL, 'false', '/icons/goldenberry-8x.png'),
+	(2, 'Silver Berry', 'Collect the silver strawberry of the map', NULL, 'false', '/icons/silverberry-8x.png'),
+	(3, 'All Maps Deathless', 'Complete all maps in the campaign without dying', NULL, 'false', NULL),
+	(4, '100% Deathless', 'Complete all maps and obtain all collectibles in the campaign without dying', NULL, 'false', NULL),
+	(5, 'All C-Sides Deathless', 'Complete all C-Sides of the campaign without dying', NULL, 'false', NULL),
+	(6, 'Void-Side Moon Berry', 'Get the moon berry in Void-Side. This entails doing the Spring-Side, Summer-Side, Winter-Side, Fall-Side and Void-Side golden strawberries in a row without dying, where Void-Side must be last. Void-Side B-Side is not required for this.', NULL, 'false', NULL),
+	(7, 'Bronze Berry', 'Collect the bronze berry (shielded golden berry) of the map. The bronze berry allows you to die a maximum of one time per room.', NULL, 'true', NULL),
+	(8, 'Segment Golden Berry', 'Collect a golden strawberry by completing a segment of the map without dying', NULL, 'true', '/icons/goldenberry-8x.png'),
+	(9, 'Segment Silver Berry', 'Collect a silver strawberry by completing a segment of the map without dying', NULL, 'true', '/icons/silverberry-8x.png'),
+	(10, 'Segment Red Berry', 'Collect a red strawberry by completing a segment of the map without dying', NULL, 'true', '/icons/strawberry-8x.png'),
+	(11, 'DTS', 'Collect the golden strawberry while using a Dash-Trigger-Skip', NULL, 'true', '/icons/goldenberry-8x.png'),
+	(12, 'No DTS', 'Collect the golden strawberry without using an existing Dash-Trigger-Skip', NULL, 'true', '/icons/goldenberry-8x.png'),
+	(13, 'Quadruple Golden Berry', 'Collect all four golden strawberries (2 deathless, 2 one-dash) in one run.', 'Quadruple Golden', 'false', '/icons/goldenberry-8x.png'),
+	(14, 'Forwards Golden', 'Collect the start->end golden strawberry', 'Forwards', 'true', '/icons/goldenberry-8x.png'),
+	(15, 'Backwards Golden', 'Collect the end->start golden strawberry', 'Backwards', 'true', '/icons/goldenberry-8x.png'),
+	(16, 'Double Golden', 'Collect both the forwards and backwards golden strawberry', 'Double Golden', 'true', '/icons/goldenberry-8x.png'),
+	(17, 'Intermediate Lobby Deathless', 'Complete all maps in the intermediate lobby without dying', NULL, 'false', NULL),
+	(18, 'Platinum Berry', 'Collect the platinum strawberry of the map', NULL, 'false', '/icons/platinumberry-8x.png');
