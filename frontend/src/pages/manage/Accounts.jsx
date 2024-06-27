@@ -34,8 +34,10 @@ import { FormAccountWrapper } from "../../components/forms/Account";
 import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/AuthProvider";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export function PageManageAccounts({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.accounts" });
   const navigate = useNavigate();
   const { tab } = useParams();
   const [tabState, setTabState] = useState(tab || "");
@@ -59,18 +61,18 @@ export function PageManageAccounts({}) {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <HeadTitle title="Manage Accounts" />
-      <Typography variant="h4">Manage Accounts</Typography>
+      <HeadTitle title={t("title")} />
+      <Typography variant="h4">{t("title")}</Typography>
       <Tabs
         value={activeTab}
         onChange={(event, newValue) => setTab(newValue)}
         variant="scrollable"
         scrollButtons="auto"
       >
-        <Tab label="Accounts" value="accounts" />
-        <Tab label="Player Claims" value="player-claims" />
-        <Tab label="Player Rename" value="player-rename" />
-        <Tab label="Player Delete" value="player-delete" />
+        <Tab label={t("tabs.accounts.label")} value="accounts" />
+        <Tab label={t("tabs.player_claims.label")} value="player-claims" />
+        <Tab label={t("tabs.player_rename.label")} value="player-rename" />
+        <Tab label={t("tabs.player_delete.label")} value="player-delete" />
       </Tabs>
       {activeTab === "accounts" && <ManageAccountsTab />}
       {activeTab === "player-claims" && <ManagePlayerClaimsTab />}
@@ -81,6 +83,7 @@ export function PageManageAccounts({}) {
 }
 
 function ManageAccountsTab() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.accounts.tabs.accounts" });
   const query = useGetAllAccounts();
   const [account, setAccount] = useState(null);
 
@@ -104,7 +107,7 @@ function ManageAccountsTab() {
         options={query.data.data}
         getOptionLabel={(option) => getAccountName(option)}
         onChange={(event, newValue) => setAccount(newValue)}
-        renderInput={(params) => <TextField {...params} label="Select an Account" />}
+        renderInput={(params) => <TextField {...params} label={t("select")} />}
         sx={{ mt: 2 }}
       />
       {account && (
@@ -118,12 +121,14 @@ function ManageAccountsTab() {
 }
 
 function ManagePlayerClaimsTab() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.accounts.tabs.player_claims" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useGetAllPlayerClaims();
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.player_id !== null) {
-      toast.success("Claim accepted");
+      toast.success(t("feedback.accepted"));
     } else {
-      toast.success("Claim rejected");
+      toast.success(t("feedback.rejected"));
     }
   });
 
@@ -149,8 +154,8 @@ function ManagePlayerClaimsTab() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell width={1}>ID</TableCell>
-              <TableCell width={1}>Player</TableCell>
+              <TableCell width={1}>{t("id")}</TableCell>
+              <TableCell width={1}>{t_g("player", { count: 1 })}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -162,10 +167,10 @@ function ManagePlayerClaimsTab() {
                 <TableCell width={1}>
                   <Stack direction="row" spacing={2} justifyContent="flex-end" flexWrap="nowrap">
                     <Button variant="contained" color="success" onClick={() => updateClaim(account, true)}>
-                      Accept
+                      {t("buttons.accept")}
                     </Button>
                     <Button variant="contained" color="error" onClick={() => updateClaim(account, false)}>
-                      Reject
+                      {t("buttons.reject")}
                     </Button>
                   </Stack>
                 </TableCell>
@@ -173,7 +178,7 @@ function ManagePlayerClaimsTab() {
             ))}
             {query.data.data.length === 0 && (
               <TableRow>
-                <TableCell colSpan={3}>No player claims</TableCell>
+                <TableCell colSpan={3}>{t("no_claims")}</TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -184,12 +189,13 @@ function ManagePlayerClaimsTab() {
 }
 
 function ManagePlayerNamesTab() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.accounts.tabs.player_rename" });
   const auth = useAuth();
   const query = useGetAllPlayers();
   const [player, setPlayer] = useState(null);
 
   const { mutate: renamePlayer } = usePostPlayer(() => {
-    toast.success("Player renamed");
+    toast.success(t("feedback.renamed"));
     if (auth.user && player.id === auth.user.player_id) {
       auth.checkSession();
     }
@@ -228,7 +234,7 @@ function ManagePlayerNamesTab() {
         options={allPlayers}
         getOptionLabel={(option) => option.name}
         onChange={(event, newValue) => setPlayer(newValue)}
-        renderInput={(params) => <TextField {...params} label="Select a Player" />}
+        renderInput={(params) => <TextField {...params} label={t("select")} />}
         sx={{ mt: 2 }}
       />
       {player && (
@@ -236,7 +242,7 @@ function ManagePlayerNamesTab() {
           <Divider sx={{ my: 2 }} />
           <Stack direction="column" spacing={2}>
             <TextField
-              label="New Name"
+              label={t("new_name")}
               {...form.register("name", { required: true, minLength: 2 })}
               InputLabelProps={{ shrink: true }}
               sx={{ mt: 2 }}
@@ -249,7 +255,7 @@ function ManagePlayerNamesTab() {
                   checked={field.value}
                   onChange={field.onChange}
                   control={<Checkbox {...field} />}
-                  label="Log the rename in the player's changelog"
+                  label={t("log_change")}
                 />
               )}
             />
@@ -261,7 +267,7 @@ function ManagePlayerNamesTab() {
               disabled={newName === player.name || newName.trim() === "" || newName.length < 3}
               sx={{ mt: 2 }}
             >
-              Rename Player
+              {t("button")}
             </Button>
           </Stack>
         </>
@@ -271,13 +277,15 @@ function ManagePlayerNamesTab() {
 }
 
 function ManagePlayerDeleteTab() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.accounts.tabs.player_delete" });
+  const { t: t_pr } = useTranslation(undefined, { keyPrefix: "manage.accounts.tabs.player_rename" });
   const auth = useAuth();
   const query = useGetAllPlayers();
   const [player, setPlayer] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { mutate: deletePlayer } = useDeletePlayer(() => {
-    toast.success("Player deleted");
+    toast.success(t("feedback.deleted"));
     if (auth.user && player.id === auth.user.player_id) {
       auth.checkSession();
     }
@@ -299,13 +307,13 @@ function ManagePlayerDeleteTab() {
   return (
     <>
       <Typography variant="body1" color="error" sx={{ mt: 2 }}>
-        Deleting a player cannot be undone and will remove all associated submissions!
+        {t("note")}
       </Typography>
       <Autocomplete
         options={allPlayers}
         getOptionLabel={(option) => option.name}
         onChange={(event, newValue) => setPlayer(newValue)}
-        renderInput={(params) => <TextField {...params} label="Select a Player" />}
+        renderInput={(params) => <TextField {...params} label={t_pr("select")} />}
         sx={{ mt: 2 }}
       />
       {player && (
@@ -317,7 +325,7 @@ function ManagePlayerDeleteTab() {
               onChange={(event) => setConfirmDelete(event.target.checked)}
               control={<Checkbox />}
               color="error"
-              label="I understand that this action is irreversible"
+              label={t("confirm")}
             />
             <Button
               variant="contained"
@@ -327,7 +335,7 @@ function ManagePlayerDeleteTab() {
               disabled={!confirmDelete}
               sx={{ mt: 2 }}
             >
-              Delete Player {playerName}
+              {t("button", { name: playerName })}
             </Button>
           </Stack>
         </>

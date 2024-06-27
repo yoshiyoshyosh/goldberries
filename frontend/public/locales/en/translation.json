@@ -18,6 +18,7 @@
     "account_one": "Account",
     "account_other": "Accounts",
     "table_per_page": "per page:",
+    "table_rows_per_page": "Rows per page:",
     "modals": {
       "buttons": {
         "delete": "Delete",
@@ -30,7 +31,8 @@
     "name": "Name",
     "url": "URL",
     "new": "New",
-    "description": "Description"
+    "description": "Description",
+    "all": "All"
   },
   "components": {
     "difficulty_select": {
@@ -255,6 +257,12 @@
       }
     }
   },
+  "hooks": {
+    "auth": {
+      "logout_success": "Logged out successfully",
+      "not_logged_in": "You weren't logged in"
+    }
+  },
   "navigation": {
     "top_golden_list": "Top Golden List",
     "campaigns_menu": {
@@ -290,6 +298,118 @@
       "my_player_page": "My Player Page",
       "my_top_goldens": "My Top Goldens",
       "logout": "Logout"
+    }
+  },
+  "manage": {
+    "accounts": {
+      "title": "Manage Accounts",
+      "tabs": {
+        "accounts": {
+          "label": "Accounts",
+          "select": "Select an Account"
+        },
+        "player_claims": {
+          "label": "Player Claims",
+          "feedback": {
+            "accepted": "Claim accepted",
+            "rejected": "Claim rejected"
+          },
+          "id": "ID",
+          "no_claims": "No player claims",
+          "buttons": {
+            "accept": "Accept",
+            "reject": "Reject"
+          }
+        },
+        "player_rename": {
+          "label": "Player Rename",
+          "feedback": {
+            "renamed": "Player renamed"
+          },
+          "select": "Select a Player",
+          "new_name": "New Name",
+          "log_change": "Log the rename in the player's changelog",
+          "button": "Rename Player"
+        },
+        "player_delete": {
+          "label": "Player Delete",
+          "feedback": {
+            "deleted": "Player deleted"
+          },
+          "note": "Deleting a player cannot be undone and will remove all associated submissions!",
+          "confirm": "I understand that this action is irreversible",
+          "button": "Delete Player {{name}}"
+        }
+      }
+    },
+    "challenges": {
+      "title": "Manage Challenges",
+      "search": "Search",
+      "num_sub": "# Sub.",
+      "buttons": {
+        "campaign": {
+          "edit": "Edit",
+          "edit_maps": "Edit Maps",
+          "delete": "Delete"
+        },
+        "map": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "challenge": {
+          "edit": "Edit",
+          "split": "Split Challenge",
+          "merge": "Merge Challenges",
+          "mark_personal": "Mark Personal",
+          "delete": "Delete"
+        }
+      },
+      "modals": {
+        "delete_campaign": {
+          "title": "Delete Campaign",
+          "description": "Are you sure you want to delete the campaign <strong>'{{name}}'</strong> and <strong>all of the attached maps, challenges and submissions</strong>?"
+        },
+        "delete_map": {
+          "title": "Delete Map",
+          "description": "Are you sure you want to delete the map <strong>'{{name}}'</strong> and <strong>all of the attached challenges and submissions</strong>?"
+        },
+        "delete_challenge": {
+          "title": "Delete Challenge",
+          "description": "Are you sure you want to delete the challenge <strong>'{{name}}'</strong> for the map <strong>'{{map}}'</strong> and <strong>all of the attached submissions</strong>?"
+        },
+        "mark_personal": {
+          "title": "Mark As Personal",
+          "description": "Mark all difficulty suggestions for <strong>'{{name}}'</strong> as personal?",
+          "impacted_one": "At most <strong>1</strong> submission will be impacted.",
+          "impacted_other": "At most <strong>{{count}}</strong> submissions will be impacted.",
+          "button": "Mark As Personal",
+          "feedback": "Marked all submissions as personal"
+        },
+        "merge_split_challenges": {
+          "feedback": {
+            "split": "Split challenge",
+            "merge": "Merged challenges"
+          },
+          "title": "Split/Merge Challenges",
+          "challenge_num": "Challenge {{num}}",
+          "split_note": "This challenge will be split from a single C/FC challenge into 2 separate challenges. All FC submissions will be automatically moved to the FC challenge.",
+          "merge_note": "The submissions of the 2nd challenge will be merged into the first challenge. The first challenge will be modified accordingly, and the 2nd challenge deleted after all submissions have been moved.",
+          "unable_to_merge": "These challenges cannot be merged. You can only merge a regular clear challenge with an FC challenge.",
+          "buttons": {
+            "split": "Split Challenge",
+            "merge": "Merge Challenges",
+            "neither": "Split / Merge"
+          }
+        }
+      },
+      "create_any_button": {
+        "create": "Create",
+        "new_campaign": "New Campaign",
+        "new_map": "New Map",
+        "new_challenge": "New Challenge",
+        "create_full_challenge": "Create Full Challenge",
+        "mass_add_maps": "Mass Add Maps to Campaign"
+      }
     }
   },
   "server_costs": {

@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { APP_URL, DISCORD_AUTH_URL } from "../util/constants";
 import { getErrorMessage } from "../components/BasicComponents";
+import { useTranslation } from "react-i18next";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "hooks.auth" });
   const [user, setUser] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
@@ -44,12 +46,12 @@ export function AuthProvider({ children }) {
     try {
       await axios.post("/auth/logout.php");
       setUser(null);
-      toast.success("Logged out successfully.");
+      toast.success(t("logout_success"));
     } catch (err) {
       if (err.response.status === 401) {
         // Reachable, but wasn't logged in
         setUser(null);
-        toast.error("You weren't logged in.");
+        toast.error(t("not_logged_in"));
       } else {
         toast.error(getErrorMessage(err));
       }

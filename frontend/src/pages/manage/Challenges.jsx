@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   Chip,
   Divider,
   Grid,
@@ -9,7 +8,6 @@ import {
   Paper,
   Skeleton,
   Stack,
-  Tab,
   Table,
   TableBody,
   TableCell,
@@ -43,9 +41,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsSplitUpAndLeft,
   faArrowsToDot,
-  faCodeMerge,
   faEdit,
-  faJoint,
   faMarker,
   faPlus,
   faTrash,
@@ -66,8 +62,10 @@ import { FormCampaignMassAddMaps } from "../../components/forms/CampaignMassAddM
 import { FormCreateFullChallengeWrapper } from "../../components/forms/CreateFullChallenge";
 import { FullChallengeSelect } from "../../components/GoldberriesComponents";
 import { toast } from "react-toastify";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageManageChallenges() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges" });
   const [page, setPage] = useLocalStorage("manage_challenges_page", 1);
   const [perPage, setPerPage] = useLocalStorage("manage_challenges_perPage", 50);
   const [searchInternal, setSearchInternal] = useLocalStorage("manage_challenges_search", "");
@@ -99,11 +97,11 @@ export function PageManageChallenges() {
 
   return (
     <BasicContainerBox maxWidth="lg" sx={{ mt: 0, p: 2 }}>
-      <HeadTitle title="Manage Challenges" />
+      <HeadTitle title={t("title")} />
       <Grid container spacing={2}>
         <Grid item xs={12} md>
           <Typography variant="h4" sx={{ mt: 0 }} gutterBottom>
-            Manage Challenges
+            {t("title")}
           </Typography>
         </Grid>
         <Grid item xs={12} md="auto">
@@ -124,13 +122,14 @@ export function PageManageChallenges() {
 }
 
 function ManageChallengesSearchField({ search, setSearch }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges" });
   const [searchInternal, setSearchInternal] = useLocalStorage("manage_challenges_search", search);
 
   const setSearchDebounced = useDebouncedCallback(setSearch, 250);
 
   return (
     <TextField
-      label="Search"
+      label={t("search")}
       value={searchInternal}
       onChange={(event) => {
         setSearchInternal(event.target.value);
@@ -147,6 +146,8 @@ function ManageChallengesSearchField({ search, setSearch }) {
 }
 
 function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, modalRefs }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["manage_challenges", page, perPage, search],
     queryFn: () => fetchChallenges(page, perPage, search),
@@ -162,10 +163,10 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Campaign</TableCell>
-              <TableCell align="left">Map</TableCell>
-              <TableCell align="left">Challenge</TableCell>
-              <TableCell align="center"># Sub.</TableCell>
+              <TableCell align="left">{t_g("campaign", { count: 1 })}</TableCell>
+              <TableCell align="left">{t_g("map", { count: 1 })}</TableCell>
+              <TableCell align="left">{t_g("challenge", { count: 1 })}</TableCell>
+              <TableCell align="center">{t("num_sub")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -200,7 +201,8 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
             setPerPage(parseInt(event.target.value, 10));
             setPage(1);
           }}
-          rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: "All" }]}
+          labelRowsPerPage={t_g("table_rows_per_page")}
+          rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: t_g("all") }]}
           slotProps={{
             select: {
               MenuProps: {
@@ -223,10 +225,10 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Campaign</TableCell>
-              <TableCell align="left">Map</TableCell>
-              <TableCell align="left">Challenge</TableCell>
-              <TableCell align="center"># Sub.</TableCell>
+              <TableCell align="left">{t_g("campaign", { count: 1 })}</TableCell>
+              <TableCell align="left">{t_g("map", { count: 1 })}</TableCell>
+              <TableCell align="left">{t_g("challenge", { count: 1 })}</TableCell>
+              <TableCell align="center">{t("num_sub")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -248,14 +250,14 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                       >
                         <MenuItem disableRipple onClick={() => openModal(modalRefs.campaign.edit, campaign)}>
                           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                          Edit
+                          {t("buttons.campaign.edit")}
                         </MenuItem>
                         <MenuItem
                           disableRipple
                           onClick={() => openModal(modalRefs.campaign.massEditMaps, campaign)}
                         >
                           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                          Edit Maps
+                          {t("buttons.campaign.edit_maps")}
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
@@ -266,7 +268,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                             sx={{ px: "16px" }}
                           >
                             <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                            Delete
+                            {t("buttons.campaign.delete")}
                           </Button>
                         </MenuItem>
                       </CustomizedMenu>
@@ -290,7 +292,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                         >
                           <MenuItem disableRipple onClick={() => openModal(modalRefs.map.edit, map)}>
                             <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                            Edit
+                            {t("buttons.map.edit")}
                           </MenuItem>
                           <Divider sx={{ my: 0.5 }} />
                           <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
@@ -301,7 +303,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                               sx={{ px: "16px" }}
                             >
                               <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                              Delete
+                              {t("buttons.map.delete")}
                             </Button>
                           </MenuItem>
                         </CustomizedMenu>
@@ -323,7 +325,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                           onClick={() => openModal(modalRefs.challenge.edit, challenge)}
                         >
                           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                          Edit
+                          {t("buttons.challenge.edit")}
                         </MenuItem>
                         <MenuItem
                           disableRipple
@@ -333,16 +335,14 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                             style={{ marginRight: "5px" }}
                             icon={challenge.has_fc ? faArrowsSplitUpAndLeft : faArrowsToDot}
                           />
-                          {challenge.has_fc ? "Split Challenge" : "Merge Challenges"}
+                          {t(challenge.has_fc ? "buttons.challenge.split" : "buttons.challenge.merge")}
                         </MenuItem>
                         <MenuItem
                           disableRipple
                           onClick={() => openModal(modalRefs.challenge.markPersonal, challenge)}
                         >
                           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faMarker} />
-                          Mark Suggestions
-                          <br />
-                          as Personal
+                          {t("buttons.challenge.mark_personal")}
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
@@ -353,7 +353,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                             sx={{ px: "16px" }}
                           >
                             <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                            Delete
+                            {t("buttons.challenge.delete")}
                           </Button>
                         </MenuItem>
                       </CustomizedMenu>
@@ -379,7 +379,8 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
             setPerPage(parseInt(event.target.value, 10));
             setPage(1);
           }}
-          rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: "All" }]}
+          labelRowsPerPage={t_g("table_rows_per_page")}
+          rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: t_g("all") }]}
           slotProps={{
             select: {
               MenuProps: {
@@ -395,6 +396,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
 }
 
 function ManageModalContainer({ modalRefs }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges.modals" });
   const { mutate: deleteCampaign } = useDeleteCampaign();
   const { mutate: deleteMap } = useDeleteMap();
   const { mutate: deleteChallenge } = useDeleteChallenge();
@@ -446,12 +448,14 @@ function ManageModalContainer({ modalRefs }) {
       </CustomModal>
       <CustomModal
         modalHook={deleteCampaignModal}
-        options={{ title: "Delete Campaign?" }}
+        options={{ title: t("delete_campaign.title") }}
         actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
-          Are you sure you want to delete the campaign <b>'{deleteCampaignModal.data?.name ?? ""}'</b> and{" "}
-          <b>all of the attached maps, challenges and submissions</b> ?
+          <Trans
+            i18nKey="manage.challenges.modals.delete_campaign.description"
+            values={{ name: deleteCampaignModal.data?.name ?? "" }}
+          />
         </Typography>
       </CustomModal>
 
@@ -476,12 +480,14 @@ function ManageModalContainer({ modalRefs }) {
       </CustomModal>
       <CustomModal
         modalHook={deleteMapModal}
-        options={{ title: "Delete Map?" }}
+        options={{ title: t("delete_map.title") }}
         actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
-          Are you sure you want to delete the map <b>'{deleteMapModal.data?.name ?? ""}'</b> and{" "}
-          <b>all of the attached challenges and submissions</b> ?
+          <Trans
+            i18nKey="manage.challenges.modals.delete_map.description"
+            values={{ name: deleteMapModal.data?.name ?? "" }}
+          />
         </Typography>
       </CustomModal>
 
@@ -494,18 +500,22 @@ function ManageModalContainer({ modalRefs }) {
       </CustomModal>
       <CustomModal
         modalHook={deleteChallengeModal}
-        options={{ title: "Delete Challenge?" }}
+        options={{ title: t("delete_challenge.title") }}
         actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
         <Typography variant="body1">
-          Are you sure you want to delete the challenge{" "}
-          <b>'{deleteChallengeModal.data ? getChallengeName(deleteChallengeModal.data) : ""}'</b> for the map{" "}
-          <b>'{deleteChallengeModal.data?.map?.name}'</b> and <b>all of the attached submissions</b> ?
+          <Trans
+            i18nKey="manage.challenges.modals.delete_challenge.description"
+            values={{
+              name: deleteChallengeModal.data ? getChallengeName(deleteChallengeModal.data) : "",
+              map: deleteChallengeModal.data?.map?.name,
+            }}
+          />
         </Typography>
       </CustomModal>
 
       <CustomModal modalHook={mergeChallengeModal} options={{ hideFooter: true }}>
-        <MergeJoinChallengesForm
+        <MergeSplitChallengesForm
           defaultChallenge={mergeChallengeModal.data}
           onSuccess={mergeChallengeModal.close}
         />
@@ -513,7 +523,7 @@ function ManageModalContainer({ modalRefs }) {
 
       <CustomModal
         modalHook={markPersonalChallengeModal}
-        options={{ hideFooter: true, title: "Mark As Personal" }}
+        options={{ hideFooter: true, title: t("mark_personal.title") }}
       >
         <MarkPersonalChallengeForm
           challenge={markPersonalChallengeModal.data}
@@ -531,6 +541,7 @@ export function CreateAnyButton({
   defaultDifficultyId,
   onCreateChallenge,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges.create_any_button" });
   const createCampaignModal = useModal();
   const campaignMassAddMapsModal = useModal();
   const createMapModal = useModal();
@@ -552,31 +563,31 @@ export function CreateAnyButton({
       <CustomizedMenu
         button={
           <Button variant="contained" color="primary" startIcon={<FontAwesomeIcon icon={faEdit} />}>
-            Create
+            {t("create")}
           </Button>
         }
       >
         <MenuItem disableRipple onClick={createCampaignModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-          New Campaign
+          {t("new_campaign")}
         </MenuItem>
         <MenuItem disableRipple onClick={createMapModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-          New Map
+          {t("new_map")}
         </MenuItem>
         <MenuItem disableRipple onClick={createChallengeModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-          New Challenge
+          {t("new_challenge")}
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem disableRipple onClick={createFullChallengeModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-          Create Full Challenge
+          {t("create_full_challenge")}
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem disableRipple onClick={campaignMassAddMapsModal.open}>
           <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faPlus} />
-          Mass Add Maps to Campaign
+          {t("mass_add_maps")}
         </MenuItem>
       </CustomizedMenu>
 
@@ -617,13 +628,14 @@ export function CreateAnyButton({
   );
 }
 
-export function MergeJoinChallengesForm({ defaultChallenge, onSuccess }) {
+export function MergeSplitChallengesForm({ defaultChallenge, onSuccess }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges.modals.merge_split_challenges" });
   const { mutate: splitChallenge } = useSplitChallenge((data) => {
-    toast.success("Split challenge!");
+    toast.success(t("feedback.split"));
     onSuccess(data);
   });
   const { mutate: mergeChallenges } = useMergeChallenges((data) => {
-    toast.success("Merged challenges!");
+    toast.success(t("feedback.merge"));
     onSuccess(data);
   });
 
@@ -651,9 +663,9 @@ export function MergeJoinChallengesForm({ defaultChallenge, onSuccess }) {
 
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h6">Split/Merge Challenges</Typography>
+      <Typography variant="h6">{t("title")}</Typography>
       <Divider sx={{}}>
-        <Chip label="Challenge 1" size="small" />
+        <Chip label={t("challenge_num", { num: 1 })} size="small" />
       </Divider>
       <FullChallengeSelect challenge={challengeOne} setChallenge={setChallengeOne} />
 
@@ -661,42 +673,35 @@ export function MergeJoinChallengesForm({ defaultChallenge, onSuccess }) {
         (isSplit ? (
           <>
             <Divider sx={{ my: 1 }} />
-            <Typography variant="body1">
-              This challenge will be split from a single C/FC challenge into 2 separate challenges. All FC
-              submissions will be automatically moved to the FC challenge.
-            </Typography>
+            <Typography variant="body1">{t("split_note")}</Typography>
           </>
         ) : (
           <>
             <Divider sx={{ mt: 1 }}>
-              <Chip label="Challenge 2" size="small" />
+              <Chip label={t("challenge_num", { num: 2 })} size="small" />
             </Divider>
             <FullChallengeSelect challenge={challengeTwo} setChallenge={setChallengeTwo} />
             <Divider sx={{ my: 1 }} />
-            <Typography variant="body1">
-              The submissions of the 2nd challenge will be merged into the first challenge. The first
-              challenge will be modified accordingly, and the 2nd challenge deleted after all submissions have
-              been moved.
-            </Typography>
+            <Typography variant="body1">{t("merge_note")}</Typography>
           </>
         ))}
       {cannotMerge && (
         <Typography variant="body1" color="error">
-          These challenges cannot be merged. You can only merge a regular clear challenge with an FC
-          challenge.
+          {t("unable_to_merge")}
         </Typography>
       )}
       <Divider sx={{ my: 1 }} />
       <Button variant="contained" color="primary" disabled={submitDisabled} onClick={onSubmit}>
-        {challengeOne === null ? "Split / Merge" : isSplit ? "Split Challenge" : "Merge Challenges"}
+        {t(challengeOne === null ? "buttons.neither" : isSplit ? "buttons.split" : "buttons.merge")}
       </Button>
     </Stack>
   );
 }
 
 export function MarkPersonalChallengeForm({ challenge, onSuccess }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges.modals.mark_personal" });
   const { mutate: markSubmissions } = useChallengeMarkPersonal((data) => {
-    toast.success("Marked all submissions as personal!");
+    toast.success(t("feedback"));
     onSuccess(data);
   });
 
@@ -707,17 +712,19 @@ export function MarkPersonalChallengeForm({ challenge, onSuccess }) {
   return (
     <>
       <Typography variant="body1">
-        Mark all difficulty suggestions for{" "}
-        <b>
-          {getMapName(challenge.map)} - {getChallengeNameShort(challenge)}
-        </b>{" "}
-        as personal?
+        <Trans
+          i18nKey="manage.challenges.modals.mark_personal.description"
+          values={{ name: getMapName(challenge.map) + " - " + getChallengeNameShort(challenge) }}
+        />
       </Typography>
       <Typography variant="body1">
-        At most <b>{challenge.data.count_submissions}</b> submissions will be impacted.
+        <Trans
+          i18nKey="manage.challenges.modals.mark_personal.impacted"
+          values={{ count: challenge.data.count_submissions }}
+        />
       </Typography>
       <Button variant="contained" fullWidth color="primary" onClick={onSubmit} sx={{ mt: 2 }}>
-        Mark as Personal
+        {t("button")}
       </Button>
     </>
   );

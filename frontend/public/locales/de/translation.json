@@ -16,6 +16,7 @@
     "objective_one": "Ziel",
     "objective_other": "Ziele",
     "table_per_page": "pro Seite:",
+    "table_rows_per_page": "Zeilen pro Seite:",
     "modals": {
       "buttons": {
         "delete": "Löschen",
@@ -253,6 +254,12 @@
       }
     }
   },
+  "hooks": {
+    "auth": {
+      "logout_success": "Logout erfolgreich",
+      "not_logged_in": "Du bist nicht eingeloggt"
+    }
+  },
   "navigation": {
     "top_golden_list": "Top Golden Liste",
     "campaigns_menu": {
@@ -287,6 +294,118 @@
       "my_player_page": "Meine Player Seite",
       "my_top_goldens": "Meine Top Goldens",
       "logout": "Logout"
+    }
+  },
+  "manage": {
+    "accounts": {
+      "title": "Verwalte Accounts",
+      "tabs": {
+        "accounts": {
+          "label": "Accounts",
+          "select": "Wähle einen Account"
+        },
+        "player_claims": {
+          "label": "Player Ansprüche",
+          "feedback": {
+            "accepted": "Anspruch akzeptiert",
+            "rejected": "Anspsruch abgelehnt"
+          },
+          "id": "ID",
+          "no_claims": "Keine Player Ansprüche",
+          "buttons": {
+            "accept": "Akzeptieren",
+            "reject": "Ablehnen"
+          }
+        },
+        "player_rename": {
+          "label": "Player Umbenennen",
+          "feedback": {
+            "renamed": "Player umbenannt"
+          },
+          "select": "Wähle einen Player",
+          "new_name": "Neuer Name",
+          "log_change": "Änderung im Protokoll des Players festhalten",
+          "button": "Player Umbenennen"
+        },
+        "player_delete": {
+          "label": "Player Löschen",
+          "feedback": {
+            "deleted": "Player gelöscht"
+          },
+          "note": "Einen Player zu löschen kann nicht rückgängig gemacht werden und wird alle assoziierten Submissions des Players löschen!",
+          "confirm": "Ich verstehe, dass diese Aktion irreversibel ist",
+          "button": "Player {{name}} Löschen"
+        }
+      }
+    },
+    "challenges": {
+      "title": "Verwalte Challenges",
+      "search": "Suche",
+      "num_sub": "# Sub.",
+      "buttons": {
+        "campaign": {
+          "edit": "Bearbeiten",
+          "edit_maps": "Bearbeite Maps",
+          "delete": "Löschen"
+        },
+        "map": {
+          "edit": "Bearbeiten",
+          "delete": "Löschen"
+        },
+        "challenge": {
+          "edit": "Bearbeiten",
+          "split": "Challenge Trennen",
+          "merge": "Challenges Zusammenfügen",
+          "mark_personal": "Markiere als Persönlich",
+          "delete": "Löschen"
+        }
+      },
+      "modals": {
+        "delete_campaign": {
+          "title": "Campaign Löschen",
+          "description": "Bist du sicher, dass du die Campaign <strong>'{{name}}'</strong> und <strong>alle anhängenden Maps, Challenges und Submissions</strong> löschen möchtest?"
+        },
+        "delete_map": {
+          "title": "Map Löschen",
+          "description": "Bist du sicher, dass du die Map <strong>'{{name}}'</strong> und <strong>alle anhängenden Challenges und Submissions</strong> löschen möchtest?"
+        },
+        "delete_challenge": {
+          "title": "Challenge Löschen",
+          "description": "Bist du sicher, dass du die Challenge <strong>'{{name}}'</strong> für die Map <strong>'{{map}}'</strong> und <strong>alle anhängenden Submissions</strong> löschen möchtest?"
+        },
+        "mark_personal": {
+          "title": "Markiere als Persönlich",
+          "description": "Markiere alle Schwierigkeitsempfehlungen für <strong>'{{name}}'</strong> als persönlich?",
+          "impacted_one": "Maximal <strong>1</strong> Submission ist betroffen.",
+          "impacted_other": "Maximal <strong>{{count}}</strong> Submissions sind betroffen.",
+          "button": "Markieren",
+          "feedback": "Alle Submissions als persönlich markiert"
+        },
+        "merge_split_challenges": {
+          "feedback": {
+            "split": "Challenge getrennt",
+            "merge": "Challenges zusammengefügt"
+          },
+          "title": "Challenges Trennen/Zusammenfügen",
+          "challenge_num": "Challenge {{num}}",
+          "split_note": "Diese Challenge wird von einer einzigen C/FC challenge in zwei getrennte Challenges geteilt. Alle FC Submissions werden automatisch in die FC Challenge verschoben.",
+          "merge_note": "Die Submissions der zweiten Challenge werden in die erste Challenge verschoben. Die erste Challenge wird korrekt bearbeitet, und anschließend wird die zweite Challenge gelöscht.",
+          "unable_to_merge": "Diese Challenges können nicht zusammengefügt werden. Du kannst du eine Regular Clear mit einer FC Challenge zusammenfügen.",
+          "buttons": {
+            "split": "Challenge Trennen",
+            "merge": "Challenges Zusammenfügen",
+            "neither": "Trennen / Zusammenfügen"
+          }
+        }
+      },
+      "create_any_button": {
+        "create": "Erstellen",
+        "new_campaign": "Neue Campaign",
+        "new_map": "Neue Map",
+        "new_challenge": "Neue Challenge",
+        "create_full_challenge": "Komplette Challenge Erstellen",
+        "mass_add_maps": "Viele Maps zu Campaign Hinzufügen"
+      }
     }
   },
   "server_costs": {
