@@ -31,8 +31,10 @@ import { FormOptions } from "../../util/constants";
 import { FullChallengeDisplay } from "../../pages/Submission";
 import { usePostSubmission } from "../../hooks/useApi";
 import { CreateAnyButton } from "../../pages/manage/Challenges";
+import { useTranslation } from "react-i18next";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["submission", id],
     queryFn: () => fetchSubmission(id),
@@ -42,14 +44,18 @@ export function FormSubmissionWrapper({ id, onSave, ...props }) {
   if (query.isLoading || query.isFetching) {
     return (
       <>
-        <Typography variant="h6">Submission ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("submission", { count: 1 })} ({id})
+        </Typography>
         <LoadingSpinner />
       </>
     );
   } else if (query.isError) {
     return (
       <>
-        <Typography variant="h6">Submission ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("submission", { count: 1 })} ({id})
+        </Typography>
         <ErrorDisplay error={query.error} />
       </>
     );
@@ -59,10 +65,13 @@ export function FormSubmissionWrapper({ id, onSave, ...props }) {
 }
 
 export function FormSubmission({ submission, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_a } = useTranslation();
   const auth = useAuth();
 
   const { mutate: saveSubmission } = usePostSubmission((submission) => {
-    toast.success("Submission updated");
+    toast.success(t("feedback.updated"));
     if (onSave) onSave(submission);
   });
 
@@ -95,7 +104,6 @@ export function FormSubmission({ submission, onSave, ...props }) {
   }, [submission]);
 
   const onCreateChallenge = (challenge) => {
-    console.log("Submission Form: Challenge created!", challenge);
     setChallenge(challenge);
   };
 
@@ -108,7 +116,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
     return (
       <>
         <Typography variant="h6" gutterBottom>
-          Submission ({submission.id})
+          {t_g("submission", { count: 1 })} ({submission.id})
         </Typography>
         <ErrorDisplay error={{ message: "You do not have permission to edit this submission" }} />
       </>
@@ -119,9 +127,10 @@ export function FormSubmission({ submission, onSave, ...props }) {
     <form {...props}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography variant="h6">
-          Submission (<StyledLink to={"/submission/" + submission.id}>{submission.id}</StyledLink>)
+          {t_g("submission", { count: 1 })} (
+          <StyledLink to={"/submission/" + submission.id}>{submission.id}</StyledLink>)
         </Typography>
-        <VerificationStatusChip isVerified={submission.is_verified} prefix="Status: " />
+        <VerificationStatusChip isVerified={submission.is_verified} prefix={t("status_prefix") + " "} />
       </Stack>
 
       {isVerifier ? (
@@ -134,7 +143,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         <Stack direction="column" gap={2} sx={{ mt: 2 }}>
           <Divider flexItem />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6">New Challenge Details</Typography>
+            <Typography variant="h6">{t("new_challenge_title")}</Typography>
             {isVerifier ? (
               <Stack direction="row" gap={2}>
                 <CreateAnyButton
@@ -148,19 +157,19 @@ export function FormSubmission({ submission, onSave, ...props }) {
             ) : null}
           </Stack>
           <TextField
-            label="URL"
+            label={t_g("url")}
             disabled={!isVerifier}
             fullWidth
             {...form.register("new_challenge.url", FormOptions.UrlRequired)}
           />
           <TextField
-            label="Name"
+            label={t_g("name")}
             disabled={!isVerifier}
             fullWidth
             {...form.register("new_challenge.name", FormOptions.Name128Required)}
           />
           <TextField
-            label="Description"
+            label={t_g("description")}
             multiline
             minRows={2}
             disabled={!isVerifier}
@@ -176,7 +185,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         <PlayerSelect type="all" value={player} onChange={(e, v) => setPlayer(v)} sx={{ mt: 2, mb: 1 }} />
       ) : (
         <Stack direction="row" gap={2} sx={{ mt: 2, mb: 1 }}>
-          <Typography variant="h6">Player:</Typography>
+          <Typography variant="h6">{t_g("player", { count: 1 })}:</Typography>
           <PlayerChip player={player} />
         </Stack>
       )}
@@ -188,14 +197,14 @@ export function FormSubmission({ submission, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Is FC"
+            label={t("is_fc")}
             checked={field.value}
             disabled={!isVerifier}
             control={<Checkbox />}
           />
         )}
       />
-      {isVerifier && (submission.is_verified || submission.is_rejected) ? (
+      {isVerifier && submission.is_verified !== null ? (
         <>
           <Controller
             control={form.control}
@@ -204,20 +213,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             render={({ field }) => (
               <FormControlLabel
                 onChange={field.onChange}
-                label="Is Verified"
-                checked={field.value}
-                control={<Checkbox />}
-              />
-            )}
-          />
-          <Controller
-            control={form.control}
-            name="is_rejected"
-            defaultValue={submission.is_rejected}
-            render={({ field }) => (
-              <FormControlLabel
-                onChange={field.onChange}
-                label="Is Rejected"
+                label={t("is_verified")}
                 checked={field.value}
                 control={<Checkbox />}
               />
@@ -228,7 +224,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
       <TextField
         {...form.register("proof_url")}
-        label="Proof URL*"
+        label={t("proof_url") + " *"}
         disabled={!isVerifier}
         fullWidth
         sx={{ my: 2 }}
@@ -239,7 +235,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
       {submission.raw_session_url ? (
         <TextField
           {...form.register("raw_session_url")}
-          label="Raw Session URL"
+          label={t("raw_session_url") + " *"}
           fullWidth
           sx={{ mt: 2 }}
           disabled={!isVerifier}
@@ -248,7 +244,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
       ) : null}
       <TextField
         {...form.register("player_notes")}
-        label="Player Notes"
+        label={t("player_notes")}
         multiline
         rows={2}
         fullWidth
@@ -263,7 +259,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             name="suggested_difficulty_id"
             render={({ field }) => (
               <DifficultySelectControlled
-                label="Suggested Difficulty"
+                label={t_a("components.difficulty_select.label")}
                 difficultyId={field.value}
                 setDifficultyId={field.onChange}
                 isSuggestion
@@ -279,13 +275,13 @@ export function FormSubmission({ submission, onSave, ...props }) {
             render={({ field }) => (
               <FormControlLabel
                 onChange={field.onChange}
-                label="Is Personal"
+                label={t("is_personal")}
                 checked={field.value}
                 control={<Checkbox />}
               />
             )}
           />
-          <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+          <TooltipInfoButton title={t("personal_note")} />
         </Grid>
       </Grid>
 
@@ -293,7 +289,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         <ListItem>
           <ListItemText
             primary={jsonDateToJsDate(submission.date_created).toLocaleString()}
-            secondary="Date Submitted"
+            secondary={t("date_submitted")}
           />
         </ListItem>
         {submission.is_verified !== null ? (
@@ -303,13 +299,13 @@ export function FormSubmission({ submission, onSave, ...props }) {
                 primary={
                   submission.date_verified ? jsonDateToJsDate(submission.date_verified).toLocaleString() : "-"
                 }
-                secondary="Date Verified"
+                secondary={t("date_verified")}
               />
             </ListItem>
             <ListItem>
               <ListItemText
                 primary={submission.verifier ? submission.verifier.name : "Modded Golden Team"}
-                secondary="Verifier"
+                secondary={t("verifier")}
               />
             </ListItem>
           </>
@@ -319,7 +315,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
       {isVerifier ? (
         <TextField
           {...form.register("verifier_notes")}
-          label="Verifier Notes"
+          label={t("verifier_notes")}
           multiline
           rows={1}
           fullWidth
@@ -340,7 +336,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             onClick={onUpdateSubmit}
             disabled={submitDisabled}
           >
-            Update Submission
+            {t("buttons.update")}
           </Button>
         ) : (
           <Stack direction="row" gap={2}>
@@ -351,7 +347,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               onClick={onVerifySubmit}
               disabled={submitDisabled}
             >
-              Verify
+              {t("buttons.verify")}
             </Button>
             <Button
               variant="contained"
@@ -360,7 +356,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               onClick={onRejectSubmit}
               disabled={submitDisabled}
             >
-              Reject
+              {t("buttons.reject")}
             </Button>
           </Stack>
         )
@@ -372,7 +368,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           onClick={onUpdateSubmit}
           disabled={submitDisabled}
         >
-          Update Submission
+          {t("buttons.update")}
         </Button>
       )}
     </form>

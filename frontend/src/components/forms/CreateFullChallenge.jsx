@@ -102,7 +102,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         helperText={errors.campaign_name ? errors.campaign_name.message : ""}
       />
       <TextField
-        label={t_ca("url") + " *"}
+        label={t_g("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("campaign_url", FormOptions.UrlRequired)}

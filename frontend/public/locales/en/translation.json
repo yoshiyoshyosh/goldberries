@@ -28,6 +28,7 @@
       }
     },
     "name": "Name",
+    "url": "URL",
     "new": "New",
     "description": "Description"
   },
@@ -136,7 +137,6 @@
         "updated": "Campaign updated",
         "deleted": "Campaign deleted"
       },
-      "url": "URL",
       "icon_url": "Icon URL",
       "author_gb_id": "Author GameBanana ID",
       "author_gb_name": "Author GameBanana Name",
@@ -216,6 +216,43 @@
         "author_gb_name": "Author GameBanana Name"
       },
       "map_name": "Map Name"
+    },
+    "map": {
+      "feedback": {
+        "created": "Map created",
+        "updated": "Map updated"
+      },
+      "is_rejected": "Is Rejected",
+      "is_archived": "Is Archived",
+      "rejection_reason": "Rejection Reason",
+      "author_note": "Leave these blank if they match the author of the campaign.",
+      "buttons": {
+        "create": "Create Map",
+        "update": "Update Map"
+      }
+    },
+    "submission": {
+      "feedback": {
+        "updated": "Submission updated"
+      },
+      "status_prefix": "Status:",
+      "new_challenge_title": "New Challenge Details",
+      "is_fc": "Is FC",
+      "is_verified": "Is Verified",
+      "proof_url": "Proof URL",
+      "raw_session_url": "Raw Session URL",
+      "player_notes": "Player Notes",
+      "is_personal": "Is Personal",
+      "personal_note": "'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements",
+      "date_submitted": "Date Submitted",
+      "date_verified": "Date Verified",
+      "verifier": "Verifier",
+      "verifier_notes": "Verifier Notes",
+      "buttons": {
+        "update": "Update Submission",
+        "verify": "Verify",
+        "reject": "Reject"
+      }
     }
   },
   "navigation": {

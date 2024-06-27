@@ -16,8 +16,10 @@ import { useEffect, useMemo } from "react";
 import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 import { getQueryData } from "../../hooks/useApi";
+import { useTranslation } from "react-i18next";
 
 export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["map", id],
     queryFn: () => fetchMap(id),
@@ -50,14 +52,18 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
   if (query.isLoading || query.isFetching) {
     return (
       <>
-        <Typography variant="h6">Map ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("map", { count: 1 })} ({id})
+        </Typography>
         <LoadingSpinner />
       </>
     );
   } else if (query.isError) {
     return (
       <>
-        <Typography variant="h6">Map ({id})</Typography>
+        <Typography variant="h6">
+          {t_g("map", { count: 1 })} ({id})
+        </Typography>
         <ErrorDisplay error={query.error} />
       </>
     );
@@ -67,6 +73,10 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
 }
 
 export function FormMap({ map, onSave, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.map" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_ch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
+  const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
   const queryClient = useQueryClient();
 
   const newMap = map.id === null;
@@ -77,7 +87,7 @@ export function FormMap({ map, onSave, ...props }) {
       queryClient.invalidateQueries(["map", map.id]);
       queryClient.invalidateQueries(["submission_queue"]);
       queryClient.invalidateQueries(["manage_challenges"]);
-      toast.success("Map " + (newMap ? "created" : "updated") + "!");
+      toast.success(t(newMap ? "feedback.created" : "feedback.updated"));
       if (onSave) onSave(response.data);
     },
   });
@@ -104,7 +114,7 @@ export function FormMap({ map, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        Map ({newMap ? "New" : map.id})
+        {t_g("map", { count: 1 })} ({newMap ? t_g("new") : map.id})
       </Typography>
 
       <Controller
@@ -122,13 +132,13 @@ export function FormMap({ map, onSave, ...props }) {
       <Divider sx={{ my: 2 }} />
 
       <TextField
-        label="Name"
+        label={t_g("name")}
         fullWidth
         {...form.register("name", FormOptions.Name128Required)}
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />
-      <TextField label="URL" sx={{ mt: 2 }} fullWidth {...form.register("url")} />
+      <TextField label={t_g("url")} sx={{ mt: 2 }} fullWidth {...form.register("url")} />
 
       <Controller
         control={form.control}
@@ -137,7 +147,7 @@ export function FormMap({ map, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Has FC"
+            label={t_ch("has_fc")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -150,7 +160,7 @@ export function FormMap({ map, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Is Rejected"
+            label={t("is_rejected")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -163,7 +173,7 @@ export function FormMap({ map, onSave, ...props }) {
         render={({ field }) => (
           <FormControlLabel
             onChange={field.onChange}
-            label="Is Archived"
+            label={t("is_archived")}
             checked={field.value}
             control={<Checkbox />}
           />
@@ -172,7 +182,7 @@ export function FormMap({ map, onSave, ...props }) {
 
       {is_rejected && (
         <TextField
-          label="Rejection Reason"
+          label={t("rejection_reason")}
           sx={{ mt: 2 }}
           fullWidth
           {...form.register("rejection_reason", { requires: true })}
@@ -181,14 +191,14 @@ export function FormMap({ map, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label="Author GameBanana ID" fullWidth {...form.register("author_gb_id")} />
+      <TextField label={t_ca("author_gb_id")} fullWidth {...form.register("author_gb_id")} />
       <TextField
-        label="Author GameBanana Name"
+        label={t_ca("author_gb_name")}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("author_gb_name")}
       />
-      <FormHelperText>Leave these blank if they match the author of the campaign.</FormHelperText>
+      <FormHelperText>{t("author_note")}</FormHelperText>
 
       <Divider sx={{ my: 2 }} />
 
@@ -199,7 +209,7 @@ export function FormMap({ map, onSave, ...props }) {
         onClick={onUpdateSubmit}
         disabled={campaign === null}
       >
-        {newMap ? "Create" : "Update"} Map
+        {t(newMap ? "buttons.create" : "buttons.update")}
       </Button>
     </form>
   );

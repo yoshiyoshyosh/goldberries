@@ -26,6 +26,7 @@
       }
     },
     "name": "Name",
+    "url": "URL",
     "new": "Neu",
     "description": "Beschreibung"
   },
@@ -134,7 +135,6 @@
         "updated": "Campaign aktualisiert",
         "deleted": "Campaign gelöscht"
       },
-      "url": "URL",
       "icon_url": "Icon URL",
       "author_gb_id": "Autor GameBanana ID",
       "author_gb_name": "Autor GameBanana Name",
@@ -214,6 +214,43 @@
         "author_gb_name": "Autor GameBanana Name"
       },
       "map_name": "Map Name"
+    },
+    "map": {
+      "feedback": {
+        "created": "Map erstellt",
+        "updated": "Map aktualisiert"
+      },
+      "is_rejected": "Ist Abgelehnt",
+      "is_archived": "Ist Archiviert",
+      "rejection_reason": "Ablehnungsgrund",
+      "author_note": "Lass diese Felder leer, wenn sie dem Autor der Campaign entsprechen.",
+      "buttons": {
+        "create": "Map Erstellen",
+        "update": "Map Aktualisieren"
+      }
+    },
+    "submission": {
+      "feedback": {
+        "updated": "Submission aktualisiert"
+      },
+      "status_prefix": "Status:",
+      "new_challenge_title": "Neue Challenge Details",
+      "is_fc": "Ist FC",
+      "is_verified": "Ist Verifiziert",
+      "proof_url": "Beweis URL",
+      "raw_session_url": "Rohe Sitzung URL",
+      "player_notes": "Player Notiz",
+      "is_personal": "Ist Persönlich",
+      "personal_note": "'Persönliche' Schwierigkeitsempfehlungen zeigen, dass diese Empfehlung nicht für offizielle Platzierungen verwendet werden soll.",
+      "date_submitted": "Datum Eingereicht",
+      "date_verified": "Datum Verifiziert",
+      "verifier": "Verifier",
+      "verifier_notes": "Verifier Notiz",
+      "buttons": {
+        "update": "Submission Aktualisieren",
+        "verify": "Verifizieren",
+        "reject": "Ablehnen"
+      }
     }
   },
   "navigation": {

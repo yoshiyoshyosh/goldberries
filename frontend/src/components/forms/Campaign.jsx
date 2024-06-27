@@ -132,7 +132,7 @@ export function FormCampaign({ campaign, onSave, ...props }) {
         helperText={errors.name ? errors.name.message : ""}
       />
       <TextField
-        label={t("url") + " *"}
+        label={t_g("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
         {...form.register("url", FormOptions.UrlRequired)}
