@@ -29,7 +29,9 @@
     "name": "Name",
     "url": "URL",
     "new": "Neu",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "date": "Datum",
+    "time": "Zeit"
   },
   "components": {
     "difficulty_select": {
@@ -405,6 +407,32 @@
         "new_challenge": "Neue Challenge",
         "create_full_challenge": "Komplette Challenge Erstellen",
         "mass_add_maps": "Viele Maps zu Campaign Hinzufügen"
+      }
+    },
+    "logs": {
+      "title": "Logs",
+      "no_logs": "Keine Logs gefunden",
+      "topic": "Thema",
+      "level": "Level",
+      "search": "Suche",
+      "message": "Nachricht"
+    },
+    "submission_queue": {
+      "feedback": {
+        "viewing_gone": "Die ausgewählte Submission ist nicht mehr in der Warteschlange. Sie wurde entweder von jemand anderem gelöscht oder verifiziert",
+        "all_verified": "Alle ausgewählten Submissions wurden verifiziert",
+        "all_rejected": "Alle ausgewählten Submissions wurden abgelehnt"
+      },
+      "title": "Submission Warteschlange",
+      "title_with_count": "({{count}}) Submission Warteschlange",
+      "queue_empty": "Keine Submissions in der Warteschlange",
+      "selected": "{{count}} Ausgewählt",
+      "total": "Submissions ({{count}} Gesamt)",
+      "note_placeholder": "Verifier Notiz / Ablehnungsgrund",
+      "or": "ODER",
+      "buttons": {
+        "verify": "'{{count}}' Ausgewählte Verifizieren",
+        "reject": "'{{count}}' Ausgewählte Ablehnen"
       }
     }
   },

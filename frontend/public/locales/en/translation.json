@@ -32,7 +32,9 @@
     "url": "URL",
     "new": "New",
     "description": "Description",
-    "all": "All"
+    "all": "All",
+    "date": "Date",
+    "time": "Time"
   },
   "components": {
     "difficulty_select": {
@@ -409,6 +411,32 @@
         "new_challenge": "New Challenge",
         "create_full_challenge": "Create Full Challenge",
         "mass_add_maps": "Mass Add Maps to Campaign"
+      }
+    },
+    "logs": {
+      "title": "Logs",
+      "no_logs": "No logs found",
+      "topic": "Topic",
+      "level": "Level",
+      "search": "Search",
+      "message": "Message"
+    },
+    "submission_queue": {
+      "feedback": {
+        "viewing_gone": "The submission you were viewing is no longer in the queue. It was either deleted or verified by someone else",
+        "all_verified": "All selected submissions have been verified",
+        "all_rejected": "All selected submissions have been rejected"
+      },
+      "title": "Submission Queue",
+      "title_with_count": "({{count}}) Submission Queue",
+      "queue_empty": "No submissions in queue",
+      "selected": "{{count}} Selected",
+      "total": "Submissions ({{count}} total)",
+      "note_placeholder": "Verify Note / Reject Reason",
+      "or": "OR",
+      "buttons": {
+        "verify": "Verify '{{count}}' Selected",
+        "reject": "Reject '{{count}}' Selected"
       }
     }
   },

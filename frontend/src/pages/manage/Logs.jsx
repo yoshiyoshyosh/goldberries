@@ -34,10 +34,10 @@ import { toast } from "react-toastify";
 import { jsonDateToJsDate } from "../../util/util";
 import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
 import { getQueryData, useDeleteLogEntry, useGetLogs } from "../../hooks/useApi";
+import { useTranslation } from "react-i18next";
 
 export function PageLogs() {
-  const auth = useAuth();
-  const navigate = useNavigate();
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.logs" });
   const [filter, setFilter] = useLocalStorage("logs_filter", {
     page: 1,
     perPage: 25,
@@ -74,7 +74,7 @@ export function PageLogs() {
   if (!query.isSuccess && query.isLoading) {
     return (
       <BasicContainerBox maxWidth="lg">
-        <HeadTitle title="Logs" />
+        <HeadTitle title={t("title")} />
         <LogFilter filter={filter} setFilter={handleFilterChange} />
         <LoadingSpinner />
       </BasicContainerBox>
@@ -82,7 +82,7 @@ export function PageLogs() {
   } else if (query.isError) {
     return (
       <BasicContainerBox maxWidth="lg">
-        <HeadTitle title="Logs" />
+        <HeadTitle title={t("title")} />
         <LogFilter filter={filter} setFilter={handleFilterChange} />
         <ErrorDisplay error={query.error} />
       </BasicContainerBox>
@@ -93,9 +93,9 @@ export function PageLogs() {
 
   return (
     <BasicContainerBox maxWidth="lg">
-      <HeadTitle title="Logs" />
+      <HeadTitle title={t("title")} />
       <LogFilter filter={filter} setFilter={handleFilterChange} />
-      {logs.length === 0 && <Typography variant="body2">No logs found.</Typography>}
+      {logs.length === 0 && <Typography variant="body2">{t("no_logs")}</Typography>}
       {logs.length > 0 && (
         <LogsTable
           logs={logs}
@@ -112,6 +112,8 @@ export function PageLogs() {
 }
 
 function LogFilter({ filter, setFilter }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.logs" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const levels = [
     { value: "debug", label: "Debug" },
     { value: "info", label: "Info" },
@@ -169,7 +171,7 @@ function LogFilter({ filter, setFilter }) {
           style={dateInputStyle}
         />
         <TextField
-          label="Topic"
+          label={t("topic")}
           select
           value={filter.topic}
           onChange={(e) => setFilter("topic", e.target.value)}
@@ -177,7 +179,7 @@ function LogFilter({ filter, setFilter }) {
           SelectProps={{ MenuProps: { disableScrollLock: true } }}
         >
           <MenuItem value="">
-            <em>All</em>
+            <em>{t_g("all")}</em>
           </MenuItem>
           <Divider />
           {topics.map((topic, index) => {
@@ -190,7 +192,7 @@ function LogFilter({ filter, setFilter }) {
           })}
         </TextField>
         <TextField
-          label="Level"
+          label={t("level")}
           select
           value={filter.level}
           onChange={(e) => setFilter("level", e.target.value)}
@@ -198,7 +200,7 @@ function LogFilter({ filter, setFilter }) {
           SelectProps={{ MenuProps: { disableScrollLock: true } }}
         >
           <MenuItem value="">
-            <em>All</em>
+            <em>{t_g("all")}</em>
           </MenuItem>
           {levels.map((level) => (
             <MenuItem key={level.value} value={level.value}>
@@ -207,7 +209,7 @@ function LogFilter({ filter, setFilter }) {
           ))}
         </TextField>
         <TextField
-          label="Search"
+          label={t("search")}
           value={filter.search}
           onChange={(e) => setFilter("search", e.target.value)}
           fullWidth
@@ -218,6 +220,8 @@ function LogFilter({ filter, setFilter }) {
 }
 
 function LogsTable({ logs, maxCount, deleteLog, page, setPage, perPage, setPerPage }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.logs" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const canDelete = auth.isAdmin;
 
@@ -226,11 +230,11 @@ function LogsTable({ logs, maxCount, deleteLog, page, setPage, perPage, setPerPa
       <Table sx={{ minWidth: 650 }} size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Time</TableCell>
-            <TableCell align="center">Level</TableCell>
-            <TableCell align="center">Topic</TableCell>
-            <TableCell align="left">Message</TableCell>
+            <TableCell>{t_g("date")}</TableCell>
+            <TableCell>{t_g("time")}</TableCell>
+            <TableCell align="center">{t("level")}</TableCell>
+            <TableCell align="center">{t("topic")}</TableCell>
+            <TableCell align="left">{t("message")}</TableCell>
             <TableCell align="center"></TableCell>
           </TableRow>
         </TableHead>
@@ -268,10 +272,11 @@ function LogsTable({ logs, maxCount, deleteLog, page, setPage, perPage, setPerPa
         </TableBody>
       </Table>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: "All" }]}
+        rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: t_g("all") }]}
         component="div"
         count={maxCount}
         rowsPerPage={perPage}
+        labelRowsPerPage={t_g("table_rows_per_page")}
         page={page - 1}
         onPageChange={(e, newPage) => setPage(newPage + 1)}
         onRowsPerPageChange={(e) => {

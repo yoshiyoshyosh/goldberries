@@ -18,7 +18,6 @@ import {
   TablePagination,
   TableRow,
   TextField,
-  Toolbar,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -27,8 +26,10 @@ import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
 import { getChallengeCampaign } from "../../util/data_util";
+import { useTranslation } from "react-i18next";
 
 export function PageSubmissionQueue() {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
   const { submission } = useParams();
   const defaultSubmission = submission === undefined ? null : parseInt(submission);
   const [submissionId, setSubmissionId] = useState(defaultSubmission ?? null);
@@ -53,16 +54,12 @@ export function PageSubmissionQueue() {
       updateSubmissionId(queue[0].id);
     } else if (submissionId !== null) {
       if (queue.length === 0) {
-        toast.info(
-          "The submission you were viewing is no longer in the queue. It was either deleted or verified by someone else."
-        );
+        toast.info(t("feedback.viewing_gone"));
         updateSubmissionId(null);
       } else {
         const index = queue.findIndex((submission) => submission.id === submissionId);
         if (index === -1) {
-          toast.info(
-            "The submission you were viewing is no longer in the queue. It was either deleted or verified by someone else."
-          );
+          toast.info(t("feedback.viewing_gone"));
           goToNextSubmission({ id: submissionId });
         }
       }
@@ -74,7 +71,7 @@ export function PageSubmissionQueue() {
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
         <Typography variant="h4" sx={{ mt: 0 }}>
-          Submission Queue
+          {t("title")}
         </Typography>
         <LoadingSpinner />
       </BasicContainerBox>
@@ -83,7 +80,7 @@ export function PageSubmissionQueue() {
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
         <Typography variant="h4" sx={{ mt: 0 }}>
-          Submission Queue
+          {t("title")}
         </Typography>
         <ErrorDisplay error={query.error} />
       </BasicContainerBox>
@@ -107,7 +104,7 @@ export function PageSubmissionQueue() {
     updateSubmissionId(nextSubmission.id);
   };
 
-  const title = "(" + queue.length + ") Submission Queue";
+  const title = t("title_with_count", { count: queue.length });
 
   return (
     <>
@@ -134,7 +131,7 @@ export function PageSubmissionQueue() {
         {submissionId !== null ? (
           <FormSubmissionWrapper id={submissionId} onSave={goToNextSubmission} />
         ) : (
-          <Typography variant="body1">No submissions in queue</Typography>
+          <Typography variant="body1">{t("queue_empty")}</Typography>
         )}
       </BasicContainerBox>
     </>
@@ -142,6 +139,9 @@ export function PageSubmissionQueue() {
 }
 
 function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_a } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useLocalStorage("submission_queue_rows_per_page", 10);
   const [selected, setSelected] = useState([]);
   const [note, setNote] = useState("");
@@ -193,7 +193,7 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
     Promise.all(promises)
       .then(() => {
         setSelected([]);
-        toast.success(`All selected submissions have been ${verified ? "verified" : "rejected"}.`);
+        toast.success(t(verified ? "feedback.all_verified" : "feedback.all_rejected"));
       })
       .catch(() => {
         //Do nothing, error is handled by usePostSubmission
@@ -213,9 +213,9 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
             </TableCell>
             <TableCell sx={{ pl: 1 }}>
               {selected.length > 0 ? (
-                <Typography variant="h6">Selected {selected.length}</Typography>
+                <Typography variant="h6">{t("selected", { count: selected.length })}</Typography>
               ) : (
-                <Typography variant="h6">Submissions ({queue.length} total)</Typography>
+                <Typography variant="h6">{t("total", { count: queue.length })}</Typography>
               )}
             </TableCell>
           </TableRow>
@@ -224,7 +224,7 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
           {queue.length === 0 && (
             <TableRow>
               <TableCell colSpan={2}>
-                <Typography variant="body1">No submissions in queue</Typography>
+                <Typography variant="body1">{t("queue_empty")}</Typography>
               </TableCell>
             </TableRow>
           )}
@@ -244,8 +244,8 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
         </TableBody>
       </Table>
       <TablePagination
-        labelRowsPerPage="Per page"
-        rowsPerPageOptions={[5, 10, 25, 50, 100, { label: "All", value: -1 }]}
+        labelRowsPerPage={t_g("table_rows_per_page")}
+        rowsPerPageOptions={[5, 10, 25, 50, 100, { label: t_g("all"), value: -1 }]}
         component="div"
         count={queue.length}
         rowsPerPage={rowsPerPage}
@@ -267,22 +267,22 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
         <Grid container spacing={1} sx={{ p: 1 }}>
           <Grid item xs={12} md={12}>
             <TextField
-              label="Verifier Note"
+              label={t_a("forms.submission.verifier_notes")}
               fullWidth
               variant="outlined"
-              placeholder="Verify Note / Reject Reason"
+              placeholder={t("note_placeholder")}
               value={note}
               onChange={(event) => setNote(event.target.value)}
             />
           </Grid>
           <Grid item xs={12} md={12}>
             <Button variant="contained" fullWidth color="success" onClick={() => verifyAll(true)}>
-              Verify '{selected.length}' Selected
+              {t("buttons.verify", { count: selected.length })}
             </Button>
           </Grid>
           <Grid item xs={12} md={12}>
             <Divider>
-              <Chip label="OR" size="small" />
+              <Chip label={t("or")} size="small" />
             </Divider>
           </Grid>
           <Grid item xs={12} md={12}>
@@ -293,7 +293,7 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
               onClick={() => verifyAll(false)}
               disabled={note === ""}
             >
-              Reject '{selected.length}' Selected
+              {t("buttons.reject", { count: selected.length })}
             </Button>
           </Grid>
         </Grid>
