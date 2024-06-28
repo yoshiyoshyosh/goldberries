@@ -1,0 +1,507 @@
+{
+  "hello_world": "Hello World!",
+  "general": {
+    "campaign_one": "Campagne",
+    "campaign_other": "Campagnes",
+    "map_one": "Map",
+    "map_other": "Maps",
+    "challenge_one": "Challenge",
+    "challenge_other": "Challenges",
+    "submission_one": "Entrée",
+    "submission_other": "Entrées",
+    "player_one": "Joueur·euse",
+    "player_other": "Joueur·euses",
+    "difficulty_one": "Difficulté",
+    "difficulty_other": "Difficultés",
+    "objective_one": "Objectif",
+    "objective_other": "Objectifs",
+    "account_one": "Compte",
+    "account_other": "Comptes",
+    "table_per_page": "par page :",
+    "table_rows_per_page": "Colonnes par page :",
+    "modals": {
+      "buttons": {
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "save": "Sauvegarder",
+        "close": "Fermer",
+        "update": "Mettre à jour"
+      }
+    },
+    "name": "Nom",
+    "url": "Lien",
+    "new": "Nouveau",
+    "description": "Description",
+    "all": "Tout",
+    "date": "Date",
+    "time": "Heure"
+  },
+  "components": {
+    "difficulty_select": {
+      "label": "Difficulté ressentie",
+      "no_suggestion": "Laisser vide",
+      "no_selection": "Non sélectionné"
+    },
+    "difficulty_chip": {
+      "personal_tooltip": "Cette difficulté ressentie est personnelle et ne doit pas être utilisée pour le classement de cette map."
+    },
+    "verification_status_chip": {
+      "verified": "Vérifiée",
+      "pending": "En attente",
+      "rejected": "Refusée"
+    },
+    "full_challenge_select": {
+      "full_game_label": "Sélectionne une map OU un challenge Full Game"
+    },
+    "verifier_icon": "Membre de la Modded Golden Team",
+    "admin_icon": "Admin du site",
+    "suspended_icon": {
+      "with_reason": "Cette personne est suspendue : {{reason}}",
+      "no_reason": "Cette personne est suspendue"
+    },
+    "input_methods": {
+      "keyboard": "Clavier",
+      "dpad": "Manette (Croix directionnelle)",
+      "analog": "Manette (Joystick)",
+      "hybrid": "Hybride",
+      "other": "Autre"
+    },
+    "gamebanana_embed": {
+      "alt": "Bannière de la campagne"
+    },
+    "loading": "Chargement",
+    "error": "Erreur",
+    "video_embed": {
+      "error": "L’intégration de la vidéo a échoué :"
+    },
+    "external_link": {
+      "warning": "Tu t’apprêtes à ouvrir un lien externe. Clique-ici pour continuer :"
+    },
+    "share_button": {
+      "copy_link": "Copier le lien",
+      "copied": "Copié !"
+    },
+    "recent_submissions": {
+      "title": "Entrées récentes",
+      "show": "Afficher :",
+      "no_pending": "Aucune entrée en attente trouvée",
+      "no_verified": "Aucune entrée vérifiée trouvée",
+      "no_rejected": "Aucune entrée rejetée trouvée",
+      "new_challenge": "Nouveau challenge :",
+      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données !"
+    },
+    "changelog": {
+      "name": "Changelog",
+      "no_changes_yet": "Pas de changements pour le moment",
+      "entry_deleted": "Entrée supprimée",
+      "entry_delete_confirm": "Veux-tu vraiment supprimer cette entrée ?",
+      "entry_delete_modal_title": "Supprimer l’entrée ?",
+      "moved_from": "Déplacé de"
+    },
+    "stats": {
+      "no_suggestions_yet": "Pas de difficultée ressentie pour le moment"
+    },
+    "top_golden_list": {
+      "use_suggested": "Utiliser les difficultés ressenties pour le classement",
+      "empty": "C’est un peu vide ici. Obtiens des goldens de la Top Golden List afin de peupler ta propre liste !",
+      "note_number_people": "Cette colonne indique le nombre de personnes ayant effectué un challenge",
+      "note_suggested_difficulties": "Les difficultés ressenties de ce·cette joueur·euse",
+      "note_video_link": "Ces liens mènent à la vidéo du premier clear d’un challenge",
+      "placement_difficulty": "Positionnement de cette difficulté :"
+    }
+  },
+  "forms": {
+    "account": {
+      "feedback": {
+        "updated": "Compte mis à jour",
+        "deleted": "Compte supprimé"
+      },
+      "button_update": "Mettre à jour son compte",
+      "claimed_player": "Joueur·euse réclamé·e",
+      "new_email": "Nouvel email",
+      "email_verified": "Email Verifié",
+      "new_password": "Nouveau mot de passe",
+      "unlink_discord": "Se déconnecter de Discord",
+      "user_links": "Liens",
+      "suspended": "Suspendu",
+      "suspension_reason": "Raison de suspension",
+      "is_verifier": "Est vérificateur·trice",
+      "is_admin": "Est admin",
+      "logout_user": "Déconnecter ce compte",
+      "delete": {
+        "title": "Supprimer ce compte",
+        "description": "Veux-tu vraiment supprimer ce compte ? Tu ne pourras pas faire demi-tour.",
+        "confirm": "Confirmer",
+        "button": "Supprimer ce compte"
+      }
+    },
+    "campaign": {
+      "feedback": {
+        "created": "Campagne créée",
+        "updated": "Campagne mise à jour",
+        "deleted": "Campaign supprimée"
+      },
+      "icon_url": "Lien de l’icône",
+      "author_gb_id": "ID GameBanana de l’auteur·trice",
+      "author_gb_name": "Nom GameBanana de l’auteur·trice",
+      "sort_category_major": "Tri majeur des maps",
+      "sort_category_minor": "Tri mineur des maps",
+      "buttons": {
+        "create": "Créer cette campagne",
+        "update": "Mettre à jour cette campagne"
+      },
+      "sort_editor": {
+        "delete": "Supprimer",
+        "add": "Ajouter une étiquette"
+      },
+      "edit_maps": {
+        "feedback": {
+          "updated": "Maps de la campagne mises à jour",
+          "deleted_one": "1 map supprimée",
+          "deleted_other": "{{count}} maps supprimées"
+        },
+        "order": "Ordre",
+        "delete_map": "Supprimer cette map",
+        "undo_delete": "Annuler la suppression",
+        "confirm_delete_one": "Veux-tu vraiment supprimer 1 map ? Tu ne pourras pas revenir en arrière !",
+        "confirm_delete_other": "Veux-tu vraiment supprimer '{{count}}' maps ? Tu ne pourras pas revenir en arrière !",
+        "confirm_delete_label_one": "Oui, supprimer '1' map ainsi que tous les challenges & les entrées qui y sont liés.",
+        "confirm_delete_label_other": "Oui, supprimer '{{count}}' maps ainsi que tous les challenges & les entrées qui y sont liés.",
+        "save_maps": "Sauvegarder ces maps"
+      }
+    },
+    "campaign_mass_add_maps": {
+      "feedback": {
+        "adding_one": "Ajout d’une map ({{current}}/{{count}})",
+        "adding_other": "Ajout de plusieurs maps ({{current}}/{{count}})"
+      },
+      "title": "Ajout de masse de maps",
+      "step": "Étape {{current}} / {{total}}",
+      "next": "Suivant",
+      "back": "Retour",
+      "step_1": {
+        "helper": "Chaque ligne correspond au nom d’une map.",
+        "label": "Nom des maps"
+      },
+      "step_2": {
+        "helper": "Indique quels challenges tu souhaites ajouter à ces maps.",
+        "map_name": "Nom de la map",
+        "generate_challenges": "Générer des challenges",
+        "c_fc_distinct": "Clear et FC séparés",
+        "create_maps": "Créer ces maps"
+      }
+    },
+    "challenge": {
+      "feedback": {
+        "created": "Challenge créé",
+        "updated": "Challenge mis à jour"
+      },
+      "full_game_notice": "Ne pas sélectionner de map signifie qu’il s’agit d’un challenge Full Game.",
+      "requires_fc": "Nécessite le FC",
+      "has_fc": "A un FC",
+      "is_arbitrary": "Est arbitraire",
+      "sort_order": "Trier l’ordre",
+      "buttons": {
+        "create": "Créer ce challenge",
+        "update": "Mettre à jour ce challenge"
+      }
+    },
+    "create_full_challenge": {
+      "feedback": {
+        "campaign": "Campagne créée",
+        "map": "Map créée",
+        "challenge": "Challenge créé"
+      },
+      "title": "Créer un challenge Full Game",
+      "campaign": {
+        "name": "Nom de la campagne",
+        "url": "Lien de la campagne",
+        "author_gb_id": "ID GameBanana de l’auteur·ice",
+        "author_gb_name": "Nom GameBanana de l’auteur·ice"
+      },
+      "map_name": "Nom de la map"
+    },
+    "map": {
+      "feedback": {
+        "created": "Map créée",
+        "updated": "Map mise à jour"
+      },
+      "is_rejected": "Est rejetée",
+      "is_archived": "Est archivée",
+      "rejection_reason": "Raison de rejet",
+      "author_note": "Laisse ces espaces vides s’ils correspondent à l’auteur·trice de la map.",
+      "buttons": {
+        "create": "Créer cette map",
+        "update": "Mettre à jour cette map"
+      }
+    },
+    "submission": {
+      "feedback": {
+        "updated": "Entrée mise à jour"
+      },
+      "status_prefix": "Statut :",
+      "new_challenge_title": "Détails du nouveau challenge",
+      "is_fc": "Est un FC",
+      "is_verified": "Est vérifié",
+      "proof_url": "Lien de la preuve",
+      "raw_session_url": "Lien de la session complète",
+      "player_notes": "Notes personnelles",
+      "is_personal": "Est personnelle",
+      "personal_note": "Les difficultés ressenties sont indiquées comme étant « personnelles » lorsqu’elles ne doivent pas être utilisées pour le classement d’un challenge",
+      "date_submitted": "Date de soumission",
+      "date_verified": "Date de vérification",
+      "verifier": "Vérification",
+      "verifier_notes": "Notes de vérification",
+      "buttons": {
+        "update": "Mettre à jour cette entrée",
+        "verify": "Vérifier",
+        "reject": "Rejeter"
+      }
+    }
+  },
+  "hooks": {
+    "auth": {
+      "logout_success": "Déconnexion réussie",
+      "not_logged_in": "Il faut d’abord se connecter"
+    }
+  },
+  "navigation": {
+    "top_golden_list": "Top Golden List",
+    "campaigns_menu": {
+      "name": "Campagnes",
+      "campaign_list": "Liste de campagnes",
+      "rejected_maps": "Maps rejetées"
+    },
+    "other_menu": {
+      "name": "Autres",
+      "suggestion_box": "Boîte à suggestions",
+      "monthly_recap": "Récap’ du mois"
+    },
+    "internal_menu": {
+      "name": "Interne",
+      "logs": "Logs",
+      "submission_queue": "File d’attente des entrées",
+      "manage_challenges": "Gérer les challenges",
+      "manage_accounts": "Gérer les comptes"
+    },
+    "widgets": {
+      "submission_queue": "Entrées en attente",
+      "player_claims": "Ouvrir les réclamations de joueur·euses"
+    },
+    "submit": "Ajouter",
+    "login": "Connexion",
+    "search": "Recherche",
+    "settings": "Paramètres",
+    "switch_to_light_mode": "Basculer en mode clair",
+    "switch_to_dark_mode": "Basculer en mode sombre",
+    "player_menu": {
+      "name": "Mon compte",
+      "claim_a_player": "Réclamer un·e joueur·euse",
+      "my_player_page": "Ma page de joueur·euse",
+      "my_top_goldens": "Mes Top Goldens",
+      "logout": "Déconnexion"
+    }
+  },
+  "manage": {
+    "accounts": {
+      "title": "Gérer les comptes",
+      "tabs": {
+        "accounts": {
+          "label": "Comptes",
+          "select": "Sélectionner un compte"
+        },
+        "player_claims": {
+          "label": "Réclamation de joueur·euses",
+          "feedback": {
+            "accepted": "Réclamation acceptée",
+            "rejected": "Réclamation refusée"
+          },
+          "id": "ID",
+          "no_claims": "Aucune réclamation",
+          "buttons": {
+            "accept": "Accepter",
+            "reject": "Refuser"
+          }
+        },
+        "player_rename": {
+          "label": "Renommage d’un·e joueur·euse",
+          "feedback": {
+            "renamed": "Joueur·euse renommé·e"
+          },
+          "select": "Sélectionner un·e joueur·euse",
+          "new_name": "Nouveau nom",
+          "log_change": "Noter ce renommage dans le changelog personnel",
+          "button": "Renommer ce·cette joueur·euse"
+        },
+        "player_delete": {
+          "label": "Supprimer un·e joueur·euse",
+          "feedback": {
+            "deleted": "Joueur·euse supprimée"
+          },
+          "note": "Supprimer un·e joueur·euse est une action irréversible et entraînera la suppression des entrées qui lui sont liées !",
+          "confirm": "Je comprends que cette action est irréversible",
+          "button": "Supprimer le compte de {{name}}"
+        }
+      }
+    },
+    "challenges": {
+      "title": "Gérer les challenges",
+      "search": "Recherche",
+      "num_sub": "# Ent.",
+      "buttons": {
+        "campaign": {
+          "edit": "Modifier",
+          "edit_maps": "Modifier ces maps",
+          "delete": "Supprimer"
+        },
+        "map": {
+          "edit": "Modifier",
+          "delete": "Supprimer"
+        },
+        "challenge": {
+          "edit": "Modifier",
+          "split": "Séparer ce challenge en deux",
+          "merge": "Fusionner ces challenges",
+          "mark_personal": "Indiquer comme étant personnelle",
+          "delete": "Supprimer"
+        }
+      },
+      "modals": {
+        "delete_campaign": {
+          "title": "Supprimer la campagne",
+          "description": "Veux-tu vraiment supprimer la campagne <strong>'{{name}}'</strong> ainsi que <strong>toutes les maps, challenges et entrées qui y sont liés</strong> ?"
+        },
+        "delete_map": {
+          "title": "Supprimer la map",
+          "description": "Veux-tu vraiment supprimer la map <strong>'{{name}}'</strong> ainsi que <strong>tous les challenges et entrées qui y sont liés</strong> ?"
+        },
+        "delete_challenge": {
+          "title": "Supprimer le challenge",
+          "description": "Veux-tu vraiment supprimer le challenge <strong>'{{name}}'</strong> de la map <strong>'{{map}}'</strong> ainsi que <strong>toutes les entrées qui y sont liées</strong> ?"
+        },
+        "mark_personal": {
+          "title": "Indiquer une difficultée ressentie comme étant personnelle",
+          "description": "Indiquer toutes les difficultés ressenties de <strong>'{{name}}'</strong> comme étant personnelles ?",
+          "impacted_one": "Pas plus de <strong>1</strong> entrée sera affectée.",
+          "impacted_other": "Pas plus de <strong>{{count}}</strong> entrées seront affectées.",
+          "button": "Indiquer comme étant personnelles",
+          "feedback": "Toutes les entrées ont été indiquées comme étant personnelles"
+        },
+        "merge_split_challenges": {
+          "feedback": {
+            "split": "Challenges séparés",
+            "merge": "Challenges fusionnées"
+          },
+          "title": "Séprarer / Fusionner des challenges",
+          "challenge_num": "Challenge {{num}}",
+          "split_note": "Ce challenge sera séparé en deux challenges C et FC. Toutes les entrées en FC seront automatiquement redirigées vers le challenge FC.",
+          "merge_note": "Les entrées du second challenge seront fusionnées avec celles du premier. Le premier challenge sera modifié en conséquence et le second sera supprimé après que toutes ses entrées aient été déplacées.",
+          "unable_to_merge": "Ce challenge ne peut pas être fusionné. Seuls un challenge clear normal et un challenge FC peuvent être fusionnés.",
+          "buttons": {
+            "split": "Séparer ce challenge en deux",
+            "merge": "Fusionner ces challenges",
+            "neither": "Séparer / Fusionner"
+          }
+        }
+      },
+      "create_any_button": {
+        "create": "Créer",
+        "new_campaign": "Nouvelle campagne",
+        "new_map": "Nouvelle map",
+        "new_challenge": "Nouveau challenge",
+        "create_full_challenge": "Créer un challenge Full Game",
+        "mass_add_maps": "Ajout de masse de maps à une campagne"
+      }
+    },
+    "logs": {
+      "title": "Logs",
+      "no_logs": "Aucun log trouvé",
+      "topic": "Sujet",
+      "level": "Niveau",
+      "search": "Recherche",
+      "message": "Message"
+    },
+    "submission_queue": {
+      "feedback": {
+        "viewing_gone": "L’entrée que tu observais ne se trouve plus dans la file. Elle a soit été supprimée, soit vérifiée par quelqu’un d’autre.",
+        "all_verified": "Toutes les entrées sélectionnées ont été vérifiées",
+        "all_rejected": "Toutes les entrées sélectionnées ont été rejetées"
+      },
+      "title": "File d’attente des entrées",
+      "title_with_count": "({{count}}) File d’attente des entrées",
+      "queue_empty": "Aucune entrée dans la file d’attente",
+      "selected": "{{count}} sélectionnées",
+      "total": "Entrées ({{count}} au total)",
+      "note_placeholder": "Note de vérification / Raison de rejet",
+      "or": "OU",
+      "buttons": {
+        "verify": "Vérifier '{{count}}'",
+        "reject": "Rejeter '{{count}}'"
+      }
+    }
+  },
+  "server_costs": {
+    "server_costs": {
+      "title": "Coûts du serveur",
+      "description": "Salut, c’est viddie. Sans grande surprise, faire tourner des serveurs n’est pas gratuit, et bien que je sois prêt à passer mes journées à gérer ce projet, quelqu’un doit bien payer le serveur. Ce site n’a pas (et n’aura jamais) de pubs. Si besoin, je suis capable de couvrir les frais de ma propre poche, mais si un ou plusieurs membres de la communauté souhaitent participer, ce serait avec grand plaisir !",
+      "table": {
+        "item": "Item",
+        "cost": "Prix",
+        "VPS": "VPS",
+        "domain": "Domaine",
+        "total": "Total",
+        "value": "{{value}} € / mois"
+      }
+    },
+    "costs_so_far": {
+      "title": "Coûts jusqu’à maintenant",
+      "description": {
+        "1": "Le serveur est en marche depuis",
+        "2": "avril 2024",
+        "3": "Ça fait jusqu’ici un total de",
+        "4": "{{months}} mois",
+        "5": ""
+      },
+      "table": {
+        "total_costs": "Prix total",
+        "total_donations": "Total des dons",
+        "total_difference": "Différence total"
+      },
+      "not_lose": "Voici le montant d’€ dont j’ai besoin pour ne pas perdre d’argent"
+    },
+    "stocked_up": {
+      "title": "Réserves",
+      "description": {
+        "1": "Le serveur peut encore tourner ",
+        "2": "{{months}} months",
+        "3": " uniquement grâce aux dons !"
+      },
+      "additional_months_one": "+ {{count}} mois supplémentaire !!!",
+      "additional_months_other": "+ {{count}} mois supplémentaire !!!"
+    },
+    "you_can_help": {
+      "title": "Tu peux aider",
+      "description": "Si tu souhaites participer à l’entretien du serveur, tu peux faire un don via une des méthodes suivantes :",
+      "table": {
+        "paypal_donation": "PayPal (Don, les frais de PayPal s’appliquent)",
+        "paypal_direct": "PayPal (Directement à moi, aucun frais)",
+        "paypal_website": "Sit de PayPal",
+        "note": "* Les dons ne se mettent pas à jour automatiquement, ils peuvent prendre un peu de temps avant d’apparaître."
+      }
+    },
+    "thank_you": {
+      "title": "Merci",
+      "description": "Si tu fais un don et souhaite apparaître sur cette page, laisse ton nom sur le message de don !",
+      "table": {
+        "date": "Date",
+        "amount": "Montant",
+        "name": "Nom",
+        "no_donations": "Pas de don pour le moment"
+      },
+      "post_donation": {
+        "text": "Merci beaucoup ! Tu remarqueras que ton nom n’apparaît pas directement sur la page des remerciements. Elle ne se met pas à jour automatiquement, donc les dons peuvent prendre un peu de temps avant d’être affichés. ",
+        "back": "Revenir à la page précédente"
+      }
+    }
+  }
+}

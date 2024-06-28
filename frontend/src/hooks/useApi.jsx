@@ -316,6 +316,10 @@ export function usePostMap(onSuccess) {
     mutationFn: (map) => postMap(map),
     onSuccess: (response, map) => {
       queryClient.invalidateQueries(["map", response.data.id]);
+      queryClient.invalidateQueries(["all_maps", response.data.campaign_id]);
+      queryClient.invalidateQueries(["campaign", response.data.campaign_id]);
+      queryClient.invalidateQueries(["submission_queue"]);
+      queryClient.invalidateQueries(["manage_challenges"]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },
@@ -328,7 +332,14 @@ export function usePostChallenge(onSuccess) {
   return useMutation({
     mutationFn: (challenge) => postChallenge(challenge),
     onSuccess: (response, challenge) => {
-      queryClient.invalidateQueries(["challenge", response.data.id]);
+      const responseChallenge = response.data;
+      queryClient.invalidateQueries(["challenge", responseChallenge.id]);
+      if (responseChallenge.map_id !== null) {
+        queryClient.invalidateQueries(["all_challenges", responseChallenge.map_id]);
+      } else {
+        queryClient.invalidateQueries(["all_challenges_campaign", responseChallenge.campaign_id]);
+        queryClient.invalidateQueries(["all_maps", responseChallenge.campaign_id]);
+      }
       queryClient.invalidateQueries(["submission_queue"]);
       queryClient.invalidateQueries(["manage_challenges"]);
       queryClient.invalidateQueries(["top_golden_list"]);

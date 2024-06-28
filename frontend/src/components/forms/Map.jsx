@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { useEffect, useMemo } from "react";
 import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
-import { getQueryData } from "../../hooks/useApi";
+import { getQueryData, usePostMap } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 
 export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
@@ -77,19 +77,12 @@ export function FormMap({ map, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_ch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
-  const queryClient = useQueryClient();
 
   const newMap = map.id === null;
 
-  const { mutate: saveMap } = useMutation({
-    mutationFn: (map) => postMap(map),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries(["map", map.id]);
-      queryClient.invalidateQueries(["submission_queue"]);
-      queryClient.invalidateQueries(["manage_challenges"]);
-      toast.success(t(newMap ? "feedback.created" : "feedback.updated"));
-      if (onSave) onSave(response.data);
-    },
+  const { mutate: saveMap } = usePostMap((data) => {
+    toast.success(t(newMap ? "feedback.created" : "feedback.updated"));
+    if (onSave) onSave(data);
   });
 
   const form = useForm({

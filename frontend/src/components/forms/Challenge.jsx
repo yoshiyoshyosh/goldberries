@@ -12,7 +12,7 @@ import {
   CampaignSelect,
   MapSelect,
 } from "../GoldberriesComponents";
-import { getQueryData } from "../../hooks/useApi";
+import { getQueryData, usePostChallenge } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
@@ -69,22 +69,14 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
 export function FormChallenge({ challenge, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const queryClient = useQueryClient();
   const [map, setMap] = useState(challenge.map);
   const [campaign, setCampaign] = useState(challenge.map?.campaign ?? challenge.campaign);
 
   const newChallenge = challenge.id === null;
 
-  const { mutate: saveChallenge } = useMutation({
-    mutationFn: (challenge) => postChallenge(challenge),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries(["challenge", challenge.id]);
-      queryClient.invalidateQueries(["submission_queue"]);
-      queryClient.invalidateQueries(["manage_challenges"]);
-      queryClient.invalidateQueries(["top_golden_list"]);
-      toast.success(t(newChallenge ? "feedback.created" : "feedback.updated"));
-      if (onSave) onSave(response.data);
-    },
+  const { mutate: saveChallenge } = usePostChallenge((data) => {
+    toast.success(t(newChallenge ? "feedback.created" : "feedback.updated"));
+    if (onSave) onSave(data);
   });
 
   const form = useForm({

@@ -317,6 +317,7 @@ function SubmissionQueueTableRow({
     (challenge === null ? "" : " - " + (map === null ? challenge.description : map.name));
   const textBottom = challenge === null ? "New Challenge: " + submission.new_challenge.name : campaign.name;
   const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;
+  const isNewChallenge = challenge === null;
   return (
     <TableRow
       key={submission.id}
@@ -324,7 +325,11 @@ function SubmissionQueueTableRow({
       sx={{ cursor: "pointer" }}
     >
       <TableCell sx={{ p: 0 }} width={1}>
-        <Checkbox checked={isSelected} onClick={(event) => onSelect(event, submission.id)} />
+        <Checkbox
+          checked={isSelected}
+          onClick={(event) => onSelect(event, submission.id)}
+          disabled={isNewChallenge}
+        />
       </TableCell>
       <TableCell
         onClick={() => {

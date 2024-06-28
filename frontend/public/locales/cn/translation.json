@@ -1,3 +1,507 @@
 {
-  "hello_world": "你好世界"
+  "hello_world": "你好，世界!",
+  "general": {
+    "campaign_one": "地图包",
+    "campaign_other": "地图包",
+    "map_one": "地图",
+    "map_other": "地图",
+    "challenge_one": "挑战项目",
+    "challenge_other": "挑战项目",
+    "submission_one": "提交内容",
+    "submission_other": "提交内容",
+    "player_one": "玩家",
+    "player_other": "玩家",
+    "difficulty_one": "难度",
+    "difficulty_other": "难度",
+    "objective_one": "项目",
+    "objective_other": "项目",
+    "account_one": "账号",
+    "account_other": "账号",
+    "table_per_page": "每页：",
+    "table_rows_per_page": "每页行数：",
+    "modals": {
+      "buttons": {
+        "delete": "删除",
+        "cancel": "取消",
+        "save": "保存",
+        "close": "关闭",
+        "update": "更新"
+      }
+    },
+    "name": "名称",
+    "url": "网址",
+    "new": "新",
+    "description": "简介",
+    "all": "全部",
+    "date": "日期",
+    "time": "时间"
+  },
+  "components": {
+    "difficulty_select": {
+      "label": "难度建议",
+      "no_suggestion": "无",
+      "no_selection": "无"
+    },
+    "difficulty_chip": {
+      "personal_tooltip": "由于个人路线等原因造成难度差异，因此此建议不适用于官方难度排名"
+    },
+    "verification_status_chip": {
+      "verified": "已通过",
+      "pending": "审核中",
+      "rejected": "已拒绝"
+    },
+    "full_challenge_select": {
+      "full_game_label": "选择地图或多章节挑战"
+    },
+    "verifier_icon": "金榜管理团队的一员",
+    "admin_icon": "网站管理员",
+    "suspended_icon": {
+      "with_reason": "该用户已被封禁: {{reason}}",
+      "no_reason": "该用户已被封禁"
+    },
+    "input_methods": {
+      "keyboard": "键盘",
+      "dpad": "手柄（十字键）",
+      "analog": "手柄（摇杆）",
+      "hybrid": "混合",
+      "other": "其他"
+    },
+    "gamebanana_embed": {
+      "alt": "地图包展示头图"
+    },
+    "loading": "加载中",
+    "error": "错误",
+    "video_embed": {
+      "error": "无法嵌入视频："
+    },
+    "external_link": {
+      "warning": "你即将打开外部链接，点击此处继续："
+    },
+    "share_button": {
+      "copy_link": "复制链接",
+      "copied": "链接已复制！"
+    },
+    "recent_submissions": {
+      "title": "近期提交内容",
+      "show": "显示:",
+      "no_pending": "找不到审核中的内容",
+      "no_verified": "找不到已通过审核的内容",
+      "no_rejected": "找不到已被拒绝的内容",
+      "new_challenge": "新地图:",
+      "new_challenge_note": "此为数据库中未被记录的新地图！"
+    },
+    "changelog": {
+      "name": "更新日志",
+      "no_changes_yet": "暂无更新内容",
+      "entry_deleted": "更新内容已删除",
+      "entry_delete_confirm": "确认删除此条更新内容？",
+      "entry_delete_modal_title": "删除内容？",
+      "moved_from": "移动到"
+    },
+    "stats": {
+      "no_suggestions_yet": "暂无难度建议"
+    },
+    "top_golden_list": {
+      "use_suggested": "使用此玩家的难度建议来排名",
+      "empty": "这里什么也没有，试着从排行榜上打点金来丰富你自己的列表吧！",
+      "note_number_people": "完成此挑战的人数与具体数据",
+      "note_suggested_difficulties": "此玩家的难度排名建议",
+      "note_video_link": "首位完成此挑战的玩家视频",
+      "placement_difficulty": "实际排名："
+    }
+  },
+  "forms": {
+    "account": {
+      "feedback": {
+        "updated": "账号已更新",
+        "deleted": "账号已删除"
+      },
+      "button_update": "更新账号",
+      "claimed_player": "绑定玩家",
+      "new_email": "新的电子邮箱",
+      "email_verified": "邮箱已验证",
+      "new_password": "新密码",
+      "unlink_discord": "与Discord解绑",
+      "user_links": "用户链接",
+      "suspended": "封禁",
+      "suspension_reason": "封禁理由",
+      "is_verifier": "是否为验证者",
+      "is_admin": "是否为管理员",
+      "logout_user": "强制登出",
+      "delete": {
+        "title": "删除账号",
+        "description": "是否要删除该账号，此操作不可撤销。",
+        "confirm": "确认",
+        "button": "删除"
+      }
+    },
+    "campaign": {
+      "feedback": {
+        "created": "地图包已创建",
+        "updated": "地图包已更新",
+        "deleted": "地图包已删除"
+      },
+      "icon_url": "图标网址",
+      "author_gb_id": "作者的香蕉网ID（非必填）",
+      "author_gb_name": "作者的香蕉网名称（必填，不然会导致地图加载不出来）",
+      "sort_category_major": "地图主要排序（注：暂时仅多大厅合集需要填写）",
+      "sort_category_minor": "地图次要排序（注：暂时仅合集小图/心门需要填写，单大厅合集则仅需填写这项）",
+      "buttons": {
+        "create": "创建地图包",
+        "update": "更新地图包"
+      },
+      "sort_editor": {
+        "delete": "删除",
+        "add": "添加标签"
+      },
+      "edit_maps": {
+        "feedback": {
+          "updated": "地图已更新",
+          "deleted_one": "1张地图已删除",
+          "deleted_other": "{{count}}张地图已删除"
+        },
+        "order": "排序",
+        "delete_map": "删除",
+        "undo_delete": "撤销",
+        "confirm_delete_one": "确认删除1张地图？此操作不可撤销！",
+        "confirm_delete_other": "确认删除{{count}}张地图？此操作不可撤销！",
+        "confirm_delete_label_one": "是的，删除1张地图及其附加的所有挑战和提交内容。",
+        "confirm_delete_label_other": "是的，删除{{count}}张地图及其附加的所有挑战和提交内容。",
+        "save_maps": "保存"
+      }
+    },
+    "campaign_mass_add_maps": {
+      "feedback": {
+        "adding_one": "添加地图中 ({{current}}/{{count}})",
+        "adding_other": "添加地图中 ({{current}}/{{count}})"
+      },
+      "title": "为一个地图包批量添加地图",
+      "step": "第{{current}}/{{total}}步",
+      "next": "下一步",
+      "back": "上一步",
+      "step_1": {
+        "helper": "一行仅可对应一张地图。",
+        "label": "地图名称"
+      },
+      "step_2": {
+        "helper": "选择各地图的挑战项目",
+        "map_name": "地图名称",
+        "generate_challenges": "挑战项目",
+        "c_fc_distinct": "单金与FC分开记录",
+        "create_maps": "创建地图"
+      }
+    },
+    "challenge": {
+      "feedback": {
+        "created": "项目已创建",
+        "updated": "项目已更新"
+      },
+      "full_game_notice": "不选择特定地图将意味着此挑战为多章节一命项目。",
+      "requires_fc": "需要FC",
+      "has_fc": "包含FC",
+      "is_arbitrary": "其他类型（注：此为Arbitrary）",
+      "sort_order": "排序",
+      "buttons": {
+        "create": "创建项目",
+        "update": "更新项目"
+      }
+    },
+    "create_full_challenge": {
+      "feedback": {
+        "campaign": "地图包已创建",
+        "map": "地图已创建",
+        "challenge": "项目已创建"
+      },
+      "title": "在一份表单内创建一份完整的挑战项目",
+      "campaign": {
+        "name": "地图包名称",
+        "url": "地图包链接",
+        "author_gb_id": "作者的香蕉网ID（非必填）",
+        "author_gb_name": "作者的香蕉网名称（必填，不然会导致地图加载不出来）"
+      },
+      "map_name": "地图名称"
+    },
+    "map": {
+      "feedback": {
+        "created": "地图已创建",
+        "updated": "地图已更新"
+      },
+      "is_rejected": "拒绝此地图",
+      "is_archived": "旧版本",
+      "rejection_reason": "拒绝理由",
+      "author_note": "如果地图包与作者匹配，则将两项留空",
+      "buttons": {
+        "create": "创建地图",
+        "update": "更新地图"
+      }
+    },
+    "submission": {
+      "feedback": {
+        "updated": "内容已更新"
+      },
+      "status_prefix": "状态:",
+      "new_challenge_title": "详情",
+      "is_fc": "FC",
+      "is_verified": "已通过",
+      "proof_url": "视频链接",
+      "raw_session_url": "无剪辑原视频链接",
+      "player_notes": "玩家备注",
+      "is_personal": "个人差",
+      "personal_note": "用于个人路线等原因造成难度差异从而此建议不适用于官方难度排名的情况",
+      "date_submitted": "提交日期",
+      "date_verified": "通过日期",
+      "verifier": "验证者",
+      "verifier_notes": "验证者备注",
+      "buttons": {
+        "update": "更新提交内容",
+        "verify": "通过",
+        "reject": "拒绝"
+      }
+    }
+  },
+  "hooks": {
+    "auth": {
+      "logout_success": "已退出登录",
+      "not_logged_in": "尚未登录"
+    }
+  },
+  "navigation": {
+    "top_golden_list": "金草莓排行榜",
+    "campaigns_menu": {
+      "name": "地图包",
+      "campaign_list": "地图包列表",
+      "rejected_maps": "已拒绝的地图（未收录）"
+    },
+    "other_menu": {
+      "name": "其他",
+      "suggestion_box": "意见箱",
+      "monthly_recap": "每月数据回顾"
+    },
+    "internal_menu": {
+      "name": "管理",
+      "logs": "日志",
+      "submission_queue": "待审核的内容队列",
+      "manage_challenges": "管理挑战项目",
+      "manage_accounts": "管理账号"
+    },
+    "widgets": {
+      "submission_queue": "待审核的内容队列",
+      "player_claims": "待绑定玩家"
+    },
+    "submit": "提交",
+    "login": "登录",
+    "search": "搜索",
+    "settings": "设置",
+    "switch_to_light_mode": "白天",
+    "switch_to_dark_mode": "夜间",
+    "player_menu": {
+      "name": "个人账号",
+      "claim_a_player": "绑定玩家",
+      "my_player_page": "个人页面",
+      "my_top_goldens": "个人金草莓排行榜",
+      "logout": "退出登录"
+    }
+  },
+  "manage": {
+    "accounts": {
+      "title": "管理账号",
+      "tabs": {
+        "accounts": {
+          "label": "账号",
+          "select": "选择一个账号"
+        },
+        "player_claims": {
+          "label": "绑定玩家",
+          "feedback": {
+            "accepted": "绑定已完成",
+            "rejected": "绑定已拒绝"
+          },
+          "id": "ID",
+          "no_claims": "暂无",
+          "buttons": {
+            "accept": "接受",
+            "reject": "拒绝"
+          }
+        },
+        "player_rename": {
+          "label": "重命名玩家",
+          "feedback": {
+            "renamed": "重命名已生效"
+          },
+          "select": "选择一位玩家",
+          "new_name": "新名称",
+          "log_change": "将命名记录更新在玩家的更新日志中",
+          "button": "重命名"
+        },
+        "player_delete": {
+          "label": "删除玩家",
+          "feedback": {
+            "deleted": "此玩家已删除"
+          },
+          "note": "此操作不可撤销且会删除与该玩家相关的所有提交内容！",
+          "confirm": "我已知晓此操作不可撤销",
+          "button": "删除玩家 {{name}}"
+        }
+      }
+    },
+    "challenges": {
+      "title": "管理挑战项目",
+      "search": "搜索",
+      "num_sub": "# Sub.",
+      "buttons": {
+        "campaign": {
+          "edit": "编辑",
+          "edit_maps": "编辑地图",
+          "delete": "删除"
+        },
+        "map": {
+          "edit": "编辑",
+          "delete": "删除"
+        },
+        "challenge": {
+          "edit": "编辑",
+          "split": "分割挑战项目",
+          "merge": "合并挑战项目",
+          "mark_personal": "记为个人差",
+          "delete": "删除"
+        }
+      },
+      "modals": {
+        "delete_campaign": {
+          "title": "删除地图包",
+          "description": "确认删除地图包<strong>'{{name}}'</strong>及其<strong>附加的所有挑战和提交内容</strong>?"
+        },
+        "delete_map": {
+          "title": "删除地图",
+          "description": "确认删除地图<strong>'{{name}}'</strong>及其<strong>附加的所有挑战和提交内容</strong>?"
+        },
+        "delete_challenge": {
+          "title": "删除挑战项目",
+          "description": "确认删除挑战项目<strong>'{{name}}'</strong>（地图：<strong>'{{map}}'</strong>）及其<strong>所有提交内容</strong>?"
+        },
+        "mark_personal": {
+          "title": "记为个人差",
+          "description": "将所有关于<strong>'{{name}}'</strong>的挑战项目记为个人差？",
+          "impacted_one": "最多<strong>1</strong>条内容将进行变更。",
+          "impacted_other": "最多<strong>{{count}}</strong>条内容将进行变更。",
+          "button": "标记",
+          "feedback": "已标记全部内容为个人差"
+        },
+        "merge_split_challenges": {
+          "feedback": {
+            "split": "项目已分割",
+            "merge": "项目已合并"
+          },
+          "title": "分割/合并挑战项目",
+          "challenge_num": "项目{{num}}",
+          "split_note": "此挑战项目将会从单一的C/FC项目分割为两个单独的项目，所有FC的提交内容将自动移植（注：单金项目不会重复记录相同内容）",
+          "merge_note": "第二个挑战项目的内容将合并到第一个项目中，同时将对第一挑战项目进行相应修改并移植所有提交内容到此处，当变更生效后，第二挑战项目将会被删除",
+          "unable_to_merge": "无法合并，只能将一单金项目与一FC项目合并",
+          "buttons": {
+            "split": "分割项目",
+            "merge": "合并项目",
+            "neither": "分割/合并"
+          }
+        }
+      },
+      "create_any_button": {
+        "create": "创建",
+        "new_campaign": "新地图包",
+        "new_map": "新地图",
+        "new_challenge": "新挑战项目",
+        "create_full_challenge": "创建完整的挑战项目",
+        "mass_add_maps": "批量添加地图至地图包"
+      }
+    },
+    "logs": {
+      "title": "日志",
+      "no_logs": "找不到日志",
+      "topic": "主题",
+      "level": "级别",
+      "search": "搜索",
+      "message": "信息"
+    },
+    "submission_queue": {
+      "feedback": {
+        "viewing_gone": "此提交内容已不在队列中，可能是被删除或已由他人验证",
+        "all_verified": "所有选择的提交内容均已验证通过",
+        "all_rejected": "所有选择的提交内容均已被拒绝"
+      },
+      "title": "待审核内容队列",
+      "title_with_count": "{{count}}条待审核内容",
+      "queue_empty": "队列中暂无内容",
+      "selected": "{{count}}个内容已选择",
+      "total": "提交内容（总数：{{count}}）",
+      "note_placeholder": "填写备注或拒绝理由",
+      "or": "或",
+      "buttons": {
+        "verify": "通过'{{count}}'个内容",
+        "reject": "拒绝'{{count}}'个内容"
+      }
+    }
+  },
+  "server_costs": {
+    "server_costs": {
+      "title": "服务器成本",
+      "description": "Hi, viddie here. Unsurprisingly, running servers costs money, and while I can pour in as much time as I like into creating this project, someone has to pay to keep the server running. This website does not (and will never) have ADs. I am willing to pay for the server costs all by myself if necessary, but if anyone in the community wants to help me out, I would gladly appreciate it!",
+      "table": {
+        "item": "项目",
+        "cost": "成本",
+        "VPS": "服务器",
+        "domain": "域",
+        "total": "总数",
+        "value": "{{value}}€ /每月"
+      }
+    },
+    "costs_so_far": {
+      "title": "截至目前服务器所用成本",
+      "description": {
+        "1": "此服务器开始运行时间：",
+        "2": "April, 2024",
+        "3": "已运行了",
+        "4": "{{months}}个月",
+        "5": "（截至目前）"
+      },
+      "table": {
+        "total_costs": "总成本",
+        "total_donations": "捐款总额",
+        "total_difference": "总差异"
+      },
+      "not_lose": "为防止亏损，这是服务器需要的金额（单位：欧元）"
+    },
+    "stocked_up": {
+      "title": "库存充足",
+      "description": {
+        "1": "服务器还可以再运行",
+        "2": "{{months}}个月",
+        "3": "（仅靠捐款数量）！"
+      },
+      "additional_months_one": "+额外{{count}}个月！！！",
+      "additional_months_other": "+额外{{count}}个月！！！"
+    },
+    "you_can_help": {
+      "title": "服务器助力",
+      "description": "如果你想为此服务器助力，可使用以下方式进行：",
+      "table": {
+        "paypal_donation": "PayPal（需支付额外手续费进行捐赠）",
+        "paypal_direct": "PayPal（直接转账给我，无手续费）",
+        "paypal_website": "在这",
+        "note": "*此页面不会自动更新，如果你已经助力，可能需要一段时间才会进行更新"
+      }
+    },
+    "thank_you": {
+      "title": "感谢助力",
+      "description": "如果你希望助力后将你的名字记录在这，请在捐款信息里留下你的名字（非真名）",
+      "table": {
+        "date": "日期",
+        "amount": "额度",
+        "name": "名字",
+        "no_donations": "暂无"
+      },
+      "post_donation": {
+        "text": "我很感激！但同上，可能需要一段时间才会进行更新",
+        "back": "返回助力页面"
+      }
+    }
+  }
 }
