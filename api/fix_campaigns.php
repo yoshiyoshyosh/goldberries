@@ -710,8 +710,7 @@ $sj = array(
     "sort_order" => NULL,
   ),
 );
-$sj_campaign_id = 1197;
-fix_campaign_sorts(1197, $sj);
+fix_campaign_sorts(1128, $sj);
 
 
 $winter_collab = array(
@@ -848,8 +847,7 @@ $winter_collab = array(
     "sort_order" => NULL,
   ),
 );
-fix_campaign_sorts(924, $winter_collab);
-fix_campaign_sorts(1193, $winter_collab);
+fix_campaign_sorts(925, $winter_collab);
 
 
 

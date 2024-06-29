@@ -196,4 +196,10 @@ class Player extends DbObject
 
     return true;
   }
+
+  function get_name_escaped()
+  {
+    //Regex remove backticks from the name, then return
+    return preg_replace('/`/', '', $this->name);
+  }
 }

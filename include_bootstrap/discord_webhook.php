@@ -61,7 +61,7 @@ function send_webhook_suggestion_verified($suggestion)
         $diff_suggestion = null;
       $as_text = $diff_suggestion !== null ? "{$diff_suggestion->to_tier_name()}" : "<none>";
       $fields[] = [
-        "name" => $submission->player->name,
+        "name" => "`" . $submission->player->get_name_escaped() . "`",
         "value" => $as_text,
         "inline" => true
       ];
@@ -87,6 +87,9 @@ function send_webhook_suggestion_verified($suggestion)
     //"avatar_url" => "https://ru.gravatar.com/userimage/28503754/1168e2bddca84fec2a63addb348c571d.jpg?size=512",
     // "tts" => false,
     // "file" => "",
+    "allowed_mentions" => [
+      "parse" => []
+    ],
     "embeds" => [
       [
         "title" => "Suggestion for '$name' by {$suggestion->author->name}",
@@ -157,11 +160,13 @@ function send_webhook_submission_verified($submission)
   }
 
   $account = $submission->player->get_account($DB);
-  $player_name = "@{$submission->player->name}";
+  $player_name = "@`{$submission->player->get_name_escaped()}`";
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $allowed_mentions = ["users" => []];
 
   if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
     $player_name = "<@{$account->discord_id}>";
+    $allowed_mentions["users"][] = $account->discord_id;
   }
 
   $challenge_name = $submission->challenge->get_name_for_discord();
@@ -169,8 +174,8 @@ function send_webhook_submission_verified($submission)
   $is_rejected = $submission->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
-  $message = "$emote [Submission](<{$submission_url}>) for {$challenge_name} was $verified_str! ($player_name)";
-  send_simple_webhook_message($webhook_url, $message);
+  $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str!";
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 function send_webhook_challenge_marked_personal($challenge)
@@ -239,10 +244,12 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   send_simple_webhook_message($webhook_url, $message);
 }
 
-function send_simple_webhook_message($url, $message)
+function send_simple_webhook_message($url, $message, $allowed_mentions = null)
 {
+  $allowed_mentions = $allowed_mentions ?? ["parse" => []];
   $json_data = json_encode([
     "content" => $message,
+    "allowed_mentions" => $allowed_mentions
   ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   send_webhook($url, $json_data);
 }
