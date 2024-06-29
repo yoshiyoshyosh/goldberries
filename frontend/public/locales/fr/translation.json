@@ -17,7 +17,6 @@
     "objective_other": "Objectifs",
     "account_one": "Compte",
     "account_other": "Comptes",
-    "table_per_page": "par page :",
     "table_rows_per_page": "Colonnes par page :",
     "modals": {
       "buttons": {
@@ -88,7 +87,8 @@
       "no_verified": "Aucune entrée vérifiée trouvée",
       "no_rejected": "Aucune entrée rejetée trouvée",
       "new_challenge": "Nouveau challenge :",
-      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données !"
+      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données !",
+      "submissions_per_page": "Submissions per page:"
     },
     "changelog": {
       "name": "Changelog",
@@ -433,6 +433,7 @@
       "selected": "{{count}} sélectionnées",
       "total": "Entrées ({{count}} au total)",
       "note_placeholder": "Note de vérification / Raison de rejet",
+      "new_challenge": "New Challenge:",
       "or": "OU",
       "buttons": {
         "verify": "Vérifier '{{count}}'",
@@ -455,13 +456,7 @@
     },
     "costs_so_far": {
       "title": "Coûts jusqu’à maintenant",
-      "description": {
-        "1": "Le serveur est en marche depuis",
-        "2": "avril 2024",
-        "3": "Ça fait jusqu’ici un total de",
-        "4": "{{months}} mois",
-        "5": ""
-      },
+      "description": "The server has been running since <strong>April, 2024</strong>. That's <strong>{{months}} months</strong> so far.",
       "table": {
         "total_costs": "Prix total",
         "total_donations": "Total des dons",
@@ -471,11 +466,7 @@
     },
     "stocked_up": {
       "title": "Réserves",
-      "description": {
-        "1": "Le serveur peut encore tourner ",
-        "2": "{{months}} months",
-        "3": " uniquement grâce aux dons !"
-      },
+      "description": "The server can run for <strong>{{months}} more months</strong> on just donations!",
       "additional_months_one": "+ {{count}} mois supplémentaire !!!",
       "additional_months_other": "+ {{count}} mois supplémentaire !!!"
     },

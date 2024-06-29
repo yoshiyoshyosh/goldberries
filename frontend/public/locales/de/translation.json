@@ -15,7 +15,6 @@
     "difficulty_other": "Schwierigkeiten",
     "objective_one": "Ziel",
     "objective_other": "Ziele",
-    "table_per_page": "pro Seite:",
     "table_rows_per_page": "Zeilen pro Seite:",
     "modals": {
       "buttons": {
@@ -85,7 +84,8 @@
       "no_verified": "Keine verifizierten Submissions gefunden",
       "no_rejected": "Keine abgelehnten Submissions gefunden",
       "new_challenge": "Neue Challenge:",
-      "new_challenge_note": "Diese Challenge ist noch nicht in der Datenbank erfasst!"
+      "new_challenge_note": "Diese Challenge ist noch nicht in der Datenbank erfasst!",
+      "submissions_per_page": "Submissions pro Seite:"
     },
     "changelog": {
       "name": "Änderungsprotokoll",
@@ -429,6 +429,7 @@
       "selected": "{{count}} Ausgewählt",
       "total": "Submissions ({{count}} Gesamt)",
       "note_placeholder": "Verifier Notiz / Ablehnungsgrund",
+      "new_challenge": "Neue Challenge:",
       "or": "ODER",
       "buttons": {
         "verify": "'{{count}}' Ausgewählte Verifizieren",
@@ -451,13 +452,7 @@
     },
     "costs_so_far": {
       "title": "Kosten Soweit",
-      "description": {
-        "1": "Der Server läuft seit",
-        "2": "April, 2024",
-        "3": "Das sind",
-        "4": "{{months}} Monate",
-        "5": "bis jetzt."
-      },
+      "description": "Der Server läuft seit <strong>April, 2024</strong>. Das sind <strong>{{months}} Monate</strong> bis jetzt.",
       "table": {
         "total_costs": "Gesamte Kosten",
         "total_donations": "Gesamte Spenden",
@@ -467,11 +462,7 @@
     },
     "stocked_up": {
       "title": "Aufgestockt",
-      "description": {
-        "1": "Der Server kann für",
-        "2": "{{months}} weitere Monate",
-        "3": "nur über Spenden laufen!"
-      },
+      "description": "Der Server kann für <strong>{{months}} weitere Monate</strong> nur über Spenden laufen!",
       "additional_months_one": "+ {{count}} weiterer Monat!!!",
       "additional_months_other": "+ {{count}} weitere Monate!!!"
     },

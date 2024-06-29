@@ -309,13 +309,15 @@ function SubmissionQueueTableRow({
   isSelected,
   onSelect,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
   const challenge = submission.challenge;
   const map = challenge !== null ? challenge.map : null;
   const campaign = getChallengeCampaign(challenge);
   const textTop =
     submission.player.name +
     (challenge === null ? "" : " - " + (map === null ? challenge.description : map.name));
-  const textBottom = challenge === null ? "New Challenge: " + submission.new_challenge.name : campaign.name;
+  const textBottom =
+    challenge === null ? t("new_challenge") + " " + submission.new_challenge.name : campaign.name;
   const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;
   const isNewChallenge = challenge === null;
   return (

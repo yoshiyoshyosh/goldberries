@@ -17,7 +17,6 @@
     "objective_other": "项目",
     "account_one": "账号",
     "account_other": "账号",
-    "table_per_page": "每页：",
     "table_rows_per_page": "每页行数：",
     "modals": {
       "buttons": {
@@ -83,12 +82,13 @@
     },
     "recent_submissions": {
       "title": "近期提交内容",
-      "show": "显示:",
+      "show": "状态：",
       "no_pending": "找不到审核中的内容",
       "no_verified": "找不到已通过审核的内容",
       "no_rejected": "找不到已被拒绝的内容",
       "new_challenge": "新地图:",
-      "new_challenge_note": "此为数据库中未被记录的新地图！"
+      "new_challenge_note": "此为数据库中未被记录的新地图！",
+      "submissions_per_page": "Submissions per page:"
     },
     "changelog": {
       "name": "更新日志",
@@ -125,8 +125,8 @@
       "user_links": "用户链接",
       "suspended": "封禁",
       "suspension_reason": "封禁理由",
-      "is_verifier": "是否为验证者",
-      "is_admin": "是否为管理员",
+      "is_verifier": "设为验证者",
+      "is_admin": "设为管理员",
       "logout_user": "强制登出",
       "delete": {
         "title": "删除账号",
@@ -247,7 +247,7 @@
       "raw_session_url": "无剪辑原视频链接",
       "player_notes": "玩家备注",
       "is_personal": "个人差",
-      "personal_note": "用于个人路线等原因造成难度差异从而此建议不适用于官方难度排名的情况",
+      "personal_note": "用于个人路线等原因造成难度差异从而导致此建议不适用于官方难度排名的情况",
       "date_submitted": "提交日期",
       "date_verified": "通过日期",
       "verifier": "验证者",
@@ -395,8 +395,8 @@
           "title": "分割/合并挑战项目",
           "challenge_num": "项目{{num}}",
           "split_note": "此挑战项目将会从单一的C/FC项目分割为两个单独的项目，所有FC的提交内容将自动移植（注：单金项目不会重复记录相同内容）",
-          "merge_note": "第二个挑战项目的内容将合并到第一个项目中，同时将对第一挑战项目进行相应修改并移植所有提交内容到此处，当变更生效后，第二挑战项目将会被删除",
-          "unable_to_merge": "无法合并，只能将一单金项目与一FC项目合并",
+          "merge_note": "项目2的内容将合并到项目1中，同时将对项目1进行相应修改并移植所有提交内容到此处，当变更生效后，项目2将会被删除",
+          "unable_to_merge": "无法合并同一类型的挑战项目，只能将单金项目与FC项目合并",
           "buttons": {
             "split": "分割项目",
             "merge": "合并项目",
@@ -433,6 +433,7 @@
       "selected": "{{count}}个内容已选择",
       "total": "提交内容（总数：{{count}}）",
       "note_placeholder": "填写备注或拒绝理由",
+      "new_challenge": "New Challenge:",
       "or": "或",
       "buttons": {
         "verify": "通过'{{count}}'个内容",
@@ -455,13 +456,7 @@
     },
     "costs_so_far": {
       "title": "截至目前服务器所用成本",
-      "description": {
-        "1": "此服务器开始运行时间：",
-        "2": "April, 2024",
-        "3": "已运行了",
-        "4": "{{months}}个月",
-        "5": "（截至目前）"
-      },
+      "description": "The server has been running since <strong>April, 2024</strong>. That's <strong>{{months}} months</strong> so far.",
       "table": {
         "total_costs": "总成本",
         "total_donations": "捐款总额",
@@ -471,11 +466,7 @@
     },
     "stocked_up": {
       "title": "库存充足",
-      "description": {
-        "1": "服务器还可以再运行",
-        "2": "{{months}}个月",
-        "3": "（仅靠捐款数量）！"
-      },
+      "description": "The server can run for <strong>{{months}} more months</strong> on just donations!",
       "additional_months_one": "+额外{{count}}个月！！！",
       "additional_months_other": "+额外{{count}}个月！！！"
     },

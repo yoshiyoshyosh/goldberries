@@ -17,7 +17,6 @@
     "objective_other": "Objectives",
     "account_one": "Account",
     "account_other": "Accounts",
-    "table_per_page": "per page:",
     "table_rows_per_page": "Rows per page:",
     "modals": {
       "buttons": {
@@ -88,7 +87,8 @@
       "no_verified": "No verified submissions found",
       "no_rejected": "No rejected submissions found",
       "new_challenge": "New Challenge:",
-      "new_challenge_note": "This is a new challenge not yet in the database!"
+      "new_challenge_note": "This is a new challenge not yet in the database!",
+      "submissions_per_page": "Submissions per page:"
     },
     "changelog": {
       "name": "Changelog",
@@ -433,6 +433,7 @@
       "selected": "{{count}} Selected",
       "total": "Submissions ({{count}} total)",
       "note_placeholder": "Verify Note / Reject Reason",
+      "new_challenge": "New Challenge:",
       "or": "OR",
       "buttons": {
         "verify": "Verify '{{count}}' Selected",
@@ -455,13 +456,7 @@
     },
     "costs_so_far": {
       "title": "Costs So Far",
-      "description": {
-        "1": "The server has been running since",
-        "2": "April, 2024",
-        "3": "That's",
-        "4": "{{months}} months",
-        "5": "so far"
-      },
+      "description": "The server has been running since <strong>April, 2024</strong>. That's <strong>{{months}} months</strong> so far.",
       "table": {
         "total_costs": "Total Costs",
         "total_donations": "Total Donations",
@@ -471,11 +466,7 @@
     },
     "stocked_up": {
       "title": "Stocked Up",
-      "description": {
-        "1": "The server can run for ",
-        "2": "{{months}} more months",
-        "3": " on just donations!"
-      },
+      "description": "The server can run for <strong>{{months}} more months</strong> on just donations!",
       "additional_months_one": "+ {{count}} additional month!!!",
       "additional_months_other": "+ {{count}} additional months!!!"
     },

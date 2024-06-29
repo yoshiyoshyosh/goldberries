@@ -200,7 +200,7 @@ export function RecentSubmissionsTable({
           rowsPerPage={perPage}
           onPageChange={(event, newPage) => setPage(newPage + 1)}
           rowsPerPageOptions={[10, 15, 25, 50, 100]}
-          labelRowsPerPage={t_g("submission", { count: 30 }) + " " + t_g("table_per_page")}
+          labelRowsPerPage={t("submissions_per_page")}
           onRowsPerPageChange={(event) => {
             setPerPage(event.target.value);
             setPage(1);

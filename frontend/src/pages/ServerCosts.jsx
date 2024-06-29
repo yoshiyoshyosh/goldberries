@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import { AnyImage, EmoteImage } from "../components/GoldberriesComponents";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageServerCosts({}) {
   const { status } = useParams();
@@ -107,10 +107,7 @@ export function PageServerCosts({}) {
           {t_csf("title")}
         </Typography>
         <Typography variant="body1">
-          {t_csf("description.1")} <b>{t_csf("description.2")}</b>
-          {". "}
-          {t_csf("description.3")} <b>{t_csf("description.4", { months: months })}</b>{" "}
-          {t_csf("description.5")}
+          <Trans i18nKey="server_costs.costs_so_far.description" values={{ months: months }} />
         </Typography>
         <Table size="small">
           <TableBody>
@@ -160,8 +157,10 @@ export function PageServerCosts({}) {
               {t_su("title")}
             </Typography>
             <Typography variant="body1">
-              {t_su("description.1")} <b>{t_su("description.2", { months: monthsToSpare.toFixed(2) })}</b>{" "}
-              {t_su("description.3")}
+              <Trans
+                i18nKey="server_costs.stocked_up.description"
+                values={{ months: monthsToSpare.toFixed(2) }}
+              />
             </Typography>
             {
               //For each month the server can run without donations, show a full progress bar. For the last month, show the remaining amount.
