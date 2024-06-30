@@ -611,5 +611,76 @@
         "button": "Delete Account"
       }
     }
+  },
+  "app_settings": {
+    "title": "Settings",
+    "footnote": "Settings are saved automatically",
+    "tabs": {
+      "general": {
+        "label": "General",
+        "language": "Language"
+      },
+      "visual": {
+        "label": "Visual",
+        "name_colors": {
+          "label": "Player Name Colors",
+          "show": "Show Player Name Colors",
+          "prefer_solid_color": "Prefer Solid Color Over Gradient Color",
+          "show_outline": "Show Outline"
+        },
+        "background": {
+          "label": "Background",
+          "blur": {
+            "label": "Background Blur",
+            "tooltip": "Gaussian Blur applied to the background"
+          },
+          "light_mode": "Light Mode",
+          "dark_mode": "Dark Mode",
+          "default": "Default Background",
+          "custom": {
+            "label": "Custom Background",
+            "tooltip": "If set, replaces the selected background from above",
+            "placeholder": "URL to image"
+          }
+        }
+      },
+      "top_golden_list": {
+        "label": "Top Golden List",
+        "darken_colors": {
+          "label": "Darken Tier Colors",
+          "tooltip": "In dark-mode, makes the tier colors darker. 0% doesn't change the colors, 100% makes them entirely black.",
+          "note": "This setting only affects the dark-mode colors!"
+        },
+        "campaign_icons": {
+          "label": "Show Campaign Icons",
+          "note": "Shows popular campaign's icons, such as SJ, SC, D-Sides..."
+        },
+        "text_fc_icons": {
+          "label": "Use Text FC Icons",
+          "note": "This will replace the flag icons with [C], [FC] and [C/FC] 'icons'"
+        },
+        "switch_order": {
+          "label": "Switch Map and Challenge",
+          "note": "Switches from 'Segment Name [Map Name]' to 'Map Name [Segment Name]' format"
+        },
+        "hide_empty_tiers": "Hide Empty Tiers"
+      },
+      "difficulty_colors": {
+        "label": "Difficulty Colors",
+        "description": "High and Low subtier colors are calculated based on the Mid color. You can overwrite this by explicitly setting the High and Low subtier colors.",
+        "high": "High",
+        "mid": "Mid",
+        "low": "Low",
+        "t4+": "Tier 4+ (no subtiers)",
+        "presets": {
+          "label": "Presets:",
+          "default": "Default",
+          "colorblind": "Colorblindness Presets:",
+          "protanopia": "Protanopia",
+          "deuteranopia": "Deuteranopia",
+          "tritanopia": "Tritanopia"
+        }
+      }
+    }
   }
 }

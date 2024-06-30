@@ -607,5 +607,76 @@
         "button": "Account Löschen"
       }
     }
+  },
+  "app_settings": {
+    "title": "Einstellungen",
+    "footnote": "Einstellungen werden automatisch gespeichert",
+    "tabs": {
+      "general": {
+        "label": "Allgemein",
+        "language": "Sprache"
+      },
+      "visual": {
+        "label": "Visuell",
+        "name_colors": {
+          "label": "Player Namensfarben",
+          "show": "Zeige Player Namesfarben",
+          "prefer_solid_color": "Bevorzuge Solide über Gradient Farbe",
+          "show_outline": "Zeige Umrandung"
+        },
+        "background": {
+          "label": "Hintergrund",
+          "blur": {
+            "label": "Hintergrund Unschärfe",
+            "tooltip": "Gaußsche Unschärfe des Hintergrunds"
+          },
+          "light_mode": "Lichtmodus",
+          "dark_mode": "Dunkelmodus",
+          "default": "Standardhintergrund",
+          "custom": {
+            "label": "Eigener Hintergrund",
+            "tooltip": "Wenn gesetzt, wird dieser Hintergrund den obigen ersetzen",
+            "placeholder": "URL zum Hintergrundbild"
+          }
+        }
+      },
+      "top_golden_list": {
+        "label": "Top Golden Liste",
+        "darken_colors": {
+          "label": "Verdunkle Tier Farben",
+          "tooltip": "Verdunkelt die Tier Farben. 0% ändert die Farben nicht, 100% macht sie komplett schwarz.",
+          "note": "Diese Einstellungen betrifft nur den Dunkelmodus!"
+        },
+        "campaign_icons": {
+          "label": "Zeige Campaign Icons",
+          "note": "Zeigt die Icons großer Campaigns, z.B. SJ, SC, D-Sides..."
+        },
+        "text_fc_icons": {
+          "label": "Text FC Icons",
+          "note": "Ersetzt die normalen Flaggen Icons mit [C], [FC] and [C/FC] 'icons'"
+        },
+        "switch_order": {
+          "label": "Tausche Map und Challenge",
+          "note": "Tauscht das Format 'Segmentname [Map Name]' gegen 'Map Name [Segmentname]'"
+        },
+        "hide_empty_tiers": "Verstecke Leere Tiers"
+      },
+      "difficulty_colors": {
+        "label": "Schwierigkeitsfarben",
+        "description": "High- und Low-Subtierfarben werden basierend auf der Mid-Subtierfarbe berechnet. Du kannst dieses Verhalten überschreiben, indem du die High- oder Low-Subtierfarbe explizit angibst.",
+        "high": "High",
+        "mid": "Mid",
+        "low": "Low",
+        "t4+": "Tier 4+ (keine Subtiers)",
+        "presets": {
+          "label": "Vorlagen:",
+          "default": "Standard",
+          "colorblind": "Vorlagen für Farbenblinde:",
+          "protanopia": "Protanopia",
+          "deuteranopia": "Deuteranopia",
+          "tritanopia": "Tritanopia"
+        }
+      }
+    }
   }
 }

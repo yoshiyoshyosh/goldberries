@@ -29,6 +29,7 @@ import i18n, { LANGUAGES } from "../i18n/config";
 import { useTranslation } from "react-i18next";
 
 export function PageAppSettings({ isModal = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings" });
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useLocalStorage("settings_tab", "general");
 
@@ -51,9 +52,9 @@ export function PageAppSettings({ isModal = false }) {
 
   return (
     <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
-      <HeadTitle title="Settings" />
+      <HeadTitle title={t("title")} />
       <Typography variant="h4" gutterBottom>
-        Settings
+        {t("title")}
       </Typography>
       <Tabs
         value={selectedTab}
@@ -62,10 +63,10 @@ export function PageAppSettings({ isModal = false }) {
         scrollButtons="auto"
         sx={{ mb: 2 }}
       >
-        <Tab label="General" value="general" />
-        <Tab label="Visual" value="visual" />
-        <Tab label="Top Golden list" value="top-golden-list" />
-        <Tab label="Difficulty Colors" value="difficulty-colors" />
+        <Tab label={t("tabs.general.label")} value="general" />
+        <Tab label={t("tabs.visual.label")} value="visual" />
+        <Tab label={t("tabs.top_golden_list.label")} value="top-golden-list" />
+        <Tab label={t("tabs.difficulty_colors.label")} value="difficulty-colors" />
       </Tabs>
       {selectedTab === "general" && <AppSettingsGeneralForm />}
       {selectedTab === "visual" && <AppSettingsVisualForm />}
@@ -76,8 +77,8 @@ export function PageAppSettings({ isModal = false }) {
 }
 
 export function AppSettingsGeneralForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.general" });
   const { settings, setSettings } = useAppSettings();
-  const { t } = useTranslation();
 
   const form = useForm({
     defaultValues: settings.general,
@@ -98,7 +99,7 @@ export function AppSettingsGeneralForm() {
 
   return (
     <form>
-      <SettingsEntry title="Language">
+      <SettingsEntry title={t("language")}>
         {/* We dont set the language to the regular app settings */}
         <Select fullWidth value={i18n.resolvedLanguage} onChange={(e) => i18n.changeLanguage(e.target.value)}>
           {LANGUAGES.map((lang) => (
@@ -120,10 +121,7 @@ export function AppSettingsGeneralForm() {
           ))}
         </Select>
       </SettingsEntry>
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="body2">
-        <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
-      </Typography>
+      <Footnote />
     </form>
   );
 }
@@ -239,6 +237,8 @@ const backgroundsLight = [
   },
 ];
 export function AppSettingsVisualForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.visual" });
+  const { t: t_b } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.visual.background" });
   const { settings, setSettings } = useAppSettings();
 
   const form = useForm({
@@ -266,7 +266,7 @@ export function AppSettingsVisualForm() {
 
   return (
     <form>
-      <Typography variant="h5">Player Name Colors</Typography>
+      <Typography variant="h5">{t("name_colors.label")}</Typography>
       <SettingsEntry>
         <Controller
           name="playerNames.showColors"
@@ -276,7 +276,7 @@ export function AppSettingsVisualForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Show Player Name Colors"
+              label={t("name_colors.show")}
             />
           )}
         />
@@ -290,7 +290,7 @@ export function AppSettingsVisualForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Prefer Solid Color Over Gradient Color"
+              label={t("name_colors.prefer_solid_color")}
             />
           )}
         />
@@ -304,7 +304,7 @@ export function AppSettingsVisualForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Show Outline"
+              label={t("name_colors.show_outline")}
             />
           )}
         />
@@ -312,8 +312,8 @@ export function AppSettingsVisualForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h5">Background</Typography>
-      <SettingsEntry title="Background Blur" tooltip="Guassian Blur applied to the background">
+      <Typography variant="h5">{t_b("label")}</Typography>
+      <SettingsEntry title={t_b("blur.label")} tooltip={t_b("blur.tooltip")}>
         <Controller
           name="background.blur"
           control={form.control}
@@ -332,8 +332,8 @@ export function AppSettingsVisualForm() {
         />
       </SettingsEntry>
 
-      <Typography variant="h6">Light Mode</Typography>
-      <SettingsEntry title="Background">
+      <Typography variant="h6">{t_b("light_mode")}</Typography>
+      <SettingsEntry title={t_b("label")}>
         <Controller
           name="background.light"
           control={form.control}
@@ -348,7 +348,7 @@ export function AppSettingsVisualForm() {
               }}
             >
               <MenuItem value="">
-                <em>Default Background</em>
+                <em>{t_b("default")}</em>
               </MenuItem>
               {backgroundsLight.map((bg) => (
                 <MenuItem key={bg.file} value={bg.file}>
@@ -365,12 +365,16 @@ export function AppSettingsVisualForm() {
           )}
         />
       </SettingsEntry>
-      <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
-        <TextField fullWidth {...form.register("background.lightCustom")} placeholder="URL to image" />
+      <SettingsEntry title={t_b("custom.label")} tooltip={t_b("custom.tooltip")}>
+        <TextField
+          fullWidth
+          {...form.register("background.lightCustom")}
+          placeholder={t_b("custom.placeholder")}
+        />
       </SettingsEntry>
 
-      <Typography variant="h6">Dark Mode</Typography>
-      <SettingsEntry title="Background">
+      <Typography variant="h6">{t_b("dark_mode")}</Typography>
+      <SettingsEntry title={t_b("label")}>
         <Controller
           name="background.dark"
           control={form.control}
@@ -385,7 +389,7 @@ export function AppSettingsVisualForm() {
               }}
             >
               <MenuItem value="">
-                <em>Default Background</em>
+                <em>{t_b("default")}</em>
               </MenuItem>
               {backgroundsDark.map((bg) => (
                 <MenuItem key={bg.file} value={bg.file}>
@@ -402,19 +406,21 @@ export function AppSettingsVisualForm() {
           )}
         />
       </SettingsEntry>
-      <SettingsEntry title="Custom Background" tooltip="If set, replaces the selected background from above">
-        <TextField fullWidth {...form.register("background.darkCustom")} placeholder="URL to image" />
+      <SettingsEntry title={t_b("custom.label")} tooltip={t_b("custom.tooltip")}>
+        <TextField
+          fullWidth
+          {...form.register("background.darkCustom")}
+          placeholder={t_b("custom.placeholder")}
+        />
       </SettingsEntry>
 
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="body2">
-        <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
-      </Typography>
+      <Footnote />
     </form>
   );
 }
 
 function AppSettingsTopGoldenListForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.top_golden_list" });
   const { settings, setSettings } = useAppSettings();
 
   const form = useForm({
@@ -437,9 +443,9 @@ function AppSettingsTopGoldenListForm() {
   return (
     <form>
       <SettingsEntry
-        title="Darken Tier Colors"
-        tooltip="In dark-mode, makes the tier colors darker. 0% doesn't change the colors, 100% makes them entirely black."
-        note="This setting only affects the dark-mode colors!"
+        title={t("darken_colors.label")}
+        tooltip={t("darken_colors.tooltip")}
+        note={t("darken_colors.note")}
       >
         <Controller
           name="topGoldenList.darkenTierColors"
@@ -458,7 +464,7 @@ function AppSettingsTopGoldenListForm() {
           )}
         />
       </SettingsEntry>
-      <SettingsEntry note="Hides the popular campaign's icons, such as SJ, SC, D-Sides...">
+      <SettingsEntry note={t("campaign_icons.note")}>
         <Controller
           name="topGoldenList.showCampaignIcons"
           control={form.control}
@@ -467,12 +473,12 @@ function AppSettingsTopGoldenListForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Show Campaign Icons"
+              label={t("campaign_icons.label")}
             />
           )}
         />
       </SettingsEntry>
-      <SettingsEntry note="This will replace the flag icons with [C], [FC] and [C/FC] 'icons'">
+      <SettingsEntry note={t("text_fc_icons.note")}>
         <Controller
           name="topGoldenList.useTextFcIcons"
           control={form.control}
@@ -481,13 +487,13 @@ function AppSettingsTopGoldenListForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Use Text FC Icons"
+              label={t("text_fc_icons.label")}
             />
           )}
         />
       </SettingsEntry>
 
-      <SettingsEntry note="Switches from 'Segment Name [Map Name]' to 'Map Name [Segment Name]' format">
+      <SettingsEntry note={t("switch_order.note")}>
         <Controller
           name="topGoldenList.switchMapAndChallenge"
           control={form.control}
@@ -496,7 +502,7 @@ function AppSettingsTopGoldenListForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Switch Map and Challenge"
+              label={t("switch_order.label")}
             />
           )}
         />
@@ -511,21 +517,19 @@ function AppSettingsTopGoldenListForm() {
               checked={field.value}
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
-              label="Hide Empty Tiers"
+              label={t("hide_empty_tiers")}
             />
           )}
         />
       </SettingsEntry>
 
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="body2">
-        <FontAwesomeIcon icon={faInfoCircle} /> Settings are saved automatically.
-      </Typography>
+      <Footnote />
     </form>
   );
 }
 
 function AppSettingsDifficultyColorsForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.difficulty_colors" });
   const { settings, setSettings } = useAppSettings();
   const [render, setRender] = useState(false);
 
@@ -607,18 +611,17 @@ function AppSettingsDifficultyColorsForm() {
   return (
     <form>
       <Typography variant="body2" color={(t) => t.palette.text.secondary}>
-        High and Low subtier colors are calculated based on the Mid color. You can overwrite this by
-        explicitly setting the High and Low subtier colors.
+        {t("description")}
       </Typography>
       <Grid container rowSpacing={1} columnSpacing={2}>
         <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">High</Typography>
+          <Typography variant="h6">{t("high")}</Typography>
         </Grid>
         <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">Mid</Typography>
+          <Typography variant="h6">{t("mid")}</Typography>
         </Grid>
         <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">Low</Typography>
+          <Typography variant="h6">{t("low")}</Typography>
         </Grid>
       </Grid>
       <Grid container rowSpacing={1} columnSpacing={2}>
@@ -626,7 +629,7 @@ function AppSettingsDifficultyColorsForm() {
           if (id === 13) {
             return (
               <Grid item xs={12} md={12} key={id}>
-                <Typography variant="h6">Tier 4+ (no subtiers)</Typography>
+                <Typography variant="h6">{t("t4+")}</Typography>
               </Grid>
             );
           }
@@ -645,21 +648,21 @@ function AppSettingsDifficultyColorsForm() {
         })}
       </Grid>
       <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
-        <Typography variant="body1">Presets:</Typography>
+        <Typography variant="body1">{t("presets.label")}</Typography>
         <Button variant="outlined" onClick={() => restorePreset(0)}>
-          Default
+          {t("presets.default")}
         </Button>
       </Stack>
       <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
-        <Typography variant="body1">Colorblindness Presets:</Typography>
+        <Typography variant="body1">{t("presets.colorblind")}</Typography>
         <Button variant="outlined" onClick={() => restorePreset(1)}>
-          Protanopia
+          {t("presets.protanopia")}
         </Button>
         <Button variant="outlined" onClick={() => {}} disabled>
-          Deuteranopia
+          {t("presets.deuteranopia")}
         </Button>
         <Button variant="outlined" onClick={() => {}} disabled>
-          Tritanopia
+          {t("presets.tritanopia")}
         </Button>
       </Stack>
     </form>
@@ -711,5 +714,17 @@ export function SettingsEntry({ title = "", tooltip, note, children, shiftNote =
         </Grid>
       )}
     </Grid>
+  );
+}
+
+function Footnote({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "app_settings" });
+  return (
+    <>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="body2">
+        <FontAwesomeIcon icon={faInfoCircle} /> {t("footnote")}
+      </Typography>
+    </>
   );
 }
