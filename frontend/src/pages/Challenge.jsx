@@ -3,15 +3,8 @@ import {
   Chip,
   Divider,
   Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  ListSubheader,
   Paper,
   Stack,
-  StyledEngineProvider,
   Table,
   TableBody,
   TableCell,
@@ -42,7 +35,6 @@ import {
 import {
   getChallengeCampaign,
   getChallengeNameShort,
-  getGamebananaEmbedUrl,
   getMapLobbyInfo,
   getPlayerNameColorStyle,
 } from "../util/data_util";
@@ -57,10 +49,7 @@ import {
   faExternalLink,
   faExternalLinkAlt,
   faFlagCheckered,
-  faInfoCircle,
-  faLandmark,
   faPlus,
-  faShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
@@ -70,6 +59,7 @@ import { getQueryData, useGetChallenge } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useTranslation } from "react-i18next";
 
 const displayNoneOnMobile = {
   display: {
@@ -89,6 +79,7 @@ export function PageChallenge({}) {
 }
 
 export function ChallengeDisplay({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const auth = useAuth();
   const query = useGetChallenge(id);
 
@@ -118,7 +109,7 @@ export function ChallengeDisplay({ id }) {
           {auth.hasVerifierPriv && (
             <Link to={"/submit/single-challenge/" + id}>
               <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} sx={{ mt: 0, mb: 0 }}>
-                Submit A Run
+                {t("buttons.submit")}
               </Button>
             </Link>
           )}
@@ -128,7 +119,7 @@ export function ChallengeDisplay({ id }) {
             sx={{ mr: 1, mt: 0 }}
             startIcon={<FontAwesomeIcon icon={faEdit} />}
           >
-            Edit Challenge
+            {t("buttons.edit")}
           </Button>
         </Stack>
       )}
@@ -136,7 +127,7 @@ export function ChallengeDisplay({ id }) {
       <ChallengeSubmissionTable challenge={challenge} />
 
       <Divider sx={{ my: 2 }}>
-        <Chip label="Difficulty Suggestions" size="small" />
+        <Chip label={t("difficulty_suggestions")} size="small" />
       </Divider>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <SuggestedDifficultyChart challenge={challenge} />
@@ -159,6 +150,8 @@ export function ChallengeDisplay({ id }) {
 }
 
 export function ChallengeDetailsList({ map, challenge = null, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
 
   const lobbyInfo = getMapLobbyInfo(map);
@@ -168,25 +161,31 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
     <Grid container columnSpacing={1} rowSpacing={1} {...props}>
       <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text="Campaign" />
+          <InfoBoxIconTextLine
+            icon={<FontAwesomeIcon icon={faBook} />}
+            text={t_g("campaign", { count: 1 })}
+          />
           <InfoBoxIconTextLine text={campaign.name} isSecondary />
         </InfoBox>
         {map !== null ? (
           map.name === campaign.name ? null : (
             <InfoBox>
-              <InfoBoxIconTextLine text="Map" />
+              <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
               <InfoBoxIconTextLine text={map.name} isSecondary />
             </InfoBox>
           )
         ) : (
           <InfoBox>
-            <InfoBoxIconTextLine text="Full Game?" />
+            <InfoBoxIconTextLine text={t("is_full_game")} />
             <InfoBoxIconTextLine text={<FontAwesomeIcon icon={faCheckCircle} color="green" />} isSecondary />
           </InfoBox>
         )}
         {challenge !== null && (
           <InfoBox>
-            <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faFlagCheckered} />} text="Challenge" />
+            <InfoBoxIconTextLine
+              icon={<FontAwesomeIcon icon={faFlagCheckered} />}
+              text={t_g("challenge", { count: 1 })}
+            />
             <InfoBoxIconTextLine
               text={
                 <Stack direction="row" alignItems="center" gap={0.5}>
@@ -205,18 +204,18 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
       <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
         {hasLobbyInfo && (
           <InfoBox>
-            <InfoBoxIconTextLine text="Lobby Info" />
+            <InfoBoxIconTextLine text={t("lobby_info")} />
             <InfoBoxIconTextLine text={<LobbyInfoSpan lobbyInfo={lobbyInfo} />} isSecondary />
           </InfoBox>
         )}
         {challenge !== null && (
           <InfoBox>
-            <InfoBoxIconTextLine text="Difficulty" />
+            <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
             <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
           </InfoBox>
         )}
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text="URL" />
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
           <InfoBoxIconTextLine
             text={<StyledExternalLink href={campaign.url}>{campaign.url}</StyledExternalLink>}
             isSecondary
@@ -253,13 +252,15 @@ export function ChallengeSubmissionTable({
   hideSubmissionIcon = false,
   ...props
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "challenge.submission_table" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
     <TableContainer component={Paper} {...props}>
       <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
-            <TableCell width={compact ? 1 : undefined}>Player</TableCell>
+            <TableCell width={compact ? 1 : undefined}>{t_g("player", { count: 1 })}</TableCell>
             {compact ? null : (
               <TableCell width={1} align="center" sx={displayNoneOnMobile}>
                 <FontAwesomeIcon icon={faComment} />
@@ -279,7 +280,7 @@ export function ChallengeSubmissionTable({
                   },
                 }}
               >
-                Suggestion
+                {t("suggestion")}
               </TableCell>
             )}
           </TableRow>
@@ -296,7 +297,7 @@ export function ChallengeSubmissionTable({
           ))}
           {challenge.submissions.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5}>No submissions</TableCell>
+              <TableCell colSpan={5}>{t("empty")}</TableCell>
             </TableRow>
           )}
         </TableBody>

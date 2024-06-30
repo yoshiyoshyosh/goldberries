@@ -43,7 +43,7 @@ import {
   VerificationStatusChip,
 } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
-import { API_URL, FormOptions } from "../util/constants";
+import { API_URL, DISCORD_INVITE, FormOptions } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightArrowLeft,
@@ -346,7 +346,7 @@ export function UserAccountNotificationsForm() {
         <Trans
           i18nKey="account.tabs.notifications.note"
           components={{
-            CustomLink1: <StyledExternalLink href="https://discord.gg/GeJvmMycaC" />,
+            CustomLink1: <StyledExternalLink href={DISCORD_INVITE} />,
             CustomLink2: <StyledLink to="/my-account/login-methods" />,
           }}
         />
@@ -710,7 +710,7 @@ export function UserAccountShowcaseForm() {
   if (!auth.hasPlayerClaimed) {
     return (
       <>
-        <Typography variant="body1" gutterBottom color="red">
+        <Typography variant="body1" gutterBottom color="error.main">
           {t("no_player_claimed")}
         </Typography>
       </>

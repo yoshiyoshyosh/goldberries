@@ -682,5 +682,64 @@
         }
       }
     }
+  },
+  "challenge": {
+    "buttons": {
+      "submit": "Submit a Run",
+      "edit": "Edit Challenge"
+    },
+    "difficulty_suggestions": "Difficulty Suggestions",
+    "is_full_game": "Full Game?",
+    "lobby_info": "Lobby Info",
+    "submission_table": {
+      "suggestion": "Suggestion",
+      "empty": "No submissions"
+    }
+  },
+  "claim_player": {
+    "title": "Claim a Player",
+    "link_success": {
+      "title": "Player claimed!",
+      "info": "You have successfully claimed your player. You can now submit runs!"
+    },
+    "make_claim": {
+      "title": "Claim Player",
+      "info": "Your account is not linked to a player yet. If you have made submissions on the old spreadsheet, you should claim your player with the same name. Otherwise you can create a new player.",
+      "buttons": {
+        "link": "Link Existing Player",
+        "create": "Create New Player"
+      },
+      "back": "Back",
+      "create": {
+        "title": "Create New Player",
+        "feedback": {
+          "created": "Player created",
+          "already_exists": "Player already exists",
+          "name_missing": "Please enter a player name",
+          "name_short": "Player name must be at least 3 characters long"
+        },
+        "info": "Please enter the name you want to have on the list. If you already have existing submissions from the old spreadsheet, please go back and select \"Link Existing Player\".",
+        "player_name": "Player Name",
+        "button": "Create Player"
+      },
+      "link": {
+        "title": "Claim Existing Player",
+        "info_1": "If you have made submission for the old spreadsheet, you can claim these for your account.",
+        "info_2": "After making a claim, you will have to contact a team member directly, in order to verify that you are who you claim to be!",
+        "this_u": "This u?",
+        "confirm": "I confirm that I am the player shown in the video",
+        "button": "Claim Player"
+      }
+    },
+    "claim_made": {
+      "title": "Player claim submitted!",
+      "info": "Your claim has been submitted! Please contact one of the verifiers on Discord (or some other way) to verify your claim. An @ in the <CustomLink>Modded Golden Team Discord</CustomLink> should be enough in most cases!",
+      "your_data": {
+        "title": "Your Data",
+        "account_id": "Account ID:",
+        "claimed_player": "Claimed Player:",
+        "verifiers": "Verifiers"
+      }
+    }
   }
 }

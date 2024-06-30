@@ -20,6 +20,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   ProofEmbed,
+  StyledExternalLink,
 } from "../components/BasicComponents";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,8 +28,11 @@ import { toast } from "react-toastify";
 import { errorToast } from "../util/util";
 import { PlayerChip, PlayerSelect } from "../components/GoldberriesComponents";
 import { useClaimPlayer } from "../hooks/useApi";
+import { Trans, useTranslation } from "react-i18next";
+import { DISCORD_INVITE } from "../util/constants";
 
 export function PageClaimPlayer() {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player" });
   const auth = useAuth();
 
   return (
@@ -40,7 +44,7 @@ export function PageClaimPlayer() {
         },
       }}
     >
-      <HeadTitle title="Claim a Player" />
+      <HeadTitle title={t("title")} />
       {auth.user.player_id !== null ? <ClaimPlayerLinkSuccess /> : null}
       {auth.user.claimed_player_id !== null ? <ClaimPlayerClaimMade /> : null}
       {auth.user.player_id === null && auth.user.claimed_player_id === null ? <ClaimPlayerMakeClaim /> : null}
@@ -49,32 +53,33 @@ export function PageClaimPlayer() {
 }
 
 export function ClaimPlayerClaimMade() {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player.claim_made" });
   const auth = useAuth();
   const query = useQuery({
     queryKey: ["player_list", "verifier"],
     queryFn: () => fetchPlayerList("verifier"),
   });
 
-  console.log("Query:", query);
-
   return (
     <>
       <Typography variant="h4" gutterBottom color="success.main">
-        Player claim submitted!
+        {t("title")}
       </Typography>
       <Typography variant="body1">
-        Your claim has been submitted! Please contact one of the verifiers on Discord (or some other way) to
-        verify your claim.
+        <Trans
+          i18nKey="claim_player.claim_made.info"
+          components={{ CustomLink: <StyledExternalLink href={DISCORD_INVITE} /> }}
+        />
       </Typography>
 
       <List dense>
-        <ListSubheader>Your Data</ListSubheader>
+        <ListSubheader>{t("your_data.title")}</ListSubheader>
         <ListItem>
-          <ListItemText primary={"Account ID: " + auth.user.id} />
+          <ListItemText primary={t("your_data.account_id") + " " + auth.user.id} />
         </ListItem>
         <ListItem>
           <Stack direction="row" gap={1} alignItems="center">
-            <Typography variant="body2">Claimed Player:</Typography>
+            <Typography variant="body2">{t("your_data.claimed_player")}</Typography>
             <PlayerChip player={auth.user.claimed_player} size="small" />
           </Stack>
         </ListItem>
@@ -84,7 +89,7 @@ export function ClaimPlayerClaimMade() {
       {query.isError ? <ErrorDisplay error={query.error} /> : null}
       {query.isSuccess ? (
         <List dense>
-          <ListSubheader>Verifiers</ListSubheader>
+          <ListSubheader>{t("your_data.verifiers")}</ListSubheader>
           {query.data.data.map((player) => (
             <ListItem key={player.id}>
               <PlayerChip player={player} size="small" />
@@ -97,19 +102,19 @@ export function ClaimPlayerClaimMade() {
 }
 
 export function ClaimPlayerLinkSuccess() {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player.link_success" });
   return (
     <>
       <Typography variant="h4" gutterBottom color="success.main">
-        Player claimed!
+        {t("title")}
       </Typography>
-      <Typography variant="body1">
-        You have successfully claimed your player. You can now submit runs!
-      </Typography>
+      <Typography variant="body1">{t("info")}</Typography>
     </>
   );
 }
 
 function ClaimPlayerMakeClaim() {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player.make_claim" });
   const [createNewPlayer, setCreateNewPlayer] = useState(null);
   const onGoBack = () => setCreateNewPlayer(null);
 
@@ -117,19 +122,16 @@ function ClaimPlayerMakeClaim() {
     return (
       <>
         <Typography variant="h4" gutterBottom>
-          Claim Player
+          {t("title")}
         </Typography>
-        <Typography variant="body1">
-          Your account is not linked to a player yet. If you have made submissions on the old spreadsheet, you
-          should claim your player with the same name. Otherwise you can create a new player.
-        </Typography>
+        <Typography variant="body1">{t("info")}</Typography>
         <Stack direction="column" gap={2} sx={{ mt: 2 }} justifyContent="center">
           <Button variant="contained" fullWidth size="large" onClick={() => setCreateNewPlayer(false)}>
-            Link Existing Player
+            {t("buttons.link")}
           </Button>
           <Divider flexItem>OR</Divider>
           <Button variant="contained" fullWidth size="large" onClick={() => setCreateNewPlayer(true)}>
-            Create New Player
+            {t("buttons.create")}
           </Button>
         </Stack>
       </>
@@ -144,6 +146,8 @@ function ClaimPlayerMakeClaim() {
 }
 
 function ClaimPlayerCreateNewPlayer({ onGoBack }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player.make_claim.create" });
+  const { t: t_mc } = useTranslation(undefined, { keyPrefix: "claim_player.make_claim" });
   const auth = useAuth();
   const form = useForm({
     mode: "onTouched",
@@ -162,14 +166,14 @@ function ClaimPlayerCreateNewPlayer({ onGoBack }) {
   const { mutate: createPlayer } = useMutation({
     mutationFn: (data) => postPlayer(data),
     onSuccess: (data) => {
-      toast.success("Player created!");
+      toast.success(t("feedback.created"));
       auth.checkSession();
     },
     onError: errorToast,
   });
   const validateNameUnique = (value) => {
     if (query.data.data.find((player) => player.name.toLowerCase() === value.trim().toLowerCase())) {
-      return "Player already exists!";
+      return t("feedback.already_exists");
     }
     return true;
   };
@@ -177,37 +181,36 @@ function ClaimPlayerCreateNewPlayer({ onGoBack }) {
   return (
     <>
       <Button variant="outlined" size="large" onClick={onGoBack}>
-        Back
+        {t_mc("back")}
       </Button>
       <Divider sx={{ my: 2 }} />
       <Typography variant="h4" gutterBottom>
-        Create New Player
+        {t("title")}
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        Please enter the name you want to have on the list. If you already have existing submissions from the
-        old spreadsheet, please go back and select "Link Existing Player".
+        {t("info")}
       </Typography>
       {query.isLoading ? <LoadingSpinner /> : null}
       {query.isError ? <ErrorDisplay error={query.error} /> : null}
       {query.isSuccess ? (
         <form onSubmit={onSubmit}>
           <TextField
-            label="Player Name"
+            label={t("player_name")}
             variant="outlined"
             fullWidth
             {...form.register("name", {
-              required: "Please enter a player name",
+              required: t("feedback.name_missing"),
               validate: validateNameUnique,
               minLength: {
                 value: 3,
-                message: "Player name must be at least 3 characters long",
+                message: t("feedback.name_short"),
               },
             })}
             error={!!errors.name}
             helperText={errors.name?.message}
           />
           <Button type="submit" variant="contained" sx={{ mt: 2 }} fullWidth disabled={!!errors.name}>
-            Create Player
+            {t("button")}
           </Button>
         </form>
       ) : null}
@@ -216,6 +219,8 @@ function ClaimPlayerCreateNewPlayer({ onGoBack }) {
 }
 
 function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "claim_player.make_claim.link" });
+  const { t: t_mc } = useTranslation(undefined, { keyPrefix: "claim_player.make_claim" });
   const auth = useAuth();
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [confirmCheck, setConfirmCheck] = useState(false);
@@ -249,18 +254,17 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
   return (
     <>
       <Button variant="outlined" size="large" onClick={onGoBack}>
-        Back
+        {t_mc("back")}
       </Button>
       <Divider sx={{ my: 2 }} />
       <Typography variant="h4" gutterBottom>
-        Claim Existing Player
+        {t("title")}
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        If you have made submission for the old spreadsheet, you can claim these for your account.
+        {t("info_1")}
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        After making a claim, you will have to contact a team member directly, in order to verify that you are
-        who you claim to be!
+        {t("info_2")}
       </Typography>
       <PlayerSelect
         type="unclaimed"
@@ -272,7 +276,7 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
       {query.isSuccess ? (
         <>
           <Typography variant="h6" sx={{ mt: 2 }}>
-            This u?
+            {t("this_u")}
           </Typography>
           <ProofEmbed url={url} />
         </>
@@ -280,7 +284,7 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
       <Divider sx={{ my: 2 }} />
       <FormControlLabel
         control={<Checkbox checked={confirmCheck} onChange={(e) => setConfirmCheck(e.target.checked)} />}
-        label="I confirm that I am the player shown in the video"
+        label={t("confirm")}
         disabled={selectedPlayer === null}
       />
       <Button
@@ -290,7 +294,7 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
         onClick={() => claimSelectedPlayer(selectedPlayer)}
         disabled={selectedPlayer === null || !confirmCheck}
       >
-        Claim Player
+        {t("button")}
       </Button>
     </>
   );

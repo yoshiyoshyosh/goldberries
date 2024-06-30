@@ -302,6 +302,7 @@
     "switch_to_dark_mode": "Wechsel zum Dunkelmodus",
     "player_menu": {
       "name": "Mein Account",
+      "claim_a_player": "Player Beanspruchen",
       "my_player_page": "Meine Player Seite",
       "my_top_goldens": "Meine Top Goldens",
       "logout": "Logout"
@@ -676,6 +677,65 @@
           "deuteranopia": "Deuteranopia",
           "tritanopia": "Tritanopia"
         }
+      }
+    }
+  },
+  "challenge": {
+    "buttons": {
+      "submit": "Run Einreichen",
+      "edit": "Challenge Bearbeiten"
+    },
+    "difficulty_suggestions": "Schwierigkeitsempfehlungen",
+    "is_full_game": "Full Game?",
+    "lobby_info": "Lobby Info",
+    "submission_table": {
+      "suggestion": "Empfehlung",
+      "empty": "Keine Submissions"
+    }
+  },
+  "claim_player": {
+    "title": "Player Beanspruchen",
+    "link_success": {
+      "title": "Player beansprucht!",
+      "info": "Du hast deinen Player erfolgreich beansprucht! Du kannst jetzt Runs einreichen!"
+    },
+    "make_claim": {
+      "title": "Player Beanspruchen",
+      "info": "Dein Account ist noch nicht mit einem Player verbunden. Wenn du Submissions zu dem alten Spreadsheet gemacht hast, solltest du den existierenden Player mit deinem Namen beanspruchen. Ansonsten kannst du einen neuen Player erstellen.",
+      "buttons": {
+        "link": "Existierenden Player Verbinden",
+        "create": "Neuen Player Erstellen"
+      },
+      "back": "Zurück",
+      "create": {
+        "title": "Neuen Player Erstellen",
+        "feedback": {
+          "created": "Player erstellt",
+          "already_exists": "Player existiert bereits",
+          "name_missing": "Bitte gib einen Namen an",
+          "name_short": "Player Name muss mindestens 3 Zeichen lang sein"
+        },
+        "info": "Bitte gib den Namen an, den du auf der Liste haben möchtest. Wenn du schon bestehende Submissions von dem alten Spreadsheet hast, gehe bitte zurück und wähle \"Existierenden Player Verbinden\".",
+        "player_name": "Player Name",
+        "button": "Player Erstellen"
+      },
+      "link": {
+        "title": "Existierenden Player Verbinden",
+        "info_1": "Wenn du Submissions zu dem alten Spreadsheet gemacht hast, kannst du diese hier für deinen Account beanspruchen.",
+        "info_2": "Nachdem du einen Anspruch gestellt hast, musst du mit einem Teammitglied kontakt aufnehmen, damit wir bestätigen können, dass du auch der Player bist, den du beanspruchst!",
+        "this_u": "This u?",
+        "confirm": "Ich bestätige, dass ich der Player bin, der in dem Video gezeigt wird",
+        "button": "Player Beanspruchen"
+      }
+    },
+    "claim_made": {
+      "title": "Player beansprucht!",
+      "info": "Dein Anspruch ist eingegangen! Bitte kontaktiere einen der Verifier auf Discord (oder auf anderem Wege) um deinen Anspruch zu verifizieren. Ein @ auf dem <CustomLink>Modded Golden Team Discord</CustomLink> reicht in den meisten Fällen aus!",
+      "your_data": {
+        "title": "Deine Daten",
+        "account_id": "Account ID:",
+        "claimed_player": "Beanspruchter Player:",
+        "verifiers": "Verifier"
       }
     }
   }
