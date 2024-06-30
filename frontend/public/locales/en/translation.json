@@ -59,6 +59,9 @@
       "no_reason": "This user is suspended"
     },
     "input_methods": {
+      "label_one": "Input Method",
+      "label_other": "Input Methods",
+      "not_specified": "Not Specified",
       "keyboard": "Keyboard",
       "dpad": "Controller (D-Pad)",
       "analog": "Controller (Analog)",
@@ -108,6 +111,12 @@
       "note_suggested_difficulties": "Suggested difficulties of this player",
       "note_video_link": "These links lead to the video of the first clear of a challenge",
       "placement_difficulty": "Placement Difficulty:"
+    },
+    "custom_links": {
+      "label": "Custom Links",
+      "add_link": "Add Link",
+      "remove_link": "Remove",
+      "invalid_url": "Invalid URL"
     }
   },
   "forms": {
@@ -492,6 +501,114 @@
       "post_donation": {
         "text": "I appreciate it! Do note that donations aren't automatically put on the list of Contributors, so it might take a while for your donation to be added!",
         "back": "Back to Server Costs"
+      }
+    }
+  },
+  "account": {
+    "title": "My Account",
+    "no_player_claimed": "You haven't claimed a player yet. Head over to <CustomLink>this page</CustomLink> to create or claim one!",
+    "claim": "Claim:",
+    "tabs": {
+      "login_methods": {
+        "label": "Login Methods",
+        "feedback": {
+          "updated": "Account updated",
+          "passwords_not_match": "Passwords do not match"
+        },
+        "note": "Note: One of the login methods must always be active!",
+        "email": "Email",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "add_email": "Add Email",
+        "undo": "Undo",
+        "unlink": "Unlink",
+        "discord": "Discord",
+        "linked": "Linked",
+        "link_discord": "Link Discord",
+        "button": "Save Changes"
+      },
+      "notifications": {
+        "label": "Notifications",
+        "feedback": {
+          "updated": "Notification settings updated"
+        },
+        "note": "Note: Currently these notifications will be sent as Discord pings in the official Modded Golden Discord Server. To get a notification, you need to join that server (<CustomLink1>invite link</CustomLink1>) AND have your Discord account linked to your goldberries.net account <CustomLink2>here</CustomLink2>!",
+        "sub_verified": {
+          "label": "Submission Verified",
+          "description": "To get notified when your submission gets verified or rejected"
+        },
+        "marked_personal": {
+          "label": "Difficulty Suggestion Marked Personal",
+          "description": "To get notified when a difficulty suggestion from you gets marked as 'personal', due to new major strats being discovered"
+        },
+        "challenge_moved": {
+          "label": "Challenge Moved",
+          "description": "To get notified when a challenge you have completed gets moved to a different difficulty"
+        },
+        "suggestion_created": {
+          "label": "Suggestion Created",
+          "description": "To get notified when a suggestion for a challenge you have completed is created"
+        }
+      },
+      "profile": {
+        "label": "Profile",
+        "feedback": {
+          "updated": "Profile updated"
+        },
+        "name_color": {
+          "label": "Name Color",
+          "preview": "Preview:",
+          "name_placeholder": "Player Name",
+          "use_gradient": "Use Gradient",
+          "start_color": "Start Color",
+          "end_color": "End Color",
+          "solid_color": "Solid Color",
+          "switch": "Switch"
+        },
+        "about_me": {
+          "label": "About Me",
+          "placeholder": "Tell us about yourself!"
+        },
+        "custom_links": {
+          "label": "Custom Links",
+          "note": "You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to your YouTube channel, or any other link you want to share with the community."
+        }
+      },
+      "showcase": {
+        "label": "Showcase",
+        "title": "Submission Showcase",
+        "feedback": {
+          "updated": "Showcase updated"
+        },
+        "no_player_claimed": "You need to have a player claimed to use this feature!",
+        "note_1": "Select up to 9 submissions which should be shown on your player profile!",
+        "note_2": "Note: Not selecting any submissions will make the 9 highest placed submissions be shown instead.",
+        "buttons": {
+          "save": "Save Showcase",
+          "add_submission": "Add Submission",
+          "remove_submission": "Remove Submission"
+        }
+      },
+      "player_rename": {
+        "label": "Player Rename",
+        "title": "Rename your Player",
+        "feedback": {
+          "renamed": "Rename successful"
+        },
+        "no_player_claimed": "You don't have a player claimed yet!",
+        "description": "Give your player a new name. This can be done once every 24 hours.",
+        "can_rename": "You can rename your player!",
+        "cannot_rename": "You can rename your player again in {{time}}.",
+        "new_name": "New Name",
+        "log_change": "Log the rename in your player's changelog",
+        "button": "Rename"
+      },
+      "danger_zone": {
+        "label": "Danger Zone",
+        "description": "Permanently delete your account.",
+        "note": "Please note that this does not delete your associated player! Any submissions will remain unchanged, and your 'player' will become unclaimed again. If you want to remove your name from this website or mass delete your own submissions, contact a team member!",
+        "confirm": "Type 'DELETE' to confirm",
+        "button": "Delete Account"
       }
     }
   }

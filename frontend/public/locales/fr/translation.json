@@ -59,6 +59,9 @@
       "no_reason": "Cette personne est suspendue"
     },
     "input_methods": {
+      "label_one": "Input Method",
+      "label_other": "Input Methods",
+      "not_specified": "Not Specified",
       "keyboard": "Clavier",
       "dpad": "Manette (Croix directionnelle)",
       "analog": "Manette (Joystick)",
@@ -108,6 +111,12 @@
       "note_suggested_difficulties": "Les difficultés ressenties de ce·cette joueur·euse",
       "note_video_link": "Ces liens mènent à la vidéo du premier clear d’un challenge",
       "placement_difficulty": "Positionnement de cette difficulté :"
+    },
+    "custom_links": {
+      "label": "Custom Links",
+      "add_link": "Add Link",
+      "remove_link": "Remove",
+      "invalid_url": "Invalid URL"
     }
   },
   "forms": {

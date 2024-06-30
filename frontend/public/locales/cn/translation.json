@@ -59,6 +59,9 @@
       "no_reason": "该用户已被封禁"
     },
     "input_methods": {
+      "label_one": "Input Method",
+      "label_other": "Input Methods",
+      "not_specified": "Not Specified",
       "keyboard": "键盘",
       "dpad": "手柄（十字键）",
       "analog": "手柄（摇杆）",
@@ -108,6 +111,12 @@
       "note_suggested_difficulties": "此玩家的难度排名建议",
       "note_video_link": "首位完成此挑战的玩家视频",
       "placement_difficulty": "实际排名："
+    },
+    "custom_links": {
+      "label": "Custom Links",
+      "add_link": "Add Link",
+      "remove_link": "Remove",
+      "invalid_url": "Invalid URL"
     }
   },
   "forms": {

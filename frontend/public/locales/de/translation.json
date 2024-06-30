@@ -56,6 +56,9 @@
       "no_reason": "Dieser Benutzer ist suspendiert"
     },
     "input_methods": {
+      "label_one": "Input Methode",
+      "label_other": "Input Methoden",
+      "not_specified": "Nicht Spezifiziert",
       "keyboard": "Tastatur",
       "dpad": "Controller (D-Pad)",
       "analog": "Controller (Analog)",
@@ -105,6 +108,12 @@
       "note_suggested_difficulties": "Schwierigkeitsempfehlungen dieses Spielers",
       "note_video_link": "Diese Links führen zu dem Video des Players, der diese Challenge als erstes gemacht hat",
       "placement_difficulty": "Offizielle Schwierigkeit:"
+    },
+    "custom_links": {
+      "label": "Eigene Links",
+      "add_link": "Link Hinzufügen",
+      "remove_link": "Entfernen",
+      "invalid_url": "Ungülte URL"
     }
   },
   "forms": {
@@ -488,6 +497,114 @@
       "post_donation": {
         "text": "Das bedeutet mir viel! Beachte, dass Spenden nicht automatisch auf der Liste der Unterstützer erscheinen, es kann also eine Weile dauern, bis deine Spende hinzugefügt wird!",
         "back": "Zurück zu Server Kosten"
+      }
+    }
+  },
+  "account": {
+    "title": "Mein Account",
+    "no_player_claimed": "Du hast noch keinen Player. Gehe zu <CustomLink>dieser Seite</CustomLink> um einen zu erstellen oder zu beanspruchen!",
+    "claim": "Anspruch:",
+    "tabs": {
+      "login_methods": {
+        "label": "Login",
+        "feedback": {
+          "updated": "Account aktualisiert",
+          "passwords_not_match": "Passwörter stimmen nicht überein"
+        },
+        "note": "Beachte: Eine der beiden Login Methoden muss immer aktiv sein!",
+        "email": "Email",
+        "password": "Passwort",
+        "confirm_password": "Passwort Bestätigen",
+        "add_email": "Email Hinzufügen",
+        "undo": "Rückgängig",
+        "unlink": "Trennen",
+        "discord": "Discord",
+        "linked": "Verbunden",
+        "link_discord": "Verbinde Discord",
+        "button": "Änderungen Speichern"
+      },
+      "notifications": {
+        "label": "Benachrichtigungen",
+        "feedback": {
+          "updated": "Benachrichtigungen aktualisiert"
+        },
+        "note": "Beachte: Derzeit werden diese Benachrichtigungen als Discord Pings im offiziellen Modded Golden Discord Server gesendet. Um diese Benachrichtigungen zu erhalten musst du dem Server beitreten (<CustomLink1>Einladungslink</CustomLink1>) UND dein Discord Account muss mit deinem goldberries.net Account <CustomLink2>hier</CustomLink2> verknüpft sein!",
+        "sub_verified": {
+          "label": "Submission Verifiziert",
+          "description": "Um benachrichtigt zu werden, wenn eine deiner Submissions verifiziert oder abgelehnt wird"
+        },
+        "marked_personal": {
+          "label": "Schwierigkeitsempfehlung Als Persönlich Markiert",
+          "description": "Um benachrichtigt zu werden, wenn eine deiner Schwierigkeitsempfehlungen als persönlich markiert wird"
+        },
+        "challenge_moved": {
+          "label": "Challenge Verschoben",
+          "description": "Um benachrichtigt zu werden, wenn eine Challenge die du abgeschlossen hast zu einer anderen Schwierigkeit verschoben wird"
+        },
+        "suggestion_created": {
+          "label": "Vorschlag Erstellt",
+          "description": "Um benachrichtigt zu werden, wenn ein neuer Vorschlag zu einer Challenge erstellt wird, die du abgeschlossen hast"
+        }
+      },
+      "profile": {
+        "label": "Profil",
+        "feedback": {
+          "updated": "Profil aktualisiert"
+        },
+        "name_color": {
+          "label": "Namesfarbe",
+          "preview": "Vorschau:",
+          "name_placeholder": "Player Name",
+          "use_gradient": "Gradient verwenden",
+          "start_color": "Startfarbe",
+          "end_color": "Endfarbe",
+          "solid_color": "Solide Farbe",
+          "switch": "Wechseln"
+        },
+        "about_me": {
+          "label": "Über Mich",
+          "placeholder": "Erzähl uns etwas über dich!"
+        },
+        "custom_links": {
+          "label": "Eigene Links",
+          "note": "Du kannst eigene Links zu deinem Profil hinzufügen. Zum Beispiel ein Link zu deinem speedrun.com Profil, YouTube Kanal oder ein beliebiger anderer Link, den du mit der Community teilen möchtest."
+        }
+      },
+      "showcase": {
+        "label": "Schaukasten",
+        "title": "Submission Schaukasten",
+        "feedback": {
+          "updated": "Schaukasten aktualisiert"
+        },
+        "no_player_claimed": "Du benötigst einen Player, um diese Funktion zu nutzen!",
+        "note_1": "Wähle bis zu 9 Submissions aus, die auf deinem Profil angezeigt werden sollen!",
+        "note_2": "Hinweis: Wenn keine Submissions ausgewählt werden, werden stattdessen die 9 höchstplatzierten Submissions angezeigt.",
+        "buttons": {
+          "save": "Speichere Schaukasten",
+          "add_submission": "Submission Hinzufügen",
+          "remove_submission": "Submission Entfernen"
+        }
+      },
+      "player_rename": {
+        "label": "Umbenennen",
+        "title": "Player Umbenennen",
+        "feedback": {
+          "renamed": "Umbenennung erfolgreich"
+        },
+        "no_player_claimed": "Du hast noch keinen Player!",
+        "description": "Gib deinem Player einen neuen Namen. Dies kann alle 24 Stunden gemacht werden.",
+        "can_rename": "Du kannst deinen Player umbenennen!",
+        "cannot_rename": "Du kannst deinen Player wieder in {{time}} umbenennen.",
+        "new_name": "Neuer Name",
+        "log_change": "Umbenennung in dem Protokoll deines Players festhalten",
+        "button": "Umbenennen"
+      },
+      "danger_zone": {
+        "label": "Gefahrenzone",
+        "description": "Lösche deinen Account permanent.",
+        "note": "Bitte beachte, dass dies deinen zugehörigen Player nicht löscht! Alle Submissions bleiben unverändert, und dein 'Player' wird wieder verfügbar zum Beanspruchen. Wenn du deinen Namen von dieser Website entfernen oder deine eigenen Submissions in Massen löschen möchtest, kontaktiere ein Teammitglied!",
+        "confirm": "Tippe 'DELETE' um zu bestätigen",
+        "button": "Account Löschen"
       }
     }
   }

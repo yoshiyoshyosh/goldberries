@@ -35,6 +35,7 @@ import {
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
 import {
+  INPUT_METHOD_ICONS,
   InputMethodIcon,
   PlayerChip,
   PlayerSubmissionSelect,
@@ -47,11 +48,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightArrowLeft,
   faCheckSquare,
+  faEdit,
   faEnvelope,
   faLink,
   faLinkSlash,
   faPlus,
   faSave,
+  faTrash,
   faUndo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
@@ -61,8 +64,11 @@ import { MuiColorInput } from "mui-color-input";
 import { getPlayerNameColorStyle } from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { SettingsEntry } from "./AppSettings";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageAccount() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const { tab } = useParams();
   const navigate = useNavigate();
@@ -87,25 +93,27 @@ export function PageAccount() {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <HeadTitle title="My Account" />
+      <HeadTitle title={t("title")} />
       <Typography variant="h4" gutterBottom>
-        My Account
+        {t("title")}
       </Typography>
 
       {auth.user.player === null && auth.user.claimed_player === null ? (
         <>
           <Typography>
-            You haven't claimed a player yet. Head over to{" "}
-            <StyledLink to="/claim-player">this page</StyledLink> to create or claim one!
+            <Trans
+              i18nKey="account.no_player_claimed"
+              components={{ CustomLink: <StyledLink to="/claim-player" /> }}
+            />
           </Typography>
         </>
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography>{auth.user.claimed_player === null ? "Player: " : "Player: "}</Typography>
+              <Typography>{t_g("player", { count: 1 })}: </Typography>
               <PlayerChip player={auth.user.player ?? auth.user.claimed_player} />
-              <VerificationStatusChip isVerified={claimVerified} prefix="Claim: " />
+              <VerificationStatusChip isVerified={claimVerified} prefix={t("claim")} />
             </Stack>
           </Grid>
         </Grid>
@@ -120,12 +128,12 @@ export function PageAccount() {
         scrollButtons="auto"
         sx={{ mb: 2 }}
       >
-        <Tab label="Login Methods" value="login-methods" />
-        <Tab label="Notifications" value="notifications" />
-        <Tab label="Profile" value="profile" />
-        <Tab label="Showcase" value="showcase" />
-        <Tab label="Player Rename" value="rename" />
-        <Tab label="Danger Zone" value="danger-zone" />
+        <Tab label={t("tabs.login_methods.label")} value="login-methods" />
+        <Tab label={t("tabs.notifications.label")} value="notifications" />
+        <Tab label={t("tabs.profile.label")} value="profile" />
+        <Tab label={t("tabs.showcase.label")} value="showcase" />
+        <Tab label={t("tabs.player_rename.label")} value="rename" />
+        <Tab label={t("tabs.danger_zone.label")} value="danger-zone" />
       </Tabs>
       {selectedTab === "login-methods" && <UserAccountLoginMethodsForm />}
       {selectedTab === "notifications" && <UserAccountNotificationsForm />}
@@ -138,12 +146,15 @@ export function PageAccount() {
 }
 
 export function UserAccountLoginMethodsForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.login_methods" });
+  const { t: t_fa } = useTranslation(undefined, { keyPrefix: "forms.account" });
+
   const auth = useAuth();
   const [addEmail, setAddEmail] = useState(false);
 
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
-    toast.success("Account updated");
+    toast.success(t("feedback.updated"));
   }, true);
 
   const form = useForm({
@@ -176,15 +187,15 @@ export function UserAccountLoginMethodsForm() {
 
   const validateConfirmPassword = (value) => {
     if (!formAccount.password) return true;
-    return value === formAccount.password || "Passwords do not match";
+    return value === formAccount.password || t("feedback.passwords_not_match");
   };
 
   return (
     <form>
-      <FormHelperText>Note: One of the login methods must always be active!</FormHelperText>
+      <FormHelperText>{t("note")}</FormHelperText>
 
       <Typography variant="h6" gutterBottom>
-        Email
+        {t("email")}
       </Typography>
       <Grid container spacing={2} sx={{ mt: 0 }}>
         <Grid item xs={12} sm={hasEmail || addEmail ? 9 : 3} style={{ paddingTop: 2 }}>
@@ -192,13 +203,13 @@ export function UserAccountLoginMethodsForm() {
             {hasEmail || addEmail ? (
               <>
                 <TextField
-                  label="Email"
+                  label={t("email")}
                   {...form.register("email", addEmail ? FormOptions.Email : FormOptions.EmailOptional)}
                   fullWidth
                 />
                 <Stack direction="column">
                   <TextField
-                    label={hasEmail ? "New Password" : "Password"}
+                    label={hasEmail ? t_fa("new_password") : t("password")}
                     type="password"
                     {...form.register(
                       "password",
@@ -212,7 +223,7 @@ export function UserAccountLoginMethodsForm() {
                 {hasEmail && (
                   <Stack direction="column">
                     <TextField
-                      label="Confirm Password"
+                      label={t("confirm_password")}
                       type="password"
                       {...form.register("password_confirm", {
                         validate: validateConfirmPassword,
@@ -234,7 +245,7 @@ export function UserAccountLoginMethodsForm() {
                 color="primary"
                 onClick={() => setAddEmail(true)}
               >
-                Add Email
+                {t("add_email")}
               </Button>
             )}
           </Stack>
@@ -248,7 +259,7 @@ export function UserAccountLoginMethodsForm() {
               onClick={() => form.setValue("unlink_email", !formAccount.unlink_email)}
               disabled={formAccount.unlink_discord}
             >
-              {formAccount.unlink_email ? "Undo" : "Unlink"}
+              {t(formAccount.unlink_email ? "undo" : "unlink")}
             </Button>
           </Grid>
         )}
@@ -256,12 +267,12 @@ export function UserAccountLoginMethodsForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">Discord</Typography>
+      <Typography variant="h6">{t("discord")}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={canUnlink ? 9 : 9} sx={{ display: "flex", alignItems: "center" }}>
           {hasDiscord ? (
             <Typography>
-              Linked <FontAwesomeIcon icon={faCheckSquare} color="green" />
+              {t("linked")} <FontAwesomeIcon icon={faCheckSquare} color="green" />
             </Typography>
           ) : (
             <a href={API_URL + "/auth/discord_auth.php?link_account=true"}>
@@ -271,7 +282,7 @@ export function UserAccountLoginMethodsForm() {
                 variant="contained"
                 color="primary"
               >
-                Link Discord
+                {t("link_discord")}
               </Button>
             </a>
           )}
@@ -285,7 +296,7 @@ export function UserAccountLoginMethodsForm() {
               onClick={() => form.setValue("unlink_discord", !formAccount.unlink_discord)}
               disabled={formAccount.unlink_email}
             >
-              {formAccount.unlink_discord ? "Undo" : "Unlink"}
+              {t(formAccount.unlink_discord ? "undo" : "unlink")}
             </Button>
           </Grid>
         )}
@@ -301,18 +312,20 @@ export function UserAccountLoginMethodsForm() {
         onClick={onSubmit}
         disabled={Object.keys(errors).length > 0}
       >
-        Save Changes
+        {t("button")}
       </Button>
     </form>
   );
 }
 
 export function UserAccountNotificationsForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.notifications" });
+  const { t: t_lm } = useTranslation(undefined, { keyPrefix: "account.tabs.login_methods" });
   const auth = useAuth();
 
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
-    toast.success("Notification settings updated");
+    toast.success(t("feedback.updated"));
   }, true);
 
   const form = useForm({
@@ -330,20 +343,18 @@ export function UserAccountNotificationsForm() {
   return (
     <form>
       <FormHelperText>
-        Note: Currently these notifications will be sent as Discord pings in the official Modded Golden
-        Discord Server. To get a notification, you need to join that server (
-        <StyledExternalLink href="https://discord.gg/GeJvmMycaC">invite link</StyledExternalLink>) AND have
-        your Discord account linked to your goldberries.net account{" "}
-        <StyledLink to={"/my-account/login-methods"}>here</StyledLink>!
+        <Trans
+          i18nKey="account.tabs.notifications.note"
+          components={{
+            CustomLink1: <StyledExternalLink href="https://discord.gg/GeJvmMycaC" />,
+            CustomLink2: <StyledLink to="/my-account/login-methods" />,
+          }}
+        />
       </FormHelperText>
 
       <Divider sx={{ my: 2 }} />
 
-      <SettingsEntry
-        note="To get notified when your submission gets verified/rejected"
-        title="Submission Verification"
-        shiftNote
-      >
+      <SettingsEntry note={t("sub_verified.description")} title={t("sub_verified.label")} shiftNote>
         <Controller
           name="n_sub_verified"
           control={form.control}
@@ -356,11 +367,7 @@ export function UserAccountNotificationsForm() {
           )}
         />
       </SettingsEntry>
-      <SettingsEntry
-        note="To get notified when a difficulty suggestion from you gets marked as 'personal', due to new major strats being discovered"
-        title="Difficulty Suggestion Marked Personal"
-        shiftNote
-      >
+      <SettingsEntry note={t("marked_personal.description")} title={t("marked_personal.label")} shiftNote>
         <Controller
           name="n_chall_personal"
           control={form.control}
@@ -373,11 +380,7 @@ export function UserAccountNotificationsForm() {
           )}
         />
       </SettingsEntry>
-      <SettingsEntry
-        note="To get notified when a challenge you have completed gets moved to a different difficulty"
-        title="Challenge Moved"
-        shiftNote
-      >
+      <SettingsEntry note={t("challenge_moved.description")} title={t("challenge_moved.label")} shiftNote>
         <Controller
           name="n_chall_moved"
           control={form.control}
@@ -391,8 +394,8 @@ export function UserAccountNotificationsForm() {
         />
       </SettingsEntry>
       <SettingsEntry
-        note="To get notified when a suggestion for a challenge you have completed is created"
-        title="Suggestion Creation"
+        note={t("suggestion_created.description")}
+        title={t("suggestion_created.label")}
         shiftNote
       >
         <Controller
@@ -417,18 +420,22 @@ export function UserAccountNotificationsForm() {
         startIcon={<FontAwesomeIcon icon={faSave} />}
         onClick={onSubmit}
       >
-        Save Changes
+        {t_lm("button")}
       </Button>
     </form>
   );
 }
 
 export function UserAccountProfileForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.profile" });
+  const { t: t_nc } = useTranslation(undefined, { keyPrefix: "account.tabs.profile.name_color" });
+  const { t: t_lm } = useTranslation(undefined, { keyPrefix: "account.tabs.login_methods" });
+  const { t: t_im } = useTranslation(undefined, { keyPrefix: "components.input_methods" });
   const auth = useAuth();
   const { settings } = useAppSettings();
   const { mutate: postAccount } = usePostAccount((account) => {
     if (account.id === auth.user.id) auth.checkSession();
-    toast.success("Account updated");
+    toast.success(t("feedback.updated"));
   }, true);
 
   const form = useForm({
@@ -498,11 +505,11 @@ export function UserAccountProfileForm() {
 
   return (
     <form>
-      <Typography variant="h6">Name Color</Typography>
+      <Typography variant="h6">{t_nc("label")}</Typography>
       <Stack direction="row" spacing={1} alignItems="center">
-        <Typography variant="body1">Preview:</Typography>
+        <Typography variant="body1">{t_nc("preview")}</Typography>
         <span style={{ fontSize: "1.4rem", ...nameColorStyle }}>
-          {auth.user.player?.name ?? "Player Name"}
+          {auth.user.player?.name ?? t_nc("name_placeholder")}
         </span>
       </Stack>
 
@@ -514,12 +521,12 @@ export function UserAccountProfileForm() {
             color="primary"
           />
         }
-        label="Use Gradient"
+        label={t_nc("use_gradient")}
       />
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={5}>
-          <Typography variant="body1">{useGradient ? "Start Color" : "Solid Color"}</Typography>
+          <Typography variant="body1">{useGradient ? t_nc("start_color") : t_nc("solid_color")}</Typography>
           <Controller
             name="name_color_start"
             control={form.control}
@@ -545,11 +552,11 @@ export function UserAccountProfileForm() {
                 startIcon={<FontAwesomeIcon icon={faArrowRightArrowLeft} />}
                 onClick={switchColors}
               >
-                Switch
+                {t_nc("switch")}
               </Button>
             </Grid>
             <Grid item xs={12} sm={5}>
-              <Typography variant="body1">End Color</Typography>
+              <Typography variant="body1">{t_nc("end_color")}</Typography>
               <Controller
                 name="name_color_end"
                 control={form.control}
@@ -572,16 +579,18 @@ export function UserAccountProfileForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">About Me</Typography>
+      <Typography variant="h6">{t("about_me.label")}</Typography>
       <Controller
         name="about_me"
         control={form.control}
-        render={({ field }) => <TextField {...field} fullWidth multiline minRows={4} placeholder="Empty" />}
+        render={({ field }) => (
+          <TextField {...field} fullWidth multiline minRows={4} placeholder={t("about_me.placeholder")} />
+        )}
       />
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">Input Method</Typography>
+      <Typography variant="h6">{t_im("label", { count: 1 })}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Controller
@@ -598,28 +607,14 @@ export function UserAccountProfileForm() {
                 }}
               >
                 <MenuItem value="">
-                  <em>Not specified</em>
+                  <em>{t_im("not_specified")}</em>
                 </MenuItem>
-                <MenuItem value="keyboard">
-                  Keyboard
-                  <InputMethodIcon method="keyboard" style={{ marginLeft: "8px" }} />
-                </MenuItem>
-                <MenuItem value="dpad">
-                  Controller: D-Pad
-                  <InputMethodIcon method="dpad" style={{ marginLeft: "8px" }} />
-                </MenuItem>
-                <MenuItem value="analog">
-                  Controller: Analog
-                  <InputMethodIcon method="analog" style={{ marginLeft: "8px" }} />
-                </MenuItem>
-                <MenuItem value="hybrid">
-                  Hybrid
-                  <InputMethodIcon method="hybrid" style={{ marginLeft: "8px" }} />
-                </MenuItem>
-                <MenuItem value="other">
-                  Other
-                  <InputMethodIcon method="other" style={{ marginLeft: "8px" }} />
-                </MenuItem>
+                {Object.keys(INPUT_METHOD_ICONS).map((method) => (
+                  <MenuItem value={method}>
+                    {t_im(method)}
+                    <InputMethodIcon method={method} style={{ marginLeft: "8px" }} />
+                  </MenuItem>
+                ))}
               </TextField>
             )}
           />
@@ -628,11 +623,8 @@ export function UserAccountProfileForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">Custom Links</Typography>
-      <Typography variant="body2">
-        You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to
-        your YouTube channel, or any other link you want to share with the community.
-      </Typography>
+      <Typography variant="h6">{t("custom_links.label")}</Typography>
+      <Typography variant="body2">{t("custom_links.note")}</Typography>
       <Controller
         name="links"
         control={form.control}
@@ -649,13 +641,14 @@ export function UserAccountProfileForm() {
         onClick={onSubmit}
         disabled={Object.keys(errors).length > 0}
       >
-        Save Changes
+        {t_lm("button")}
       </Button>
     </form>
   );
 }
 
 export function ManageUserLinks({ links, setLinks }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.custom_links" });
   const deleteLink = (index) => {
     setLinks(links.filter((_, i) => i !== index));
   };
@@ -675,13 +668,13 @@ export function ManageUserLinks({ links, setLinks }) {
         onClick={addLink}
         sx={{ mt: 2 }}
       >
-        Add Link
+        {t("add_link")}
       </Button>
       <Stack direction="column" gap={2} sx={{ mt: 2 }}>
         {links !== null &&
           links.map((link, index) => {
             //validate link to be a valid URL
-            const error = link.trim() !== "" && isValidHttpUrl(link) === false ? "Invalid URL" : "";
+            const error = link.trim() !== "" && isValidHttpUrl(link) === false ? t("invalid_url") : "";
             return (
               <Stack direction="row" spacing={2} key={index}>
                 <TextField
@@ -699,7 +692,7 @@ export function ManageUserLinks({ links, setLinks }) {
                   startIcon={<FontAwesomeIcon icon={faLinkSlash} />}
                   onClick={() => deleteLink(index)}
                 >
-                  Remove
+                  {t("remove_link")}
                 </Button>
               </Stack>
             );
@@ -709,56 +702,126 @@ export function ManageUserLinks({ links, setLinks }) {
   );
 }
 
-export function UserAccountDangerZoneForm() {
+export function UserAccountShowcaseForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
   const auth = useAuth();
-  const navigate = useNavigate();
-  const { mutate: deleteAccount } = useDeleteOwnAccount(() => {
-    auth.checkSession();
-    navigate("/");
+  const query = useGetShowcaseSubmissions(auth.hasPlayerClaimed ? auth.user.player.id : 0);
+
+  if (!auth.hasPlayerClaimed) {
+    return (
+      <>
+        <Typography variant="body1" gutterBottom color="red">
+          {t("no_player_claimed")}
+        </Typography>
+      </>
+    );
+  }
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const { submissions, type } = getQueryData(query);
+  let selectedSubmissions = [];
+  if (type === "custom") {
+    selectedSubmissions = [...submissions];
+  }
+
+  for (let i = selectedSubmissions.length; i < 9; i++) {
+    selectedSubmissions.push(null);
+  }
+
+  return <UserAccountShowcaseSubForm playerId={auth.user.player.id} submissions={selectedSubmissions} />;
+}
+function UserAccountShowcaseSubForm({ playerId, submissions }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
+  const [showcase, setShowcase] = useState(submissions);
+
+  const { mutate: postShowcase } = usePostShowcase(() => {
+    toast.success(t("feedback.updated"));
   });
 
-  const [confirmText, setConfirmText] = useState("");
+  const onSubmit = () => {
+    let submissionIds = showcase.filter((s) => s !== null);
+    submissionIds = submissionIds.map((s) => s.id);
+    postShowcase(submissionIds);
+  };
+  const setSubmission = (index, submission) => {
+    setShowcase(showcase.map((s, i) => (i === index ? submission : s)));
+  };
 
   return (
     <>
-      <Typography variant="h6" color="error">
-        Danger Zone
+      <Typography variant="h6">{t("title")}</Typography>
+      <Typography variant="body2" gutterBottom>
+        {t("note_1")}
       </Typography>
-      <Typography variant="body2" color="error" gutterBottom>
-        Permanently delete your account.
-      </Typography>
-      <Typography variant="body2" sx={{ mb: 2 }}>
-        Please note that this does not delete your associated player! Any submissions will remain unchanged,
-        and your 'player' will become unclaimed again. If you want to remove your name from this website or
-        mass delete your own submissions, contact a team member!
+      <Typography variant="body2" color={(t) => t.palette.text.secondary} gutterBottom>
+        {t("note_2")}
       </Typography>
 
-      <form>
-        <Stack direction="column" spacing={2}>
-          <TextField
-            label="Type 'DELETE' to confirm"
-            fullWidth
-            value={confirmText}
-            onChange={(e) => setConfirmText(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="error"
-            disabled={confirmText !== "DELETE"}
-            onClick={() => deleteAccount()}
-          >
-            Delete Account
-          </Button>
-        </Stack>
-      </form>
+      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+        {showcase.map((submission, index) => (
+          <Stack direction="row" gap={2} alignItems="center">
+            <Typography variant="body1">#{index + 1}</Typography>
+            <UserAccountShowcaseEntry
+              key={index}
+              playerId={playerId}
+              submission={submission}
+              setSubmission={(s) => setSubmission(index, s)}
+            />
+          </Stack>
+        ))}
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<FontAwesomeIcon icon={faSave} />}
+          onClick={onSubmit}
+        >
+          {t("buttons.save")}
+        </Button>
+      </Stack>
     </>
+  );
+}
+function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
+  const [isAdding, setIsAdding] = useState(false);
+
+  const onSetSubmission = (sub) => {
+    setSubmission(sub);
+    setIsAdding(false);
+  };
+
+  return submission === null ? (
+    isAdding ? (
+      <PlayerSubmissionSelect playerId={playerId} submission={submission} setSubmission={onSetSubmission} />
+    ) : (
+      <Button variant="outlined" color="primary" onClick={() => setIsAdding(true)}>
+        {t("buttons.add_submission")}
+      </Button>
+    )
+  ) : (
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={4}>
+        <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
+      </Grid>
+      <Grid item xs={12} sm={8} display="flex" alignItems="center">
+        <Button variant="outlined" color="error" onClick={() => setSubmission(null)}>
+          {t("buttons.remove_submission")}
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 
 export function UserAccountRenameForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.player_rename" });
   const auth = useAuth();
   const { mutate: renameSelf } = usePostPlayerSelf(() => {
-    toast.success("Rename successful");
+    toast.success(t("feedback.renamed"));
     auth.checkSession();
   });
 
@@ -802,29 +865,29 @@ export function UserAccountRenameForm() {
       {auth.user.player === null && (
         <>
           <Typography variant="body1" gutterBottom>
-            You don't have a player claimed yet!
+            {t("no_player_claimed")}
           </Typography>
           <Divider sx={{ my: 2 }} />
         </>
       )}
-      <Typography variant="h6">Rename your Player</Typography>
+      <Typography variant="h6">{t("title")}</Typography>
       <Typography variant="body2" gutterBottom>
-        Give your player a new name. This can be done once every 24 hours.
+        {t("description")}
       </Typography>
       {canRename ? (
         <Typography variant="body2" color="green" gutterBottom>
-          You can rename your player!
+          {t("can_rename")}
         </Typography>
       ) : (
         <Typography variant="body2" color="error" gutterBottom>
-          You can rename your player in {formatTime(timeUntilRename)}.
+          {t("cannot_rename", { time: formatTime(timeUntilRename) })}
         </Typography>
       )}
 
       <form>
         <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
           <TextField
-            label="New Name"
+            label={t("new_name")}
             fullWidth
             disabled={auth.user.player === null}
             {...form.register("name", FormOptions.PlayerName)}
@@ -837,7 +900,7 @@ export function UserAccountRenameForm() {
                 checked={field.value}
                 onChange={field.onChange}
                 control={<Checkbox {...field} />}
-                label="Log the rename in your player's changelog"
+                label={t("log_change")}
               />
             )}
           />
@@ -846,8 +909,9 @@ export function UserAccountRenameForm() {
             color="primary"
             disabled={auth.user.player === null || !form.formState.isValid || !canRename}
             onClick={onSubmit}
+            startIcon={<FontAwesomeIcon icon={faEdit} />}
           >
-            Rename
+            {t("button")}
           </Button>
         </Stack>
       </form>
@@ -855,112 +919,48 @@ export function UserAccountRenameForm() {
   );
 }
 
-export function UserAccountShowcaseForm() {
+export function UserAccountDangerZoneForm() {
+  const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.danger_zone" });
   const auth = useAuth();
-  const query = useGetShowcaseSubmissions(auth.hasPlayerClaimed ? auth.user.player.id : 0);
-
-  if (!auth.hasPlayerClaimed) {
-    return (
-      <>
-        <Typography variant="body1" gutterBottom>
-          You don't have a player claimed yet!
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          Head over to <StyledLink to="/claim-player">this page</StyledLink> to create or claim one!
-        </Typography>
-      </>
-    );
-  }
-
-  if (query.isLoading) {
-    return <LoadingSpinner />;
-  } else if (query.isError) {
-    return <ErrorDisplay error={query.error} />;
-  }
-
-  const { submissions, type } = getQueryData(query);
-  let selectedSubmissions = [];
-  if (type === "custom") {
-    selectedSubmissions = [...submissions];
-  }
-
-  for (let i = selectedSubmissions.length; i < 9; i++) {
-    selectedSubmissions.push(null);
-  }
-
-  return <UserAccountShowcaseSubForm playerId={auth.user.player.id} submissions={selectedSubmissions} />;
-}
-function UserAccountShowcaseSubForm({ playerId, submissions }) {
-  const [showcase, setShowcase] = useState(submissions);
-
-  const { mutate: postShowcase } = usePostShowcase(() => {
-    toast.success("Showcase updated");
+  const navigate = useNavigate();
+  const { mutate: deleteAccount } = useDeleteOwnAccount(() => {
+    auth.checkSession();
+    navigate("/");
   });
 
-  const onSubmit = () => {
-    let submissionIds = showcase.filter((s) => s !== null);
-    submissionIds = submissionIds.map((s) => s.id);
-    postShowcase(submissionIds);
-  };
-  const setSubmission = (index, submission) => {
-    setShowcase(showcase.map((s, i) => (i === index ? submission : s)));
-  };
+  const [confirmText, setConfirmText] = useState("");
 
   return (
     <>
-      <Typography variant="h6">Submission Showcase</Typography>
-      <Typography variant="body2" gutterBottom>
-        Select up to 9 submissions which should be shown on your player profile!
+      <Typography variant="h6" color="error">
+        {t("label")}
       </Typography>
-      <Typography variant="body2" color={(t) => t.palette.text.secondary} gutterBottom>
-        Note: Not selecting any submissions will make the 9 highest placed submissions be shown instead.
+      <Typography variant="body2" color="error" gutterBottom>
+        {t("description")}
+      </Typography>
+      <Typography variant="body2" sx={{ mb: 2 }}>
+        {t("note")}
       </Typography>
 
-      <Stack direction="column" gap={2} sx={{ mt: 2 }}>
-        {showcase.map((submission, index) => (
-          <Stack direction="row" gap={2} alignItems="center">
-            <Typography variant="body1">#{index + 1}</Typography>
-            <UserAccountShowcaseEntry
-              key={index}
-              playerId={playerId}
-              submission={submission}
-              setSubmission={(s) => setSubmission(index, s)}
-            />
-          </Stack>
-        ))}
-        <Button variant="contained" color="primary" onClick={onSubmit}>
-          Save Showcase
-        </Button>
-      </Stack>
+      <form>
+        <Stack direction="column" spacing={2}>
+          <TextField
+            label={t("confirm")}
+            fullWidth
+            value={confirmText}
+            onChange={(e) => setConfirmText(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="error"
+            disabled={confirmText !== "DELETE"}
+            onClick={() => deleteAccount()}
+            startIcon={<FontAwesomeIcon icon={faTrash} />}
+          >
+            {t("button")}
+          </Button>
+        </Stack>
+      </form>
     </>
-  );
-}
-function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
-  const [isAdding, setIsAdding] = useState(false);
-
-  const onSetSubmission = (sub) => {
-    setSubmission(sub);
-    setIsAdding(false);
-  };
-
-  return submission === null ? (
-    isAdding ? (
-      <PlayerSubmissionSelect playerId={playerId} submission={submission} setSubmission={onSetSubmission} />
-    ) : (
-      <Button variant="outlined" color="primary" onClick={() => setIsAdding(true)}>
-        Add Submission
-      </Button>
-    )
-  ) : (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={4}>
-        <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
-      </Grid>
-      <Grid item xs={12} sm={8} display="flex" alignItems="center">
-        <Button variant="outlined" color="error" onClick={() => setSubmission(null)}>
-          Remove Submission
-        </Button>
-      </Grid>
-    </Grid>
   );
 }
