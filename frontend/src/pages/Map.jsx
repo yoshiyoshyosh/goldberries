@@ -1,7 +1,6 @@
 import {
   Button,
   Chip,
-  Container,
   Divider,
   List,
   ListItem,
@@ -9,7 +8,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   ListSubheader,
-  Paper,
   Stack,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
@@ -46,6 +44,7 @@ import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData, useGetMap } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
+import { useTranslation } from "react-i18next";
 
 export function PageMap() {
   const { id } = useParams();
@@ -58,6 +57,7 @@ export function PageMap() {
 }
 
 export function MapDisplay({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "map" });
   const auth = useAuth();
   const query = useGetMap(id);
 
@@ -89,7 +89,7 @@ export function MapDisplay({ id }) {
             startIcon={<FontAwesomeIcon icon={faEdit} />}
             sx={{ mb: 1 }}
           >
-            Edit Map
+            {t("buttons.edit")}
           </Button>
         </Stack>
       )}
@@ -119,78 +119,5 @@ export function MapDisplay({ id }) {
         <FormMapWrapper id={id} onSave={editMapModal.close} />
       </CustomModal>
     </>
-  );
-}
-
-export function MapDetailsList({ map }) {
-  const embedUrl = getGamebananaEmbedUrl(map.campaign.url);
-  const author = getMapAuthor(map);
-  const lobbyInfo = getMapLobbyInfo(map);
-  const majorInfo = lobbyInfo.major ? lobbyInfo.major.name + ": " + lobbyInfo.major.label : null;
-  const minorInfo = lobbyInfo.minor ? lobbyInfo.minor.name + ": " + lobbyInfo.minor.label : null;
-  return (
-    <List dense>
-      <ListSubheader>Map Details</ListSubheader>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faBook} />
-        </ListItemIcon>
-        <ListItemText primary={map.campaign.name} secondary="Campaign" />
-        {embedUrl && (
-          <ListItemSecondaryAction
-            sx={{
-              display: {
-                xs: "none",
-                sm: "block",
-              },
-            }}
-          >
-            <Link to={map.campaign.url} target="_blank">
-              <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
-            </Link>
-          </ListItemSecondaryAction>
-        )}
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faExternalLink} />
-        </ListItemIcon>
-        <ListItemText
-          primary={<StyledExternalLink href={map.campaign.url}>{map.campaign.url}</StyledExternalLink>}
-          secondary="URL"
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faLandmark} />
-        </ListItemIcon>
-        <ListItemText primary={map.name} secondary="Map" />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faUser} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            author.name !== null ? (
-              <StyledExternalLink href={"https://gamebanana.com/members/" + author.id}>
-                {author.name}
-              </StyledExternalLink>
-            ) : (
-              "<Unknown Author>"
-            )
-          }
-          secondary="Author"
-        />
-      </ListItem>
-      {(majorInfo || minorInfo) && (
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faFlagCheckered} />
-          </ListItemIcon>
-          <ListItemText primary={majorInfo ?? minorInfo} secondary={majorInfo ? minorInfo : null} />
-        </ListItem>
-      )}
-    </List>
   );
 }

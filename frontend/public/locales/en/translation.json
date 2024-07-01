@@ -838,5 +838,25 @@
         "button": "Set New Password"
       }
     }
+  },
+  "map": {
+    "buttons": {
+      "edit": "Edit Map"
+    }
+  },
+  "player": {
+    "title": "Profile",
+    "personal_tgl": "Personal Top Golden List",
+    "stats": "Player Stats",
+    "showcase_hardest": "Hardest Submissions",
+    "chart": {
+      "x_axis": "Count of Goldens per Tier"
+    }
+  },
+  "rejected_maps": {
+    "title": "Rejected Maps",
+    "info_1": "This page contains all the maps that have been decided to not be added to the list, as well as reasons why such decision was made.",
+    "info_2": "If the map or map pack breaks rule 3 (has inapporpriate words/visual stuff/etc), it won't be listed here.",
+    "reason": "Reason"
   }
 }

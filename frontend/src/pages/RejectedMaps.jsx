@@ -16,53 +16,58 @@ import {
   StyledLink,
 } from "../components/BasicComponents";
 import { getQueryData, useGetRejectedMapList } from "../hooks/useApi";
-import { Link } from "react-router-dom";
 import { getCampaignName } from "../util/data_util";
+import { useTranslation } from "react-i18next";
 
 export function PageRejectedMaps() {
+  const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
   const query = useGetRejectedMapList();
 
   if (query.isLoading || query.isFetching) {
     return (
       <>
-        <Typography variant="h6">Rejected Maps</Typography>
+        <Typography variant="h6">{t("title")}</Typography>
         <LoadingSpinner />
       </>
     );
   } else if (query.isError) {
     return (
       <>
-        <Typography variant="h6">Rejected Maps</Typography>
+        <Typography variant="h6">{t("title")}</Typography>
         <ErrorDisplay error={query.error} />
       </>
     );
   }
 
   const maps = getQueryData(query);
-  const title = "Rejected Maps";
 
   return (
     <BasicContainerBox maxWidth="md">
-      <HeadTitle title={title} />
+      <HeadTitle title={t("title")} />
       <RejectedMapsTable maps={maps} />
     </BasicContainerBox>
   );
 }
 
 function RejectedMapsTable({ maps }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
     <>
-      <Typography variant="h6">Rejected Maps</Typography>
+      <Typography variant="h6">{t("title")}</Typography>
       <Typography variant="body2" gutterBottom>
-        These maps have been rejected from the map pool and are not eligible for submissions.
+        {t("info_1")}
+      </Typography>
+      <Typography variant="body2" gutterBottom color="error.main">
+        {t("info_2")}
       </Typography>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Campaign</TableCell>
-              <TableCell>Map</TableCell>
-              <TableCell>Reason</TableCell>
+              <TableCell>{t_g("campaign", { count: 1 })}</TableCell>
+              <TableCell>{t_g("map", { count: 1 })}</TableCell>
+              <TableCell>{t("reason")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -13,22 +13,19 @@ import {
   useGetAllDifficulties,
   useGetPlayer,
   useGetPlayerStats,
-  useGetRecentSubmissions,
   useGetShowcaseSubmissions,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
   AdminIcon,
-  INPUT_METHOD_ICONS,
   InputMethodIcon,
   LinkIcon,
   SubmissionEmbed,
   SuspendedIcon,
-  VerificationStatusChip,
   VerifierIcon,
 } from "../components/GoldberriesComponents";
-import { RecentSubmissions, RecentSubmissionsHeadless } from "../components/RecentSubmissions";
+import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { DIFFICULTY_COLORS } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
@@ -36,7 +33,6 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useAuth } from "../hooks/AuthProvider";
-import { fetchShowcaseSubmissions } from "../util/api";
 import { useTranslation } from "react-i18next";
 
 export function PagePlayer() {
@@ -54,7 +50,9 @@ export function PagePlayer() {
 }
 
 export function PlayerDisplay({ id }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: "player" });
+  const { t: t_a } = useTranslation();
+  const { t: t_ap } = useTranslation(undefined, { keyPrefix: "account.tabs.profile" });
   const { settings } = useAppSettings();
   const query = useGetPlayer(id);
   const statsQuery = useGetPlayerStats(id);
@@ -73,7 +71,7 @@ export function PlayerDisplay({ id }) {
   const nameStyle = getPlayerNameColorStyle(player, settings);
   const aboutMeSplit = player.account.about_me?.split("\n") || [];
 
-  const title = `${player.name} - Profile`;
+  const title = `${player.name} - ` + t("title");
 
   return (
     <>
@@ -94,7 +92,7 @@ export function PlayerDisplay({ id }) {
           {player.account.is_verifier && <VerifierIcon />}
           {player.account.is_admin && <AdminIcon />}
           <Box flexGrow={1} />
-          <StyledLink to={`/player/${id}/top-golden-list`}>Personal Top Golden List</StyledLink>
+          <StyledLink to={`/player/${id}/top-golden-list`}>{t("personal_tgl")}</StyledLink>
         </Stack>
         {player.account?.links ? (
           <Stack direction="row" gap={1}>
@@ -106,7 +104,7 @@ export function PlayerDisplay({ id }) {
 
         {player.account.about_me && (
           <>
-            <Typography variant="h6">About Me</Typography>
+            <Typography variant="h6">{t_ap("about_me.label")}</Typography>
             {aboutMeSplit.map((line) => (
               <Typography variant="body1">{line}</Typography>
             ))}
@@ -116,7 +114,8 @@ export function PlayerDisplay({ id }) {
         {player.account.input_method && (
           <Stack direction="row" alignItems="center" gap={1} sx={{ mt: 2 }}>
             <Typography variant="body1">
-              Input Method: {t("components.input_methods." + player.account.input_method)}
+              {t_a("components.input_methods.label", { count: 1 })}:{" "}
+              {t_a("components.input_methods." + player.account.input_method)}
             </Typography>
             <InputMethodIcon method={player.account.input_method} />
           </Stack>
@@ -128,7 +127,7 @@ export function PlayerDisplay({ id }) {
       <Divider sx={{ my: 2 }} />
       <PlayerRecentSubmissions id={id} />
       <Divider sx={{ my: 2 }} />
-      <Typography variant="h5">Player Stats</Typography>
+      <Typography variant="h5">{t("stats")}</Typography>
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
       <Divider sx={{ my: 2 }} />
       <Changelog type="player" id={id} />
@@ -137,6 +136,8 @@ export function PlayerDisplay({ id }) {
 }
 
 function SubmissionShowcase({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "player" });
+  const { t: t_as } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
   const query = useGetShowcaseSubmissions(id);
   const data = getQueryData(query);
 
@@ -147,7 +148,7 @@ function SubmissionShowcase({ id }) {
   }
 
   const { type, submissions } = data;
-  const typeStr = type === "custom" ? "Showcase Submissions" : "Hardest Submissions";
+  const typeStr = type === "custom" ? t_as("title") : t("showcase_hardest");
 
   const widths = [12, 6, 6, 4, 4, 4, 4, 4, 4, 4];
 
@@ -170,12 +171,13 @@ function SubmissionShowcase({ id }) {
 }
 
 function PlayerRecentSubmissions({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.recent_submissions" });
   const auth = useAuth();
   const canSeeRejected = auth.hasVerifierPriv || auth.isPlayerWithId(id);
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        Recent Submissions
+        {t("title")}
       </Typography>
       <RecentSubmissionsHeadless verified={null} playerId={id} showChip hideIfEmpty />
       <RecentSubmissionsHeadless verified={true} playerId={id} showChip chipSx={{ mt: 2 }} />
@@ -190,6 +192,8 @@ function PlayerRecentSubmissions({ id }) {
 }
 
 export function PagePlayerTopGoldenList({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "player" });
+  const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const query = useGetPlayer(id);
   const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
@@ -209,28 +213,26 @@ export function PagePlayerTopGoldenList({ id }) {
   }
 
   const player = getQueryData(query);
-  const apostrophe = player.name.endsWith("s") ? "'" : "'s";
 
-  const title = `${player.name}${apostrophe} Top Golden List`;
+  const title = `${player.name} - ` + t("personal_tgl");
 
   return (
     <Box sx={{ mx: 2 }}>
       <HeadTitle title={title} />
       <BasicBox sx={{ mb: 1 }}>
         <Typography variant="h4">
-          <StyledLink to={`/player/${id}`}>{player.name}</StyledLink>
-          {apostrophe} Top Golden List
+          <StyledLink to={`/player/${id}`}>{player.name}</StyledLink>- {t("personal_tgl")}
         </Typography>
         <Stack direction="row" spacing={2}>
           <FormControlLabel
             control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-            label="Show Archived"
+            label={t_gl("show_archived")}
           />
           <FormControlLabel
             control={
               <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
             }
-            label="Show Arbitrary"
+            label={t_gl("show_archived")}
           />
         </Stack>
       </BasicBox>
@@ -240,6 +242,7 @@ export function PagePlayerTopGoldenList({ id }) {
 }
 
 export function DifficultyCountChart({ difficulty_counts }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "player.chart" });
   const query = useGetAllDifficulties();
 
   if (query.isLoading) {
@@ -271,11 +274,10 @@ export function DifficultyCountChart({ difficulty_counts }) {
   return (
     <BarChart
       yAxis={[{ scaleType: "linear", min: 0, max: Math.max(4, Math.max(...data.map((d) => d.count))) }]}
-      xAxis={[{ scaleType: "band", data: ["Count of Goldens per Tier"] }]}
+      xAxis={[{ scaleType: "band", data: [t("x_axis")] }]}
       series={seriesData}
       height={300}
       slotProps={{ legend: { hidden: true } }}
-      title="Tier Counts"
       margin={{
         left: 30,
         right: 0,

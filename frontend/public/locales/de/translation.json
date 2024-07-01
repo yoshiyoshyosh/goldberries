@@ -835,5 +835,25 @@
         "button": "Passwort Zurücksetzen"
       }
     }
+  },
+  "map": {
+    "buttons": {
+      "edit": "Map Bearbeiten"
+    }
+  },
+  "player": {
+    "title": "Profil",
+    "personal_tgl": "Persönliche Top Golden Liste",
+    "stats": "Player Statistik",
+    "showcase_hardest": "Schwierigste Submissions",
+    "chart": {
+      "x_axis": "Anzahl an Goldens pro Tier"
+    }
+  },
+  "rejected_maps": {
+    "title": "Abgelehnte Maps",
+    "info_1": "Diese Seite enthält alle Maps, für die entschieden wurde, diese nicht zur Liste hinzuzufügen, sowie Gründe, warum diese Entscheidung getroffen wurde.",
+    "info_2": "Nicht aufgelistet werden Maps oder Map Packs, die gegen Regel 3 verstoßen (unangemessene Wörter/visuelle Inhalte/etc).",
+    "reason": "Grund"
   }
 }
