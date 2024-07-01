@@ -891,5 +891,26 @@
       "clear": "Clear",
       "moved": "Moved"
     }
+  },
+  "submission": {
+    "title": "{{challenge}} by '{{player}}'",
+    "feedback": {
+      "deleted": "Submission deleted"
+    },
+    "details": {
+      "new_challenge": "New Challenge",
+      "submitted": "Submitted",
+      "verification": "Verification",
+      "status": "Status"
+    },
+    "delete_modal": {
+      "title": "Delete Submission",
+      "description": "Are you sure you want to delete this submission?"
+    },
+    "buttons": {
+      "modify": "Modify",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
   }
 }

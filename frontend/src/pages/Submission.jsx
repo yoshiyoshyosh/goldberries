@@ -5,12 +5,6 @@ import {
   Chip,
   Divider,
   Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
   MenuItem,
   Paper,
   Stack,
@@ -29,23 +23,16 @@ import {
   faShield,
   faUser,
   faTrash,
-  faShare,
   faCheckCircle,
   faExternalLink,
   faFlagCheckered,
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
-import {
-  DifficultyChip,
-  VerificationStatusChip,
-  PlayerChip,
-  JournalIcon,
-} from "../components/GoldberriesComponents";
+import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
 import {
   displayDate,
   getChallengeCampaign,
-  getChallengeDescription,
   getChallengeFlags,
   getChallengeName,
   getChallengeNameShort,
@@ -59,7 +46,6 @@ import {
   LoadingSpinner,
   ProofEmbed,
   HeadTitle,
-  StyledLink,
   StyledExternalLink,
   ShareButton,
   InfoBox,
@@ -68,7 +54,8 @@ import {
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 import { getQueryData, useDeleteSubmission, useGetSubmission } from "../hooks/useApi";
-import { API_BASE_URL, API_URL, APP_URL } from "../util/constants";
+import { API_BASE_URL } from "../util/constants";
+import { useTranslation } from "react-i18next";
 
 export function PageSubmission({}) {
   const { id } = useParams();
@@ -87,11 +74,12 @@ export function PageSubmission({}) {
 }
 
 export function SubmissionDisplay({ id, onDelete }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submission" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const query = useGetSubmission(id);
-  console.log("SubmissionDisplay query -> ", query);
   const { mutate: deleteSubmission } = useDeleteSubmission((submission) => {
-    toast.success("Submission deleted!");
+    toast.success(t("feedback.deleted"));
     if (onDelete !== undefined) onDelete();
   });
 
@@ -121,15 +109,10 @@ export function SubmissionDisplay({ id, onDelete }) {
 
   let title = "";
   if (submission.new_challenge !== null) {
-    title = submission.new_challenge.name + " by '" + submission.player.name + "'";
+    title = t("title", { challenge: submission.new_challenge.name, player: submission.player.name });
   } else {
-    title =
-      (map?.name ?? campaign.name) +
-      " - " +
-      getChallengeNameShort(submission.challenge) +
-      " by '" +
-      submission.player.name +
-      "'";
+    const challengeName = (map?.name ?? campaign.name) + " - " + getChallengeNameShort(challenge);
+    title = t("title", { challenge: challengeName, player: submission.player.name });
   }
 
   return (
@@ -148,16 +131,16 @@ export function SubmissionDisplay({ id, onDelete }) {
       )}
       <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
         <Grid item xs={12} sm>
-          <Typography variant="h4">Submission</Typography>
+          <Typography variant="h4">{t_g("submission", { count: 1 })}</Typography>
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" gap={1}>
             <ShareButton text={API_BASE_URL + "/embed/submission.php?id=" + submission.id} />
             {isVerifier || isOwnSubmission ? (
-              <CustomizedMenu title="Modify">
+              <CustomizedMenu title={t("buttons.modify")}>
                 <MenuItem disableRipple onClick={() => editModal.open(submission)}>
                   <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                  Edit
+                  {t("buttons.edit")}
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
@@ -168,7 +151,7 @@ export function SubmissionDisplay({ id, onDelete }) {
                     sx={{ px: "16px" }}
                   >
                     <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                    Delete
+                    {t("buttons.delete")}
                   </Button>
                 </MenuItem>
               </CustomizedMenu>
@@ -183,65 +166,31 @@ export function SubmissionDisplay({ id, onDelete }) {
         <FormSubmissionWrapper id={editModal.data?.id} onSave={() => editModal.close()} />
       </CustomModal>
 
-      <CustomModal modalHook={deleteModal} options={{ title: "Delete Submission" }}>
+      <CustomModal modalHook={deleteModal} options={{ title: t("delete_modal.title") }}>
         <Typography variant="body1" sx={{ mb: 2 }}>
-          Are you sure you want to delete this submission?
+          {t("delete_modal.description")}
         </Typography>
       </CustomModal>
     </>
   );
 }
 
-export function FullChallengeDisplay({ challenge }) {
-  const map = challenge.map;
-  const campaign = getChallengeCampaign(challenge);
+export function FullChallengeDisplay({ challenge, ...props }) {
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Campaign</TableCell>
-            <TableCell>{campaign.name}</TableCell>
-          </TableRow>
-          {map === null ? (
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold", whiteSpace: "nowrap" }}>Is Full Game?</TableCell>
-              <TableCell>Yes</TableCell>
-            </TableRow>
-          ) : (
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Map</TableCell>
-              <TableCell>{challenge.map.name}</TableCell>
-            </TableRow>
-          )}
-          <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Challenge</TableCell>
-            <TableCell>
-              {getChallengeName(challenge)} - {challenge.objective.description}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Flags</TableCell>
-            <TableCell>
-              <Stack direction="row" gap={1}>
-                <DifficultyChip difficulty={challenge.difficulty} prefix="Difficulty: " />
-                {getChallengeFlags(challenge).map((f) => (
-                  <Chip label={f} size="small" />
-                ))}
-              </Stack>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Grid container columnSpacing={1} rowSpacing={1} {...props}>
+      <Grid item xs={12} sm={12} display="flex" flexDirection="column" rowGap={1}>
+        <ChallengeInfoBoxes challenge={challenge} />
+      </Grid>
+    </Grid>
   );
 }
 
 export function SubmissionDetailsDisplay({ submission, challenge = null, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submission.details" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_a } = useTranslation();
   const verifier = getSubmissionVerifier(submission);
   challenge = challenge ?? submission.challenge;
-  const map = challenge !== null ? challenge.map : null;
-  const campaign = challenge !== null ? getChallengeCampaign(challenge) : null;
   const newChallenge = submission.new_challenge;
 
   return (
@@ -253,54 +202,28 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           color={(t) => t.palette.text.secondary}
           fontSize="90%"
         >
-          {challenge === null ? "New Challenge" : "Map"}
+          {challenge === null ? t("new_challenge") : t_g("map", { count: 1 })}
         </Typography>
         {challenge !== null ? (
-          <>
-            <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text="Campaign" />
-              <InfoBoxIconTextLine text={campaign.name} isSecondary />
-            </InfoBox>
-            {map !== null ? (
-              map.name === campaign.name ? null : (
-                <InfoBox>
-                  <InfoBoxIconTextLine text="Map" />
-                  <InfoBoxIconTextLine text={map.name} isSecondary />
-                </InfoBox>
-              )
-            ) : (
-              <InfoBox>
-                <InfoBoxIconTextLine text="Full Game?" />
-                <InfoBoxIconTextLine
-                  text={<FontAwesomeIcon icon={faCheckCircle} color="green" />}
-                  isSecondary
-                />
-              </InfoBox>
-            )}
-            <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faFlagCheckered} />} text="Challenge" />
-              <InfoBoxIconTextLine text={getChallengeNameShort(challenge)} isSecondary />
-            </InfoBox>
-            <InfoBox>
-              <InfoBoxIconTextLine text="Difficulty" />
-              <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
-            </InfoBox>
-          </>
+          <ChallengeInfoBoxes challenge={challenge} />
         ) : (
           <>
             <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text="Campaign URL" />
+              <InfoBoxIconTextLine
+                icon={<FontAwesomeIcon icon={faExternalLink} />}
+                text={t_a("forms.create_full_challenge.campaign.url")}
+              />
               <InfoBoxIconTextLine
                 text={<StyledExternalLink href={newChallenge.url}>{newChallenge.url}</StyledExternalLink>}
                 isSecondary
               />
             </InfoBox>
             <InfoBox>
-              <InfoBoxIconTextLine text="Map" />
+              <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
               <InfoBoxIconTextLine text={newChallenge.name} isSecondary />
             </InfoBox>
             <InfoBox>
-              <InfoBoxIconTextLine text="Description" />
+              <InfoBoxIconTextLine text={t_g("description")} />
               <InfoBoxIconTextLine text={newChallenge.description ?? "-"} isSecondary />
             </InfoBox>
           </>
@@ -313,22 +236,28 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           color={(t) => t.palette.text.secondary}
           fontSize="90%"
         >
-          Submission
+          {t_g("submission", { count: 1 })}
         </Typography>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text="Player" />
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t_g("player", { count: 1 })} />
           <InfoBoxIconTextLine text={<PlayerChip player={submission.player} size="small" />} isSecondary />
         </InfoBox>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text="Submitted" />
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("submitted")} />
           <InfoBoxIconTextLine text={displayDate(submission.date_created)} isSecondary />
         </InfoBox>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faComment} />} text="Player Notes" />
+          <InfoBoxIconTextLine
+            icon={<FontAwesomeIcon icon={faComment} />}
+            text={t_a("forms.submission.player_notes")}
+          />
           <InfoBoxIconTextLine text={submission.player_notes ?? "-"} isSecondary />
         </InfoBox>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faShield} />} text="Suggested Difficulty" />
+          <InfoBoxIconTextLine
+            icon={<FontAwesomeIcon icon={faShield} />}
+            text={t_a("components.difficulty_select.label")}
+          />
           <InfoBoxIconTextLine
             text={
               submission.suggested_difficulty === null ? (
@@ -348,12 +277,15 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           color={(t) => t.palette.text.secondary}
           fontSize="90%"
         >
-          Verification
+          {t("verification")}
         </Typography>
         {submission.is_verified !== null ? (
           <>
             <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text="Verifier" />
+              <InfoBoxIconTextLine
+                icon={<FontAwesomeIcon icon={faUser} />}
+                text={t_a("forms.submission.verifier")}
+              />
               <InfoBoxIconTextLine
                 text={verifier.id ? <PlayerChip player={submission.verifier} size="small" /> : verifier.name}
                 isSecondary
@@ -366,14 +298,17 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               <InfoBoxIconTextLine text={displayDate(submission.date_verified)} isSecondary />
             </InfoBox>
             <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faComment} />} text="Verifier Notes" />
+              <InfoBoxIconTextLine
+                icon={<FontAwesomeIcon icon={faComment} />}
+                text={t_a("forms.submission.verifier_notes")}
+              />
               <InfoBoxIconTextLine text={submission.verifier_notes ?? "-"} isSecondary />
             </InfoBox>
           </>
         ) : (
           <>
             <InfoBox>
-              <InfoBoxIconTextLine text="Status" />
+              <InfoBoxIconTextLine text={t("status")} />
               <InfoBoxIconTextLine
                 text={<VerificationStatusChip isVerified={submission.is_verified} size="small" />}
                 isSecondary
@@ -383,5 +318,44 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
         )}
       </Grid>
     </Grid>
+  );
+}
+
+function ChallengeInfoBoxes({ challenge }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_a } = useTranslation();
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  return (
+    <>
+      <InfoBox>
+        <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text={t_g("campaign", { count: 1 })} />
+        <InfoBoxIconTextLine text={campaign.name} isSecondary />
+      </InfoBox>
+      {map !== null ? (
+        map.name === campaign.name ? null : (
+          <InfoBox>
+            <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
+            <InfoBoxIconTextLine text={map.name} isSecondary />
+          </InfoBox>
+        )
+      ) : (
+        <InfoBox>
+          <InfoBoxIconTextLine text={t_a("challenge.is_full_game")} />
+          <InfoBoxIconTextLine text={<FontAwesomeIcon icon={faCheckCircle} color="green" />} isSecondary />
+        </InfoBox>
+      )}
+      <InfoBox>
+        <InfoBoxIconTextLine
+          icon={<FontAwesomeIcon icon={faFlagCheckered} />}
+          text={t_g("challenge", { count: 1 })}
+        />
+        <InfoBoxIconTextLine text={getChallengeNameShort(challenge)} isSecondary />
+      </InfoBox>
+      <InfoBox>
+        <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
+        <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
+      </InfoBox>
+    </>
   );
 }

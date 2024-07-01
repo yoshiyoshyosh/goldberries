@@ -888,5 +888,26 @@
       "clear": "Clear",
       "moved": "Verschoben"
     }
+  },
+  "submission": {
+    "title": "{{challenge}} von '{{player}}'",
+    "feedback": {
+      "deleted": "Submission gelöscht"
+    },
+    "details": {
+      "new_challenge": "Neue Challenge",
+      "submitted": "Eingereicht",
+      "verification": "Verifikation",
+      "status": "Status"
+    },
+    "delete_modal": {
+      "title": "Submission Löschen",
+      "description": "Bist du sicher, dass du diese Submission löschen möchtest?"
+    },
+    "buttons": {
+      "modify": "Ändern",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    }
   }
 }
