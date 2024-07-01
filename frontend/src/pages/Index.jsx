@@ -30,7 +30,7 @@ import { faMoneyBill1Wave, faScroll, faWrench } from "@fortawesome/free-solid-sv
 import Markdown from "react-markdown";
 import { useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
-import { getDifficultySubtierShares } from "../util/constants";
+import { DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { useTranslation } from "react-i18next";
 
 export function PageIndex() {
@@ -139,7 +139,7 @@ export function UsefulLinksComponent() {
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <StyledExternalLink href="https://discord.gg/GeJvmMycaC" target="_blank" rel="noreferrer">
+          <StyledExternalLink href={DISCORD_INVITE} target="_blank" rel="noreferrer">
             Modded Golden Team Discord
           </StyledExternalLink>
         </li>

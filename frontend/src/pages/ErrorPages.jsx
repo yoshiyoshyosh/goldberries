@@ -1,36 +1,40 @@
 import { Container, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { BasicContainerBox } from "../components/BasicComponents";
+import { BasicContainerBox, StyledLink } from "../components/BasicComponents";
+import { Trans, useTranslation } from "react-i18next";
 
 export function Page403({ message }) {
-  const defaultMessage = "You don't have permission to access this page.";
+  const { t } = useTranslation(undefined, { keyPrefix: "error_pages" });
+  const defaultMessage = t("403.description");
   return (
     <Container sx={{ p: 5 }} maxWidth="sm">
       <h1>403</h1>
-      <Typography color="error.main">Forbidden: {message ?? defaultMessage}</Typography>
+      <Typography color="error.main">
+        {t("403.forbidden")}: {message ?? defaultMessage}
+      </Typography>
     </Container>
   );
 }
 
 export function PageNoPlayerClaimed() {
+  const { t } = useTranslation(undefined, { keyPrefix: "error_pages.no_player_claimed" });
   return (
     <BasicContainerBox maxWidth="sm">
-      <Typography color="error.main">Your Account is missing setup!</Typography>
+      <Typography color="error.main">{t("title")}</Typography>
       <Typography>
-        Please go to <Link to="/claim-player">this page</Link> to create a new Player, or claim an existing
-        one!
+        <Trans t={t} i18nKey="description" components={{ CustomLink: <StyledLink to="/claim-player" /> }} />
       </Typography>
     </BasicContainerBox>
   );
 }
 
 export function Page404() {
+  const { t } = useTranslation(undefined, { keyPrefix: "error_pages" });
   return (
     <BasicContainerBox maxWidth="sm">
       <Typography variant="h3" color="error">
         404
       </Typography>
-      <Typography color="error.main">The requested page does not exist</Typography>
+      <Typography color="error.main">{t("404")}</Typography>
       <img src="/emotes/boomeline.gif" alt="boomeline" style={{ width: "100%" }} />
     </BasicContainerBox>
   );

@@ -663,7 +663,7 @@
         "hide_empty_tiers": "Verstecke Leere Tiers"
       },
       "difficulty_colors": {
-        "label": "Schwierigkeitsfarben",
+        "label": "Tierfarben",
         "description": "High- und Low-Subtierfarben werden basierend auf der Mid-Subtierfarbe berechnet. Du kannst dieses Verhalten überschreiben, indem du die High- oder Low-Subtierfarbe explizit angibst.",
         "high": "High",
         "mid": "Mid",
@@ -737,6 +737,31 @@
         "claimed_player": "Beanspruchter Player:",
         "verifiers": "Verifier"
       }
+    }
+  },
+  "error_pages": {
+    "403": {
+      "forbidden": "Verboten",
+      "description": "Du hast keinen Zugriff auf diese Seite."
+    },
+    "no_player_claimed": {
+      "title": "Dein Account ist noch nicht eingerichtet!",
+      "description": "Bitte gehe zu <CustomLink>dieser Seite</CustomLink> um einen neuen Player zu erstellen, oder einen existierenden Player zu beanspruchen!"
+    },
+    "404": "Diese Seite existiert nicht"
+  },
+  "golden_list": {
+    "hard": "Hard Golden Liste",
+    "standard": "Standard Golden Liste",
+    "all": "Alle Campaigns",
+    "campaign_list": "Campaign Liste",
+    "list_type": "Listen Typ",
+    "show_archived": "Zeige Archiviert",
+    "show_arbitrary": "Zeige Willkürlich",
+    "state": {
+      "submissions": "{{count}} Submissions über {{campaigns}} Campaigns",
+      "campaigns": "Lade Campaigns {{current}}/{{total}}",
+      "done_loading": "Laden abgeschlossen"
     }
   }
 }

@@ -741,5 +741,30 @@
         "verifiers": "Verifiers"
       }
     }
+  },
+  "error_pages": {
+    "403": {
+      "forbidden": "Forbidden",
+      "description": "You don't have permission to access this page."
+    },
+    "no_player_claimed": {
+      "title": "Your account is missing setup!",
+      "description": "Please go to <CustomLink>this page</CustomLink> to create a new player, or claim an existing one!"
+    },
+    "404": "This requested page does not exist"
+  },
+  "golden_list": {
+    "hard": "Hard Golden List",
+    "standard": "Standard Golden List",
+    "all": "All Campaigns",
+    "campaign_list": "Campaign List",
+    "list_type": "List Type",
+    "show_archived": "Show Archived",
+    "show_arbitrary": "Show Arbitrary",
+    "state": {
+      "submissions": "{{count}} submissions across {{campaigns}} campaigns",
+      "campaigns": "Loading campaigns {{current}}/{{total}}",
+      "done_loading": "Done loading"
+    }
   }
 }

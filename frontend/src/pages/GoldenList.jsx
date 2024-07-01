@@ -37,19 +37,16 @@ import { faCheckCircle, faLemon } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useTranslation } from "react-i18next";
 
 export function PageGoldenList({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const { type } = useParams();
   const navigate = useNavigate();
   const [showArchived, setShowArchived] = useLocalStorage("golden_list_show_archived", false);
   const [showArbitrary, setShowArbitrary] = useLocalStorage("golden_list_show_arbitrary", false);
   const [selectedType, setSelectedType] = useState(type ?? "hard");
-  const title =
-    selectedType === "hard"
-      ? "Hard Golden List"
-      : selectedType === "all"
-      ? "All Campaigns"
-      : "Standard Golden List";
+  const title = selectedType === "hard" ? t("hard") : selectedType === "all" ? t("all") : t("standard");
 
   const onChangeType = (type) => {
     if (type === "hard") {
@@ -76,7 +73,7 @@ export function PageGoldenList({}) {
         <HeadTitle title={title} />
         <BasicBox sx={{ pb: 0, mb: 1 }}>
           <Stack direction="column" gap={1}>
-            <Typography variant="h4">Campaign List</Typography>
+            <Typography variant="h4">{t("campaign_list")}</Typography>
             <GoldenListFilter
               type={selectedType}
               setType={onChangeType}
@@ -94,10 +91,11 @@ export function PageGoldenList({}) {
 }
 
 function GoldenListFilter({ type, setType, showArchived, setShowArchived, showArbitrary, setShowArbitrary }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "golden_list" });
   return (
     <Stack direction="column" gap={1}>
       <TextField
-        label="List Type"
+        label={t("list_type")}
         select
         value={type}
         onChange={(e) => setType(e.target.value)}
@@ -108,22 +106,22 @@ function GoldenListFilter({ type, setType, showArchived, setShowArchived, showAr
           },
         }}
       >
-        <MenuItem value="hard">Hard Golden List</MenuItem>
-        <MenuItem value="standard">Standard Golden List</MenuItem>
-        <MenuItem value="all">All Campaigns</MenuItem>
+        <MenuItem value="hard">{t("hard")}</MenuItem>
+        <MenuItem value="standard">{t("standard")}</MenuItem>
+        <MenuItem value="all">{t("all")}</MenuItem>
       </TextField>
       <Stack direction="row" gap={1} alignItems="center">
         <FormControlLabel
           checked={showArchived}
           onChange={(e) => setShowArchived(e.target.checked)}
           control={<Checkbox />}
-          label="Show Archived"
+          label={t("show_archived")}
         />
         <FormControlLabel
           checked={showArbitrary}
           onChange={(e) => setShowArbitrary(e.target.checked)}
           control={<Checkbox />}
-          label="Show Arbitrary"
+          label={t("show_arbitrary")}
         />
       </Stack>
     </Stack>
@@ -131,6 +129,7 @@ function GoldenListFilter({ type, setType, showArchived, setShowArchived, showAr
 }
 
 export function GoldenList({ type, id = null, showArchived = false, showArbitrary = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const query = useGetGoldenList(type, id, showArchived, showArbitrary);
   const currentKey = "" + type + id + showArchived + showArbitrary;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
@@ -142,11 +141,9 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
     setRenderUpTo({ key: currentKey, index: 0 });
   }, [type, id, showArchived, showArbitrary]);
 
-  // console.log("rendering GoldenList (" + type + ") with renderUpTo", renderUpTo);
   const onFinishRender = useCallback((index) => {
     if (index === renderUpTo.index) {
       setTimeout(() => {
-        // console.log("onFinishRender: incrementing the current renderUpTo", renderUpTo);
         setRenderUpTo((prev) => {
           return { key: prev.key, index: prev.index + 1 };
         });
@@ -190,48 +187,74 @@ export function GoldenList({ type, id = null, showArchived = false, showArbitrar
     acc[acc.length - 1].push(campaign);
     return acc;
   }, []);
-  // console.log("campaignGroups: ", campaignsGroups);
 
   return (
     <Stack direction="column" alignItems="stretch" gap={1.25}>
       <BasicBox>
         <Stack direction="column" gap={1}>
           <Typography variant="body2">
-            {totalSubmissionCount} submissions across {campaigns.length} campaigns
+            {t("state.submissions", { count: totalSubmissionCount, campaigns: campaigns.length })}
           </Typography>
           {renderUpTo.index < campaignsGroups.length && (
             <Typography variant="body2">
-              Loading campaigns {renderUpTo.index * groupSize}/{campaigns.length}
+              {t("state.campaigns", { current: renderUpTo.index * groupSize, total: campaigns.length })}
             </Typography>
           )}
           {renderUpTo.index >= campaignsGroups.length && (
             <Typography variant="body2" color={(theme) => theme.palette.success.main}>
-              Done loading <FontAwesomeIcon icon={faCheckCircle} />
+              {t("state.done_loading")} <FontAwesomeIcon icon={faCheckCircle} />
             </Typography>
           )}
         </Stack>
       </BasicBox>
       <BasicBox>
-        <Stack direction="row" gap={0.5} alignItems="center" flexWrap="wrap" maxWidth={425}>
-          {"abcdefghijklmnopqrstuvwxyz".split("").map((l) => {
-            const letter = l.toUpperCase();
-            const countCampaigns = campaigns.filter((c) => c.name.toUpperCase().charAt(0) === letter).length;
-            return (
-              <StyledExternalLink
-                key={letter}
-                href={"#" + letter}
-                target="_self"
-                style={{ textDecoration: "none" }}
-              >
-                <BasicBox sx={{ p: 0.5, borderRadius: 0, minWidth: "29px" }}>
-                  <Stack direction="column" gap={0} alignItems="center">
-                    <span>{letter}</span>
-                    <span>{countCampaigns}</span>
-                  </Stack>
-                </BasicBox>
-              </StyledExternalLink>
-            );
-          })}
+        <Stack direction="column" gap={1}>
+          <Stack direction="row" gap={0.5} alignItems="center" flexWrap="wrap">
+            {"abcdefghijklm".split("").map((l) => {
+              const letter = l.toUpperCase();
+              const countCampaigns = campaigns.filter(
+                (c) => c.name.toUpperCase().charAt(0) === letter
+              ).length;
+              return (
+                <StyledExternalLink
+                  key={letter}
+                  href={"#" + letter}
+                  target="_self"
+                  style={{ textDecoration: "none" }}
+                >
+                  <BasicBox sx={{ p: 0.5, borderRadius: 0, minWidth: "29px" }}>
+                    <Stack direction="column" gap={0} alignItems="center">
+                      <span>{letter}</span>
+                      <span>{countCampaigns}</span>
+                    </Stack>
+                  </BasicBox>
+                </StyledExternalLink>
+              );
+            })}
+          </Stack>
+          <Stack direction="row" gap={0.5} alignItems="center" flexWrap="wrap">
+            {"nopqrstuvwxyz".split("").map((l) => {
+              const letter = l.toUpperCase();
+              const countCampaigns = campaigns.filter(
+                (c) => c.name.toUpperCase().charAt(0) === letter
+              ).length;
+              return (
+                <StyledExternalLink
+                  key={letter}
+                  href={"#" + letter}
+                  target="_self"
+                  style={{ textDecoration: "none" }}
+                >
+                  <BasicBox sx={{ p: 0.5, borderRadius: 0, minWidth: "29px" }}>
+                    <Stack direction="column" gap={0} alignItems="center">
+                      <span>{letter}</span>
+                      <span>{countCampaigns}</span>
+                    </Stack>
+                  </BasicBox>
+                </StyledExternalLink>
+              );
+            })}
+          </Stack>
         </Stack>
       </BasicBox>
       {campaignsGroups.map((campaignsGroup, index) => {
