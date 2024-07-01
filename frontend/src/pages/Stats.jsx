@@ -7,7 +7,7 @@ import {
   StyledLink,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
-import { GlobalStatsComponent, TiersCountDisplay } from "./Index";
+import { TiersCountDisplay } from "./Index";
 import { getQueryData, useGetAllDifficulties, useGetStats } from "../hooks/useApi";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -33,12 +33,12 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineOppositeContent, { timelineOppositeContentClasses } from "@mui/lab/TimelineOppositeContent";
 import { useEffect, useState } from "react";
-import { all } from "axios";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { Changelog } from "../components/Changelog";
 import { DifficultyMoveDisplay } from "./Suggestions";
+import { useTranslation } from "react-i18next";
 
 export function PageMonthlyRecap() {
+  const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.settings" });
   const { month } = useParams();
   const navigate = useNavigate();
 
@@ -69,13 +69,13 @@ export function PageMonthlyRecap() {
         <Button variant="outlined" onClick={() => setMonth(olderMonth)}>
           <Stack direction="row" alignItems="center" gap={1}>
             <FontAwesomeIcon icon={faArrowLeft} />
-            Less Recent '{sliceMonth(olderMonth)}'
+            {t("less_recent", { month: sliceMonth(olderMonth) })}
           </Stack>
         </Button>
         <span style={{ flex: 1 }}></span>
         <Button disabled={!hasNewerMonth} variant="outlined" onClick={() => setMonth(newerMonth)}>
           <Stack direction="row" alignItems="center" gap={1}>
-            More Recent '{sliceMonth(newerMonth)}'
+            {t("more_recent", { month: sliceMonth(newerMonth) })}
             <FontAwesomeIcon icon={faArrowRight} />
           </Stack>
         </Button>
@@ -87,6 +87,8 @@ export function PageMonthlyRecap() {
 }
 
 function MonthlyRecap({ month }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap" });
+  const { t: t_s } = useTranslation(undefined, { keyPrefix: "monthly_recap.settings" });
   const [allClearsDifficulty, setAllClearsDifficulty] = useLocalStorage(
     "monthly_recap_all_clears_tier_sort",
     null
@@ -104,7 +106,7 @@ function MonthlyRecap({ month }) {
     <Grid container columnSpacing={2} sx={{ mb: 1 }}>
       <Grid item xs={12} md={6}>
         <DifficultySelectControlled
-          label="Normal Clears Min. Difficulty"
+          label={t_s("normal_clears")}
           fullWidth
           difficultyId={allClearsDifficulty?.id ?? 3}
           setDifficulty={setAllClearsDifficulty}
@@ -114,7 +116,7 @@ function MonthlyRecap({ month }) {
       </Grid>
       <Grid item xs={12} md={6}>
         <DifficultySelectControlled
-          label="First Clears Min. Difficulty"
+          label={t_s("first_clears")}
           fullWidth
           difficultyId={firstClearsDifficulty?.id ?? 12}
           setDifficulty={setFirstClearsDifficulty}
@@ -125,7 +127,7 @@ function MonthlyRecap({ month }) {
       <Grid item xs={12}>
         <FormControlLabel
           control={<Checkbox />}
-          label="Hide Changelog"
+          label={t_s("hide_changelog")}
           checked={hideChangelog}
           onChange={(e) => setHideChangelog(e.target.checked)}
         />
@@ -156,22 +158,22 @@ function MonthlyRecap({ month }) {
 
   return (
     <>
-      <HeadTitle title={`Monthly Recap '${month}'`} />
+      <HeadTitle title={t("title", { month: month })} />
       {diffGrid}
 
       <Divider sx={{ mt: 1, mb: 2 }} />
 
       <Typography variant="h5" textAlign="center">
-        Monthly Recap for '{month}'
+        {t("header", { month: month })}
       </Typography>
 
       <Typography variant="h6" sx={{ mt: 2 }}>
-        Total clears this month
+        {t("total_clears")}
       </Typography>
       <TiersCountDisplay stats={difficulty} differences={tier_clears} hideEmpty equalWidths={3} />
 
       <Typography variant="h6" sx={{ mt: 3 }}>
-        Timeline
+        {t("timeline.label")}
       </Typography>
       <MonthlyRecapTimeline
         submissions_t0={submissions_t0}
@@ -331,6 +333,7 @@ function MonthlyRecapTimelineItem({
 }
 
 function TimelineSubmission({ submission, challenge, isFirstClear }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.timeline" });
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   const nameIsSame = map?.name === campaign.name;
@@ -343,7 +346,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
       alignItems="center"
       sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}
     >
-      <Chip size="small" label={isFirstClear ? "First Clear" : "Clear"} />
+      <Chip size="small" label={t(isFirstClear ? "first_clear" : "clear")} />
       <PlayerChip player={submission.player} size="small" />
       <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
@@ -368,6 +371,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
 }
 
 function TimelineChangelogEntry({ change, challenge }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.timeline" });
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   const nameIsSame = map?.name === campaign.name;
@@ -381,7 +385,7 @@ function TimelineChangelogEntry({ change, challenge }) {
 
   return (
     <Stack direction="row" columnGap={1} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
-      <Chip label="Moved" size="small" />
+      <Chip label={t("moved")} size="small" />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
         <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
         {!nameIsSame && map && (

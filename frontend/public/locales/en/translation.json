@@ -858,5 +858,38 @@
     "info_1": "This page contains all the maps that have been decided to not be added to the list, as well as reasons why such decision was made.",
     "info_2": "If the map or map pack breaks rule 3 (has inapporpriate words/visual stuff/etc), it won't be listed here.",
     "reason": "Reason"
+  },
+  "search": {
+    "title_content": "Search '{{content}}'",
+    "title_no_content": "Search",
+    "feedback": {
+      "min_length": "Please enter at least 3 characters to search"
+    },
+    "header": "Search Goldberries Database",
+    "info": "Search for players, campaigns, and maps by name!",
+    "search_label": "Search",
+    "no_campaigns": "No campaigns found",
+    "no_maps": "No maps found",
+    "no_players": "No players found",
+    "authors": "Authors",
+    "no_authors": "No authors found"
+  },
+  "monthly_recap": {
+    "title": "Monthly Recap '{{month}}'",
+    "settings": {
+      "less_recent": "Less Recent '{{month}}'",
+      "more_recent": "More Recent '{{month}}'",
+      "normal_clears": "Normal Clears Min. Difficulty",
+      "first_clears": "First Clears Min. Difficulty",
+      "hide_changelog": "Hide Changelog"
+    },
+    "header": "Monthly Recap for '{{month}}'",
+    "total_clears": "Total clears this month",
+    "timeline": {
+      "label": "Timeline",
+      "first_clear": "First Clear",
+      "clear": "Clear",
+      "moved": "Moved"
+    }
   }
 }

@@ -14,8 +14,10 @@ import { PlayerChip } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { getCampaignName, getMapLobbyInfo } from "../util/data_util";
+import { useTranslation } from "react-i18next";
 
 export function PageSearch({ isDirectSearch = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "search" });
   const { q } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState(q || "");
@@ -34,7 +36,7 @@ export function PageSearch({ isDirectSearch = false }) {
     }
   };
 
-  const title = search ? "Search '" + search + "'" : "Search";
+  const title = search ? t("title_content", { content: search }) : t("title_no_content");
 
   const containerSx = { mt: 0 };
   if (isDirectSearch) {
@@ -45,20 +47,20 @@ export function PageSearch({ isDirectSearch = false }) {
   return (
     <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
       <HeadTitle title={title} />
-      <Typography variant="h4">Search Goldberries Database</Typography>
+      <Typography variant="h4">{t("header")}</Typography>
       <Typography variant="body1" color="gray" gutterBottom>
-        Search for players, campaigns, and maps by name.
+        {t("info")}
       </Typography>
       <DebouncedTextField
         value={search}
         setValue={updateSearch}
-        label="Search"
+        label={t("search_label")}
         isDirectSearch={isDirectSearch}
       />
       {search && search.length >= 3 && <SearchDisplay search={search} />}
       {search && search.length < 3 && search.length > 0 && (
         <Typography variant="body1" color="gray">
-          Please enter at least 3 characters to search
+          {t("feedback.min_length")}
         </Typography>
       )}
     </BasicContainerBox>
@@ -87,15 +89,19 @@ export function SearchDisplay({ search }) {
 }
 
 function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = true }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "search" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const showCampaign = (campaign) => campaign.maps.length > 1 || campaign.maps[0].name !== campaign.name;
   const filteredCampaigns = filterStandalone ? campaigns.filter(showCampaign) : campaigns;
 
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant={heading}>Campaigns - {filteredCampaigns.length}</Typography>
+      <Typography variant={heading}>
+        {t_g("campaign", { count: 30 })} - {filteredCampaigns.length}
+      </Typography>
       {filteredCampaigns.length === 0 && (
         <Typography variant="body1" color="gray">
-          No campaigns found
+          {t("no_campaigns")}
         </Typography>
       )}
       {filteredCampaigns.map((campaign) => (
@@ -143,12 +149,16 @@ function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = 
 }
 
 function SearchResultsMaps({ maps, heading = "h5" }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "search" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant={heading}>Maps - {maps.length}</Typography>
+      <Typography variant={heading}>
+        {t_g("map", { count: 30 })} - {maps.length}
+      </Typography>
       {maps.length === 0 && (
         <Typography variant="body1" color="gray">
-          No maps found
+          {t("no_maps")}
         </Typography>
       )}
       {maps.map((map) => (
@@ -171,12 +181,16 @@ function SearchResultsMaps({ maps, heading = "h5" }) {
 }
 
 function SearchResultsPlayers({ players }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "search" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Players - {players.length}</Typography>
+      <Typography variant="h5">
+        {t_g("player", { count: 30 })} - {players.length}
+      </Typography>
       {players.length === 0 ? (
         <Typography variant="body1" color="gray">
-          No players found
+          {t("no_players")}
         </Typography>
       ) : (
         <Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
@@ -190,12 +204,15 @@ function SearchResultsPlayers({ players }) {
 }
 
 function SearchResultsAuthors({ authors }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "search" });
   return (
     <Stack direction="column" gap={1}>
-      <Typography variant="h5">Authors - {authors.length}</Typography>
+      <Typography variant="h5">
+        {t("authors")} - {authors.length}
+      </Typography>
       {authors.length === 0 && (
         <Typography variant="body1" color="gray">
-          No authors found
+          {t("no_authors")}
         </Typography>
       )}
       {authors.map((author) => (

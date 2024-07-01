@@ -855,5 +855,38 @@
     "info_1": "Diese Seite enthält alle Maps, für die entschieden wurde, diese nicht zur Liste hinzuzufügen, sowie Gründe, warum diese Entscheidung getroffen wurde.",
     "info_2": "Nicht aufgelistet werden Maps oder Map Packs, die gegen Regel 3 verstoßen (unangemessene Wörter/visuelle Inhalte/etc).",
     "reason": "Grund"
+  },
+  "search": {
+    "title_content": "Suche '{{content}}'",
+    "title_no_content": "Suche",
+    "feedback": {
+      "min_length": "Bitte gib mindestens 3 Zeichen ein zum Suchen"
+    },
+    "header": "Durchsuche die Goldberries Datenbank",
+    "info": "Suche nach Players, Campaigns, und Maps nach Namen!",
+    "search_label": "Suche",
+    "no_campaigns": "Keine Campaigns gefunden",
+    "no_maps": "Keine Maps gefunden",
+    "no_players": "Keine Players gefunden",
+    "authors": "Autoren",
+    "no_authors": "Keine Autoren gefunden"
+  },
+  "monthly_recap": {
+    "title": "Monatlicher Rückblick '{{month}}'",
+    "settings": {
+      "less_recent": "Später '{{month}}'",
+      "more_recent": "Früher '{{month}}'",
+      "normal_clears": "Normale Clears Min. Schwierigkeit",
+      "first_clears": "Erste Clears Min. Schwierigkeit",
+      "hide_changelog": "Änderungsprotokoll verstecken"
+    },
+    "header": "Monatlicher Rückblick für '{{month}}'",
+    "total_clears": "Gesamte Clears diesen Monat",
+    "timeline": {
+      "label": "Zeitstrahl",
+      "first_clear": "Erster Clear",
+      "clear": "Clear",
+      "moved": "Verschoben"
+    }
   }
 }
