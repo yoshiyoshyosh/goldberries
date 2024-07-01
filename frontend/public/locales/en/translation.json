@@ -266,6 +266,29 @@
         "verify": "Verify",
         "reject": "Reject"
       }
+    },
+    "feedback": {
+      "player_name": {
+        "required": "Player name can't be empty",
+        "min_length": "Player name must be at least 3 characters long",
+        "max_length": "Player name can't be longer than 32 characters"
+      },
+      "password": {
+        "required": "Password can't be empty",
+        "min_length": "Password must be at least 8 characters long",
+        "max_length": "Password can't be longer than 128 characters"
+      },
+      "email": {
+        "required": "Email can't be empty",
+        "invalid": "Invalid email address"
+      },
+      "name": {
+        "required": "Name can't be empty",
+        "max_length": "Name can't be longer than {{count}} characters"
+      },
+      "url": {
+        "required": "URL can't be empty"
+      }
     }
   },
   "hooks": {
@@ -512,8 +535,7 @@
       "login_methods": {
         "label": "Login Methods",
         "feedback": {
-          "updated": "Account updated",
-          "passwords_not_match": "Passwords do not match"
+          "updated": "Account updated"
         },
         "note": "Note: One of the login methods must always be active!",
         "email": "Email",
@@ -765,6 +787,56 @@
       "submissions": "{{count}} submissions across {{campaigns}} campaigns",
       "campaigns": "Loading campaigns {{current}}/{{total}}",
       "done_loading": "Done loading"
+    }
+  },
+  "login": {
+    "already_logged_in": "You're already logged in, silly",
+    "login": {
+      "title": "Login",
+      "feedback": {
+        "passwords_not_match": "Passwords do not match"
+      },
+      "email": "Email Address",
+      "password": "Password",
+      "or": "OR",
+      "buttons": {
+        "sign_in": "Sign In",
+        "forgot_password": "Forgot Password?",
+        "sign_up": "Sign Up",
+        "discord": "Sign In with Discord"
+      }
+    },
+    "register": {
+      "title": "Register",
+      "success": "Check your inbox (and spam folder!) for the activation email",
+      "info": "Registering via email requires you to verify your email address. Register with Discord to skip this.",
+      "confirm_password": "Confirm Password",
+      "buttons": {
+        "register": "Register",
+        "sign_in": "Have an account? Sign In instead!",
+        "discord": "Register with Discord"
+      }
+    },
+    "verify_email": {
+      "title": "Verify Email",
+      "success": "Your email has been verified! You can now login to your account.",
+      "to_login": "Go to the Login",
+      "info": "Click the button below to verify your email address",
+      "button": "Verify Email"
+    },
+    "forgot_password": {
+      "request": {
+        "title": "Forgot Password",
+        "info": "If an account with this email exists, you will receive an email with instructions to reset your password! (Check you spam folder too!)",
+        "button": "Send Recovery Email"
+      },
+      "verify": {
+        "title": "Reset Password",
+        "success": "Your password has been reset! You can now login with your new password.",
+        "info": "Enter your new password below",
+        "new_password": "New Password",
+        "button": "Set New Password"
+      }
     }
   }
 }

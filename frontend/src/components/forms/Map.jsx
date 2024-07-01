@@ -77,6 +77,7 @@ export function FormMap({ map, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_ch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
 
   const newMap = map.id === null;
 
@@ -127,7 +128,7 @@ export function FormMap({ map, onSave, ...props }) {
       <TextField
         label={t_g("name")}
         fullWidth
-        {...form.register("name", FormOptions.Name128Required)}
+        {...form.register("name", FormOptions.Name128Required(t_ff))}
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />

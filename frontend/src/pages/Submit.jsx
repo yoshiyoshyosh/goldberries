@@ -54,6 +54,7 @@ import {
 } from "../components/GoldberriesComponents";
 import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useTranslation } from "react-i18next";
 
 export function PageSubmit() {
   const { tab, challengeId } = useParams();
@@ -118,6 +119,7 @@ export function PageSubmit() {
 }
 
 export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChallenge }) {
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const navigate = useNavigate();
   const [campaign, setCampaign] = useState(defaultCampaign ?? null);
@@ -298,7 +300,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             <TextField
               label="Proof URL *"
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired)}
+              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
               helperText={errors.proof_url?.message}
             />
@@ -311,7 +313,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               <TextField
                 label="Raw Session URL *"
                 fullWidth
-                {...form.register("raw_session_url", FormOptions.UrlRequired)}
+                {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
                 error={errors.raw_session_url}
                 helperText={errors.raw_session_url?.message}
               />
@@ -398,6 +400,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
 }
 
 export function MultiUserSubmission() {
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
 
   const [campaign, setCampaign] = useState(null);
@@ -666,7 +669,7 @@ export function MultiUserSubmission() {
             <TextField
               label="Proof URL *"
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired)}
+              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
               helperText={errors.proof_url?.message}
             />
@@ -714,6 +717,7 @@ export function MultiUserSubmission() {
 }
 
 export function NewChallengeUserSubmission({}) {
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const navigate = useNavigate();
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
@@ -762,14 +766,14 @@ export function NewChallengeUserSubmission({}) {
           <TextField
             label="GameBanana URL *"
             fullWidth
-            {...form.register("new_challenge.url", FormOptions.UrlRequired)}
+            {...form.register("new_challenge.url", FormOptions.UrlRequired(t_ff))}
             error={errors.new_challenge?.url}
             helperText={errors.new_challenge?.url?.message}
           />
           <TextField
             label="Map Name *"
             fullWidth
-            {...form.register("new_challenge.name", FormOptions.Name128Required)}
+            {...form.register("new_challenge.name", FormOptions.Name128Required(t_ff))}
             error={errors.new_challenge?.name}
             helperText={errors.new_challenge?.name?.message}
           />
@@ -802,7 +806,7 @@ export function NewChallengeUserSubmission({}) {
             <TextField
               label="Proof URL *"
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired)}
+              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
               helperText={errors.proof_url?.message}
             />
@@ -815,7 +819,7 @@ export function NewChallengeUserSubmission({}) {
               <TextField
                 label="Raw Session URL *"
                 fullWidth
-                {...form.register("raw_session_url", FormOptions.UrlRequired)}
+                {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
                 error={errors.raw_session_url}
                 helperText={errors.raw_session_url?.message}
               />

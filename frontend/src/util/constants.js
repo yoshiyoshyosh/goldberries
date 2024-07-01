@@ -11,124 +11,84 @@ export const APP_NAME_LONG = "Goldberries.net";
 export const DISCORD_INVITE = "https://discord.gg/GeJvmMycaC";
 
 export const FormOptions = {
-  PlayerName: {
+  PlayerName: (t) => ({
     required: {
       value: true,
-      message: "Player name can't be empty",
+      message: t("player_name.required"),
     },
     minLength: {
       value: 2,
-      message: "Player name must be at least 2 characters long",
+      message: t("player_name.min_length"),
     },
     maxLength: {
       value: 32,
-      message: "Player name can't be longer than 32 characters",
+      message: t("player_name.max_length"),
     },
-  },
-  PasswordOptional: {
+  }),
+  PasswordOptional: (t) => ({
     minLength: {
       value: 8,
-      message: "Password must be at least 8 characters long",
+      message: t("password.min_length"),
     },
     maxLength: {
       value: 128,
-      message: "Password can't be longer than 128 characters",
+      message: t("password.max_length"),
     },
-  },
-  Password: {
+  }),
+  Password: (t) => ({
     required: {
       value: true,
-      message: "Password can't be empty",
+      message: t("password.required"),
     },
     minLength: {
       value: 8,
-      message: "Password must be at least 8 characters long",
+      message: t("password.min_length"),
     },
     maxLength: {
       value: 128,
-      message: "Password can't be longer than 128 characters",
+      message: t("password.max_length"),
     },
-  },
-  EmailOptional: {
+  }),
+  EmailOptional: (t) => ({
     pattern: {
       value: /^\S+@\S+\.\S+$/,
       message: "Invalid email address",
     },
-  },
-  Email: {
+  }),
+  Email: (t) => ({
     required: {
       value: true,
-      message: "Email can't be empty",
+      message: t("email.required"),
     },
     pattern: {
       value: /^\S+@\S+\.\S+$/,
-      message: "Invalid email address",
+      message: t("email.invalid"),
     },
-  },
-  Name128: {
+  }),
+  Name128: (t) => ({
     maxLength: {
       value: 128,
-      message: "Name can't be longer than 128 characters",
+      message: t("name.max_length", { count: 128 }),
     },
-  },
-  Name128Required: {
+  }),
+  Name128Required: (t) => ({
     required: {
       value: true,
-      message: "Name can't be empty",
+      message: t("name.required"),
     },
     maxLength: {
       value: 128,
-      message: "Name can't be longer than 128 characters",
+      message: t("name.max_length", { count: 128 }),
     },
-  },
-  UrlRequired: {
+  }),
+  UrlRequired: (t) => ({
     required: {
       value: true,
-      message: "URL can't be empty",
+      message: t("url.required"),
     },
-  },
+  }),
 };
 
-// export const DIFFICULTY_COLORS = {
-//   //Tier 0
-//   1: { color: "#ff4d70", group_color: "#ff00d4", contrast_color: "#000000" },
-//   2: { color: "#ff4d4d", group_color: "#ff00d4", contrast_color: "#000000" },
-//   3: { color: "#ff794d", group_color: "#ff00d4", contrast_color: "#000000" },
-
-//   //Tier 1
-//   4: { color: "#ffaf4d", group_color: "#ff0000", contrast_color: "#000000" },
-//   5: { color: "#ffbe4d", group_color: "#ff0000", contrast_color: "#000000" },
-//   6: { color: "#ffd24d", group_color: "#ff0000", contrast_color: "#000000" },
-
-//   //Tier 2
-//   7: { color: "#ffed4d", group_color: "#ffff00", contrast_color: "#000000" },
-//   8: { color: "#f9ff4d", group_color: "#ffff00", contrast_color: "#000000" },
-//   9: { color: "#e1ff4d", group_color: "#ffff00", contrast_color: "#000000" },
-
-//   //Tier 3
-//   10: { color: "#79ff4d", group_color: "#00ff00", contrast_color: "#000000" },
-//   11: { color: "#4dff5b", group_color: "#00ff00", contrast_color: "#000000" },
-//   12: { color: "#4dff85", group_color: "#00ff00", contrast_color: "#000000" },
-//   13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
-
-//   //Tier 4
-//   14: { color: "#4dffc1", group_color: "#00ffff", contrast_color: "#000000" },
-
-//   //Tier 5
-//   15: { color: "#4dffff", group_color: "#00aaff", contrast_color: "#000000" },
-
-//   //Tier 6
-//   16: { color: "#4dc3ff", group_color: "#0051ff", contrast_color: "#000000" },
-
-//   //Tier 7
-//   17: { color: "#4d85ff", group_color: "#6f00ff", contrast_color: "#000000" },
-
-//   //Standard
-//   18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
-
-//   //Undetermined
-//   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
-// };
 export const DIFFICULTY_COLORS = {
   //Tier 0
   1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },

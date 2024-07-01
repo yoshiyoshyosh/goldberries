@@ -63,6 +63,7 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
 //This account form is used by team members, not users themselves
 export function FormAccount({ account, allPlayers, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.account" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -144,7 +145,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       <TextField
         label={t("new_email")}
-        {...form.register("new_email", FormOptions.EmailOptional)}
+        {...form.register("new_email", FormOptions.EmailOptional(t_ff))}
         fullWidth
       />
       <Controller
@@ -161,7 +162,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       />
       <TextField
         label={t("new_password")}
-        {...form.register("password", FormOptions.PasswordOptional)}
+        {...form.register("password", FormOptions.PasswordOptional(t_ff))}
         fullWidth
       />
       <Stack direction="row" spacing={2} sx={{ mt: 2 }}>

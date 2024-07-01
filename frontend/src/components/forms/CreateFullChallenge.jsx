@@ -40,6 +40,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.create_full_challenge.campaign" });
   const { t: t_fch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { mutateAsync: postCampaign } = usePostCampaign(() => {
     toast.success(t("feedback.campaign"));
   });
@@ -97,7 +98,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       <TextField
         label={t_ca("name") + " *"}
         fullWidth
-        {...form.register("campaign_name", FormOptions.Name128Required)}
+        {...form.register("campaign_name", FormOptions.Name128Required(t_ff))}
         error={!!errors.campaign_name}
         helperText={errors.campaign_name ? errors.campaign_name.message : ""}
       />
@@ -105,7 +106,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         label={t_g("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
-        {...form.register("campaign_url", FormOptions.UrlRequired)}
+        {...form.register("campaign_url", FormOptions.UrlRequired(t_ff))}
         error={!!errors.campaign_url}
         helperText={errors.campaign_url ? errors.campaign_url.message : ""}
       />
@@ -128,7 +129,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       <TextField
         label={t("map_name") + " *"}
         fullWidth
-        {...form.register("map_name", FormOptions.Name128Required)}
+        {...form.register("map_name", FormOptions.Name128Required(t_ff))}
         error={!!errors.map_name}
         helperText={errors.map_name ? errors.map_name.message : ""}
       />

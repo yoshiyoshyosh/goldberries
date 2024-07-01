@@ -148,6 +148,8 @@ export function PageAccount() {
 export function UserAccountLoginMethodsForm() {
   const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.login_methods" });
   const { t: t_fa } = useTranslation(undefined, { keyPrefix: "forms.account" });
+  const { t: t_l } = useTranslation(undefined, { keyPrefix: "login.login" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
 
   const auth = useAuth();
   const [addEmail, setAddEmail] = useState(false);
@@ -187,7 +189,7 @@ export function UserAccountLoginMethodsForm() {
 
   const validateConfirmPassword = (value) => {
     if (!formAccount.password) return true;
-    return value === formAccount.password || t("feedback.passwords_not_match");
+    return value === formAccount.password || t_l("feedback.passwords_not_match");
   };
 
   return (
@@ -204,7 +206,10 @@ export function UserAccountLoginMethodsForm() {
               <>
                 <TextField
                   label={t("email")}
-                  {...form.register("email", addEmail ? FormOptions.Email : FormOptions.EmailOptional)}
+                  {...form.register(
+                    "email",
+                    addEmail ? FormOptions.Email(t_ff) : FormOptions.EmailOptional(t_ff)
+                  )}
                   fullWidth
                 />
                 <Stack direction="column">
@@ -213,7 +218,7 @@ export function UserAccountLoginMethodsForm() {
                     type="password"
                     {...form.register(
                       "password",
-                      addEmail ? FormOptions.Password : FormOptions.PasswordOptional
+                      addEmail ? FormOptions.Password(t_ff) : FormOptions.PasswordOptional(t_ff)
                     )}
                     fullWidth
                     error={!!errors.password}
@@ -819,6 +824,7 @@ function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
 
 export function UserAccountRenameForm() {
   const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.player_rename" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const { mutate: renameSelf } = usePostPlayerSelf(() => {
     toast.success(t("feedback.renamed"));
@@ -860,6 +866,8 @@ export function UserAccountRenameForm() {
     return `${hours}h ${minutes}m`;
   };
 
+  console.log(errors);
+
   return (
     <>
       {auth.user.player === null && (
@@ -890,7 +898,9 @@ export function UserAccountRenameForm() {
             label={t("new_name")}
             fullWidth
             disabled={auth.user.player === null}
-            {...form.register("name", FormOptions.PlayerName)}
+            {...form.register("name", FormOptions.PlayerName(t_ff))}
+            error={!!errors.name}
+            helperText={errors.name?.message}
           />
           <Controller
             name="log_change"

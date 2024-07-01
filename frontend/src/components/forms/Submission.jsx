@@ -68,6 +68,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_a } = useTranslation();
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
 
   const { mutate: saveSubmission } = usePostSubmission((submission) => {
@@ -160,13 +161,13 @@ export function FormSubmission({ submission, onSave, ...props }) {
             label={t_g("url")}
             disabled={!isVerifier}
             fullWidth
-            {...form.register("new_challenge.url", FormOptions.UrlRequired)}
+            {...form.register("new_challenge.url", FormOptions.UrlRequired(t_ff))}
           />
           <TextField
             label={t_g("name")}
             disabled={!isVerifier}
             fullWidth
-            {...form.register("new_challenge.name", FormOptions.Name128Required)}
+            {...form.register("new_challenge.name", FormOptions.Name128Required(t_ff))}
           />
           <TextField
             label={t_g("description")}

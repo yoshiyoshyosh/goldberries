@@ -263,6 +263,29 @@
         "verify": "Verifizieren",
         "reject": "Ablehnen"
       }
+    },
+    "feedback": {
+      "player_name": {
+        "required": "Player Name kann nicht leer sein",
+        "min_length": "Player Name muss mindestens 3 Zeichen lang sein",
+        "max_length": "Player Name darf nicht länger als 32 Zeichen lang sein"
+      },
+      "password": {
+        "required": "Passwort kann nicht leer sein",
+        "min_length": "Passwort muss mindestens 8 Zeichen lang sein",
+        "max_length": "Passwort darf nicht länger als 128 Zeichen lang sein"
+      },
+      "email": {
+        "required": "Email kann nicht leer sein",
+        "invalid": "Ungültige Email Adresse"
+      },
+      "name": {
+        "required": "Name kann nicht leer sein",
+        "max_length": "Name darf nicht länger als {{count}} Zeichen lang sein"
+      },
+      "url": {
+        "required": "URL kann nicht leer sein"
+      }
     }
   },
   "hooks": {
@@ -509,8 +532,7 @@
       "login_methods": {
         "label": "Login",
         "feedback": {
-          "updated": "Account aktualisiert",
-          "passwords_not_match": "Passwörter stimmen nicht überein"
+          "updated": "Account aktualisiert"
         },
         "note": "Beachte: Eine der beiden Login Methoden muss immer aktiv sein!",
         "email": "Email",
@@ -762,6 +784,56 @@
       "submissions": "{{count}} Submissions über {{campaigns}} Campaigns",
       "campaigns": "Lade Campaigns {{current}}/{{total}}",
       "done_loading": "Laden abgeschlossen"
+    }
+  },
+  "login": {
+    "already_logged_in": "Du bist schon angemeldet, silly",
+    "login": {
+      "title": "Login",
+      "feedback": {
+        "passwords_not_match": "Passwörter stimmen nicht überein"
+      },
+      "email": "Email Adresse",
+      "password": "Passwort",
+      "or": "ODER",
+      "buttons": {
+        "sign_in": "Anmelden",
+        "forgot_password": "Passwort Vergessen?",
+        "sign_up": "Registrieren",
+        "discord": "Registrieren mit Discord"
+      }
+    },
+    "register": {
+      "title": "Registrierung",
+      "success": "Überprüfe deinen Posteingang (und Spam Ordner!) für die Aktivierungsemail",
+      "info": "Die Registrierung per Email erfordert, dass du deine Email Adresse verifizierst. Registriere dich mit Discord um diesen Schritt zu überspringen.",
+      "confirm_password": "Passwort Bestätigen",
+      "buttons": {
+        "register": "Registrieren",
+        "sign_in": "Hast du schon einen Account? Anmelden",
+        "discord": "Registrieren mit Discord"
+      }
+    },
+    "verify_email": {
+      "title": "Email Bestätigen",
+      "success": "Deine Email wurde verifiziert! Du kannst dich jetzt einloggen.",
+      "to_login": "Zum Login",
+      "info": "Klick auf den Button unten um deine Email Adresse zu verifizieren",
+      "button": "Email Bestätigen"
+    },
+    "forgot_password": {
+      "request": {
+        "title": "Passwort Vergessen",
+        "info": "Wenn ein Account mit dieser Email existiert, wirst du eine Email mit Anweisungen zum Zurücksetzen deines Passworts erhalten! (Check auch deinen Spam Ordner!)",
+        "button": "Wiederherstellungs-Email Senden"
+      },
+      "verify": {
+        "title": "Passwort Zurücksetzen",
+        "success": "Dein Passwort wurde zurückgesetzt! Du kannst dich nun mit deinem neuen Passwort einloggen.",
+        "info": "Gib dein neues Passwort unten ein",
+        "new_password": "Neues Passwort",
+        "button": "Passwort Zurücksetzen"
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../hooks/AuthProvider";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,9 +15,12 @@ import {
   useRegister,
   useVerifyEmail,
 } from "../hooks/useApi";
-import { MemoWebsiteIcon, WebsiteIcon } from "../components/GoldberriesComponents";
+import { MemoWebsiteIcon } from "../components/GoldberriesComponents";
+import { useTranslation } from "react-i18next";
 
 export function PageLogin() {
+  const { t } = useTranslation(undefined, { keyPrefix: "login.login" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const { redirect } = useParams();
   const form = useForm();
@@ -27,17 +30,17 @@ export function PageLogin() {
   const errors = form.formState.errors;
 
   if (auth.user) {
-    return <AlreadyLoggedInBox title="Login" />;
+    return <AlreadyLoggedInBox title={t("title")} />;
   }
 
   return (
-    <LoginBox title="Login">
+    <LoginBox title={t("title")}>
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
           fullWidth
-          label="Email Address"
-          {...form.register("email", FormOptions.Email)}
+          label={t("email")}
+          {...form.register("email", FormOptions.Email(t_ff))}
           error={!!errors.email}
           helperText={errors.email?.message}
         />
@@ -45,30 +48,30 @@ export function PageLogin() {
           margin="normal"
           type="password"
           fullWidth
-          label="Password"
-          {...form.register("password", FormOptions.Password)}
+          label={t("password")}
+          {...form.register("password", FormOptions.Password(t_ff))}
           error={!!errors.password}
           helperText={errors.password?.message}
         />
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Sign In
+          {t("buttons.sign_in")}
         </Button>
         <Grid container>
           <Grid item xs>
             <StyledLink to="/forgot-password" variant="body2">
-              Forgot password?
+              {t("buttons.forgot_password")}
             </StyledLink>
           </Grid>
           <Grid item>
             <StyledLink to="/register" variant="body2">
-              Sign Up
+              {t("buttons.sign_up")}
             </StyledLink>
           </Grid>
         </Grid>
       </Box>
 
       <Divider sx={{ mt: 2, mb: 0 }} flexItem>
-        OR
+        {t("or")}
       </Divider>
 
       <Button
@@ -78,13 +81,16 @@ export function PageLogin() {
         onClick={() => auth.loginWithDiscord(redirect)}
         endIcon={<FontAwesomeIcon icon={faDiscord} />}
       >
-        Sign in with Discord
+        {t("buttons.discord")}
       </Button>
     </LoginBox>
   );
 }
 
 export function PageRegister() {
+  const { t } = useTranslation(undefined, { keyPrefix: "login.register" });
+  const { t: t_l } = useTranslation(undefined, { keyPrefix: "login.login" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const { error } = useParams();
   const [postRegister, setPostRegister] = useState(false);
@@ -107,38 +113,38 @@ export function PageRegister() {
   const errors = form.formState.errors;
 
   const validateConfirmPassword = (value) => {
-    return value === form.watch("password") || "Passwords do not match";
+    return value === form.watch("password") || t_l("feedback.password_not_match");
   };
 
   if (auth.user) {
-    return <AlreadyLoggedInBox title="Registration" />;
+    return <AlreadyLoggedInBox title={t("title")} />;
   }
   if (postRegister) {
     return (
-      <LoginBox title="Register" titleColor="green">
+      <LoginBox title={t("title")} titleColor="green">
         <Typography variant="body2" color="green" textAlign="center">
-          Check your inbox (and spam folder!) for the activation email
+          {t("success")}
         </Typography>
       </LoginBox>
     );
   }
 
   return (
-    <LoginBox title="Register">
+    <LoginBox title={t("title")}>
       {error && (
         <Alert severity="error" sx={{ mt: 2, alignSelf: "stretch" }}>
           {decodeURIComponent(error)}
         </Alert>
       )}
       <Typography variant="body2" textAlign="center">
-        Registering via email requires you to verify your email address. Register with Discord to skip this.
+        {t("info")}
       </Typography>
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
           fullWidth
-          label="Email Address"
-          {...form.register("email", FormOptions.Email)}
+          label={t_l("email")}
+          {...form.register("email", FormOptions.Email(t_ff))}
           error={!!errors.email}
           helperText={errors.email?.message}
         />
@@ -146,8 +152,8 @@ export function PageRegister() {
           margin="normal"
           type="password"
           fullWidth
-          label="Password"
-          {...form.register("password", FormOptions.Password)}
+          label={t_l("password")}
+          {...form.register("password", FormOptions.Password(t_ff))}
           error={!!errors.password}
           helperText={errors.password?.message}
         />
@@ -155,26 +161,26 @@ export function PageRegister() {
           margin="normal"
           type="password"
           fullWidth
-          label="Confirm Password"
+          label={t("confirm_password")}
           {...form.register("confirmPassword", { validate: validateConfirmPassword })}
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword?.message}
         />
 
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Register
+          {t("buttons.register")}
         </Button>
         <Grid container>
           <Grid item>
             <StyledLink to="/login" variant="body2">
-              Have an account? Sign In instead!
+              {t("buttons.sign_in")}
             </StyledLink>
           </Grid>
         </Grid>
       </Box>
 
       <Divider sx={{ mt: 2, mb: 0 }} flexItem>
-        OR
+        {t_l("or")}
       </Divider>
 
       <Button
@@ -184,13 +190,14 @@ export function PageRegister() {
         onClick={() => auth.registerWithDiscord()}
         endIcon={<FontAwesomeIcon icon={faDiscord} />}
       >
-        Register with Discord
+        {t("buttons.discord")}
       </Button>
     </LoginBox>
   );
 }
 
 export function PageVerifyEmail() {
+  const { t } = useTranslation(undefined, { keyPrefix: "login.veriy_email" });
   const auth = useAuth();
   const { verify } = useParams();
   const [postSubmit, setPostSubmit] = useState(false);
@@ -202,26 +209,26 @@ export function PageVerifyEmail() {
   };
 
   if (auth.user) {
-    return <AlreadyLoggedInBox title="Verify Email" />;
+    return <AlreadyLoggedInBox title={t("title")} />;
   }
   if (postSubmit) {
     return (
-      <LoginBox title="Verify Email" titleColor="green">
+      <LoginBox title={t("title")} titleColor="green">
         <Typography variant="body2" color="green" textAlign="center">
-          Your email has been verified! You can now login to your account.
+          {t("success")}
         </Typography>
-        <StyledLink to="/login">Go to the Login</StyledLink>
+        <StyledLink to="/login">{t("to_login")}</StyledLink>
       </LoginBox>
     );
   }
 
   return (
-    <LoginBox title="Verify Email">
+    <LoginBox title={t("title")}>
       <Typography variant="body2" textAlign="center">
-        Click the button below to verify your email address
+        {t("info")}
       </Typography>
       <Button onClick={onSubmit} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        Verify Email
+        {t("button")}
       </Button>
     </LoginBox>
   );
@@ -238,6 +245,9 @@ export function PageForgotPassword() {
 }
 
 export function PageForgotPasswordRequest() {
+  const { t } = useTranslation(undefined, { keyPrefix: "login.forgot_password.request" });
+  const { t: t_l } = useTranslation(undefined, { keyPrefix: "login.login" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const [postSubmit, setPostSubmit] = useState(false);
   const { mutate: requestPasswordChange } = useForgotPasswordRequest(() => {
@@ -254,14 +264,13 @@ export function PageForgotPasswordRequest() {
   });
 
   if (auth.user) {
-    return <AlreadyLoggedInBox title="Forgot Password" />;
+    return <AlreadyLoggedInBox title={t("title")} />;
   }
   if (postSubmit) {
     return (
-      <LoginBox title="Forgot Password" titleColor="green">
+      <LoginBox title={t("title")} titleColor="green">
         <Typography variant="body2" color="green" textAlign="center">
-          If an account with this email exists, you will receive an email with instructions to reset your
-          password! (Check you spam folder too!)
+          {t("info")}
         </Typography>
       </LoginBox>
     );
@@ -273,14 +282,14 @@ export function PageForgotPasswordRequest() {
         <TextField
           margin="normal"
           fullWidth
-          label="Email Address"
-          {...form.register("email", FormOptions.Email)}
+          label={t_l("email")}
+          {...form.register("email", FormOptions.Email(t_ff))}
           error={!!errors.email}
           helperText={errors.email?.message}
         />
 
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Send Recovery Email
+          {t("button")}
         </Button>
       </Box>
     </LoginBox>
@@ -288,6 +297,11 @@ export function PageForgotPasswordRequest() {
 }
 
 export function PageForgotPasswordVerify({ token }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "login.forgot_password.verify" });
+  const { t: t_l } = useTranslation(undefined, { keyPrefix: "login.login" });
+  const { t: t_r } = useTranslation(undefined, { keyPrefix: "login.register" });
+  const { t: t_ve } = useTranslation(undefined, { keyPrefix: "login.verify_email" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const auth = useAuth();
   const [postSubmit, setPostSubmit] = useState(false);
   const { mutate: changePassword } = useForgotPasswordVerify(() => {
@@ -306,35 +320,35 @@ export function PageForgotPasswordVerify({ token }) {
   });
 
   const validateConfirmPassword = (value) => {
-    return value === form.watch("password") || "Passwords do not match";
+    return value === form.watch("password") || t_l("feedback.password_not_match");
   };
 
   if (auth.user) {
-    return <AlreadyLoggedInBox title="Forgot Password" />;
+    return <AlreadyLoggedInBox title={t("title")} />;
   }
   if (postSubmit) {
     return (
-      <LoginBox title="Recover Password" titleColor="green">
+      <LoginBox title={t("title")} titleColor="green">
         <Typography variant="body2" color="green" textAlign="center">
-          Your password has been reset! You can now login with your new password.
+          {t("success")}
         </Typography>
-        <StyledLink to="/login">Go to the Login</StyledLink>
+        <StyledLink to="/login">{t_ve("to_login")}</StyledLink>
       </LoginBox>
     );
   }
 
   return (
-    <LoginBox title="Recover Password">
+    <LoginBox title={t("title")}>
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
         <Typography variant="body2" textAlign="center">
-          Enter your new password below
+          {t("info")}
         </Typography>
         <TextField
           margin="normal"
           type="password"
           fullWidth
-          label="New Password"
-          {...form.register("password", FormOptions.Password)}
+          label={t("new_password")}
+          {...form.register("password", FormOptions.Password(t_ff))}
           error={!!errors.password}
           helperText={errors.password?.message}
         />
@@ -342,14 +356,14 @@ export function PageForgotPasswordVerify({ token }) {
           margin="normal"
           type="password"
           fullWidth
-          label="Confirm Password"
+          label={t_r("confirm_password")}
           {...form.register("confirmPassword", { validate: validateConfirmPassword })}
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword?.message}
         />
 
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Set New Password
+          {t("button")}
         </Button>
       </Box>
     </LoginBox>
@@ -379,6 +393,7 @@ function LoginHeader({ title, titleColor }) {
 }
 
 function AlreadyLoggedInBox({ title }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "login" });
   return (
     <BasicContainerBox maxWidth="xs" sx={{ mt: 8 }}>
       <HeadTitle title={title} />
@@ -387,7 +402,7 @@ function AlreadyLoggedInBox({ title }) {
         <Typography component="h1" variant="h5">
           {title}
         </Typography>
-        <Typography variant="body1">You're already logged in, silly</Typography>
+        <Typography variant="body1">{t("already_logged_in")}</Typography>
       </Stack>
     </BasicContainerBox>
   );

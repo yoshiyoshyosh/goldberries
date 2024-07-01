@@ -91,6 +91,7 @@ export function FormCampaignWrapper({
 
 export function FormCampaign({ campaign, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const newCampaign = campaign.id === null;
 
@@ -127,7 +128,7 @@ export function FormCampaign({ campaign, onSave, ...props }) {
       <TextField
         label={t_g("name") + " *"}
         fullWidth
-        {...form.register("name", FormOptions.Name128Required)}
+        {...form.register("name", FormOptions.Name128Required(t_ff))}
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />
@@ -135,7 +136,7 @@ export function FormCampaign({ campaign, onSave, ...props }) {
         label={t_g("url") + " *"}
         sx={{ mt: 2 }}
         fullWidth
-        {...form.register("url", FormOptions.UrlRequired)}
+        {...form.register("url", FormOptions.UrlRequired(t_ff))}
         error={!!errors.url}
         helperText={errors.url ? errors.url.message : ""}
       />
@@ -263,6 +264,7 @@ function CampaignSortCategoryEdit({ labels, colors, setLabels, setColors }) {
 function FormCampaignEditMaps({ campaign, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign.edit_maps" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutateAsync: saveMaps } = usePostMap((response) => {
     toast.success(t("feedback.updated"));
@@ -344,7 +346,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
             <TextField
               label={t_g("name")}
               fullWidth
-              {...form.register(`maps[${i}].name`, FormOptions.Name128Required)}
+              {...form.register(`maps[${i}].name`, FormOptions.Name128Required(t_ff))}
               disabled={isMapDeleted}
             />
             {hasMajorSort && (
