@@ -24,8 +24,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "react-query";
-import { fetchChallenge, postSubmission } from "../util/api";
-import { getChallengeFlags, getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
+import { fetchChallenge } from "../util/api";
+import { getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
 import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
@@ -46,7 +46,6 @@ import {
   CampaignSelect,
   MapSelect,
   ChallengeSelect,
-  DifficultyChip,
   SuggestedDifficultySelect,
   PlayerSelect,
   PlayerChip,
@@ -55,8 +54,10 @@ import {
 import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
+import { FullChallengeDisplay } from "./Submission";
 
 export function PageSubmit() {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit" });
   const { tab, challengeId } = useParams();
   const [selectedTab, setSelectedTab] = useState(tab ?? "single-challenge");
 
@@ -75,9 +76,9 @@ export function PageSubmit() {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label="Single Challenge" value="single-challenge" />
-          <Tab label="Multi Challenge" value="multi-challenge" />
-          <Tab label="New Challenge" value="new-challenge" />
+          <Tab label={t("tabs.single.label")} value="single-challenge" />
+          <Tab label={t("tabs.multi.label")} value="multi-challenge" />
+          <Tab label={t("tabs.new.label")} value="new-challenge" />
         </Tabs>
         <LoadingSpinner sx={{ mt: 2 }} />
       </BasicContainerBox>
@@ -94,16 +95,16 @@ export function PageSubmit() {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <HeadTitle title="Submit a run" />
+      <HeadTitle title={t("title")} />
       <Tabs
         value={selectedTab}
         onChange={(event, newValue) => setSelectedTab(newValue)}
         variant="scrollable"
         scrollButtons="auto"
       >
-        <Tab label="Single Challenge" value="single-challenge" />
-        <Tab label="Multi Challenge" value="multi-challenge" />
-        <Tab label="New Challenge" value="new-challenge" />
+        <Tab label={t("tabs.single.label")} value="single-challenge" />
+        <Tab label={t("tabs.multi.label")} value="multi-challenge" />
+        <Tab label={t("tabs.new.label")} value="new-challenge" />
       </Tabs>
       {selectedTab === "single-challenge" && (
         <SingleUserSubmission
@@ -119,7 +120,9 @@ export function PageSubmit() {
 }
 
 export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChallenge }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   const auth = useAuth();
   const navigate = useNavigate();
   const [campaign, setCampaign] = useState(defaultCampaign ?? null);
@@ -147,7 +150,6 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    console.log("Form data:", data);
     submitRun({
       challenge_id: challenge.id,
       player_id: selectedPlayer.id,
@@ -203,13 +205,11 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
     }
   };
 
-  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
-
   return (
     <>
-      <h1 style={{ marginBottom: "0" }}>Submit a run</h1>
+      <h1 style={{ marginBottom: "0" }}>{t("header")}</h1>
       <Stack gap={2}>
-        <h4 style={{ marginBottom: "0" }}>Select a Challenge</h4>
+        <h4 style={{ marginBottom: "0" }}>{t("select")}</h4>
         <CampaignSelect selected={campaign} setSelected={onCampaignSelect} />
         {campaign && (
           <>
@@ -220,7 +220,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
         {campaign && map === null && campaign.challenges?.length > 0 && (
           <>
             <Divider>
-              <Chip label="Select Map OR Full Game Challenge" size="small" />
+              <Chip label={t("full_game")} size="small" />
             </Divider>
             <CampaignChallengeSelect
               campaign={campaign}
@@ -232,41 +232,19 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       </Stack>
       {challenge && (
         <>
-          <h4>Challenge Data</h4>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Objective</TableCell>
-                  <TableCell>
-                    {challenge.objective.name} - {challenge.objective.description}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Flags</TableCell>
-                  <TableCell>
-                    <Stack direction="row" gap={1}>
-                      <DifficultyChip difficulty={challenge.difficulty} prefix="Difficulty: " />
-                      {getChallengeFlags(challenge).map((f) => (
-                        <Chip label={f} size="small" />
-                      ))}
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <h4>{t("challenge_data")}</h4>
+          <FullChallengeDisplay challenge={challenge} map={map} campaign={campaign} hideMap showObjective />
         </>
       )}
       <Divider sx={{ my: 3 }} />
-      <h4>Your Run</h4>
+      <h4>{t("your_run")}</h4>
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             {auth.hasVerifierPriv ? (
               <PlayerSelect
                 type="all"
-                label="[Verifier Only] Submit for Player"
+                label={t("verifier.player_select")}
                 value={selectedPlayer}
                 onChange={(e, v) => setSelectedPlayer(v)}
               />
@@ -279,7 +257,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               <Stack direction="row" gap={1} alignItems="center" sx={{ height: "100%" }}>
                 {isAddingPlayer && (
                   <TextField
-                    label="New Player Name"
+                    label={t("verifier.new_player_name")}
                     fullWidth
                     value={newPlayerName}
                     onChange={(e) => setNewPlayerName(e.target.value)}
@@ -291,40 +269,40 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
                   onClick={addPlayer}
                   sx={{ whiteSpace: "nowrap" }}
                 >
-                  {isAddingPlayer && newPlayerName.length < 3 ? "Cancel" : "Add Player"}
+                  {t(
+                    isAddingPlayer && newPlayerName.length < 3
+                      ? "verifier.buttons.cancel"
+                      : "verifier.buttons.add_player"
+                  )}
                 </Button>
               </Stack>
             </Grid>
           )}
           <Grid item xs={12}>
             <TextField
-              label="Proof URL *"
+              label={t_fs("proof_url") + " *"}
               fullWidth
               {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
               helperText={errors.proof_url?.message}
             />
-            <FormHelperText>
-              Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight
-            </FormHelperText>
+            <FormHelperText>{t("proof_note")}</FormHelperText>
           </Grid>
           {challenge !== null && challenge.difficulty.id <= 13 && (
             <Grid item xs={12}>
               <TextField
-                label="Raw Session URL *"
+                label={t_fs("raw_session_url") + " *"}
                 fullWidth
                 {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
                 error={errors.raw_session_url}
                 helperText={errors.raw_session_url?.message}
               />
-              <FormHelperText>
-                Raw session recording of the winning run is required for Tier 3+ goldens.
-              </FormHelperText>
+              <FormHelperText>{t("raw_session_note")}</FormHelperText>
             </Grid>
           )}
           <Grid item xs={12}>
             <TextField
-              label="Player Notes"
+              label={t_fs("player_notes")}
               multiline
               fullWidth
               minRows={2}
@@ -338,7 +316,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               render={({ field }) => (
                 <FormControlLabel
                   control={<Checkbox />}
-                  label="Run is Full Clear"
+                  label={t("is_fc")}
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                   disabled={challenge === null || challenge.requires_fc || !challenge.has_fc}
@@ -359,13 +337,13 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               render={({ field }) => (
                 <FormControlLabel
                   onChange={field.onChange}
-                  label="Is Personal"
+                  label={t_fs("is_personal")}
                   checked={field.value}
                   control={<Checkbox />}
                 />
               )}
             />
-            <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+            <TooltipInfoButton title={t_fs("personal_note")} />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Button
@@ -374,25 +352,10 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               onClick={onSubmit}
               disabled={challenge === null || selectedPlayer === null}
             >
-              Submit
+              {t("button")}
             </Button>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <Typography variant="caption" color="error">
-              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
-              <StyledLink to="/">Public Test notice</StyledLink> for more info.
-            </Typography>
-          </Grid>
-          {notifsEnabled && (
-            <Grid item xs={12} sm={12}>
-              <Typography variant="caption" color="textSecondary">
-                Your notification settings:{" "}
-              </Typography>
-              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
-                {notifsEnabled ? "Notification upon verification" : "Disabled"}
-              </Typography>
-            </Grid>
-          )}
+          <NotificationNotice />
         </Grid>
       </form>
     </>
@@ -400,7 +363,11 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
 }
 
 export function MultiUserSubmission() {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.multi" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_ts } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
   const auth = useAuth();
 
   const [campaign, setCampaign] = useState(null);
@@ -419,14 +386,14 @@ export function MultiUserSubmission() {
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    const toastId = toast.loading("Creating Run (" + 0 + "/" + mapDataList.length + ")", {
+    const toastId = toast.loading(t("feedback.submitting", { current: 0, total: mapDataList.length }), {
       autoClose: false,
     });
 
     const addRunRecursive = (index) => {
       if (index >= mapDataList.length) {
         toast.update(toastId, {
-          render: "Runs Created",
+          render: t("feedback.submitted"),
           isLoading: false,
           type: "success",
           autoClose: 10000,
@@ -446,7 +413,7 @@ export function MultiUserSubmission() {
       })
         .then(() => {
           toast.update(toastId, {
-            render: "Creating Run (" + (index + 1) + "/" + mapDataList.length + ")",
+            render: t("feedback.submitting", { current: index + 1, total: mapDataList.length }),
           });
           addRunRecursive(index + 1);
         })
@@ -550,16 +517,12 @@ export function MultiUserSubmission() {
     }
   });
 
-  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
-
   return (
     <>
-      <h1 style={{ marginBottom: "0" }}>Submit a compilation video</h1>
-      <Typography variant="body1">
-        This is for submitting a compilation video of an entire campaign or lobby.
-      </Typography>
+      <h1 style={{ marginBottom: "0" }}>{t("header")}</h1>
+      <Typography variant="body1">{t("info")}</Typography>
       <Stack gap={2}>
-        <h4 style={{ marginBottom: "0" }}>Select a Campaign</h4>
+        <h4 style={{ marginBottom: "0" }}>{t("select_campaign")}</h4>
         <CampaignSelect
           selected={campaign}
           setSelected={onCampaignSelect}
@@ -579,7 +542,7 @@ export function MultiUserSubmission() {
             }}
           >
             <MenuItem value={null}>
-              <em>All {campaign.sort_major_name}</em>
+              <em>{t("all")}</em>
             </MenuItem>
             {campaign.sort_major_labels.map((value, index) => (
               <MenuItem key={index} value={index}>
@@ -602,7 +565,7 @@ export function MultiUserSubmission() {
             }}
           >
             <MenuItem value={null}>
-              <em>All {campaign.sort_minor_name}</em>
+              <em>{t("all")}</em>
             </MenuItem>
             {campaign.sort_minor_labels.map((value, index) => (
               <MenuItem key={index} value={index}>
@@ -614,7 +577,7 @@ export function MultiUserSubmission() {
       )}
       <FormControlLabel
         control={<Checkbox />}
-        label="Prefer Full Clear"
+        label={t("prefer_fc")}
         checked={preferFc}
         onChange={(e, v) => setPreferFc(v)}
       />
@@ -626,9 +589,9 @@ export function MultiUserSubmission() {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  <TableCell>Map</TableCell>
-                  <TableCell>Challenge</TableCell>
-                  <TableCell>Is FC</TableCell>
+                  <TableCell>{t_g("map", { count: 1 })}</TableCell>
+                  <TableCell>{t_g("challenge", { count: 1 })}</TableCell>
+                  <TableCell>{t("is_fc")}</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -650,14 +613,14 @@ export function MultiUserSubmission() {
         </>
       )}
       <Divider sx={{ my: 3 }} />
-      <h4>Compilation Video</h4>
+      <h4>{t("compilation_video")}</h4>
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             {auth.hasVerifierPriv ? (
               <PlayerSelect
                 type="all"
-                label="[Verifier Only] Submit for Player"
+                label={t_ts("verifier.player_select")}
                 value={selectedPlayer}
                 onChange={(e, v) => setSelectedPlayer(v)}
               />
@@ -667,49 +630,32 @@ export function MultiUserSubmission() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Proof URL *"
+              label={t_fs("proof_url") + " *"}
               fullWidth
               {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
               helperText={errors.proof_url?.message}
             />
-            <FormHelperText>
-              Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight...
-            </FormHelperText>
+            <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} sm={12}>
             <Button
               variant="contained"
               fullWidth
               onClick={onSubmit}
               disabled={!submittable || !rawSessionsGood}
             >
-              Submit
+              {t("button", { count: mapDataList.length })}
             </Button>
           </Grid>
           {!rawSessionsGood && (
             <Grid item xs={12}>
               <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-                Raw session recording of the winning run is required for Tier 3+ challenges.
+                {t_ts("raw_session_note")}
               </Typography>
             </Grid>
           )}
-          <Grid item xs={12} sm={12}>
-            <Typography variant="caption" color="error">
-              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
-              <StyledLink to="/">Public Test notice</StyledLink> for more info.
-            </Typography>
-          </Grid>
-          {notifsEnabled && (
-            <Grid item xs={12} sm={12}>
-              <Typography variant="caption" color="textSecondary">
-                Your notification settings:{" "}
-              </Typography>
-              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
-                {notifsEnabled ? "Notification upon verification" : "Disabled"}
-              </Typography>
-            </Grid>
-          )}
+          <NotificationNotice />
         </Grid>
       </form>
     </>
@@ -717,7 +663,11 @@ export function MultiUserSubmission() {
 }
 
 export function NewChallengeUserSubmission({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.new" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_ts } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
+  const { t: t_a } = useTranslation();
   const auth = useAuth();
   const navigate = useNavigate();
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
@@ -743,7 +693,6 @@ export function NewChallengeUserSubmission({}) {
     },
   });
   const onSubmit = form.handleSubmit((data) => {
-    console.log("Form data:", data);
     submitRun({
       player_id: selectedPlayer.id,
       ...data,
@@ -751,50 +700,46 @@ export function NewChallengeUserSubmission({}) {
   });
   const errors = form.formState.errors;
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
-  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
 
   return (
     <>
-      <h1 style={{ marginBottom: "0" }}>Submit a run</h1>
+      <h1 style={{ marginBottom: "0" }}>{t("header")}</h1>
       <form>
-        <Typography variant="body1">
-          This form is for submitting a run for a challenge that is not yet in the database. Might take longer
-          to get verified!
-        </Typography>
+        <Typography variant="body1">{t("info")}</Typography>
         <h4>Challenge Data</h4>
         <Stack direction="column" gap={2}>
           <TextField
-            label="GameBanana URL *"
+            label={t("gamebanana_url") + " *"}
             fullWidth
             {...form.register("new_challenge.url", FormOptions.UrlRequired(t_ff))}
             error={errors.new_challenge?.url}
             helperText={errors.new_challenge?.url?.message}
           />
           <TextField
-            label="Map Name *"
+            label={t_a("forms.create_full_challenge.map_name") + " *"}
             fullWidth
             {...form.register("new_challenge.name", FormOptions.Name128Required(t_ff))}
             error={errors.new_challenge?.name}
             helperText={errors.new_challenge?.name?.message}
           />
           <TextField
-            label="Challenge Description"
+            label={t("challenge_description.label")}
             fullWidth
             multiline
             minRows={3}
             {...form.register("new_challenge.description")}
             InputLabelProps={{ shrink: true }}
-            placeholder="Description of the challenge, if different from a regular deathless run"
+            placeholder={t("challenge_description.placeholder")}
           />
         </Stack>
         <Divider sx={{ my: 3 }} />
-        <h4>Your Run</h4>
+        <h4>{t_ts("your_run")}</h4>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             {auth.hasVerifierPriv ? (
               <PlayerSelect
                 type="all"
-                label="[Verifier Only] Submit for Player"
+                label={t_ts("verifier.player_select")}
                 value={selectedPlayer}
                 onChange={(e, v) => setSelectedPlayer(v)}
               />
@@ -804,7 +749,7 @@ export function NewChallengeUserSubmission({}) {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Proof URL *"
+              label={t_fs("proof_url") + " *"}
               fullWidth
               {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
               error={errors.proof_url}
@@ -817,7 +762,7 @@ export function NewChallengeUserSubmission({}) {
           {suggested_difficulty_id !== null && suggested_difficulty_id < 13 && (
             <Grid item xs={12}>
               <TextField
-                label="Raw Session URL *"
+                label={t_fs("raw_session_url") + " *"}
                 fullWidth
                 {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
                 error={errors.raw_session_url}
@@ -830,7 +775,7 @@ export function NewChallengeUserSubmission({}) {
           )}
           <Grid item xs={12}>
             <TextField
-              label="Player Notes"
+              label={t_fs("player_notes")}
               multiline
               fullWidth
               minRows={2}
@@ -838,7 +783,7 @@ export function NewChallengeUserSubmission({}) {
             />
           </Grid>
           <Grid item xs={12} sm={12}>
-            <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label="Run is Full Clear" />
+            <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label={t_ts("is_fc")} />
           </Grid>
           <Grid item xs={12} sm>
             <SuggestedDifficultySelect
@@ -853,35 +798,20 @@ export function NewChallengeUserSubmission({}) {
               render={({ field }) => (
                 <FormControlLabel
                   onChange={field.onChange}
-                  label="Is Personal"
+                  label={t_fs("is_personal")}
                   checked={field.value}
                   control={<Checkbox />}
                 />
               )}
             />
-            <TooltipInfoButton title="'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements" />
+            <TooltipInfoButton title={t_fs("personal_note")} />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Button variant="contained" fullWidth onClick={onSubmit}>
-              Submit
+              {t("button")}
             </Button>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <Typography variant="caption" color="error">
-              * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
-              <StyledLink to="/">Public Test notice</StyledLink> for more info.
-            </Typography>
-          </Grid>
-          {notifsEnabled && (
-            <Grid item xs={12} sm={12}>
-              <Typography variant="caption" color="textSecondary">
-                Your notification settings:{" "}
-              </Typography>
-              <Typography variant="caption" color={notifsEnabled ? "green" : "red"}>
-                {notifsEnabled ? "Notification upon verification" : "Disabled"}
-              </Typography>
-            </Grid>
-          )}
+          <NotificationNotice />
         </Grid>
       </form>
     </>
@@ -891,6 +821,8 @@ export function NewChallengeUserSubmission({}) {
 /* COMPONENTS */
 
 export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.multi" });
+  const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const [expanded, setExpanded] = useState(mapData.challenge?.difficulty.id <= 13 ? true : false);
@@ -928,7 +860,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
             control={<Checkbox />}
             checked={mapData.is_fc}
             onChange={(e, v) => updateMapDataRow(index, { ...mapData, is_fc: v })}
-            label="Is FC"
+            label={t_fs("is_fc")}
             slotProps={{
               typography: {
                 sx: {
@@ -963,7 +895,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
                 >
                   <TableCell colSpan={5}>
                     <TextField
-                      label="Player Notes"
+                      label={t_fs("player_notes")}
                       value={mapData.player_notes}
                       onChange={(e) => updateMapDataRow(index, { ...mapData, player_notes: e.target.value })}
                       fullWidth
@@ -979,7 +911,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
                     />
                   </TableCell>
                   <TableCell width={1}>
-                    <Tooltip title="Remove Map">
+                    <Tooltip title={t("remove_map")}>
                       <IconButton
                         variant="outlined"
                         color="error"
@@ -1003,7 +935,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
                   >
                     <TableCell colSpan={7}>
                       <TextField
-                        label="Raw Session URL *"
+                        label={t_fs("raw_session_url") + " *"}
                         value={mapData.raw_session_url}
                         onChange={(e) =>
                           updateMapDataRow(index, { ...mapData, raw_session_url: e.target.value })
@@ -1034,3 +966,29 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
   // console.log("ListItem propsEqual:", propsEqual);
   return propsEqual;
 });
+
+function NotificationNotice({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "submit.notifications" });
+  const auth = useAuth();
+  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
+  return (
+    <>
+      <Grid item xs={12} sm={12}>
+        <Typography variant="caption" color="error">
+          * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
+          <StyledLink to="/">Public Test notice</StyledLink> for more info.
+        </Typography>
+      </Grid>
+      {(notifsEnabled || true) && (
+        <Grid item xs={12} sm={12}>
+          <Typography variant="caption" color="textSecondary">
+            {t("your_settings")}{" "}
+          </Typography>
+          <Typography variant="caption" color={notifsEnabled ? "success.main" : "error.main"}>
+            {t(notifsEnabled ? "enabled" : "disabled")}
+          </Typography>
+        </Grid>
+      )}
+    </>
+  );
+}

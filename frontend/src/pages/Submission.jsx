@@ -175,11 +175,24 @@ export function SubmissionDisplay({ id, onDelete }) {
   );
 }
 
-export function FullChallengeDisplay({ challenge, ...props }) {
+export function FullChallengeDisplay({
+  challenge,
+  map,
+  campaign,
+  hideMap = false,
+  showObjective = false,
+  ...props
+}) {
   return (
     <Grid container columnSpacing={1} rowSpacing={1} {...props}>
       <Grid item xs={12} sm={12} display="flex" flexDirection="column" rowGap={1}>
-        <ChallengeInfoBoxes challenge={challenge} />
+        <ChallengeInfoBoxes
+          challenge={challenge}
+          map={map}
+          campaign={campaign}
+          hideMap={hideMap}
+          showObjective={showObjective}
+        />
       </Grid>
     </Grid>
   );
@@ -321,23 +334,31 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
   );
 }
 
-function ChallengeInfoBoxes({ challenge }) {
+function ChallengeInfoBoxes({ challenge, map, campaign, hideMap = false, showObjective = false }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_a } = useTranslation();
-  const map = challenge.map;
-  const campaign = getChallengeCampaign(challenge);
+  map = map ?? challenge.map;
+  campaign = campaign ?? getChallengeCampaign(challenge);
+  const objectiveSuffix = showObjective ? " - " + challenge.objective.description : "";
   return (
     <>
-      <InfoBox>
-        <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faBook} />} text={t_g("campaign", { count: 1 })} />
-        <InfoBoxIconTextLine text={campaign.name} isSecondary />
-      </InfoBox>
+      {!hideMap && (
+        <InfoBox>
+          <InfoBoxIconTextLine
+            icon={<FontAwesomeIcon icon={faBook} />}
+            text={t_g("campaign", { count: 1 })}
+          />
+          <InfoBoxIconTextLine text={campaign.name} isSecondary />
+        </InfoBox>
+      )}
       {map !== null ? (
         map.name === campaign.name ? null : (
-          <InfoBox>
-            <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
-            <InfoBoxIconTextLine text={map.name} isSecondary />
-          </InfoBox>
+          !hideMap && (
+            <InfoBox>
+              <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
+              <InfoBoxIconTextLine text={map.name} isSecondary />
+            </InfoBox>
+          )
         )
       ) : (
         <InfoBox>
@@ -350,7 +371,7 @@ function ChallengeInfoBoxes({ challenge }) {
           icon={<FontAwesomeIcon icon={faFlagCheckered} />}
           text={t_g("challenge", { count: 1 })}
         />
-        <InfoBoxIconTextLine text={getChallengeNameShort(challenge)} isSecondary />
+        <InfoBoxIconTextLine text={getChallengeNameShort(challenge) + objectiveSuffix} isSecondary />
       </InfoBox>
       <InfoBox>
         <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />

@@ -912,5 +912,62 @@
       "edit": "Edit",
       "delete": "Delete"
     }
+  },
+  "submit": {
+    "title": "Submit A Run",
+    "tabs": {
+      "single": {
+        "label": "Single Challenge",
+        "header": "Submit a run",
+        "select": "Select a Challenge",
+        "full_game": "Select Map OR Full Game Challenge",
+        "challenge_data": "Challenge Data",
+        "your_run": "Your Run",
+        "verifier": {
+          "player_select": "[Verifier Only] Submit for Player",
+          "new_player_name": "New Player Name",
+          "buttons": {
+            "cancel": "Cancel",
+            "add_player": "Add Player"
+          }
+        },
+        "proof_note": "Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight",
+        "raw_session_note": "Raw session recording of the winning run is required for Tier 3+ goldens.",
+        "is_fc": "Run is Full Clear",
+        "button": "Submit"
+      },
+      "multi": {
+        "label": "Multi Challenge",
+        "feedback": {
+          "submitting": "Submitting run ({{current}}/{{total}})",
+          "submitted": "Runs submitted"
+        },
+        "header": "Submit a compilation video",
+        "info": "This form is for submitting a compilation video of an entire campaign or lobby",
+        "select_campaign": "Select a Campaign",
+        "all": "All",
+        "prefer_fc": "Prefer Full Clear",
+        "is_fc": "Is FC",
+        "compilation_video": "Compilation Video",
+        "remove_map": "Remove Map",
+        "button": "Submit '{{count}}' Runs"
+      },
+      "new": {
+        "label": "New Challenge",
+        "header": "Submit a new challenge run",
+        "info": "This form is for submitting a run for a challenge that is not yet in the database. Might take longer to get verified!",
+        "gamebanana_url": "GameBanana URL",
+        "challenge_description": {
+          "label": "Challenge Description",
+          "placeholder": "Description of the challenge, if different from a regular deathless run"
+        },
+        "button": "Submit"
+      }
+    },
+    "notifications": {
+      "your_settings": "Your notification settings:",
+      "enabled": "Notification upon verification",
+      "disabled": "Disabled"
+    }
   }
 }

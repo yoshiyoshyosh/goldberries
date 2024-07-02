@@ -909,5 +909,62 @@
       "edit": "Bearbeiten",
       "delete": "Löschen"
     }
+  },
+  "submit": {
+    "title": "Run Einreichen",
+    "tabs": {
+      "single": {
+        "label": "Einzel-Challenge",
+        "header": "Run einreichen",
+        "select": "Wähle eine Challenge",
+        "full_game": "Wähle eine Map ODER Full Game Challenge",
+        "challenge_data": "Challenge Daten",
+        "your_run": "Dein Run",
+        "verifier": {
+          "player_select": "[Nur Verifier] Einreichen für Player",
+          "new_player_name": "Neuer Player Name",
+          "buttons": {
+            "cancel": "Abbrechen",
+            "add_player": "Player Hinzufügen"
+          }
+        },
+        "proof_note": "Lade dein Beweisvideo an einen permanenten Ort hoch, wie YouTube, Bilibili, Twitch Highlight",
+        "raw_session_note": "Rohe Aufnahme der Sitzung mit dem Golden Run ist für Tier 3+ Goldens erforderlich.",
+        "is_fc": "Run ist Full Clear",
+        "button": "Einreichen"
+      },
+      "multi": {
+        "label": "Multi-Challenge",
+        "feedback": {
+          "submitting": "Reiche Runs ein ({{current}}/{{total}})",
+          "submitted": "Runs eingereicht"
+        },
+        "header": "Compilation-Video einreichen",
+        "info": "Dieses Formular ist zum Einreichen eines Compilation-Videos für eine gesamte Campaign oder Lobby",
+        "select_campaign": "Wähle eine Campaign",
+        "all": "Alle",
+        "prefer_fc": "Bevorzuge Full Clear",
+        "is_fc": "Ist FC",
+        "compilation_video": "Compilation-Video",
+        "remove_map": "Map Entfernen",
+        "button": "'{{count}}' Runs Einreichen"
+      },
+      "new": {
+        "label": "Neue Challenge",
+        "header": "Run für neue Challenge einreichen",
+        "info": "Dieses Formular ist zum Einreichen eines Runs für eine Challenge, die noch nicht in der Datenbank ist. Es kann länger dauern, diesen Run zu verifiziert!",
+        "gamebanana_url": "GameBanana URL",
+        "challenge_description": {
+          "label": "Challenge Beschreibung",
+          "placeholder": "Beschreibung der Challenge, wenn sie sich von einem normalen Deathless-Run unterscheidet"
+        },
+        "button": "Einreichen"
+      }
+    },
+    "notifications": {
+      "your_settings": "Deine Benachrichtigungseinstellungen:",
+      "enabled": "Benachrichtigung bei Verifikation",
+      "disabled": "Ausgeschaltet"
+    }
   }
 }
