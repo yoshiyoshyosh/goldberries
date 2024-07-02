@@ -7,14 +7,17 @@ import { ChallengeFcIcon } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
+import { useTranslation } from "react-i18next";
 
 export function PageTopGoldenList({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "top_golden_list" });
+  const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const { type, id } = useParams();
   const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
   const theme = useTheme();
 
-  const title = "Top Golden List";
+  const title = t("title");
 
   return (
     <Box
@@ -29,19 +32,19 @@ export function PageTopGoldenList({}) {
       <Grid container spacing={1} sx={{ mb: 1 }}>
         <Grid item xs={12} sm="auto">
           <BasicBox sx={{ height: "fit-content" }}>
-            <Typography variant="h4">Top Golden List</Typography>
+            <Typography variant="h4">{title}</Typography>
             <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
               <FormControlLabel
                 control={
                   <Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
                 }
-                label="Show Archived"
+                label={t_gl("show_archived")}
               />
               <FormControlLabel
                 control={
                   <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
                 }
-                label="Show Arbitrary"
+                label={t_gl("show_arbitrary")}
               />
             </Stack>
           </BasicBox>
@@ -51,15 +54,15 @@ export function PageTopGoldenList({}) {
             <Stack direction="column" spacing={2}>
               <Stack direction="row" gap={1} alignItems="center">
                 <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.5em" />
-                <span>- Golden clear with all optional collectibles (red berries, cassette, etc)</span>
+                <span>- {t("notes.fc")}</span>
               </Stack>
               <Stack direction="row" gap={1} alignItems="center">
                 <ChallengeFcIcon challenge={{ requires_fc: false, has_fc: true }} height="1.5em" />
-                <span>- Regular clear and Full Clear are the same difficulty placement</span>
+                <span>- {t("notes.c_fc")}</span>
               </Stack>
               <Stack direction="row" gap={1} alignItems="center">
                 <span>[New]/[Old]</span>
-                <span>- New or Old version of the map</span>
+                <span>- {t("notes.new_old")}</span>
               </Stack>
             </Stack>
           </BasicBox>

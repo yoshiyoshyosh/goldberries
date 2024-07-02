@@ -969,5 +969,94 @@
       "enabled": "Notification upon verification",
       "disabled": "Disabled"
     }
+  },
+  "suggestions": {
+    "title": "Suggestions",
+    "header": "#suggestion-box",
+    "expired": "Expired Suggestions",
+    "showing_one": "Showing {{from}}-{{to}} of {{count}} total suggestion",
+    "showing_other": "Showing {{from}}-{{to}} of {{count}} total suggestions",
+    "buttons": {
+      "create": "Create"
+    },
+    "display": {
+      "deleted_player": "(deleted player)",
+      "no_votes": "No votes yet"
+    },
+    "name": {
+      "general": "General Suggestion",
+      "pending": "Pending Verification",
+      "rejected": "Rejected Verification",
+      "same_map": "by {{author}}",
+      "different_map": "from {{campaign}} (by {{author}})"
+    },
+    "votes": {
+      "label": "Votes",
+      "did_challenge": "Votes from players who did this challenge",
+      "others": "Votes from players who did not do this challenge",
+      "for": "For",
+      "against": "Against",
+      "indifferent": "Indifferent",
+      "count_one": "{{count}} vote",
+      "count_other": "{{count}} votes"
+    },
+    "icon": {
+      "undecided": "Undecided",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "modals": {
+      "view": {
+        "feedback": {
+          "updated": "Suggestion updated"
+        },
+        "claim_player": "Claim a player to be able to vote on suggestions!",
+        "your_comment": "Your Comment",
+        "comment_note": "To change your comment after you voted, remove your vote and vote again.",
+        "totals": "Totals",
+        "done_challenge": "Done Challenge",
+        "not_done_challenge": "Not Done Challenge",
+        "buttons": {
+          "verify": "Verify",
+          "accept": "Accept Change",
+          "reject_verification": "Reject Verification",
+          "reject_change": "Reject Change"
+        }
+      },
+      "create": {
+        "feedback": {
+          "created": "Suggestion created"
+        },
+        "header": "New Suggestion",
+        "select_challenge": "Select Challenge",
+        "suggestion_type": "Suggestion Type",
+        "error_difficulty_general": "Cannot select a difficulty when making a general challenge suggestion.",
+        "not_placement": {
+          "label": "Not a placement suggestion",
+          "note": "Checking this means not suggesting a difficulty, e.g. when split a C/FC challenge into C and FC."
+        },
+        "no_challenge_note": "Not selecting a challenge will create a general suggestion.",
+        "challenge_details": "Challenge Details",
+        "totals": "Total for each tier",
+        "comment": {
+          "label": "Comment",
+          "placeholder": "Explain why you think something should be changed",
+          "required": "Comment is required for general suggestions."
+        },
+        "button": "Create Suggestion"
+      },
+      "delete": {
+        "title": "Delete Suggestion?",
+        "info": "Are you sure you want to delete this suggestion and all attached votes?"
+      }
+    }
+  },
+  "top_golden_list": {
+    "title": "Top Golden List",
+    "notes": {
+      "fc": "Golden clear with all optional collectibles (red berries, cassette, etc)",
+      "c_fc": "Regular clear and Full Clear are the same placement",
+      "new_old": "New or Old version of the map"
+    }
   }
 }

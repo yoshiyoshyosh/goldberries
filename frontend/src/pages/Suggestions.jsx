@@ -16,7 +16,6 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
-  StyledLink,
 } from "../components/BasicComponents";
 import {
   Box,
@@ -38,11 +37,8 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  getCampaignName,
   getChallengeCampaign,
   getChallengeIsFullGame,
-  getChallengeName,
-  getMapName,
   getMapNameClean,
   getSortedSuggestedDifficulties,
 } from "../util/data_util";
@@ -59,19 +55,14 @@ import { useTheme } from "@emotion/react";
 import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
 import {
   faArrowRight,
-  faArrowTurnUp,
-  faBook,
   faCheck,
   faCircleCheck,
   faCircleXmark,
   faComment,
-  faCross,
   faEquals,
   faEyeSlash,
   faHorse,
-  faHorseHead,
   faInfoCircle,
-  faList,
   faPlus,
   faQuestionCircle,
   faThumbsDown,
@@ -80,14 +71,15 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Helmet } from "react-helmet";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { ChallengeSubmissionTable } from "./Challenge";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export function PageSuggestions({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -111,25 +103,23 @@ export function PageSuggestions({}) {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <Helmet>
-        <title>Suggestion</title>
-      </Helmet>
+      <HeadTitle title={t("title")} />
       <Grid container>
         <Grid item xs>
           <Typography variant="h4" gutterBottom>
-            #suggestion-box
+            {t("header")}
           </Typography>
         </Grid>
         <Grid item xs="auto">
           <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} onClick={newSuggestion}>
-            New
+            {t("buttons.create")}
           </Button>
         </Grid>
       </Grid>
       <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" gutterBottom>
-        Expired Suggestions
+        {t("expired")}
       </Typography>
       <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} />
       <SuggestionsModalContainer modalRefs={modalRefs} suggestionId={id} closeModal={onCloseSuggestion} />
@@ -139,6 +129,7 @@ export function PageSuggestions({}) {
 
 //#region == Suggestions List ==
 function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultPerPage);
 
@@ -155,7 +146,7 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
 
   return (
     <Stack direction="column" gap={2}>
-      {!expired && <HeadTitle title={"Suggestions"} />}
+      {!expired && <HeadTitle title={t("title")} />}
       {suggestions.map((suggestion) => (
         <SuggestionDisplay
           key={suggestion.id}
@@ -166,8 +157,11 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
       ))}
       <Stack direction="row" gap={2} alignItems="center">
         <Typography variant="body2">
-          Showing {(page - 1) * perPage + 1}-{(page - 1) * perPage + suggestions.length} of {max_count} total
-          suggestions
+          {t("showing", {
+            from: max_count === 0 ? 0 : (page - 1) * perPage + 1,
+            to: (page - 1) * perPage + suggestions.length,
+            count: max_count,
+          })}
         </Typography>
         <Pagination count={max_page} page={page} onChange={(e, value) => setPage(value)} />
       </Stack>
@@ -176,6 +170,7 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
 }
 
 function SuggestionDisplay({ suggestion, expired, modalRefs }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.display" });
   const theme = useTheme();
   const auth = useAuth();
 
@@ -266,7 +261,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
           <Stack direction="row" gap={1}>
             <Typography variant="body2">
               {suggestion.author_id === null ? (
-                "(deleted player)"
+                t("deleted_player")
               ) : (
                 <PlayerChip player={suggestion.author} size="small" />
               )}
@@ -295,7 +290,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 
       <Divider sx={{ my: 1 }} />
       {suggestion.votes.length === 0 ? (
-        <Typography variant="body2">No votes yet.</Typography>
+        <Typography variant="body2">{t("no_votes")}</Typography>
       ) : (
         <Grid container columnSpacing={1}>
           {!isGeneral && (
@@ -324,21 +319,20 @@ export function DifficultyMoveDisplay({ from, to, ...props }) {
 }
 
 function SuggestionName({ suggestion, expired }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.name" });
   const theme = useTheme();
   const challenge = suggestion.challenge;
   const map = challenge?.map;
   const campaign = getChallengeCampaign(challenge);
   const sameMapName =
     suggestion.challenge_id !== null && challenge.map_id !== null && map.name === campaign.name;
-  const isFullGame = suggestion.challenge_id !== null && getChallengeIsFullGame(challenge);
 
   return (
     <Stack direction="column" gap={0}>
       <Stack direction="row" gap={1} alignItems="center">
         {suggestion.challenge_id === null ? (
           <>
-            {/* <FontAwesomeIcon icon={faInfoCircle} /> */}
-            <Typography variant="h6">General Suggestion</Typography>
+            <Typography variant="h6">{t("general")}</Typography>
           </>
         ) : (
           <>
@@ -356,12 +350,12 @@ function SuggestionName({ suggestion, expired }) {
           <SuggestionAcceptedIcon isAccepted={suggestion.is_accepted} />
         )}
         {suggestion.is_verified === null && (
-          <Tooltip title="Pending Verification" arrow placement="top">
+          <Tooltip title={t("pending")} arrow placement="top">
             <FontAwesomeIcon icon={faEyeSlash} />
           </Tooltip>
         )}
         {suggestion.is_verified === false && (
-          <Tooltip title="Rejected Verification" arrow placement="top">
+          <Tooltip title={t("rejected")} arrow placement="top">
             <FontAwesomeIcon icon={faCircleXmark} color={theme.palette.error.main} />
           </Tooltip>
         )}
@@ -380,12 +374,9 @@ function SuggestionName({ suggestion, expired }) {
             color: theme.palette.text.secondary,
           }}
         >
-          {/* <FontAwesomeIcon icon={faArrowTurnUp} style={{ transform: "rotateZ(90deg)" }} /> */}
-          {/* <StyledLink to={"/challenge/" + suggestion.challenge.id}> */}
           {sameMapName
-            ? "by " + campaign.author_gb_name
-            : "from " + campaign.name + " (by " + campaign.author_gb_name + ")"}
-          {/* </StyledLink> */}
+            ? t("same_map", { author: campaign.author_gb_name })
+            : t("different_map", { campaign: campaign.name, author: campaign.author_gb_name })}
         </Stack>
       )}
     </Stack>
@@ -414,13 +405,12 @@ function VotesDisplay({ votes, hasSubmission }) {
 }
 
 function VoteDisplay({ type, count, hasSubmission }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.votes" });
   const theme = useTheme();
   const icon = type === "+" ? faThumbsUp : type === "-" ? faThumbsDown : faEquals;
   const color = type === "+" ? theme.palette.success.main : type === "-" ? theme.palette.error.main : "gray";
 
-  const tooltip = hasSubmission
-    ? "Votes from players who did this challenge"
-    : "Votes from players who did not do this challenge";
+  const tooltip = hasSubmission ? t("did_challenge") : t("others");
   return (
     <Tooltip title={tooltip} arrow placement="top">
       <Box
@@ -442,16 +432,17 @@ function VoteDisplay({ type, count, hasSubmission }) {
 }
 
 function SuggestionAcceptedIcon({ isAccepted, height = "1.5em" }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.icon" });
   const theme = useTheme();
 
   if (isAccepted === null)
     return (
-      <Tooltip title="Undecided" arrow placement="top">
+      <Tooltip title={t("undecided")} arrow placement="top">
         <FontAwesomeIcon icon={faQuestionCircle} height={height} />
       </Tooltip>
     );
 
-  const acceptedText = isAccepted ? "Accepted" : "Rejected";
+  const acceptedText = t(isAccepted ? "accepted" : "rejected");
   const icon = isAccepted === true ? faCircleCheck : faCircleXmark;
   const color = isAccepted ? theme.palette.success.main : theme.palette.error.main;
   return (
@@ -464,6 +455,9 @@ function SuggestionAcceptedIcon({ isAccepted, height = "1.5em" }) {
 
 //#region == View Suggestion Modal
 function ViewSuggestionModal({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.modals.view" });
+  const { t: t_s } = useTranslation(undefined, { keyPrefix: "suggestions" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const [userText, setUserText] = useState("");
 
@@ -478,7 +472,7 @@ function ViewSuggestionModal({ id }) {
   });
   const { mutate: postSuggestion } = usePostSuggestion(() => {
     query.refetch();
-    toast.success("Suggestion updated");
+    toast.success(t("feedback.updated"));
   });
 
   useEffect(() => {
@@ -564,12 +558,15 @@ function ViewSuggestionModal({ id }) {
         {auth.hasVerifierPriv && (
           <Grid item xs={12} sm="auto">
             <ButtonGroup>
-              <Tooltip title={isUnverified ? "Verify" : "Accept Change"} arrow>
+              <Tooltip title={t(isUnverified ? "buttons.verify" : "buttons.accept")} arrow>
                 <Button variant={acceptVariant} color="success" onClick={() => updateSuggestion(true)}>
                   <FontAwesomeIcon icon={faCheck} style={{ height: "1.5em" }} />
                 </Button>
               </Tooltip>
-              <Tooltip title={isUnverified ? "Reject Verification" : "Reject Change"} arrow>
+              <Tooltip
+                title={t(isUnverified ? "buttons.reject_verification" : "buttons.reject_change")}
+                arrow
+              >
                 <Button variant={rejectVariant} color="error" onClick={() => updateSuggestion(false)}>
                   <FontAwesomeIcon icon={faXmark} style={{ height: "1.5em" }} />
                 </Button>
@@ -589,7 +586,7 @@ function ViewSuggestionModal({ id }) {
           <Stack direction="row" gap={1} alignItems="center">
             <Typography variant="body2">
               {suggestion.author_id === null ? (
-                "(deleted player)"
+                t_s("display.deleted_player")
               ) : (
                 <PlayerChip player={suggestion.author} size="small" />
               )}
@@ -610,7 +607,7 @@ function ViewSuggestionModal({ id }) {
               >
                 <FontAwesomeIcon icon={faThumbsUp} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
-                  For
+                  {t_s("votes.for")}
                 </Box>
               </Button>
               <Button
@@ -621,7 +618,7 @@ function ViewSuggestionModal({ id }) {
               >
                 <FontAwesomeIcon icon={faThumbsDown} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
-                  Against
+                  {t_s("votes.against")}
                 </Box>
               </Button>
               <Button
@@ -631,13 +628,13 @@ function ViewSuggestionModal({ id }) {
               >
                 <FontAwesomeIcon icon={faHorse} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
-                  Indifferent
+                  {t_s("votes.indifferent")}
                 </Box>
               </Button>
             </Stack>
             {!auth.hasPlayerClaimed && (
               <Typography variant="body2" gutterBottom>
-                Claim a player to be able to vote on suggestions!
+                {t("claim_player")}
               </Typography>
             )}
           </Stack>
@@ -646,7 +643,7 @@ function ViewSuggestionModal({ id }) {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Your Comment"
+              label={t("your_comment")}
               multiline
               minRows={3}
               variant="outlined"
@@ -655,8 +652,7 @@ function ViewSuggestionModal({ id }) {
               onChange={(e) => setUserText(e.target.value)}
             />
             <Typography variant="body2" color={(t) => t.palette.text.secondary} sx={{ mt: 0.25 }}>
-              <FontAwesomeIcon icon={faInfoCircle} /> To change your comment after you voted, remove your vote
-              and vote again.
+              <FontAwesomeIcon icon={faInfoCircle} /> {t("comment_note")}
             </Typography>
           </Grid>
         )}
@@ -665,7 +661,7 @@ function ViewSuggestionModal({ id }) {
           <>
             <Grid item xs={12}>
               <Divider>
-                <Chip label="Submissions" size="small" />
+                <Chip label={t_g("submission", { count: 30 })} size="small" />
               </Divider>
             </Grid>
             <Grid item xs={12}>
@@ -684,7 +680,7 @@ function ViewSuggestionModal({ id }) {
             </Grid>
             <Grid item xs={12} sm>
               <Typography variant="body1" gutterBottom>
-                Totals
+                {t("totals")}
               </Typography>
               <SuggestedDifficultyTierCounts
                 challenge={suggestion.challenge}
@@ -696,13 +692,13 @@ function ViewSuggestionModal({ id }) {
         )}
         <Grid item xs={12}>
           <Divider>
-            <Chip label="Votes" size="small" />
+            <Chip label={t_s("votes.label")} size="small" />
           </Divider>
         </Grid>
         {!isGeneral && (
           <>
             <Grid item xs={12} sm={12}>
-              <Typography variant="body1">Done Challenge</Typography>
+              <Typography variant="body1">{t("done_challenge")}</Typography>
               <Grid container columnSpacing={1}>
                 <Grid item xs={12} sm={4}>
                   <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={true} />
@@ -721,7 +717,7 @@ function ViewSuggestionModal({ id }) {
           </>
         )}
         <Grid item xs={12} sm={12}>
-          {!isGeneral && <Typography variant="body1">Not Done Challenge</Typography>}
+          {!isGeneral && <Typography variant="body1">{t("not_done_challenge")}</Typography>}
           <Grid container columnSpacing={1}>
             <Grid item xs={12} sm={4}>
               <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={false} />
@@ -740,22 +736,20 @@ function ViewSuggestionModal({ id }) {
 }
 
 function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.votes" });
   const votesFiltered = votes.filter(
     (vote) => vote.vote === voteType && (hasSubmission ? vote.submission !== null : vote.submission === null)
   );
   const count = votesFiltered.length;
   const voteIcon = voteType === "+" ? faThumbsUp : voteType === "-" ? faThumbsDown : faEquals;
   const voteColor = voteType === "+" ? "green" : voteType === "-" ? "red" : "gray";
-  const s = count === 1 ? "" : "s";
 
   return (
     <Stack direction="column" gap={1} alignItems="center">
       <Typography variant="body1">
         <FontAwesomeIcon icon={voteIcon} color={voteColor} />
       </Typography>
-      <Typography variant="body2">
-        {count} vote{s}
-      </Typography>
+      <Typography variant="body2">{t("count", { count: count })}</Typography>
       {votesFiltered.map((vote) => (
         <Stack direction="row" gap={0.5} alignItems="center">
           <PlayerChip player={vote.player} size="small" />
@@ -773,9 +767,11 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
 
 //#region == Create Suggestion Modal ==
 function CreateSuggestionModal({ onSuccess }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.modals.create" });
+  const { t: t_a } = useTranslation();
   const theme = useTheme();
   const { mutate: postSuggestion } = usePostSuggestion(() => {
-    toast.success("Suggestion created");
+    toast.success(t("feedback.created"));
     if (onSuccess) onSuccess();
   });
 
@@ -812,12 +808,12 @@ function CreateSuggestionModal({ onSuccess }) {
     <Grid container rowSpacing={1} columnSpacing={2}>
       <Grid item xs={12}>
         <Typography variant="h5" gutterBottom>
-          Create Suggestion
+          {t("header")}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Divider>
-          <Chip label="Select Challenge" size="small" />
+          <Chip label={t("select_challenge")} size="small" />
         </Divider>
       </Grid>
       <Grid item xs={12}>
@@ -838,7 +834,7 @@ function CreateSuggestionModal({ onSuccess }) {
         <>
           <Grid item xs={12}>
             <Divider>
-              <Chip label="Suggestion Type" size="small" />
+              <Chip label={t("suggestion_type")} size="small" />
             </Divider>
           </Grid>
           <Grid item xs={12}>
@@ -847,7 +843,7 @@ function CreateSuggestionModal({ onSuccess }) {
               control={form.control}
               render={({ field }) => (
                 <DifficultySelectControlled
-                  label="Suggested Difficulty"
+                  label={t_a("components.difficulty_select.label")}
                   fullWidth
                   isSuggestion
                   difficultyId={field.value}
@@ -860,7 +856,7 @@ function CreateSuggestionModal({ onSuccess }) {
             />
             {isGeneral && selectedDifficulty !== null && (
               <FormHelperText sx={{ color: theme.palette.error.main }}>
-                Cannot select a difficulty when making a general challenge suggestion.
+                {t("error_difficulty_general")}
               </FormHelperText>
             )}
           </Grid>
@@ -870,7 +866,7 @@ function CreateSuggestionModal({ onSuccess }) {
               control={form.control}
               render={({ field }) => (
                 <FormControlLabel
-                  label="Not a placement suggestion"
+                  label={t("not_placement.label")}
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                   control={<Checkbox />}
@@ -878,15 +874,13 @@ function CreateSuggestionModal({ onSuccess }) {
                 />
               )}
             />
-            <FormHelperText>
-              Checking this means not suggesting a difficulty, e.g. when split a C/FC challenge into C and FC.
-            </FormHelperText>
+            <FormHelperText>{t("not_placement.note")}</FormHelperText>
           </Grid>
         </>
       )}
       {selectedChallenge === null && (
         <Grid item xs={12}>
-          <Typography variant="body2">Not selecting a challenge will create a general suggestion.</Typography>
+          <Typography variant="body2">{t("no_challenge_note")}</Typography>
         </Grid>
       )}
       {query.isLoading && <LoadingSpinner />}
@@ -895,7 +889,7 @@ function CreateSuggestionModal({ onSuccess }) {
         <>
           <Grid item xs={12}>
             <Divider>
-              <Chip label="Challenge Details" size="small" />
+              <Chip label={t("challenge_details")} size="small" />
             </Divider>
           </Grid>
           <Grid item xs={12}>
@@ -914,7 +908,7 @@ function CreateSuggestionModal({ onSuccess }) {
           </Grid>
           <Grid item xs={12} sm>
             <Typography variant="body1" gutterBottom>
-              Total for each (sub-)tier
+              {t("totals")}
             </Typography>
             <SuggestedDifficultyTierCounts challenge={fetchedChallenge} direction="row" />
           </Grid>
@@ -927,8 +921,8 @@ function CreateSuggestionModal({ onSuccess }) {
       <Grid item xs={12}>
         <TextField
           fullWidth
-          label="Comment"
-          placeholder="Explain why you think something should be changed"
+          label={t("comment.label")}
+          placeholder={t("comment.placeholder")}
           required
           multiline
           minRows={3}
@@ -936,14 +930,12 @@ function CreateSuggestionModal({ onSuccess }) {
           {...form.register("comment")}
         />
         {(isGeneral || selectedChallenge === null) && comment.length < 10 && (
-          <FormHelperText sx={{ color: theme.palette.error.main }}>
-            Comment is required for general suggestions.
-          </FormHelperText>
+          <FormHelperText sx={{ color: theme.palette.error.main }}>{t("comment.required")}</FormHelperText>
         )}
       </Grid>
       <Grid item xs={12}>
         <Button variant="contained" color="primary" onClick={onSubmit} disabled={isDisabled}>
-          Create
+          {t("button")}
         </Button>
       </Grid>
     </Grid>
@@ -952,6 +944,7 @@ function CreateSuggestionModal({ onSuccess }) {
 //#endregion
 
 function SuggestionsModalContainer({ modalRefs, suggestionId, closeModal }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "suggestions.modals.delete" });
   const { mutate: deleteSuggestion } = useDeleteSuggestion();
 
   const createSuggestionModal = useModal();
@@ -985,12 +978,10 @@ function SuggestionsModalContainer({ modalRefs, suggestionId, closeModal }) {
 
       <CustomModal
         modalHook={deleteSuggestionModal}
-        options={{ title: "Delete Suggestion?" }}
+        options={{ title: t("title") }}
         actions={[ModalButtons.cancel, ModalButtons.delete]}
       >
-        <Typography variant="body1">
-          Are you sure you want to delete this suggestion and all attached votes?
-        </Typography>
+        <Typography variant="body1">{t("info")}</Typography>
       </CustomModal>
     </>
   );

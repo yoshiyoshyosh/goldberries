@@ -104,9 +104,9 @@
     "top_golden_list": {
       "use_suggested": "Verwende Schwierigkeitsempfehlungen für das Ranking",
       "empty": "Ziemlich leer hier. Mach ein paar Goldens von der Top Golden Liste, um deine eigene Liste zu füllen!",
-      "note_number_people": "Diese Spalte zeigt die Anzahl der Personen, die eine Challenge gemacht haben",
+      "note_number_people": "Diese Spalte zeigt die Anzahl der Personen, die eine Challenge abgeschlossen haben",
       "note_suggested_difficulties": "Schwierigkeitsempfehlungen dieses Spielers",
-      "note_video_link": "Diese Links führen zu dem Video des Players, der diese Challenge als erstes gemacht hat",
+      "note_video_link": "Diese Links führen zu dem Video des Players, der diese Challenge als erstes abgeschlossen hat",
       "placement_difficulty": "Offizielle Schwierigkeit:"
     },
     "custom_links": {
@@ -965,6 +965,95 @@
       "your_settings": "Deine Benachrichtigungseinstellungen:",
       "enabled": "Benachrichtigung bei Verifikation",
       "disabled": "Ausgeschaltet"
+    }
+  },
+  "suggestions": {
+    "title": "Vorschläge",
+    "header": "#suggestion-box",
+    "expired": "Abgelaufene Suggestions",
+    "showing_one": "Zeige {{from}}-{{to}} von {{count}} Vorschlag",
+    "showing_other": "Zeige {{from}}-{{to}} von {{count}} Vorschlägen",
+    "buttons": {
+      "create": "Erstelle"
+    },
+    "display": {
+      "deleted_player": "(gelöschter Player)",
+      "no_votes": "Noch keine Stimmen"
+    },
+    "name": {
+      "general": "Allgemeiner Vorschlag",
+      "pending": "Verifikation Ausstehend",
+      "rejected": "Verifikation Abgelehnt",
+      "same_map": "von {{author}}",
+      "different_map": "von {{campaign}} (von {{author}})"
+    },
+    "votes": {
+      "label": "Stimmen",
+      "did_challenge": "Stimmen von Players, die diese Challenge abgeschlossen haben",
+      "others": "Stimmen von Players, die diese Challenge nicht abgeschlossen haben",
+      "for": "Für",
+      "against": "Dagegen",
+      "indifferent": "Gleichgültig",
+      "count_one": "{{count}} Stimme",
+      "count_other": "{{count}} Stimmen"
+    },
+    "icon": {
+      "undecided": "Unentschlossen",
+      "accepted": "Akzeptiert",
+      "rejected": "Abgelehnt"
+    },
+    "modals": {
+      "view": {
+        "feedback": {
+          "updated": "Vorschlag aktualisiert"
+        },
+        "claim_player": "Beanspruche einen Player, um in Vorschlägen abstimmen zu können!",
+        "your_comment": "Dein Kommentar",
+        "comment_note": "Um deinen Kommentar zu ändern, nachdem du abgestimmt hast, entferne deine Stimme und stimme erneut ab.",
+        "totals": "Gesamt",
+        "done_challenge": "Challenge Abgeschlossen",
+        "not_done_challenge": "Challenge Nicht Abgeschlossen",
+        "buttons": {
+          "verify": "Verifizieren",
+          "accept": "Änderung Akzeptieren",
+          "reject_verification": "Verifikation Ablehnen",
+          "reject_change": "Änderung Ablehnen"
+        }
+      },
+      "create": {
+        "feedback": {
+          "created": "Vorschlag erstellt"
+        },
+        "header": "Neuer Vorschlag",
+        "select_challenge": "Challenge Auswählen",
+        "suggestion_type": "Vorschlagstyp",
+        "error_difficulty_general": "Eine Schwierigkeit kann nicht ausgewählt werden, wenn du einen allgemeinen Vorschlag machst.",
+        "not_placement": {
+          "label": "Kein Platzierungsvorschlag",
+          "note": "Kreuze dies an, wenn du keine Änderung an der Platzierung vorschlagen willst, z.B. wenn eine C/FC Challenge in C und FC geteilt werden soll."
+        },
+        "no_challenge_note": "Keine Challenge auszuwählen erstellt einen allgemeinen Vorschlag.",
+        "challenge_details": "Challenge Details",
+        "totals": "Gesamt für alle Tiers",
+        "comment": {
+          "label": "Kommentar",
+          "placeholder": "Erkläre weshalb du denkst, dass etwas geändert werden soll",
+          "required": "Ein Kommentar ist verpflichtend für allgemeine Vorschläge."
+        },
+        "button": "Vorschlag Erstellen"
+      },
+      "delete": {
+        "title": "Vorschlag Löschen?",
+        "info": "Bist du sicher, dass du diesen Vorschlag und alle anhängenden Stimmen löschen willst?"
+      }
+    }
+  },
+  "top_golden_list": {
+    "title": "Top Golden Liste",
+    "notes": {
+      "fc": "Golden Clear mit allen optionalen Collectibles (Erdbeeren, Kassetten, etc)",
+      "c_fc": "Regular Clear und Full Clear haben die selbe Schwierigkeit",
+      "new_old": "Neue und Alte Version einer Map"
     }
   }
 }
