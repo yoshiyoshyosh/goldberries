@@ -12,14 +12,12 @@ import {
 import { toast } from "react-toastify";
 import {
   getCampaignName,
-  getChallengeCampaign,
   getChallengeFcLong,
   getChallengeFcShort,
   getChallengeName,
   getChallengeNameClean,
   getDifficultyName,
   getGamebananaEmbedUrl,
-  getMapNameClean,
   getObjectiveName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
@@ -46,17 +44,13 @@ import {
 import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import {
-  getQueryData,
-  useGetChallengesInMap,
-  useGetGoldenList,
-  useGetPlayerSubmissions,
-} from "../hooks/useApi";
+import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
 import { StyledExternalLink } from "./BasicComponents";
 import { useTranslation } from "react-i18next";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const { t } = useTranslation();
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["all_campaigns"],
     queryFn: () => fetchAllCampaigns(),
@@ -72,7 +66,7 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
   campaigns.sort((a, b) => a.name.localeCompare(b.name));
 
   const getOptionLabel = (campaign) => {
-    return getCampaignName(campaign);
+    return getCampaignName(campaign, t_g);
   };
 
   return (
@@ -243,12 +237,13 @@ export function SuggestedDifficultySelect({ defaultValue, ...props }) {
 
 export function PlayerSubmissionSelect({ playerId, submission, setSubmission, ...props }) {
   const { t } = useTranslation();
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useGetPlayerSubmissions(playerId, true, true);
 
   let submissions = getQueryData(query) ?? [];
 
   const getOptionLabel = (submission) => {
-    return getChallengeNameClean(submission.challenge);
+    return getChallengeNameClean(submission.challenge, t_g);
   };
 
   return (

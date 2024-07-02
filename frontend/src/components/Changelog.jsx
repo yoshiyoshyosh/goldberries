@@ -91,6 +91,8 @@ export function Changelog({ type, id }) {
 }
 
 export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
   if (entry.challenge_id !== null && entry.description.startsWith("Moved from"))
     return <ChangelogEntryMovedChallenge entry={entry} deleteEntry={deleteEntry} canManage={canManage} />;
 
@@ -108,7 +110,7 @@ export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
         <Grid item xs="auto" md sx={{ order: { xs: 2, md: 3 } }}></Grid>
         <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 3, md: 4 } }}>
           <Typography variant="body1" sx={{ ml: { xs: 1, md: 0 } }}>
-            {displayDate(entry.date)}
+            {displayDate(entry.date, t_g)}
           </Typography>
         </Grid>
         {canManage && (
@@ -125,6 +127,7 @@ export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
 
 function ChangelogEntryMovedChallenge({ entry, deleteEntry, canManage = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.changelog" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useGetAllDifficulties();
 
   if (query.isLoading) return <LoadingSpinner />;
@@ -150,7 +153,7 @@ function ChangelogEntryMovedChallenge({ entry, deleteEntry, canManage = false })
         <Grid item xs="auto" md sx={{ order: { xs: 2, md: 3 } }}></Grid>
         <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 3, md: 4 } }}>
           <Typography variant="body1" sx={{ ml: { xs: 1, md: 0 } }}>
-            {displayDate(entry.date)}
+            {displayDate(entry.date, t_g)}
           </Typography>
         </Grid>
         {canManage && (

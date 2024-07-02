@@ -240,7 +240,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                 <TableRow key={challenge.id}>
                   <TableCell align="left" width="35%">
                     <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
-                      <Typography variant="body2">{getCampaignName(campaign)}</Typography>
+                      <Typography variant="body2">{getCampaignName(campaign, t_g)}</Typography>
                       <CustomizedMenu
                         button={
                           <IconButton size="small" color="primary" aria-label="edit">

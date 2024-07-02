@@ -74,7 +74,9 @@ function RejectedMapsTable({ maps }) {
             {maps.map((map) => (
               <TableRow key={map.id}>
                 <TableCell>
-                  <StyledLink to={"/campaign/" + map.campaign.id}>{getCampaignName(map.campaign)}</StyledLink>
+                  <StyledLink to={"/campaign/" + map.campaign.id}>
+                    {getCampaignName(map.campaign, t_g)}
+                  </StyledLink>
                 </TableCell>
                 <TableCell>
                   <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>

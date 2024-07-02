@@ -34,6 +34,7 @@ import { Changelog } from "../components/Changelog";
 import { CampaignIcon } from "../components/GoldberriesComponents";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useTranslation } from "react-i18next";
 
 const STYLE_CONSTS = {
   player: {
@@ -69,6 +70,7 @@ export function PageCampaign() {
 
 export function CampaignDisplay({ id }) {
   const [showArchived, setShowArchived] = useLocalStorage("campaign_filter_archived", false);
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
   const query = useGetCampaignView(id, showArchived);
 
@@ -80,7 +82,7 @@ export function CampaignDisplay({ id }) {
 
   const response = getQueryData(query);
   const { campaign, players, submissions } = response;
-  const title = getCampaignName(campaign);
+  const title = getCampaignName(campaign, t_g);
 
   return (
     <>

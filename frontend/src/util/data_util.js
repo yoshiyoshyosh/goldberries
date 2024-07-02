@@ -79,8 +79,8 @@ export function getChallengeFlags(challenge) {
   return flags;
 }
 
-export function displayDate(dateObj) {
-  if (dateObj === null || dateObj === undefined) return "<Unknown Date>";
+export function displayDate(dateObj, t) {
+  if (dateObj === null || dateObj === undefined) return "<" + t("unknown_date") + ">";
   return jsonDateToJsDate(dateObj).toLocaleDateString();
 }
 
@@ -181,16 +181,16 @@ export function getObjectiveName(objective) {
   return objective.name + arbitrarySuffix;
 }
 
-export function getChallengeNameClean(challenge) {
+export function getChallengeNameClean(challenge, t) {
   const challengeSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
-  return getMapNameClean(map, campaign) + challengeSuffix;
+  return getMapNameClean(map, campaign, t) + challengeSuffix;
 }
-export function getMapNameClean(map, campaign, noAuthor = false) {
+export function getMapNameClean(map, campaign, t, noAuthor = false) {
   const isFullGame = map === null;
   if (isFullGame) {
-    return campaign.name + (noAuthor ? "" : " (by " + campaign.author_gb_name + ")");
+    return campaign.name + (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")");
   }
 
   // const isSameName = map.name === campaign.name;
@@ -198,12 +198,13 @@ export function getMapNameClean(map, campaign, noAuthor = false) {
   if (isSide) {
     return campaign.name + " [" + map.name + "]";
   }
-  return map.name + (noAuthor ? "" : " (by " + campaign.author_gb_name + ")");
+  return map.name + (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")");
 }
-export function getCampaignName(campaign, noAuthor = false) {
+export function getCampaignName(campaign, t, noAuthor = false) {
   if (noAuthor) return campaign.name;
-  const authorName = campaign.author_gb_name === null ? "<Unknown Author>" : campaign.author_gb_name;
-  return campaign.name + " (by " + authorName + ")";
+  const authorName =
+    campaign.author_gb_name === null ? "<" + t("unknown_author") + ">" : campaign.author_gb_name;
+  return campaign.name + " (" + t("by") + " " + authorName + ")";
 }
 
 export function getAccountName(account) {

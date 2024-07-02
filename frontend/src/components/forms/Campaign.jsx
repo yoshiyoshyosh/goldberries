@@ -330,7 +330,7 @@ function FormCampaignEditMaps({ campaign, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        {getCampaignName(campaign)} {">"} {t_g("map", { count: 30 })}
+        {getCampaignName(campaign, t_g)} {">"} {t_g("map", { count: 30 })}
       </Typography>
 
       {campaign.maps.map((map, i) => {

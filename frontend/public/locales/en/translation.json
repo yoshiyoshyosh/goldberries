@@ -33,7 +33,10 @@
     "description": "Description",
     "all": "All",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "by": "by",
+    "unknown_author": "Unknown Author",
+    "unknown_date": "Unknown Date"
   },
   "components": {
     "difficulty_select": {

@@ -320,6 +320,7 @@ export function DifficultyMoveDisplay({ from, to, ...props }) {
 
 function SuggestionName({ suggestion, expired }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions.name" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
   const challenge = suggestion.challenge;
   const map = challenge?.map;
@@ -338,7 +339,7 @@ function SuggestionName({ suggestion, expired }) {
           <>
             <Stack direction="column" gap={1}>
               <Typography variant="h6">
-                {getMapNameClean(map, campaign, true)}
+                {getMapNameClean(map, campaign, t_g, true)}
                 {challenge.description && " [" + challenge.description + "]"}
               </Typography>
             </Stack>

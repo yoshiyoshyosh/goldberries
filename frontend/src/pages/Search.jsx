@@ -108,7 +108,7 @@ function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = 
         <Stack direction="column">
           <Stack direction="row" gap={2} alignItems="center">
             <Link to={"/campaign/" + campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-              <Typography variant="h6">{getCampaignName(campaign)}</Typography>
+              <Typography variant="h6">{getCampaignName(campaign, t_g)}</Typography>
             </Link>
           </Stack>
           {showCampaign(campaign) && (
@@ -170,7 +170,7 @@ function SearchResultsMaps({ maps, heading = "h5" }) {
             <Typography variant="body2" sx={{ pl: 2 }}>
               <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
                 <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
-                {getCampaignName(map.campaign)}
+                {getCampaignName(map.campaign, t_g)}
               </Link>
             </Typography>
           )}

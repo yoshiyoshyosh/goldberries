@@ -334,6 +334,7 @@ function MonthlyRecapTimelineItem({
 
 function TimelineSubmission({ submission, challenge, isFirstClear }) {
   const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.timeline" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   const nameIsSame = map?.name === campaign.name;
@@ -350,7 +351,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
       <PlayerChip player={submission.player} size="small" />
       <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
-        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
+        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
         {!nameIsSame && map && (
           <>
             {"/"}
@@ -372,6 +373,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
 
 function TimelineChangelogEntry({ change, challenge }) {
   const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.timeline" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   const nameIsSame = map?.name === campaign.name;
@@ -387,7 +389,7 @@ function TimelineChangelogEntry({ change, challenge }) {
     <Stack direction="row" columnGap={1} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
       <Chip label={t("moved")} size="small" />
       <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
-        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, true)}</StyledLink>
+        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
         {!nameIsSame && map && (
           <>
             {"/"}

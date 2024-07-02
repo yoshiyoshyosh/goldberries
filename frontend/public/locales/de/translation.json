@@ -30,7 +30,10 @@
     "new": "Neu",
     "description": "Beschreibung",
     "date": "Datum",
-    "time": "Zeit"
+    "time": "Zeit",
+    "by": "von",
+    "unknown_author": "Unbekannter Autor",
+    "unknown_date": "Unbekanntes Datum"
   },
   "components": {
     "difficulty_select": {

@@ -58,6 +58,7 @@ export function PageMap() {
 
 export function MapDisplay({ id }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const query = useGetMap(id);
 
@@ -71,7 +72,7 @@ export function MapDisplay({ id }) {
 
   const map = getQueryData(query);
   const campaign = map.campaign;
-  const title = map.name + " - " + getCampaignName(map.campaign);
+  const title = map.name + " - " + getCampaignName(map.campaign, t_g);
 
   return (
     <>

@@ -33,7 +33,10 @@
     "description": "简介",
     "all": "全部",
     "date": "日期",
-    "time": "时间"
+    "time": "时间",
+    "by": "by",
+    "unknown_author": "Unknown Author",
+    "unknown_date": "Unknown Date"
   },
   "components": {
     "difficulty_select": {
