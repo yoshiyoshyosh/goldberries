@@ -29,32 +29,35 @@ export function getChallengeName(challenge, includeFc = true) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
   const challengeFc = includeFc ? getChallengeFcLong(challenge) + ": " : "";
-  const challengeDescriptionSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
+  const challengeSuffix =
+    getChallengeSuffix(challenge) === null ? "" : " [" + getChallengeSuffix(challenge) + "]";
   return (
     oldPrefix +
     challengeFc +
     challenge.objective.name +
     getChallengeObjectiveSuffix(challenge) +
-    challengeDescriptionSuffix
+    challengeSuffix
   );
 }
 
-export function getChallengeDescription(challenge) {
-  return challenge.description === null ? "" : challenge.description;
+export function getChallengeSuffix(challenge) {
+  if (challenge.label !== null) return challenge.label;
+  else if (challenge.objective.display_name_suffix !== null) return challenge.objective.display_name_suffix;
+  return null;
 }
 
-export function getChallengeNameShort(challenge, withDescription = false) {
+export function getChallengeNameShort(challenge, withSuffix = false) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
-  const challengeDescriptionSuffix =
-    withDescription && challenge.description !== null ? " [" + challenge.description + "]" : "";
+  const challengeSuffix =
+    withSuffix && getChallengeSuffix(challenge) !== null ? " [" + getChallengeSuffix(challenge) + "]" : "";
   return (
     oldPrefix +
     challenge.objective.name +
     " " +
     getChallengeFcShort(challenge) +
     getChallengeObjectiveSuffix(challenge) +
-    challengeDescriptionSuffix
+    challengeSuffix
   );
 }
 
@@ -182,7 +185,8 @@ export function getObjectiveName(objective) {
 }
 
 export function getChallengeNameClean(challenge, t) {
-  const challengeSuffix = challenge.description === null ? "" : " [" + challenge.description + "]";
+  const challengeSuffix =
+    getChallengeSuffix(challenge) === null ? "" : " [" + getChallengeSuffix(challenge) + "]";
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   return getMapNameClean(map, campaign, t) + challengeSuffix;

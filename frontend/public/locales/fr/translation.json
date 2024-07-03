@@ -30,6 +30,7 @@
     "name": "Nom",
     "url": "Lien",
     "new": "Nouveau",
+    "label": "Label",
     "description": "Description",
     "all": "Tout",
     "date": "Date",

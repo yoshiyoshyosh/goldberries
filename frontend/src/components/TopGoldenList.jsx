@@ -31,7 +31,7 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
-import { getChallengeDescription, getMapName } from "../util/data_util";
+import { getChallengeSuffix, getMapName } from "../util/data_util";
 import {
   CampaignIcon,
   ChallengeFcIcon,
@@ -436,7 +436,7 @@ function TopGoldenListRow({
   };
   if (showDivider) cellStyle.borderTop = "3px solid " + theme.palette.tableDividerStrong;
 
-  let nameSuffix = challenge.description === null ? "" : `${getChallengeDescription(challenge)}`;
+  let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
   if (nameSuffix !== "") {
     if (tpgSettings.switchMapAndChallenge) {
@@ -469,9 +469,9 @@ function TopGoldenListRow({
   }, [isOverflowActive]);
 
   const [descOverflowActive, setDescOverflowActive] = useState(false);
-  const descriptionRef = useRef();
+  const labelRef = useRef();
   useEffect(() => {
-    if (descriptionRef.current && isOverflowActive(descriptionRef.current)) {
+    if (labelRef.current && isOverflowActive(labelRef.current)) {
       setDescOverflowActive(true);
       return;
     }
@@ -492,9 +492,9 @@ function TopGoldenListRow({
       {name}
     </span>
   );
-  const descriptionElement = (
+  const labelElement = (
     <span
-      ref={descriptionRef}
+      ref={labelRef}
       style={{
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -566,10 +566,10 @@ function TopGoldenListRow({
               {nameSuffix !== "" &&
                 (descOverflowActive ? (
                   <Tooltip title={nameSuffix} arrow placement="top">
-                    {descriptionElement}
+                    {labelElement}
                   </Tooltip>
                 ) : (
-                  descriptionElement
+                  labelElement
                 ))}
             </Stack>
           </Box>

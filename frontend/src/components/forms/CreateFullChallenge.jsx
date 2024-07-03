@@ -23,6 +23,7 @@ export function FormCreateFullChallengeWrapper({
       map_name: defaultName ?? "",
 
       objective_id: 1,
+      label: "",
       description: "",
       requires_fc: false,
       has_fc: false,
@@ -69,6 +70,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
     };
     const challenge = {
       objective_id: data.objective_id,
+      label: data.label,
       description: data.description,
       requires_fc: data.requires_fc,
       has_fc: data.has_fc,
@@ -145,6 +147,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         )}
       />
 
+      <TextField label={t_g("label")} sx={{ mt: 2 }} fullWidth {...form.register("label")} />
       <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />
 
       <Controller

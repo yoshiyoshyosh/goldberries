@@ -30,6 +30,7 @@
     "name": "Name",
     "url": "URL",
     "new": "New",
+    "label": "Label",
     "description": "Description",
     "all": "All",
     "date": "Date",

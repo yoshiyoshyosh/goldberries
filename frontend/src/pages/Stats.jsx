@@ -20,6 +20,7 @@ import {
   extractDifficultiesFromChangelog,
   getCampaignName,
   getChallengeCampaign,
+  getChallengeSuffix,
   getMapName,
 } from "../util/data_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -358,9 +359,9 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
             <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
           </>
         )}
-        {challenge.description && (
+        {getChallengeSuffix(challenge) !== null && (
           <Typography variant="body2" color="textSecondary">
-            [{challenge.description}]
+            [{getChallengeSuffix(challenge)}]
           </Typography>
         )}
         <StyledLink to={"/submission/" + submission.id} style={{ lineHeight: "1" }}>
@@ -396,9 +397,9 @@ function TimelineChangelogEntry({ change, challenge }) {
             <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
           </>
         )}
-        {challenge.description && (
+        {getChallengeSuffix(challenge) !== null && (
           <Typography variant="body2" color="textSecondary">
-            [{challenge.description}]
+            [{getChallengeSuffix(challenge)}]
           </Typography>
         )}
         <StyledLink to={"/challenge/" + challenge.id} style={{ lineHeight: "1px" }}>

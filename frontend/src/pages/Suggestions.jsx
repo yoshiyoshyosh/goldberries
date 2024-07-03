@@ -39,6 +39,7 @@ import {
 import {
   getChallengeCampaign,
   getChallengeIsFullGame,
+  getChallengeSuffix,
   getMapNameClean,
   getSortedSuggestedDifficulties,
 } from "../util/data_util";
@@ -340,7 +341,7 @@ function SuggestionName({ suggestion, expired }) {
             <Stack direction="column" gap={1}>
               <Typography variant="h6">
                 {getMapNameClean(map, campaign, t_g, true)}
-                {challenge.description && " [" + challenge.description + "]"}
+                {getChallengeSuffix(challenge) && " [" + getChallengeSuffix(challenge) + "]"}
               </Typography>
             </Stack>
             <ObjectiveIcon objective={challenge.objective} height="1.2em" />

@@ -30,6 +30,7 @@
     "name": "名称",
     "url": "网址",
     "new": "新",
+    "label": "Label",
     "description": "简介",
     "all": "全部",
     "date": "日期",

@@ -35,6 +35,7 @@ import {
 import {
   getChallengeCampaign,
   getChallengeNameShort,
+  getChallengeSuffix,
   getMapLobbyInfo,
   getPlayerNameColorStyle,
 } from "../util/data_util";
@@ -195,8 +196,8 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
               }
               isSecondary
             />
-            {challenge.description && (
-              <InfoBoxIconTextLine text={"[" + challenge.description + "]"} isSecondary />
+            {getChallengeSuffix(challenge) !== null && (
+              <InfoBoxIconTextLine text={"[" + getChallengeSuffix(challenge) + "]"} isSecondary />
             )}
           </InfoBox>
         )}
@@ -209,10 +210,18 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
           </InfoBox>
         )}
         {challenge !== null && (
-          <InfoBox>
-            <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
-            <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
-          </InfoBox>
+          <>
+            <InfoBox>
+              <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
+              <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
+            </InfoBox>
+            {challenge.description !== null && (
+              <InfoBox>
+                <InfoBoxIconTextLine text={t_g("description")} icon={<FontAwesomeIcon icon={faComment} />} />
+                <InfoBoxIconTextLine text={challenge.description} isSecondary />
+              </InfoBox>
+            )}
+          </>
         )}
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />

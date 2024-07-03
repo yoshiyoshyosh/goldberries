@@ -487,6 +487,16 @@ export function MultiUserSubmission() {
   };
 
   const updateMapDataRow = useCallback((index, data) => {
+    //Check if the challenge is FC or regular C, and set is_fc accordingly
+    if (data.challenge !== null) {
+      if (data.challenge.requires_fc) {
+        data.is_fc = true;
+      } else if (data.challenge.has_fc && preferFc) {
+        data.is_fc = true;
+      } else if (!data.challenge.has_fc && !data.challenge.requires_fc) {
+        data.is_fc = false;
+      }
+    }
     setMapDataList((mapDataList) => {
       mapDataList[index] = data;
       return [...mapDataList];
@@ -859,6 +869,7 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
           <FormControlLabel
             control={<Checkbox />}
             checked={mapData.is_fc}
+            disabled={mapData.challenge.requires_fc || !mapData.challenge.has_fc}
             onChange={(e, v) => updateMapDataRow(index, { ...mapData, is_fc: v })}
             label={t_fs("is_fc")}
             slotProps={{

@@ -22,7 +22,12 @@ import {
   LoadingSpinner,
   StyledExternalLink,
 } from "../components/BasicComponents";
-import { getDifficultyName, getMapName, getPlayerNameColorStyle } from "../util/data_util";
+import {
+  getChallengeSuffix,
+  getDifficultyName,
+  getMapName,
+  getPlayerNameColorStyle,
+} from "../util/data_util";
 import { getQueryData, useGetGoldenList } from "../hooks/useApi";
 import {
   CampaignIcon,
@@ -442,8 +447,8 @@ function ChallengeEntry({ challenge, type }) {
       <Grid component={Stack} item xs={12} md={1} direction="row" gap={1}>
         <Stack direction="column" alignItems="stretch" gap={1} width="100%">
           <DifficultyChip difficulty={challenge.difficulty} sx={{ width: "100%", textAlign: "center" }} />
-          {challenge.description !== null && (
-            <div style={{ textAlign: "center" }}>{challenge.description}</div>
+          {getChallengeSuffix(challenge) !== null && (
+            <div style={{ textAlign: "center" }}>{getChallengeSuffix(challenge)}</div>
           )}
         </Stack>
       </Grid>
@@ -454,7 +459,7 @@ function ChallengeEntry({ challenge, type }) {
           <span>{challenge.submissions.length}</span>
         </Stack>
       </Grid>
-      <Grid item xs={12} md={challenge.description !== null ? 10 : 10}>
+      <Grid item xs={12} md={getChallengeSuffix(challenge) !== null ? 10 : 10}>
         <Stack direction="row" columnGap={3} rowGap={1} flexWrap="wrap">
           {challenge.submissions.map((submission) => (
             <SubmissionEntry key={submission.id} submission={submission} />

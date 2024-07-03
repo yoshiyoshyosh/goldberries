@@ -655,11 +655,12 @@ export function SuspendedIcon({ reason }) {
 }
 
 export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const iconUrl = campaign.icon_url;
   if (iconUrl === null) return null;
 
   const comp = (
-    <Tooltip title={getCampaignName(campaign)}>
+    <Tooltip title={getCampaignName(campaign, t_g)}>
       <img
         src={iconUrl}
         alt={campaign.name}
@@ -826,10 +827,8 @@ export function ArbitraryIcon({ height = "1em" }) {
   return <Tooltip title="Arbitrary">(A)</Tooltip>;
 }
 
-export function ObjectiveIcon({ objective, challengeDescription, height = "1em" }) {
-  const description = challengeDescription
-    ? objective.name + ": " + challengeDescription
-    : objective.description;
+export function ObjectiveIcon({ objective, challengeLabel, height = "1em" }) {
+  const description = challengeLabel ? objective.name + ": " + challengeLabel : objective.description;
   if (objective.icon_url === null || objective.icon_url === undefined)
     return (
       <Tooltip title={description}>

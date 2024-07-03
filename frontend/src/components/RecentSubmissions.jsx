@@ -28,7 +28,7 @@ import {
   VerificationStatusChip,
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
-import { getChallengeCampaign, getChallengeDescription } from "../util/data_util";
+import { getChallengeCampaign, getChallengeSuffix } from "../util/data_util";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -267,9 +267,9 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
                   </>
                 )}
                 {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
-                {challenge.description && (
+                {getChallengeSuffix(challenge) !== null && (
                   <Typography variant="body2" color={theme.palette.text.secondary}>
-                    [{getChallengeDescription(challenge)}]
+                    [{getChallengeSuffix(challenge)}]
                   </Typography>
                 )}
                 <ObjectiveIcon objective={challenge.objective} height="1.3em" />

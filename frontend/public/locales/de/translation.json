@@ -28,6 +28,7 @@
     "name": "Name",
     "url": "URL",
     "new": "Neu",
+    "label": "Etikett",
     "description": "Beschreibung",
     "date": "Datum",
     "time": "Zeit",
