@@ -28,7 +28,7 @@ function send_webhook_suggestion_verified($suggestion)
   $name = $map === null ? ($campaign === null ? "General Suggestion" : $campaign->get_name()) : $map->get_name();
   $suggestion_url = constant("BASE_URL") . "/suggestion/" . $suggestion->id;
 
-  $description = "";
+  $objective = "";
 
   $fields = [];
 
@@ -39,9 +39,9 @@ function send_webhook_suggestion_verified($suggestion)
   ];
 
   if ($challenge) {
-    $description = $challenge->objective->name;
-    if ($challenge->description) {
-      $description += " [" . $challenge->description . "]";
+    $objective = $challenge->objective->name;
+    if ($challenge->get_suffix() !== null) {
+      $objective += " [" . $challenge->get_suffix() . "]";
     }
 
     $current_diff_name = $challenge->difficulty->to_tier_name();
@@ -94,7 +94,7 @@ function send_webhook_suggestion_verified($suggestion)
       [
         "title" => "Suggestion for '$name' by {$suggestion->author->name}",
         "type" => "rich",
-        "description" => $description,
+        "description" => $objective,
         "url" => $suggestion_url,
         "timestamp" => $timestamp,
         "color" => hexdec("3333ff"),

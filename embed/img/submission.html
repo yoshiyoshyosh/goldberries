@@ -154,7 +154,7 @@
           let sameNames = mapName === campaignName;
           const isFullGame = mapName === null;
           const campaignAuthor = getCookie('campaign_author');
-          const challengeDescription = getCookie('challenge_description');
+          const challengeLabel = getCookie('challenge_label');
           let objectiveIconUrl = getCookie('objective_icon_url');
           const difficultyId = getCookie('difficulty_id');
 
@@ -181,7 +181,7 @@
             }
           }
           sel("#mapName").innerHTML = isFullGame ? campaignName : mapName;
-          sel("#mapSuffix").innerHTML = challengeDescription === "None" ? "" : " ["+challengeDescription+"]";
+          sel("#mapSuffix").innerHTML = challengeLabel === "None" ? "" : " ["+challengeLabel+"]";
           sel("#campaign").innerHTML = sameNames || isFullGame ? "by "+campaignAuthor : campaignName + " (by "+campaignAuthor+")";
 
           const diff = DIFFICULTIES[difficultyId];
@@ -226,7 +226,7 @@
             Map Name
           </span>
           <span id="mapSuffix">
-            [Description]
+            [Label]
           </span>
         </p>
         <p id="campaign" class="detail-small outlined-small">Campaign</p>

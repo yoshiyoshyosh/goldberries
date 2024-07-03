@@ -4,6 +4,7 @@ class Challenge extends DbObject
 {
   public static string $table_name = 'challenge';
 
+  public ?string $label = null;
   public ?string $description = null;
   public ?JsonDateTime $date_created = null;
   public bool $requires_fc = false;
@@ -34,6 +35,7 @@ class Challenge extends DbObject
   function get_field_set()
   {
     return array(
+      'label' => $this->label,
       'description' => $this->description,
       'date_created' => $this->date_created,
       'requires_fc' => $this->requires_fc,
@@ -61,6 +63,8 @@ class Challenge extends DbObject
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
     if (isset($arr[$prefix . 'map_id']))
       $this->map_id = intval($arr[$prefix . 'map_id']);
+    if (isset($arr[$prefix . 'label']))
+      $this->label = $arr[$prefix . 'label'];
     if (isset($arr[$prefix . 'description']))
       $this->description = $arr[$prefix . 'description'];
     if (isset($arr[$prefix . 'is_arbitrary']))
@@ -160,7 +164,7 @@ class Challenge extends DbObject
 
   function __toString()
   {
-    return "(Challenge, id:{$this->id}, description:'{$this->description}')";
+    return "(Challenge, id:{$this->id}, suffix:'{$this->get_suffix()}')";
   }
 
   static function generate_changelog($DB, $old, $new)
@@ -182,6 +186,9 @@ class Challenge extends DbObject
       $oldDifficulty = Difficulty::get_by_id($DB, $old->difficulty_id);
       $newDifficulty = Difficulty::get_by_id($DB, $new->difficulty_id);
       Change::create_change($DB, 'challenge', $new->id, "Moved from '{$oldDifficulty->to_tier_name()}' to '{$newDifficulty->to_tier_name()}'");
+    }
+    if ($old->label !== $new->label) {
+      Change::create_change($DB, 'challenge', $new->id, "Changed label from '{$old->label}' to '{$new->label}'");
     }
     if ($old->description !== $new->description) {
       Change::create_change($DB, 'challenge', $new->id, "Changed description from '{$old->description}' to '{$new->description}'");
@@ -207,24 +214,34 @@ class Challenge extends DbObject
     return true;
   }
 
+  function get_suffix(): string
+  {
+    if ($this->label !== null)
+      return $this->label;
+    else if ($this->objective->display_name_suffix !== null)
+      return $this->objective->display_name_suffix;
+    else
+      return null;
+  }
+
   function get_name(): string
   {
     $map_name = $this->map !== null ? $this->map->get_name() : $this->campaign->get_name();
     $objective_name = $this->objective->name;
     $c_fc = $this->get_c_fc();
-    $description_addition = $this->description !== null ? " [{$this->description}]" : "";
+    $label_suffix = $this->get_suffix() !== null ? " [{$this->get_suffix()}]" : "";
 
-    return "{$map_name} / {$objective_name} [{$c_fc}]{$description_addition}";
+    return "{$map_name} / {$objective_name} [{$c_fc}]{$label_suffix}";
   }
   function get_name_for_discord(): string
   {
     $map_name = $this->map !== null ? $this->map->get_name_for_discord() : $this->campaign->get_name_for_discord();
     $objective_name = $this->objective->name;
     $c_fc = $this->get_c_fc();
-    $description_addition = $this->description !== null ? " [{$this->description}]" : "";
+    $label_suffix = $this->get_suffix() !== null ? " [{$this->get_suffix()}]" : "";
     $challenge_url = $this->get_url();
 
-    return "{$map_name} / [{$objective_name} [{$c_fc}]{$description_addition}](<$challenge_url>)";
+    return "{$map_name} / [{$objective_name} [{$c_fc}]{$label_suffix}](<$challenge_url>)";
   }
 
   function get_c_fc(): string

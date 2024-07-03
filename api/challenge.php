@@ -127,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_challenge->objective_id = $challenge->objective_id;
     $new_challenge->difficulty_id = $challenge->difficulty_id;
 
+    $new_challenge->label = $challenge->label;
     $new_challenge->description = $challenge->description;
     $new_challenge->date_created = $challenge->date_created;
     $new_challenge->sort = $challenge->sort;

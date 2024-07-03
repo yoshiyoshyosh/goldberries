@@ -100,13 +100,13 @@ $data = array(
   "player_name_color_end" => $player->account['name_color_end'],
   "campaign_name" => $campaign->name,
   "campaign_author" => $campaign->author_gb_name,
-  "challenge_description" => $challenge->description,
+  "challenge_label" => $challenge->label,
   "objective_icon_url" => $challenge->objective->icon_url,
   "difficulty_id" => $challenge->difficulty_id,
   "wkhtmltoimage_path" => $wkhtmltoimage_path,
   "file_name" => $img_name . "",
   "folder_name" => "submission",
-  "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_description", "objective_icon_url", "difficulty_id"],
+  "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_label", "objective_icon_url", "difficulty_id"],
 );
 if ($map !== null) {
   $data["map_name"] = $map->name;

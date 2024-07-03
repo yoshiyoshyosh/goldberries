@@ -49,13 +49,6 @@ function is_valid_url($url): bool
 
 function is_valid_name($name): bool
 {
-  //Allowed characters:
-  //Alphanumeric and underscore
-  //Spaces (only spaces, no other whitespace characters)
-  //No leading or trailing spaces
-  //Symbols
-  //Chinese characters (Han script)
-
   //If starts or ends with a space, or has two spaces in a row, its invalid
   if (preg_match('/^ | $|  /', $name)) {
     return false;
