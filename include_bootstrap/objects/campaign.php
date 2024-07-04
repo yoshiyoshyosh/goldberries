@@ -63,7 +63,7 @@ class Campaign extends DbObject
       $this->sort_major_colors = is_array($sort_major_colors) ? $sort_major_colors : explode("\t", $sort_major_colors);
     }
 
-    if (isset($arr['sort_minor_name'])) {
+    if (isset($arr[$prefix . 'sort_minor_name'])) {
       $this->sort_minor_name = $arr[$prefix . 'sort_minor_name'];
     }
     if (isset($arr[$prefix . 'sort_minor_labels'])) {

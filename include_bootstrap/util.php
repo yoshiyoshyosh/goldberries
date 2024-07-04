@@ -69,6 +69,11 @@ class JsonDateTime extends \DateTime implements \JsonSerializable
     return $this->format("c");
   }
 
+  public function diff(DateTimeInterface $other, bool $absolute = false)
+  {
+    return parent::diff($other, $absolute);
+  }
+
   public function __toString()
   {
     return $this->format("c");
