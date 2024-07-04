@@ -45,7 +45,7 @@ import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-ico
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
-import { StyledExternalLink } from "./BasicComponents";
+import { StyledExternalLink, StyledLink } from "./BasicComponents";
 import { useTranslation } from "react-i18next";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
@@ -616,6 +616,15 @@ export function PlayerChip({ player, ...props }) {
         {...props}
       />
     </Link>
+  );
+}
+export function PlayerLink({ player, ...props }) {
+  const { settings } = useAppSettings();
+  const nameStyle = getPlayerNameColorStyle(player, settings);
+  return (
+    <StyledLink to={"/player/" + player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
+      {player.name}
+    </StyledLink>
   );
 }
 

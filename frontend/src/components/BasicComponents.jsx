@@ -381,13 +381,14 @@ export function InfoBox({ children }) {
     </Box>
   );
 }
-export function InfoBoxIconTextLine({ icon, text, isSecondary = false }) {
+export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false }) {
   const theme = useTheme();
-  const color = isSecondary ? theme.palette.text.secondary : theme.palette.text.primary;
+  let textColor = isSecondary ? theme.palette.text.secondary : theme.palette.text.primary;
+  textColor = color ? color : textColor;
   return (
     <Stack direction="row" gap={1} alignItems="center">
       {icon}
-      <Typography variant="body1" color={color} fontWeight={isSecondary ? "normal" : "bold"}>
+      <Typography variant="body1" color={textColor} fontWeight={isSecondary ? "normal" : "bold"}>
         {text}
       </Typography>
     </Stack>

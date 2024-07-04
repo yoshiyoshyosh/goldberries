@@ -287,7 +287,7 @@ export function PageServerCosts({}) {
   );
 }
 
-function LinearProgressWithLabel({ color, value, valueLabel, maxLabel, ...props }) {
+export function LinearProgressWithLabel({ color, value, valueLabel, maxLabel, ...props }) {
   return (
     <Stack direction="row" gap={1} alignItems="center" {...props}>
       {valueLabel && <Typography variant="body2">{valueLabel}</Typography>}

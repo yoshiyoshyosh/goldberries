@@ -1063,5 +1063,8 @@
       "c_fc": "Regular clear and Full Clear are the same placement",
       "new_old": "New or Old version of the map"
     }
+  },
+  "campaign": {
+    "author": "Author"
   }
 }

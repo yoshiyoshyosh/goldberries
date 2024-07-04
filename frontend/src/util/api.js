@@ -126,11 +126,18 @@ export function fetchCampaign(id, maps = true, challenges = true, submission = t
   });
 }
 
-export function fetchCampaignView(id, include_archived = false) {
+export function fetchCampaignView(id) {
   return axios.get("/campaign_view.php", {
     params: {
       id: id,
-      archived: include_archived,
+    },
+  });
+}
+export function fetchCampaignViewPlayer(id, playerId) {
+  return axios.get("/campaign_view.php", {
+    params: {
+      id: id,
+      player_id: playerId,
     },
   });
 }

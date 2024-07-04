@@ -2,39 +2,59 @@ import { Link, useParams } from "react-router-dom";
 import { getQueryData, useGetCampaignView } from "../hooks/useApi";
 import {
   BasicBox,
+  BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
+  InfoBox,
+  InfoBoxIconTextLine,
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
 import {
   Box,
+  Button,
   Checkbox,
   Divider,
   FormControlLabel,
+  Grid,
+  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   ListSubheader,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faLink, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faExternalLink, faLink, faListDots, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCampaignName, getGamebananaEmbedUrl, getMapLobbyInfo } from "../util/data_util";
 import { getNewDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
-import { CampaignIcon } from "../components/GoldberriesComponents";
+import {
+  CampaignIcon,
+  ChallengeFcIcon,
+  GamebananaEmbed,
+  PlayerChip,
+  PlayerLink,
+} from "../components/GoldberriesComponents";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
+import { LinearProgressWithLabel } from "./ServerCosts";
 
 const STYLE_CONSTS = {
   player: {
@@ -65,7 +85,11 @@ export function PageCampaign() {
     return <PageCampaignTopGoldenList id={id} />;
   }
 
-  return <CampaignDisplay id={parseInt(id)} tab={tab} />;
+  return (
+    <BasicContainerBox maxWidth="md">
+      <CampaignDisplay id={parseInt(id)} tab={tab} />
+    </BasicContainerBox>
+  );
 }
 
 export function CampaignDisplay({ id }) {
@@ -81,106 +105,216 @@ export function CampaignDisplay({ id }) {
   }
 
   const response = getQueryData(query);
-  const { campaign, players, submissions } = response;
+  const { campaign, players } = response;
   const title = getCampaignName(campaign, t_g);
 
   return (
     <>
       <HeadTitle title={title} />
-      <Box sx={{ mx: 2 }}>
-        <Box
-          sx={{
-            p: 2,
-            background: theme.palette.background.other,
-            borderRadius: "10px",
-            border: "1px solid #cccccc99",
-            boxShadow: 1,
-            width: {
-              xs: "100%",
-              sm: "600px",
-            },
-          }}
-        >
-          <Stack direction="row" alignItems="center" gap={1}>
-            {campaign.icon_url === null && <FontAwesomeIcon icon={faBook} size="2x" />}
-            <CampaignIcon campaign={campaign} height="1.7em" />
-            <Typography variant="h4">{campaign.name}</Typography>
-          </Stack>
-          <CampaignDetailsList campaign={campaign} sx={{}} />
-          <Changelog type="campaign" id={id} />
-        </Box>
-        <Divider sx={{ my: 2 }} />
-        <BasicBox sx={{ mb: 1 }}>
-          <FormControlLabel
-            control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-            label="Show Archived"
-          />
-        </BasicBox>
-      </Box>
-      <CampaignTableView campaign={campaign} players={players} submissions={submissions} />
+      <Stack direction="row" alignItems="center" gap={1}>
+        {campaign.icon_url === null && <FontAwesomeIcon icon={faBook} size="2x" />}
+        <CampaignIcon campaign={campaign} height="1.7em" />
+        <Typography variant="h4">{campaign.name}</Typography>
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={1} justifyContent="space-around" sx={{ mt: 1 }}>
+        <GamebananaEmbed campaign={campaign} size="large" />
+      </Stack>
+
+      <CampaignDetailsList campaign={campaign} sx={{ mt: 0 }} />
+
+      <CampaignPlayerTable campaign={campaign} players={players} sx={{ mt: 2 }} />
+
+      <Divider sx={{ my: 2 }} />
+      <Changelog type="campaign" id={id} />
     </>
   );
 }
 
 export function CampaignDetailsList({ campaign, ...props }) {
-  const embedUrl = getGamebananaEmbedUrl(campaign.url);
-  const author = {
-    name: campaign.author_gb_name,
-    id: campaign.author_gb_id,
-  };
+  const { t } = useTranslation(undefined, { keyPrefix: "campaign" });
+  const { t: t_c } = useTranslation(undefined, { keyPrefix: "challenge" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  const hasMajorSort = campaign.sort_major_name !== null;
+  const hasMinorSort = campaign.sort_minor_name !== null;
+
   return (
-    <List dense {...props}>
-      <ListSubheader>Campaign Details</ListSubheader>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faBook} />
-        </ListItemIcon>
-        <ListItemText primary={campaign.name} secondary="Campaign" />
-        {embedUrl && (
-          <ListItemSecondaryAction
-            sx={{
-              display: {
-                xs: "none",
-                sm: "block",
-              },
-            }}
-          >
-            <StyledExternalLink href={campaign.url} target="_blank">
-              <img src={embedUrl} alt="Campaign Banner" style={{ borderRadius: "5px" }} />
-            </StyledExternalLink>
-          </ListItemSecondaryAction>
+    <Grid container columnSpacing={1} rowSpacing={1} {...props}>
+      <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
+        <InfoBox>
+          <InfoBoxIconTextLine
+            icon={<FontAwesomeIcon icon={faBook} />}
+            text={t_g("campaign", { count: 1 })}
+          />
+          <InfoBoxIconTextLine text={campaign.name} isSecondary />
+        </InfoBox>
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faListDots} />} text={"Map Count"} />
+          <InfoBoxIconTextLine text={campaign.maps.length + " Maps"} isSecondary />
+        </InfoBox>
+        {hasMajorSort && (
+          <SortInfoBox
+            name={campaign.sort_major_name}
+            labels={campaign.sort_major_labels}
+            colors={campaign.sort_major_colors}
+          />
         )}
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faUser} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            author.name !== null ? (
-              <StyledExternalLink href={"https://gamebanana.com/members/" + author.id}>
-                {author.name}
+      </Grid>
+      <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t("author")} />
+          <InfoBoxIconTextLine
+            text={
+              <StyledExternalLink href={"https://gamebanana.com/members/" + campaign.author_gb_id}>
+                {campaign.author_gb_name}
               </StyledExternalLink>
-            ) : (
-              "<Unknown Author>"
-            )
-          }
-          secondary="Author"
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <FontAwesomeIcon icon={faLink} />
-        </ListItemIcon>
-        <ListItemText
-          primary={<StyledLink to={`/campaign/${campaign.id}/top-golden-list`}>Top Golden List</StyledLink>}
-        />
-      </ListItem>
-    </List>
+            }
+            isSecondary
+          />
+        </InfoBox>
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
+          <InfoBoxIconTextLine
+            text={<StyledExternalLink href={campaign.url}>{campaign.url}</StyledExternalLink>}
+            isSecondary
+          />
+        </InfoBox>
+        {hasMinorSort && (
+          <SortInfoBox
+            name={campaign.sort_minor_name}
+            labels={campaign.sort_minor_labels}
+            colors={campaign.sort_minor_colors}
+          />
+        )}
+      </Grid>
+    </Grid>
+  );
+}
+function SortInfoBox({ name, labels, colors }) {
+  return (
+    <InfoBox>
+      <InfoBoxIconTextLine text={name} />
+      <InfoBoxIconTextLine
+        text={
+          <Stack direction="row" alignItems="center" columnGap={1} rowGap={0} flexWrap="wrap">
+            {labels.map((label, index) => (
+              <Typography key={index} variant="body1" color={colors[index]}>
+                {label}
+              </Typography>
+            ))}
+          </Stack>
+        }
+        isSecondary
+      />
+    </InfoBox>
   );
 }
 
-//#region Campaign Table View
+export function CampaignPlayerTable({ campaign, players, ...props }) {
+  const [showAll, setShowAll] = useState(false);
+  const [actuallyShowAll, setActuallyShowAll] = useState(false);
+
+  useEffect(() => {
+    if (showAll) {
+      setActuallyShowAll(true);
+    }
+  }, [showAll]);
+
+  const playersToShow = actuallyShowAll ? Object.values(players) : Object.values(players).slice(0, 100);
+  return (
+    <TableContainer component={Paper} {...props}>
+      <Table size="small">
+        <TableHead>
+          <TableCell width={1} sx={{ px: 1 }}></TableCell>
+          <TableCell width={1} sx={{ px: 0 }}>
+            Player
+          </TableCell>
+          {/* <TableCell width={1} sx={{ px: 0 }}></TableCell> */}
+          <TableCell sx={{ pl: 0.5, pr: 1 }} colSpan={2}>
+            Progress
+          </TableCell>
+          <TableCell width={1} sx={{ px: 1 }}></TableCell>
+        </TableHead>
+        <TableBody>
+          {playersToShow.map((player, index) => (
+            <CampaignPlayerTableRow key={player.id} index={index} campaign={campaign} playerEntry={player} />
+          ))}
+          {!actuallyShowAll && (
+            <>
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <Typography variant="caption">
+                    + {Object.values(players).length - playersToShow.length} more players
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  {showAll ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <Button size="small" fullWidth onClick={() => setShowAll(!showAll)}>
+                      {showAll ? "Show Less" : "Show All"}
+                    </Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            </>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
+  const { player, stats, last_submission, highest_lobby_sweep, highest_lobby_sweep_fcs } = playerEntry;
+  const mapsInCampaign = campaign.maps.length;
+  const progressColor = stats.clears === mapsInCampaign ? "primary" : "success";
+  const backgroundColor = stats.clears === mapsInCampaign ? "#ffbf001a" : "transparent";
+  const sweepColor =
+    campaign.sort_major_name !== null ? campaign.sort_major_colors[highest_lobby_sweep] ?? "white" : null;
+  const borderLeft = sweepColor ? "20px solid " + sweepColor : "none";
+  return (
+    <TableRow sx={{ backgroundColor }}>
+      <TableCell width={1} align="center" sx={{ px: 1, borderLeft }}>
+        #{index + 1}
+      </TableCell>
+      <TableCell
+        width={1}
+        sx={{
+          px: 0,
+          maxWidth: { xs: "120px", md: "150px" },
+          minWidth: { xs: "120px", md: "150px" },
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        <PlayerLink player={player} />
+      </TableCell>
+      <TableCell width={1} align="center" sx={{ pl: 0.5, pr: 0 }}>
+        <Typography variant="caption">{((stats.clears / mapsInCampaign) * 100).toFixed(0)}%</Typography>
+      </TableCell>
+      <TableCell sx={{ pl: 1 }}>
+        <LinearProgress
+          variant="determinate"
+          color={progressColor}
+          value={(stats.clears / mapsInCampaign) * 100}
+          max={100}
+          sx={{ height: "6px", borderRadius: 1 }}
+        />
+      </TableCell>
+      <TableCell width={1} sx={{ px: 1 }}>
+        <Stack direction="row" gap={1} alignItems="center">
+          <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
+          <span>{stats.full_clears}</span>
+        </Stack>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+//#region Old Campaign Table View
 
 function getPlayerSortInfo(player, campaign, submissions) {
   let sortInfo = {

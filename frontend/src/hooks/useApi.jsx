@@ -55,6 +55,7 @@ import {
   postChallengeMerge,
   postChallengeSplit,
   postChallengeMarkPersonal,
+  fetchCampaignViewPlayer,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -137,10 +138,17 @@ export function useGetCampaign(id) {
   });
 }
 
-export function useGetCampaignView(id, include_archived = false) {
+export function useGetCampaignView(id) {
   return useQuery({
-    queryKey: ["campaign_view", id, include_archived],
-    queryFn: () => fetchCampaignView(id, include_archived),
+    queryKey: ["campaign_view", id],
+    queryFn: () => fetchCampaignView(id),
+    onError: errorToast,
+  });
+}
+export function useGetCampaignViewPlayer(id, playerId) {
+  return useQuery({
+    queryKey: ["campaign_view_player", id, playerId],
+    queryFn: () => fetchCampaignViewPlayer(id, playerId),
     onError: errorToast,
   });
 }
