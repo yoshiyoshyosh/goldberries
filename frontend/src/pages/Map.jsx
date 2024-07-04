@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Chip,
   Divider,
@@ -8,16 +9,21 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   ListSubheader,
+  MenuItem,
+  Select,
   Stack,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChallengeDetailsList, ChallengeSubmissionTable } from "./Challenge";
 import {
+  faArrowRightToBracket,
+  faArrowRightToFile,
   faBook,
   faEdit,
   faExternalLink,
   faFlagCheckered,
   faLandmark,
+  faRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +32,8 @@ import {
   getChallengeFcLong,
   getChallengeFcShort,
   getChallengeName,
+  getChallengeNameClean,
+  getChallengeNameShort,
   getGamebananaEmbedUrl,
   getMapAuthor,
   getMapLobbyInfo,
@@ -36,6 +44,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledExternalLink,
+  StyledLink,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { ChallengeFcIcon, DifficultyChip, GamebananaEmbed } from "../components/GoldberriesComponents";
@@ -45,22 +54,32 @@ import { useAuth } from "../hooks/AuthProvider";
 import { getQueryData, useGetMap } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 export function PageMap() {
-  const { id } = useParams();
+  const { id, challengeId } = useParams();
 
   return (
     <BasicContainerBox maxWidth="md">
-      <MapDisplay id={parseInt(id)} />
+      <MapDisplay id={parseInt(id)} challengeId={parseInt(challengeId)} />
     </BasicContainerBox>
   );
 }
 
-export function MapDisplay({ id }) {
+export function MapDisplay({ id, challengeId, isModal = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
+  const navigate = useNavigate();
   const query = useGetMap(id);
+  const [selectedChallengeId, setSelectedChallengeId] = useState(challengeId ?? null);
+
+  const updateSelectedChallenge = (challengeId) => {
+    setSelectedChallengeId(challengeId);
+    if (!isModal) {
+      navigate("/map/" + id + "/" + challengeId, { replace: true });
+    }
+  };
 
   const editMapModal = useModal();
 
@@ -71,6 +90,8 @@ export function MapDisplay({ id }) {
   }
 
   const map = getQueryData(query);
+  const firstChallenge = map.challenges[0];
+  const selectedChallenge = map.challenges.find((c) => c.id === selectedChallengeId) ?? firstChallenge;
   const campaign = map.campaign;
   const title = map.name + " - " + getCampaignName(map.campaign, t_g);
 
@@ -95,7 +116,24 @@ export function MapDisplay({ id }) {
         </Stack>
       )}
       <ChallengeDetailsList map={map} />
-      {map.challenges.map((challenge) => {
+      <Divider sx={{ my: 2 }}>
+        <Chip label="Challenges" size="small" />
+      </Divider>
+      <Box sx={{ mt: 1, p: 1, background: "rgba(0,0,0,0.2)", borderRadius: 1 }}>
+        <MapChallengeTabs selected={selectedChallenge.id} setSelected={updateSelectedChallenge} map={map} />
+      </Box>
+      <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
+        <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
+        <span>{getChallengeFcShort(selectedChallenge)}</span>
+        <DifficultyChip difficulty={selectedChallenge.difficulty} />
+        <StyledLink to={"/challenge/" + selectedChallenge.id} style={{ marginLeft: "auto" }}>
+          <Button variant="text" startIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}>
+            {t("buttons.view_challenge")}
+          </Button>
+        </StyledLink>
+      </Stack>
+      <ChallengeSubmissionTable key={selectedChallenge.id} challenge={selectedChallenge} />
+      {/* {map.challenges.map((challenge) => {
         return (
           <>
             <Divider sx={{ my: 2 }}>
@@ -111,7 +149,7 @@ export function MapDisplay({ id }) {
             <ChallengeSubmissionTable key={challenge.id} challenge={challenge} />
           </>
         );
-      })}
+      })} */}
 
       <Divider sx={{ my: 2 }} />
       <Changelog type="map" id={id} />
@@ -120,5 +158,40 @@ export function MapDisplay({ id }) {
         <FormMapWrapper id={id} onSave={editMapModal.close} />
       </CustomModal>
     </>
+  );
+}
+
+//controlled property: selected challenge ID
+function MapChallengeTabs({ selected, setSelected, map }) {
+  //If too many challenges, instead render as select dropdown
+  if (map.challenges.length > 5) {
+    return (
+      <Select
+        value={selected}
+        fullWidth
+        onChange={(e) => setSelected(e.target.value)}
+        MenuProps={{ disableScrollLock: true }}
+      >
+        {map.challenges.map((challenge) => (
+          <MenuItem key={challenge.id} value={challenge.id}>
+            {getChallengeNameShort(challenge, true)}
+          </MenuItem>
+        ))}
+      </Select>
+    );
+  }
+  return (
+    <Stack direction="row" gap={1} flexWrap="wrap">
+      {map.challenges.map((challenge) => (
+        <Button
+          key={challenge.id}
+          onClick={() => setSelected(challenge.id)}
+          variant={selected === challenge.id ? "contained" : "outlined"}
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          {getChallengeNameShort(challenge, true)}
+        </Button>
+      ))}
+    </Stack>
   );
 }

@@ -111,8 +111,8 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
       });
     }, 50);
   });
-  const showMap = useCallback((id, isCampaign) => {
-    modalRefs.map.show.current.open({ id, isCampaign: isCampaign });
+  const showMap = useCallback((id, challengeId, isCampaign) => {
+    modalRefs.map.show.current.open({ id, challengeId, isCampaign });
   });
   const openEditChallenge = useCallback((id) => {
     modalRefs.challenge.edit.current.open({ id });
@@ -554,7 +554,13 @@ function TopGoldenListRow({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
-              onClick={() => showMap(map?.id ?? challenge.id, map === null || map === undefined)}
+              onClick={() =>
+                showMap(
+                  map?.id ?? challenge.id,
+                  map !== null ? challenge.id : null,
+                  map === null || map === undefined
+                )
+              }
             >
               {overflowActive ? (
                 <Tooltip title={name} arrow placement="top">
@@ -870,7 +876,7 @@ function ModalContainer({ modalRefs }) {
         ) : showMapModal.data?.isCampaign ? (
           <ChallengeDisplay id={showMapModal.data.id} />
         ) : (
-          <MapDisplay id={showMapModal.data.id} />
+          <MapDisplay id={showMapModal.data.id} challengeId={showMapModal.data.challengeId} isModal />
         )}
       </CustomModal>
 

@@ -842,7 +842,8 @@
   },
   "map": {
     "buttons": {
-      "edit": "Map Bearbeiten"
+      "edit": "Map Bearbeiten",
+      "view_challenge": "Challenge Ansehen"
     }
   },
   "player": {

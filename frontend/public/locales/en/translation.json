@@ -845,7 +845,8 @@
   },
   "map": {
     "buttons": {
-      "edit": "Edit Map"
+      "edit": "Edit Map",
+      "view_challenge": "View Challenge"
     }
   },
   "player": {

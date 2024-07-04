@@ -224,7 +224,7 @@ const router = createBrowserRouter([
       { path: "player/:id/:tab?", element: <PagePlayer /> },
       { path: "submission/:id", element: <PageSubmission /> },
       { path: "challenge/:id", element: <PageChallenge /> },
-      { path: "map/:id", element: <PageMap /> },
+      { path: "map/:id/:challengeId?", element: <PageMap /> },
       { path: "campaign/:id/:tab?", element: <PageCampaign /> },
 
       { path: "search/:q?", element: <PageSearch /> },
@@ -365,7 +365,7 @@ export function AuthWrapper({ children }) {
 function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirect, children }) {
   const auth = useAuth();
   if (auth.user === null) {
-    return <Navigate to={"/login/" + encodeURIComponent(redirect)} />;
+    return <Navigate to={"/login/" + encodeURIComponent(redirect)} replace />;
   }
   if (needsPlayerClaimed && auth.user.player === null) {
     return <PageNoPlayerClaimed />;
