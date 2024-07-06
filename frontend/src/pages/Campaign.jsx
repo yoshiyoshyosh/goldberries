@@ -1,8 +1,9 @@
-import { Link, useParams } from "react-router-dom";
-import { getQueryData, useGetCampaignView } from "../hooks/useApi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getQueryData, useGetCampaign, useGetCampaignView, useGetCampaignViewPlayer } from "../hooks/useApi";
 import {
   BasicBox,
   BasicContainerBox,
+  BorderedBox,
   ErrorDisplay,
   HeadTitle,
   InfoBox,
@@ -27,29 +28,48 @@ import {
   ListSubheader,
   Paper,
   Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faExternalLink, faLink, faListDots, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faCheckCircle,
+  faExternalLink,
+  faLink,
+  faListDots,
+  faUser,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
 import { useEffect, useState } from "react";
-import { getCampaignName, getGamebananaEmbedUrl, getMapLobbyInfo } from "../util/data_util";
+import {
+  getCampaignName,
+  getChallengeNameShort,
+  getGamebananaEmbedUrl,
+  getMapLobbyInfo,
+  getMapName,
+} from "../util/data_util";
 import { getNewDifficultyColors } from "../util/constants";
 import { useLocalStorage } from "../hooks/useStorage";
 import { Changelog } from "../components/Changelog";
 import {
   CampaignIcon,
   ChallengeFcIcon,
+  DifficultyChip,
   GamebananaEmbed,
   PlayerChip,
   PlayerLink,
+  SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -80,6 +100,15 @@ const STYLE_CONSTS = {
 
 export function PageCampaign() {
   const { id, tab } = useParams();
+  const navigate = useNavigate();
+
+  const setTab = (newTab) => {
+    if (newTab === "players") {
+      navigate(`/campaign/${id}`, { replace: true });
+    } else {
+      navigate(`/campaign/${id}/${newTab}`, { replace: true });
+    }
+  };
 
   if (tab === "top-golden-list") {
     return <PageCampaignTopGoldenList id={id} />;
@@ -87,16 +116,15 @@ export function PageCampaign() {
 
   return (
     <BasicContainerBox maxWidth="md">
-      <CampaignDisplay id={parseInt(id)} tab={tab} />
+      <CampaignDisplay id={parseInt(id)} tab={tab ?? "players"} setTab={setTab} />
     </BasicContainerBox>
   );
 }
 
-export function CampaignDisplay({ id }) {
-  const [showArchived, setShowArchived] = useLocalStorage("campaign_filter_archived", false);
+export function CampaignDisplay({ id, tab, setTab = () => {} }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
-  const query = useGetCampaignView(id, showArchived);
+  const query = useGetCampaignView(id);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -107,6 +135,7 @@ export function CampaignDisplay({ id }) {
   const response = getQueryData(query);
   const { campaign, players } = response;
   const title = getCampaignName(campaign, t_g);
+  const hasFullGameChallenges = campaign.challenges.length > 0;
 
   return (
     <>
@@ -123,13 +152,28 @@ export function CampaignDisplay({ id }) {
 
       <CampaignDetailsList campaign={campaign} sx={{ mt: 0 }} />
 
-      <CampaignPlayerTable campaign={campaign} players={players} sx={{ mt: 2 }} />
+      <Divider sx={{ mt: 2 }} />
+
+      <Tabs variant="fullWidth" value={tab} onChange={(event, newTab) => setTab(newTab)} sx={{ mt: 0 }}>
+        <Tab label="Players" value="players" />
+        <Tab label="Maps" value="maps" />
+        {hasFullGameChallenges && <Tab label="Challenges" value="challenges" />}
+      </Tabs>
+      <Divider sx={{ my: 0 }} />
+
+      {tab === "players" && <CampaignPlayerTable campaign={campaign} players={players} sx={{ mt: 2 }} />}
+      {tab === "maps" && <CampaignMapList campaign={campaign} sx={{ mt: 2 }}></CampaignMapList>}
+      {tab === "challenges" && (
+        <CampaignChallengeList campaign={campaign} sx={{ mt: 2 }}></CampaignChallengeList>
+      )}
 
       <Divider sx={{ my: 2 }} />
       <Changelog type="campaign" id={id} />
     </>
   );
 }
+
+//#region Campaign Info
 
 export function CampaignDetailsList({ campaign, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "campaign" });
@@ -138,6 +182,10 @@ export function CampaignDetailsList({ campaign, ...props }) {
 
   const hasMajorSort = campaign.sort_major_name !== null;
   const hasMinorSort = campaign.sort_minor_name !== null;
+
+  const notArchivedMaps = campaign.maps.filter((map) => !map.is_archived);
+  const archivedMapsCount = campaign.maps.length - notArchivedMaps.length;
+  const archivedAddition = archivedMapsCount > 0 ? " (+ " + archivedMapsCount + " archived Map)" : "";
 
   return (
     <Grid container columnSpacing={1} rowSpacing={1} {...props}>
@@ -151,7 +199,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
         </InfoBox>
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faListDots} />} text={"Map Count"} />
-          <InfoBoxIconTextLine text={campaign.maps.length + " Maps"} isSecondary />
+          <InfoBoxIconTextLine text={notArchivedMaps.length + " Maps" + archivedAddition} isSecondary />
         </InfoBox>
         {hasMajorSort && (
           <SortInfoBox
@@ -192,6 +240,8 @@ export function CampaignDetailsList({ campaign, ...props }) {
   );
 }
 function SortInfoBox({ name, labels, colors }) {
+  const textShadow =
+    "black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px";
   return (
     <InfoBox>
       <InfoBoxIconTextLine text={name} />
@@ -199,7 +249,7 @@ function SortInfoBox({ name, labels, colors }) {
         text={
           <Stack direction="row" alignItems="center" columnGap={1} rowGap={0} flexWrap="wrap">
             {labels.map((label, index) => (
-              <Typography key={index} variant="body1" color={colors[index]}>
+              <Typography key={index} variant="body1" color={colors[index]} sx={{ textShadow }}>
                 {label}
               </Typography>
             ))}
@@ -211,6 +261,10 @@ function SortInfoBox({ name, labels, colors }) {
   );
 }
 
+//#endregion
+
+//#region Campaign Player Table
+
 export function CampaignPlayerTable({ campaign, players, ...props }) {
   const [showAll, setShowAll] = useState(false);
   const [actuallyShowAll, setActuallyShowAll] = useState(false);
@@ -221,36 +275,39 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
     }
   }, [showAll]);
 
-  const playersToShow = actuallyShowAll ? Object.values(players) : Object.values(players).slice(0, 100);
+  const reducedPlayerAmount = 100;
+  const playersToShow = actuallyShowAll
+    ? Object.values(players)
+    : Object.values(players).slice(0, reducedPlayerAmount);
   return (
     <TableContainer component={Paper} {...props}>
       <Table size="small">
         <TableHead>
-          <TableCell width={1} sx={{ px: 1 }}></TableCell>
-          <TableCell width={1} sx={{ px: 0 }}>
+          <TableCell width={1} sx={{ pl: 1 }}></TableCell>
+          <TableCell width={1} sx={{ pl: 1, pr: 0 }}>
             Player
           </TableCell>
-          {/* <TableCell width={1} sx={{ px: 0 }}></TableCell> */}
           <TableCell sx={{ pl: 0.5, pr: 1 }} colSpan={2}>
             Progress
           </TableCell>
+          <TableCell width={1} sx={{ pl: 0, pr: 1, display: { xs: "none", md: "table-cell" } }}></TableCell>
           <TableCell width={1} sx={{ px: 1 }}></TableCell>
         </TableHead>
         <TableBody>
           {playersToShow.map((player, index) => (
             <CampaignPlayerTableRow key={player.id} index={index} campaign={campaign} playerEntry={player} />
           ))}
-          {!actuallyShowAll && (
+          {!actuallyShowAll && players.length > reducedPlayerAmount && (
             <>
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={6} align="center">
                   <Typography variant="caption">
                     + {Object.values(players).length - playersToShow.length} more players
                   </Typography>
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={6} align="center">
                   {showAll ? (
                     <LoadingSpinner />
                   ) : (
@@ -268,51 +325,299 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
   );
 }
 function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
+  const {
+    palette: { campaignPage },
+  } = useTheme();
+  const [expanded, setExpanded] = useState(false);
   const { player, stats, last_submission, highest_lobby_sweep, highest_lobby_sweep_fcs } = playerEntry;
-  const mapsInCampaign = campaign.maps.length;
+  const mapsInCampaign = campaign.maps.filter((map) => !map.is_archived).length;
   const progressColor = stats.clears === mapsInCampaign ? "primary" : "success";
-  const backgroundColor = stats.clears === mapsInCampaign ? "#ffbf001a" : "transparent";
+  const backgroundColor = stats.clears === mapsInCampaign ? campaignPage.sweepBackground : "transparent";
+  const backgroundHover =
+    stats.clears === mapsInCampaign
+      ? campaignPage.sweepHightlightBackground
+      : campaignPage.highlightBackground;
   const sweepColor =
     campaign.sort_major_name !== null ? campaign.sort_major_colors[highest_lobby_sweep] ?? "white" : null;
   const borderLeft = sweepColor ? "20px solid " + sweepColor : "none";
+
+  const onClick = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <TableRow sx={{ backgroundColor }}>
-      <TableCell width={1} align="center" sx={{ px: 1, borderLeft }}>
-        #{index + 1}
-      </TableCell>
-      <TableCell
-        width={1}
-        sx={{
-          px: 0,
-          maxWidth: { xs: "120px", md: "150px" },
-          minWidth: { xs: "120px", md: "150px" },
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
+    <>
+      <TableRow
+        sx={{ backgroundColor, "&:hover": { backgroundColor: backgroundHover, cursor: "pointer" } }}
+        onClick={onClick}
       >
-        <PlayerLink player={player} />
-      </TableCell>
-      <TableCell width={1} align="center" sx={{ pl: 0.5, pr: 0 }}>
-        <Typography variant="caption">{((stats.clears / mapsInCampaign) * 100).toFixed(0)}%</Typography>
-      </TableCell>
-      <TableCell sx={{ pl: 1 }}>
-        <LinearProgress
-          variant="determinate"
-          color={progressColor}
-          value={(stats.clears / mapsInCampaign) * 100}
-          max={100}
-          sx={{ height: "6px", borderRadius: 1 }}
-        />
-      </TableCell>
-      <TableCell width={1} sx={{ px: 1 }}>
-        <Stack direction="row" gap={1} alignItems="center">
-          <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
-          <span>{stats.full_clears}</span>
-        </Stack>
-      </TableCell>
-    </TableRow>
+        <TableCell width={1} align="center" sx={{ pl: 1, pr: 0, borderLeft }}>
+          #{index + 1}
+        </TableCell>
+        <TableCell
+          width={1}
+          sx={{
+            pl: 1,
+            pr: 0,
+            maxWidth: { xs: "120px", md: "150px" },
+            minWidth: { xs: "120px", md: "150px" },
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          <PlayerLink player={player} />
+        </TableCell>
+        <TableCell width={1} align="center" sx={{ pl: 0.5, pr: 0 }}>
+          <Typography variant="caption">{((stats.clears / mapsInCampaign) * 100).toFixed(0)}%</Typography>
+        </TableCell>
+        <TableCell sx={{ pl: 1 }}>
+          <LinearProgress
+            variant="determinate"
+            color={progressColor}
+            value={(stats.clears / mapsInCampaign) * 100}
+            max={100}
+            sx={{ height: "6px", borderRadius: 1 }}
+          />
+        </TableCell>
+        <TableCell width={1} align="right" sx={{ pl: 0, pr: 1, display: { xs: "none", md: "table-cell" } }}>
+          <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
+            <span style={{ whiteSpace: "nowrap" }}>
+              {stats.clears} / {mapsInCampaign}
+            </span>
+          </Stack>
+        </TableCell>
+        <TableCell width={1} sx={{ px: 1 }}>
+          <Stack direction="row" gap={1} alignItems="center">
+            <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
+            <span>{stats.full_clears}</span>
+          </Stack>
+        </TableCell>
+      </TableRow>
+      {expanded && (
+        <TableRow>
+          <TableCell colSpan={6} sx={{ pb: 2 }}>
+            <CampaignPlayerTableRowExpanded player={player} campaign={campaign} />
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   );
 }
+
+function CampaignPlayerTableRowExpanded({ player, campaign }) {
+  const query = useGetCampaignViewPlayer(campaign.id, player.id);
+  const validMaps = campaign.maps.filter((map) => !map.is_archived);
+  const hasMajorSort = campaign.sort_major_name !== null;
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const mapData = getQueryData(query); //dictionary with map id => map object, map.challenges[0].submission[0] is the submission object
+
+  return (
+    <Stack direction="column" gap={1}>
+      {/* <Typography variant="h6">Player Details</Typography> */}
+      {hasMajorSort ? (
+        campaign.sort_major_labels.map((major, index) => {
+          const maps = campaign.maps.filter((map) => map.sort_major === index);
+          const countCompleted = maps.reduce((acc, map) => {
+            return acc + (mapData[map.id] !== undefined ? 1 : 0);
+          }, 0);
+          return (
+            <>
+              <Stack direction="row" gap={1} alignItems="center">
+                <Typography variant="h6">{major}</Typography>
+                <Typography variant="body1" color="text.secondary">
+                  ({countCompleted} / {maps.length})
+                </Typography>
+              </Stack>
+              <CampaignPlayerTableRowExpandedMapGroup
+                key={index}
+                majorSort={index}
+                maps={maps}
+                mapData={mapData}
+                campaign={campaign}
+              />
+            </>
+          );
+        })
+      ) : (
+        <CampaignPlayerTableRowExpandedMapGroup maps={validMaps} mapData={mapData} campaign={campaign} />
+      )}
+    </Stack>
+  );
+}
+function CampaignPlayerTableRowExpandedMapGroup({ maps, mapData, campaign }) {
+  const hasMajorSort = campaign.sort_major_name !== null;
+  const hasMinorSort = campaign.sort_minor_name !== null;
+  const borderLeft = hasMajorSort ? "10px solid " + campaign.sort_major_colors[maps[0].sort_major] : "none";
+  return (
+    <TableContainer component={Paper}>
+      <Table size="small">
+        <TableBody>
+          {maps.map((map) => {
+            const hasSubmission = mapData[map.id] !== undefined;
+            const submission = hasSubmission ? mapData[map.id].challenges[0].submissions[0] : null;
+            const borderRight = hasMinorSort
+              ? "15px solid " + campaign.sort_minor_colors[map.sort_minor]
+              : "none";
+            return (
+              <TableRow key={map.id}>
+                <TableCell sx={{ px: 2, borderLeft }}>
+                  <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
+                </TableCell>
+                <TableCell width={1} align="right" sx={{ px: 2, borderRight }}>
+                  <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
+                    {hasSubmission ? (
+                      <>
+                        <SubmissionFcIcon submission={submission} />
+                        <StyledLink to={"/submission/" + submission.id}>
+                          <FontAwesomeIcon icon={faBook} />
+                        </StyledLink>
+                        <FontAwesomeIcon icon={faCheckCircle} color="green" />
+                      </>
+                    ) : (
+                      <FontAwesomeIcon icon={faXmark} color="red" />
+                    )}
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+//#endregion
+
+//#region Campaign Map List
+
+export function CampaignMapList({ campaign, ...props }) {
+  const hasMajorSort = campaign.sort_major_name !== null;
+
+  if (hasMajorSort) {
+    return campaign.sort_major_labels.map((major, index) => {
+      const maps = campaign.maps.filter((map) => map.sort_major === index);
+      return (
+        <CampaignMapListMajorGroup key={index} majorSort={index} maps={maps} campaign={campaign} {...props} />
+      );
+    });
+  }
+
+  return <CampaignMapListBasic maps={campaign.maps} campaign={campaign} {...props} />;
+}
+
+function CampaignMapListMajorGroup({ maps, campaign, majorSort, sx = {}, ...props }) {
+  const mapCount = maps.length;
+  return (
+    <Grid container sx={sx} columnSpacing={1} {...props}>
+      <Grid item xs="auto">
+        <Box sx={{ background: campaign.sort_major_colors[majorSort], height: "100%", width: "10px" }}></Box>
+      </Grid>
+      <Grid item xs>
+        <Stack direction="column" gap={1}>
+          <Stack direction="row" gap={1} alignItems="center">
+            <Typography variant="h4">{campaign.sort_major_labels[majorSort]}</Typography>
+            <Typography variant="body1" color="text.secondary">
+              ({mapCount} Maps)
+            </Typography>
+          </Stack>
+          <CampaignMapListBasic maps={maps} campaign={campaign} />
+        </Stack>
+      </Grid>
+    </Grid>
+  );
+}
+function CampaignMapListBasic({ maps, campaign, sx = {}, ...props }) {
+  return (
+    <Stack direction="column" gap={1} sx={sx} {...props}>
+      {maps.map((map) => (
+        <CampaignMapListMapEntry key={map.id} map={map} campaign={campaign} />
+      ))}
+    </Stack>
+  );
+}
+function CampaignMapListMapEntry({ map, campaign, sx = {}, ...props }) {
+  const { settings } = useAppSettings();
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const useTextFcIcons = settings.visual.topGoldenList.useTextFcIcons;
+  const hasMinorSort = campaign.sort_minor_name !== null;
+  const sortColor = hasMinorSort ? campaign.sort_minor_colors[map.sort_minor] : null;
+  const textShadow =
+    "black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px, black 0px 0px 1px";
+  return (
+    <BorderedBox sx={{ p: 1, borderRadius: 1, ...sx }} {...props}>
+      <Stack direction="row" gap={1} alignItems="center">
+        <Stack direction="column" gap={0.25}>
+          <StyledLink to={"/map/" + map.id}>
+            <Typography variant="h6">{getMapName(map, campaign)}</Typography>
+          </StyledLink>
+          <Stack direction="column" gap={0.5} sx={{ pl: 2 }}>
+            {map.challenges.map((challenge) => (
+              <Stack direction="row" gap={2} alignItems="center">
+                <StyledLink to={"/challenge/" + challenge.id} key={challenge.id}>
+                  <Stack direction="row" gap={1} alignItems="center">
+                    {getChallengeNameShort(
+                      challenge,
+                      true,
+                      isMdScreen ? true : useTextFcIcons ? true : false
+                    )}
+                    <ChallengeFcIcon
+                      challenge={challenge}
+                      style={{ display: isMdScreen ? "block" : useTextFcIcons ? "none" : "block" }}
+                    />
+                  </Stack>
+                </StyledLink>
+                <DifficultyChip difficulty={challenge.difficulty} />
+              </Stack>
+            ))}
+          </Stack>
+        </Stack>
+        {hasMinorSort && (
+          <Typography variant="body1" sx={{ ml: "auto", color: sortColor, textShadow }}>
+            {campaign.sort_minor_labels[map.sort_minor]}
+          </Typography>
+        )}
+      </Stack>
+    </BorderedBox>
+  );
+}
+
+//#endregion
+
+//#region Campaign Challenge List
+
+function CampaignChallengeList({ campaign, ...props }) {
+  return (
+    <Stack direction="column" gap={1} {...props}>
+      {campaign.challenges.map((challenge) => (
+        <CampaignChallengeEntry key={challenge.id} challenge={challenge} campaign={campaign} />
+      ))}
+    </Stack>
+  );
+}
+function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+  return (
+    <BorderedBox sx={{ p: 1, borderRadius: 1, ...sx }} {...props}>
+      <Stack direction="column" gap={0.25}>
+        <StyledLink to={"/challenge/" + challenge.id}>
+          <Typography variant="h6">{getChallengeNameShort(challenge, true, true)}</Typography>
+        </StyledLink>
+        {challenge.description && <Typography variant="body1">{challenge.description}</Typography>}
+      </Stack>
+    </BorderedBox>
+  );
+}
+
+//#endregion
 
 //#region Old Campaign Table View
 

@@ -166,7 +166,9 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
               <TableCell align="left">{t_g("campaign", { count: 1 })}</TableCell>
               <TableCell align="left">{t_g("map", { count: 1 })}</TableCell>
               <TableCell align="left">{t_g("challenge", { count: 1 })}</TableCell>
-              <TableCell align="center">{t("num_sub")}</TableCell>
+              <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                {t("num_sub")}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -228,7 +230,9 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
               <TableCell align="left">{t_g("campaign", { count: 1 })}</TableCell>
               <TableCell align="left">{t_g("map", { count: 1 })}</TableCell>
               <TableCell align="left">{t_g("challenge", { count: 1 })}</TableCell>
-              <TableCell align="center">{t("num_sub")}</TableCell>
+              <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                {t("num_sub")}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

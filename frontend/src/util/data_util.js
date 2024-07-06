@@ -46,16 +46,16 @@ export function getChallengeSuffix(challenge) {
   return null;
 }
 
-export function getChallengeNameShort(challenge, withSuffix = false) {
+export function getChallengeNameShort(challenge, withSuffix = false, includeFc = true) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
   const challengeSuffix =
     withSuffix && getChallengeSuffix(challenge) !== null ? " [" + getChallengeSuffix(challenge) + "]" : "";
+  const cfcSuffix = includeFc ? " " + getChallengeFcShort(challenge) : "";
   return (
     oldPrefix +
     challenge.objective.name +
-    " " +
-    getChallengeFcShort(challenge) +
+    cfcSuffix +
     getChallengeObjectiveSuffix(challenge) +
     challengeSuffix
   );

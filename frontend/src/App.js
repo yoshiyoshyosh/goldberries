@@ -242,16 +242,6 @@ const router = createBrowserRouter([
 ]);
 
 export const lightTheme = createTheme({
-  // typography: {
-  //   fontFamily: [
-  //     // "Renogare",
-  //     "Roboto",
-  //     "Arial",
-  //     "Droid Sans",
-  //     "Helvetica Neue",
-  //     "sans-serif",
-  //   ].join(","),
-  // },
   palette: {
     mode: "light",
     contrastThreshold: 4.5,
@@ -268,8 +258,13 @@ export const lightTheme = createTheme({
       border: "#cccccc99",
       hover: "#f0f0f0",
     },
-    infoBox: "rgba(215, 215, 215, 0.77)",
+    infoBox: "rgba(205, 205, 205, 0.77)",
     errorBackground: "rgba(255,215,215,0.75)",
+    campaignPage: {
+      sweepBackground: "rgba(255,191,0,0.1)",
+      highlightBackground: "rgba(0,0,0,0.1)",
+      sweepHightlightBackground: "rgba(255,191,0,0.2)",
+    },
   },
   components: {
     MuiContainer: {
@@ -283,15 +278,6 @@ export const lightTheme = createTheme({
   },
 });
 const darkTheme = createTheme({
-  // typography: {
-  //   fontFamily: [
-  //     // '"Renogare"',
-  //     '"Roboto"',
-  //     '"Helvetica"',
-  //     '"Arial"',
-  //     "sans-serif",
-  //   ].join(","),
-  // },
   palette: {
     mode: "dark",
     links: {
@@ -309,6 +295,11 @@ const darkTheme = createTheme({
     },
     infoBox: "rgba(40, 40, 40, 0.77)",
     errorBackground: "rgba(40,0,0,0.5)",
+    campaignPage: {
+      sweepBackground: "rgba(255,191,0,0.1)",
+      highlightBackground: "rgba(255,255,255,0.1)",
+      sweepHightlightBackground: "rgba(255,191,0,0.2)",
+    },
   },
   components: {
     MuiContainer: {

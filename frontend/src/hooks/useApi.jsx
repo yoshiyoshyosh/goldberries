@@ -130,10 +130,10 @@ export function useGetPlayerStats(id) {
   });
 }
 
-export function useGetCampaign(id) {
+export function useGetCampaign(id, maps = true, challenges = true, submission = true) {
   return useQuery({
-    queryKey: ["campaign", id],
-    queryFn: () => fetchCampaign(id),
+    queryKey: ["campaign", id, maps, challenges, submission],
+    queryFn: () => fetchCampaign(id, maps, challenges, submission),
     onError: errorToast,
   });
 }

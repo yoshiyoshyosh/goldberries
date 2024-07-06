@@ -197,7 +197,7 @@ export function PageRegister() {
 }
 
 export function PageVerifyEmail() {
-  const { t } = useTranslation(undefined, { keyPrefix: "login.veriy_email" });
+  const { t } = useTranslation(undefined, { keyPrefix: "login.verify_email" });
   const auth = useAuth();
   const { verify } = useParams();
   const [postSubmit, setPostSubmit] = useState(false);
