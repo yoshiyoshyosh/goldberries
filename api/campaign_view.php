@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     $campaign_view = parse_campaign_view($result);
+    $campaign_view["campaign"]->fetch_maps($DB, true);
+    $campaign_view["campaign"]->fetch_challenges($DB, false, true);
     api_write($campaign_view);
   }
 }

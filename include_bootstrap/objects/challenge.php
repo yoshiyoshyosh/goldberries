@@ -21,8 +21,8 @@ class Challenge extends DbObject
   // Linked Objects
   public ?Campaign $campaign = null;
   public ?Map $map = null;
-  public ?Objective $objective;
-  public ?Difficulty $difficulty;
+  public ?Objective $objective = null;
+  public ?Difficulty $difficulty = null;
 
   // Associative Objects
   public ?array $submissions = null; /* Submission[] */
@@ -214,14 +214,17 @@ class Challenge extends DbObject
     return true;
   }
 
-  function get_suffix(): string
+  function get_suffix(): ?string
   {
-    if ($this->label !== null)
+    if ($this->label !== null) {
       return $this->label;
-    else if ($this->objective->display_name_suffix !== null)
-      return $this->objective->display_name_suffix;
-    else
-      return null;
+    } else if ($this->objective !== null) {
+      if ($this->objective->display_name_suffix !== null) {
+        return $this->objective->display_name_suffix;
+      }
+    }
+
+    return null;
   }
 
   function get_name(): string

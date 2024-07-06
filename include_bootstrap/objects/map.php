@@ -100,7 +100,7 @@ class Map extends DbObject
   function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true): bool
   {
     $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
-    $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition);
+    $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, id ASC");
     if ($challenges === false)
       return false;
     $this->challenges = $challenges;
