@@ -279,6 +279,13 @@ function parse_campaign_view($result)
     //Check the remaining points
     if ($a["stats"]["clears"] === $b["stats"]["clears"]) {
       if ($a["stats"]["full_clears"] === $b["stats"]["full_clears"]) {
+        //If either of the last submissions is null, we want to put the player with the null submission at the bottom
+        if ($a["last_submission"] === null) {
+          return 1;
+        }
+        if ($b["last_submission"] === null) {
+          return -1;
+        }
         return $a["last_submission"]->diff($b["last_submission"]);
       }
       return $b["stats"]["full_clears"] - $a["stats"]["full_clears"];
