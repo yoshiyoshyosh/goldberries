@@ -41,7 +41,7 @@ import {
   TooltipInfoButton,
 } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronLeft, faInfoCircle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import {
   CampaignSelect,
   MapSelect,
@@ -374,6 +374,7 @@ export function MultiUserSubmission() {
   const [sortMajorIndex, setSortMajorIndex] = useState(null);
   const [sortMinorIndex, setSortMinorIndex] = useState(null);
   const [preferFc, setPreferFc] = useState(false);
+  const [multiVideo, setMultiVideo] = useState(false);
   const [mapDataList, setMapDataList] = useState([]); // [{map: map, challenge: challenge, is_fc: false, player_notes: "", suggested_difficulty_id: null}]
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
 
@@ -409,7 +410,7 @@ export function MultiUserSubmission() {
         player_notes: mapData.player_notes,
         raw_session_url: mapData.raw_session_url,
         suggested_difficulty_id: mapData.suggested_difficulty_id,
-        proof_url: data.proof_url,
+        proof_url: mapData.proof_url ?? data.proof_url,
       })
         .then(() => {
           toast.update(toastId, {
@@ -479,6 +480,7 @@ export function MultiUserSubmission() {
           is_fc: challenge.requires_fc || (preferFc && challenge.has_fc),
           player_notes: "",
           raw_session_url: "",
+          proof_url: "",
           suggested_difficulty_id: null,
         });
       });
@@ -516,7 +518,9 @@ export function MultiUserSubmission() {
   const hasSortMajor = campaign !== null && campaign.sort_major_name !== null;
   const hasSortMinor = campaign !== null && campaign.sort_minor_name !== null;
 
-  let submittable = campaign !== null && mapDataList.length > 0;
+  let hasAllIndividualVideos = mapDataList.every((mapData) => mapData.proof_url !== "");
+  let submittable =
+    campaign !== null && mapDataList.length > 0 && (form.watch("proof_url") !== "" || hasAllIndividualVideos);
   let rawSessionsGood = true;
   mapDataList.forEach((mapData) => {
     if (mapData.challenge && mapData.challenge.difficulty.id <= 13 && mapData.raw_session_url === "") {
@@ -585,12 +589,25 @@ export function MultiUserSubmission() {
           </TextField>
         </>
       )}
-      <FormControlLabel
-        control={<Checkbox />}
-        label={t("prefer_fc")}
-        checked={preferFc}
-        onChange={(e, v) => setPreferFc(v)}
-      />
+      <Stack direction="row" alignItems="center" gap={1}>
+        <FormControlLabel
+          control={<Checkbox />}
+          label={t("prefer_fc")}
+          checked={preferFc}
+          onChange={(e, v) => setPreferFc(v)}
+        />
+        <Stack direction="row" alignItems="center" gap={0}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label={t("multi_video.label")}
+            checked={multiVideo}
+            onChange={(e, v) => setMultiVideo(v)}
+          />
+          <Tooltip title={t("multi_video.tooltip")}>
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </Tooltip>
+        </Stack>
+      </Stack>
       {campaign !== null && (
         <>
           <Divider sx={{ my: 3 }} />
@@ -614,6 +631,7 @@ export function MultiUserSubmission() {
                       index={index}
                       updateMapDataRow={updateMapDataRow}
                       deleteRow={deleteRow}
+                      multiVideo={multiVideo}
                     />
                   );
                 })}
@@ -640,10 +658,11 @@ export function MultiUserSubmission() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label={t_fs("proof_url") + " *"}
+              label={t_fs("proof_url") + (hasAllIndividualVideos ? "" : " *")}
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
+              {...form.register("proof_url")}
               error={errors.proof_url}
+              disabled={hasAllIndividualVideos}
               helperText={errors.proof_url?.message}
             />
             <FormHelperText>{t_ts("proof_note")}</FormHelperText>
@@ -830,12 +849,24 @@ export function NewChallengeUserSubmission({}) {
 
 /* COMPONENTS */
 
-export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, deleteRow }) {
+export function MultiUserSubmissionMapRow({
+  mapData,
+  multiVideo = false,
+  index,
+  updateMapDataRow,
+  deleteRow,
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.multi" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
-  const [expanded, setExpanded] = useState(mapData.challenge?.difficulty.id <= 13 ? true : false);
+  const [expanded, setExpanded] = useState(
+    mapData.challenge?.difficulty.id <= 13 ? true : false || multiVideo
+  );
+
+  useEffect(() => {
+    if (multiVideo) setExpanded(true);
+  }, [multiVideo]);
 
   const lobbyInfo = getMapLobbyInfo(mapData.map);
   const color = lobbyInfo?.major ? lobbyInfo?.major?.color : lobbyInfo?.minor?.color ?? "inherit";
@@ -897,6 +928,24 @@ export function MultiUserSubmissionMapRow({ mapData, index, updateMapDataRow, de
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <Table size="small">
               <TableBody>
+                {multiVideo && (
+                  <TableRow
+                    sx={{
+                      "& > *": {
+                        borderBottom: "unset",
+                      },
+                    }}
+                  >
+                    <TableCell colSpan={7}>
+                      <TextField
+                        label={t_fs("proof_url")}
+                        value={mapData.proof_url}
+                        onChange={(e) => updateMapDataRow(index, { ...mapData, proof_url: e.target.value })}
+                        fullWidth
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
                 <TableRow
                   sx={{
                     "& > *": {
@@ -972,6 +1021,8 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
     prevProps.mapData.player_notes === newProps.mapData.player_notes &&
     prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
     prevProps.mapData.raw_session_url === newProps.mapData.raw_session_url &&
+    prevProps.mapData.proof_url === newProps.mapData.proof_url &&
+    prevProps.multiVideo === newProps.multiVideo &&
     prevProps.index === newProps.index;
 
   // console.log("ListItem propsEqual:", propsEqual);
