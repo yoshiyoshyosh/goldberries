@@ -26,7 +26,14 @@ import { useEffect, useState } from "react";
 import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faMoneyBill1Wave, faScroll, faWrench } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMoneyBill1Wave,
+  faQuestion,
+  faQuestionCircle,
+  faScaleBalanced,
+  faScroll,
+  faWrench,
+} from "@fortawesome/free-solid-svg-icons";
 import Markdown from "react-markdown";
 import { useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
@@ -132,6 +139,12 @@ export function UsefulLinksComponent() {
       <Typography variant="h6">Useful Links</Typography>
       <ul style={{ listStyleType: "none" }}>
         <li>
+          <FontAwesomeIcon icon={faScaleBalanced} /> <StyledLink to="/rules">Rules</StyledLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faQuestion} /> <StyledLink to="/faq">Frequently Asked Questions</StyledLink>
+        </li>
+        <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
           <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
             Celeste's Discord
@@ -166,12 +179,6 @@ export function UsefulLinksComponent() {
         <li>
           <FontAwesomeIcon icon={faMoneyBill1Wave} />{" "}
           <StyledLink to="/server-costs">Overview of Server Costs</StyledLink>
-        </li>
-        <li>
-          <FontAwesomeIcon icon={faWrench} />{" "}
-          <Typography variant="body1" display="inline">
-            Testing translation: {t("hello_world")}
-          </Typography>
         </li>
       </ul>
     </>

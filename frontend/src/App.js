@@ -122,6 +122,8 @@ import {
 import { PageMonthlyRecap } from "./pages/Stats";
 import { PageServerCosts } from "./pages/ServerCosts";
 import { useTranslation } from "react-i18next";
+import { PageRules } from "./pages/Rules";
+import { PageFAQ } from "./pages/FAQ";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -230,6 +232,9 @@ const router = createBrowserRouter([
       { path: "search/:q?", element: <PageSearch /> },
       { path: "suggestions/:id?", element: <PageSuggestions /> },
       { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
+
+      { path: "rules", element: <PageRules /> },
+      { path: "faq", element: <PageFAQ /> },
 
       { path: "settings/:tab?", element: <PageAppSettings /> },
 

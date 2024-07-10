@@ -949,6 +949,10 @@
         "select_campaign": "Wähle eine Campaign",
         "all": "Alle",
         "prefer_fc": "Bevorzuge Full Clear",
+        "multi_video": {
+          "label": "Benutze mehrere Videos",
+          "tooltip": "Kreuze dies an, wenn du mehrere Videos für diese Campaign hast. Wenn du keine URL für eine Map festlegst, wird die Compilation Video URL genommen."
+        },
         "is_fc": "Ist FC",
         "compilation_video": "Compilation-Video",
         "remove_map": "Map Entfernen",
@@ -1059,6 +1063,26 @@
       "fc": "Golden Clear mit allen optionalen Collectibles (Erdbeeren, Kassetten, etc)",
       "c_fc": "Regular Clear und Full Clear haben die selbe Schwierigkeit",
       "new_old": "Neue und Alte Version einer Map"
+    }
+  },
+  "campaign": {
+    "info_boxes": {
+      "author": "Autor",
+      "map_count": "Anzahl Maps",
+      "maps_one": "{{count}} Map",
+      "maps_other": "{{count}} Maps",
+      "maps_archived_one": "{{count}} Map (+{{archived}} archiviert)",
+      "maps_archived_other": "{{count}} Maps (+{{archived}} archiviert)",
+      "links": "Links",
+      "campaign_tgl": "Campaign Top Golden Liste"
+    },
+    "tabs": {
+      "players": {
+        "progress": "Fortschritt",
+        "more_players_one": "+ {{count}} weiterer Player",
+        "more_players_other": "+ {{count}} weitere Players",
+        "show_all": "Alle Anzeigen"
+      }
     }
   }
 }
