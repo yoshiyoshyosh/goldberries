@@ -1182,7 +1182,7 @@
     },
     "3": {
       "question": "Why are some maps easier than rule requirements?",
-      "answer": "Some maps that are not satisfying the difficulty criteria may be added for various reasons, at the discretion of the Modded Golden Team. For example, if a map is less than 3 screens but is a part of a collab with all other maps satisfying the criteria."
+      "answer": "Some maps that are not satisfying the difficulty criteria may be added for various reasons, at the discretion of the Modded Golden Team. For example, if a map is less than 2 screens but is a part of a collab with all other maps satisfying the criteria."
     },
     "4": {
       "question": "Are demodash buttons/multiple jump binds allowed?",
@@ -1205,10 +1205,6 @@
       "answer": "Some maps have collectibles which are not optional, such as strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side."
     },
     "9": {
-      "question": "Why do some map names include [Full Clear]?",
-      "answer": "This means that a Full Clear is required to be entered into the list, and a normal clear will be rejected. There's a note attached to each of these maps that explains exactly what is needed in the run and why. These extra requirements are added either because a map is too easy to be on the Standard List without them (Cheyenne, Aibohphobia), or because the extra challenge means it should be on the Hard List (Hakoniwa Adventure, X-Side). "
-    },
-    "10": {
       "question": "What is the Top Golden List Rankings?",
       "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
     }

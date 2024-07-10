@@ -1,5 +1,6 @@
 import {
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +12,8 @@ import {
 import { BasicContainerBox, HeadTitle, StyledExternalLink, StyledLink } from "../components/BasicComponents";
 import { Trans, useTranslation } from "react-i18next";
 import { NewRules } from "../util/other_data";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export function PageRules() {
   const { t } = useTranslation(undefined, { keyPrefix: "rules" });
@@ -29,9 +32,15 @@ function RulesList() {
 
   return (
     <>
-      <Typography variant="h3" gutterBottom>
-        {t("title")}
-      </Typography>
+      <Stack direction="row">
+        <Typography variant="h3" gutterBottom>
+          {t("title")}
+        </Typography>
+        <StyledLink to="/faq" style={{ marginLeft: "auto" }}>
+          <FontAwesomeIcon icon={faArrowRight} style={{ marginRight: "4px" }} />
+          FAQ
+        </StyledLink>
+      </Stack>
       {Object.keys(allRules).map((key) => (
         <RulesSection key={key} sectionKey={key} section={allRules[key]} />
       ))}

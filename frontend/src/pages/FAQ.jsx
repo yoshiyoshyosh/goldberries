@@ -1,9 +1,9 @@
-import { Paper, Typography } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 import { BasicContainerBox, HeadTitle, StyledLink } from "../components/BasicComponents";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export function PageFAQ() {
   const { t } = useTranslation(undefined, { keyPrefix: "faq" });
@@ -19,13 +19,19 @@ export function PageFAQ() {
 function FAQList() {
   const { t } = useTranslation(undefined, { keyPrefix: "faq" });
 
-  const entryCount = 11;
+  const entryCount = 10;
 
   return (
     <>
-      <Typography variant="h3" gutterBottom>
-        {t("title")}
-      </Typography>
+      <Stack direction="row">
+        <Typography variant="h3" gutterBottom>
+          {t("title")}
+        </Typography>
+        <StyledLink to="/rules" style={{ marginLeft: "auto" }}>
+          <FontAwesomeIcon icon={faArrowRight} style={{ marginRight: "4px" }} />
+          Rules
+        </StyledLink>
+      </Stack>
       {Array.from({ length: entryCount }, (_, index) => (
         <FAQEntry key={index} index={index} />
       ))}
