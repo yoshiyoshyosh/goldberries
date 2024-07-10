@@ -1,20 +1,20 @@
 import { Box, Checkbox, FormControlLabel, Grid, Stack, Typography } from "@mui/material";
 import { TopGoldenList } from "../components/TopGoldenList";
 import { useParams } from "react-router-dom";
-import { useLocalStorage } from "../hooks/useStorage";
 import { BasicBox, HeadTitle } from "../components/BasicComponents";
 import { ChallengeFcIcon } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useTranslation } from "react-i18next";
+import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageTopGoldenList({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "top_golden_list" });
   const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const { type, id } = useParams();
-  const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
-  const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
   const theme = useTheme();
 
   const title = t("title");
@@ -30,23 +30,12 @@ export function PageTopGoldenList({}) {
     >
       <HeadTitle title={title} />
       <Grid container spacing={1} sx={{ mb: 1 }}>
-        <Grid item xs={12} sm="auto">
+        <Grid item xs={12} sm="auto" display="flex" flexDirection="row" alignItems="center">
           <BasicBox sx={{ height: "fit-content" }}>
-            <Typography variant="h4">{title}</Typography>
-            <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />
-                }
-                label={t_gl("show_archived")}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
-                }
-                label={t_gl("show_arbitrary")}
-              />
-            </Stack>
+            <Typography variant="h4" gutterBottom>
+              {title}
+            </Typography>
+            <SubmissionFilter type={type} id={id} filter={filter} setFilter={setFilter} />
           </BasicBox>
         </Grid>
         <Grid item xs={12} sm="auto">
@@ -83,7 +72,7 @@ export function PageTopGoldenList({}) {
           </BasicBox>
         </Grid>
       </Grid>
-      <TopGoldenList type={type} id={id} archived={showArchived} arbitrary={showArbitrary} isOverallList />
+      <TopGoldenList type={type} id={id} filter={filter} isOverallList />
     </Box>
   );
 }

@@ -50,7 +50,14 @@ import { MapDisplay } from "../pages/Map";
 import Color from "color";
 import { useTranslation } from "react-i18next";
 
-export function TopGoldenList({ type, id, archived = false, arbitrary = false, isOverallList = false }) {
+export function TopGoldenList({ type, id, filter, isOverallList = false }) {
+  return (
+    <Stack direction="column" gap={1}>
+      <TopGoldenListComponent type={type} id={id} filter={filter} isOverallList={isOverallList} />
+    </Stack>
+  );
+}
+function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const { settings } = useAppSettings();
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
@@ -61,16 +68,17 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
     "" +
     type +
     id +
-    archived +
-    arbitrary +
+    filter.archived +
+    filter.arbitrary +
+    filter.hide_objectives.join(",") +
     settings.visual.topGoldenList.showCampaignIcons +
     settings.visual.topGoldenList.darkenTierColors +
     settings.visual.topGoldenList.useTextFcIcons;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
 
   const query = useQuery({
-    queryKey: ["top_golden_list", type, id, archived, arbitrary],
-    queryFn: () => fetchTopGoldenList(type, id, archived, arbitrary),
+    queryKey: ["top_golden_list", type, id, filter],
+    queryFn: () => fetchTopGoldenList(type, id, filter),
   });
 
   // Reset the render up to index when the key changes
@@ -79,8 +87,9 @@ export function TopGoldenList({ type, id, archived = false, arbitrary = false, i
   }, [
     type,
     id,
-    archived,
-    arbitrary,
+    filter.archived,
+    filter.arbitrary,
+    filter.hide_objectives,
     settings.visual.topGoldenList.showCampaignIcons,
     settings.visual.topGoldenList.darkenTierColors,
     settings.visual.topGoldenList.useTextFcIcons,

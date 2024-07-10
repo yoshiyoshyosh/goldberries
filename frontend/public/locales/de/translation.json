@@ -118,6 +118,14 @@
       "add_link": "Link Hinzufügen",
       "remove_link": "Entfernen",
       "invalid_url": "Ungülte URL"
+    },
+    "submission_filter": {
+      "label": "Submission Filter",
+      "additional_filters": "Weitere Filter",
+      "show_archived": "Zeige Archivierte Maps",
+      "show_arbitrary": "Zeige Willkürliche Challenges",
+      "categories_hidden_one": "{{count}} Kategorie Versteckt",
+      "categories_hidden_other": "{{count}} Kategorien Versteckt"
     }
   },
   "forms": {

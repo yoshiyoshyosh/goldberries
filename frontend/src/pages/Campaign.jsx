@@ -57,6 +57,8 @@ import {
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
 
 const STYLE_CONSTS = {
   player: {
@@ -616,6 +618,7 @@ function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
 
 export function PageCampaignTopGoldenList({ id }) {
   const query = useGetCampaignView(id);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
 
   if (query.isLoading) {
     return (
@@ -639,8 +642,9 @@ export function PageCampaignTopGoldenList({ id }) {
         <Typography variant="h4">
           Top Golden List: <StyledLink to={`/campaign/${id}`}>{response.campaign.name}</StyledLink>
         </Typography>
+        <SubmissionFilter type="campaign" id={id} filter={filter} setFilter={setFilter} />
       </BasicBox>
-      <TopGoldenList type="campaign" id={id} arbitrary archived />
+      <TopGoldenList type="campaign" id={id} filter={filter} />
     </Box>
   );
 }

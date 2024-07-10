@@ -30,10 +30,11 @@ export function fetchGoldenList(
   return axios.get("/golden-list.php", { params: data });
 }
 
-export function fetchTopGoldenList(type, id = null, archived = false, arbitrary = false) {
+export function fetchTopGoldenList(type, id = null, filter) {
   const data = {
-    archived: archived,
-    arbitrary: arbitrary,
+    archived: filter.archived,
+    arbitrary: filter.arbitrary,
+    hide_objectives: filter.hide_objectives,
   };
 
   let endpoint = "/top-golden-list.php";
@@ -92,11 +93,21 @@ export function fetchAllChallengesInCampaign(campaignId) {
   });
 }
 
+export function fetchObjectiveSubmissionCount(type = null, id = null) {
+  const params = {
+    submission_count: true,
+  };
+  if (type !== null) {
+    params.type = type;
+    params.id = id;
+  }
+  return axios.get("/objective.php", { params: params });
+}
 export function fetchAllObjectives() {
-  return axios.get("/objective.php?id=all");
+  return axios.get("/objective.php", { params: { id: "all" } });
 }
 export function fetchAllDifficulties() {
-  return axios.get("/difficulty.php?id=all");
+  return axios.get("/difficulty.php", { params: { id: "all" } });
 }
 
 export function fetchAllPlayerClaims() {

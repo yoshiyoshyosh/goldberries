@@ -56,6 +56,8 @@ import {
   postChallengeSplit,
   postChallengeMarkPersonal,
   fetchCampaignViewPlayer,
+  fetchAllObjectives,
+  fetchObjectiveSubmissionCount,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -223,6 +225,21 @@ export function useGetVerifierList() {
   return useQuery({
     queryKey: ["player_list", "verifier"],
     queryFn: () => fetchPlayerList("verifier"),
+    onError: errorToast,
+  });
+}
+
+export function useGetObjectives() {
+  return useQuery({
+    queryKey: ["objectives"],
+    queryFn: () => fetchAllObjectives(),
+    onError: errorToast,
+  });
+}
+export function useGetObjectiveSubmissionCount(type = null, id = null) {
+  return useQuery({
+    queryKey: ["objective_sub_count", type, id],
+    queryFn: () => fetchObjectiveSubmissionCount(type, id),
     onError: errorToast,
   });
 }

@@ -121,6 +121,14 @@
       "add_link": "Add Link",
       "remove_link": "Remove",
       "invalid_url": "Invalid URL"
+    },
+    "submission_filter": {
+      "label": "Submission Filter",
+      "additional_filters": "Additional Filters",
+      "show_archived": "Show Archived Maps",
+      "show_arbitrary": "Show Arbitrary Challenges",
+      "categories_hidden_one": "{{count}} Category Hidden",
+      "categories_hidden_other": "{{count}} Categories Hidden"
     }
   },
   "forms": {

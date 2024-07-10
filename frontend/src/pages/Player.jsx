@@ -34,6 +34,7 @@ import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useAuth } from "../hooks/AuthProvider";
 import { useTranslation } from "react-i18next";
+import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -197,6 +198,7 @@ export function PagePlayerTopGoldenList({ id }) {
   const query = useGetPlayer(id);
   const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
   const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
 
   if (query.isLoading) {
     return (
@@ -223,20 +225,9 @@ export function PagePlayerTopGoldenList({ id }) {
         <Typography variant="h4">
           <StyledLink to={`/player/${id}`}>{player.name}</StyledLink>- {t("personal_tgl")}
         </Typography>
-        <Stack direction="row" spacing={2}>
-          <FormControlLabel
-            control={<Checkbox checked={showArchived} onChange={(e) => setShowArchived(e.target.checked)} />}
-            label={t_gl("show_archived")}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={showArbitrary} onChange={(e) => setShowArbitrary(e.target.checked)} />
-            }
-            label={t_gl("show_archived")}
-          />
-        </Stack>
+        <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
       </BasicBox>
-      <TopGoldenList type="player" id={id} archived={showArchived} arbitrary={showArbitrary} />
+      <TopGoldenList type="player" id={id} filter={filter} />
     </Box>
   );
 }
