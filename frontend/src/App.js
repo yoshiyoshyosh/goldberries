@@ -234,7 +234,7 @@ const router = createBrowserRouter([
       { path: "search/:q?", element: <PageSearch /> },
       { path: "suggestions/:id?", element: <PageSuggestions /> },
       { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
-      { path: "stats/:tab?", element: <PageStats /> },
+      // { path: "stats/:tab?", element: <PageStats /> },
 
       { path: "rules", element: <PageRules /> },
       { path: "faq", element: <PageFAQ /> },
@@ -554,11 +554,11 @@ export function Layout() {
           path: "/monthly-recap",
           icon: <FontAwesomeIcon icon={faSquarePollHorizontal} />,
         },
-        {
-          name: t("other_menu.stats"),
-          path: "/stats",
-          icon: <FontAwesomeIcon icon={faTable} />,
-        },
+        // {
+        //   name: t("other_menu.stats"),
+        //   path: "/stats",
+        //   icon: <FontAwesomeIcon icon={faTable} />,
+        // },
       ],
     },
     suggestions: {},
