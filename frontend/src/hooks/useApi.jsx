@@ -58,6 +58,7 @@ import {
   fetchCampaignViewPlayer,
   fetchAllObjectives,
   fetchObjectiveSubmissionCount,
+  fetchStaticStats,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -311,10 +312,19 @@ export function useGetSuggestion(id) {
   });
 }
 
+//type: all, monthly_recap
 export function useGetStats(type, month = null, allClearsTierSort = null, firstClearsTierSort = null) {
   return useQuery({
     queryKey: ["stats", type, month, allClearsTierSort, firstClearsTierSort],
     queryFn: () => fetchStats(type, month, allClearsTierSort, firstClearsTierSort),
+    onError: errorToast,
+  });
+}
+//type: chart_tier_clears_monthly, table_tier_clear_counts
+export function useGetStaticStats(type) {
+  return useQuery({
+    queryKey: ["static_stats", type],
+    queryFn: () => fetchStaticStats(type),
     onError: errorToast,
   });
 }

@@ -327,6 +327,12 @@ export function fetchStats(type, month = null, allClearsTierSort = null, firstCl
     params: params,
   });
 }
+export function fetchStaticStats(type) {
+  const params = { type: type };
+  return axios.get("/stats.php", {
+    params: params,
+  });
+}
 //#endregion
 
 //#region == POST ==

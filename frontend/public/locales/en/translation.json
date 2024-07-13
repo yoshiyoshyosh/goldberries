@@ -319,7 +319,8 @@
     "other_menu": {
       "name": "Other",
       "suggestion_box": "Suggestion Box",
-      "monthly_recap": "Monthly Recap"
+      "monthly_recap": "Monthly Recap",
+      "stats": "Stats"
     },
     "internal_menu": {
       "name": "Internal",

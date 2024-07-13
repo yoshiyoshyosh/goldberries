@@ -223,7 +223,7 @@ export function PagePlayerTopGoldenList({ id }) {
       <HeadTitle title={title} />
       <BasicBox sx={{ mb: 1 }}>
         <Typography variant="h4">
-          <StyledLink to={`/player/${id}`}>{player.name}</StyledLink>- {t("personal_tgl")}
+          <StyledLink to={`/player/${id}`}>{player.name}</StyledLink> - {t("personal_tgl")}
         </Typography>
         <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
       </BasicBox>

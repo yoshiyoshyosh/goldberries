@@ -80,6 +80,7 @@ import {
   faSignOut,
   faSquarePollHorizontal,
   faSun,
+  faTable,
   faTooth,
   faUser,
   faUserAlt,
@@ -119,11 +120,12 @@ import {
   ObjectiveIcon,
   WebsiteIcon,
 } from "./components/GoldberriesComponents";
-import { PageMonthlyRecap } from "./pages/Stats";
+import { PageMonthlyRecap } from "./pages/MonthlyRecap";
 import { PageServerCosts } from "./pages/ServerCosts";
 import { useTranslation } from "react-i18next";
 import { PageRules } from "./pages/Rules";
 import { PageFAQ } from "./pages/FAQ";
+import { PageStats } from "./pages/Stats";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -232,6 +234,7 @@ const router = createBrowserRouter([
       { path: "search/:q?", element: <PageSearch /> },
       { path: "suggestions/:id?", element: <PageSuggestions /> },
       { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
+      { path: "stats/:tab?", element: <PageStats /> },
 
       { path: "rules", element: <PageRules /> },
       { path: "faq", element: <PageFAQ /> },
@@ -550,6 +553,11 @@ export function Layout() {
           name: t("other_menu.monthly_recap"),
           path: "/monthly-recap",
           icon: <FontAwesomeIcon icon={faSquarePollHorizontal} />,
+        },
+        {
+          name: t("other_menu.stats"),
+          path: "/stats",
+          icon: <FontAwesomeIcon icon={faTable} />,
         },
       ],
     },
