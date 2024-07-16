@@ -1113,7 +1113,7 @@
       "rules": {
         "header": "Rules",
         "0": "Must have video that shows the whole completion from start to finish of the run. The video must be permanent and published somewhere where it can be watched (YouTube, Twitch, etc).",
-        "1": "Usage of any gameplay affecting features is banned. These include but aren't limited to: Assist mode, Variant mode, Extended Variant mod, High Frame Rate Mod, etc. Debug is also banned unless it's used to get a golden on a map that doesn't have one by default (you may only use the give_golden command on the first screen of the map).",
+        "1": "Usage of any gameplay affecting features is banned. These include but aren't limited to: Assist mode, Variant mode, Extended Variant mod, High Frame Rate Mod (not to be confused with Motion Smoothing, which is allowed), etc. Debug is also banned unless it's used to get a golden on a map that doesn't have one by default (you may only use the give_golden command on the first screen of the map).",
         "2": "Show the endscreen if one exists in the map. If it doesn't, show the journal right after the run.",
         "3": "You must have raw recording of the run before it's verified, for Tier 3 and harder entries it's desirable to upload the raw recording together with the run itself."
       },

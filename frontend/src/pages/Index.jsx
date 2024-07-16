@@ -23,7 +23,6 @@ import {
 import { getQueryData, useGetAllDifficulties, useGetStats, useGetVerifierList } from "../hooks/useApi";
 import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
-import { FAQData } from "../util/other_data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -181,77 +180,6 @@ export function UsefulLinksComponent() {
           <StyledLink to="/server-costs">Overview of Server Costs</StyledLink>
         </li>
       </ul>
-    </>
-  );
-}
-
-function RulesFaqContainer() {
-  const [tab, setTab] = useState("rules");
-
-  return (
-    <>
-      <Tabs value={tab} onChange={(_, newTab) => setTab(newTab)}>
-        <Tab label="Rules" value="rules" />
-        <Tab label="FAQ" value="faq" />
-      </Tabs>
-      {tab === "rules" && <RulesComponent />}
-      {tab === "faq" && <FAQComponent />}
-    </>
-  );
-}
-
-export function RulesComponent() {
-  const theme = useTheme();
-  const [markdown, setMarkdown] = useState("");
-
-  const MarginH1 = ({ children }) => <h1 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h1>;
-  const MarginH2 = ({ children }) => <h2 style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</h2>;
-  const MarginOl = ({ children }) => <ol style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ol>;
-  const MarginUl = ({ children }) => <ul style={{ marginTop: "5px", marginBottom: "5px" }}>{children}</ul>;
-  const Anchor = ({ children, href }) => (
-    <StyledExternalLink
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      style={{ color: theme.palette.links.main }}
-    >
-      {children}
-    </StyledExternalLink>
-  );
-
-  useEffect(() => {
-    fetch("/md/rules.md")
-      .then((response) => response.text())
-      .then((text) => setMarkdown(text));
-  }, []);
-
-  if (markdown === "") return <LoadingSpinner />;
-
-  return (
-    <Markdown components={{ h1: MarginH1, ol: MarginOl, ul: MarginUl, h2: MarginH2, a: Anchor }}>
-      {markdown}
-    </Markdown>
-  );
-}
-
-export function FAQComponent() {
-  return (
-    <>
-      <Typography variant="h6">Frequently Asked Questions</Typography>
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableBody>
-            {FAQData.map((faq) => (
-              <TableRow key={faq.question}>
-                <TableCell>
-                  <b>{faq.question}</b>
-                </TableCell>
-                <TableCell>{faq.answer}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
     </>
   );
 }

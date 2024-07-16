@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect } from "react";
-import { useLocalStorage } from "./useStorage";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { APP_URL, DISCORD_AUTH_URL } from "../util/constants";
 import { getErrorMessage } from "../components/BasicComponents";
 import { useTranslation } from "react-i18next";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const AuthContext = createContext();
 

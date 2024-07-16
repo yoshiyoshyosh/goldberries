@@ -1,22 +1,11 @@
-import { useDebounce } from "@uidotdev/usehooks";
-import { useLocalStorage } from "../../hooks/useStorage";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useAuth } from "../../hooks/AuthProvider";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
-  Container,
   Divider,
-  FormControl,
-  IconButton,
-  InputLabel,
-  Menu,
   MenuItem,
   Paper,
-  Select,
   Stack,
   Table,
   TableBody,
@@ -30,7 +19,6 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 import { jsonDateToJsDate } from "../../util/util";
 import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
 import { getQueryData, useDeleteLogEntry, useGetLogs } from "../../hooks/useApi";

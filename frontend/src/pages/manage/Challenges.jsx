@@ -36,7 +36,6 @@ import {
   LoadingSpinner,
   HeadTitle,
 } from "../../components/BasicComponents";
-import { useLocalStorage } from "../../hooks/useStorage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsSplitUpAndLeft,
@@ -63,6 +62,7 @@ import { FormCreateFullChallengeWrapper } from "../../components/forms/CreateFul
 import { FullChallengeSelect } from "../../components/GoldberriesComponents";
 import { toast } from "react-toastify";
 import { Trans, useTranslation } from "react-i18next";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function PageManageChallenges() {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges" });
