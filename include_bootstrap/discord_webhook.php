@@ -26,7 +26,7 @@ function send_webhook_suggestion_verified($suggestion)
   send_webhook_suggestion_notification($suggestion);
 
   $name = $map === null ? ($campaign === null ? "General Suggestion" : $campaign->get_name()) : $map->get_name();
-  $suggestion_url = constant("BASE_URL") . "/suggestion/" . $suggestion->id;
+  $suggestion_url = constant("BASE_URL") . "/suggestions/" . $suggestion->id;
 
   $objective = "";
 
