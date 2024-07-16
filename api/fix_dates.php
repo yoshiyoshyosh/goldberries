@@ -103,11 +103,23 @@ while ($row = pg_fetch_assoc($result)) {
     }
 
   } else {
+    //If the link contains "twitch", skip it
+    if (strpos($link, 'twitch') !== false || strpos($link, 'drive.google.com') !== false || strpos($link, 'nico.ms') !== false || strpos($link, 'nicovideo.jp') !== false || strpos($link, 'playlist') !== false) {
+      // $count++;
+      // echo "\n";
+      // echo "Processing submission (#$count): $submission\n";
+      // echo "  Link: $link\n";
+      // echo "  Link contains Twitch\n";
+      continue;
+    }
+
     // $count++;
     // echo "\n";
     // echo "Processing submission (#$count): $submission\n";
     // echo "  Link: $link\n";
     // echo "  Link is neither YouTube nor Bilibili\n";
+    // $submission->expand_foreign_keys($DB, 5, true);
+    // echo "  Submission details: map = " . $submission->challenge->get_name() . ", player = " . $submission->player->name . "\n";
     continue;
   }
 }

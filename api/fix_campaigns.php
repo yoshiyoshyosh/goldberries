@@ -710,7 +710,7 @@ $sj = array(
     "sort_order" => NULL,
   ),
 );
-fix_campaign_sorts(1128, $sj);
+fix_campaign_sorts(1159, $sj);
 
 
 $winter_collab = array(
@@ -847,7 +847,7 @@ $winter_collab = array(
     "sort_order" => NULL,
   ),
 );
-fix_campaign_sorts(925, $winter_collab);
+fix_campaign_sorts(949, $winter_collab);
 
 
 
@@ -880,6 +880,20 @@ function fix_campaign_sorts($campaign_id, $maps)
         $map->sort_major = $map_data['sort_major'];
         $map->sort_minor = $map_data['sort_minor'];
         $map->sort_order = $map_data['sort_order'];
+        if ($campaign_id == 1128) {
+          //For SJ specifically, get the challenges of the map and set their objective id's to 2 if the map name doesnt contain "Heart Side"
+          $map->fetch_challenges($DB);
+          foreach ($map->challenges as $challenge) {
+            if (strpos($map->name, "Heart Side") === false) {
+              $challenge->objective_id = 2;
+              if (!$challenge->update($DB)) {
+                echo "Failed to save challenge: " . $challenge->name . "\n";
+              } else {
+                echo "Updated challenge: " . $challenge->name . "\n";
+              }
+            }
+          }
+        }
         if (!$map->update($DB)) {
           echo "Failed to save map: " . $map->name . "\n";
         } else {

@@ -183,7 +183,7 @@ class Submission extends DbObject
     if (count($where) > 0) {
       $query .= " WHERE " . implode(" AND ", $where);
     }
-    $query .= " ORDER BY submission_date_created DESC";
+    $query .= " ORDER BY submission_date_created DESC NULLS LAST";
 
     $query = "
     WITH submissions AS (

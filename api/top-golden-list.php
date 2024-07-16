@@ -21,6 +21,11 @@ if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
 if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
   $where .= " AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 }
+if (isset($_GET["hide_objectives"])) {
+  //hide_objectives will be an array of objective.id's to not include in the search
+  $hide_objectives = $_GET["hide_objectives"];
+  $where .= " AND objective_id NOT IN (" . implode(",", $hide_objectives) . ")";
+}
 
 $query = $query . " " . $where;
 $query .= " ORDER BY challenge_sort DESC, map_name ASC, submission_id ASC";
