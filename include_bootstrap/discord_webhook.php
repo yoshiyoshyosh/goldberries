@@ -255,6 +255,10 @@ function send_simple_webhook_message($url, $message, $allowed_mentions = null)
 }
 function send_webhook($url, $data)
 {
+  if ($url === false) { //env variable for webhook url is not set
+    return;
+  }
+
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
   curl_setopt($ch, CURLOPT_POST, 1);
