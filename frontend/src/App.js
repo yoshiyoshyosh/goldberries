@@ -258,6 +258,7 @@ export const lightTheme = createTheme({
     },
     background: {
       other: "rgba(255,255,255,0.75)",
+      subtle: "rgba(0,0,0,0.05)",
       lightShade: "rgba(0,0,0,10%)",
     },
     tableDivider: "#949494",
@@ -293,6 +294,7 @@ const darkTheme = createTheme({
     },
     background: {
       other: "rgba(0,0,0,0.5)",
+      subtle: "rgba(0,0,0,0.2)",
       lightShade: "rgba(255,255,255,10%)",
     },
     tableDivider: "#515151",

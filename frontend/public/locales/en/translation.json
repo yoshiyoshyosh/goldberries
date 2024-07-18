@@ -864,6 +864,7 @@
     "stats": "Player Stats",
     "showcase_hardest": "Hardest Submissions",
     "chart": {
+      "show_standard": "Show Standard & Undetermined",
       "x_axis": "Count of Goldens per Tier"
     }
   },

@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Stack, Typography } from "@mui/material";
 import {
   BasicBox,
   BasicContainerBox,
@@ -26,8 +26,7 @@ import {
   VerifierIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { BarChart } from "@mui/x-charts/BarChart";
-import { DIFFICULTY_COLORS } from "../util/constants";
+import { DIFFICULTY_COLORS, getGroupId } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
@@ -35,6 +34,20 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useAuth } from "../hooks/AuthProvider";
 import { useTranslation } from "react-i18next";
 import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
+import {
+  BarChart,
+  Bar,
+  Rectangle,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import { useState } from "react";
+import { useTheme } from "@emotion/react";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -130,6 +143,7 @@ export function PlayerDisplay({ id }) {
       <Divider sx={{ my: 2 }} />
       <Typography variant="h5">{t("stats")}</Typography>
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
+      {/* <ExampleChart /> */}
       <Divider sx={{ my: 2 }} />
       <Changelog type="player" id={id} />
     </>
@@ -196,8 +210,6 @@ export function PagePlayerTopGoldenList({ id }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player" });
   const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const query = useGetPlayer(id);
-  const [showArchived, setShowArchived] = useLocalStorage("top_filter_archived", false);
-  const [showArbitrary, setShowArbitrary] = useLocalStorage("top_filter_arbitrary", false);
   const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
 
   if (query.isLoading) {
@@ -234,7 +246,9 @@ export function PagePlayerTopGoldenList({ id }) {
 
 export function DifficultyCountChart({ difficulty_counts }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player.chart" });
+  const theme = useTheme();
   const query = useGetAllDifficulties();
+  const [showStandard, setShowStandard] = useLocalStorage("player_chart_show_standard", true);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -243,39 +257,81 @@ export function DifficultyCountChart({ difficulty_counts }) {
   }
 
   const rawDiffs = getQueryData(query);
-  const difficulties = rawDiffs.filter((d) => d.id !== 13);
-  const data = difficulties.map((difficulty) => {
-    return {
-      name: getDifficultyName(difficulty),
-      count: difficulty_counts[difficulty.id] || 0,
-      color: difficulty.id === 18 ? DIFFICULTY_COLORS[18].contrast_color : DIFFICULTY_COLORS[difficulty.id],
-    };
+  let difficulties = rawDiffs.filter((d) => d.id !== 13);
+  if (!showStandard) {
+    difficulties = difficulties.filter((d) => d.id !== 18 && d.id !== 19);
+  }
+
+  //Loop through all difficulties and do the following:
+  // 1. Get the difficulties group id by getGroupId(id)
+  // 2. If the group id is different from the id of the difficulty, add the difficulty_counts of the difficulty to the difficulty_counts of the group
+  // 3. Then, remove the difficulty from the list of difficulties
+  const difficulty_counts_grouped = {};
+  difficulties.forEach((difficulty) => {
+    const group_id = getGroupId(difficulty.id);
+    if (group_id !== difficulty.id) {
+      difficulty_counts_grouped[group_id] =
+        (difficulty_counts_grouped[group_id] || 0) + (difficulty_counts[difficulty.id] || 0);
+    } else {
+      difficulty_counts_grouped[difficulty.id] = difficulty_counts[difficulty.id];
+    }
   });
 
-  const seriesData = data.map((d) => {
-    return {
-      data: [d.count],
-      color: d.color.color,
-      label: d.name,
-      highlighted: "series",
-      faded: "global",
-    };
+  //Filter out the difficulties that are not in the difficulty_counts_grouped object
+  difficulties = difficulties.filter((d) => d.id in difficulty_counts_grouped);
+
+  const getDifficultyName = (id) => {
+    const difficulty = difficulties.find((d) => d.id === id);
+    return difficulty ? difficulty.name : "";
+  };
+  const getChartDifficultyColor = (id) => {
+    if (id === 18) {
+      return theme.palette.text.primary;
+    } else {
+      return DIFFICULTY_COLORS[id].color;
+    }
+  };
+
+  const data = [];
+  difficulties.forEach((difficulty) => {
+    data.push({
+      id: difficulty.id,
+      name: difficulty.id === 19 ? "Undet." : getDifficultyName(difficulty.id),
+      count: difficulty_counts[difficulty.id] || 0,
+    });
   });
 
   return (
-    <BarChart
-      yAxis={[{ scaleType: "linear", min: 0, max: Math.max(4, Math.max(...data.map((d) => d.count))) }]}
-      xAxis={[{ scaleType: "band", data: [t("x_axis")] }]}
-      series={seriesData}
-      height={300}
-      slotProps={{ legend: { hidden: true } }}
-      margin={{
-        left: 30,
-        right: 0,
-        bottom: 30,
-        top: 15,
-      }}
-      skipAnimation
-    />
+    <Stack direction="column" gap={1}>
+      <FormControlLabel
+        checked={showStandard}
+        onChange={() => setShowStandard(!showStandard)}
+        control={<Checkbox />}
+        label="Show Standard & Undetermined"
+      />
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart
+          data={data}
+          barCategoryGap="8%"
+          barGap={50}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 5,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="name" tick={{ fill: theme.palette.text.primary }} />
+          <YAxis tick={{ fill: theme.palette.text.primary }} />
+          <Legend iconSize={0} payload={[{ value: t("x_axis"), type: "bar", id: "tier-bar" }]} />
+          <Bar id="tier-bar" dataKey="count" fill={theme.palette.text.primary} label={{ position: "top" }}>
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getChartDifficultyColor(entry.id)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </Stack>
   );
 }

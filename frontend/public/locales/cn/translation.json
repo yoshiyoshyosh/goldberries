@@ -864,6 +864,7 @@
     "stats": "玩家数据",
     "showcase_hardest": "默认置顶",
     "chart": {
+      "show_standard": "Show Standard & Undetermined",
       "x_axis": "各层级的金草莓数量"
     }
   },

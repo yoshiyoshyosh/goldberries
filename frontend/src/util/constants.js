@@ -196,7 +196,7 @@ const GROUP_ID_MAPPINGS = {
   18: 18,
   19: 19,
 };
-function getGroupId(id) {
+export function getGroupId(id) {
   return GROUP_ID_MAPPINGS[id];
 }
 
