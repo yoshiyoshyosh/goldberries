@@ -54,6 +54,7 @@ import {
   faBook,
   faBullseye,
   faBurger,
+  faChartBar,
   faCheckToSlot,
   faChevronDown,
   faChevronLeft,
@@ -733,6 +734,7 @@ function ModalContainer({ searchOpenRef, settingsOpenRef }) {
 }
 
 function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const auth = useAuth();
   const { settings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
@@ -776,7 +778,7 @@ function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
         />
       )}
       <MobileMenuItem
-        item={{ name: "Settings", path: "/settings", icon: <FontAwesomeIcon icon={faCogs} /> }}
+        item={{ name: t("settings"), path: "/settings", icon: <FontAwesomeIcon icon={faCogs} /> }}
       />
     </div>
   );
@@ -1068,6 +1070,12 @@ function VerifierStatsNavDesktop() {
         <Link to="/manage/accounts/player-claims" style={{ color: "inherit", textDecoration: "none" }}>
           <FontAwesomeIcon icon={faUserNinja} style={{ marginRight: "5px" }} />
           {query.isError ? "X" : data.open_player_claims ?? "..."}
+        </Link>
+      </Tooltip>
+      <Tooltip title={t("widgets.pending_suggestions")}>
+        <Link to="/suggestions" style={{ color: "inherit", textDecoration: "none" }}>
+          <FontAwesomeIcon icon={faChartBar} style={{ marginRight: "5px" }} />
+          {query.isError ? "X" : data.pending_suggestions ?? "..."}
         </Link>
       </Tooltip>
     </Stack>

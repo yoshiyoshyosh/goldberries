@@ -331,7 +331,8 @@
     },
     "widgets": {
       "submission_queue": "Submissions in queue",
-      "player_claims": "Open player claims"
+      "player_claims": "Open player claims",
+      "pending_suggestions": "Pending suggestions"
     },
     "submit": "Submit",
     "login": "Login",

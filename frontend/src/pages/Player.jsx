@@ -307,7 +307,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
         checked={showStandard}
         onChange={() => setShowStandard(!showStandard)}
         control={<Checkbox />}
-        label="Show Standard & Undetermined"
+        label={t("show_standard")}
       />
       <ResponsiveContainer width="100%" height={400}>
         <BarChart

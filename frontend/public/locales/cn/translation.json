@@ -331,7 +331,8 @@
     },
     "widgets": {
       "submission_queue": "待验证的内容队列",
-      "player_claims": "待绑定玩家"
+      "player_claims": "待绑定玩家",
+      "pending_suggestions": "Pending suggestions"
     },
     "submit": "提交",
     "login": "登录",

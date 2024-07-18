@@ -328,7 +328,8 @@
     },
     "widgets": {
       "submission_queue": "Submissions in der Warteschlange",
-      "player_claims": "Offene Player Ansprüche"
+      "player_claims": "Offene Player Ansprüche",
+      "pending_suggestions": "Ausstehende Vorschläge"
     },
     "submit": "Einreichen",
     "login": "Login",
