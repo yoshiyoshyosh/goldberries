@@ -316,7 +316,8 @@
     "other_menu": {
       "name": "Andere",
       "suggestion_box": "Vorschlagsbox",
-      "monthly_recap": "Monatlicher Rückblick"
+      "monthly_recap": "Monatlicher Rückblick",
+      "stats": "Statistik"
     },
     "internal_menu": {
       "name": "Intern",
@@ -969,6 +970,7 @@
       "new": {
         "label": "Neue Challenge",
         "header": "Run für neue Challenge einreichen",
+        "challenge_data": "Challenge Daten",
         "info": "Dieses Formular ist zum Einreichen eines Runs für eine Challenge, die noch nicht in der Datenbank ist. Es kann länger dauern, diesen Run zu verifiziert!",
         "gamebanana_url": "GameBanana URL",
         "challenge_description": {

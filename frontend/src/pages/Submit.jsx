@@ -735,7 +735,7 @@ export function NewChallengeUserSubmission({}) {
       <h1 style={{ marginBottom: "0" }}>{t("header")}</h1>
       <form>
         <Typography variant="body1">{t("info")}</Typography>
-        <h4>Challenge Data</h4>
+        <h4>{t("challenge_data")}</h4>
         <Stack direction="column" gap={2}>
           <TextField
             label={t("gamebanana_url") + " *"}

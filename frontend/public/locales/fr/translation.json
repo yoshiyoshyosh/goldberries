@@ -319,7 +319,8 @@
     "other_menu": {
       "name": "Autres",
       "suggestion_box": "Boîte à suggestions",
-      "monthly_recap": "Récap’ du mois"
+      "monthly_recap": "Récap’ du mois",
+      "stats": "Stats"
     },
     "internal_menu": {
       "name": "Interne",

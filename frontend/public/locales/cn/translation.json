@@ -30,14 +30,14 @@
     "name": "名称",
     "url": "网址",
     "new": "新",
-    "label": "Label",
+    "label": "标签",
     "description": "简介",
     "all": "全部",
     "date": "日期",
     "time": "时间",
     "by": "by",
-    "unknown_author": "Unknown Author",
-    "unknown_date": "Unknown Date"
+    "unknown_author": "未知作者",
+    "unknown_date": "未知日期"
   },
   "components": {
     "difficulty_select": {
@@ -50,22 +50,22 @@
     },
     "verification_status_chip": {
       "verified": "已通过",
-      "pending": "审核中",
+      "pending": "验证中",
       "rejected": "已拒绝"
     },
     "full_challenge_select": {
       "full_game_label": "选择地图或多章节挑战"
     },
-    "verifier_icon": "金榜管理团队的一员",
+    "verifier_icon": "验证者",
     "admin_icon": "网站管理员",
     "suspended_icon": {
       "with_reason": "该用户已被封禁: {{reason}}",
       "no_reason": "该用户已被封禁"
     },
     "input_methods": {
-      "label_one": "Input Method",
-      "label_other": "Input Methods",
-      "not_specified": "Not Specified",
+      "label_one": "游玩设备",
+      "label_other": "游玩设备",
+      "not_specified": "无",
       "keyboard": "键盘",
       "dpad": "手柄（十字键）",
       "analog": "手柄（摇杆）",
@@ -73,7 +73,7 @@
       "other": "其他"
     },
     "gamebanana_embed": {
-      "alt": "地图包展示头图"
+      "alt": "地图包头图"
     },
     "loading": "加载中",
     "error": "错误",
@@ -90,12 +90,12 @@
     "recent_submissions": {
       "title": "近期提交内容",
       "show": "状态：",
-      "no_pending": "找不到审核中的内容",
-      "no_verified": "找不到已通过审核的内容",
+      "no_pending": "找不到验证中的内容",
+      "no_verified": "找不到已通过验证的内容",
       "no_rejected": "找不到已被拒绝的内容",
       "new_challenge": "新地图:",
       "new_challenge_note": "此为数据库中未被记录的新地图！",
-      "submissions_per_page": "Submissions per page:"
+      "submissions_per_page": "每页提交内容数量："
     },
     "changelog": {
       "name": "更新日志",
@@ -111,24 +111,24 @@
     "top_golden_list": {
       "use_suggested": "使用此玩家的难度建议来排名",
       "empty": "这里什么也没有，试着从排行榜上打点金来丰富你自己的列表吧！",
-      "note_number_people": "完成此挑战的人数与具体数据",
+      "note_number_people": "达成此挑战的人数与具体数据",
       "note_suggested_difficulties": "此玩家的难度排名建议",
-      "note_video_link": "首位完成此挑战的玩家视频",
+      "note_video_link": "首位达成此挑战的玩家视频",
       "placement_difficulty": "实际排名："
     },
     "custom_links": {
-      "label": "Custom Links",
-      "add_link": "Add Link",
-      "remove_link": "Remove",
-      "invalid_url": "Invalid URL"
+      "label": "自定义链接",
+      "add_link": "添加",
+      "remove_link": "删除",
+      "invalid_url": "无效链接"
     },
     "submission_filter": {
-      "label": "Submission Filter",
-      "additional_filters": "Additional Filters",
-      "show_archived": "Show Archived Maps",
-      "show_arbitrary": "Show Arbitrary Challenges",
-      "categories_hidden_one": "{{count}} Category Hidden",
-      "categories_hidden_other": "{{count}} Categories Hidden"
+      "label": "筛选",
+      "additional_filters": "附加",
+      "show_archived": "显示旧版本地图",
+      "show_arbitrary": "显示其他类型挑战",
+      "categories_hidden_one": "{{count}}个类别已隐藏",
+      "categories_hidden_other": "{{count}}个类别已隐藏"
     }
   },
   "forms": {
@@ -281,25 +281,25 @@
     },
     "feedback": {
       "player_name": {
-        "required": "Player Name kann nicht leer sein",
-        "min_length": "Player Name muss mindestens 3 Zeichen lang sein",
-        "max_length": "Player Name darf nicht länger als 32 Zeichen lang sein"
+        "required": "玩家名称不可为空",
+        "min_length": "玩家名称必须至少包含3个字符",
+        "max_length": "玩家名称不可超过32个字符"
       },
       "password": {
-        "required": "Passwort kann nicht leer sein",
-        "min_length": "Passwort muss mindestens 8 Zeichen lang sein",
-        "max_length": "Passwort darf nicht länger als 128 Zeichen lang sein"
+        "required": "密码不可为空",
+        "min_length": "密码必须至少包含8个字符",
+        "max_length": "密码不可超过128个字符"
       },
       "email": {
-        "required": "Email kann nicht leer sein",
-        "invalid": "Ungültige Email Adresse"
+        "required": "邮箱不可为空",
+        "invalid": "无效地址"
       },
       "name": {
-        "required": "Name kann nicht leer sein",
-        "max_length": "Name darf nicht länger als {{count}} Zeichen lang sein"
+        "required": "名称不可为空",
+        "max_length": "名称不可超过{{count}}个字符"
       },
       "url": {
-        "required": "URL kann nicht leer sein"
+        "required": "链接不可为空"
       }
     }
   },
@@ -314,22 +314,23 @@
     "campaigns_menu": {
       "name": "地图包",
       "campaign_list": "地图包列表",
-      "rejected_maps": "已拒绝的地图（未收录）"
+      "rejected_maps": "已拒绝的地图"
     },
     "other_menu": {
       "name": "其他",
       "suggestion_box": "意见箱",
-      "monthly_recap": "每月数据回顾"
+      "monthly_recap": "每月数据回顾",
+      "stats": "Stats"
     },
     "internal_menu": {
       "name": "管理",
       "logs": "日志",
-      "submission_queue": "待审核的内容队列",
+      "submission_queue": "待验证的内容队列",
       "manage_challenges": "管理挑战项目",
       "manage_accounts": "管理账号"
     },
     "widgets": {
-      "submission_queue": "待审核的内容队列",
+      "submission_queue": "待验证的内容队列",
       "player_claims": "待绑定玩家"
     },
     "submit": "提交",
@@ -468,16 +469,16 @@
     "submission_queue": {
       "feedback": {
         "viewing_gone": "此提交内容已不在队列中，可能是被删除或已由他人验证",
-        "all_verified": "所有选择的提交内容均已验证通过",
-        "all_rejected": "所有选择的提交内容均已被拒绝"
+        "all_verified": "选择的所有提交内容均已验证通过",
+        "all_rejected": "选择的所有提交内容均已被拒绝"
       },
-      "title": "待审核内容队列",
-      "title_with_count": "{{count}}条待审核内容",
+      "title": "待验证内容队列",
+      "title_with_count": "{{count}}条待验证内容",
       "queue_empty": "队列中暂无内容",
       "selected": "{{count}}个内容已选择",
       "total": "提交内容（总数：{{count}}）",
       "note_placeholder": "填写备注或拒绝理由",
-      "new_challenge": "New Challenge:",
+      "new_challenge": "新挑战项目或地图",
       "or": "或",
       "buttons": {
         "verify": "通过'{{count}}'个内容",
@@ -500,7 +501,7 @@
     },
     "costs_so_far": {
       "title": "截至目前服务器所用成本",
-      "description": "The server has been running since <strong>April, 2024</strong>. That's <strong>{{months}} months</strong> so far.",
+      "description": "服务器于<strong>2024年4月</strong>开始运行，目前已运行<strong>{{months}}个月</strong>。",
       "table": {
         "total_costs": "总成本",
         "total_donations": "捐款总额",
@@ -510,7 +511,7 @@
     },
     "stocked_up": {
       "title": "库存充足",
-      "description": "The server can run for <strong>{{months}} more months</strong> on just donations!",
+      "description": "仅靠捐款，服务器还可以再运行<strong>{{months}}个月</strong>！",
       "additional_months_one": "+额外{{count}}个月！！！",
       "additional_months_other": "+额外{{count}}个月！！！"
     },
@@ -520,7 +521,7 @@
       "table": {
         "paypal_donation": "PayPal（需支付额外手续费进行捐赠）",
         "paypal_direct": "PayPal（直接转账给我，无手续费）",
-        "paypal_website": "在这",
+        "paypal_website": "我的账户",
         "note": "*此页面不会自动更新，如果你已经助力，可能需要一段时间才会进行更新"
       }
     },
@@ -537,6 +538,664 @@
         "text": "我很感激！但同上，可能需要一段时间才会进行更新",
         "back": "返回助力页面"
       }
+    }
+  },
+  "account": {
+    "title": "个人账号",
+    "no_player_claimed": "你尚未绑定玩家，请跳转到<CustomLink>此页面</CustomLink>来创建或绑定玩家！",
+    "claim": "玩家绑定：",
+    "tabs": {
+      "login_methods": {
+        "label": "登录管理",
+        "feedback": {
+          "updated": "设置已更新"
+        },
+        "note": "注：必须至少设置一个始终可用的登录方法",
+        "email": "邮箱",
+        "password": "密码",
+        "confirm_password": "确认密码",
+        "add_email": "添加邮箱",
+        "undo": "撤销",
+        "unlink": "解绑",
+        "discord": "Discord",
+        "linked": "已绑定",
+        "link_discord": "绑定Discord",
+        "button": "保存"
+      },
+      "notifications": {
+        "label": "通知",
+        "feedback": {
+          "updated": "设置已更新"
+        },
+        "note": "注：目前这些通知只在官方金榜服务器以@的形式发送，要获取通知，请加入<CustomLink1>金榜服务器</CustomLink1>并且将你的Discord账号绑定至<CustomLink2>此处</CustomLink2>！",
+        "sub_verified": {
+          "label": "验证通知",
+          "description": "当你的提交内容验证通过或被拒绝时获取通知"
+        },
+        "marked_personal": {
+          "label": "难度建议被设置为个人差",
+          "description": "当某张地图发现新路线/偷鸡从而导致你提出的建议被变更为个人差时获取通知"
+        },
+        "challenge_moved": {
+          "label": "排名变更",
+          "description": "当你达成的挑战从排行榜变更难度时获取通知"
+        },
+        "suggestion_created": {
+          "label": "意见箱通知",
+          "description": "当你达成的挑战由别人在意见箱里提出建议时获取通知"
+        }
+      },
+      "profile": {
+        "label": "个人资料",
+        "feedback": {
+          "updated": "设置已更新"
+        },
+        "name_color": {
+          "label": "名称颜色",
+          "preview": "预览：",
+          "name_placeholder": "玩家名称",
+          "use_gradient": "渐变色",
+          "start_color": "起始颜色",
+          "end_color": "结尾颜色",
+          "solid_color": "纯色",
+          "switch": "切换"
+        },
+        "about_me": {
+          "label": "个人介绍",
+          "placeholder": "介绍一下你自己吧！"
+        },
+        "custom_links": {
+          "label": "自定义链接",
+          "note": "你可以在你个人页面上添加自定义链接，这些链接可以指向任何你想对其他玩家分享的页面"
+        }
+      },
+      "showcase": {
+        "label": "置顶",
+        "title": "个人置顶",
+        "feedback": {
+          "updated": "设置已更新"
+        },
+        "no_player_claimed": "需绑定玩家才能使用此功能！",
+        "note_1": "最多将9个内容置顶到你的个人页面上",
+        "note_2": "如果不设置任何内容，则自动将你打过的最难的9个内容置顶",
+        "buttons": {
+          "save": "保存",
+          "add_submission": "添加",
+          "remove_submission": "删除"
+        }
+      },
+      "player_rename": {
+        "label": "重命名",
+        "title": "重命名",
+        "feedback": {
+          "renamed": "设置已更新"
+        },
+        "no_player_claimed": "尚未绑定玩家！",
+        "description": "你只能在24小时内修改一次名称",
+        "can_rename": "现在可以进行修改",
+        "cannot_rename": "你可以{{time}}后再次提交重命名请求",
+        "new_name": "新名称",
+        "log_change": "将重命名记录更新在你的更改日志里",
+        "button": "保存"
+      },
+      "danger_zone": {
+        "label": "慎入",
+        "description": "永久删除你的账户",
+        "note": "请注意这不会删除任何已经验证通过的内容，只会将你的玩家名称变回未绑定状态，如果你想移除你的提交内容，请联系验证者（一般来说私信我就行：Parabones）",
+        "confirm": "输入DELETE以确认（每个字母都要大写）",
+        "button": "删除账号"
+      }
+    }
+  },
+  "app_settings": {
+    "title": "设置",
+    "footnote": "设置为自动保存",
+    "tabs": {
+      "general": {
+        "label": "通用",
+        "language": "多语言"
+      },
+      "visual": {
+        "label": "视图",
+        "name_colors": {
+          "label": "玩家名称颜色",
+          "show": "显示名称颜色",
+          "prefer_solid_color": "默认显示纯色",
+          "show_outline": "显示黑边"
+        },
+        "background": {
+          "label": "背景",
+          "blur": {
+            "label": "模糊度",
+            "tooltip": "调整背景清晰度"
+          },
+          "light_mode": "白天",
+          "dark_mode": "夜间",
+          "default": "无",
+          "custom": {
+            "label": "自定义背景",
+            "tooltip": "这将替换上面已经设置好的背景（注：在浏览器暗色模式下图片可能会无法显示）",
+            "placeholder": "图片链接"
+          }
+        }
+      },
+      "top_golden_list": {
+        "label": "金草莓排行榜",
+        "darken_colors": {
+          "label": "暗度",
+          "tooltip": "这可以使排行榜上的层级颜色变暗，0%为原色，100%为纯黑",
+          "note": "此设置仅在夜间模式生效！"
+        },
+        "campaign_icons": {
+          "label": "显示地图包图标",
+          "note": "在地图右侧显示图标（如果有的话）"
+        },
+        "text_fc_icons": {
+          "label": "使用文字图标",
+          "note": "这将用[C]、[FC]和[C/FC]替换绿旗和黄旗图标"
+        },
+        "switch_order": {
+          "label": "切换地图和挑战内容的位置",
+          "note": "从“挑战内容名 [地图名]”切换至“地图名 [挑战内容名]”格式"
+        },
+        "hide_empty_tiers": "隐藏空层级"
+      },
+      "difficulty_colors": {
+        "label": "层级颜色",
+        "description": "上位和下位的颜色都是根据中位颜色计算出的，你可以明确填写出上位和下位的颜色来覆盖",
+        "high": "上位",
+        "mid": "中位",
+        "low": "下位",
+        "t4+": "t4及以下层级（不分层）",
+        "presets": {
+          "label": "预设：",
+          "default": "默认",
+          "colorblind": "色盲预设",
+          "protanopia": "红色盲",
+          "deuteranopia": "绿色盲",
+          "tritanopia": "蓝色盲"
+        }
+      }
+    }
+  },
+  "challenge": {
+    "buttons": {
+      "submit": "提交你的内容",
+      "edit": "编辑"
+    },
+    "difficulty_suggestions": "难度建议",
+    "is_full_game": "是否为多章节一命项目",
+    "lobby_info": "大厅信息",
+    "submission_table": {
+      "suggestion": "难度建议",
+      "empty": "暂无建议"
+    }
+  },
+  "claim_player": {
+    "title": "绑定玩家",
+    "link_success": {
+      "title": "玩家已绑定！",
+      "info": "已成功绑定玩家，现在你可以提交新内容了！"
+    },
+    "make_claim": {
+      "title": "绑定玩家",
+      "info": "你的账号尚未进行绑定，请在旧表格上寻找你的数据（如果你经常改b站名的话表格可能来不及更新，需要你回想你的旧名字），如果没有数据则需要创建新玩家",
+      "buttons": {
+        "link": "绑定玩家",
+        "create": "创建新玩家"
+      },
+      "back": "返回",
+      "create": {
+        "title": "创建新玩家",
+        "feedback": {
+          "created": "玩家已创建",
+          "already_exists": "玩家已存在",
+          "name_missing": "名称不可为空",
+          "name_short": "玩家名称必须至少包含3个字符"
+        },
+        "info": "输入你的玩家名称，如果你在旧表格上存在数据，请返回并选择\"绑定玩家\".",
+        "player_name": "玩家名称",
+        "button": "创建"
+      },
+      "link": {
+        "title": "绑定玩家",
+        "info_1": "如果你在旧表格上存在数据，则可以进行绑定",
+        "info_2": "提交绑定请求后，你必须直接联系验证者以通过你提交的绑定请求",
+        "this_u": "这是你？",
+        "confirm": "确认",
+        "button": "绑定"
+      }
+    },
+    "claim_made": {
+      "title": "绑定请求已提交!",
+      "info": "你的绑定请求已提交！请在<CustomLink>金榜服务器</CustomLink>联系验证者以通过你提交的绑定请求（对于国内，请直接私信Parabones来解决问题，或在我的动态里提及都行）",
+      "your_data": {
+        "title": "你的数据",
+        "account_id": "账号ID",
+        "claimed_player": "玩家",
+        "verifiers": "验证者"
+      }
+    }
+  },
+  "error_pages": {
+    "403": {
+      "forbidden": "无法访问",
+      "description": "没有权限"
+    },
+    "no_player_claimed": {
+      "title": "你的账号缺少了一些必要设置",
+      "description": "请跳转到<CustomLink>此页面</CustomLink>来创建或绑定玩家！"
+    },
+    "404": "请求的页面不存在"
+  },
+  "golden_list": {
+    "hard": "Hard",
+    "standard": "Standard",
+    "all": "全部",
+    "campaign_list": "地图包列表",
+    "list_type": "类型",
+    "show_archived": "显示旧版本地图",
+    "show_arbitrary": "显示其他类型挑战",
+    "state": {
+      "submissions": "总计{{count}}个提交内容，{{campaigns}}个地图包",
+      "campaigns": "加载中：{{current}}/{{total}}",
+      "done_loading": "已完成加载"
+    }
+  },
+  "login": {
+    "already_logged_in": "请勿重复登录",
+    "login": {
+      "title": "登录",
+      "feedback": {
+        "passwords_not_match": "密码错误"
+      },
+      "email": "邮箱",
+      "password": "密码",
+      "or": "或",
+      "buttons": {
+        "sign_in": "登录",
+        "forgot_password": "忘记密码？",
+        "sign_up": "注册",
+        "discord": "用Discord登录"
+      }
+    },
+    "register": {
+      "title": "注册",
+      "success": "查看你的收件箱（或广告/垃圾邮件）以进行验证",
+      "info": "用邮箱注册需要验证你的邮箱，如果用Discord注册则无视",
+      "confirm_password": "确认密码",
+      "buttons": {
+        "register": "注册",
+        "sign_in": "已有账号？请点击此处登录！",
+        "discord": "用Discord注册"
+      }
+    },
+    "verify_email": {
+      "title": "验证邮箱",
+      "success": "你的邮箱验证已通过！可以进行登录了",
+      "to_login": "去登录",
+      "info": "单击下面的按钮以验证你的邮箱",
+      "button": "验证邮箱"
+    },
+    "forgot_password": {
+      "request": {
+        "title": "忘记密码",
+        "info": "如果你已经绑定邮箱，你将收到一封邮件以进行密码更改（别忘了检查广告/垃圾邮件）",
+        "button": "发送邮件"
+      },
+      "verify": {
+        "title": "重置密码",
+        "success": "密码已重置。",
+        "info": "输入你的新密码",
+        "new_password": "新密码",
+        "button": "保存"
+      }
+    }
+  },
+  "map": {
+    "buttons": {
+      "edit": "编辑",
+      "view_challenge": "查看挑战项目"
+    }
+  },
+  "player": {
+    "title": "个人资料",
+    "personal_tgl": "个人金草莓排行榜",
+    "stats": "玩家数据",
+    "showcase_hardest": "默认置顶",
+    "chart": {
+      "x_axis": "各层级的金草莓数量"
+    }
+  },
+  "rejected_maps": {
+    "title": "已拒绝的地图",
+    "info_1": "包含所有不会添加到地图包列表的地图，以及原因",
+    "info_2": "如果地图或地图包违反了规则3，也不会在此处列出",
+    "reason": "原因"
+  },
+  "search": {
+    "title_content": "搜索'{{content}}'",
+    "title_no_content": "搜索",
+    "feedback": {
+      "min_length": "至少输入3个字符"
+    },
+    "header": "搜索",
+    "info": "搜索玩家，作者，地图包或地图名称！",
+    "search_label": "搜索",
+    "no_campaigns": "找不到该地图包",
+    "no_maps": "找不到该地图",
+    "no_players": "找不到该玩家",
+    "authors": "作者",
+    "no_authors": "找不到该作者"
+  },
+  "monthly_recap": {
+    "title": "'{{month}}'的数据",
+    "settings": {
+      "less_recent": "上个月'{{month}}'",
+      "more_recent": "下个月'{{month}}'",
+      "normal_clears": "达成数（下限）",
+      "first_clears": "首位达成数（下限）",
+      "hide_changelog": "隐藏更改日志"
+    },
+    "header": "'{{month}}'的数据",
+    "total_clears": "月总数",
+    "timeline": {
+      "label": "时间线",
+      "first_clear": "首位达成",
+      "clear": "达成",
+      "moved": "变更"
+    }
+  },
+  "submission": {
+    "title": "{{challenge}} by '{{player}}'",
+    "feedback": {
+      "deleted": "内容已删除"
+    },
+    "details": {
+      "new_challenge": "新挑战项目",
+      "submitted": "提交日期",
+      "verification": "验证信息",
+      "status": "状态"
+    },
+    "delete_modal": {
+      "title": "删除提交内容",
+      "description": "确认删除此提交内容？"
+    },
+    "buttons": {
+      "modify": "更改",
+      "edit": "编辑",
+      "delete": "删除"
+    }
+  },
+  "submit": {
+    "title": "提交内容",
+    "tabs": {
+      "single": {
+        "label": "单次提交",
+        "header": "提交一个视频",
+        "select": "选择一个挑战项目",
+        "full_game": "选择一张地图或一个多章节一命项目",
+        "challenge_data": "挑战内容",
+        "your_run": "你的视频",
+        "verifier": {
+          "player_select": "[仅验证者]为其他玩家提交视频",
+          "new_player_name": "新玩家名称",
+          "buttons": {
+            "cancel": "取消",
+            "add_player": "添加玩家"
+          }
+        },
+        "proof_note": "请将视频发布在永久保留的地方，例如b站，油管或twitch切片（特别强调：b站的视频链接只用粘贴到bv号结束就行，如果把后面的部分也打进去会导致网站嵌入的视频播放不了，千万不要把斜杠给打进去了！）",
+        "raw_session_note": "t3及以上的金草莓需要上传无剪辑的原视频或整个直播回放（如果视频过短或第一局就出了就再传上一份时长更长的录像）",
+        "is_fc": "FC（一般情况下不需要手动勾选，如果你提交了C/FC的内容则需要手动勾选）",
+        "button": "提交"
+      },
+      "multi": {
+        "label": "批量提交",
+        "feedback": {
+          "submitting": "提交中：({{current}}/{{total}})",
+          "submitted": "已全部提交"
+        },
+        "header": "提交一个合集视频",
+        "info": "用于提交包含整个大厅的彩莓或地图包全金的合集视频",
+        "select_campaign": "选择一个地图包",
+        "all": "全部",
+        "prefer_fc": "默认FC",
+        "multi_video": {
+          "label": "提交多个视频",
+          "tooltip": "如果你有不止一个视频（或分P）请勾选这项，当一张地图的视频链接留空时则默认用最底部的视频链接自动补充"
+        },
+        "is_fc": "是否为FC",
+        "compilation_video": "你的合集视频",
+        "remove_map": "删除地图",
+        "button": "提交{{count}}个项目"
+      },
+      "new": {
+        "label": "新地图/挑战项目",
+        "header": "提交一个新地图",
+        "challenge_data": "Challenge Data",
+        "info": "用于提交数据库中尚未存在的新地图，可能需要更长的时间进行验证",
+        "gamebanana_url": "香蕉网链接",
+        "challenge_description": {
+          "label": "内容描述",
+          "placeholder": "如果该挑战与常规一命通关有所不同，请描述一下该挑战内容"
+        },
+        "button": "提交"
+      }
+    },
+    "notifications": {
+      "your_settings": "通知设置",
+      "enabled": "启用",
+      "disabled": "禁用"
+    }
+  },
+  "suggestions": {
+    "title": "意见箱",
+    "header": "意见箱",
+    "expired": "已过期的建议",
+    "showing_one": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
+    "showing_other": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
+    "buttons": {
+      "create": "创建"
+    },
+    "display": {
+      "deleted_player": "（已删除的玩家）",
+      "no_votes": "暂无投票"
+    },
+    "name": {
+      "general": "通用建议",
+      "pending": "验证中的建议",
+      "rejected": "已拒绝的建议",
+      "same_map": "by {{author}}",
+      "different_map": "地图包：{{campaign}} (by {{author}})"
+    },
+    "votes": {
+      "label": "投票",
+      "did_challenge": "达成此挑战的玩家投票数",
+      "others": "未达成此挑战的玩家投票数",
+      "for": "同意",
+      "against": "反对",
+      "indifferent": "无所谓",
+      "count_one": "{{count}}个投票",
+      "count_other": "{{count}}个投票"
+    },
+    "icon": {
+      "undecided": "待定",
+      "accepted": "已通过",
+      "rejected": "已拒绝"
+    },
+    "modals": {
+      "view": {
+        "feedback": {
+          "updated": "建议已更新"
+        },
+        "claim_player": "请绑定玩家以创建你的建议",
+        "your_comment": "发表你的意见",
+        "comment_note": "要更改意见，要暂时先将你的投票移除，修改好意见后再次进行投票",
+        "totals": "总计",
+        "done_challenge": "达成此挑战的玩家",
+        "not_done_challenge": "未达成此挑战的玩家",
+        "buttons": {
+          "verify": "通过",
+          "accept": "接受变更",
+          "reject_verification": "拒绝",
+          "reject_change": "拒绝变更"
+        }
+      },
+      "create": {
+        "feedback": {
+          "created": "建议已创建"
+        },
+        "header": "新建议",
+        "select_challenge": "选择挑战项目",
+        "suggestion_type": "建议类型",
+        "error_difficulty_general": "创建通用建议时无法选择难度",
+        "not_placement": {
+          "label": "通用建议",
+          "note": "非难度建议，用于请求分割挑战项目或其他情况"
+        },
+        "no_challenge_note": "不选择地图将默认创建通用建议",
+        "challenge_details": "详情",
+        "totals": "总计",
+        "comment": {
+          "label": "发表你的意见",
+          "placeholder": "描述一下发表此建议的原因",
+          "required": "创建通用建议时此项不可为空"
+        },
+        "button": "创建建议"
+      },
+      "delete": {
+        "title": "删除建议？",
+        "info": "确认删除此建议及所有投票？"
+      }
+    }
+  },
+  "top_golden_list": {
+    "title": "金草莓排行榜",
+    "notes": {
+      "fc": "收集所有可在正常情况下获得的收集物（红草莓，磁带，月莓等）",
+      "c_fc": "单金和FC在同一难度中",
+      "new_old": "地图版本（某些地图会附带版本号）"
+    }
+  },
+  "campaign": {
+    "info_boxes": {
+      "author": "作者",
+      "map_count": "地图数量",
+      "maps_one": "{{count}}张地图",
+      "maps_other": "{{count}}张地图",
+      "maps_archived_one": "{{count}}张地图（+{{archived}}张旧版地图）",
+      "maps_archived_other": "{{count}}张地图（+{{archived}}张旧版地图）",
+      "links": "链接",
+      "campaign_tgl": "地图包内的金草莓排行榜"
+    },
+    "tabs": {
+      "players": {
+        "progress": "进度",
+        "more_players_one": "+另外{{count}}位玩家",
+        "more_players_other": "+另外{{count}}位玩家",
+        "show_all": "显示全部"
+      }
+    }
+  },
+  "rules": {
+    "title": "Rules",
+    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.",
+    "maps": {
+      "header": "Maps",
+      "rules": {
+        "header": "Map Rules",
+        "0": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but it was taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability.",
+        "1": "The map or map pack <strong>must</strong> pose a non-trivial amount of difficulty, even if that difficulty may be very small. Maps with little to no ways to die will be rejected.",
+        "2": "The map or map pack <strong>must</strong> be at least three gameplay screens or checkpoints in length. This matches the shortest c-sides in the vanilla game.",
+        "3": "The map or map pack <strong>must not</strong> contain NSFW content.",
+        "4": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. Unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
+        "5": "The map or map pack <strong>is recommended to not</strong> be low-quality in nature. \"Shitpost\" or \"meme\" maps are fine, so long as there remains playable and generally-thought-out gameplay beneath it. Since this is vague, it's really decided more on a case by case basis, but if one would like a quick comparison: Maps like <CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink> or <CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink> are fine, but maps like <CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink> are not."
+      }
+    },
+    "goldens": {
+      "header": "Submissions",
+      "rules": {
+        "header": "Rules for All Submissions",
+        "0": "The submission video <strong>must</strong> be uploaded to a place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
+        "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\"). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
+        "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
+        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",
+        "4": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked.",
+        "5": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges where these may make some difference, but not enough to be exceedingly notable, submissions will be accepted, but with a note. On challenges where these make a big difference, such as subpixel-level alignment or stamina-heavy maps, submissions will likely be rejected.",
+        "6": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i> to a degree that trivializes the difficulty of the challenge. Pause buffering can make tight inputs in a map extremely easy, and heavy use of it is grounds for rejection. Since this is vague, it's usually evaluated on a case-by-case basis, but for a quick comparison: Pause buffering <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">this one wallbounce in Aquatic Underground</CustomExternalLink> is fine, whereas pause buffering <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower Golden</CustomExternalLink> is grounds for rejection. Runs which use a non-rejectable amount of pause buffering will have a note placed on them.",
+        "7": "Submissions <strong>must not</strong> abuse the <i>long wait spinner deload glitch</i>. Submissions <strong>may</strong> utilize the technique known as <i>spinner stunning</i> due to its frame-perfect nature and general unviability for goldens. For more info on these techniques, check out <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">this video</CustomExternalLink>.",
+        "8": "If a map does not have a golden strawberry, one <strong>is allowed</strong> to use the console command <code>give_golden</code> to give themselves a golden strawberry. This command <strong>must</strong> be used in the <strong>first</strong> room of the map. Alternatively, one may use <CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink> to add a golden strawberry in the first room of the map.",
+        "9": "For golden strawberry (or other similar berry) submissions, the submission <strong>does not have to</strong> actually collect the berry so long as the run follows the same challenge requirements (A.K.A. a <i>deathless berryless</i> run). Runs where a golden strawberry is fundamentally different than a non-golden, such as a golden room, <strong>will most likely not</strong> be accepted in this manner. While of course discouraged and we urge submissions to collect the applicable berry, we also understand that sometimes things happen and people unexpectedly fluke, and we don't want that to take away from anyone's achievement. Deathless berryless submissions will be given a note.",
+        "10": "For golden strawberry (or other similar berry) submissions, submissions <strong>may</strong> edit the <strong>end</strong> of a map to add a golden collect trigger <strong>if and only if</strong> a golden collect trigger does not exist. If a crystal heart indicates the ending but doesn't kick the player out, editing it to kick the player out is fine. This will be evaluated on a case-by-case basis, as this is very rare.",
+        "11": "For golden strawberry (or other similar berry) submissions, submissions <strong>are allowed to</strong> die during <strong>map intentional golden strawberry detachments</strong> as many times as one would like. This does <strong>not</strong> apply to golden detachments made to fix an issue (such as in <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) or unintentional golden detachments."
+      },
+      "full_game_additional": {
+        "header": "Additional Rules for Full Game Submissions",
+        "explanation": "There are two types of \"full game\" submissions: ones that complete a relevant subset of all maps in a map pack (which will be referred to as <i>partial full game runs</i>), such as all c-sides deathless or beginner lobby deathless, and completely full game runs, such as all maps deathless or 100% deathless (which will be referred to as <i>complete full game runs</i>). Rules which apply to only a specific category of these will be indicated.",
+        "0": "The submission video <strong>must</strong> show the run in full. For a partial full game run, the video must start at or before the chapter select screen of the first map completed and end after completing the final map. For a complete full game run, the video must start at or before the file select screen and end after completing the final map.",
+        "1": "Submissions for complete full game runs <strong>must</strong> complete the maps as how they would be completed from a new save file. It is recommended to <strong>always</strong> use a new save file for complete full game runs and <strong>not</strong> use cheat mode as a result. Partial full game runs may complete the applicable maps in any order.</strong>",
+        "2": "Submissions <strong>must not</strong> use \"Return to Map\" or any similar option to cheat likely death or otherwise make a map easier. This includes instances where one is \"softlocked\" in a map by any means brought on by the player.",
+        "3": "Submissions <strong>must not</strong> utilize more than one save file.",
+        "4": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Compare this to the previous note about individual level detachments",
+        "5": "Submissions <strong>must</strong> have the \"File Timer\" enabled, <strong>not just</strong> the chapter timer.",
+        "6": "Submissions <strong>must not</strong> have an overlay covering a large amount or essential parts of the screen. Essential parts include the timer, the total berry count in the top left, the pause menu berry tracker, the player, and the save icon in the bottom right.",
+        "7": "Submissions <strong>are recommended to not</strong> take long breaks on the menu or pause screen. It is more acceptable to take breaks while inside a map and not paused, though taking frequent breaks might raise suspicion and request for more proof.",
+        "8": "If a submission does not collect golden/silver berries, it <strong>may</strong> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs."
+      }
+    },
+    "general_recommendations": {
+      "header": "General Recommendations",
+      "section": {
+        "explanation": "These aren't <strong>exactly</strong> rules that need to be followed, but they help in aiding proof strength, avoiding giving your submission a note, helping one complete a challenge, or is a general courteous decision for others.",
+        "0": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions.",
+        "1": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility.",
+        "2": "For video compilations with multiple maps, adding timestamps in the description of the video or directly in the submission URL will help greatly.",
+        "3": "Keep one or two full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof."
+      }
+    }
+  },
+  "faq": {
+    "title": "常见问题解答",
+    "0": {
+      "question": "我可以提交不在数据库里的地图吗？",
+      "answer": "可以，但你需要提供地图链接以确保它符合基本规则，但即便如此，我们也可能不会添加它，在这种情况下你可以查看已拒绝的地图页面以了解原因。"
+    },
+    "1": {
+      "question": "地图至少要多难才能被添加？",
+      "answer": "很模糊的界限，看地图规则，也可以参考其他地图。"
+    },
+    "2": {
+      "question": "如果地图上没有金草莓怎么办？",
+      "answer": "在打开调试模式的前提下按~然后输入give_golden，或者你可以在制图器（Ahorn或者Loenn）来添加金草莓，确保金草莓靠近复活点而且不会挡路就行。"
+    },
+    "3": {
+      "question": "为什么有些地图难度比规则要求的要简单",
+      "answer": "特殊情况下，一些不符合难度的地图会经过团队决定后添加它们。比如一张地图虽然少于两面，但它是合集的一部分，不可分割（比如egc的五云，酱四的逆旅）。"
+    },
+    "4": {
+      "question": "Are demodash buttons/multiple jump binds allowed?",
+      "answer": "Demodash buttons and multiple jump binds are allowed. The same goes for any combination of inputs that can be mapped on the same key/button, but external macros which press multiple inputs on different frames are not allowed."
+    },
+    "5": {
+      "question": "Are pause buffers allowed?",
+      "answer": "For pause buffers, you can pause the game but if pause was used too aggressively or distinctly used to frame advance (pause/unpause to progress frame by frame), a note may be put into the cell with the golden clear. A run that abuses pause buffering too much might get rejected."
+    },
+    "6": {
+      "question": "What about spinner stunning?",
+      "answer": "Due to its difficulty and lack of golden viability, spinner stunning is allowed (pausing frame perfectly multiple times to keep spinners/lightning unloaded). However, deloading spinners by waiting 118+ hours is not allowed."
+    },
+    "7": {
+      "question": "FC的标准是什么？",
+      "answer": "-（此条回答已过时，等待重写中）"
+    },
+    "8": {
+      "question": "Why are some maps ineligible for full clear runs?",
+      "answer": "Some maps have collectibles which are not optional, such as strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side."
+    },
+    "9": {
+      "question": "What is the Top Golden List Rankings?",
+      "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
     }
   }
 }

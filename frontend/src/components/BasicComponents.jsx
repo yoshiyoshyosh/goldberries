@@ -388,7 +388,12 @@ export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false }) 
   return (
     <Stack direction="row" gap={1} alignItems="center">
       {icon}
-      <Typography variant="body1" color={textColor} fontWeight={isSecondary ? "normal" : "bold"}>
+      <Typography
+        variant="body1"
+        color={textColor}
+        fontWeight={isSecondary ? "normal" : "bold"}
+        sx={{ width: "100%", wordBreak: "break-word" }}
+      >
         {text}
       </Typography>
     </Stack>

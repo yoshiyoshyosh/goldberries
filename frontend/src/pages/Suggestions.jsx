@@ -296,12 +296,12 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
         <Grid container columnSpacing={1}>
           {!isGeneral && (
             <Grid item xs={12} sm={6} display="flex" justifyContent="space-between">
-              <VotesDisplay votes={votesSubmission} hasSubmission={true} />
+              <VotesDisplay votes={votesSubmission} hasSubmission={true} isGeneral={isGeneral} />
               <Divider orientation="vertical" />
             </Grid>
           )}
           <Grid item xs={12} sm={isGeneral ? 12 : 6}>
-            <VotesDisplay votes={votesNoSubmission} hasSubmission={false} />
+            <VotesDisplay votes={votesNoSubmission} hasSubmission={false} isGeneral={isGeneral} />
           </Grid>
         </Grid>
       )}
@@ -385,7 +385,7 @@ function SuggestionName({ suggestion, expired }) {
   );
 }
 
-function VotesDisplay({ votes, hasSubmission }) {
+function VotesDisplay({ votes, hasSubmission, isGeneral }) {
   const countFor = votes.filter((vote) => vote.vote === "+").length;
   const countAgainst = votes.filter((vote) => vote.vote === "-").length;
   const countIndifferent = votes.filter((vote) => vote.vote === "i").length;
@@ -394,43 +394,52 @@ function VotesDisplay({ votes, hasSubmission }) {
   return (
     <Stack direction="row" gap={2}>
       {(!hideEmpty || countFor > 0) && (
-        <VoteDisplay type="+" count={countFor} hasSubmission={hasSubmission} />
+        <VoteDisplay type="+" count={countFor} hasSubmission={hasSubmission} isGeneral={isGeneral} />
       )}
       {(!hideEmpty || countAgainst > 0) && (
-        <VoteDisplay type="-" count={countAgainst} hasSubmission={hasSubmission} />
+        <VoteDisplay type="-" count={countAgainst} hasSubmission={hasSubmission} isGeneral={isGeneral} />
       )}
       {(!hideEmpty || countIndifferent > 0) && (
-        <VoteDisplay type="i" count={countIndifferent} hasSubmission={hasSubmission} />
+        <VoteDisplay type="i" count={countIndifferent} hasSubmission={hasSubmission} isGeneral={isGeneral} />
       )}
     </Stack>
   );
 }
 
-function VoteDisplay({ type, count, hasSubmission }) {
+function VoteDisplay({ type, count, hasSubmission, isGeneral }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions.votes" });
   const theme = useTheme();
   const icon = type === "+" ? faThumbsUp : type === "-" ? faThumbsDown : faEquals;
   const color = type === "+" ? theme.palette.success.main : type === "-" ? theme.palette.error.main : "gray";
 
   const tooltip = hasSubmission ? t("did_challenge") : t("others");
-  return (
-    <Tooltip title={tooltip} arrow placement="top">
-      <Box
-        sx={{
-          border: "1px solid " + (hasSubmission ? color : theme.palette.box.border),
-          borderRadius: "5px",
-          px: 1,
-          py: 0.5,
-          opacity: count === 0 ? 0.3 : 1,
-        }}
-      >
-        <Stack direction="row" gap={1} alignItems="center">
-          <span>{count}</span>
-          <FontAwesomeIcon icon={icon} height="1em" color={color} />
-        </Stack>
-      </Box>
-    </Tooltip>
+
+  const comp = (
+    <Box
+      sx={{
+        border: "1px solid " + (hasSubmission ? color : theme.palette.box.border),
+        borderRadius: "5px",
+        px: 1,
+        py: 0.5,
+        opacity: count === 0 ? 0.3 : 1,
+      }}
+    >
+      <Stack direction="row" gap={1} alignItems="center">
+        <span>{count}</span>
+        <FontAwesomeIcon icon={icon} height="1em" color={color} />
+      </Stack>
+    </Box>
   );
+
+  if (isGeneral) {
+    return comp;
+  } else {
+    return (
+      <Tooltip title={tooltip} arrow placement="top">
+        {comp}
+      </Tooltip>
+    );
+  }
 }
 
 function SuggestionAcceptedIcon({ isAccepted, height = "1.5em" }) {

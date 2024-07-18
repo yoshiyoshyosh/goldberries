@@ -973,6 +973,7 @@
       "new": {
         "label": "New Challenge",
         "header": "Submit a new challenge run",
+        "challenge_data": "Challenge Data",
         "info": "This form is for submitting a run for a challenge that is not yet in the database. Might take longer to get verified!",
         "gamebanana_url": "GameBanana URL",
         "challenge_description": {
@@ -1099,79 +1100,68 @@
   },
   "rules": {
     "title": "Rules",
+    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.",
     "maps": {
-      "header": "Maps",
+      "header": "Rules for Maps",
       "rules": {
-        "header": "Map Rules",
-        "0": "The map and/or map pack must be published on Gamebanana.com, or alternatively uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps \">this archive.org item</CustomExternalLink>.",
-        "1": "The golden must pose some sort of challenge or difficulty, even if small (around the same difficulty as 1A). The map also must be at least 2 gameplay screens (or segments) long.",
-        "2": "The map itself must not contain inappropriate visual or sound content, or any NSFW content."
+        "0": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but it was taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability.",
+        "1": "The map or map pack <strong>must</strong> pose a non-trivial amount of difficulty, even if that difficulty may be very small. Maps with little to no ways to die will be rejected.",
+        "2": "The map or map pack <strong>must</strong> be at least three gameplay screens or checkpoints in length. This matches the shortest c-sides in the vanilla game.",
+        "3": "The map or map pack <strong>must not</strong> contain NSFW content.",
+        "4": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. Unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
+        "5": "The map or map pack <strong>is recommended to not</strong> be low-quality in nature. \"Shitpost\" or \"meme\" maps are fine, so long as there remains playable and generally-thought-out gameplay beneath it. Since this is vague, it's really decided more on a case by case basis, but if one would like a quick comparison: Maps like <CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink> or <CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink> are fine, but maps like <CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink> are not."
       }
     },
     "goldens": {
-      "header": "Deathless Runs",
+      "header": "Submissions",
       "rules": {
-        "header": "Rules",
-        "0": "Must have video that shows the whole completion from start to finish of the run. The video must be permanent and published somewhere where it can be watched (YouTube, Twitch, etc).",
-        "1": "Usage of any gameplay affecting features is banned. These include but aren't limited to: Assist mode, Variant mode, Extended Variant mod, High Frame Rate Mod (not to be confused with Motion Smoothing, which is allowed), etc. Debug is also banned unless it's used to get a golden on a map that doesn't have one by default (you may only use the give_golden command on the first screen of the map).",
-        "2": "Show the endscreen if one exists in the map. If it doesn't, show the journal right after the run.",
-        "3": "You must have raw recording of the run before it's verified, for Tier 3 and harder entries it's desirable to upload the raw recording together with the run itself."
+        "header": "Rules for All Submissions",
+        "0": "The submission video <strong>must</strong> be uploaded to a place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
+        "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
+        "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
+        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",
+        "4": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked.",
+        "5": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges where these may make some difference, but not enough to be exceedingly notable, submissions will be accepted, but with a note. On challenges where these make a big difference, such as subpixel-level alignment or stamina-heavy maps, submissions will likely be rejected.",
+        "6": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i> to a degree that trivializes the difficulty of the challenge. Pause buffering can make tight inputs in a map extremely easy, and heavy use of it is grounds for rejection. Since this is vague, it's usually evaluated on a case-by-case basis, but for a quick comparison: Pause buffering <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">this one wallbounce in Aquatic Underground</CustomExternalLink> is fine, whereas pause buffering <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower Golden</CustomExternalLink> is grounds for rejection. Runs which use a non-rejectable amount of pause buffering will have a note placed on them.",
+        "7": "Submissions <strong>must not</strong> abuse <i>spinner freezing</i>, where the player waits ~118 hours ingame to prevent certain spinners from loading. Submissions <strong>may</strong> utilize the technique known as <i>spinner stunning</i> due to its frame-perfect nature and general unviability for goldens. For more info on these techniques, check out <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">this video</CustomExternalLink>.",
+        "8": "If a map does not have a golden strawberry, one <strong>is allowed</strong> to use the console command <code>give_golden</code> to give themselves a golden strawberry. This command <strong>must</strong> be used in the <strong>first</strong> room of the map. Alternatively, one may use <CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink> to add a golden strawberry in the first room of the map.",
+        "9": "For golden strawberry (or other similar berry) submissions, the submission <strong>does not have to</strong> actually collect the berry so long as the run follows the same challenge requirements (A.K.A. a <i>deathless berryless</i> run). Runs where a golden strawberry is fundamentally different than a non-golden, such as a golden room, <strong>will most likely not</strong> be accepted in this manner. While of course discouraged and we urge submissions to collect the applicable berry, we also understand that sometimes things happen and people unexpectedly fluke, and we don't want that to take away from anyone's achievement. Deathless berryless submissions will be given a note.",
+        "10": "For golden strawberry (or other similar berry) submissions, submissions <strong>may</strong> edit the <strong>end</strong> of a map to add a golden collect trigger <strong>if and only if</strong> a golden collect trigger does not exist. If a crystal heart indicates the ending but doesn't kick the player out, editing it to kick the player out is fine. This will be evaluated on a case-by-case basis, as this is very rare.",
+        "11": "For golden strawberry (or other similar berry) submissions, submissions <strong>are allowed to</strong> die during <strong>map intentional golden strawberry detachments</strong> as many times as one would like. This does <strong>not</strong> apply to golden detachments made to fix an issue (such as in <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) or unintentional golden detachments."
       },
-      "recommendations": {
-        "header": "Recommendations",
-        "0": "Don't use features that significantly affect the visual part of the run (e. g. simplified graphics feature from CelesteTAS).",
-        "1": "Don't use mods that can give you some important information that you normally don't have access to (such as stamina meter or input history).",
-        "2": "Disable screenshake and turn photosensitive mode on.",
-        "3": "Use chapter timer or file timer.",
-        "4": "Use an input display. Make sure it's not minimized as some of them (like NohBoard) are known for not working in this case, make sure it's properly shown in the video before every session.",
-        "5": "Put the link to the map in description of the video.",
-        "6": "For video compilations with multiple maps, put a time stamp for each map.",
-        "7": "For Spring Collab 2020 or similar map packs, submit one video for each lobby and/or Heart Side golden for easier and faster verification.",
-        "8": "Sharing your progress publicly (via official Celeste Discord server or Celeste Modded Done Deathless Discord server) or otherwise documenting it somewhere helps credibility.",
-        "9": "Using pause buffering might result in putting a note on a golden clear, or rejecting a golden clear, depending on how aggressively pause was utilized in a run."
-      },
-      "info": {
-        "header": "Info",
-        "0": "When submitting a golden clear for a map that is already in the list, make sure that it follows all the rules for golden clear submissions. When submitting a golden clear for a map that is not in the list yet, make sure that the map follows the rules for maps as well as golden clear submission rules.",
-        "1": "There might be more rules for both golden clear submissions and maps that we didn't consider, so adding a golden clear or a map may be decided on a case by case basis.",
-        "2": "If the run doesn't follow some of the main rules, it might still get verified if it meets sufficient amount of recommendations to prove beyond any doubt that it's legit.",
-        "3": "A map may not be added to the list if a significant part of it resembles another map, both custom or from base game."
+      "full_game_additional": {
+        "header": "Additional Rules for Full Game Submissions",
+        "explanation": "There are two types of \"full game\" submissions: ones that complete a relevant subset of all maps in a map pack (which will be referred to as <i>partial full game runs</i>), such as all c-sides deathless or beginner lobby deathless, and completely full game runs, such as all maps deathless or 100% deathless (which will be referred to as <i>complete full game runs</i>). Rules which apply to only a specific category of these will be indicated.",
+        "0": "The submission video <strong>must</strong> show the run in full. For a partial full game run, the video must start at or before the chapter select screen of the first map completed and end after completing the final map. For a complete full game run, the video must start at or before the file select screen and end after completing the final map.",
+        "1": "Submissions for complete full game runs <strong>must</strong> complete the maps as how they would be completed from a new save file. It is recommended to <strong>always</strong> use a new save file for complete full game runs and <strong>not</strong> use cheat mode as a result. Partial full game runs may complete the applicable maps in any order.</strong>",
+        "2": "Submissions <strong>must not</strong> use \"Return to Map\" or any similar option to cheat likely death or otherwise make a map easier. This includes instances where one is \"softlocked\" in a map by any means brought on by the player.",
+        "3": "Submissions <strong>must not</strong> utilize more than one save file.",
+        "4": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Compare this to the previous note about individual level detachments",
+        "5": "Submissions <strong>must</strong> have the \"File Timer\" enabled, <strong>not just</strong> the chapter timer.",
+        "6": "Submissions <strong>must not</strong> have an overlay covering a large amount or essential parts of the screen. Essential parts include the timer, the total berry count in the top left, the pause menu berry tracker, the player, and the save icon in the bottom right.",
+        "7": "Submissions <strong>are recommended to not</strong> take long breaks on the menu or pause screen. It is more acceptable to take breaks while inside a map and not paused, though taking frequent breaks might raise suspicion and request for more proof.",
+        "8": "If a submission does not collect golden/silver berries, it <strong>may</strong> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs."
       }
     },
-    "fullgame": {
-      "header": "Full Game Runs",
-      "preface": {
-        "header": "Preface",
-        "explanation": "Those are challenge runs that involve completing multiple maps (3 or more, runs that involve 2 maps can be accepted on case by case basis) in a row without dying. Generally, they resemble one of the following (including but not limited to):",
-        "0": "All A-Sides of the map pack without dying (All A-Sides Deathless) / All B-Sides of the map pack without dying (All B-Sides Deathless) / All C-Sides of the map pack without dying (All C-Sides Deathless);",
-        "1": "All the A-Sides (or B-Sides/C-Sides/etc) of the map pack with all red berries/all collectibles without dying (All Red Berries deathless, All Full Clears Deathless);",
-        "2": "Completing one lobby without dying, if the map pack uses lobby system (Lobby Deathless)",
-        "3": "All maps of the map pack without dying (All Chapters Deathless);",
-        "4": "All maps + all red berries/all collectibles of the map pack without dying (All Red Berries deathless, 100% Deathless)"
-      },
-      "verification": {
-        "header": "Verification",
-        "explanation": "For full game runs there are two ways to make a verifiable run:",
-        "0": "Create a new file and complete the run. Some runs may require cheat mode to access certain maps, but if cheat mode isn't mentioned then it isn't allowed for the run.",
-        "1": "Get the golden berry on every map that's required for the run, without creating a new file. Some runs may only be possible to complete from existing file (e. g. Glyph Void-Side Moon Berry)."
-      },
-      "rules": {
-        "header": "Rules",
-        "0": "Must have a video that shows the run from creating a new file to completing the final chapter of the run. If you play from existing file, you must show chapter select screen of the first chapter of the run.",
-        "1": "If you play from existing file, you must follow the order of chapters that would only be possible from a newly created save. Keep in mind heart gates and other similar measures that limit options of what chapters you can play at any moment.",
-        "2": "You are not allowed to use Return to Map (Restart Chapter) option in order to avoid death. This also includes cases when you are on \"safe ground\" but can't proceed and finish a map by any means.",
-        "3": "Using more than one save file in one run is not allowed.",
-        "4": "If the run has forced deaths, you must not have more deaths than the minimum it takes to progress (for example, dying 2 times to one death warp isn't allowed if only 1 death is enough to progress).",
-        "5": "Runs must be done in one play session.",
-        "6": "Layout must not cover essential parts of the screen: timer, total berry counter in top left, berry tracker at the bottom, and save icon in bottom right."
-      },
-      "info": {
-        "header": "Info",
-        "0": "Refrain from long breaks if you're on menu (AFK during gameplay is acceptable but such breaks may cause suspicion if they are too long).",
-        "1": "Using hardcore mod isn't required.",
-        "2": "Collecting golden/silver berries is highly recommended if you're playing not from a new file.",
-        "3": "Full game run that doesn't get golden/silver berries may be submitted as individial golden/silver entries in other tabs, unless the map has gameplay exclusive for having a golden/silver berry (golden room, golden blocks etc).",
-        "4": "If some of the recommendations aren't followed, run still may get verified if enough additional proof is provided."
+    "general_recommendations": {
+      "header": "General Recommendations",
+      "section": {
+        "explanation": "These aren't <strong>exactly</strong> rules that need to be followed, but they help in aiding proof strength, avoiding giving your submission a note, helping one complete a challenge, or is a general courteous decision for others.",
+        "0": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions.",
+        "1": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility.",
+        "2": "For video compilations with multiple maps, adding timestamps in the description of the video or directly in the submission URL will help greatly.",
+        "3": "Keep one or two full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof."
+      }
+    },
+    "allowed_mods": {
+      "header": "Allowed and Recommended Mods",
+      "section": {
+        "explanation": "All mods listed here are allowed for submissions unless otherwise specified. Mods not listed here are also allowed for submissions unless they violate the gameplay altering mod rule or info gaining mod rule.",
+        "0": "The <strong>only</strong> gameplay-altering mod that is allowed is the <i>No Freeze Frames</i> variant in <CustomExternalLink href=\"https://gamebanana.com/mods/53650\">Extended Variants</CustomExternalLink>. The rationale is that this mod does not fundamentally change the game as well as makes the game harder in most instances.",
+        "1": "For complete full game runs, using the <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">hardcore mode</CustomExternalLink> mod may help reset runs faster, but is not required. Hardcore mode will also allow goldens to spawn without needing cheat mode, which means the full game run may be submitted to individual maps without issue.",
+        "2": "The <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> mod is allowed for submissions. This mod gives players some helpful quality of life features, such as making the golden berry transparent, being able to place a persistent golden berry without using a map editor, or allowing one to start at the same room they died in a golden run.",
+        "3": "The <CustomExternalLink href=\"https://gamebanana.com/tools/6597\">Speedrun Tool</CustomExternalLink> mod and <CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink> mods can help finding strategies and setups for parts in a challenge. Do note, however, that utilizing any gameplay-altering of info-gaining features of these mods during a challenge is disallowed.",
+        "4": "Other mods frequently used for deathless challenges include <CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink> and <CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>."
       }
     }
   },

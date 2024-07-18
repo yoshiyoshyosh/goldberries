@@ -1,46 +1,44 @@
 export const NewRules = {
   goldens: {
+    id: "submissions",
     rules: {
+      id: "submissions-all",
       type: "ordered",
-      count: 4,
+      count: 12,
     },
-    recommendations: {
-      type: "unordered",
-      size: "small",
-      count: 10,
+    full_game_additional: {
+      id: "submissions-fullgame",
+      explanation: true,
+      type: "ordered",
+      count: 9,
     },
-    info: {
+  },
+  general_recommendations: {
+    id: "general-recs",
+    section: {
+      header: false,
+      explanation: true,
       type: "unordered",
       size: "small",
       count: 4,
     },
   },
-  fullgame: {
-    preface: {
-      type: "unordered",
+  allowed_mods: {
+    id: "allowed-mods",
+    section: {
+      header: false,
       explanation: true,
-      size: "small",
-      count: 5,
-    },
-    verification: {
-      type: "ordered",
-      explanation: true,
-      count: 2,
-    },
-    rules: {
-      type: "ordered",
-      count: 7,
-    },
-    info: {
       type: "unordered",
       size: "small",
       count: 5,
     },
   },
   maps: {
+    id: "maps",
     rules: {
+      header: false,
       type: "ordered",
-      count: 3,
+      count: 6,
     },
   },
 };
