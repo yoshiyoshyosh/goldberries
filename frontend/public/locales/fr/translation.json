@@ -539,5 +539,724 @@
         "back": "Revenir à la page précédente"
       }
     }
+  },
+  "account": {
+    "title": "My Account",
+    "no_player_claimed": "You haven't claimed a player yet. Head over to <CustomLink>this page</CustomLink> to create or claim one!",
+    "claim": "Claim:",
+    "tabs": {
+      "login_methods": {
+        "label": "Login Methods",
+        "feedback": {
+          "updated": "Account updated"
+        },
+        "note": "Note: One of the login methods must always be active!",
+        "email": "Email",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "add_email": "Add Email",
+        "undo": "Undo",
+        "unlink": "Unlink",
+        "discord": "Discord",
+        "linked": "Linked",
+        "link_discord": "Link Discord",
+        "button": "Save Changes"
+      },
+      "notifications": {
+        "label": "Notifications",
+        "feedback": {
+          "updated": "Notification settings updated"
+        },
+        "note": "Note: Currently these notifications will be sent as Discord pings in the official Modded Golden Discord Server. To get a notification, you need to join that server (<CustomLink1>invite link</CustomLink1>) AND have your Discord account linked to your goldberries.net account <CustomLink2>here</CustomLink2>!",
+        "sub_verified": {
+          "label": "Submission Verified",
+          "description": "To get notified when your submission gets verified or rejected"
+        },
+        "marked_personal": {
+          "label": "Difficulty Suggestion Marked Personal",
+          "description": "To get notified when a difficulty suggestion from you gets marked as 'personal', due to new major strats being discovered"
+        },
+        "challenge_moved": {
+          "label": "Challenge Moved",
+          "description": "To get notified when a challenge you have completed gets moved to a different difficulty"
+        },
+        "suggestion_created": {
+          "label": "Suggestion Created",
+          "description": "To get notified when a suggestion for a challenge you have completed is created"
+        }
+      },
+      "profile": {
+        "label": "Profile",
+        "feedback": {
+          "updated": "Profile updated"
+        },
+        "name_color": {
+          "label": "Name Color",
+          "preview": "Preview:",
+          "name_placeholder": "Player Name",
+          "use_gradient": "Use Gradient",
+          "start_color": "Start Color",
+          "end_color": "End Color",
+          "solid_color": "Solid Color",
+          "switch": "Switch"
+        },
+        "about_me": {
+          "label": "About Me",
+          "placeholder": "Tell us about yourself!"
+        },
+        "custom_links": {
+          "label": "Custom Links",
+          "note": "You can add custom links to your profile. This can be a link to your speedrun.com profile, a link to your YouTube channel, or any other link you want to share with the community."
+        }
+      },
+      "showcase": {
+        "label": "Showcase",
+        "title": "Submission Showcase",
+        "feedback": {
+          "updated": "Showcase updated"
+        },
+        "no_player_claimed": "You need to have a player claimed to use this feature!",
+        "note_1": "Select up to 9 submissions which should be shown on your player profile!",
+        "note_2": "Note: Not selecting any submissions will make the 9 highest placed submissions be shown instead.",
+        "buttons": {
+          "save": "Save Showcase",
+          "add_submission": "Add Submission",
+          "remove_submission": "Remove Submission"
+        }
+      },
+      "player_rename": {
+        "label": "Player Rename",
+        "title": "Rename your Player",
+        "feedback": {
+          "renamed": "Rename successful"
+        },
+        "no_player_claimed": "You don't have a player claimed yet!",
+        "description": "Give your player a new name. This can be done once every 24 hours.",
+        "can_rename": "You can rename your player!",
+        "cannot_rename": "You can rename your player again in {{time}}.",
+        "new_name": "New Name",
+        "log_change": "Log the rename in your player's changelog",
+        "button": "Rename"
+      },
+      "danger_zone": {
+        "label": "Danger Zone",
+        "description": "Permanently delete your account.",
+        "note": "Please note that this does not delete your associated player! Any submissions will remain unchanged, and your 'player' will become unclaimed again. If you want to remove your name from this website or mass delete your own submissions, contact a team member!",
+        "confirm": "Type 'DELETE' to confirm",
+        "button": "Delete Account"
+      }
+    }
+  },
+  "app_settings": {
+    "title": "Settings",
+    "footnote": "Settings are saved automatically",
+    "tabs": {
+      "general": {
+        "label": "General",
+        "language": "Language"
+      },
+      "visual": {
+        "label": "Visual",
+        "name_colors": {
+          "label": "Player Name Colors",
+          "show": "Show Player Name Colors",
+          "prefer_solid_color": "Prefer Solid Color Over Gradient Color",
+          "show_outline": "Show Outline"
+        },
+        "background": {
+          "label": "Background",
+          "blur": {
+            "label": "Background Blur",
+            "tooltip": "Gaussian Blur applied to the background"
+          },
+          "light_mode": "Light Mode",
+          "dark_mode": "Dark Mode",
+          "default": "Default Background",
+          "custom": {
+            "label": "Custom Background",
+            "tooltip": "If set, replaces the selected background from above",
+            "placeholder": "URL to image"
+          }
+        }
+      },
+      "top_golden_list": {
+        "label": "Top Golden List",
+        "darken_colors": {
+          "label": "Darken Tier Colors",
+          "tooltip": "In dark-mode, makes the tier colors darker. 0% doesn't change the colors, 100% makes them entirely black.",
+          "note": "This setting only affects the dark-mode colors!"
+        },
+        "campaign_icons": {
+          "label": "Show Campaign Icons",
+          "note": "Shows popular campaign's icons, such as SJ, SC, D-Sides..."
+        },
+        "text_fc_icons": {
+          "label": "Use Text FC Icons",
+          "note": "This will replace the flag icons with [C], [FC] and [C/FC] 'icons'"
+        },
+        "switch_order": {
+          "label": "Switch Map and Challenge",
+          "note": "Switches from 'Segment Name [Map Name]' to 'Map Name [Segment Name]' format"
+        },
+        "hide_empty_tiers": "Hide Empty Tiers"
+      },
+      "difficulty_colors": {
+        "label": "Difficulty Colors",
+        "description": "High and Low subtier colors are calculated based on the Mid color. You can overwrite this by explicitly setting the High and Low subtier colors.",
+        "high": "High",
+        "mid": "Mid",
+        "low": "Low",
+        "t4+": "Tier 4+ (no subtiers)",
+        "presets": {
+          "label": "Presets:",
+          "default": "Default",
+          "colorblind": "Colorblindness Presets:",
+          "protanopia": "Protanopia",
+          "deuteranopia": "Deuteranopia",
+          "tritanopia": "Tritanopia"
+        }
+      }
+    }
+  },
+  "challenge": {
+    "buttons": {
+      "submit": "Submit a Run",
+      "edit": "Edit Challenge"
+    },
+    "difficulty_suggestions": "Difficulty Suggestions",
+    "is_full_game": "Full Game?",
+    "lobby_info": "Lobby Info",
+    "submission_table": {
+      "suggestion": "Suggestion",
+      "empty": "No submissions"
+    }
+  },
+  "claim_player": {
+    "title": "Claim a Player",
+    "link_success": {
+      "title": "Player claimed!",
+      "info": "You have successfully claimed your player. You can now submit runs!"
+    },
+    "make_claim": {
+      "title": "Claim Player",
+      "info": "Your account is not linked to a player yet. If you have made submissions on the old spreadsheet, you should claim your player with the same name. Otherwise you can create a new player.",
+      "buttons": {
+        "link": "Link Existing Player",
+        "create": "Create New Player"
+      },
+      "back": "Back",
+      "create": {
+        "title": "Create New Player",
+        "feedback": {
+          "created": "Player created",
+          "already_exists": "Player already exists",
+          "name_missing": "Please enter a player name",
+          "name_short": "Player name must be at least 3 characters long"
+        },
+        "info": "Please enter the name you want to have on the list. If you already have existing submissions from the old spreadsheet, please go back and select \"Link Existing Player\".",
+        "player_name": "Player Name",
+        "button": "Create Player"
+      },
+      "link": {
+        "title": "Claim Existing Player",
+        "info_1": "If you have made submission for the old spreadsheet, you can claim these for your account.",
+        "info_2": "After making a claim, you will have to contact a team member directly, in order to verify that you are who you claim to be!",
+        "this_u": "This u?",
+        "confirm": "I confirm that I am the player shown in the video",
+        "button": "Claim Player"
+      }
+    },
+    "claim_made": {
+      "title": "Player claim submitted!",
+      "info": "Your claim has been submitted! Please contact one of the verifiers on Discord (or some other way) to verify your claim. An @ in the <CustomLink>Modded Golden Team Discord</CustomLink> should be enough in most cases!",
+      "your_data": {
+        "title": "Your Data",
+        "account_id": "Account ID:",
+        "claimed_player": "Claimed Player:",
+        "verifiers": "Verifiers"
+      }
+    }
+  },
+  "error_pages": {
+    "403": {
+      "forbidden": "Forbidden",
+      "description": "You don't have permission to access this page."
+    },
+    "no_player_claimed": {
+      "title": "Your account is missing setup!",
+      "description": "Please go to <CustomLink>this page</CustomLink> to create a new player, or claim an existing one!"
+    },
+    "404": "This requested page does not exist"
+  },
+  "golden_list": {
+    "hard": "Hard Golden List",
+    "standard": "Standard Golden List",
+    "all": "All Campaigns",
+    "campaign_list": "Campaign List",
+    "list_type": "List Type",
+    "show_archived": "Show Archived",
+    "show_arbitrary": "Show Arbitrary",
+    "state": {
+      "submissions": "{{count}} submissions across {{campaigns}} campaigns",
+      "campaigns": "Loading campaigns {{current}}/{{total}}",
+      "done_loading": "Done loading"
+    }
+  },
+  "login": {
+    "already_logged_in": "You're already logged in, silly",
+    "login": {
+      "title": "Login",
+      "feedback": {
+        "passwords_not_match": "Passwords do not match"
+      },
+      "email": "Email Address",
+      "password": "Password",
+      "or": "OR",
+      "buttons": {
+        "sign_in": "Sign In",
+        "forgot_password": "Forgot Password?",
+        "sign_up": "Sign Up",
+        "discord": "Sign In with Discord"
+      }
+    },
+    "register": {
+      "title": "Register",
+      "success": "Check your inbox (and spam folder!) for the activation email",
+      "info": "Registering via email requires you to verify your email address. Register with Discord to skip this.",
+      "confirm_password": "Confirm Password",
+      "buttons": {
+        "register": "Register",
+        "sign_in": "Have an account? Sign In instead!",
+        "discord": "Register with Discord"
+      }
+    },
+    "verify_email": {
+      "title": "Verify Email",
+      "success": "Your email has been verified! You can now login to your account.",
+      "to_login": "Go to the Login",
+      "info": "Click the button below to verify your email address",
+      "button": "Verify Email"
+    },
+    "forgot_password": {
+      "request": {
+        "title": "Forgot Password",
+        "info": "If an account with this email exists, you will receive an email with instructions to reset your password! (Check you spam folder too!)",
+        "button": "Send Recovery Email"
+      },
+      "verify": {
+        "title": "Reset Password",
+        "success": "Your password has been reset! You can now login with your new password.",
+        "info": "Enter your new password below",
+        "new_password": "New Password",
+        "button": "Set New Password"
+      }
+    }
+  },
+  "map": {
+    "buttons": {
+      "edit": "Edit Map",
+      "view_challenge": "View Challenge"
+    }
+  },
+  "player": {
+    "title": "Profile",
+    "personal_tgl": "Personal Top Golden List",
+    "stats": "Player Stats",
+    "showcase_hardest": "Hardest Submissions",
+    "chart": {
+      "show_standard": "Show Standard & Undetermined",
+      "x_axis": "Count of Goldens per Tier"
+    }
+  },
+  "rejected_maps": {
+    "title": "Rejected Maps",
+    "info_1": "This page contains all the maps that have been decided to not be added to the list, as well as reasons why such decision was made.",
+    "info_2": "If the map or map pack breaks rule 3 (has inapporpriate words/visual stuff/etc), it won't be listed here.",
+    "reason": "Reason"
+  },
+  "search": {
+    "title_content": "Search '{{content}}'",
+    "title_no_content": "Search",
+    "feedback": {
+      "min_length": "Please enter at least 3 characters to search"
+    },
+    "header": "Search Goldberries Database",
+    "info": "Search for players, campaigns, and maps by name!",
+    "search_label": "Search",
+    "no_campaigns": "No campaigns found",
+    "no_maps": "No maps found",
+    "no_players": "No players found",
+    "authors": "Authors",
+    "no_authors": "No authors found"
+  },
+  "monthly_recap": {
+    "title": "Monthly Recap '{{month}}'",
+    "settings": {
+      "less_recent": "Less Recent '{{month}}'",
+      "more_recent": "More Recent '{{month}}'",
+      "normal_clears": "Normal Clears Min. Difficulty",
+      "first_clears": "First Clears Min. Difficulty",
+      "hide_changelog": "Hide Changelog"
+    },
+    "header": "Monthly Recap for '{{month}}'",
+    "total_clears": "Total clears this month",
+    "timeline": {
+      "label": "Timeline",
+      "first_clear": "First Clear",
+      "clear": "Clear",
+      "moved": "Moved"
+    }
+  },
+  "submission": {
+    "title": "{{challenge}} by '{{player}}'",
+    "feedback": {
+      "deleted": "Submission deleted"
+    },
+    "details": {
+      "new_challenge": "New Challenge",
+      "submitted": "Submitted",
+      "verification": "Verification",
+      "status": "Status"
+    },
+    "delete_modal": {
+      "title": "Delete Submission",
+      "description": "Are you sure you want to delete this submission?"
+    },
+    "buttons": {
+      "modify": "Modify",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "submit": {
+    "title": "Submit A Run",
+    "tabs": {
+      "single": {
+        "label": "Single Challenge",
+        "header": "Submit a run",
+        "select": "Select a Challenge",
+        "full_game": "Select Map OR Full Game Challenge",
+        "challenge_data": "Challenge Data",
+        "your_run": "Your Run",
+        "verifier": {
+          "player_select": "[Verifier Only] Submit for Player",
+          "new_player_name": "New Player Name",
+          "buttons": {
+            "cancel": "Cancel",
+            "add_player": "Add Player"
+          }
+        },
+        "proof_note": "Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight",
+        "raw_session_note": "Raw session recording of the winning run is required for Tier 3+ goldens.",
+        "is_fc": "Run is Full Clear",
+        "button": "Submit"
+      },
+      "multi": {
+        "label": "Multi Challenge",
+        "feedback": {
+          "submitting": "Submitting run ({{current}}/{{total}})",
+          "submitted": "Runs submitted"
+        },
+        "header": "Submit a compilation video",
+        "info": "This form is for submitting a compilation video of an entire campaign or lobby",
+        "select_campaign": "Select a Campaign",
+        "all": "All",
+        "prefer_fc": "Prefer Full Clear",
+        "multi_video": {
+          "label": "Use multiple videos",
+          "tooltip": "Tick this if you have multiple videos for this campaign. If you don't set a url for a map, the compilation video will be taken instead."
+        },
+        "is_fc": "Is FC",
+        "compilation_video": "Compilation Video",
+        "remove_map": "Remove Map",
+        "button": "Submit '{{count}}' Runs"
+      },
+      "new": {
+        "label": "New Challenge",
+        "header": "Submit a new challenge run",
+        "challenge_data": "Challenge Data",
+        "info": "This form is for submitting a run for a challenge that is not yet in the database. Might take longer to get verified!",
+        "gamebanana_url": "GameBanana URL",
+        "challenge_description": {
+          "label": "Challenge Description",
+          "placeholder": "Description of the challenge, if different from a regular deathless run"
+        },
+        "button": "Submit"
+      }
+    },
+    "notifications": {
+      "your_settings": "Your notification settings:",
+      "enabled": "Notification upon verification",
+      "disabled": "Disabled"
+    }
+  },
+  "suggestions": {
+    "title": "Suggestions",
+    "header": "#suggestion-box",
+    "expired": "Expired Suggestions",
+    "showing_one": "Showing {{from}}-{{to}} of {{count}} total suggestion",
+    "showing_other": "Showing {{from}}-{{to}} of {{count}} total suggestions",
+    "buttons": {
+      "create": "Create"
+    },
+    "display": {
+      "deleted_player": "(deleted player)",
+      "no_votes": "No votes yet"
+    },
+    "name": {
+      "general": "General Suggestion",
+      "pending": "Pending Verification",
+      "rejected": "Rejected Verification",
+      "same_map": "by {{author}}",
+      "different_map": "from {{campaign}} (by {{author}})"
+    },
+    "votes": {
+      "label": "Votes",
+      "did_challenge": "Votes from players who did this challenge",
+      "others": "Votes from players who did not do this challenge",
+      "for": "For",
+      "against": "Against",
+      "indifferent": "Indifferent",
+      "count_one": "{{count}} vote",
+      "count_other": "{{count}} votes"
+    },
+    "icon": {
+      "undecided": "Undecided",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "modals": {
+      "view": {
+        "feedback": {
+          "updated": "Suggestion updated"
+        },
+        "claim_player": "Claim a player to be able to vote on suggestions!",
+        "your_comment": "Your Comment",
+        "comment_note": "To change your comment after you voted, remove your vote and vote again.",
+        "totals": "Totals",
+        "done_challenge": "Done Challenge",
+        "not_done_challenge": "Not Done Challenge",
+        "buttons": {
+          "verify": "Verify",
+          "accept": "Accept Change",
+          "reject_verification": "Reject Verification",
+          "reject_change": "Reject Change"
+        }
+      },
+      "create": {
+        "feedback": {
+          "created": "Suggestion created"
+        },
+        "header": "New Suggestion",
+        "select_challenge": "Select Challenge",
+        "suggestion_type": "Suggestion Type",
+        "error_difficulty_general": "Cannot select a difficulty when making a general challenge suggestion.",
+        "not_placement": {
+          "label": "Not a placement suggestion",
+          "note": "Checking this means not suggesting a difficulty, e.g. when split a C/FC challenge into C and FC."
+        },
+        "no_challenge_note": "Not selecting a challenge will create a general suggestion.",
+        "challenge_details": "Challenge Details",
+        "totals": "Total for each tier",
+        "comment": {
+          "label": "Comment",
+          "placeholder": "Explain why you think something should be changed",
+          "required": "Comment is required for general suggestions."
+        },
+        "button": "Create Suggestion"
+      },
+      "delete": {
+        "title": "Delete Suggestion?",
+        "info": "Are you sure you want to delete this suggestion and all attached votes?"
+      }
+    }
+  },
+  "top_golden_list": {
+    "title": "Top Golden List",
+    "notes": {
+      "fc": "Golden clear with all optional collectibles (red berries, cassette, etc)",
+      "c_fc": "Regular clear and Full Clear are the same placement",
+      "new_old": "New or Old version of the map"
+    }
+  },
+  "campaign": {
+    "info_boxes": {
+      "author": "Author",
+      "map_count": "Map Count",
+      "maps_one": "{{count}} Map",
+      "maps_other": "{{count}} Maps",
+      "maps_archived_one": "{{count}} Map (+{{archived}} archived)",
+      "maps_archived_other": "{{count}} Maps (+{{archived}} archived)",
+      "links": "Links",
+      "campaign_tgl": "Campaign Top Golden List"
+    },
+    "tabs": {
+      "players": {
+        "progress": "Progress",
+        "more_players_one": "+ {{count}} more player",
+        "more_players_other": "+ {{count}} more players",
+        "show_all": "Show All"
+      }
+    }
+  },
+  "rules": {
+    "title": "Rules",
+    "toc": "Table of Contents",
+    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.",
+    "maps": {
+      "header": "Rules for Maps",
+      "rules": {
+        "0": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but it was taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability.",
+        "1": "The map or map pack <strong>must</strong> pose a non-trivial amount of difficulty, even if that difficulty may be very small. Maps with little to no ways to die will be rejected.",
+        "2": "The map or map pack <strong>must</strong> be at least three gameplay screens or checkpoints in length. This matches the shortest c-sides in the vanilla game.",
+        "3": "The map or map pack <strong>must not</strong> contain NSFW content.",
+        "4": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. Unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
+        "5": "The map or map pack <strong>is recommended to not</strong> be low-quality in nature. \"Shitpost\" or \"meme\" maps are fine, so long as there remains playable and generally-thought-out gameplay beneath it. Since this is vague, it's really decided more on a case by case basis, but if one would like a quick comparison: Maps like <CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink> or <CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink> are fine, but maps like <CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink> are not."
+      }
+    },
+    "goldens": {
+      "header": "Submissions",
+      "rules": {
+        "header": "Rules for All Submissions",
+        "0": "The submission video <strong>must</strong> be uploaded to a place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
+        "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
+        "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
+        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",
+        "4": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked.",
+        "5": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges where these may make some difference, but not enough to be exceedingly notable, submissions will be accepted, but with a note. On challenges where these make a big difference, such as subpixel-level alignment or stamina-heavy maps, submissions will likely be rejected.",
+        "6": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i> to a degree that trivializes the difficulty of the challenge. Pause buffering can make tight inputs in a map extremely easy, and heavy use of it is grounds for rejection. Since this is vague, it's usually evaluated on a case-by-case basis, but for a quick comparison: Pause buffering <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">this one wallbounce in Aquatic Underground</CustomExternalLink> is fine, whereas pause buffering <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower Golden</CustomExternalLink> is grounds for rejection. Runs which use a non-rejectable amount of pause buffering will have a note placed on them.",
+        "7": "Submissions <strong>must not</strong> abuse <i>spinner freezing</i>, where the player waits ~118 hours ingame to prevent certain spinners from loading. Submissions <strong>may</strong> utilize the technique known as <i>spinner stunning</i> due to its frame-perfect nature and general unviability for goldens. For more info on these techniques, check out <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">this video</CustomExternalLink>.",
+        "8": "If a map does not have a golden strawberry, one <strong>is allowed</strong> to use the console command <code>give_golden</code> to give themselves a golden strawberry. This command <strong>must</strong> be used in the <strong>first</strong> room of the map. Alternatively, one may use <CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink> to add a golden strawberry in the first room of the map.",
+        "9": "For golden strawberry (or other similar berry) submissions, the submission <strong>does not have to</strong> actually collect the berry so long as the run follows the same challenge requirements (A.K.A. a <i>deathless berryless</i> run). Runs where a golden strawberry is fundamentally different than a non-golden, such as a golden room, <strong>will most likely not</strong> be accepted in this manner. While of course discouraged and we urge submissions to collect the applicable berry, we also understand that sometimes things happen and people unexpectedly fluke, and we don't want that to take away from anyone's achievement. Deathless berryless submissions will be given a note.",
+        "10": "For golden strawberry (or other similar berry) submissions, submissions <strong>may</strong> edit the <strong>end</strong> of a map to add a golden collect trigger <strong>if and only if</strong> a golden collect trigger does not exist. If a crystal heart indicates the ending but doesn't kick the player out, editing it to kick the player out is fine. This will be evaluated on a case-by-case basis, as this is very rare.",
+        "11": "For golden strawberry (or other similar berry) submissions, submissions <strong>are allowed to</strong> die during <strong>map intentional golden strawberry detachments</strong> as many times as one would like. This does <strong>not</strong> apply to golden detachments made to fix an issue (such as in <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) or unintentional golden detachments."
+      },
+      "full_game_additional": {
+        "header": "Additional Rules for Full Game Submissions",
+        "explanation": "There are two types of \"full game\" submissions: ones that complete a relevant subset of all maps in a map pack (which will be referred to as <i>partial full game runs</i>), such as all c-sides deathless or beginner lobby deathless, and completely full game runs, such as all maps deathless or 100% deathless (which will be referred to as <i>complete full game runs</i>). Rules which apply to only a specific category of these will be indicated.",
+        "0": "The submission video <strong>must</strong> show the run in full. For a partial full game run, the video must start at or before the chapter select screen of the first map completed and end after completing the final map. For a complete full game run, the video must start at or before the file select screen and end after completing the final map.",
+        "1": "Submissions for complete full game runs <strong>must</strong> complete the maps as how they would be completed from a new save file. It is recommended to <strong>always</strong> use a new save file for complete full game runs and <strong>not</strong> use cheat mode as a result. Partial full game runs may complete the applicable maps in any order.</strong>",
+        "2": "Submissions <strong>must not</strong> use \"Return to Map\" or any similar option to cheat likely death or otherwise make a map easier. This includes instances where one is \"softlocked\" in a map by any means brought on by the player.",
+        "3": "Submissions <strong>must not</strong> utilize more than one save file.",
+        "4": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Compare this to the previous note about individual level detachments",
+        "5": "Submissions <strong>must</strong> have the \"File Timer\" enabled, <strong>not just</strong> the chapter timer.",
+        "6": "Submissions <strong>must not</strong> have an overlay covering a large amount or essential parts of the screen. Essential parts include the timer, the total berry count in the top left, the pause menu berry tracker, the player, and the save icon in the bottom right.",
+        "7": "Submissions <strong>are recommended to not</strong> take long breaks on the menu or pause screen. It is more acceptable to take breaks while inside a map and not paused, though taking frequent breaks might raise suspicion and request for more proof.",
+        "8": "If a submission does not collect golden/silver berries, it <strong>may</strong> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs."
+      }
+    },
+    "general_recommendations": {
+      "header": "General Recommendations",
+      "section": {
+        "explanation": "These aren't <strong>exactly</strong> rules that need to be followed, but they help in aiding proof strength, avoiding giving your submission a note, helping one complete a challenge, or is a general courteous decision for others.",
+        "0": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions.",
+        "1": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility.",
+        "2": "For video compilations with multiple maps, adding timestamps in the description of the video or directly in the submission URL will help greatly.",
+        "3": "Keep one or two full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof."
+      }
+    },
+    "allowed_mods": {
+      "header": "Allowed and Recommended Mods",
+      "section": {
+        "explanation": "All mods listed here are allowed for submissions unless otherwise specified. Mods not listed here are also allowed for submissions unless they violate the gameplay altering mod rule or info gaining mod rule.",
+        "0": "The <strong>only</strong> gameplay-altering mod that is allowed is the <i>No Freeze Frames</i> variant in <CustomExternalLink href=\"https://gamebanana.com/mods/53650\">Extended Variants</CustomExternalLink>. The rationale is that this mod does not fundamentally change the game as well as makes the game harder in most instances.",
+        "1": "For complete full game runs, using the <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">hardcore mode</CustomExternalLink> mod may help reset runs faster, but is not required. Hardcore mode will also allow goldens to spawn without needing cheat mode, which means the full game run may be submitted to individual maps without issue.",
+        "2": "The <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> mod is allowed for submissions. This mod gives players some helpful quality of life features, such as making the golden berry transparent, being able to place a persistent golden berry without using a map editor, or allowing one to start at the same room they died in a golden run.",
+        "3": "The <CustomExternalLink href=\"https://gamebanana.com/tools/6597\">Speedrun Tool</CustomExternalLink> mod and <CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink> mods can help finding strategies and setups for parts in a challenge. Do note, however, that utilizing any gameplay-altering of info-gaining features of these mods during a challenge is disallowed.",
+        "4": "Other mods frequently used for deathless challenges include <CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink> and <CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>."
+      }
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "0": {
+      "question": "Can I submit maps that aren't in the list yet?",
+      "answer": "Yes, you can submit a golden for a map that isn't in the list yet. In this case you must also provide a link to the map and make sure that the map follows all the rules. But even if it does, we may not add it to the list for certain reasons which we will specify in the page with rejected maps."
+    },
+    "1": {
+      "question": "What difficulty should a map have to make it into the list?",
+      "answer": "Generally, it should be a map with at least some obstacles on your way and not too short. This is very much a blurry line, but one can generally see the boundaries by looking at the Rejected List, as well as the easier Standard List maps."
+    },
+    "2": {
+      "question": "What do I do if the map has no golden berry?",
+      "answer": "In this case you can use debug console (press ~ to open it and to close it) and type the give_golden command to get a golden berry. Alternatively, you can add a golden berry in Ahorn or Loenn (map editors). Make sure that the golden is close to the spawn and isn't directly in the way so one will need more movement to avoid it than to grab it in a non-golden run."
+    },
+    "3": {
+      "question": "Why are some maps easier than rule requirements?",
+      "answer": "Some maps that are not satisfying the difficulty criteria may be added for various reasons, at the discretion of the Modded Golden Team. For example, if a map is less than 2 screens but is a part of a collab with all other maps satisfying the criteria."
+    },
+    "4": {
+      "question": "Are demodash buttons/multiple jump binds allowed?",
+      "answer": "Demodash buttons and multiple jump binds are allowed. The same goes for any combination of inputs that can be mapped on the same key/button, but external macros which press multiple inputs on different frames are not allowed."
+    },
+    "5": {
+      "question": "Are pause buffers allowed?",
+      "answer": "For pause buffers, you can pause the game but if pause was used too aggressively or distinctly used to frame advance (pause/unpause to progress frame by frame), a note may be put into the cell with the golden clear. A run that abuses pause buffering too much might get rejected."
+    },
+    "6": {
+      "question": "What about spinner stunning?",
+      "answer": "Due to its difficulty and lack of golden viability, spinner stunning is allowed (pausing frame perfectly multiple times to keep spinners/lightning unloaded). However, deloading spinners by waiting 118+ hours is not allowed."
+    },
+    "7": {
+      "question": "What is the criteria for getting a full clear?",
+      "answer": "Maps can have the following optional collectibles that may or may not be obtained in a golden run: Heart, cassette, red berries, and non-red berries such as moon, dashless, or custom berries. Full clear runs generally require getting all optional collectibles, unless a collectible significantly changes the nature of the run, such as the winged golden strawberry in 1A. In that case, the collectible is considered as a special berry, and runs which collect it will gain the [SB] tag. Examples of some maps that have an optional special berry are: A Christmas Night by JaThePlayer, Starship Ruins from Winter Collab and Into The Jungle chapter 1a. The example when a special berry is required is Rite of the Jungle, the run that doesn't get the berry can't be submitted to the list."
+    },
+    "8": {
+      "question": "Why are some maps ineligible for full clear runs?",
+      "answer": "Some maps have collectibles which are not optional, such as strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side."
+    },
+    "9": {
+      "question": "What is the Top Golden List Rankings?",
+      "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
+    }
+  },
+  "index": {
+    "title": "Welcome!",
+    "welcome": {
+      "header": "Celeste Modded Done Deathless!",
+      "text": "The main goal of this website is to maintain all the deathless clears of maps or campaigns, as well as motivating people to go for deathless challenges and making the deathless completion scene of Celeste more active in general. The website shows all the maps that have been completed without dying, as well as names of people who did the goldens.",
+      "info": "If you have any questions or suggestions, feel free to join the Modded Golden Team Discord server and ask there, or contact any of the team members directly.",
+      "team_members": "Team Members"
+    },
+    "links": {
+      "header": "Useful Links",
+      "rules": "Rules",
+      "faq": "Freqently Asked Questions",
+      "celeste_discord": "Celeste's Discord",
+      "modded_golden_team_discord": "Modded Golden Team Discord",
+      "fwg_sheet": "Farewell Golden Collectors' List",
+      "survivors_list": "Celeste Survivors List (Deathless runs of vanilla Celeste)",
+      "server_costs": "Overview of Server Costs"
+    },
+    "issues": {
+      "header": "Report Issues",
+      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">dedicated channel</CustomExternalLink> for this website"
+    },
+    "global_stats": {
+      "header": "Global Stats",
+      "totals": {
+        "header": "There are currently:",
+        "campaigns": "<strong>{{campaigns}}</strong> campaigns ({{standalone}} of them are stand-alone maps)",
+        "maps": "<strong>{{maps}}</strong> maps",
+        "submissions": "and <strong>{{submissions}}</strong> submissions from <strong>{{players}}</strong> players!"
+      },
+      "difficulty_stats": {
+        "header": "Difficulty Stats",
+        "text": "Number of submissions in each tier"
+      }
+    },
+    "getting_started": {
+      "header": "Getting Started",
+      "preface": "To make a submission to this website, you need to do the following:",
+      "video": "Have video proof of your deathless run, uploaded to a permanent place (e.g. YouTube, bilibili, ...)",
+      "account": "<strong><RegisterLink>Register</RegisterLink> an account and <LoginLink>login</LoginLink> to your account</strong>. You can sign-up via Discord or email address & password",
+      "player": "<strong><CustomLink>Claim a player</CustomLink></strong>. If you already had submissions on the spreadsheet your \"player\" will already exist, and you need to claim it for yourself. If this is your first submission, you can create a new player for yourself.",
+      "submit": "Head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+    },
+    "newly_released": {
+      "header": "Newly Released!",
+      "text": "This website has just recently been released! Given the chaotic state of data on the spreadsheet, it's to be expected that there will be wrong or inconsistent data somewhere. When you spot some, please report it in the Modded Golden Team Discord server!",
+      "migration": "Migrating all of the data, as well as the entire community over to this website will take a while, so for the time being you can still make your submissions the old-fashioned way, by tagging the modded golden team in the Celeste Discord server, or the Modded Golden Team Discord server."
+    }
   }
 }

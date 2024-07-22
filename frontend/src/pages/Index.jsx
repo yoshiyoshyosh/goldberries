@@ -37,9 +37,10 @@ import Markdown from "react-markdown";
 import { useTheme } from "@emotion/react";
 import { RecentSubmissions } from "../components/RecentSubmissions";
 import { DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageIndex() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index" });
   return (
     <Container
       maxWidth="xl"
@@ -48,7 +49,7 @@ export function PageIndex() {
         pb: 3,
       }}
     >
-      <HeadTitle title="Welcome!" />
+      <HeadTitle title={t("title")} />
       <Grid container spacing={2}>
         <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
@@ -56,14 +57,14 @@ export function PageIndex() {
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
+              <GettingStarted />
+            </BorderedBox>
+            <BorderedBox>
               <GlobalStatsComponent />
             </BorderedBox>
             <BorderedBox>
-              <PublicTestNotice />
+              <ReleaseNotice />
             </BorderedBox>
-            {/* <BorderedBox>
-              <RulesComponent />
-            </BorderedBox> */}
           </Stack>
         </Grid>
         <Grid item xs={12} lg={6}>
@@ -77,9 +78,6 @@ export function PageIndex() {
             <BorderedBox>
               <IssueTrackerNotice />
             </BorderedBox>
-            {/* <BorderedBox>
-              <FAQComponent />
-            </BorderedBox> */}
           </Stack>
         </Grid>
       </Grid>
@@ -88,23 +86,17 @@ export function PageIndex() {
 }
 
 export function WelcomeComponent() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.welcome" });
   return (
     <>
-      <Typography variant="h4">Celeste Modded Done Deathless!</Typography>
+      <Typography variant="h4">{t("header")}</Typography>
       <Typography variant="body1" gutterBottom>
-        The main goal of this list is to maintain all the golden clears of maps or deathless clears of map
-        packs, as well as motivating people to go for goldens and making the deathless completion scene of
-        Celeste more active in general. The list shows all the maps that have been completed without dying, as
-        well as names of people who did the goldens. If you want to be added to the list or you know of some
-        golden clears that haven't been added to the list, feel free to DM the people mentioned below. This
-        list initially took an inspiration from other golden berry lists: Farewell golden list by DJTom3,
-        D-Side golden list by Zerex and talia, and CC-Side golden list by Ezel142.
+        {t("text")}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        If you have any questions or suggestions, feel free to join the Molden Team Discord server and ask
-        there, or contact any of the team members directly.
+        {t("info")}
       </Typography>
-      <Typography variant="h6">Team Members</Typography>
+      <Typography variant="h6">{t("team_members")}</Typography>
       <TeamMemberList />
     </>
   );
@@ -131,28 +123,28 @@ export function TeamMemberList() {
 }
 
 export function UsefulLinksComponent() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: "index.links" });
 
   return (
     <>
-      <Typography variant="h6">Useful Links</Typography>
+      <Typography variant="h6">{t("header")}</Typography>
       <ul style={{ listStyleType: "none" }}>
         <li>
-          <FontAwesomeIcon icon={faScaleBalanced} /> <StyledLink to="/rules">Rules</StyledLink>
+          <FontAwesomeIcon icon={faScaleBalanced} /> <StyledLink to="/rules">{t("rules")}</StyledLink>
         </li>
         <li>
-          <FontAwesomeIcon icon={faQuestion} /> <StyledLink to="/faq">Frequently Asked Questions</StyledLink>
+          <FontAwesomeIcon icon={faQuestion} /> <StyledLink to="/faq">{t("faq")}</StyledLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
           <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
-            Celeste's Discord
+            {t("celeste_discord")}
           </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
           <StyledExternalLink href={DISCORD_INVITE} target="_blank" rel="noreferrer">
-            Modded Golden Team Discord
+            {t("modded_golden_team_discord")}
           </StyledExternalLink>
         </li>
         <li>
@@ -162,7 +154,7 @@ export function UsefulLinksComponent() {
             target="_blank"
             rel="noreferrer"
           >
-            Farewell Golden Collectors' List
+            {t("fwg_sheet")}
           </StyledExternalLink>
         </li>
         <li>
@@ -172,14 +164,59 @@ export function UsefulLinksComponent() {
             target="_blank"
             rel="noreferrer"
           >
-            Celeste Survivors List (Deathless runs of vanilla Celeste)
+            {t("survivors_list")}
           </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faMoneyBill1Wave} />{" "}
-          <StyledLink to="/server-costs">Overview of Server Costs</StyledLink>
+          <StyledLink to="/server-costs">{t("server_costs")}</StyledLink>
         </li>
       </ul>
+    </>
+  );
+}
+
+function GettingStarted() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.getting_started" });
+  return (
+    <>
+      <Typography variant="h5">{t("header")}</Typography>
+      <Typography variant="body1" gutterBottom>
+        {t("preface")}
+      </Typography>
+      <ul>
+        <li>{t("video")}</li>
+        <li>
+          <Trans
+            t={t}
+            i18nKey="account"
+            components={{
+              RegisterLink: <StyledLink to="/register" />,
+              LoginLink: <StyledLink to="/login" />,
+            }}
+          />
+        </li>
+        <li>
+          <Trans t={t} i18nKey="player" components={{ CustomLink: <StyledLink to="/claim-player" /> }} />
+        </li>
+        <li>
+          <Trans t={t} i18nKey="submit" components={{ CustomLink: <StyledLink to="/submit" /> }} />
+        </li>
+      </ul>
+    </>
+  );
+}
+function ReleaseNotice() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.newly_released" });
+  return (
+    <>
+      <Typography variant="h5">{t("header")}</Typography>
+      <Typography variant="body1" gutterBottom>
+        {t("text")}
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        {t("migration")}
+      </Typography>
     </>
   );
 }
@@ -219,31 +256,19 @@ function PublicTestNotice() {
 }
 
 function IssueTrackerNotice() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.issues" });
   return (
     <>
-      <Typography variant="h5">Report Issues</Typography>
+      <Typography variant="h5">{t("header")}</Typography>
       <Typography variant="body1" gutterBottom>
-        If you find any issues, please report them by either creating a{" "}
-        <StyledExternalLink href="https://github.com/yoshiyoshyosh/goldberries/issues">
-          new issue on GitHub
-        </StyledExternalLink>{" "}
-        or by @-ing viddie in the Modded Golden Team Discord server, preferably in the{" "}
-        <StyledExternalLink href="https://discord.com/channels/790156040653897749/1196193088843030708">
-          dedicated channel
-        </StyledExternalLink>{" "}
-        for this website.
+        <Trans t={t} i18nKey="text" components={{ CustomExternalLink: <StyledExternalLink /> }} />
       </Typography>
-      <Typography variant="body1" gutterBottom>
-        Known Issues (that aren't tracked on GitHub):
-      </Typography>
-      <ul>
-        <li>The navigation kinda sucks on mobile, needs to be revamped entirely</li>
-      </ul>
     </>
   );
 }
 
 export function GlobalStatsComponent() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.global_stats" });
   const query = useGetStats("all");
 
   if (query.isLoading) {
@@ -259,34 +284,26 @@ export function GlobalStatsComponent() {
 
   return (
     <>
-      <Typography variant="h6">Global Stats</Typography>
-      <TableContainer component={Paper} sx={{ mb: 1 }}>
-        <Table size="small">
-          <TableBody>
-            <TableRow>
-              <TableCell align="center">Total Campaigns</TableCell>
-              <TableCell align="center">
-                <b>{campaigns}</b> with <b>{campaigns - real_campaigns}</b> stand-alone maps
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">Total Maps</TableCell>
-              <TableCell align="center">
-                <b>{maps}</b> with <b>{challenges}</b> Challenges
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center">Total Submissions</TableCell>
-              <TableCell align="center">
-                <b>{submissions}</b> from <b>{players}</b> Players
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Typography variant="h6">Difficulty Stats</Typography>
+      <Typography variant="h6">{t("header")}</Typography>
+      <Typography variant="body1">{t("totals.header")}</Typography>
+      <ul style={{ marginBottom: "4px", marginTop: "4px" }}>
+        <li>
+          <Trans
+            t={t}
+            i18nKey="totals.campaigns"
+            values={{ campaigns, standalone: campaigns - real_campaigns }}
+          />
+        </li>
+        <li>
+          <Trans t={t} i18nKey="totals.maps" values={{ maps }} />
+        </li>
+        <li>
+          <Trans t={t} i18nKey="totals.submissions" values={{ submissions, players }} />
+        </li>
+      </ul>
+      <Typography variant="h6">{t("difficulty_stats.header")}</Typography>
       <Typography variant="body2" gutterBottom>
-        Number of submissions in each tier
+        {t("difficulty_stats.text")}
       </Typography>
       <TiersCountDisplay stats={difficulty} />
     </>

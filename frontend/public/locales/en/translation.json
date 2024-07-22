@@ -1102,6 +1102,7 @@
   },
   "rules": {
     "title": "Rules",
+    "toc": "Table of Contents",
     "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.",
     "maps": {
       "header": "Rules for Maps",
@@ -1208,6 +1209,55 @@
     "9": {
       "question": "What is the Top Golden List Rankings?",
       "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
+    }
+  },
+  "index": {
+    "title": "Welcome!",
+    "welcome": {
+      "header": "Celeste Modded Done Deathless!",
+      "text": "The main goal of this website is to maintain all the deathless clears of maps or campaigns, as well as motivating people to go for deathless challenges and making the deathless completion scene of Celeste more active in general. The website shows all the maps that have been completed without dying, as well as names of people who did the goldens.",
+      "info": "If you have any questions or suggestions, feel free to join the Modded Golden Team Discord server and ask there, or contact any of the team members directly.",
+      "team_members": "Team Members"
+    },
+    "links": {
+      "header": "Useful Links",
+      "rules": "Rules",
+      "faq": "Freqently Asked Questions",
+      "celeste_discord": "Celeste's Discord",
+      "modded_golden_team_discord": "Modded Golden Team Discord",
+      "fwg_sheet": "Farewell Golden Collectors' List",
+      "survivors_list": "Celeste Survivors List (Deathless runs of vanilla Celeste)",
+      "server_costs": "Overview of Server Costs"
+    },
+    "issues": {
+      "header": "Report Issues",
+      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">dedicated channel</CustomExternalLink> for this website"
+    },
+    "global_stats": {
+      "header": "Global Stats",
+      "totals": {
+        "header": "There are currently:",
+        "campaigns": "<strong>{{campaigns}}</strong> campaigns ({{standalone}} of them are stand-alone maps)",
+        "maps": "<strong>{{maps}}</strong> maps",
+        "submissions": "and <strong>{{submissions}}</strong> submissions from <strong>{{players}}</strong> players!"
+      },
+      "difficulty_stats": {
+        "header": "Difficulty Stats",
+        "text": "Number of submissions in each tier"
+      }
+    },
+    "getting_started": {
+      "header": "Getting Started",
+      "preface": "To make a submission to this website, you need to do the following:",
+      "video": "Have video proof of your deathless run, uploaded to a permanent place (e.g. YouTube, bilibili, ...)",
+      "account": "<strong><RegisterLink>Register</RegisterLink> an account and <LoginLink>login</LoginLink> to your account</strong>. You can sign-up via Discord or email address & password",
+      "player": "<strong><CustomLink>Claim a player</CustomLink></strong>. If you already had submissions on the spreadsheet your \"player\" will already exist, and you need to claim it for yourself. If this is your first submission, you can create a new player for yourself.",
+      "submit": "Head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+    },
+    "newly_released": {
+      "header": "Newly Released!",
+      "text": "This website has just recently been released! Given the chaotic state of data on the spreadsheet, it's to be expected that there will be wrong or inconsistent data somewhere. When you spot some, please report it in the Modded Golden Team Discord server!",
+      "migration": "Migrating all of the data, as well as the entire community over to this website will take a while, so for the time being you can still make your submissions the old-fashioned way, by tagging the modded golden team in the Celeste Discord server, or the Modded Golden Team Discord server."
     }
   }
 }

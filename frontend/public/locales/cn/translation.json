@@ -17,7 +17,7 @@
     "objective_other": "项目",
     "account_one": "账号",
     "account_other": "账号",
-    "table_rows_per_page": "每页行数：",
+    "table_rows_per_page": "每页数量：",
     "modals": {
       "buttons": {
         "delete": "删除",
@@ -95,7 +95,7 @@
       "no_rejected": "找不到已被拒绝的内容",
       "new_challenge": "新地图:",
       "new_challenge_note": "此为数据库中未被记录的新地图！",
-      "submissions_per_page": "每页提交内容数量："
+      "submissions_per_page": "每页数量："
     },
     "changelog": {
       "name": "更新日志",
@@ -217,7 +217,7 @@
         "created": "项目已创建",
         "updated": "项目已更新"
       },
-      "full_game_notice": "不选择特定地图将意味着此挑战为多章节一命项目。",
+      "full_game_notice": "不选择特定地图将意味着此挑战为多地图一命项目。",
       "requires_fc": "需要FC",
       "has_fc": "包含FC",
       "is_arbitrary": "其他类型（注：此为Arbitrary）",
@@ -325,14 +325,14 @@
     "internal_menu": {
       "name": "管理",
       "logs": "日志",
-      "submission_queue": "待验证的内容队列",
+      "submission_queue": "待验证内容队列",
       "manage_challenges": "管理挑战项目",
       "manage_accounts": "管理账号"
     },
     "widgets": {
-      "submission_queue": "待验证的内容队列",
+      "submission_queue": "待验证内容队列",
       "player_claims": "待绑定玩家",
-      "pending_suggestions": "Pending suggestions"
+      "pending_suggestions": "待定建议"
     },
     "submit": "提交",
     "login": "登录",
@@ -587,7 +587,7 @@
         }
       },
       "profile": {
-        "label": "个人资料",
+        "label": "个人页面",
         "feedback": {
           "updated": "设置已更新"
         },
@@ -683,7 +683,7 @@
       "top_golden_list": {
         "label": "金草莓排行榜",
         "darken_colors": {
-          "label": "暗度",
+          "label": "层级暗度",
           "tooltip": "这可以使排行榜上的层级颜色变暗，0%为原色，100%为纯黑",
           "note": "此设置仅在夜间模式生效！"
         },
@@ -725,7 +725,7 @@
       "edit": "编辑"
     },
     "difficulty_suggestions": "难度建议",
-    "is_full_game": "是否为多章节一命项目",
+    "is_full_game": "是否为多地图一命项目",
     "lobby_info": "大厅信息",
     "submission_table": {
       "suggestion": "难度建议",
@@ -769,7 +769,7 @@
     },
     "claim_made": {
       "title": "绑定请求已提交!",
-      "info": "你的绑定请求已提交！请在<CustomLink>金榜服务器</CustomLink>联系验证者以通过你提交的绑定请求（对于国内，请直接私信Parabones来解决问题，或在我的动态里提及都行）",
+      "info": "你的绑定请求已提交！请在<CustomLink>金榜服务器</CustomLink>联系验证者以通过你提交的绑定请求（对于国内，请直接私信Parabones来解决问题）",
       "your_data": {
         "title": "你的数据",
         "account_id": "账号ID",
@@ -860,12 +860,12 @@
     }
   },
   "player": {
-    "title": "个人资料",
+    "title": "个人页面",
     "personal_tgl": "个人金草莓排行榜",
     "stats": "玩家数据",
     "showcase_hardest": "默认置顶",
     "chart": {
-      "show_standard": "Show Standard & Undetermined",
+      "show_standard": "显示Standard与待定层",
       "x_axis": "各层级的金草莓数量"
     }
   },
@@ -882,7 +882,7 @@
       "min_length": "至少输入3个字符"
     },
     "header": "搜索",
-    "info": "搜索玩家，作者，地图包或地图名称！",
+    "info": "搜索玩家、作者、地图包或地图名称",
     "search_label": "搜索",
     "no_campaigns": "找不到该地图包",
     "no_maps": "找不到该地图",
@@ -924,7 +924,7 @@
       "description": "确认删除此提交内容？"
     },
     "buttons": {
-      "modify": "更改",
+      "modify": "修改",
       "edit": "编辑",
       "delete": "删除"
     }
@@ -936,7 +936,7 @@
         "label": "单次提交",
         "header": "提交一个视频",
         "select": "选择一个挑战项目",
-        "full_game": "选择一张地图或一个多章节一命项目",
+        "full_game": "选择一张地图或一个多地图一命项目",
         "challenge_data": "挑战内容",
         "your_run": "你的视频",
         "verifier": {
@@ -947,7 +947,7 @@
             "add_player": "添加玩家"
           }
         },
-        "proof_note": "请将视频发布在永久保留的地方，例如b站，油管或twitch切片（特别强调：b站的视频链接只用粘贴到bv号结束就行，如果把后面的部分也打进去会导致网站嵌入的视频播放不了，千万不要把斜杠给打进去了！）",
+        "proof_note": "请将视频发布在永久保留的地方，例如b站、油管或twitch切片（特别强调：b站的视频链接只用粘贴到bv号结束就行，如果把后面的部分也打进去会导致网站嵌入的视频播放不了，千万不要把斜杠给打进去了！）",
         "raw_session_note": "t3及以上的金草莓需要上传无剪辑的原视频或整个直播回放（如果视频过短或第一局就出了就再传上一份时长更长的录像）",
         "is_fc": "FC（一般情况下不需要手动勾选，如果你提交了C/FC的内容则需要手动勾选）",
         "button": "提交"
@@ -975,7 +975,7 @@
       "new": {
         "label": "新地图/挑战项目",
         "header": "提交一个新地图",
-        "challenge_data": "Challenge Data",
+        "challenge_data": "地图数据",
         "info": "用于提交数据库中尚未存在的新地图，可能需要更长的时间进行验证",
         "gamebanana_url": "香蕉网链接",
         "challenge_description": {
@@ -995,7 +995,7 @@
     "title": "意见箱",
     "header": "意见箱",
     "expired": "已过期的建议",
-    "showing_one": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
+    "showing_one": "显示第{{from}}至第{{to}}条建议（共{{count}}条建议）",
     "showing_other": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
     "buttons": {
       "create": "创建"
@@ -1075,7 +1075,7 @@
   "top_golden_list": {
     "title": "金草莓排行榜",
     "notes": {
-      "fc": "收集所有可在正常情况下获得的收集物（红草莓，磁带，月莓等）",
+      "fc": "收集所有可在正常情况下获得的收集物（红草莓、磁带、月莓等）",
       "c_fc": "单金和FC在同一难度中",
       "new_old": "地图版本（某些地图会附带版本号）"
     }
@@ -1094,66 +1094,78 @@
     "tabs": {
       "players": {
         "progress": "进度",
-        "more_players_one": "+另外{{count}}位玩家",
-        "more_players_other": "+另外{{count}}位玩家",
+        "more_players_one": "+更多{{count}}位玩家",
+        "more_players_other": "+更多{{count}}位玩家",
         "show_all": "显示全部"
       }
     }
   },
   "rules": {
-    "title": "Rules",
-    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The long and short of it all is what you'd expect: Don't cheat, don't use gameplay-altering mods, all the like. However, if you are confused about if something may be allowed or want some recommendations for doing deathless challenges, please read the respective section.",
+    "title": "规则",
+    "toc": "目录",
+    "description": "此页面旨在对以上规则的形式化/严谨化，和一些边缘情况的处理。总体来说基本和你想得差不多：不要作弊，不要用会影响到游戏玩法的Mod，诸如此类。不过，如果你不知道什么能用什么不能用，或者想要一些建议/推荐，请阅读相应的规则部分（注：里面的一些链接需要挂梯子才能访问）。",
     "maps": {
-      "header": "Maps",
+      "header": "关于地图",
       "rules": {
-        "header": "Map Rules",
-        "0": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but it was taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability.",
-        "1": "The map or map pack <strong>must</strong> pose a non-trivial amount of difficulty, even if that difficulty may be very small. Maps with little to no ways to die will be rejected.",
-        "2": "The map or map pack <strong>must</strong> be at least three gameplay screens or checkpoints in length. This matches the shortest c-sides in the vanilla game.",
-        "3": "The map or map pack <strong>must not</strong> contain NSFW content.",
-        "4": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. Unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
-        "5": "The map or map pack <strong>is recommended to not</strong> be low-quality in nature. \"Shitpost\" or \"meme\" maps are fine, so long as there remains playable and generally-thought-out gameplay beneath it. Since this is vague, it's really decided more on a case by case basis, but if one would like a quick comparison: Maps like <CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink> or <CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink> are fine, but maps like <CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink> are not."
+        "header": "地图规则",
+        "0": "地图或地图包<strong>必须</strong>公开发布至<CustomExternalLink href=\"https://gamebanana.com/games/6460\">香蕉网</CustomExternalLink>。如果某张地图被删除或被作者设为私有，则此地图会上传至<CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">互联网档案馆</CustomExternalLink>。除非作者明确不允许其他人下载，并要求彻底删除它。",
+        "1": "地图或地图包<strong>必须</strong>有一定难度，即使难度很小。几乎不会死的图会被拒绝。",
+        "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
+        "3": "地图或地图包<strong>不得</strong>包含NSFW内容。",
+        "4": "地图或地图包里的内容<strong>最好不要</strong>与官图或已经存在的其他图过于相似。不过像比较有特点的<CustomExternalLink href=\"https://gamebanana.com/mods/150418\">官图倒走</CustomExternalLink>，或者官图的加难版比如<CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink>这类图是允许的，但是像<CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink>这样的图大概率会被拒绝。",
+        "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，\"垃圾类\"或\"整活类\"图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你想来点实际参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
       }
     },
     "goldens": {
-      "header": "Submissions",
+      "header": "关于提交内容",
       "rules": {
-        "header": "Rules for All Submissions",
-        "0": "The submission video <strong>must</strong> be uploaded to a place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
-        "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\"). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
-        "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
-        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",
-        "4": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked.",
-        "5": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges where these may make some difference, but not enough to be exceedingly notable, submissions will be accepted, but with a note. On challenges where these make a big difference, such as subpixel-level alignment or stamina-heavy maps, submissions will likely be rejected.",
-        "6": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i> to a degree that trivializes the difficulty of the challenge. Pause buffering can make tight inputs in a map extremely easy, and heavy use of it is grounds for rejection. Since this is vague, it's usually evaluated on a case-by-case basis, but for a quick comparison: Pause buffering <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">this one wallbounce in Aquatic Underground</CustomExternalLink> is fine, whereas pause buffering <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower Golden</CustomExternalLink> is grounds for rejection. Runs which use a non-rejectable amount of pause buffering will have a note placed on them.",
-        "7": "Submissions <strong>must not</strong> abuse the <i>long wait spinner deload glitch</i>. Submissions <strong>may</strong> utilize the technique known as <i>spinner stunning</i> due to its frame-perfect nature and general unviability for goldens. For more info on these techniques, check out <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">this video</CustomExternalLink>.",
-        "8": "If a map does not have a golden strawberry, one <strong>is allowed</strong> to use the console command <code>give_golden</code> to give themselves a golden strawberry. This command <strong>must</strong> be used in the <strong>first</strong> room of the map. Alternatively, one may use <CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink> to add a golden strawberry in the first room of the map.",
-        "9": "For golden strawberry (or other similar berry) submissions, the submission <strong>does not have to</strong> actually collect the berry so long as the run follows the same challenge requirements (A.K.A. a <i>deathless berryless</i> run). Runs where a golden strawberry is fundamentally different than a non-golden, such as a golden room, <strong>will most likely not</strong> be accepted in this manner. While of course discouraged and we urge submissions to collect the applicable berry, we also understand that sometimes things happen and people unexpectedly fluke, and we don't want that to take away from anyone's achievement. Deathless berryless submissions will be given a note.",
-        "10": "For golden strawberry (or other similar berry) submissions, submissions <strong>may</strong> edit the <strong>end</strong> of a map to add a golden collect trigger <strong>if and only if</strong> a golden collect trigger does not exist. If a crystal heart indicates the ending but doesn't kick the player out, editing it to kick the player out is fine. This will be evaluated on a case-by-case basis, as this is very rare.",
-        "11": "For golden strawberry (or other similar berry) submissions, submissions <strong>are allowed to</strong> die during <strong>map intentional golden strawberry detachments</strong> as many times as one would like. This does <strong>not</strong> apply to golden detachments made to fix an issue (such as in <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) or unintentional golden detachments."
+        "header": "单个地图提交规则",
+        "0": "视频<strong>必须</strong>上传至不需要登录就能观看的地方，目前主流的几个视频网站是：<CustomExternalLink href=\"https://www.youtube.com/\">油管</CustomExternalLink>、<CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>、<CustomExternalLink href=\"https://www.bilibili.com/\">B站</CustomExternalLink>和<CustomExternalLink href=\"https://www.nicovideo.jp/\">niconico动画</CustomExternalLink>，诸如此类的网站均可以进行提交。但不允许提交消息服务内容分发网络（比如<code>cdn.discordapp.com</code>或其他）中的视频。",
+        "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但请注意，凡事都有例外，比如在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
+        "2": "挑战<strong>必须</strong>在同一局游戏内完成。",
+        "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomExternalLink href=\"#recommended-mods\">允许和推荐的Mod</CustomExternalLink>。",
+        "4": "<strong>t3及以上难度</strong>的挑战<strong>必须</strong>有完整的全程录像。如果在录像的第一局或开头就完成挑战，则需要提供之前的完整录像。",
+        "5": "<strong>最好不要</strong>使用任何提供信息的Mod，这类Mod通常会给你提供游戏内无法访问的信息。例如input history、体力条或CelesteTAS里的信息面板。如果在游戏过程中这些东西产生的影响很小，则此类提交内容均会被无条件接受；如果产生了一定量但不值得特别关注的影响，则此类提交内容依然会被接受但会打上注释；如果产生的影响很大，比如通过输入帧数反复调亚像素对准，或者在一些高速/控体力/禁无体力跳的图使用速度计和体力条的情况，则此类提交内容会被拒绝。",
+        "6": "<strong>不得</strong>滥用<i>暂停预输入</i>来降低难度。这会使得某些图中一些很难，容错很低的地方变得非常简单，由于定义也很模糊，通常也会根据具体情况进行评估。不过如果你也想来点参考：比如用暂停过<CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">海鲜市场倒二的蹭墙</CustomExternalLink>是可以的，但<CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower</CustomExternalLink>则不行。使用不会被拒绝的暂停预输入也会被打上注释。",
+        "7": "<strong>不得</strong>等待118+小时以进行<i>冻结圆刺</i>。<strong>但允许</strong>使用<i>spinner stunning</i>，因为这通常是由大量的fp实现的，不适合用在金草莓里。关于更多信息，请参考<CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">这个视频</CustomExternalLink>。",
+        "8": "如果地图上没有金草莓，<strong>则允许</strong>使用控制台命令<code>give_golden</code>生成一个金草莓。该命令<strong>必须</strong>在<strong>地图的第一面</strong>使用。或者也可以用<CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink>或<CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink>来给地图添加金草莓。",
+        "9": "对于金草莓本身，只要遵循挑战本身的规则，玩家<strong>可以不用</strong>真正收集金草莓（也叫<i>不带金一命</i>）。如果有金限，<strong>则很大可能不允许玩家以这种方式进行挑战</strong>。虽然本身不鼓励这种行为并希望你真正收集到金草莓，但有些时候会真的会有压死局变一命这种情况发生，我们不希望抹杀任何人突如其来的成就。另外，不带金一命均会打上注释。",
+        "10": "对于金草莓本身，<strong>如果</strong>地图结尾不存在结算trigger，玩家<strong>可以</strong>在地图的<strong>结尾</strong>添加一个金草莓结算trigger。如果吃到心但不结束游戏，你也可以通过制图器将它改为吃到心结束游戏。这将根据具体情况进行评估，因为真的很少见。",
+        "11": "对于金草莓本身，<strong>允许金草莓不跟在你身边</strong>时死亡，次数不限。但这<strong>不适用于</strong>因为修复地图问题从而不得不分离金草莓（比如<CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>）或作者无意设置的情况。"
       },
       "full_game_additional": {
-        "header": "Additional Rules for Full Game Submissions",
-        "explanation": "There are two types of \"full game\" submissions: ones that complete a relevant subset of all maps in a map pack (which will be referred to as <i>partial full game runs</i>), such as all c-sides deathless or beginner lobby deathless, and completely full game runs, such as all maps deathless or 100% deathless (which will be referred to as <i>complete full game runs</i>). Rules which apply to only a specific category of these will be indicated.",
-        "0": "The submission video <strong>must</strong> show the run in full. For a partial full game run, the video must start at or before the chapter select screen of the first map completed and end after completing the final map. For a complete full game run, the video must start at or before the file select screen and end after completing the final map.",
-        "1": "Submissions for complete full game runs <strong>must</strong> complete the maps as how they would be completed from a new save file. It is recommended to <strong>always</strong> use a new save file for complete full game runs and <strong>not</strong> use cheat mode as a result. Partial full game runs may complete the applicable maps in any order.</strong>",
-        "2": "Submissions <strong>must not</strong> use \"Return to Map\" or any similar option to cheat likely death or otherwise make a map easier. This includes instances where one is \"softlocked\" in a map by any means brought on by the player.",
-        "3": "Submissions <strong>must not</strong> utilize more than one save file.",
-        "4": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Compare this to the previous note about individual level detachments",
-        "5": "Submissions <strong>must</strong> have the \"File Timer\" enabled, <strong>not just</strong> the chapter timer.",
-        "6": "Submissions <strong>must not</strong> have an overlay covering a large amount or essential parts of the screen. Essential parts include the timer, the total berry count in the top left, the pause menu berry tracker, the player, and the save icon in the bottom right.",
-        "7": "Submissions <strong>are recommended to not</strong> take long breaks on the menu or pause screen. It is more acceptable to take breaks while inside a map and not paused, though taking frequent breaks might raise suspicion and request for more proof.",
-        "8": "If a submission does not collect golden/silver berries, it <strong>may</strong> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs."
+        "header": "多地图一命提交规则",
+        "explanation": "多地图一命有两种类型：1、完成地图包内有关联性的地图一命，比如全C面一命，初级地图大厅一命；2、整个地图包一命，比如全章节一命或100%一命。 这部分规则将仅适用于多地图一命。",
+        "0": "视频<strong>必须</strong>展示完整流程，对于第一种类型，视频必须开始于第一张地图的选关页面，并完成最后一张地图后结束。对于第二种类型，视频必须开始于选择存档之前，并完成最后一张地图后结束。",
+        "1": "对于类型2，<strong>必须</strong>按照新档要求的正常地图顺序完成，<strong>始终推荐</strong>创建新档并且<strong>不使用</strong>cheat mode。对于类型1，可按照任意顺序完成地图。",
+        "2": "<strong>不得</strong>使用返回地图或任何手段规避死亡或降低难度。也包括玩家因为各种原因导致没有死亡但无法继续过关的情况。",
+        "3": "<strong>不允许</strong>使用多个存档完成挑战。",
+        "4": "如果存在强制死亡的地方（比如第九章月莓），则<strong>允许</strong>死亡，但死亡数量<strong>不得超过通过该部分要求的最低限制数</strong>。这与上面有关金草莓分离的说明不同。",
+        "5": "<strong>必须</strong>打开文件计时器，<strong>不仅仅是</strong>章节计时器。",
+        "6": "视频<strong>不得</strong>覆盖大部分游戏屏幕或关键部分。包括左上角的计时器与草莓数、玛德琳、暂停时下方的草莓计数器和右下角的保存图标。",
+        "7": "<strong>不建议</strong>在选关页面或暂停期间休息太长的时间，在地图内休息而非暂停期间休息更可接受，尽管不论任何情况，频繁休息均会引起怀疑并且会要求你提供更多证据。",
+        "8": "如果没有带上金/银草莓，<strong>同样允许</strong>将该多地图一命挑战内包含的所有单个挑战项目分别提交至单独的地图包列表里，前提是遵守上述关于不带金一命的相关规则。"
       }
     },
     "general_recommendations": {
-      "header": "General Recommendations",
+      "header": "一些建议",
       "section": {
-        "explanation": "These aren't <strong>exactly</strong> rules that need to be followed, but they help in aiding proof strength, avoiding giving your submission a note, helping one complete a challenge, or is a general courteous decision for others.",
-        "0": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions.",
-        "1": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility.",
-        "2": "For video compilations with multiple maps, adding timestamps in the description of the video or directly in the submission URL will help greatly.",
-        "3": "Keep one or two full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof."
+        "explanation": "这些<strong>均不是</strong>需要遵循的规则，但都有助于提高可信度，避免给你的视频打上注释，或帮助到别人。",
+        "0": "打开计时器有助于提高可信度，对于单独的地图不强制要求打开。但多地图挑战<strong>必须</strong>打开文件计时器。",
+        "1": "使用按键映射有助于提高可信度，比如Windows的<CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink>、Linux (X11)的<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink>或跨平台通用的<CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink>。",
+        "2": "对于合集视频，在简介或你的视频链接里贴上时间戳将对验证大有帮助。",
+        "3": "保留一到两份完整的全程录像，尤其是对于难度很高的金草莓，以防验证者要求更多的证明。"
+      }
+    },
+    "allowed_mods": {
+      "header": "允许和推荐的Mod",
+      "section": {
+        "explanation": "除非另有规定，否则下方列出的所有Mod默认允许使用。下方未列出的Mod除非违反了上述关于影响游戏玩法或信息获取的规则，不然也都允许使用。",
+        "0": "<strong>唯一</strong>允许使用的改变游戏玩法的Mod是<CustomExternalLink href=\"https://gamebanana.com/mods/53650\">拓展异变</CustomExternalLink>中的<i>取消冻结帧</i>。该选项不会从根本上影响地图本来的玩法，并且在大多数时候都会使难度变得更高。",
+        "1": "对于多地图一命，使用<CustomExternalLink href=\"https://gamebanana.com/mods/53679\">硬核模式</CustomExternalLink>可以让你更快速的重置存档，但不是必需。另外硬核模式还允许金草莓在不打开cheat mode的情况下出现，这意味着即使有金限之类的东西，你也可以不受限制地将视频提交至单独的地图包列表里。",
+        "2": "<CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink>允许使用。这个Mod可以让金草莓隐形，可以在不用制图器的情况下放置新的金草莓，或者可以让你带金死后直接从当前房间复活。",
+        "3": "<CustomExternalLink href=\"https://gamebanana.com/tools/6597\">速通辅助工具</CustomExternalLink>和<CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink>可以帮助你在练习期间找各个地方的对准或偷鸡。但必须指出，在实战期间禁止使用这些工具里改变玩法和获取信息的功能。",
+        "4": "其他经常可用于练习的工具有<CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink>和<CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>。"
       }
     }
   },
@@ -1176,28 +1188,77 @@
       "answer": "特殊情况下，一些不符合难度的地图会经过团队决定后添加它们。比如一张地图虽然少于两面，但它是合集的一部分，不可分割（比如egc的五云，酱四的逆旅）。"
     },
     "4": {
-      "question": "Are demodash buttons/multiple jump binds allowed?",
-      "answer": "Demodash buttons and multiple jump binds are allowed. The same goes for any combination of inputs that can be mapped on the same key/button, but external macros which press multiple inputs on different frames are not allowed."
+      "question": "允许绑一键dd或多个跳键吗？",
+      "answer": "可以，但不允许使用外部宏。"
     },
     "5": {
-      "question": "Are pause buffers allowed?",
-      "answer": "For pause buffers, you can pause the game but if pause was used too aggressively or distinctly used to frame advance (pause/unpause to progress frame by frame), a note may be put into the cell with the golden clear. A run that abuses pause buffering too much might get rejected."
+      "question": "允许暂停预输入吗？",
+      "answer": "参考规则。"
     },
     "6": {
-      "question": "What about spinner stunning?",
-      "answer": "Due to its difficulty and lack of golden viability, spinner stunning is allowed (pausing frame perfectly multiple times to keep spinners/lightning unloaded). However, deloading spinners by waiting 118+ hours is not allowed."
+      "question": "什么是spinner stunning？",
+      "answer": "参考规则，但再次强调，等待118个小时以进行freezing是不允许的。"
     },
     "7": {
       "question": "FC的标准是什么？",
       "answer": "-（此条回答已过时，等待重写中）"
     },
     "8": {
-      "question": "Why are some maps ineligible for full clear runs?",
-      "answer": "Some maps have collectibles which are not optional, such as strawberries in Hell Gym. For other maps, the collectibles do not add any extra challenge to the run, and therefore collecting them in a full clear run is not considered to be different from a standard run. For example, the moon berry in Path of D-espair or the cassette in Void Side."
+      "question": "为什么有些地图有收集物却不算作FC",
+      "answer": "有一部分地图的收集物是必要的，比如Hell Gym。对于另一部分的地图，收集物与正路没有任何区别，比如Path of D-espair中的月莓或虚空A的磁带。"
     },
     "9": {
-      "question": "What is the Top Golden List Rankings?",
-      "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
+      "question": "什么是金草莓排行榜？",
+      "answer": "金草莓排行榜列出了许多难度较高的金草莓，上榜的最低要求是比官图6b、7b、8b难。这些排名按层级排序，数字越小难度越大。请注意：这些都是由有炼金经验的人主观决定的，排名不会完全准确，请勿认真看待。一张地图越少有人金，个人差会体现得越大，因此一些冷门的地图有更大的可能排名不准确。均根据目前为止打出过该图金的人说法做出的估计（或直接决定），如果更多人打出了该图的金草莓，则排名可能会发生变化。通常基于以下几点来确定一个图的排名：打出该金时的游戏时长、游戏经验；在地图上花费的时间；以及对地图长度、难度分布等一系列原因进行分析。"
+    }
+  },
+  "index": {
+    "title": "欢迎！",
+    "welcome": {
+      "header": "欢迎来到金草莓网站！",
+      "text": "该网站的目的是维护和记录所有地图包或地图的金草莓挑战，以及激励人们进行挑战，让蔚蓝社区的炼金领域变得更活跃。网站展示了所有已被人们完成金草莓的地图和详细的玩家信息。",
+      "info": "如果你有任何问题或建议，欢迎随时加入金榜服务器提问，或直接联系团队成员。",
+      "team_members": "团队成员"
+    },
+    "links": {
+      "header": "一些有用的链接",
+      "rules": "规则",
+      "faq": "常见问题解答",
+      "celeste_discord": "官方Discord服务器",
+      "modded_golden_team_discord": "金榜服务器",
+      "fwg_sheet": "官图第九章金草莓收集者表格",
+      "survivors_list": "官图多地图一命表格",
+      "server_costs": "服务器成本概览"
+    },
+    "issues": {
+      "header": "问题反馈",
+      "text": "如果你发现任何问题，请<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">在Github上创建一个新的New issue</CustomExternalLink>或在金榜服务器@viddie，最好用这个<CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">网站专用频道</CustomExternalLink>。"
+    },
+    "global_stats": {
+      "header": "全球统计",
+      "totals": {
+        "header": "目前已记录：",
+        "campaigns": "<strong>{{campaigns}}</strong>个地图包（有{{standalone}}个为独立地图）。",
+        "maps": "<strong>{{maps}}</strong>张独立地图。",
+        "submissions": "以及<strong>{{players}}</strong>名玩家提交的<strong>{{submissions}}</strong>个内容！"
+      },
+      "difficulty_stats": {
+        "header": "地图难度统计",
+        "text": "每个层级的提交内容数量"
+      }
+    },
+    "getting_started": {
+      "header": "网站使用指南",
+      "preface": "想要在网站提交你的金草莓，你必须先：",
+      "video": "录制视频并上传到可永久播放的地方（比如油管、B站、...）",
+      "account": "<strong><RegisterLink>注册</RegisterLink>并<LoginLink>登录</LoginLink>你的账号</strong>，你可以通过Discord或邮箱注册。",
+      "player": "<strong><CustomLink>绑定玩家</CustomLink></strong>。如果曾经在旧表格上提交过视频，那么你需要先绑定之前的玩家数据。 如果你第一次提交视频，那么你可以创建新玩家。",
+      "submit": "前往<CustomLink>提交页面</CustomLink>并提交你的视频！"
+    },
+    "newly_released": {
+      "header": "关于网站发布",
+      "text": "网站处在刚发布阶段，鉴于旧表格上有很多很混乱的数据，因此网站同步过来的数据很可能会出现问题。如果你发现此类问题，请在金榜服务器中报告！",
+      "migration": "将整个表格的数同步到网站需要一定的时间，你依然可以暂时在Discord服务器上@Modded Golden Team来提交你的金草莓。（发布在b站的视频可以无视这条）"
     }
   }
 }

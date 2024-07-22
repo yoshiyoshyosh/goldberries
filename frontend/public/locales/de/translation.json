@@ -1096,5 +1096,54 @@
         "show_all": "Alle Anzeigen"
       }
     }
+  },
+  "index": {
+    "title": "Wilkommen!",
+    "welcome": {
+      "header": "Celeste Modded Done Deathless!",
+      "text": "The main goal of this website is to maintain all the deathless clears of maps or campaigns, as well as motivating people to go for deathless challenges and making the deathless completion scene of Celeste more active in general. The website shows all the maps that have been completed without dying, as well as names of people who did the goldens.",
+      "info": "If you have any questions or suggestions, feel free to join the Modded Golden Team Discord server and ask there, or contact any of the team members directly.",
+      "team_members": "Teammitglieder"
+    },
+    "links": {
+      "header": "Nützliche Links",
+      "rules": "Regeln",
+      "faq": "Freqently Asked Questions",
+      "celeste_discord": "Celeste's Discord",
+      "modded_golden_team_discord": "Modded Golden Team Discord",
+      "fwg_sheet": "Farewell Golden Collectors' List",
+      "survivors_list": "Celeste Survivors List (Deathless runs of vanilla Celeste)",
+      "server_costs": "Übersicht über Serverkosten"
+    },
+    "issues": {
+      "header": "Problem Melden",
+      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">dedicated channel</CustomExternalLink> for this website"
+    },
+    "global_stats": {
+      "header": "Globale Stats",
+      "totals": {
+        "header": "Es gibt derzeit:",
+        "campaigns": "<strong>{{campaigns}}</strong> Campaigns ({{standalone}} davon sind stand-alone Maps)",
+        "maps": "<strong>{{maps}}</strong> Maps",
+        "submissions": "und <strong>{{submissions}}</strong> Submissions von <strong>{{players}}</strong> Players!"
+      },
+      "difficulty_stats": {
+        "header": "Schwierigkeitsstats",
+        "text": "Anzahl an Submissions in jeder Tier"
+      }
+    },
+    "getting_started": {
+      "header": "Getting Started",
+      "preface": "To make a submission to this website, you need to do the following:",
+      "video": "Have video proof of your deathless run, uploaded to a permanent place (e.g. YouTube, bilibili, ...)",
+      "account": "<strong><RegisterLink>Register</RegisterLink> an account and <LoginLink>login</LoginLink> to your account</strong>. You can sign-up via Discord or email address & password",
+      "player": "<strong><CustomLink>Claim a player</CustomLink></strong>. If you already had submissions on the spreadsheet your \"player\" will already exist, and you need to claim it for yourself. If this is your first submission, you can create a new player for yourself.",
+      "submit": "Head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+    },
+    "newly_released": {
+      "header": "Newly Released!",
+      "text": "This website has just recently been released! Given the chaotic state of data on the spreadsheet, it's to be expected that there will be wrong or inconsistent data somewhere. When you spot some, please report it in the Modded Golden Team Discord server!",
+      "migration": "Migrating all of the data, as well as the entire community over to this website will take a while, so for the time being you can still make your submissions the old-fashioned way, by tagging the modded golden team in the Celeste Discord server, or the Modded Golden Team Discord server."
+    }
   }
 }

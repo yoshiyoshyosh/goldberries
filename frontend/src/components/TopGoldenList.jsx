@@ -83,7 +83,11 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
 
   // Reset the render up to index when the key changes
   useEffect(() => {
-    setRenderUpTo({ key: currentKey, index: 0 });
+    console.log("Checking to see if key changed");
+    if (currentKey !== renderUpTo.key) {
+      console.log("Resetting render up to index");
+      setRenderUpTo({ key: currentKey, index: 0 });
+    }
   }, [
     type,
     id,

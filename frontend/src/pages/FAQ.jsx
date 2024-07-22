@@ -18,6 +18,7 @@ export function PageFAQ() {
 
 function FAQList() {
   const { t } = useTranslation(undefined, { keyPrefix: "faq" });
+  const { t: t_a } = useTranslation();
 
   const entryCount = 10;
 
@@ -29,7 +30,7 @@ function FAQList() {
         </Typography>
         <StyledLink to="/rules" style={{ marginLeft: "auto" }}>
           <FontAwesomeIcon icon={faArrowRight} style={{ marginRight: "4px" }} />
-          Rules
+          {t_a("rules.title")}
         </StyledLink>
       </Stack>
       {Array.from({ length: entryCount }, (_, index) => (

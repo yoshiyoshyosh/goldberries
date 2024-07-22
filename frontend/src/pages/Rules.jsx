@@ -31,6 +31,7 @@ export function PageRules() {
 
 function RulesList() {
   const { t } = useTranslation(undefined, { keyPrefix: "rules" });
+  const { t: t_a } = useTranslation();
   const allRules = NewRules;
   const { hash } = useLocation();
 
@@ -53,7 +54,7 @@ function RulesList() {
         </Typography>
         <StyledLink to="/faq" style={{ marginLeft: "auto" }}>
           <FontAwesomeIcon icon={faArrowRight} style={{ marginRight: "4px" }} />
-          FAQ
+          {t_a("faq.title")}
         </StyledLink>
       </Stack>
       <RulesTOC allRules={allRules} />
@@ -80,7 +81,7 @@ function RulesTOC({ allRules }) {
   return (
     <>
       <Typography variant="h5" gutterBottom>
-        Table of Contents
+        {t("toc")}
       </Typography>
       <ul>
         {Object.keys(allRules).map((key) => {
