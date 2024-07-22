@@ -140,7 +140,7 @@ $sj = array(
     "sort_order" => 6,
   ),
   array(
-    "name" => "Blueberry Bay",
+    "name" => "Blueberry Bay: The Beginner Heart Side",
     "sort_major" => 0,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -254,7 +254,7 @@ $sj = array(
     "sort_order" => 6,
   ),
   array(
-    "name" => "Raspberry Roots",
+    "name" => "Raspberry Roots: The Intermediate Heart Side",
     "sort_major" => 1,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -410,7 +410,7 @@ $sj = array(
     "sort_order" => 11,
   ),
   array(
-    "name" => "Mango Mesa",
+    "name" => "Mango Mesa: The Advanced Heart Side",
     "sort_major" => 2,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -590,7 +590,7 @@ $sj = array(
     "sort_order" => 7,
   ),
   array(
-    "name" => "Starfruit Supernova",
+    "name" => "Starfruit Supernova: The Expert Heart Side",
     "sort_major" => 3,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -704,7 +704,7 @@ $sj = array(
     "sort_order" => 4,
   ),
   array(
-    "name" => "Passionfruit Pantheon",
+    "name" => "Passionfruit Pantheon: The Grandmaster Heart Side",
     "sort_major" => 4,
     "sort_minor" => 4,
     "sort_order" => NULL,

@@ -45,14 +45,20 @@ while ($row = pg_fetch_assoc($result)) {
   $bilibili_id = bilibili_id($link);
 
   $publish_date = null;
+  $check = [];
+  // $check[] = "youtube";
+  $check[] = "bilibili";
+  // $check[] = "known_other";
+  // $check[] = "other";
 
   if ($youtube_id) {
+    if (!in_array("youtube", $check))
+      continue;
     $count++;
     echo "\n";
     echo "Processing submission (#$count): $submission\n";
     echo "  Link: $link\n";
     echo "  Link Type: YouTube\n";
-    // continue;
     $video = $video_details[$youtube_id];
     if ($video["error"]) {
       echo "  Video had an error: $video[error]\n";
@@ -71,12 +77,13 @@ while ($row = pg_fetch_assoc($result)) {
     }
 
   } else if ($bilibili_id) {
-    // $count++;
-    // echo "\n";
-    // echo "Processing submission (#$count): $submission\n";
-    // echo "  Link: $link\n";
-    // echo "  Link Type: BiliBili\n";
-    continue;
+    if (!in_array("bilibili", $check))
+      continue;
+    $count++;
+    echo "\n";
+    echo "Processing submission (#$count): $submission\n";
+    echo "  Link: $link\n";
+    echo "  Link Type: BiliBili\n";
     $video = $bilibili_video_details[$bilibili_id];
     if ($video["error"]) {
       echo "  Video had an error: $video[error]\n";
@@ -91,9 +98,6 @@ while ($row = pg_fetch_assoc($result)) {
     $date = gmdate('c', $publish_date);
 
     //UNIX timestamp to date time object
-    // $date = new DateTime();
-    // $date->setTimestamp($publish_date);
-    // $date = $date->format('Y-m-d H:i:sO');
     $submission->date_created = new JsonDateTime($date);
 
     if ($submission->update($DB)) {
@@ -105,22 +109,25 @@ while ($row = pg_fetch_assoc($result)) {
   } else {
     //If the link contains "twitch", skip it
     if (strpos($link, 'twitch') !== false || strpos($link, 'drive.google.com') !== false || strpos($link, 'nico.ms') !== false || strpos($link, 'nicovideo.jp') !== false || strpos($link, 'playlist') !== false) {
-      // $count++;
-      // echo "\n";
-      // echo "Processing submission (#$count): $submission\n";
-      // echo "  Link: $link\n";
-      // echo "  Link contains Twitch\n";
+      if (in_array("known_other", $check)) {
+        $count++;
+        echo "\n";
+        echo "Processing submission (#$count): $submission\n";
+        echo "  Link: $link\n";
+        echo "  Link contains known other site\n";
+      }
       continue;
     }
 
-    // $count++;
-    // echo "\n";
-    // echo "Processing submission (#$count): $submission\n";
-    // echo "  Link: $link\n";
-    // echo "  Link is neither YouTube nor Bilibili\n";
-    // $submission->expand_foreign_keys($DB, 5, true);
-    // echo "  Submission details: map = " . $submission->challenge->get_name() . ", player = " . $submission->player->name . "\n";
-    continue;
+    if (in_array("other", $check)) {
+      $count++;
+      echo "\n";
+      echo "Processing submission (#$count): $submission\n";
+      echo "  Link: $link\n";
+      echo "  Link is neither YouTube nor Bilibili\n";
+      $submission->expand_foreign_keys($DB, 5, true);
+      echo "  Submission details: map = " . $submission->challenge->get_name() . ", player = " . $submission->player->name . "\n";
+    }
   }
 }
 

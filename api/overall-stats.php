@@ -13,7 +13,8 @@ if (isset($_REQUEST['verifier']) && $_REQUEST['verifier'] === "true") {
   $query = "
   SELECT
     (SELECT COUNT(*) FROM submission WHERE is_verified IS NULL) AS submissions_in_queue,
-    (SELECT COUNT(*) FROM account WHERE claimed_player_id IS NOT NULL) AS open_player_claims
+    (SELECT COUNT(*) FROM account WHERE claimed_player_id IS NOT NULL) AS open_player_claims,
+    (SELECT COUNT(*) FROM suggestion WHERE is_verified IS NULL) AS pending_suggestions
   ";
   $result = pg_query($DB, $query);
   if (!$result) {
