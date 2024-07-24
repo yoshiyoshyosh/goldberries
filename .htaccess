@@ -1,8 +1,28 @@
-RewriteEngine on
+# Enable the rewrite engine
+RewriteEngine On
 
-RewriteBase /
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+# Disable trailing slash
+DirectorySlash Off
 
+# General rule to route "/api/{endpoint}" to "/api/{endpoint}/{endpoint}.php"
 RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/([^/]+)/?$ api/$1/$1.php [L]
+
+# General rule to route "/api/{endpoint}/{sub-endpoint}" to "/api/{endpoint}/{sub-endpoint}.php"
+RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/([^/]+)/([^/]+)/?$ api/$1/$2.php [L]
+
+# General rule to route "/api/{endpoint}/{sub-endpoint}/{sub-sub-endpoint}" to "/api/{endpoint}/{sub-endpoint}/{sub-sub-endpoint}.php"
+RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/([^/]+)/([^/]+)/([^/]+)/?$ api/$1/$2/$3.php [L]
+
+# Rule 2: Return a 404 for any .sh file requests
+RewriteRule ^.*\.sh$ - [L,R=404]
+
+# Rule 3: Check if the requested file exists, if not, redirect to /index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]

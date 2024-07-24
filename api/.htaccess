@@ -1,5 +1,0 @@
-RewriteEngine on
-RewriteRule ^.*\.sh$ - [L,R=404]
-
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [L]
