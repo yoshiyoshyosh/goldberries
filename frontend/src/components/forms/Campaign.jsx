@@ -7,6 +7,7 @@ import {
   Divider,
   FormControlLabel,
   FormHelperText,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -16,14 +17,22 @@ import {
   Typography,
 } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useMemo, useState } from "react";
 import { FormOptions } from "../../util/constants";
-import { getQueryData, useDeleteMap, usePostCampaign, usePostMap } from "../../hooks/useApi";
+import { getQueryData, useDeleteMap, useGetModInfo, usePostCampaign, usePostMap } from "../../hooks/useApi";
 import { fetchCampaign } from "../../util/api";
 import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faDownload,
+  faLightbulb,
+  faPlus,
+  faSpinner,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { getCampaignName } from "../../util/data_util";
 import { useTranslation } from "react-i18next";
@@ -93,6 +102,7 @@ export function FormCampaign({ campaign, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const [modFetchState, setModFetchState] = useState(0); //0 = not fetched, 1 = fetching, 2 = success, 3 = error
   const newCampaign = campaign.id === null;
 
   const { mutate: postCampaign } = usePostCampaign((newCampaign) => {
@@ -114,6 +124,29 @@ export function FormCampaign({ campaign, onSave, ...props }) {
     form.reset(campaign);
   }, [campaign]);
 
+  const { mutate: getModInfo } = useGetModInfo(
+    (response) => {
+      setModFetchState(2);
+      console.log("Mod info", response);
+      //Set the form values
+      form.setValue("name", response.name, { shouldDirty: true, shouldTouch: true });
+      form.setValue("author_gb_id", response.authorId);
+      form.setValue("author_gb_name", response.author);
+    },
+    (error) => {
+      setModFetchState(3);
+    }
+  );
+  const fetchModInfo = () => {
+    setModFetchState(1);
+    getModInfo(form.getValues("url"));
+  };
+  const fetchingButtonColors = ["primary", "primary", "success", "error"];
+  const fetchingButtonColor = fetchingButtonColors[modFetchState];
+  const fetchingButtonIcons = [faDownload, faSpinner, faCheck, faXmark];
+  const fetchingButtonIcon = fetchingButtonIcons[modFetchState];
+  const fetchingButtonSpin = modFetchState === 1;
+
   const major_labels = form.watch("sort_major_labels");
   const major_colors = form.watch("sort_major_colors");
   const minor_labels = form.watch("sort_minor_labels");
@@ -125,27 +158,73 @@ export function FormCampaign({ campaign, onSave, ...props }) {
         {t_g("campaign", { count: 1 })} ({newCampaign ? t_g("new") : campaign.id})
       </Typography>
 
-      <TextField
-        label={t_g("name") + " *"}
-        fullWidth
-        {...form.register("name", FormOptions.Name128Required(t_ff))}
-        error={!!errors.name}
-        helperText={errors.name ? errors.name.message : ""}
+      <Controller
+        control={form.control}
+        name="name"
+        defaultValue=""
+        rules={FormOptions.Name128Required(t_ff)}
+        render={({ field }) => (
+          <TextField
+            label={t_g("name") + " *"}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+            error={!!errors.name}
+            helperText={errors.name ? errors.name.message : ""}
+          />
+        )}
       />
-      <TextField
-        label={t_g("url") + " *"}
-        sx={{ mt: 2 }}
-        fullWidth
-        {...form.register("url", FormOptions.UrlRequired(t_ff))}
-        error={!!errors.url}
-        helperText={errors.url ? errors.url.message : ""}
-      />
+
+      <Grid container spacing={1} sx={{ mt: 2 }}>
+        <Grid item xs={12} sm>
+          <TextField
+            label={t_g("url") + " *"}
+            fullWidth
+            {...form.register("url", FormOptions.UrlRequired(t_ff))}
+            error={!!errors.url}
+            helperText={errors.url ? errors.url.message : ""}
+          />
+        </Grid>
+        <Grid item xs={12} sm="auto" display="flex" alignItems="center">
+          <Tooltip title={t("url_fetch_tooltip")}>
+            <Button
+              fullWidth
+              variant="contained"
+              color={fetchingButtonColor}
+              sx={{ height: "50px" }}
+              onClick={fetchModInfo}
+            >
+              <FontAwesomeIcon spin={fetchingButtonSpin} icon={fetchingButtonIcon} size="lg" />
+            </Button>
+          </Tooltip>
+        </Grid>
+      </Grid>
       <TextField label={t("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
 
       <Divider sx={{ my: 2 }} />
 
-      <TextField label={t("author_gb_id")} fullWidth {...form.register("author_gb_id")} />
-      <TextField label={t("author_gb_name")} sx={{ mt: 2 }} fullWidth {...form.register("author_gb_name")} />
+      <Controller
+        control={form.control}
+        name="author_gb_id"
+        defaultValue=""
+        render={({ field }) => (
+          <TextField label={t("author_gb_id")} fullWidth value={field.value} onChange={field.onChange} />
+        )}
+      />
+      <Controller
+        control={form.control}
+        name="author_gb_name"
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            sx={{ mt: 2 }}
+            label={t("author_gb_name")}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
+      />
 
       <Divider sx={{ my: 2 }}>
         <Chip size="small" label={t("sort_category_major")} />

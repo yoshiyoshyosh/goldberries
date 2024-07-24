@@ -1,11 +1,23 @@
-import { Button, Checkbox, Chip, Divider, FormControlLabel, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  Chip,
+  Divider,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { DifficultySelectControlled, ObjectiveSelect } from "../GoldberriesComponents";
-import { usePostCampaign, usePostChallenge, usePostMap } from "../../hooks/useApi";
+import { useGetModInfo, usePostCampaign, usePostChallenge, usePostMap } from "../../hooks/useApi";
 import { FormOptions } from "../../util/constants";
 import { useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faDownload, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function FormCreateFullChallengeWrapper({
   onSuccess,
@@ -18,8 +30,8 @@ export function FormCreateFullChallengeWrapper({
     return {
       campaign_name: defaultName ?? "",
       campaign_url: defaultUrl ?? "",
-      campaign_author_gb_id: null,
-      campaign_author_gb_name: null,
+      campaign_author_gb_id: "",
+      campaign_author_gb_name: "",
       map_name: defaultName ?? "",
 
       objective_id: 1,
@@ -42,6 +54,8 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   const { t: t_fch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const { t: t_a } = useTranslation();
+  const [modFetchState, setModFetchState] = useState(0); //0 = not fetched, 1 = fetching, 2 = success, 3 = error
   const { mutateAsync: postCampaign } = usePostCampaign(() => {
     toast.success(t("feedback.campaign"));
   });
@@ -88,6 +102,29 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
     });
   });
 
+  const { mutate: getModInfo } = useGetModInfo(
+    (response) => {
+      setModFetchState(2);
+      console.log("Mod info", response);
+      //Set the form values
+      form.setValue("campaign_name", response.name);
+      form.setValue("campaign_author_gb_id", response.authorId);
+      form.setValue("campaign_author_gb_name", response.author);
+    },
+    (error) => {
+      setModFetchState(3);
+    }
+  );
+  const fetchModInfo = () => {
+    setModFetchState(1);
+    getModInfo(form.getValues("campaign_url"));
+  };
+  const fetchingButtonColors = ["primary", "primary", "success", "error"];
+  const fetchingButtonColor = fetchingButtonColors[modFetchState];
+  const fetchingButtonIcons = [faDownload, faSpinner, faCheck, faXmark];
+  const fetchingButtonIcon = fetchingButtonIcons[modFetchState];
+  const fetchingButtonSpin = modFetchState === 1;
+
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
@@ -97,32 +134,73 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       <Divider>
         <Chip label={t_g("campaign", { count: 1 })} size="small" sx={{ mb: 1 }} />
       </Divider>
-      <TextField
-        label={t_ca("name") + " *"}
-        fullWidth
-        {...form.register("campaign_name", FormOptions.Name128Required(t_ff))}
-        error={!!errors.campaign_name}
-        helperText={errors.campaign_name ? errors.campaign_name.message : ""}
+      <Controller
+        control={form.control}
+        name="campaign_name"
+        defaultValue=""
+        rules={FormOptions.Name128Required(t_ff)}
+        render={({ field }) => (
+          <TextField
+            label={t_ca("name") + " *"}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+            error={!!errors.campaign_name}
+            helperText={errors.campaign_name ? errors.campaign_name.message : ""}
+          />
+        )}
       />
-      <TextField
-        label={t_g("url") + " *"}
-        sx={{ mt: 2 }}
-        fullWidth
-        {...form.register("campaign_url", FormOptions.UrlRequired(t_ff))}
-        error={!!errors.campaign_url}
-        helperText={errors.campaign_url ? errors.campaign_url.message : ""}
+      <Grid container spacing={1} sx={{ mt: 2 }}>
+        <Grid item xs={12} sm>
+          <TextField
+            label={t_g("url") + " *"}
+            fullWidth
+            {...form.register("campaign_url", FormOptions.UrlRequired(t_ff))}
+            error={!!errors.campaign_url}
+            helperText={errors.campaign_url ? errors.campaign_url.message : ""}
+          />
+        </Grid>
+        <Grid item xs={12} sm="auto" display="flex" alignItems="center">
+          <Tooltip title={t_a("forms.campaign.url_fetch_tooltip")}>
+            <Button
+              fullWidth
+              variant="contained"
+              color={fetchingButtonColor}
+              sx={{ height: "50px" }}
+              onClick={fetchModInfo}
+            >
+              <FontAwesomeIcon spin={fetchingButtonSpin} icon={fetchingButtonIcon} size="lg" />
+            </Button>
+          </Tooltip>
+        </Grid>
+      </Grid>
+      <Controller
+        control={form.control}
+        name="campaign_author_gb_id"
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            sx={{ mt: 2 }}
+            label={t_ca("author_gb_id")}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
       />
-      <TextField
-        label={t_ca("author_gb_id")}
-        fullWidth
-        {...form.register("campaign_author_gb_id")}
-        sx={{ mt: 2 }}
-      />
-      <TextField
-        label={t_ca("author_gb_name")}
-        sx={{ mt: 2 }}
-        fullWidth
-        {...form.register("campaign_author_gb_name")}
+      <Controller
+        control={form.control}
+        name="campaign_author_gb_name"
+        defaultValue=""
+        render={({ field }) => (
+          <TextField
+            sx={{ mt: 2 }}
+            label={t_ca("author_gb_name")}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+          />
+        )}
       />
 
       <Divider sx={{ mt: 2, mb: 1 }}>

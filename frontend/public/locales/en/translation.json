@@ -163,6 +163,7 @@
         "deleted": "Campaign deleted"
       },
       "icon_url": "Icon URL",
+      "url_fetch_tooltip": "Fetch the campaign's data from GameBanana",
       "author_gb_id": "Author GameBanana ID",
       "author_gb_name": "Author GameBanana Name",
       "sort_category_major": "Map Sort Major",
@@ -300,6 +301,11 @@
       },
       "url": {
         "required": "URL can't be empty"
+      },
+      "submission_url": {
+        "required": "Submission URL can't be empty",
+        "invalid": "Invalid URL",
+        "disallowed": "This type of URL is not allowed for submissions (<CustomLink to=\"/rules#submissions-all\">Submissions > Rule 1</CustomLink>)"
       }
     }
   },
@@ -955,6 +961,8 @@
       "multi": {
         "label": "Multi Challenge",
         "feedback": {
+          "invalid_urls_one": "1 provided URL is invalid",
+          "invalid_urls_other": "{{count}} provided URLs are invalid",
           "submitting": "Submitting run ({{current}}/{{total}})",
           "submitted": "Runs submitted"
         },
@@ -1119,7 +1127,7 @@
       "header": "Submissions",
       "rules": {
         "header": "Rules for All Submissions",
-        "0": "The submission video <strong>must</strong> be uploaded to a place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
+        "0": "The submission video <strong>must</strong> be uploaded to a permanent place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
         "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
         "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
         "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",

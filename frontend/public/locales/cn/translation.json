@@ -163,6 +163,7 @@
         "deleted": "地图包已删除"
       },
       "icon_url": "图标网址",
+      "url_fetch_tooltip": "从香蕉网上自动获取地图包数据",
       "author_gb_id": "作者的香蕉网ID（非必填）",
       "author_gb_name": "作者的香蕉网名称（必填，不然会导致地图加载不出来）",
       "sort_category_major": "地图主要排序（注：暂时仅多大厅合集需要填写）",
@@ -300,6 +301,11 @@
       },
       "url": {
         "required": "链接不可为空"
+      },
+	    "submission_url": {
+        "required": "链接不可为空",
+        "invalid": "无效链接",
+        "disallowed": "此类型链接不允许提交（<CustomLink to=\"/rules#submissions-all\">参考提交规则第1条</CustomLink>）"
       }
     }
   },
@@ -490,7 +496,7 @@
   "server_costs": {
     "server_costs": {
       "title": "服务器成本",
-      "description": "Hi, viddie here. Unsurprisingly, running servers costs money, and while I can pour in as much time as I like into creating this project, someone has to pay to keep the server running. This website does not (and will never) have ADs. I am willing to pay for the server costs all by myself if necessary, but if anyone in the community wants to help me out, I would gladly appreciate it!",
+      "description": "这里是viddie。显而易见，运行服务器是要投入成本的，虽然我可以尽可能的投入时间来开发项目，但必须有人付费才能维持这个服务器的运行。本网站没有（也永远不会有）广告。如果没有足够的资金运行，我愿意自己支付服务器费用。但如果社区内有人愿意给这个服务器助力，我将不胜感激！",
       "table": {
         "item": "项目",
         "cost": "成本",
@@ -804,7 +810,7 @@
     }
   },
   "login": {
-    "already_logged_in": "请勿重复登录",
+    "already_logged_in": "你已经登录了一个账号",
     "login": {
       "title": "登录",
       "feedback": {
@@ -872,7 +878,7 @@
   "rejected_maps": {
     "title": "已拒绝的地图",
     "info_1": "包含所有不会添加到地图包列表的地图，以及原因",
-    "info_2": "如果地图或地图包违反了规则3，也不会在此处列出",
+    "info_2": "如果地图或地图包违反了规则4，也不会在此处列出",
     "reason": "原因"
   },
   "search": {
@@ -893,10 +899,10 @@
   "monthly_recap": {
     "title": "'{{month}}'的数据",
     "settings": {
-      "less_recent": "上个月'{{month}}'",
-      "more_recent": "下个月'{{month}}'",
-      "normal_clears": "达成数（下限）",
-      "first_clears": "首位达成数（下限）",
+      "less_recent": "上个月：{{month}}",
+      "more_recent": "下个月：{{month}}",
+      "normal_clears": "达成数（设置层级下限）",
+      "first_clears": "首位达成数（设置层级下限）",
       "hide_changelog": "隐藏更改日志"
     },
     "header": "'{{month}}'的数据",
@@ -955,6 +961,8 @@
       "multi": {
         "label": "批量提交",
         "feedback": {
+		      "invalid_urls_one": "含有1个无效链接",
+          "invalid_urls_other": "含有{{count}}个无效链接",
           "submitting": "提交中：({{current}}/{{total}})",
           "submitted": "已全部提交"
         },
@@ -1113,7 +1121,7 @@
         "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
         "3": "地图或地图包<strong>不得</strong>包含NSFW内容。",
         "4": "地图或地图包里的内容<strong>最好不要</strong>与官图或已经存在的其他图过于相似。不过像比较有特点的<CustomExternalLink href=\"https://gamebanana.com/mods/150418\">官图倒走</CustomExternalLink>，或者官图的加难版比如<CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink>这类图是允许的，但是像<CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink>这样的图大概率会被拒绝。",
-        "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，\"垃圾类\"或\"整活类\"图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你想来点实际参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
+        "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，\"垃圾类\"或\"整活类\"图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你也想来点参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
       }
     },
     "goldens": {
@@ -1126,10 +1134,10 @@
         "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomExternalLink href=\"#recommended-mods\">允许和推荐的Mod</CustomExternalLink>。",
         "4": "<strong>t3及以上难度</strong>的挑战<strong>必须</strong>有完整的全程录像。如果在录像的第一局或开头就完成挑战，则需要提供之前的完整录像。",
         "5": "<strong>最好不要</strong>使用任何提供信息的Mod，这类Mod通常会给你提供游戏内无法访问的信息。例如input history、体力条或CelesteTAS里的信息面板。如果在游戏过程中这些东西产生的影响很小，则此类提交内容均会被无条件接受；如果产生了一定量但不值得特别关注的影响，则此类提交内容依然会被接受但会打上注释；如果产生的影响很大，比如通过输入帧数反复调亚像素对准，或者在一些高速/控体力/禁无体力跳的图使用速度计和体力条的情况，则此类提交内容会被拒绝。",
-        "6": "<strong>不得</strong>滥用<i>暂停预输入</i>来降低难度。这会使得某些图中一些很难，容错很低的地方变得非常简单，由于定义也很模糊，通常也会根据具体情况进行评估。不过如果你也想来点参考：比如用暂停过<CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">海鲜市场倒二的蹭墙</CustomExternalLink>是可以的，但<CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower</CustomExternalLink>则不行。使用不会被拒绝的暂停预输入也会被打上注释。",
-        "7": "<strong>不得</strong>等待118+小时以进行<i>冻结圆刺</i>。<strong>但允许</strong>使用<i>spinner stunning</i>，因为这通常是由大量的fp实现的，不适合用在金草莓里。关于更多信息，请参考<CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">这个视频</CustomExternalLink>。",
+        "6": "<strong>不得</strong>滥用<i>暂停预输入</i>来降低难度。这会使得某些图中一些很难，容错很低的地方变得非常简单，由于定义也很模糊，通常也会根据具体情况进行评估。不过如果你想来点实际参考：比如用暂停过<CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">海鲜市场倒二的蹭墙</CustomExternalLink>是可以的，但<CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower</CustomExternalLink>则不行。使用不会被拒绝的暂停预输入也会被打上注释。",
+        "7": "<strong>不得</strong>通过等待118+小时的手段来<i>冻结圆刺</i>。<strong>但可以</strong>使用<i>spinner stunning</i>，因为这通常是由大量的fp实现的，不适合用在金草莓里。关于更多信息，请参考<CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">这个视频</CustomExternalLink>。",
         "8": "如果地图上没有金草莓，<strong>则允许</strong>使用控制台命令<code>give_golden</code>生成一个金草莓。该命令<strong>必须</strong>在<strong>地图的第一面</strong>使用。或者也可以用<CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink>或<CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink>来给地图添加金草莓。",
-        "9": "对于金草莓本身，只要遵循挑战本身的规则，玩家<strong>可以不用</strong>真正收集金草莓（也叫<i>不带金一命</i>）。如果有金限，<strong>则很大可能不允许玩家以这种方式进行挑战</strong>。虽然本身不鼓励这种行为并希望你真正收集到金草莓，但有些时候会真的会有压死局变一命这种情况发生，我们不希望抹杀任何人突如其来的成就。另外，不带金一命均会打上注释。",
+        "9": "对于金草莓本身，只要遵循挑战本身的规则，玩家<strong>可以不用</strong>真正收集金草莓（也叫<i>不带金一命</i>）。如果有金限，<strong>则很大可能不允许玩家以这种方式进行挑战</strong>。虽然本身不鼓励这种行为并希望你真正收集到金草莓，但有些时候真的会出现压死局变一命的情况，我们不希望抹杀任何人突如其来的成就。另外，不带金一命均会打上注释。",
         "10": "对于金草莓本身，<strong>如果</strong>地图结尾不存在结算trigger，玩家<strong>可以</strong>在地图的<strong>结尾</strong>添加一个金草莓结算trigger。如果吃到心但不结束游戏，你也可以通过制图器将它改为吃到心结束游戏。这将根据具体情况进行评估，因为真的很少见。",
         "11": "对于金草莓本身，<strong>允许金草莓不跟在你身边</strong>时死亡，次数不限。但这<strong>不适用于</strong>因为修复地图问题从而不得不分离金草莓（比如<CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>）或作者无意设置的情况。"
       },
@@ -1139,7 +1147,7 @@
         "0": "视频<strong>必须</strong>展示完整流程，对于第一种类型，视频必须开始于第一张地图的选关页面，并完成最后一张地图后结束。对于第二种类型，视频必须开始于选择存档之前，并完成最后一张地图后结束。",
         "1": "对于类型2，<strong>必须</strong>按照新档要求的正常地图顺序完成，<strong>始终推荐</strong>创建新档并且<strong>不使用</strong>cheat mode。对于类型1，可按照任意顺序完成地图。",
         "2": "<strong>不得</strong>使用返回地图或任何手段规避死亡或降低难度。也包括玩家因为各种原因导致没有死亡但无法继续过关的情况。",
-        "3": "<strong>不允许</strong>使用多个存档完成挑战。",
+        "3": "<strong>不得</strong>使用多个存档完成挑战。",
         "4": "如果存在强制死亡的地方（比如第九章月莓），则<strong>允许</strong>死亡，但死亡数量<strong>不得超过通过该部分要求的最低限制数</strong>。这与上面有关金草莓分离的说明不同。",
         "5": "<strong>必须</strong>打开文件计时器，<strong>不仅仅是</strong>章节计时器。",
         "6": "视频<strong>不得</strong>覆盖大部分游戏屏幕或关键部分。包括左上角的计时器与草莓数、玛德琳、暂停时下方的草莓计数器和右下角的保存图标。",
@@ -1177,15 +1185,15 @@
     },
     "1": {
       "question": "地图至少要多难才能被添加？",
-      "answer": "很模糊的界限，看地图规则，也可以参考其他地图。"
+      "answer": "参考地图规则第6条。"
     },
     "2": {
       "question": "如果地图上没有金草莓怎么办？",
-      "answer": "在打开调试模式的前提下按~然后输入give_golden，或者你可以在制图器（Ahorn或者Loenn）来添加金草莓，确保金草莓靠近复活点而且不会挡路就行。"
+      "answer": "参考地图提交规则第9条，确保金草莓靠近复活点而且不会挡路就行。"
     },
     "3": {
       "question": "为什么有些地图难度比规则要求的要简单",
-      "answer": "特殊情况下，一些不符合难度的地图会经过团队决定后添加它们。比如一张地图虽然少于两面，但它是合集的一部分，不可分割（比如egc的五云，酱四的逆旅）。"
+      "answer": "特殊情况下，一些不符合难度的地图会经过团队决定后添加它们。比如一张地图虽然少于3面，但它是合集的一部分，不可分割（比如egc的五云，酱四的逆旅）。"
     },
     "4": {
       "question": "允许绑一键dd或多个跳键吗？",
@@ -1193,11 +1201,11 @@
     },
     "5": {
       "question": "允许暂停预输入吗？",
-      "answer": "参考规则。"
+      "answer": "参考地图规则第7条。"
     },
     "6": {
       "question": "什么是spinner stunning？",
-      "answer": "参考规则，但再次强调，等待118个小时以进行freezing是不允许的。"
+      "answer": "参考地图规则第8条的视频，但再次强调，等待118个小时来冻结圆刺是不允许的。"
     },
     "7": {
       "question": "FC的标准是什么？",
@@ -1226,13 +1234,13 @@
       "faq": "常见问题解答",
       "celeste_discord": "官方Discord服务器",
       "modded_golden_team_discord": "金榜服务器",
-      "fwg_sheet": "官图第九章金草莓收集者表格",
+      "fwg_sheet": "官图第九章金草莓统计表格",
       "survivors_list": "官图多地图一命表格",
       "server_costs": "服务器成本概览"
     },
     "issues": {
       "header": "问题反馈",
-      "text": "如果你发现任何问题，请<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">在Github上创建一个新的New issue</CustomExternalLink>或在金榜服务器@viddie，最好用这个<CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">网站专用频道</CustomExternalLink>。"
+      "text": "如果你发现任何问题，请<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">在Github上创建New issue</CustomExternalLink>或在金榜服务器@viddie，最好用这个<CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">网站专用频道</CustomExternalLink>。"
     },
     "global_stats": {
       "header": "全球统计",
@@ -1258,7 +1266,7 @@
     "newly_released": {
       "header": "关于网站发布",
       "text": "网站处在刚发布阶段，鉴于旧表格上有很多很混乱的数据，因此网站同步过来的数据很可能会出现问题。如果你发现此类问题，请在金榜服务器中报告！",
-      "migration": "将整个表格的数同步到网站需要一定的时间，你依然可以暂时在Discord服务器上@Modded Golden Team来提交你的金草莓。（发布在b站的视频可以无视这条）"
+      "migration": "将整个表格的数据同步到网站需要一定的时间，你依然可以暂时在Discord服务器上@Modded Golden Team来提交你的金草莓。（发布在b站的视频可以无视这条）"
     }
   }
 }

@@ -59,6 +59,7 @@ import {
   fetchAllObjectives,
   fetchObjectiveSubmissionCount,
   fetchStaticStats,
+  fetchModInfo,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -326,6 +327,16 @@ export function useGetStaticStats(type) {
     queryKey: ["static_stats", type],
     queryFn: () => fetchStaticStats(type),
     onError: errorToast,
+  });
+}
+
+export function useGetModInfo(onSuccess, onError) {
+  return useMutation({
+    mutationFn: (url) => fetchModInfo(url),
+    onSuccess: (response, url) => {
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: onError ?? errorToast,
   });
 }
 //#endregion

@@ -333,6 +333,13 @@ export function fetchStaticStats(type) {
     params: params,
   });
 }
+
+export function fetchModInfo(url) {
+  const params = { url };
+  return axios.get("/get-mod-info.php", {
+    params: params,
+  });
+}
 //#endregion
 
 //#region == POST ==
