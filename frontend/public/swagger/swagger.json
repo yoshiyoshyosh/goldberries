@@ -1,0 +1,153 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "goldberries.net",
+    "description": "This is the API documentation for goldberries.net",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://goldberries.net/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Submissions",
+      "description": "Everything about submissions"
+    }
+  ],
+  "paths": {
+    "/submission.php": {
+      "get": {
+        "tags": ["Submissions"],
+        "summary": "Get a submission by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the submission to retrieve",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the submission data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Submission"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Submission not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Submission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the submission"
+          },
+          "challenge_id": {
+            "type": "integer",
+            "description": "Identifier for the associated challenge"
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier for the player"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the submission was created"
+          },
+          "is_fc": {
+            "type": "boolean",
+            "description": "Indicates if the submission is a first clear",
+            "default": false
+          },
+          "proof_url": {
+            "type": "string",
+            "description": "URL to the proof of the submission"
+          },
+          "raw_session_url": {
+            "type": "string",
+            "description": "URL to the raw session data"
+          },
+          "player_notes": {
+            "type": "string",
+            "description": "Notes from the player about the submission"
+          },
+          "suggested_difficulty_id": {
+            "type": "integer",
+            "description": "Suggested difficulty identifier"
+          },
+          "is_personal": {
+            "type": "boolean",
+            "description": "Indicates if the submission is personal",
+            "default": false
+          },
+          "is_verified": {
+            "type": "boolean",
+            "description": "Indicates if the submission is verified"
+          },
+          "date_verified": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the submission was verified"
+          },
+          "verifier_notes": {
+            "type": "string",
+            "description": "Notes from the verifier about the submission"
+          },
+          "verifier_id": {
+            "type": "integer",
+            "description": "Identifier for the verifier"
+          },
+          "new_challenge_id": {
+            "type": "integer",
+            "description": "Identifier for the new challenge created from this submission"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}

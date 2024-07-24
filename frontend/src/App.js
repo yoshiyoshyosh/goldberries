@@ -104,7 +104,7 @@ import { PageTopGoldenList } from "./pages/TopGoldenList";
 import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 import { PageManageChallenges } from "./pages/manage/Challenges";
 import { PageManageAccounts } from "./pages/manage/Accounts";
-import { useGetOverallStats } from "./hooks/useApi";
+import { useGetStatsVerifierTools } from "./hooks/useApi";
 import { PagePlayer } from "./pages/Player";
 import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
@@ -127,6 +127,7 @@ import { useTranslation } from "react-i18next";
 import { PageRules } from "./pages/Rules";
 import { PageFAQ } from "./pages/FAQ";
 import { PageStats } from "./pages/Stats";
+import { ApiDocPage } from "./pages/ApiDoc";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -243,6 +244,7 @@ const router = createBrowserRouter([
       { path: "settings/:tab?", element: <PageAppSettings /> },
 
       { path: "server-costs/:status?", element: <PageServerCosts /> },
+      { path: "api-docs", element: <ApiDocPage /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -1052,7 +1054,7 @@ function DesktopSubMenuItem({ item, closeMenu }) {
 
 function VerifierStatsNavDesktop() {
   const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
-  const query = useGetOverallStats(true);
+  const query = useGetStatsVerifierTools();
   const data = query.data?.data ?? {
     submissions_in_queue: null,
     open_player_claims: null,

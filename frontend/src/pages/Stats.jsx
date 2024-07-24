@@ -2,9 +2,9 @@ import { Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { BasicContainerBox, ErrorDisplay, LoadingSpinner } from "../components/BasicComponents";
-import { getQueryData, useGetStaticStats } from "../hooks/useApi";
+import { getQueryData, useGetStatsPlayerTierClearCounts } from "../hooks/useApi";
 import { DataGrid, gridClasses } from "@mui/x-data-grid";
-import { PlayerChip, PlayerLink } from "../components/GoldberriesComponents";
+import { PlayerLink } from "../components/GoldberriesComponents";
 
 export function PageStats() {
   const { tab } = useParams();
@@ -46,7 +46,7 @@ function TabTotalClears() {
     "Standard",
   ];
 
-  const query = useGetStaticStats("table_tier_clear_counts");
+  const query = useGetStatsPlayerTierClearCounts();
 
   if (query.isLoading) {
     return <LoadingSpinner />;

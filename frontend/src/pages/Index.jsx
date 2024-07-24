@@ -20,7 +20,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { getQueryData, useGetAllDifficulties, useGetStats, useGetVerifierList } from "../hooks/useApi";
+import { getQueryData, useGetAllDifficulties, useGetStatsGlobal, useGetVerifierList } from "../hooks/useApi";
 import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -269,7 +269,7 @@ function IssueTrackerNotice() {
 
 export function GlobalStatsComponent() {
   const { t } = useTranslation(undefined, { keyPrefix: "index.global_stats" });
-  const query = useGetStats("all");
+  const query = useGetStatsGlobal();
 
   if (query.isLoading) {
     return <LoadingSpinner />;

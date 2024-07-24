@@ -11,7 +11,7 @@ import {
   postAccount,
   fetchAllPlayers,
   fetchAllPlayerClaims,
-  fetchOverallStats,
+  fetchStatsVerifierTools,
   postSubmission,
   fetchRecentSubmissions,
   deleteSubmission,
@@ -48,7 +48,6 @@ import {
   fetchSuggestion,
   fetchGoldenList,
   fetchAllChallengesInMap,
-  fetchStats,
   fetchShowcaseSubmissions,
   fetchPlayerSubmissions,
   postShowcase,
@@ -58,8 +57,11 @@ import {
   fetchCampaignViewPlayer,
   fetchAllObjectives,
   fetchObjectiveSubmissionCount,
-  fetchStaticStats,
   fetchModInfo,
+  fetchStatsGlobal,
+  fetchStatsMonthlyRecap,
+  fetchStatsPlayerTierClearCounts,
+  fetchStatsMonthlyTierClears,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -118,10 +120,10 @@ export function useGetAllPlayers() {
   });
 }
 
-export function useGetOverallStats(verifier = false) {
+export function useGetStatsVerifierTools(verifier = false) {
   return useQuery({
     queryKey: ["overall_stats", verifier ? "verifier" : "overall"],
-    queryFn: () => fetchOverallStats(verifier),
+    queryFn: () => fetchStatsVerifierTools(verifier),
     onError: errorToast,
   });
 }
@@ -314,18 +316,31 @@ export function useGetSuggestion(id) {
 }
 
 //type: all, monthly_recap
-export function useGetStats(type, month = null, allClearsTierSort = null, firstClearsTierSort = null) {
+export function useGetStatsGlobal(month = null) {
   return useQuery({
-    queryKey: ["stats", type, month, allClearsTierSort, firstClearsTierSort],
-    queryFn: () => fetchStats(type, month, allClearsTierSort, firstClearsTierSort),
+    queryKey: ["stats_global", month],
+    queryFn: () => fetchStatsGlobal(month),
     onError: errorToast,
   });
 }
-//type: chart_tier_clears_monthly, table_tier_clear_counts
-export function useGetStaticStats(type) {
+export function useGetStatsMonthlyRecap(month, allClearsTierSort = null, firstClearsTierSort = null) {
   return useQuery({
-    queryKey: ["static_stats", type],
-    queryFn: () => fetchStaticStats(type),
+    queryKey: ["stats_monthly_recap", month, allClearsTierSort, firstClearsTierSort],
+    queryFn: () => fetchStatsMonthlyRecap(month, allClearsTierSort, firstClearsTierSort),
+    onError: errorToast,
+  });
+}
+export function useGetStatsMonthlyTierClears() {
+  return useQuery({
+    queryKey: ["stats_monthly_tier_clears"],
+    queryFn: () => fetchStatsMonthlyTierClears(),
+    onError: errorToast,
+  });
+}
+export function useGetStatsPlayerTierClearCounts() {
+  return useQuery({
+    queryKey: ["stats_player_tier_clear_counts"],
+    queryFn: () => fetchStatsPlayerTierClearCounts(),
     onError: errorToast,
   });
 }

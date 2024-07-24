@@ -27,7 +27,7 @@ export function fetchGoldenList(
   if (options.include_archived) data.archived = true;
   if (options.include_arbitrary) data.arbitrary = true;
 
-  return axios.get("/golden-list.php", { params: data });
+  return axios.get("/lists/golden-list", { params: data });
 }
 
 export function fetchTopGoldenList(type, id = null, filter) {
@@ -37,7 +37,7 @@ export function fetchTopGoldenList(type, id = null, filter) {
     hide_objectives: filter.hide_objectives,
   };
 
-  let endpoint = "/top-golden-list.php";
+  let endpoint = "/lists/top-golden-list";
   if (type === "all") {
   } else if (type === "hitlist") {
     endpoint = "/top-golden-hitlist.php";
@@ -55,7 +55,7 @@ export function fetchTopGoldenList(type, id = null, filter) {
 }
 
 export function fetchAllChallenges(isFullGame = false) {
-  return axios.get("/challenge.php", {
+  return axios.get("/challenge", {
     params: {
       id: "all",
       is_full_game: isFullGame,
@@ -64,10 +64,10 @@ export function fetchAllChallenges(isFullGame = false) {
 }
 
 export function fetchAllCampaigns() {
-  return axios.get("/campaign.php?id=all&maps=true&challenges=true");
+  return axios.get("/campaign", { params: { id: "all", maps: true, challenges: true } });
 }
 export function fetchAllMapsInCampaign(campaignId) {
-  return axios.get("/campaign.php", {
+  return axios.get("/campaign", {
     params: {
       id: campaignId,
       maps: true,
@@ -77,7 +77,7 @@ export function fetchAllMapsInCampaign(campaignId) {
 }
 
 export function fetchAllChallengesInMap(mapId) {
-  return axios.get("/map.php", {
+  return axios.get("/map", {
     params: {
       id: mapId,
       challenges: true,
@@ -85,7 +85,7 @@ export function fetchAllChallengesInMap(mapId) {
   });
 }
 export function fetchAllChallengesInCampaign(campaignId) {
-  return axios.get("/campaign.php", {
+  return axios.get("/campaign", {
     params: {
       id: campaignId,
       challenges: true,
@@ -94,40 +94,38 @@ export function fetchAllChallengesInCampaign(campaignId) {
 }
 
 export function fetchObjectiveSubmissionCount(type = null, id = null) {
-  const params = {
-    submission_count: true,
-  };
+  const params = {};
   if (type !== null) {
     params.type = type;
     params.id = id;
   }
-  return axios.get("/objective.php", { params: params });
+  return axios.get("/objective/submission-count", { params: params });
 }
 export function fetchAllObjectives() {
-  return axios.get("/objective.php", { params: { id: "all" } });
+  return axios.get("/objective", { params: { id: "all" } });
 }
 export function fetchAllDifficulties() {
-  return axios.get("/difficulty.php", { params: { id: "all" } });
+  return axios.get("/difficulty", { params: { id: "all" } });
 }
 
 export function fetchAllPlayerClaims() {
-  return axios.get("/account.php", { params: { claimed_players: true } });
+  return axios.get("/account/claimed-players");
 }
 export function fetchAllAccounts() {
-  return axios.get("/account.php", { params: { id: "all" } });
+  return axios.get("/account", { params: { id: "all" } });
 }
 export function fetchAccount(id) {
-  return axios.get("/account.php", { params: { id: id } });
+  return axios.get("/account", { params: { id: id } });
 }
 export function fetchAllPlayers() {
-  return axios.get("/player.php", { params: { all: true } });
+  return axios.get("/player/all");
 }
 export function fetchPlayerList(group) {
-  return axios.get("/player.php", { params: { group: group } });
+  return axios.get("/player/group", { params: { group: group } });
 }
 
 export function fetchCampaign(id, maps = true, challenges = true, submission = true) {
-  return axios.get("/campaign.php", {
+  return axios.get("/campaign", {
     params: {
       id: id,
       maps: maps,
@@ -138,14 +136,14 @@ export function fetchCampaign(id, maps = true, challenges = true, submission = t
 }
 
 export function fetchCampaignView(id) {
-  return axios.get("/campaign_view.php", {
+  return axios.get("/campaign/view", {
     params: {
       id: id,
     },
   });
 }
 export function fetchCampaignViewPlayer(id, playerId) {
-  return axios.get("/campaign_view.php", {
+  return axios.get("/campaign/view", {
     params: {
       id: id,
       player_id: playerId,
@@ -154,7 +152,7 @@ export function fetchCampaignViewPlayer(id, playerId) {
 }
 
 export function fetchMap(id, challenges = true, submission = true) {
-  return axios.get("/map.php", {
+  return axios.get("/map", {
     params: {
       id: id,
       challenges: challenges,
@@ -164,15 +162,11 @@ export function fetchMap(id, challenges = true, submission = true) {
 }
 
 export function fetchRejectedMapList() {
-  return axios.get("/map.php", {
-    params: {
-      list_rejected: true,
-    },
-  });
+  return axios.get("/map/rejected");
 }
 
 export function fetchChallenge(id, submissions = true) {
-  return axios.get("/challenge.php", {
+  return axios.get("/challenge", {
     params: {
       id: id,
       depth: 3,
@@ -182,24 +176,19 @@ export function fetchChallenge(id, submissions = true) {
 }
 
 export function fetchSubmission(id) {
-  return axios.get("/submission.php", {
+  return axios.get("/submission", {
     params: {
       id: id,
-      depth: 4,
     },
   });
 }
 
 export function fetchSubmissionQueue() {
-  return axios.get("/submission.php", {
-    params: {
-      queue: true,
-    },
-  });
+  return axios.get("/submission/queue");
 }
 
 export function fetchPlayer(id) {
-  return axios.get("/player.php", {
+  return axios.get("/player", {
     params: {
       id: id,
       customization: true,
@@ -208,7 +197,7 @@ export function fetchPlayer(id) {
 }
 
 export function fetchPlayerSubmissions(id, archived, arbitrary) {
-  return axios.get("/player-submissions.php", {
+  return axios.get("/player/submissions", {
     params: {
       player_id: id,
       archived: archived,
@@ -218,7 +207,7 @@ export function fetchPlayerSubmissions(id, archived, arbitrary) {
 }
 
 export function fetchChangelog(type, id) {
-  return axios.get("/change.php", {
+  return axios.get("/change", {
     params: {
       type: type,
       id: id,
@@ -228,7 +217,6 @@ export function fetchChangelog(type, id) {
 
 export function fetchRecentSubmissions(verified, page, perPage, search = null, playerId = null) {
   const data = {
-    recent: true,
     page: page,
     per_page: perPage,
   };
@@ -237,13 +225,13 @@ export function fetchRecentSubmissions(verified, page, perPage, search = null, p
   if (search) data.search = search;
   if (playerId) data.player = playerId;
 
-  return axios.get("/submission.php", {
+  return axios.get("/submission/recent", {
     params: data,
   });
 }
 
 export function fetchShowcaseSubmissions(playerId) {
-  return axios.get("/showcase.php", {
+  return axios.get("/showcase", {
     params: {
       player_id: playerId,
     },
@@ -251,7 +239,7 @@ export function fetchShowcaseSubmissions(playerId) {
 }
 
 export function fetchChallenges(page, perPage, search) {
-  return axios.get("/challenge.php", {
+  return axios.get("/challenge/paginated", {
     params: {
       page: page,
       per_page: perPage,
@@ -260,16 +248,12 @@ export function fetchChallenges(page, perPage, search) {
   });
 }
 
-export function fetchOverallStats(verifier = false) {
-  return axios.get("/overall-stats.php", {
-    params: {
-      verifier: verifier,
-    },
-  });
+export function fetchStatsVerifierTools() {
+  return axios.get("/stats/verifier-tools");
 }
 
 export function fetchPlayerStats(id) {
-  return axios.get("/player-stats.php", {
+  return axios.get("/player/stats", {
     params: {
       id: id,
     },
@@ -277,7 +261,7 @@ export function fetchPlayerStats(id) {
 }
 
 export function fetchSearch(search) {
-  return axios.get("/search.php", {
+  return axios.get("/search", {
     params: {
       q: search,
     },
@@ -285,7 +269,7 @@ export function fetchSearch(search) {
 }
 
 export function fetchLogs(page, perPage, level, topic, search, start_date, end_date) {
-  return axios.get("/logging.php", {
+  return axios.get("/logging", {
     params: {
       page: page,
       per_page: perPage,
@@ -305,38 +289,43 @@ export function fetchSuggestions(page, perPage, expired = null, challengeId = nu
   };
   if (expired !== null) params.expired = expired;
   if (challengeId !== null) params.challenge = challengeId;
-  return axios.get("/suggestion.php", {
+  return axios.get("/suggestion/paginated", {
     params: params,
   });
 }
 export function fetchSuggestion(id) {
-  return axios.get("/suggestion.php", {
+  return axios.get("/suggestion", {
     params: {
       id: id,
     },
   });
 }
 
-export function fetchStats(type, month = null, allClearsTierSort = null, firstClearsTierSort = null) {
-  const params = { type: type };
+export function fetchStatsGlobal(month = null) {
+  const params = {};
   if (month) params.month = month;
-  if (allClearsTierSort) params.all_clears_tier_sort = allClearsTierSort;
-  if (firstClearsTierSort) params.first_clears_tier_sort = firstClearsTierSort;
-
-  return axios.get("/stats.php", {
+  return axios.get("/stats/global", {
     params: params,
   });
 }
-export function fetchStaticStats(type) {
-  const params = { type: type };
-  return axios.get("/stats.php", {
+export function fetchStatsMonthlyRecap(month, allClearsTierSort = null, firstClearsTierSort = null) {
+  const params = { month: month };
+  if (allClearsTierSort) params.all_clears_tier_sort = allClearsTierSort;
+  if (firstClearsTierSort) params.first_clears_tier_sort = firstClearsTierSort;
+  return axios.get("/stats/monthly-recap", {
     params: params,
   });
+}
+export function fetchStatsMonthlyTierClears() {
+  return axios.get("/stats/monthly-tier-clears");
+}
+export function fetchStatsPlayerTierClearCounts() {
+  return axios.get("/stats/player-tier-clear-counts");
 }
 
 export function fetchModInfo(url) {
   const params = { url };
-  return axios.get("/get-mod-info.php", {
+  return axios.get("/util/get-mod-info", {
     params: params,
   });
 }
@@ -344,36 +333,36 @@ export function fetchModInfo(url) {
 
 //#region == POST ==
 export function postCampaign(data) {
-  return axios.post("/campaign.php", formatDataForApi(data));
+  return axios.post("/campaign", formatDataForApi(data));
 }
 
 export function postMap(data) {
-  return axios.post("/map.php", formatDataForApi(data));
+  return axios.post("/map", formatDataForApi(data));
 }
 
 export function postChallenge(data) {
-  return axios.post("/challenge.php", formatDataForApi(data));
+  return axios.post("/challenge", formatDataForApi(data));
 }
 export function postChallengeSplit(data) {
   data.split = true;
-  return axios.post("/challenge.php", formatDataForApi(data));
+  return axios.post("/challenge", formatDataForApi(data));
 }
 export function postChallengeMerge(data) {
   data.merge = true;
-  return axios.post("/challenge.php", formatDataForApi(data));
+  return axios.post("/challenge", formatDataForApi(data));
 }
 export function postChallengeMarkPersonal(data) {
   data.mark_personal = true;
-  return axios.post("/challenge.php", formatDataForApi(data));
+  return axios.post("/challenge", formatDataForApi(data));
 }
 
 export function postSubmission(data) {
-  return axios.post("/submission.php", formatDataForApi(data));
+  return axios.post("/submission", formatDataForApi(data));
 }
 
 export function claimPlayer(player) {
   return axios.post(
-    "/account.php",
+    "/account",
     formatDataForApi({
       self: true,
       claimed_player_id: player.id,
@@ -385,12 +374,12 @@ export function postPlayer(data, self = false) {
   if (self) {
     data.self = true;
   }
-  return axios.post("/player.php", formatDataForApi(data));
+  return axios.post("/player", formatDataForApi(data));
 }
 
 export function postAccount(self, data) {
   return axios.post(
-    "/account.php",
+    "/account",
     formatDataForApi({
       ...data,
       self: self,
@@ -399,7 +388,7 @@ export function postAccount(self, data) {
 }
 
 export function registerEmail(data) {
-  return axios.get("/auth/register.php", {
+  return axios.get("/auth/register", {
     params: {
       email: data.email,
       password: data.password,
@@ -407,21 +396,21 @@ export function registerEmail(data) {
   });
 }
 export function verifyEmail(token) {
-  return axios.get("/auth/register.php", {
+  return axios.get("/auth/register", {
     params: {
       verify: token,
     },
   });
 }
 export function forgotPasswordRequest(email) {
-  return axios.get("/auth/forgot_password.php", {
+  return axios.get("/auth/forgot_password", {
     params: {
       email: email,
     },
   });
 }
 export function forgotPasswordVerify(data) {
-  return axios.get("/auth/forgot_password.php", {
+  return axios.get("/auth/forgot_password", {
     params: {
       token: data.token,
       password: data.password,
@@ -430,20 +419,20 @@ export function forgotPasswordVerify(data) {
 }
 
 export function postSuggestion(data) {
-  return axios.post("/suggestion.php", formatDataForApi(data));
+  return axios.post("/suggestion", formatDataForApi(data));
 }
 export function postSuggestionVote(data) {
-  return axios.post("/suggestion-vote.php", formatDataForApi(data));
+  return axios.post("/suggestion/vote", formatDataForApi(data));
 }
 
 export function postShowcase(submissions) {
-  return axios.post("/showcase.php", formatDataForApi(submissions));
+  return axios.post("/showcase", formatDataForApi(submissions));
 }
 //#endregion
 
 //#region == DELETE ==
 export function deleteCampaign(id) {
-  return axios.delete("/campaign.php", {
+  return axios.delete("/campaign", {
     params: {
       id: id,
     },
@@ -451,7 +440,7 @@ export function deleteCampaign(id) {
 }
 
 export function deleteMap(id) {
-  return axios.delete("/map.php", {
+  return axios.delete("/map", {
     params: {
       id: id,
     },
@@ -459,7 +448,7 @@ export function deleteMap(id) {
 }
 
 export function deleteChallenge(id) {
-  return axios.delete("/challenge.php", {
+  return axios.delete("/challenge", {
     params: {
       id: id,
     },
@@ -467,7 +456,7 @@ export function deleteChallenge(id) {
 }
 
 export function deleteSubmission(id) {
-  return axios.delete("/submission.php", {
+  return axios.delete("/submission", {
     params: {
       id: id,
     },
@@ -475,7 +464,7 @@ export function deleteSubmission(id) {
 }
 
 export function deletePlayer(id) {
-  return axios.delete("/player.php", {
+  return axios.delete("/player", {
     params: {
       id: id,
     },
@@ -483,7 +472,7 @@ export function deletePlayer(id) {
 }
 
 export function deleteChangelogEntry(id) {
-  return axios.delete("/change.php", {
+  return axios.delete("/change", {
     params: {
       id: id,
     },
@@ -491,14 +480,14 @@ export function deleteChangelogEntry(id) {
 }
 
 export function deleteOwnAccount() {
-  return axios.delete("/account.php", {
+  return axios.delete("/account", {
     params: {
       self: true,
     },
   });
 }
 export function deleteAccount(id) {
-  return axios.delete("/account.php", {
+  return axios.delete("/account", {
     params: {
       id: id,
     },
@@ -506,7 +495,7 @@ export function deleteAccount(id) {
 }
 
 export function deleteLogEntry(id) {
-  return axios.delete("/logging.php", {
+  return axios.delete("/logging", {
     params: {
       id: id,
     },
@@ -514,14 +503,14 @@ export function deleteLogEntry(id) {
 }
 
 export function deleteSuggestion(id) {
-  return axios.delete("/suggestion.php", {
+  return axios.delete("/suggestion", {
     params: {
       id: id,
     },
   });
 }
 export function deleteSuggestionVote(id) {
-  return axios.delete("/suggestion-vote.php", {
+  return axios.delete("/suggestion/vote", {
     params: {
       id: id,
     },

@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     data.append("email", email);
     data.append("password", password);
     try {
-      const response = await axios.post("/auth/login.php", data);
+      const response = await axios.post("/auth/login", data);
       const user = await response.data;
       setUser(user);
       if (redirect) {
@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await axios.post("/auth/logout.php");
+      await axios.post("/auth/logout");
       setUser(null);
       toast.success(t("logout_success"));
     } catch (err) {
@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
 
   const checkSession = async () => {
     try {
-      const response = await axios.get("/auth/check_session.php");
+      const response = await axios.get("/auth/check_session");
       const user = await response.data;
       setUser(user);
     } catch (err) {

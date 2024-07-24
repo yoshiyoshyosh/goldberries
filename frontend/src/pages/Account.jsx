@@ -280,7 +280,7 @@ export function UserAccountLoginMethodsForm() {
               {t("linked")} <FontAwesomeIcon icon={faCheckSquare} color="green" />
             </Typography>
           ) : (
-            <a href={API_URL + "/auth/discord_auth.php?link_account=true"}>
+            <a href={API_URL + "/auth/discord_auth?link_account=true"}>
               <Button
                 startIcon={<FontAwesomeIcon icon={faLink} />}
                 endIcon={<FontAwesomeIcon icon={faDiscord} />}

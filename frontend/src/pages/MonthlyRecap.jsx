@@ -8,7 +8,12 @@ import {
   getErrorFromMultiple,
 } from "../components/BasicComponents";
 import { TiersCountDisplay } from "./Index";
-import { getQueryData, useGetAllDifficulties, useGetStats } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetAllDifficulties,
+  useGetStatsGlobal,
+  useGetStatsMonthlyRecap,
+} from "../hooks/useApi";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChallengeFcIcon,
@@ -100,8 +105,8 @@ function MonthlyRecap({ month }) {
   );
   const [hideChangelog, setHideChangelog] = useLocalStorage("monthly_recap_hide_changelog", false);
 
-  const query = useGetStats("monthly_recap", month, allClearsDifficulty?.sort, firstClearsDifficulty?.sort);
-  const snapshotQuery = useGetStats("all", month);
+  const query = useGetStatsMonthlyRecap(month, allClearsDifficulty?.sort, firstClearsDifficulty?.sort);
+  const snapshotQuery = useGetStatsGlobal(month);
 
   const diffGrid = (
     <Grid container columnSpacing={2} sx={{ mb: 1 }}>

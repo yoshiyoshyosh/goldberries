@@ -5,7 +5,7 @@ import Color from "color";
 export const APP_URL = process.env.REACT_APP_URL;
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 export const API_URL = API_BASE_URL + "/api";
-export const DISCORD_AUTH_URL = API_URL + "/auth/discord_auth.php";
+export const DISCORD_AUTH_URL = API_URL + "/auth/discord_auth";
 export const APP_NAME_SHORT = "GBN";
 export const APP_NAME_LONG = "Goldberries.net";
 export const DISCORD_INVITE = "https://discord.gg/GeJvmMycaC";
