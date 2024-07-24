@@ -448,7 +448,8 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
       toast.error(error.message);
     },
   });
-  let objectives = query.data?.data ?? [];
+  const objectives = query.data?.data ?? [];
+  objectives.sort((a, b) => a.id - b.id);
 
   return (
     <TextField

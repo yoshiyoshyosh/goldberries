@@ -53,7 +53,7 @@ import {
 } from "../components/GoldberriesComponents";
 import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { FullChallengeDisplay } from "./Submission";
 
 export function PageSubmit() {
@@ -282,9 +282,17 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             <TextField
               label={t_fs("proof_url") + " *"}
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
+              {...form.register("proof_url", { validate: validateUrl })}
               error={errors.proof_url}
-              helperText={errors.proof_url?.message}
+              helperText={
+                errors.proof_url?.message ? (
+                  <Trans
+                    t={t_ff}
+                    i18nKey={"submission_url." + errors.proof_url?.message}
+                    components={{ CustomLink: <StyledLink /> }}
+                  />
+                ) : null
+              }
             />
             <FormHelperText>{t("proof_note")}</FormHelperText>
           </Grid>
@@ -293,9 +301,17 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               <TextField
                 label={t_fs("raw_session_url") + " *"}
                 fullWidth
-                {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
+                {...form.register("raw_session_url", { validate: validateUrl })}
                 error={errors.raw_session_url}
-                helperText={errors.raw_session_url?.message}
+                helperText={
+                  errors.raw_session_url?.message ? (
+                    <Trans
+                      t={t_ff}
+                      i18nKey={"submission_url." + errors.raw_session_url?.message}
+                      components={{ CustomLink: <StyledLink /> }}
+                    />
+                  ) : null
+                }
               />
               <FormHelperText>{t("raw_session_note")}</FormHelperText>
             </Grid>
@@ -387,6 +403,17 @@ export function MultiUserSubmission() {
     },
   });
   const onSubmit = form.handleSubmit((data) => {
+    //Check if all individually attached videos are valid
+    // const hasAllIndividualVideos = mapDataList.every(
+    //   (mapData) => validateUrlNotRequired(mapData.proof_url) === true
+    // );
+    //count how many are invalid:
+    const invalidUrls = mapDataList.filter((mapData) => validateUrlNotRequired(mapData.proof_url) !== true);
+    if (invalidUrls.length > 0) {
+      toast.error(t("feedback.invalid_urls", { count: invalidUrls.length }));
+      return;
+    }
+
     const toastId = toast.loading(t("feedback.submitting", { current: 0, total: mapDataList.length }), {
       autoClose: false,
     });
@@ -660,10 +687,18 @@ export function MultiUserSubmission() {
             <TextField
               label={t_fs("proof_url") + (hasAllIndividualVideos ? "" : " *")}
               fullWidth
-              {...form.register("proof_url")}
+              {...form.register("proof_url", { validate: validateUrlNotRequired })}
               error={errors.proof_url}
               disabled={hasAllIndividualVideos}
-              helperText={errors.proof_url?.message}
+              helperText={
+                errors.proof_url?.message ? (
+                  <Trans
+                    t={t_ff}
+                    i18nKey={"submission_url." + errors.proof_url?.message}
+                    components={{ CustomLink: <StyledLink /> }}
+                  />
+                ) : null
+              }
             />
             <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
@@ -780,9 +815,17 @@ export function NewChallengeUserSubmission({}) {
             <TextField
               label={t_fs("proof_url") + " *"}
               fullWidth
-              {...form.register("proof_url", FormOptions.UrlRequired(t_ff))}
+              {...form.register("proof_url", { validate: validateUrl })}
               error={errors.proof_url}
-              helperText={errors.proof_url?.message}
+              helperText={
+                errors.proof_url?.message ? (
+                  <Trans
+                    t={t_ff}
+                    i18nKey={"submission_url." + errors.proof_url?.message}
+                    components={{ CustomLink: <StyledLink /> }}
+                  />
+                ) : null
+              }
             />
             <FormHelperText>
               Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight
@@ -793,9 +836,17 @@ export function NewChallengeUserSubmission({}) {
               <TextField
                 label={t_fs("raw_session_url") + " *"}
                 fullWidth
-                {...form.register("raw_session_url", FormOptions.UrlRequired(t_ff))}
+                {...form.register("raw_session_url", { validate: validateUrl })}
                 error={errors.raw_session_url}
-                helperText={errors.raw_session_url?.message}
+                helperText={
+                  errors.raw_session_url?.message ? (
+                    <Trans
+                      t={t_ff}
+                      i18nKey={"submission_url." + errors.raw_session_url?.message}
+                      components={{ CustomLink: <StyledLink /> }}
+                    />
+                  ) : null
+                }
               />
               <FormHelperText>
                 Raw session recording of the winning run is required for Tier 3+ goldens.
@@ -1035,12 +1086,12 @@ function NotificationNotice({}) {
   const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
   return (
     <>
-      <Grid item xs={12} sm={12}>
+      {/* <Grid item xs={12} sm={12}>
         <Typography variant="caption" color="error">
           * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
           <StyledLink to="/">Public Test notice</StyledLink> for more info.
         </Typography>
-      </Grid>
+      </Grid> */}
       {(notifsEnabled || true) && (
         <Grid item xs={12} sm={12}>
           <Typography variant="caption" color="textSecondary">
@@ -1053,4 +1104,39 @@ function NotificationNotice({}) {
       )}
     </>
   );
+}
+
+const disallowedUrls = ["discord.com", "youtube.com/playlist"];
+//Returns the translation key for the error message, or true if the URL is valid
+function validateUrl(url, required = true) {
+  //Trim url
+  url = url.trim();
+
+  //Check if the URL is empty
+  if (url === "") {
+    if (required) {
+      return "required";
+    } else {
+      return true;
+    }
+  }
+
+  //Check if the URL is a valid URL
+  try {
+    new URL(url);
+  } catch (e) {
+    return "invalid";
+  }
+
+  //Check if the URL contains disallowed strings
+  if (disallowedUrls.some((disallowed) => url.includes(disallowed))) {
+    return "disallowed";
+  }
+
+  return true;
+}
+
+function validateUrlNotRequired(url) {
+  console.log("validateUrlNotRequired", url);
+  return validateUrl(url, false);
 }
