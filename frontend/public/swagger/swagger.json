@@ -2,10 +2,11 @@
   "openapi": "3.1.0",
   "info": {
     "title": "goldberries.net",
-    "description": "This is the API documentation for goldberries.net",
-    "termsOfService": "http://swagger.io/terms/",
+    "summary": "This is the API documentation for goldberries.net",
+    "description": "longer description",
     "contact": {
-      "email": "apiteam@swagger.io"
+      "name": "Modded Golden Team",
+      "url": "https://discord.gg/GeJvmMycaC"
     },
     "license": {
       "name": "Apache 2.0",
@@ -16,16 +17,689 @@
   "servers": [
     {
       "url": "https://goldberries.net/api"
+    },
+    {
+      "url": "http://localhost/api"
     }
   ],
   "tags": [
     {
-      "name": "Submissions",
-      "description": "Everything about submissions"
+      "name": "Campaigns"
+    },
+    {
+      "name": "Maps"
+    },
+    {
+      "name": "Challenges"
+    },
+    {
+      "name": "Submissions"
     }
   ],
   "paths": {
-    "/submission.php": {
+    "/campaign": {
+      "get": {
+        "summary": "Retrieve a campaign or a list of campaigns",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Campaign ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "maps",
+            "in": "query",
+            "description": "Whether to include maps in the response",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "challenges",
+            "in": "query",
+            "description": "Whether to include challenges in the response",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "submissions",
+            "in": "query",
+            "description": "Whether to include submissions in the response",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Campaign"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Campaign"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Campaign not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create or update a campaign",
+        "tags": ["Campaigns"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Campaign"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Campaign"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not logged in"
+          },
+          "403": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a campaign",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Campaign ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Campaign"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing ID"
+          },
+          "401": {
+            "description": "Not logged in"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Campaign not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/campaign/view": {
+      "get": {
+        "summary": "Retrieve detailed campaign view",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Campaign ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "campaign": {
+                      "$ref": "#/components/schemas/Campaign"
+                    },
+                    "players": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "player": {
+                            "$ref": "#/components/schemas/Player"
+                          },
+                          "stats": {
+                            "type": "object",
+                            "properties": {
+                              "clears": {
+                                "type": "integer"
+                              },
+                              "full_clears": {
+                                "type": "integer"
+                              },
+                              "major_sort_clears": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "clears": {
+                                      "type": "integer"
+                                    },
+                                    "full_clears": {
+                                      "type": "integer"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "last_submission": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "highest_lobby_sweep": {
+                            "type": "integer"
+                          },
+                          "highest_lobby_sweep_fcs": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid required parameter"
+          },
+          "404": {
+            "description": "Campaign not found"
+          }
+        }
+      }
+    },
+    "/campaign/view-player": {
+      "get": {
+        "summary": "Retrieve all submissions for all maps in a campaign for a player",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Campaign ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "player_id",
+            "in": "query",
+            "description": "Player ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response. Result is an objective with `map_id => map object`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/Map"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid required parameter"
+          },
+          "404": {
+            "description": "Campaign or player not found"
+          }
+        }
+      }
+    },
+    "/map": {
+      "get": {
+        "summary": "Retrieve a map or a list of maps",
+        "tags": ["Maps"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Map ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "challenges",
+            "in": "query",
+            "description": "Whether to include challenges in the response",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "submissions",
+            "in": "query",
+            "description": "Whether to include submissions in the response",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Map"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Map"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid required parameter"
+          },
+          "404": {
+            "description": "Map not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create or update maps",
+        "tags": ["Maps"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Map"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Map"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Map created or updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Map"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Map"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid campaign_id or map data"
+          },
+          "401": {
+            "description": "Not logged in"
+          },
+          "403": {
+            "description": "Not authorized"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a map",
+        "tags": ["Maps"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Map ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Map deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Map"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid id"
+          },
+          "401": {
+            "description": "Not logged in"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Map not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/map/rejected": {
+      "get": {
+        "summary": "Retrieve all rejected maps",
+        "tags": ["Maps"],
+        "responses": {
+          "200": {
+            "description": "A list of rejected maps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Map"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/challenge": {
+      "get": {
+        "summary": "Retrieve a challenge or a list of challenges",
+        "tags": ["Challenges"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the challenge to retrieve."
+          },
+          {
+            "name": "submissions",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Whether to include submissions in the response."
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 3
+            },
+            "description": "The depth of foreign key expansion."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A challenge or a list of challenges",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Challenge"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Challenge"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create or update a challenge",
+        "tags": ["Challenges"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Challenge"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created or updated challenge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Challenge"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a challenge",
+        "tags": ["Challenges"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the challenge to delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The deleted challenge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Challenge"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/challenge/paginated": {
+      "get": {
+        "summary": "Retrieve paginated challenges with optional search and sorting",
+        "tags": ["Challenges"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "The page number to retrieve."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            },
+            "description": "The number of challenges per page."
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search term to filter challenges by campaign or map names."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to sort challenges by (e.g., 'date_created', 'label')."
+          },
+          {
+            "name": "sort_dir",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            },
+            "description": "Direction to sort the challenges (ascending or descending)."
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 3
+            },
+            "description": "The depth of foreign key expansion."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of challenges",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedChallenges"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/submission": {
       "get": {
         "tags": ["Submissions"],
         "summary": "Get a submission by ID",
@@ -55,11 +729,377 @@
             "description": "Submission not found"
           }
         }
+      },
+      "post": {
+        "tags": ["Submissions"],
+        "summary": "Create or update a submission",
+        "requestBody": {
+          "description": "Submission object to update, or create if `id` is omitted",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Submission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission created/updated successfully"
+          },
+          "400": {
+            "description": "Invalid submission object"
+          },
+          "404": {
+            "description": "Submission not found"
+          }
+        },
+        "security": [
+          {},
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Submissions"],
+        "summary": "Delete a submission by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the submission to delete",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Submission deleted successfully"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Submission not found"
+          }
+        },
+        "security": [
+          {},
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/submission/queue": {
+      "get": {
+        "tags": ["Submissions"],
+        "summary": "Get a list of unverified submissions",
+        "description": "Returns a list of unverified submissions in order of submission date",
+        "responses": {
+          "200": {
+            "description": "A list of unverified submissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Submission"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/submission/recent": {
+      "get": {
+        "tags": ["Submissions"],
+        "summary": "Get a list of recent submissions",
+        "description": "Returns a paginated list of recent submissions with optional filters",
+        "parameters": [
+          {
+            "name": "verified",
+            "in": "query",
+            "required": false,
+            "description": "Filter submissions based on their verification status",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "The page number to retrieve",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "The number of submissions per page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Search term to filter submissions",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "player",
+            "in": "query",
+            "required": false,
+            "description": "Filter submissions by player ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of recent submissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedSubmissions"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "components": {
     "schemas": {
+      "Campaign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the campaign"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Name of the campaign"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the campaign"
+          },
+          "date_added": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the campaign was added"
+          },
+          "icon_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the campaign icon"
+          },
+          "sort_major_name": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Major sort category name"
+          },
+          "sort_major_labels": {
+            "type": "string",
+            "description": "Labels for the major sort category"
+          },
+          "sort_major_colors": {
+            "type": "string",
+            "description": "Colors for the major sort category"
+          },
+          "sort_minor_name": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Minor sort category name"
+          },
+          "sort_minor_labels": {
+            "type": "string",
+            "description": "Labels for the minor sort category"
+          },
+          "sort_minor_colors": {
+            "type": "string",
+            "description": "Colors for the minor sort category"
+          },
+          "author_gb_id": {
+            "type": "integer",
+            "description": "ID of the author on GameBanana"
+          },
+          "author_gb_name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Name of the author on GameBanana"
+          },
+          "maps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Map"
+            }
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Challenge"
+            }
+          }
+        }
+      },
+      "Map": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the map"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "description": "Identifier for the associated campaign"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Name of the map"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the map"
+          },
+          "date_added": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the map was added"
+          },
+          "has_fc": {
+            "type": "boolean",
+            "description": "Indicates if the map has a full clear",
+            "default": false
+          },
+          "is_rejected": {
+            "type": "boolean",
+            "description": "Indicates if the map is rejected",
+            "default": false
+          },
+          "rejection_reason": {
+            "type": "string",
+            "description": "Reason for map rejection"
+          },
+          "is_archived": {
+            "type": "boolean",
+            "description": "Indicates if the map is archived",
+            "default": false
+          },
+          "sort_major": {
+            "type": "integer",
+            "description": "Major sort order"
+          },
+          "sort_minor": {
+            "type": "integer",
+            "description": "Minor sort order"
+          },
+          "sort_order": {
+            "type": "integer",
+            "description": "Sort order"
+          },
+          "author_gb_id": {
+            "type": "integer",
+            "description": "ID of the author on GameBanana"
+          },
+          "author_gb_name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Name of the author on GameBanana"
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Challenge"
+            }
+          }
+        }
+      },
+      "Challenge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the challenge"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "description": "Identifier for the associated campaign"
+          },
+          "map_id": {
+            "type": "integer",
+            "description": "Identifier for the associated map"
+          },
+          "objective_id": {
+            "type": "integer",
+            "description": "Identifier for the associated objective"
+          },
+          "label": {
+            "type": "string",
+            "description": "Label for the challenge"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the challenge"
+          },
+          "difficulty_id": {
+            "type": "integer",
+            "description": "Identifier for the difficulty level"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the challenge was created"
+          },
+          "requires_fc": {
+            "type": "boolean",
+            "description": "Indicates if the challenge requires a full clear",
+            "default": false
+          },
+          "has_fc": {
+            "type": "boolean",
+            "description": "Indicates if the challenge has an optional full clear",
+            "default": false
+          },
+          "is_arbitrary": {
+            "type": "boolean",
+            "description": "Indicates if the challenge is arbitrary"
+          },
+          "sort": {
+            "type": "integer",
+            "description": "Sort order of the challenge"
+          },
+          "submissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Submission"
+            }
+          }
+        }
+      },
       "Submission": {
         "type": "object",
         "properties": {
@@ -82,7 +1122,7 @@
           },
           "is_fc": {
             "type": "boolean",
-            "description": "Indicates if the submission is a first clear",
+            "description": "Indicates if the submission is a full clear",
             "default": false
           },
           "proof_url": {
@@ -91,7 +1131,7 @@
           },
           "raw_session_url": {
             "type": "string",
-            "description": "URL to the raw session data"
+            "description": "URL to the raw session video"
           },
           "player_notes": {
             "type": "string",
@@ -99,11 +1139,11 @@
           },
           "suggested_difficulty_id": {
             "type": "integer",
-            "description": "Suggested difficulty identifier"
+            "description": "Identifier of the difficulty the player is suggesting for the challenge"
           },
           "is_personal": {
             "type": "boolean",
-            "description": "Indicates if the submission is personal",
+            "description": "Indicates if the difficulty suggestion is personal and should not be used for difficulty placement",
             "default": false
           },
           "is_verified": {
@@ -125,27 +1165,320 @@
           },
           "new_challenge_id": {
             "type": "integer",
-            "description": "Identifier for the new challenge created from this submission"
+            "description": "Identifier for the new challenge attached to this submission"
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the player"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Name of the player"
+          }
+        }
+      },
+      "Objective": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the objective"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Name of the objective"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the objective"
+          },
+          "display_name_suffix": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Suffix to display with the name"
+          },
+          "is_arbitrary": {
+            "type": "boolean",
+            "description": "Indicates if the objective is arbitrary",
+            "default": false
+          },
+          "icon_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the objective icon"
+          }
+        }
+      },
+      "Difficulty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the difficulty level"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Name of the difficulty level"
+          },
+          "subtier": {
+            "type": "string",
+            "enum": ["high", "mid", "low", "guard"],
+            "description": "Subtier of the difficulty level"
+          },
+          "sort": {
+            "type": "integer",
+            "description": "Sort order of the difficulty level"
+          }
+        }
+      },
+      "NewChallenge": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the new challenge"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "GameBanana URL of the new challenge"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Map name of the new challenge"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the new challenge"
+          }
+        }
+      },
+      "Logging": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the log entry"
+          },
+          "message": {
+            "type": "string",
+            "description": "Log message"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["debug", "info", "warn", "error", "critical"],
+            "description": "Log level"
+          },
+          "topic": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Topic of the log entry"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of the log entry"
+          }
+        }
+      },
+      "Suggestion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the suggestion"
+          },
+          "author_id": {
+            "type": "integer",
+            "description": "Identifier for the author (player)"
+          },
+          "challenge_id": {
+            "type": "integer",
+            "description": "Identifier for the associated challenge"
+          },
+          "suggested_difficulty_id": {
+            "type": "integer",
+            "description": "Identifier for the suggested difficulty"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment about the suggestion"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "description": "Indicates if the suggestion is verified"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the suggestion was created"
+          },
+          "is_accepted": {
+            "type": "boolean",
+            "description": "Indicates if the suggestion is accepted"
+          },
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuggestionVote"
+            }
+          }
+        }
+      },
+      "SuggestionVote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the suggestion vote"
+          },
+          "suggestion_id": {
+            "type": "integer",
+            "description": "Identifier for the associated suggestion"
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier for the player voting"
+          },
+          "vote": {
+            "type": "string",
+            "enum": ["+", "-", "i"],
+            "description": "Vote value"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment about the vote"
+          }
+        }
+      },
+      "Change": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the change"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "description": "Identifier for the associated campaign"
+          },
+          "map_id": {
+            "type": "integer",
+            "description": "Identifier for the associated map"
+          },
+          "challenge_id": {
+            "type": "integer",
+            "description": "Identifier for the associated challenge"
+          },
+          "player_id": {
+            "type": "integer",
+            "description": "Identifier for the player"
+          },
+          "author_id": {
+            "type": "integer",
+            "description": "Identifier for the author"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the change"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the change was made"
+          }
+        }
+      },
+      "Showcase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the showcase"
+          },
+          "index": {
+            "type": "integer",
+            "description": "Index position in the showcase"
+          },
+          "account_id": {
+            "type": "integer",
+            "description": "Identifier for the associated account"
+          },
+          "submission_id": {
+            "type": "integer",
+            "description": "Identifier for the associated submission"
+          }
+        }
+      },
+      "PaginatedChallenges": {
+        "type": "object",
+        "properties": {
+          "max_count": {
+            "type": "integer",
+            "description": "The total number of challenges available"
+          },
+          "max_page": {
+            "type": "integer",
+            "description": "The total number of pages available"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The current page number"
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "The number of challenges per page"
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Challenge"
+            }
+          }
+        }
+      },
+      "PaginatedSubmissions": {
+        "type": "object",
+        "properties": {
+          "max_count": {
+            "type": "integer",
+            "description": "The total number of submissions available"
+          },
+          "max_page": {
+            "type": "integer",
+            "description": "The total number of pages available"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The current page number"
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "The number of submissions per page"
+          },
+          "submissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Submission"
+            }
           }
         }
       }
     },
     "securitySchemes": {
-      "petstore_auth": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
-            "scopes": {
-              "write:pets": "modify pets in your account",
-              "read:pets": "read your pets"
-            }
-          }
-        }
-      },
       "api_key": {
         "type": "apiKey",
-        "name": "api_key",
+        "description": "An API key is necessary to perform verifier-only tasks",
+        "name": "goldberries_api_key",
         "in": "header"
       }
     }

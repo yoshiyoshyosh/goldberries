@@ -827,9 +827,7 @@ export function NewChallengeUserSubmission({}) {
                 ) : null
               }
             />
-            <FormHelperText>
-              Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight
-            </FormHelperText>
+            <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
           {suggested_difficulty_id !== null && suggested_difficulty_id < 13 && (
             <Grid item xs={12}>
@@ -848,9 +846,7 @@ export function NewChallengeUserSubmission({}) {
                   ) : null
                 }
               />
-              <FormHelperText>
-                Raw session recording of the winning run is required for Tier 3+ goldens.
-              </FormHelperText>
+              <FormHelperText>{t_ts("raw_session_note")}</FormHelperText>
             </Grid>
           )}
           <Grid item xs={12}>

@@ -2,39 +2,17 @@ import {
   BorderedBox,
   ErrorDisplay,
   HeadTitle,
+  LanguageFlag,
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
-import {
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Container, Grid, Stack, Typography } from "@mui/material";
 import { getQueryData, useGetAllDifficulties, useGetStatsGlobal, useGetVerifierList } from "../hooks/useApi";
 import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
-import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import {
-  faMoneyBill1Wave,
-  faQuestion,
-  faQuestionCircle,
-  faScaleBalanced,
-  faScroll,
-  faWrench,
-} from "@fortawesome/free-solid-svg-icons";
-import Markdown from "react-markdown";
-import { useTheme } from "@emotion/react";
+import { faMoneyBill1Wave, faQuestion, faScaleBalanced, faScroll } from "@fortawesome/free-solid-svg-icons";
 import { RecentSubmissions } from "../components/RecentSubmissions";
 import { DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { Trans, useTranslation } from "react-i18next";
@@ -137,15 +115,32 @@ export function UsefulLinksComponent() {
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
+          <StyledExternalLink href={DISCORD_INVITE} target="_blank" rel="noreferrer">
+            {t("modded_golden_team_discord")}
+          </StyledExternalLink>
+        </li>
+      </ul>
+      <Typography variant="h6">{t("header_other")}</Typography>
+      <ul style={{ listStyleType: "none" }}>
+        <li>
+          <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
           <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
             {t("celeste_discord")}
           </StyledExternalLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <StyledExternalLink href={DISCORD_INVITE} target="_blank" rel="noreferrer">
-            {t("modded_golden_team_discord")}
-          </StyledExternalLink>
+          <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
+            {t("celeste_discord_fr")}
+          </StyledExternalLink>{" "}
+          <LanguageFlag code="fr" height="15" />
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
+          <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
+            {t("celeste_discord_pt_br")}
+          </StyledExternalLink>{" "}
+          <LanguageFlag code="pt" height="15" /> <LanguageFlag code="br" height="15" />
         </li>
         <li>
           <FontAwesomeIcon icon={faScroll} />{" "}

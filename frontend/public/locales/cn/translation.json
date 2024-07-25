@@ -302,7 +302,7 @@
       "url": {
         "required": "链接不可为空"
       },
-	    "submission_url": {
+      "submission_url": {
         "required": "链接不可为空",
         "invalid": "无效链接",
         "disallowed": "此类型链接不允许提交（<CustomLink to=\"/rules#submissions-all\">参考提交规则第1条</CustomLink>）"
@@ -961,7 +961,7 @@
       "multi": {
         "label": "批量提交",
         "feedback": {
-		      "invalid_urls_one": "含有1个无效链接",
+          "invalid_urls_one": "含有1个无效链接",
           "invalid_urls_other": "含有{{count}}个无效链接",
           "submitting": "提交中：({{current}}/{{total}})",
           "submitted": "已全部提交"
@@ -1129,7 +1129,7 @@
       "rules": {
         "header": "单个地图提交规则",
         "0": "视频<strong>必须</strong>上传至不需要登录就能观看的地方，目前主流的几个视频网站是：<CustomExternalLink href=\"https://www.youtube.com/\">油管</CustomExternalLink>、<CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>、<CustomExternalLink href=\"https://www.bilibili.com/\">B站</CustomExternalLink>和<CustomExternalLink href=\"https://www.nicovideo.jp/\">niconico动画</CustomExternalLink>，诸如此类的网站均可以进行提交。但不允许提交消息服务内容分发网络（比如<code>cdn.discordapp.com</code>或其他）中的视频。",
-        "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但请注意，凡事都有例外，比如在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
+        "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但请注意，凡事都有例外，比如在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。如果死亡，该挑战将仅会作为单金记录。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
         "2": "挑战<strong>必须</strong>在同一局游戏内完成。",
         "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomExternalLink href=\"#recommended-mods\">允许和推荐的Mod</CustomExternalLink>。",
         "4": "<strong>t3及以上难度</strong>的挑战<strong>必须</strong>有完整的全程录像。如果在录像的第一局或开头就完成挑战，则需要提供之前的完整录像。",
@@ -1229,10 +1229,13 @@
       "team_members": "团队成员"
     },
     "links": {
-      "header": "一些有用的链接",
+      "header": "Important Links",
+      "header_other": "Other Links",
       "rules": "规则",
       "faq": "常见问题解答",
-      "celeste_discord": "官方Discord服务器",
+      "celeste_discord": "Celeste Discord",
+      "celeste_discord_fr": "French Celeste Discord",
+      "celeste_discord_pt_br": "Brazilian Celeste Discord",
       "modded_golden_team_discord": "金榜服务器",
       "fwg_sheet": "官图第九章金草莓统计表格",
       "survivors_list": "官图多地图一命表格",

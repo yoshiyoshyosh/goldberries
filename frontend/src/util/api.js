@@ -143,7 +143,7 @@ export function fetchCampaignView(id) {
   });
 }
 export function fetchCampaignViewPlayer(id, playerId) {
-  return axios.get("/campaign/view", {
+  return axios.get("/campaign/view-player", {
     params: {
       id: id,
       player_id: playerId,

@@ -400,7 +400,7 @@ export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false }) 
   );
 }
 
-export function LanguageFlag({ code }) {
+export function LanguageFlag({ code, height = "20", style }) {
   const alt = LANGUAGES.find((lang) => lang.code === code)?.name;
-  return <img src={`/locales/flags/${code}.png`} height="20" alt={alt} />;
+  return <img src={`/locales/flags/${code}.png`} height={height} alt={alt} style={style} />;
 }
