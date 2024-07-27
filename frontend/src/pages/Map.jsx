@@ -12,6 +12,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  Typography,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChallengeDetailsList, ChallengeSubmissionTable } from "./Challenge";
@@ -119,37 +120,30 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
       <Divider sx={{ my: 2 }}>
         <Chip label="Challenges" size="small" />
       </Divider>
-      <Box sx={{ mt: 1, p: 1, background: "rgba(0,0,0,0.2)", borderRadius: 1 }}>
-        <MapChallengeTabs selected={selectedChallenge.id} setSelected={updateSelectedChallenge} map={map} />
-      </Box>
-      <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
-        <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
-        <span>{getChallengeFcShort(selectedChallenge)}</span>
-        <DifficultyChip difficulty={selectedChallenge.difficulty} />
-        <StyledLink to={"/challenge/" + selectedChallenge.id} style={{ marginLeft: "auto" }}>
-          <Button variant="text" startIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}>
-            {t("buttons.view_challenge")}
-          </Button>
-        </StyledLink>
-      </Stack>
-      <ChallengeSubmissionTable key={selectedChallenge.id} challenge={selectedChallenge} />
-      {/* {map.challenges.map((challenge) => {
-        return (
-          <>
-            <Divider sx={{ my: 2 }}>
-              <Link to={"/challenge/" + challenge.id}>
-                <Chip label={getChallengeName(challenge, false)} size="small" />
-              </Link>
-            </Divider>
-            <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 1 }}>
-              <ChallengeFcIcon challenge={challenge} showClear height="1.3em" />
-              <span>{getChallengeFcShort(challenge)}</span>
-              <DifficultyChip difficulty={challenge.difficulty} />
-            </Stack>
-            <ChallengeSubmissionTable key={challenge.id} challenge={challenge} />
-          </>
-        );
-      })} */}
+      {selectedChallenge === null || selectedChallenge === undefined ? (
+        <Typography variant="body1">{t("no_challenges")}</Typography>
+      ) : (
+        <>
+          <Box sx={{ mt: 1, p: 1, background: "rgba(0,0,0,0.2)", borderRadius: 1 }}>
+            <MapChallengeTabs
+              selected={selectedChallenge.id}
+              setSelected={updateSelectedChallenge}
+              map={map}
+            />
+          </Box>
+          <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
+            <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
+            <span>{getChallengeFcShort(selectedChallenge)}</span>
+            <DifficultyChip difficulty={selectedChallenge.difficulty} />
+            <StyledLink to={"/challenge/" + selectedChallenge.id} style={{ marginLeft: "auto" }}>
+              <Button variant="text" startIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}>
+                {t("buttons.view_challenge")}
+              </Button>
+            </StyledLink>
+          </Stack>
+          <ChallengeSubmissionTable key={selectedChallenge.id} challenge={selectedChallenge} />
+        </>
+      )}
 
       <Divider sx={{ my: 2 }} />
       <Changelog type="map" id={id} />

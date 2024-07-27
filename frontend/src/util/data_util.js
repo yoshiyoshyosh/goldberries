@@ -159,8 +159,9 @@ export function getMapName(map, campaign, includeMapWithSide = true) {
 
   const isOld = map.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
+  const rejectedPrefix = map.is_rejected ? "[Rejected] " : "";
 
-  return oldPrefix + mapName;
+  return rejectedPrefix + oldPrefix + mapName;
 }
 
 export function getSubmissionVerifier(submission) {

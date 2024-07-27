@@ -863,7 +863,8 @@
     "buttons": {
       "edit": "编辑",
       "view_challenge": "查看挑战项目"
-    }
+    },
+    "no_challenges": "There are currently no challenges for this map."
   },
   "player": {
     "title": "个人页面",
@@ -1096,12 +1097,15 @@
       "maps_other": "{{count}}张地图",
       "maps_archived_one": "{{count}}张地图（+{{archived}}张旧版地图）",
       "maps_archived_other": "{{count}}张地图（+{{archived}}张旧版地图）",
+      "maps_rejected_one": "+{{count}} rejected map",
+      "maps_rejected_other": "+{{count}} rejected maps",
       "links": "链接",
       "campaign_tgl": "地图包内的金草莓排行榜"
     },
     "tabs": {
       "players": {
         "progress": "进度",
+        "no_players": "No players yet.",
         "more_players_one": "+更多{{count}}位玩家",
         "more_players_other": "+更多{{count}}位玩家",
         "show_all": "显示全部"
@@ -1115,7 +1119,6 @@
     "maps": {
       "header": "关于地图",
       "rules": {
-        "header": "地图规则",
         "0": "地图或地图包<strong>必须</strong>公开发布至<CustomExternalLink href=\"https://gamebanana.com/games/6460\">香蕉网</CustomExternalLink>。如果某张地图被删除或被作者设为私有，则此地图会上传至<CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">互联网档案馆</CustomExternalLink>。除非作者明确不允许其他人下载，并要求彻底删除它。",
         "1": "地图或地图包<strong>必须</strong>有一定难度，即使难度很小。几乎不会死的图会被拒绝。",
         "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
@@ -1264,7 +1267,7 @@
       "video": "录制视频并上传到可永久播放的地方（比如油管、B站、...）",
       "account": "<strong><RegisterLink>注册</RegisterLink>并<LoginLink>登录</LoginLink>你的账号</strong>，你可以通过Discord或邮箱注册。",
       "player": "<strong><CustomLink>绑定玩家</CustomLink></strong>。如果曾经在旧表格上提交过视频，那么你需要先绑定之前的玩家数据。 如果你第一次提交视频，那么你可以创建新玩家。",
-      "submit": "前往<CustomLink>提交页面</CustomLink>并提交你的视频！"
+      "submit": "Read the <RulesLink>rules</RulesLink>, head over to <CustomLink>the submit page</CustomLink> and make your submission!"
     },
     "newly_released": {
       "header": "关于网站发布",

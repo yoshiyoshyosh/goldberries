@@ -863,7 +863,8 @@
     "buttons": {
       "edit": "Edit Map",
       "view_challenge": "View Challenge"
-    }
+    },
+    "no_challenges": "There are currently no challenges for this map."
   },
   "player": {
     "title": "Profile",
@@ -1096,12 +1097,15 @@
       "maps_other": "{{count}} Maps",
       "maps_archived_one": "{{count}} Map (+{{archived}} archived)",
       "maps_archived_other": "{{count}} Maps (+{{archived}} archived)",
+      "maps_rejected_one": "+{{count}} rejected map",
+      "maps_rejected_other": "+{{count}} rejected maps",
       "links": "Links",
       "campaign_tgl": "Campaign Top Golden List"
     },
     "tabs": {
       "players": {
         "progress": "Progress",
+        "no_players": "No players yet.",
         "more_players_one": "+ {{count}} more player",
         "more_players_other": "+ {{count}} more players",
         "show_all": "Show All"
@@ -1263,7 +1267,7 @@
       "video": "Have video proof of your deathless run, uploaded to a permanent place (e.g. YouTube, bilibili, ...)",
       "account": "<strong><RegisterLink>Register</RegisterLink> an account and <LoginLink>login</LoginLink> to your account</strong>. You can sign-up via Discord or email address & password",
       "player": "<strong><CustomLink>Claim a player</CustomLink></strong>. If you already had submissions on the spreadsheet your \"player\" will already exist, and you need to claim it for yourself. If this is your first submission, you can create a new player for yourself.",
-      "submit": "Head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+      "submit": "Read the <RulesLink>rules</RulesLink>, head over to <CustomLink>the submit page</CustomLink> and make your submission!"
     },
     "newly_released": {
       "header": "Newly Released!",

@@ -40,8 +40,11 @@ export function PageIndex() {
             <BorderedBox>
               <GlobalStatsComponent />
             </BorderedBox>
-            <BorderedBox>
+            {/* <BorderedBox>
               <ReleaseNotice />
+            </BorderedBox> */}
+            <BorderedBox>
+              <PublicTestNotice />
             </BorderedBox>
           </Stack>
         </Grid>
@@ -195,7 +198,11 @@ function GettingStarted() {
           <Trans t={t} i18nKey="player" components={{ CustomLink: <StyledLink to="/claim-player" /> }} />
         </li>
         <li>
-          <Trans t={t} i18nKey="submit" components={{ CustomLink: <StyledLink to="/submit" /> }} />
+          <Trans
+            t={t}
+            i18nKey="submit"
+            components={{ RulesLink: <StyledLink to="/rules" />, CustomLink: <StyledLink to="/submit" /> }}
+          />
         </li>
       </ul>
     </>

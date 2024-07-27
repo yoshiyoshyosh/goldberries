@@ -166,13 +166,13 @@ export function CampaignDetailsList({ campaign, ...props }) {
   const hasMajorSort = campaign.sort_major_name !== null;
   const hasMinorSort = campaign.sort_minor_name !== null;
 
-  const notArchivedMaps = campaign.maps.filter((map) => !map.is_archived);
-  const archivedMapsCount = campaign.maps.length - notArchivedMaps.length;
-  const archivedAddition = archivedMapsCount > 0 ? " (+ " + archivedMapsCount + " archived Map)" : "";
+  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const rejectedMapsCount = campaign.maps.filter((map) => map.is_rejected).length;
+  const archivedMapsCount = campaign.maps.filter((map) => map.is_archived).length;
   const mapsCountStr =
     archivedMapsCount > 0
-      ? t("maps_archived", { count: notArchivedMaps.length, archived: archivedMapsCount })
-      : t("maps", { count: notArchivedMaps.length });
+      ? t("maps_archived", { count: validMaps.length, archived: archivedMapsCount })
+      : t("maps", { count: validMaps.length });
 
   return (
     <Grid container columnSpacing={1} rowSpacing={1} {...props}>
@@ -187,6 +187,9 @@ export function CampaignDetailsList({ campaign, ...props }) {
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faListDots} />} text={t("map_count")} />
           <InfoBoxIconTextLine text={mapsCountStr} isSecondary />
+          {rejectedMapsCount > 0 && (
+            <InfoBoxIconTextLine text={t("maps_rejected", { count: rejectedMapsCount })} isSecondary />
+          )}
         </InfoBox>
         {(hasMajorSort || hasMinorSort) && (
           <InfoBox>
@@ -291,6 +294,13 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
           <TableCell width={1} sx={{ px: 1 }}></TableCell>
         </TableHead>
         <TableBody>
+          {playersToShow.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                {t("no_players")}
+              </TableCell>
+            </TableRow>
+          )}
           {playersToShow.map((player, index) => (
             <CampaignPlayerTableRow key={player.id} index={index} campaign={campaign} playerEntry={player} />
           ))}
@@ -327,7 +337,7 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
   } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const { player, stats, last_submission, highest_lobby_sweep, highest_lobby_sweep_fcs } = playerEntry;
-  const mapsInCampaign = campaign.maps.filter((map) => !map.is_archived).length;
+  const mapsInCampaign = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected).length;
   const hasAllClears = stats.clears === mapsInCampaign;
   const progressColor = hasAllClears ? "primary" : "success";
   const backgroundColor = hasAllClears ? campaignPage.sweepBackground : "transparent";
