@@ -19,4 +19,3 @@ $per_page = intval($_REQUEST['per_page']) === 0 ? 50 : intval($_REQUEST['per_pag
 $logs = Change::get_paginated($DB, $page, $per_page, $type);
 
 api_write($logs);
-exit();

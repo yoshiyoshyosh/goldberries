@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   //Create a new vote
   $suggestion = Suggestion::get_by_id($DB, $data['suggestion_id']);
   if ($suggestion === false) {
-    die_json(400, "suggestion with id {$data['suggestion_id']} does not exist");
+    die_json(404, "suggestion with id {$data['suggestion_id']} does not exist");
   }
   if ($suggestion->is_verified !== true) {
     die_json(400, "Suggestion is not verified yet");

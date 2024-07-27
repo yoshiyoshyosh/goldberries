@@ -418,6 +418,8 @@ LEFT JOIN account pa ON p.id = pa.player_id
 LEFT JOIN account va ON v.id = va.player_id
 LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
 
+WHERE map.is_rejected = false OR map.is_rejected IS NULL
+
 ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_created, submission.id ;
 
 

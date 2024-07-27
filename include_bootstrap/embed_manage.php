@@ -41,9 +41,13 @@ function submission_embed_change($object_id, $object_type)
   // error_log("Pattern: $pattern");
 
   //List all files in the submission folder
-  $base_path = "../embed/img/submission";
-  // $files = glob("submission/*");
-  $files = array_diff(scandir($base_path), array('.', '..'));
+  $base_path = __DIR__ . "/../embed/img/submission";
+  $arr = scandir($base_path);
+  if ($arr === false) {
+    log_error("Failed to list files in $base_path", "Embed");
+    return;
+  }
+  $files = array_diff($arr, array('.', '..'));
   // error_log("Files: " . print_r($files, true));
   foreach ($files as $file) {
     // error_log("Checking file: $file");

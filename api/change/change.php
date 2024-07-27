@@ -48,6 +48,5 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
   } else {
     log_info("'{$account->player->name}' deleted {$target}", "Change");
     http_response_code(200);
-    exit();
   }
 }

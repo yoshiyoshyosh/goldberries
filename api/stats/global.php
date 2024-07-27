@@ -3,7 +3,7 @@
 require_once ('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-  die_json(400, 'Invalid request method');
+  die_json(405, 'Invalid Request Method');
 }
 
 $month = isset($_REQUEST['month']) ? $_REQUEST['month'] : null;

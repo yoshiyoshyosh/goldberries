@@ -180,6 +180,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge->requires_fc) {
         $submission->is_fc = true;
       }
+      if ($challenge->map_id !== null) {
+        $map = Map::get_by_id($DB, $challenge->map_id);
+        if ($map->is_rejected) {
+          die_json(400, "Rejected maps don't accept submissions");
+        }
+      }
       $player_submission = $challenge->get_player_submission($DB, $data['player_id']);
       if ($player_submission !== null) {
         die_json(400, "You already have a submission for this challenge");
