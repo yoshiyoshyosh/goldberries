@@ -45,7 +45,12 @@ export function PageSearch({ isDirectSearch = false }) {
   }
 
   return (
-    <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
+    <BasicContainerBox
+      maxWidth="md"
+      sx={containerSx}
+      containerSx={containerSx}
+      ignoreNewMargins={isDirectSearch}
+    >
       <HeadTitle title={title} />
       <Typography variant="h4">{t("header")}</Typography>
       <Typography variant="body1" color="gray" gutterBottom>

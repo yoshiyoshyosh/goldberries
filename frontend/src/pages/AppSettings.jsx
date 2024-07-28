@@ -51,7 +51,7 @@ export function PageAppSettings({ isModal = false }) {
   }
 
   return (
-    <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx}>
+    <BasicContainerBox maxWidth="md" sx={containerSx} containerSx={containerSx} ignoreNewMargins={isModal}>
       <HeadTitle title={t("title")} />
       <Typography variant="h4" gutterBottom>
         {t("title")}

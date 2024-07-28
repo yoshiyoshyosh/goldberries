@@ -326,7 +326,9 @@
       "name": "Autres",
       "suggestion_box": "Boîte à suggestions",
       "monthly_recap": "Récap’ du mois",
-      "stats": "Stats"
+      "stats": "Stats",
+      "rules": "Rules",
+      "faq": "FAQ"
     },
     "internal_menu": {
       "name": "Interne",
@@ -1234,6 +1236,7 @@
     "links": {
       "header": "Liens importants",
       "header_other": "Autres liens",
+      "header_other_lists": "Other Lists",
       "rules": "Règles",
       "faq": "FAQ",
       "celeste_discord": "Serveur Celeste principal",
@@ -1242,6 +1245,8 @@
       "modded_golden_team_discord": "Serveur Discord de la Modded Golden Team",
       "fwg_sheet": "Liste des détenteurs de la golden de Farewell (Adieu)",
       "survivors_list": "Liste des Celeste Survivors (Runs deathless de vanilla Celeste)",
+      "legal_notice": "Legal Notice",
+      "api_docs": "API Documentation",
       "server_costs": "Vue d’ensemble des coûts du serveur"
     },
     "issues": {

@@ -12,7 +12,14 @@ import { getQueryData, useGetAllDifficulties, useGetStatsGlobal, useGetVerifierL
 import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faMoneyBill1Wave, faQuestion, faScaleBalanced, faScroll } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileLines,
+  faLegal,
+  faMoneyBill1Wave,
+  faQuestion,
+  faScaleBalanced,
+  faScroll,
+} from "@fortawesome/free-solid-svg-icons";
 import { RecentSubmissions } from "../components/RecentSubmissions";
 import { DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { Trans, useTranslation } from "react-i18next";
@@ -123,6 +130,31 @@ export function UsefulLinksComponent() {
           </StyledExternalLink>
         </li>
       </ul>
+
+      <Typography variant="h6">{t("header_other_lists")}</Typography>
+      <ul style={{ listStyleType: "none" }}>
+        <li>
+          <FontAwesomeIcon icon={faScroll} />{" "}
+          <StyledExternalLink
+            href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=0"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t("fwg_sheet")}
+          </StyledExternalLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faScroll} />{" "}
+          <StyledExternalLink
+            href="https://docs.google.com/spreadsheets/d/1a32h6LErb1PAyYGsIO8hY-Y1pd-3r4co3M6RnuIRTZE/edit?usp=drivesdk"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t("survivors_list")}
+          </StyledExternalLink>
+        </li>
+      </ul>
+
       <Typography variant="h6">{t("header_other")}</Typography>
       <ul style={{ listStyleType: "none" }}>
         <li>
@@ -146,28 +178,14 @@ export function UsefulLinksComponent() {
           <LanguageFlag code="pt" height="15" /> <LanguageFlag code="br" height="15" />
         </li>
         <li>
-          <FontAwesomeIcon icon={faScroll} />{" "}
-          <StyledExternalLink
-            href="https://docs.google.com/spreadsheets/d/1FesTb6qkgMz-dCn7YdioRydToWSQNTg1axFEIHU4FF8/edit#gid=0"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t("fwg_sheet")}
-          </StyledExternalLink>
-        </li>
-        <li>
-          <FontAwesomeIcon icon={faScroll} />{" "}
-          <StyledExternalLink
-            href="https://docs.google.com/spreadsheets/d/1a32h6LErb1PAyYGsIO8hY-Y1pd-3r4co3M6RnuIRTZE/edit?usp=drivesdk"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t("survivors_list")}
-          </StyledExternalLink>
-        </li>
-        <li>
           <FontAwesomeIcon icon={faMoneyBill1Wave} />{" "}
           <StyledLink to="/server-costs">{t("server_costs")}</StyledLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faLegal} /> <StyledLink to="/legal-notice">{t("legal_notice")}</StyledLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faFileLines} /> <StyledLink to="/api-docs">{t("api_docs")}</StyledLink>
         </li>
       </ul>
     </>

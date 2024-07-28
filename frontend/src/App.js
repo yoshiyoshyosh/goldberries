@@ -49,6 +49,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
   faArrowUp,
+  faBalanceScale,
   faBan,
   faBars,
   faBook,
@@ -58,6 +59,7 @@ import {
   faCheckToSlot,
   faChevronDown,
   faChevronLeft,
+  faCircleQuestion,
   faCog,
   faCogs,
   faEdit,
@@ -75,6 +77,7 @@ import {
   faPlayCircle,
   faPlus,
   faPoll,
+  faQuestion,
   faRegistered,
   faSearch,
   faSignIn,
@@ -128,6 +131,7 @@ import { PageRules } from "./pages/Rules";
 import { PageFAQ } from "./pages/FAQ";
 import { PageStats } from "./pages/Stats";
 import { ApiDocPage } from "./pages/ApiDoc";
+import { useTheme } from "@emotion/react";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -263,6 +267,7 @@ export const lightTheme = createTheme({
       other: "rgba(255,255,255,0.75)",
       subtle: "rgba(0,0,0,0.05)",
       lightShade: "rgba(0,0,0,10%)",
+      mobileDrawer: "#ffffff",
     },
     tableDivider: "#949494",
     tableDividerStrong: "#949494",
@@ -299,6 +304,7 @@ const darkTheme = createTheme({
       other: "rgba(0,0,0,0.5)",
       subtle: "rgba(0,0,0,0.2)",
       lightShade: "rgba(255,255,255,10%)",
+      mobileDrawer: "#181818",
     },
     tableDivider: "#515151",
     tableDividerStrong: "#515151",
@@ -384,8 +390,9 @@ function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirec
 }
 
 export function Layout() {
-  const { settings } = useAppSettings();
   const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
+  const theme = useTheme();
+  const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const auth = useAuth();
   const location = useLocation();
@@ -550,6 +557,17 @@ export function Layout() {
       name: t("other_menu.name"),
       items: [
         {
+          name: t("other_menu.rules"),
+          path: "/rules",
+          icon: <FontAwesomeIcon icon={faBalanceScale} />,
+        },
+        {
+          name: t("other_menu.faq"),
+          path: "/faq",
+          icon: <FontAwesomeIcon icon={faCircleQuestion} />,
+        },
+        { divider: true },
+        {
           name: t("other_menu.suggestion_box"),
           path: "/suggestions",
           icon: <FontAwesomeIcon icon={faCheckToSlot} />,
@@ -609,14 +627,12 @@ export function Layout() {
       background = 'white url("' + backgroundSettings.lightCustom + '") 0 0 / cover no-repeat';
     } else if (backgroundSettings.light !== "") {
       background = 'white url("/img/' + backgroundSettings.light + '") 0 0 / cover no-repeat';
-      // background = "white url(/img/" + general.backgroundLight + ") 0 0 / 100% 100% no-repeat";
     }
   } else {
     if (backgroundSettings.darkCustom !== "") {
       background = 'black url("' + backgroundSettings.darkCustom + '") 0 0 / cover no-repeat';
     } else if (backgroundSettings.dark !== "") {
       background = 'black url("/img/' + backgroundSettings.dark + '") 0 0 / cover no-repeat';
-      // background = "black url(/img/" + general.backgroundDark + ") 0 0 / 100% 100% no-repeat";
     }
   }
 
@@ -649,10 +665,9 @@ export function Layout() {
             width: { md: `calc(100% - ${drawerWidth}px)` },
             ml: { md: `${drawerWidth}px` },
             display: { xs: "block", md: "none" },
-            bgcolor: "#3e3e3e",
           }}
         >
-          <Toolbar>
+          <Toolbar sx={{ bgcolor: "#181818" }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -663,10 +678,12 @@ export function Layout() {
               <FontAwesomeIcon icon={faBars} />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              <Stack direction="row" gap={0.5} alignItems="center">
-                <WebsiteIcon />
-                <span>goldberries.net</span>
-              </Stack>
+              <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+                <Stack direction="row" gap={0.5} alignItems="center">
+                  <WebsiteIcon />
+                  <span>goldberries.net</span>
+                </Stack>
+              </Link>
             </Typography>
           </Toolbar>
         </AppBar>
@@ -685,10 +702,20 @@ export function Layout() {
             }}
             sx={{
               display: { xs: "block", md: "none" },
-              "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                bgcolor: theme.palette.background.mobileDrawer,
+                backgroundImage: "none",
+              },
             }}
           >
-            <MobileDrawer leftMenu={leftMenu} rightMenu={rightMenu} userMenu={userMenu} />
+            <MobileDrawer
+              leftMenu={leftMenu}
+              rightMenu={rightMenu}
+              userMenu={userMenu}
+              closeDrawer={handleDrawerClose}
+            />
           </Drawer>
         </Box>
         <DesktopNav
@@ -735,11 +762,22 @@ function ModalContainer({ searchOpenRef, settingsOpenRef }) {
   );
 }
 
-function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
+function MobileDrawer({ leftMenu, rightMenu, userMenu, closeDrawer }) {
   const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const auth = useAuth();
-  const { settings } = useAppSettings();
+  const { settings, setSettings } = useAppSettings();
+  const darkmode = settings.visual.darkmode;
   const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
+
+  const toggleDarkmode = () => {
+    setSettings({
+      ...settings,
+      visual: {
+        ...settings.visual,
+        darkmode: !darkmode,
+      },
+    });
+  };
 
   return (
     <div>
@@ -757,36 +795,62 @@ function MobileDrawer({ leftMenu, rightMenu, userMenu }) {
 
       {leftMenu.map((entry, index) => {
         if (entry.items) {
-          return <MobileSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
+          return (
+            <MobileSubMenu
+              key={index}
+              name={entry.name}
+              icon={entry.icon}
+              items={entry.items}
+              closeDrawer={closeDrawer}
+            />
+          );
         } else {
-          return <MobileMenuItem key={index} item={entry} />;
+          return <MobileMenuItem key={index} item={entry} closeDrawer={closeDrawer} />;
         }
       })}
       {rightMenu.map((entry, index) => {
         if (entry.items) {
-          return <MobileSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
+          return (
+            <MobileSubMenu
+              key={index}
+              name={entry.name}
+              icon={entry.icon}
+              items={entry.items}
+              closeDrawer={closeDrawer}
+            />
+          );
         } else {
-          return <MobileMenuItem key={index} item={entry} />;
+          return <MobileMenuItem key={index} item={entry} closeDrawer={closeDrawer} />;
         }
       })}
       {userMenu.items === undefined ? (
-        <MobileMenuItem item={userMenu} />
+        <MobileMenuItem item={userMenu} closeDrawer={closeDrawer} />
       ) : (
         <MobileSubMenu
           name={userMenu.name}
           icon={userMenu.icon}
           items={userMenu.items}
           nameStyle={nameStyle}
+          closeDrawer={closeDrawer}
         />
       )}
       <MobileMenuItem
         item={{ name: t("settings"), path: "/settings", icon: <FontAwesomeIcon icon={faCogs} /> }}
+        closeDrawer={closeDrawer}
+      />
+      <MobileMenuItem
+        item={{
+          name: t(darkmode ? "switch_to_light_mode" : "switch_to_dark_mode"),
+          action: toggleDarkmode,
+          icon: <FontAwesomeIcon icon={darkmode ? faSun : faMoon} />,
+        }}
+        closeDrawer={closeDrawer}
       />
     </div>
   );
 }
 
-function MobileSubMenu({ name, icon, items, nameStyle = {} }) {
+function MobileSubMenu({ name, icon, items, nameStyle = {}, closeDrawer }) {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
 
@@ -807,7 +871,7 @@ function MobileSubMenu({ name, icon, items, nameStyle = {} }) {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {items.map((item, index) => (
-            <MobileMenuItem key={index} item={item} indent={1} />
+            <MobileMenuItem key={index} item={item} indent={1} closeDrawer={closeDrawer} />
           ))}
         </List>
       </Collapse>
@@ -815,9 +879,16 @@ function MobileSubMenu({ name, icon, items, nameStyle = {} }) {
   );
 }
 
-function MobileMenuItem({ item, indent = 0 }) {
+function MobileMenuItem({ item, indent = 0, closeDrawer }) {
   const { pathname } = useLocation();
   const selected = item.action ? false : pathMatchesItem(pathname, item.path);
+
+  const onClick = () => {
+    if (item.action !== undefined) {
+      item.action();
+    }
+    closeDrawer();
+  };
 
   if (item.divider) {
     return <Divider sx={{ ml: 2 }} />;
@@ -826,7 +897,7 @@ function MobileMenuItem({ item, indent = 0 }) {
   return (
     <ListItem disablePadding>
       {item.action !== undefined && (
-        <ListItemButton onClick={item.action} sx={{ py: "2px", pl: 2 + indent * 2 }}>
+        <ListItemButton onClick={onClick} sx={{ py: "2px", pl: 2 + indent * 2 }}>
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText primary={item.name} />
         </ListItemButton>
@@ -837,6 +908,7 @@ function MobileMenuItem({ item, indent = 0 }) {
           component={Link}
           to={item.path}
           sx={{ py: "2px", pl: 2 + indent * 2 }}
+          onClick={onClick}
         >
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText primary={item.name} />
@@ -895,7 +967,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
             })}
           </Stack>
         </Grid>
-        <Grid item sm={2} sx={{ pt: "0 !important" }}>
+        <Grid item sm={2} sx={{ pt: "0 !important", minWidth: "180px" }}>
           <Typography
             variant="h6"
             noWrap

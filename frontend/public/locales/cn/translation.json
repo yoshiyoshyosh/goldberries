@@ -326,7 +326,9 @@
       "name": "其他",
       "suggestion_box": "意见箱",
       "monthly_recap": "每月数据回顾",
-      "stats": "Stats"
+      "stats": "Stats",
+      "rules": "Rules",
+      "faq": "FAQ"
     },
     "internal_menu": {
       "name": "管理",
@@ -1234,6 +1236,7 @@
     "links": {
       "header": "Important Links",
       "header_other": "Other Links",
+      "header_other_lists": "Other Lists",
       "rules": "规则",
       "faq": "常见问题解答",
       "celeste_discord": "Celeste Discord",
@@ -1242,6 +1245,8 @@
       "modded_golden_team_discord": "金榜服务器",
       "fwg_sheet": "官图第九章金草莓统计表格",
       "survivors_list": "官图多地图一命表格",
+      "legal_notice": "Legal Notice",
+      "api_docs": "API Documentation",
       "server_costs": "服务器成本概览"
     },
     "issues": {

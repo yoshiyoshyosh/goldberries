@@ -55,14 +55,33 @@ export function getErrorFromMultiple(...queries) {
   return null;
 }
 
-export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, containerSx = {}, ...props }) {
+export function BasicContainerBox({
+  maxWidth = "sm",
+  children,
+  sx = {},
+  containerSx = {},
+  ignoreNewMargins = false,
+  ...props
+}) {
+  const newMargins = ignoreNewMargins
+    ? {}
+    : {
+        mx: {
+          xs: 0.5,
+          sm: "auto",
+        },
+        width: {
+          xs: "unset",
+          sm: "unset",
+        },
+      };
   return (
     <Container
       maxWidth={maxWidth}
       sx={{
         "&&": {
-          pl: 0,
-          pr: 0,
+          px: 0,
+          ...newMargins,
           ...containerSx,
         },
       }}
@@ -83,10 +102,13 @@ export function BasicContainerBox({ maxWidth = "sm", children, sx = {}, containe
             sm: 3,
           },
           mt: {
-            xs: 5,
+            xs: 0,
             sm: 1,
           },
-          borderRadius: "10px",
+          borderRadius: {
+            xs: "10px",
+            sm: "10px",
+          },
           border: "1px solid #cccccc99",
           boxShadow: 1,
           ...sx,

@@ -326,7 +326,9 @@
       "name": "Andere",
       "suggestion_box": "Vorschlagsbox",
       "monthly_recap": "Monatlicher Rückblick",
-      "stats": "Statistik"
+      "stats": "Statistik",
+      "rules": "Rules",
+      "faq": "FAQ"
     },
     "internal_menu": {
       "name": "Intern",
@@ -1234,6 +1236,7 @@
     "links": {
       "header": "Wichtige Links",
       "header_other": "Andere Links",
+      "header_other_lists": "Andere Listen",
       "rules": "Regeln",
       "faq": "Freqently Asked Questions",
       "celeste_discord": "Celeste Discord",
@@ -1242,6 +1245,8 @@
       "modded_golden_team_discord": "Modded Golden Team Discord",
       "fwg_sheet": "Farewell Golden Collectors' List",
       "survivors_list": "Celeste Survivors List (Deathless runs of vanilla Celeste)",
+      "legal_notice": "Legal Notice",
+      "api_docs": "API Documentation",
       "server_costs": "Übersicht über Serverkosten"
     },
     "issues": {
