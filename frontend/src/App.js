@@ -132,6 +132,7 @@ import { PageFAQ } from "./pages/FAQ";
 import { PageStats } from "./pages/Stats";
 import { ApiDocPage } from "./pages/ApiDoc";
 import { useTheme } from "@emotion/react";
+import { LegalNoticePage } from "./pages/LegalNotice";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -249,6 +250,7 @@ const router = createBrowserRouter([
 
       { path: "server-costs/:status?", element: <PageServerCosts /> },
       { path: "api-docs", element: <ApiDocPage /> },
+      { path: "legal-notice", element: <LegalNoticePage /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },

@@ -881,7 +881,7 @@
   "rejected_maps": {
     "title": "Abgelehnte Maps",
     "info_1": "Diese Seite enthält alle Maps, für die entschieden wurde, diese nicht zur Liste hinzuzufügen, sowie Gründe, warum diese Entscheidung getroffen wurde.",
-    "info_2": "Nicht aufgelistet werden Maps oder Map Packs, die gegen Regel 3 verstoßen (unangemessene Wörter/visuelle Inhalte/etc).",
+    "info_2": "Nicht aufgelistet werden Maps oder Map Packs, die gegen <CustomLink>Regel 4</CustomLink> verstoßen (unangemessene Wörter/visuelle Inhalte/etc).",
     "reason": "Grund"
   },
   "search": {

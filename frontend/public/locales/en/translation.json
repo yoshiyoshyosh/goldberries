@@ -881,7 +881,7 @@
   "rejected_maps": {
     "title": "Rejected Maps",
     "info_1": "This page contains all the maps that have been decided to not be added to the list, as well as reasons why such decision was made.",
-    "info_2": "If the map or map pack breaks rule 3 (has inapporpriate words/visual stuff/etc), it won't be listed here.",
+    "info_2": "If the map or map pack breaks <CustomLink>rule 4</CustomLink> (has inapporpriate words/visual stuff/etc), it won't be listed here.",
     "reason": "Reason"
   },
   "search": {

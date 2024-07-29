@@ -17,7 +17,7 @@ import {
 } from "../components/BasicComponents";
 import { getQueryData, useGetRejectedMapList } from "../hooks/useApi";
 import { getCampaignName } from "../util/data_util";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageRejectedMaps() {
   const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
@@ -25,17 +25,17 @@ export function PageRejectedMaps() {
 
   if (query.isLoading || query.isFetching) {
     return (
-      <>
+      <BasicContainerBox maxWidth="md">
         <Typography variant="h6">{t("title")}</Typography>
         <LoadingSpinner />
-      </>
+      </BasicContainerBox>
     );
   } else if (query.isError) {
     return (
-      <>
+      <BasicContainerBox maxWidth="md">
         <Typography variant="h6">{t("title")}</Typography>
         <ErrorDisplay error={query.error} />
-      </>
+      </BasicContainerBox>
     );
   }
 
@@ -59,7 +59,7 @@ function RejectedMapsTable({ maps }) {
         {t("info_1")}
       </Typography>
       <Typography variant="body2" gutterBottom color="error.main">
-        {t("info_2")}
+        <Trans t={t} i18nKey="info_2" components={{ CustomLink: <StyledLink to="/rules#maps" /> }} />
       </Typography>
       <TableContainer component={Paper}>
         <Table size="small">

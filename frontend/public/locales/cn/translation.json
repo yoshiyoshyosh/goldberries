@@ -327,8 +327,8 @@
       "suggestion_box": "意见箱",
       "monthly_recap": "每月数据回顾",
       "stats": "Stats",
-      "rules": "Rules",
-      "faq": "FAQ"
+      "rules": "规则",
+      "faq": "常见问题解答"
     },
     "internal_menu": {
       "name": "管理",
@@ -490,8 +490,8 @@
       "new_challenge": "新挑战项目或地图",
       "or": "或",
       "buttons": {
-        "verify": "通过'{{count}}'个内容",
-        "reject": "拒绝'{{count}}'个内容"
+        "verify": "通过{{count}}个内容",
+        "reject": "拒绝{{count}}个内容"
       }
     }
   },
@@ -762,7 +762,7 @@
           "name_missing": "名称不可为空",
           "name_short": "玩家名称必须至少包含3个字符"
         },
-        "info": "输入你的玩家名称，如果你在旧表格上存在数据，请返回并选择\"绑定玩家\".",
+        "info": "输入你的玩家名称，如果你在旧表格上存在数据，请返回并选择“绑定玩家”。",
         "player_name": "玩家名称",
         "button": "创建"
       },
@@ -866,7 +866,7 @@
       "edit": "编辑",
       "view_challenge": "查看挑战项目"
     },
-    "no_challenges": "There are currently no challenges for this map."
+    "no_challenges": "该地图暂无挑战项目"
   },
   "player": {
     "title": "个人页面",
@@ -881,7 +881,7 @@
   "rejected_maps": {
     "title": "已拒绝的地图",
     "info_1": "包含所有不会添加到地图包列表的地图，以及原因",
-    "info_2": "如果地图或地图包违反了规则4，也不会在此处列出",
+    "info_2": "如果地图或地图包违反了<CustomLink>地图规则第4条</CustomLink>（含有敏感文字、视觉内容等），也不会在此处列出。",
     "reason": "原因"
   },
   "search": {
@@ -908,7 +908,7 @@
       "first_clears": "首位达成数（设置层级下限）",
       "hide_changelog": "隐藏更改日志"
     },
-    "header": "'{{month}}'的数据",
+    "header": "{{month}}的数据",
     "total_clears": "月总数",
     "timeline": {
       "label": "时间线",
@@ -1042,16 +1042,16 @@
         "feedback": {
           "updated": "建议已更新"
         },
-        "claim_player": "请绑定玩家以创建你的建议",
+        "claim_player": "你尚未绑定或创建玩家",
         "your_comment": "发表你的意见",
         "comment_note": "要更改意见，要暂时先将你的投票移除，修改好意见后再次进行投票",
         "totals": "总计",
         "done_challenge": "达成此挑战的玩家",
         "not_done_challenge": "未达成此挑战的玩家",
         "buttons": {
-          "verify": "通过",
-          "accept": "接受变更",
-          "reject_verification": "拒绝",
+          "verify": "通过验证",
+          "accept": "通过变更",
+          "reject_verification": "拒绝验证",
           "reject_change": "拒绝变更"
         }
       },
@@ -1099,15 +1099,15 @@
       "maps_other": "{{count}}张地图",
       "maps_archived_one": "{{count}}张地图（+{{archived}}张旧版地图）",
       "maps_archived_other": "{{count}}张地图（+{{archived}}张旧版地图）",
-      "maps_rejected_one": "+{{count}} rejected map",
-      "maps_rejected_other": "+{{count}} rejected maps",
+      "maps_rejected_one": "+{{count}}张已拒绝的地图",
+      "maps_rejected_other": "+{{count}}张已拒绝的地图",
       "links": "链接",
       "campaign_tgl": "地图包内的金草莓排行榜"
     },
     "tabs": {
       "players": {
         "progress": "进度",
-        "no_players": "No players yet.",
+        "no_players": "暂无玩家",
         "more_players_one": "+更多{{count}}位玩家",
         "more_players_other": "+更多{{count}}位玩家",
         "show_all": "显示全部"
@@ -1121,12 +1121,13 @@
     "maps": {
       "header": "关于地图",
       "rules": {
+        "header": "地图规则",
         "0": "地图或地图包<strong>必须</strong>公开发布至<CustomExternalLink href=\"https://gamebanana.com/games/6460\">香蕉网</CustomExternalLink>。如果某张地图被删除或被作者设为私有，则此地图会上传至<CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">互联网档案馆</CustomExternalLink>。除非作者明确不允许其他人下载，并要求彻底删除它。",
         "1": "地图或地图包<strong>必须</strong>有一定难度，即使难度很小。几乎不会死的图会被拒绝。",
         "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
         "3": "地图或地图包<strong>不得</strong>包含NSFW内容。",
         "4": "地图或地图包里的内容<strong>最好不要</strong>与官图或已经存在的其他图过于相似。不过像比较有特点的<CustomExternalLink href=\"https://gamebanana.com/mods/150418\">官图倒走</CustomExternalLink>，或者官图的加难版比如<CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink>这类图是允许的，但是像<CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink>这样的图大概率会被拒绝。",
-        "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，\"垃圾类\"或\"整活类\"图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你也想来点参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
+        "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，“垃圾类”或“整活类”图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你也想来点参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
       }
     },
     "goldens": {
@@ -1134,7 +1135,7 @@
       "rules": {
         "header": "单个地图提交规则",
         "0": "视频<strong>必须</strong>上传至不需要登录就能观看的地方，目前主流的几个视频网站是：<CustomExternalLink href=\"https://www.youtube.com/\">油管</CustomExternalLink>、<CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>、<CustomExternalLink href=\"https://www.bilibili.com/\">B站</CustomExternalLink>和<CustomExternalLink href=\"https://www.nicovideo.jp/\">niconico动画</CustomExternalLink>，诸如此类的网站均可以进行提交。但不允许提交消息服务内容分发网络（比如<code>cdn.discordapp.com</code>或其他）中的视频。",
-        "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但请注意，凡事都有例外，比如在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。如果死亡，该挑战将仅会作为单金记录。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
+        "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但是如果在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。如果死亡，该挑战将仅会作为单金记录。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
         "2": "挑战<strong>必须</strong>在同一局游戏内完成。",
         "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomExternalLink href=\"#recommended-mods\">允许和推荐的Mod</CustomExternalLink>。",
         "4": "<strong>t3及以上难度</strong>的挑战<strong>必须</strong>有完整的全程录像。如果在录像的第一局或开头就完成挑战，则需要提供之前的完整录像。",
@@ -1164,8 +1165,8 @@
       "header": "一些建议",
       "section": {
         "explanation": "这些<strong>均不是</strong>需要遵循的规则，但都有助于提高可信度，避免给你的视频打上注释，或帮助到别人。",
-        "0": "打开计时器有助于提高可信度，对于单独的地图不强制要求打开。但多地图挑战<strong>必须</strong>打开文件计时器。",
-        "1": "使用按键映射有助于提高可信度，比如Windows的<CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink>、Linux (X11)的<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink>或跨平台通用的<CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink>。",
+        "0": "打开计时器，对于单独的地图不强制要求打开。但多地图挑战<strong>必须</strong>打开文件计时器。",
+        "1": "使用按键映射，比如Windows的<CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink>、Linux (X11)的<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink>或跨平台通用的<CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink>。",
         "2": "对于合集视频，在简介或你的视频链接里贴上时间戳将对验证大有帮助。",
         "3": "保留一到两份完整的全程录像，尤其是对于难度很高的金草莓，以防验证者要求更多的证明。"
       }
@@ -1234,19 +1235,19 @@
       "team_members": "团队成员"
     },
     "links": {
-      "header": "Important Links",
-      "header_other": "Other Links",
-      "header_other_lists": "Other Lists",
+      "header": "主要链接",
+      "header_other": "其他链接",
+      "header_other_lists": "其他表格",
       "rules": "规则",
       "faq": "常见问题解答",
-      "celeste_discord": "Celeste Discord",
-      "celeste_discord_fr": "French Celeste Discord",
-      "celeste_discord_pt_br": "Brazilian Celeste Discord",
+      "celeste_discord": "Discord官方服务器",
+      "celeste_discord_fr": "Discord服务器（法国）",
+      "celeste_discord_pt_br": "Discord服务器（巴西）",
       "modded_golden_team_discord": "金榜服务器",
       "fwg_sheet": "官图第九章金草莓统计表格",
       "survivors_list": "官图多地图一命表格",
-      "legal_notice": "Legal Notice",
-      "api_docs": "API Documentation",
+      "legal_notice": "法律声明",
+      "api_docs": "API文档",
       "server_costs": "服务器成本概览"
     },
     "issues": {
@@ -1272,7 +1273,7 @@
       "video": "录制视频并上传到可永久播放的地方（比如油管、B站、...）",
       "account": "<strong><RegisterLink>注册</RegisterLink>并<LoginLink>登录</LoginLink>你的账号</strong>，你可以通过Discord或邮箱注册。",
       "player": "<strong><CustomLink>绑定玩家</CustomLink></strong>。如果曾经在旧表格上提交过视频，那么你需要先绑定之前的玩家数据。 如果你第一次提交视频，那么你可以创建新玩家。",
-      "submit": "Read the <RulesLink>rules</RulesLink>, head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+      "submit": "阅读<RulesLink>规则</RulesLink>并前往<CustomLink>提交页面</CustomLink>并提交你的视频！"
     },
     "newly_released": {
       "header": "关于网站发布",

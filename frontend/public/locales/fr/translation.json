@@ -866,7 +866,7 @@
       "edit": "Modifier cette map",
       "view_challenge": "Voir ce challenge"
     },
-    "no_challenges": "There are currently no challenges for this map."
+    "no_challenges": "Cette map n’a pas de challenge pour le moment…"
   },
   "player": {
     "title": "Profil",
@@ -881,7 +881,7 @@
   "rejected_maps": {
     "title": "Maps rejetées",
     "info_1": "Cette page contient toutes les maps qui n’apparaissent pas sur la liste, ainsi que la raison pour laquelle ce choix a été fait.",
-    "info_2": "Si une map ou un map pack enfreint la règle nº 3 (contenu inapproprié), elle ne sera pas listée ici.",
+    "info_2": "If the map or map pack breaks <CustomLink>rule 4</CustomLink> (has inapporpriate words/visual stuff/etc), it won't be listed here.",
     "reason": "Raison"
   },
   "search": {
@@ -1094,20 +1094,20 @@
   "campaign": {
     "info_boxes": {
       "author": "Auteur·rice",
-      "map_count": "Count",
+      "map_count": "Nombre",
       "maps_one": "{{count}} Map",
       "maps_other": "{{count}} Maps",
       "maps_archived_one": "{{count}} Map (+{{archived}} archivées)",
       "maps_archived_other": "{{count}} Maps (+{{archived}} archivées)",
-      "maps_rejected_one": "+{{count}} rejected map",
-      "maps_rejected_other": "+{{count}} rejected maps",
-      "links": "Links",
+      "maps_rejected_one": "+ {{count}} map rejetée",
+      "maps_rejected_other": "+ {{count}} maps rejetées",
+      "links": "Liens",
       "campaign_tgl": "Top Golden List de la campagne"
     },
     "tabs": {
       "players": {
         "progress": "Progrès",
-        "no_players": "No players yet.",
+        "no_players": "Personne pour le moment…",
         "more_players_one": "+ {{count}} autre",
         "more_players_other": "+ {{count}} autres",
         "show_all": "Tout afficher"
@@ -1272,7 +1272,7 @@
       "video": "Avoir une preuve vidéo de ta run, disponible à tout moment (par exemple sur YouTube, bilibili, …).",
       "account": "<strong><RegisterLink>Créer</RegisterLink> un compte et t’y <LoginLink>connecter</LoginLink></strong>. Tu peux te connecter via Discord ou avec une adresse email et un mot de passe.",
       "player": "<strong><CustomLink>Apparaître sur la lisre</CustomLink></strong>. Si tu possèdes déjà des entrées sur l’ancien tableur, ton « nom » existe déjà, et tu peux le réclamer. Si c’est ta première fois, tu peux créer un nouveau nom.",
-      "submit": "Read the <RulesLink>rules</RulesLink>, head over to <CustomLink>the submit page</CustomLink> and make your submission!"
+      "submit": "Lis bien les <RulesLink>règles</RulesLink>, rends-toi sur <CustomLink>cette page</CustomLink> et rajoute ta run !"
     },
     "newly_released": {
       "header": "Un site tout beau tout neuf !",

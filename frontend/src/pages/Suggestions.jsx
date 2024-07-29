@@ -293,11 +293,11 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
       {suggestion.votes.length === 0 ? (
         <Typography variant="body2">{t("no_votes")}</Typography>
       ) : (
-        <Grid container columnSpacing={1}>
+        <Grid container columnSpacing={1} rowSpacing={0.5}>
           {!isGeneral && (
             <Grid item xs={12} sm={6} display="flex" justifyContent="space-between">
               <VotesDisplay votes={votesSubmission} hasSubmission={true} isGeneral={isGeneral} />
-              <Divider orientation="vertical" />
+              <Divider sx={{ display: { xs: "none", sm: "block" } }} orientation="vertical" />
             </Grid>
           )}
           <Grid item xs={12} sm={isGeneral ? 12 : 6}>

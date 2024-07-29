@@ -13,6 +13,7 @@ import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesCompon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import {
+  faCircleQuestion,
   faFileLines,
   faLegal,
   faMoneyBill1Wave,
@@ -121,7 +122,7 @@ export function UsefulLinksComponent() {
           <FontAwesomeIcon icon={faScaleBalanced} /> <StyledLink to="/rules">{t("rules")}</StyledLink>
         </li>
         <li>
-          <FontAwesomeIcon icon={faQuestion} /> <StyledLink to="/faq">{t("faq")}</StyledLink>
+          <FontAwesomeIcon icon={faCircleQuestion} /> <StyledLink to="/faq">{t("faq")}</StyledLink>
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}

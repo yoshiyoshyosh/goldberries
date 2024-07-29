@@ -413,7 +413,7 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
 
 function CampaignPlayerTableRowExpanded({ player, campaign }) {
   const query = useGetCampaignViewPlayer(campaign.id, player.id);
-  const validMaps = campaign.maps.filter((map) => !map.is_archived);
+  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
   const hasMajorSort = campaign.sort_major_name !== null;
 
   if (query.isLoading) {
