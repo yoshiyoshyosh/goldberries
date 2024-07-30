@@ -21,9 +21,15 @@ $submission->expand_foreign_keys($DB, 5);
 //Objects
 $player = $submission->player;
 $challenge = $submission->challenge;
-$map = $challenge->map;
-$campaign = $challenge->get_campaign();
-$for_str = $map === null ? $campaign->get_name() : $map->get_name();
+$for_str = "";
+if ($challenge === null) {
+  $new_challenge = $submission->new_challenge;
+  $for_str = "New Challenge: " . $new_challenge->name;
+} else {
+  $map = $challenge->map;
+  $campaign = $challenge->get_campaign();
+  $for_str = $map === null ? $campaign->get_name() : $map->get_name();
+}
 
 $real_url = constant("BASE_URL") . "/submission/" . $submission->id;
 $proof_url = $submission->proof_url;

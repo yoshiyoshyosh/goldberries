@@ -240,6 +240,21 @@ class Submission extends DbObject
     }
   }
 
+  function get_challenge_name()
+  {
+    if ($this->challenge !== null) {
+      return $this->challenge->get_name();
+    }
+    return $this->new_challenge->get_name();
+  }
+  function get_challenge_name_for_discord()
+  {
+    if ($this->challenge !== null) {
+      return $this->challenge->get_name_for_discord();
+    }
+    return $this->new_challenge->get_name_for_discord();
+  }
+
   function get_url()
   {
     return constant("BASE_URL") . "/submission/" . $this->id;

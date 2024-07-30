@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->verifier_id === null
         && $old_submission->is_verified !== $submission->is_verified
       ) {
-        if ($old_submission->challenge_id === null) {
+        if ($old_submission->challenge_id === null && $submission->is_verified) {
           die_json(400, "Cannot verify a submission without a challenge");
         }
         $toLog = $submission->is_verified ? "verified" : "rejected";
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $old_submission->date_created = $submission->date_created;
       $old_submission->verifier_notes = $submission->verifier_notes;
-      $old_submission->new_challenge_id = $submission->is_verified !== null ? null : $submission->new_challenge_id;
+      $old_submission->new_challenge_id = $submission->is_verified === true ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
         submission_embed_change($old_submission->id, "submission");

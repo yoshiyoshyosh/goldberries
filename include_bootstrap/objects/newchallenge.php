@@ -40,4 +40,20 @@ class NewChallenge extends DbObject
   {
     return "(NewChallenge, id:{$this->id}, url:'{$this->url}', name:'{$this->name}', description:'{$this->description}')";
   }
+
+  function get_name(): string
+  {
+    return "New Challenge: {$this->name}";
+  }
+  function get_name_for_discord(): string
+  {
+    $name = $this->get_name_escaped();
+    return "`New Challenge: {$name}`";
+  }
+
+  function get_name_escaped()
+  {
+    //Regex remove backticks from the name, then return
+    return preg_replace('/`/', '', $this->name);
+  }
 }

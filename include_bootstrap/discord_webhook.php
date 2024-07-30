@@ -169,7 +169,7 @@ function send_webhook_submission_verified($submission)
     $allowed_mentions["users"][] = $account->discord_id;
   }
 
-  $challenge_name = $submission->challenge->get_name_for_discord();
+  $challenge_name = $submission->get_challenge_name_for_discord();
   $submission_url = $submission->get_url();
   $is_rejected = $submission->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
