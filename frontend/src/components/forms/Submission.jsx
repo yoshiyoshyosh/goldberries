@@ -32,6 +32,8 @@ import { FullChallengeDisplay } from "../../pages/Submission";
 import { usePostSubmission } from "../../hooks/useApi";
 import { CreateAnyButton } from "../../pages/manage/Challenges";
 import { useTranslation } from "react-i18next";
+import { DatePicker, DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -286,13 +288,36 @@ export function FormSubmission({ submission, onSave, ...props }) {
         </Grid>
       </Grid>
 
+      {isVerifier && (
+        <Controller
+          control={form.control}
+          name="date_created"
+          render={({ field }) => (
+            <DateTimePicker
+              label={t("date_submitted") + " *"}
+              value={dayjs(field.value)}
+              onChange={(value) => {
+                console.log("New date value", value);
+                field.onChange(value.toISOString());
+              }}
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+              }}
+              sx={{ mt: 2, width: "100%" }}
+            />
+          )}
+        />
+      )}
       <List dense sx={{ pb: 0 }}>
-        <ListItem>
-          <ListItemText
-            primary={jsonDateToJsDate(submission.date_created).toLocaleString()}
-            secondary={t("date_submitted")}
-          />
-        </ListItem>
+        {!isVerifier && (
+          <ListItem>
+            <ListItemText
+              primary={jsonDateToJsDate(submission.date_created).toLocaleString()}
+              secondary={t("date_submitted")}
+            />
+          </ListItem>
+        )}
         {submission.is_verified !== null ? (
           <>
             <ListItem>

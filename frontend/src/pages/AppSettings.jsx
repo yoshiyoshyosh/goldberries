@@ -125,7 +125,7 @@ export function AppSettingsGeneralForm() {
         </Select>
       </SettingsEntry>
 
-      {(true || isAprilFools) && (
+      {isAprilFools && (
         <Button
           fullWidth
           variant="contained"

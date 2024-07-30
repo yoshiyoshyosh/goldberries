@@ -94,7 +94,6 @@ import {
   faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
 import { createRef, useEffect, useState } from "react";
-import { faBlackberry } from "@fortawesome/free-brands-svg-icons";
 import { PageGoldenList } from "./pages/GoldenList";
 import HoverMenu from "material-ui-popup-state/HoverMenu";
 import PopupState, { bindHover, bindMenu } from "material-ui-popup-state";
@@ -133,6 +132,9 @@ import { PageStats } from "./pages/Stats";
 import { ApiDocPage } from "./pages/ApiDoc";
 import { useTheme } from "@emotion/react";
 import { LegalNoticePage } from "./pages/LegalNotice";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/en-gb";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -152,7 +154,9 @@ const router = createBrowserRouter([
     element: (
       <ThemeWrapper>
         <AuthWrapper>
-          <Layout />
+          <DateLibraryWrapper>
+            <Layout />
+          </DateLibraryWrapper>
         </AuthWrapper>
       </ThemeWrapper>
     ),
@@ -372,6 +376,13 @@ export function ThemeWrapper({ children }) {
 }
 export function AuthWrapper({ children }) {
   return <AuthProvider>{children}</AuthProvider>;
+}
+export function DateLibraryWrapper({ children }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+      {children}
+    </LocalizationProvider>
+  );
 }
 
 function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirect, children }) {
