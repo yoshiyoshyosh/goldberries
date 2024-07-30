@@ -106,7 +106,7 @@ class Submission extends DbObject
         $this->player->apply_db_data($DB, "player_");
         // $this->player->expand_foreign_keys($DB, $depth - 1);
       } else {
-        $this->player = Player::get_by_id($DB, $this->player_id);
+        $this->player = Player::get_by_id($DB, $this->player_id, 2, $expand_structure);
       }
     }
     if (isset($this->verifier_id)) {

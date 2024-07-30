@@ -6,6 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
 }
 
+$all_submissions = isset($_GET['all_submissions']) && $_GET['all_submissions'] === "true";
+
 $query = "SELECT * FROM view_submissions";
 
 $where = "WHERE submission_is_verified = true AND challenge_difficulty_id != 18";
@@ -112,6 +114,13 @@ $response['challenges'] = array_values($response['challenges']);
 //Flatten submissions
 foreach ($response['challenges'] as $challengeIndex => $challenge) {
   $response['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
+  //Set challenge->data->submission_count to the number of submissions
+  //Then, delete all submissions except the first one from the challenge
+  $response['challenges'][$challengeIndex]->data = array();
+  $response['challenges'][$challengeIndex]->data["submission_count"] = count($challenge->submissions);
+  if (!$all_submissions) {
+    $response['challenges'][$challengeIndex]->submissions = array($challenge->submissions[0]);
+  }
 }
 
 api_write($response);

@@ -5,11 +5,21 @@ require_once ('api_functions.inc.php');
 $DB = db_connect();
 
 header('Content-Type: application/json; charset=UTF-8');
-//CORS allow all header
-header('Access-Control-Allow-Origin: http://localhost:3000');
+
+//CORS https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+//In the test environment, the frontend runs on localhost:3000 while the backend runs on localhost. This is a cross-origin request.
+//In order to allow the test frontend to make credentialed requests, the access control allow origin header must have the correct value.
+//Any other origin should not use the main domain's cookies, and thus will receive the wildcard value *, which does not allow credentials.
+$http_origin = $_SERVER['HTTP_ORIGIN'];
+if ($http_origin === "http://localhost:3000") {
+  header("Access-Control-Allow-Origin: http://localhost:3000");
+  header('Access-Control-Allow-Credentials: true');
+} else {
+  header("Access-Control-Allow-Origin: *");
+}
+
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: content-type, authorization');
-header('Access-Control-Allow-Credentials: true');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
