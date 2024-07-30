@@ -15,7 +15,17 @@ if ($id == 0) {
   die_json(400, "Invalid player id");
 }
 
-$query = "SELECT difficulty_id, difficulty_sort, COUNT(difficulty_id) FROM view_submissions WHERE player_id = $id AND submission_is_verified = true GROUP BY difficulty_id, difficulty_sort";
+$query = "SELECT
+    difficulty_id,
+    difficulty_sort, 
+    COUNT(difficulty_id)
+  FROM view_submissions 
+  WHERE player_id = $id 
+    AND submission_is_verified = true
+    AND (objective_is_arbitrary = false 
+    AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL))
+  GROUP BY difficulty_id, difficulty_sort";
+
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Could not query database");
@@ -36,7 +46,7 @@ while ($row = pg_fetch_assoc($result)) {
 
   if ($diff_sort === 2) {
     $response["count_total_standard_list"] += $count;
-  } else if ($diff_id > 2) {
+  } else if ($diff_sort > 2) {
     $response["count_total_hard_list"] += $count;
   }
 }
