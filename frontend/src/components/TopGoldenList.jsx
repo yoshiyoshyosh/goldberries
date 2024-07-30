@@ -196,6 +196,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
               render={index <= renderUpTo.index}
               onFinishRendering={onFinishRendering}
               isOverallList={isOverallList}
+              isHidingObjective1={filter.hide_objectives.includes(1)}
             />
           );
         })}
@@ -218,6 +219,7 @@ function TopGoldenListGroup({
   render,
   onFinishRendering,
   isOverallList,
+  isHidingObjective1,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const theme = useTheme();
@@ -350,6 +352,7 @@ function TopGoldenListGroup({
                       showMap={showMap}
                       isOverallList={isOverallList}
                       hadEntriesBefore={hadEntriesBefore}
+                      isHidingObjective1={isHidingObjective1}
                     />
                   );
                 })}
@@ -380,6 +383,7 @@ function TopGoldenListSubtier({
   showMap,
   isOverallList,
   hadEntriesBefore,
+  isHidingObjective1,
 }) {
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
   challenges.sort((a, b) => {
@@ -413,7 +417,7 @@ function TopGoldenListSubtier({
           />
         );
       })}
-      {isFwgSubtier && isOverallList ? <TopGoldenListFwgRow /> : null}
+      {isFwgSubtier && isOverallList && !isHidingObjective1 ? <TopGoldenListFwgRow /> : null}
     </>
   );
 }
