@@ -114,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($submission->verifier_notes !== null && strlen($submission->verifier_notes) > 5000) {
         die_json(400, "Verifier notes can't be longer than 5000 characters");
       }
+      $old_submission->date_created = $submission->date_created;
       $old_submission->verifier_notes = $submission->verifier_notes;
       $old_submission->new_challenge_id = $submission->is_verified !== null ? null : $submission->new_challenge_id;
 

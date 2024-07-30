@@ -116,8 +116,9 @@ foreach ($response['challenges'] as $challengeIndex => $challenge) {
   $response['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
   //Set challenge->data->submission_count to the number of submissions
   //Then, delete all submissions except the first one from the challenge
-  $response['challenges'][$challengeIndex]->data = array();
-  $response['challenges'][$challengeIndex]->data["submission_count"] = count($challenge->submissions);
+  $response['challenges'][$challengeIndex]->data = array(
+    "submission_count" => count($challenge->submissions),
+  );
   if (!$all_submissions) {
     $response['challenges'][$challengeIndex]->submissions = array($challenge->submissions[0]);
   }
