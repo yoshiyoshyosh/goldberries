@@ -83,9 +83,9 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
 
   // Reset the render up to index when the key changes
   useEffect(() => {
-    console.log("Checking to see if key changed");
+    // console.log("Checking to see if key changed");
     if (currentKey !== renderUpTo.key) {
-      console.log("Resetting render up to index");
+      // console.log("Resetting render up to index");
       setRenderUpTo({ key: currentKey, index: 0 });
     }
   }, [
@@ -646,73 +646,9 @@ function TopGoldenListRow({
             />
           </Stack>
         ) : (
-          <Tooltip
-            componentsProps={{
-              tooltip: {
-                sx: {
-                  width: {
-                    xs: "95vw",
-                    sm: "auto",
-                  },
-                  maxWidth: {
-                    xs: "95vw",
-                    sm: "none",
-                  },
-                  maxHeight: "400px",
-                  overflowY: "scroll",
-                },
-              },
-            }}
-            enterTouchDelay={0}
-            leaveTouchDelay={0}
-            leaveDelay={200}
-            title={
-              <>
-                {auth.hasPlayerClaimed ? (
-                  <Stack direction="column" gap="2px" sx={{ mb: "2px" }}>
-                    <Link to={"/submit/single-challenge/" + challenge.id}>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        fullWidth
-                        color="info"
-                        startIcon={<FontAwesomeIcon icon={faBook} />}
-                      >
-                        Submit
-                      </Button>
-                    </Link>
-                    {auth.hasVerifierPriv && (
-                      <Button
-                        variant="contained"
-                        size="small"
-                        fullWidth
-                        color="info"
-                        startIcon={<FontAwesomeIcon icon={faEdit} />}
-                        onClick={() => openEditChallenge(challenge.id)}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                  </Stack>
-                ) : null}
-                <ChallengeSubmissionTable challenge={challenge} compact />
-              </>
-            }
-            enterDelay={500}
-          >
-            <Stack
-              direction="row"
-              gap={1}
-              alignItems="center"
-              justifyContent="flex-end"
-              sx={{ cursor: "pointer" }}
-            >
-              {challenge.submissions.length}
-              <Typography color="info.dark" sx={{}}>
-                <FontAwesomeIcon icon={faList} />
-              </Typography>
-            </Stack>
-          </Tooltip>
+          <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end" sx={{}}>
+            {challenge.data.submission_count}
+          </Stack>
         )}
       </TableCell>
       <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>
@@ -822,12 +758,7 @@ function TopGoldenListFwgRow({}) {
                   {name}
                 </span>
               </StyledExternalLink>
-              <OtherIcon
-                url={"/icons/bird.png"}
-                title={"This challenge serves as a primary difficulty reference"}
-                alt={"Birb"}
-                height="1.2em"
-              />
+              <OtherIcon url={"/icons/bird.png"} title={"Birb"} alt={"Birb"} height="1.2em" />
               <OtherIcon
                 url="/icons/goldenberry-8x.png"
                 title="Chapter 9 of vanilla Celeste"

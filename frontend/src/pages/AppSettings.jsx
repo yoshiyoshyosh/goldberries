@@ -97,6 +97,9 @@ export function AppSettingsGeneralForm() {
     return () => subscription.unsubscribe();
   }, [form.handleSubmit, form.watch]);
 
+  //April fools is the first of April
+  const isAprilFools = new Date().getMonth() === 3 && new Date().getDate() === 1;
+
   return (
     <form>
       <SettingsEntry title={t("language")}>
@@ -121,6 +124,21 @@ export function AppSettingsGeneralForm() {
           ))}
         </Select>
       </SettingsEntry>
+
+      {(true || isAprilFools) && (
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={() => {
+            document.body.style.animation = "spin 3s ease-in-out infinite";
+            setTimeout(() => {
+              document.body.style.animation = "";
+            }, 3000);
+          }}
+        >
+          Rotate Site
+        </Button>
+      )}
       <Footnote />
     </form>
   );

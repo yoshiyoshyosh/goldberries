@@ -327,7 +327,7 @@
       "suggestion_box": "Boîte à suggestions",
       "monthly_recap": "Récap’ du mois",
       "stats": "Stats",
-      "rules": "Rules",
+      "rules": "Règles",
       "faq": "FAQ"
     },
     "internal_menu": {
@@ -881,7 +881,7 @@
   "rejected_maps": {
     "title": "Maps rejetées",
     "info_1": "Cette page contient toutes les maps qui n’apparaissent pas sur la liste, ainsi que la raison pour laquelle ce choix a été fait.",
-    "info_2": "If the map or map pack breaks <CustomLink>rule 4</CustomLink> (has inapporpriate words/visual stuff/etc), it won't be listed here.",
+    "info_2": "Si une map ou un map pack enfreint la règle nº 4 (contenu inapproprié), elle ne sera pas listée ici.",
     "reason": "Raison"
   },
   "search": {
@@ -1094,20 +1094,20 @@
   "campaign": {
     "info_boxes": {
       "author": "Auteur·rice",
-      "map_count": "Nombre",
+      "map_count": "Count",
       "maps_one": "{{count}} Map",
       "maps_other": "{{count}} Maps",
       "maps_archived_one": "{{count}} Map (+{{archived}} archivées)",
       "maps_archived_other": "{{count}} Maps (+{{archived}} archivées)",
-      "maps_rejected_one": "+ {{count}} map rejetée",
-      "maps_rejected_other": "+ {{count}} maps rejetées",
+      "maps_rejected_one": "+{{count}} map rejetée",
+      "maps_rejected_other": "+{{count}} maps rejetées",
       "links": "Liens",
       "campaign_tgl": "Top Golden List de la campagne"
     },
     "tabs": {
       "players": {
         "progress": "Progrès",
-        "no_players": "Personne pour le moment…",
+        "no_players": "No players yet.",
         "more_players_one": "+ {{count}} autre",
         "more_players_other": "+ {{count}} autres",
         "show_all": "Tout afficher"
@@ -1236,7 +1236,7 @@
     "links": {
       "header": "Liens importants",
       "header_other": "Autres liens",
-      "header_other_lists": "Other Lists",
+      "header_other_lists": "Autres listes",
       "rules": "Règles",
       "faq": "FAQ",
       "celeste_discord": "Serveur Celeste principal",
@@ -1245,8 +1245,8 @@
       "modded_golden_team_discord": "Serveur Discord de la Modded Golden Team",
       "fwg_sheet": "Liste des détenteurs de la golden de Farewell (Adieu)",
       "survivors_list": "Liste des Celeste Survivors (Runs deathless de vanilla Celeste)",
-      "legal_notice": "Legal Notice",
-      "api_docs": "API Documentation",
+      "legal_notice": "Mention légale",
+      "api_docs": "Documentation API",
       "server_costs": "Vue d’ensemble des coûts du serveur"
     },
     "issues": {

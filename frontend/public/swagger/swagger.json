@@ -1932,6 +1932,15 @@
         "parameters": [
           {
             "in": "query",
+            "name": "all_submissions",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to include all submissions for all challenges. If false, will only send the first submission for all challenges."
+            }
+          },
+          {
+            "in": "query",
             "name": "campaign",
             "schema": {
               "type": "integer",
@@ -2401,6 +2410,16 @@
           "sort": {
             "type": "integer",
             "description": "Sort order of the challenge"
+          },
+          "data": {
+            "type": "object",
+            "description": "Additional data array. Only certain endpoints use this.",
+            "properties": {
+              "submission_count": {
+                "type": "integer",
+                "description": "Count of submissions in the challenge. Available in all endpoints that need the count of submissions, but don't send *all* submissions."
+              }
+            }
           },
           "submissions": {
             "type": "array",
@@ -3070,13 +3089,13 @@
         },
         "examples": [
           {
-            "2024-05-01Z00:00:00T": {
+            "Sat Jun 01 2024 02:00:00 GMT+0200 (Central European Summer Time)": {
               "1": 1,
               "2": 2,
               "4": 4,
               "5": 7
             },
-            "2024-06-01Z00:00:00T": {
+            "Mon Jul 01 2024 02:00:00 GMT+0200 (Central European Summer Time)": {
               "1": 1,
               "2": 2,
               "4": 4,
