@@ -135,6 +135,7 @@ import { LegalNoticePage } from "./pages/LegalNotice";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
+import { PageCredits } from "./pages/Credits";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -255,6 +256,7 @@ const router = createBrowserRouter([
       { path: "server-costs/:status?", element: <PageServerCosts /> },
       { path: "api-docs", element: <ApiDocPage /> },
       { path: "legal-notice", element: <LegalNoticePage /> },
+      { path: "credits", element: <PageCredits /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },

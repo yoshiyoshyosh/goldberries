@@ -1247,7 +1247,8 @@
       "survivors_list": "Liste des Celeste Survivors (Runs deathless de vanilla Celeste)",
       "legal_notice": "Mention légale",
       "api_docs": "Documentation API",
-      "server_costs": "Vue d’ensemble des coûts du serveur"
+      "server_costs": "Vue d’ensemble des coûts du serveur",
+      "credits": "Credits"
     },
     "issues": {
       "header": "Signaler un problème",
@@ -1279,5 +1280,16 @@
       "text": "Ce site vient juste d’être rendu public ! De par la nature chaotique du tableur, il n’est pas rare que certaines données soient fausses ou irrégulières. Si tu en trouves, signale-nous ça sur le serveur Discord de la Modded Golden Team !",
       "migration": "Faire migrer toutes les données, ainsi que toute la communauté sur ce site va prendre un petit moment, donc pour l’instant, tu peux toujours rajouter des entrées comme au bon vieux temps, en taggant la modded golden team sur le serveur Discord de Celeste, ou sur le serveur Discord de la Modded Golden Team."
     }
+  },
+  "credits": {
+    "title": "Credits",
+    "text": "This page lists all contributors to the website",
+    "modelling": "Modelling",
+    "backend_frontend": "Backend & Frontend",
+    "rules": "Rules",
+    "testing": "Testing & Feedback",
+    "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
+    "chinese_translation": "Chinese Translation",
+    "french_translation": "French Translation"
   }
 }

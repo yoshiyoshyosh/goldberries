@@ -1121,7 +1121,6 @@
     "maps": {
       "header": "关于地图",
       "rules": {
-        "header": "地图规则",
         "0": "地图或地图包<strong>必须</strong>公开发布至<CustomExternalLink href=\"https://gamebanana.com/games/6460\">香蕉网</CustomExternalLink>。如果某张地图被删除或被作者设为私有，则此地图会上传至<CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">互联网档案馆</CustomExternalLink>。除非作者明确不允许其他人下载，并要求彻底删除它。",
         "1": "地图或地图包<strong>必须</strong>有一定难度，即使难度很小。几乎不会死的图会被拒绝。",
         "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
@@ -1248,7 +1247,8 @@
       "survivors_list": "官图多地图一命表格",
       "legal_notice": "法律声明",
       "api_docs": "API文档",
-      "server_costs": "服务器成本概览"
+      "server_costs": "服务器成本概览",
+      "credits": "Credits"
     },
     "issues": {
       "header": "问题反馈",
@@ -1280,5 +1280,16 @@
       "text": "网站处在刚发布阶段，鉴于旧表格上有很多很混乱的数据，因此网站同步过来的数据很可能会出现问题。如果你发现此类问题，请在金榜服务器中报告！",
       "migration": "将整个表格的数据同步到网站需要一定的时间，你依然可以暂时在Discord服务器上@Modded Golden Team来提交你的金草莓。（发布在b站的视频可以无视这条）"
     }
+  },
+  "credits": {
+    "title": "Credits",
+    "text": "This page lists all contributors to the website",
+    "modelling": "Modelling",
+    "backend_frontend": "Backend & Frontend",
+    "rules": "Rules",
+    "testing": "Testing & Feedback",
+    "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
+    "chinese_translation": "Chinese Translation",
+    "french_translation": "French Translation"
   }
 }

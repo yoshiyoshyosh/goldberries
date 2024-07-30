@@ -11,9 +11,10 @@ import { Container, Grid, Stack, Typography } from "@mui/material";
 import { getQueryData, useGetAllDifficulties, useGetStatsGlobal, useGetVerifierList } from "../hooks/useApi";
 import { DifficultyValueChip, PlayerChip } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { faCreativeCommonsBy, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import {
   faCircleQuestion,
+  faCreditCard,
   faFileLines,
   faLegal,
   faMoneyBill1Wave,
@@ -187,6 +188,9 @@ export function UsefulLinksComponent() {
         </li>
         <li>
           <FontAwesomeIcon icon={faFileLines} /> <StyledLink to="/api-docs">{t("api_docs")}</StyledLink>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faCreativeCommonsBy} /> <StyledLink to="/credits">{t("credits")}</StyledLink>
         </li>
       </ul>
     </>
