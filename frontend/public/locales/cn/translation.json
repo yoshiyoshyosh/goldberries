@@ -821,7 +821,7 @@
     "state": {
       "submissions": "总计{{count}}个提交内容，{{campaigns}}个地图包",
       "campaigns": "加载中：{{current}}/{{total}}",
-      "done_loading": "已完成加载"
+      "done_loading": "加载完成"
     }
   },
   "login": {
@@ -940,7 +940,9 @@
       "submitted": "提交日期",
       "verification": "验证信息",
       "status": "状态",
-      "links": "Links"
+      "links": "Links",
+      "video": "Video",
+      "raw_session": "Raw Session"
     },
     "delete_modal": {
       "title": "删除提交内容",
@@ -1019,9 +1021,9 @@
   "suggestions": {
     "title": "意见箱",
     "header": "意见箱",
-    "intro": "In the suggestion box you can suggest changes to challenge placements, general changes to a challenge or general changes to the website itself. It is meant to make it easier to collect opinions from the community. However, it is <strong>not</strong> meant for discussion of changes, for which you should still use the Modded Golden Team Discord server.",
-    "language_info": "Please keep the suggestion box in english!",
-    "active": "Active Suggestions",
+    "intro": "在意见箱中，你可以提出难度排名建议，或对挑战项目、网站本身提出修改建议，让你更轻松地收集社区意见。 但意见箱<strong>不能</strong>用来讨论，你仍然需要在金榜服务器（或国内社区）进行讨论。",
+    "language_info": "以及，在意见箱里请用英语表达！",
+    "active": "进行中的建议",
     "expired": "已过期的建议",
     "showing_one": "显示第{{from}}至第{{to}}条建议（共{{count}}条建议）",
     "showing_other": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
@@ -1142,7 +1144,7 @@
         "1": "地图或地图包<strong>必须</strong>有一定难度，即使难度很小。几乎不会死的图会被拒绝。",
         "2": "地图或地图包<strong>必须</strong>至少3面或3个存档点长，和官图最短的C面长度一致。",
         "3": "地图或地图包<strong>不得</strong>包含NSFW内容。",
-        "4": "地图或地图包里的内容<strong>最好不要</strong>与官图或已经存在的其他图过于相似。不过像比较有特点的<CustomExternalLink href=\"https://gamebanana.com/mods/150418\">官图倒走</CustomExternalLink>，或者官图的加难版比如<CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink>这类图是允许的，但是像<CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink>这样的图大概率会被拒绝。",
+        "4": "地图或地图包里的内容<strong>最好不要</strong>与官图或已经存在的其他图过于相似。不过像比较有特点的<CustomExternalLink href=\"https://gamebanana.com/mods/150418\">官图倒走</CustomExternalLink>，或者官图的加难版比如<CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink>这类图是允许的，但是像<CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink>这样的图大概率不行。",
         "5": "地图或地图包<strong>最好</strong>质量不要太低。只要图本身有可玩性且用心制作，“垃圾类”或“整活类”图都可以。由于这个定义很模糊，因此大多数都根据具体情况决定。不过如果你也想来点参考，像<CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink>或者<CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink>之类的图都可以，但是像<CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink>这样的图不行。"
       }
     },
@@ -1265,7 +1267,7 @@
       "legal_notice": "法律声明",
       "api_docs": "API文档",
       "server_costs": "服务器成本概览",
-      "credits": "Credits"
+      "credits": "主创人员"
     },
     "issues": {
       "header": "问题反馈",
@@ -1299,14 +1301,14 @@
     }
   },
   "credits": {
-    "title": "Credits",
-    "text": "This page lists all contributors to the website",
-    "modelling": "Modelling",
-    "backend_frontend": "Backend & Frontend",
-    "rules": "Rules",
-    "testing": "Testing & Feedback",
-    "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
-    "chinese_translation": "Chinese Translation",
-    "french_translation": "French Translation"
+    "title": "主创人员",
+    "text": "对此网站的所有贡献者",
+    "modelling": "建模",
+    "backend_frontend": "后端与前端处理",
+    "rules": "规则",
+    "testing": "测试与反馈",
+    "people": "金榜服务器#goldberries-net子区中许多很棒的人",
+    "chinese_translation": "汉语",
+    "french_translation": "法语"
   }
 }

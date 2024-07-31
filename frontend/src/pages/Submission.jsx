@@ -290,9 +290,11 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           <InfoBoxIconTextLine
             text={
               <Stack direction="row" gap={2}>
-                <StyledExternalLink href={submission.proof_url}>Video</StyledExternalLink>
+                <StyledExternalLink href={submission.proof_url}>{t("video")}</StyledExternalLink>
                 {submission.raw_session_url !== null && (
-                  <StyledExternalLink href={submission.raw_session_url}>Raw Session</StyledExternalLink>
+                  <StyledExternalLink href={submission.raw_session_url}>
+                    {t("raw_session")}
+                  </StyledExternalLink>
                 )}
               </Stack>
             }

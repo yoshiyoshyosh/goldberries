@@ -940,7 +940,9 @@
       "submitted": "Submitted",
       "verification": "Verification",
       "status": "Status",
-      "links": "Links"
+      "links": "Links",
+      "video": "Video",
+      "raw_session": "Raw Session"
     },
     "delete_modal": {
       "title": "Delete Submission",

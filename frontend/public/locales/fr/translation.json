@@ -940,7 +940,9 @@
       "submitted": "Soumis",
       "verification": "Vérification",
       "status": "Statut",
-      "links": "Links"
+      "links": "Links",
+      "video": "Video",
+      "raw_session": "Raw Session"
     },
     "delete_modal": {
       "title": "Supprimer une entrée",
@@ -1019,9 +1021,9 @@
   "suggestions": {
     "title": "Suggestions",
     "header": "#boîte-à-suggestions",
-    "intro": "In the suggestion box you can suggest changes to challenge placements, general changes to a challenge or general changes to the website itself. It is meant to make it easier to collect opinions from the community. However, it is <strong>not</strong> meant for discussion of changes, for which you should still use the Modded Golden Team Discord server.",
-    "language_info": "Please keep the suggestion box in english!",
-    "active": "Active Suggestions",
+    "intro": "Dans la boîte à suggestions, tu peux demander à déplacer ou à modifier un challenge, ou même faire des remarques d’ordre général sur le site. Cette page existe dans le but de partager facilement les opinions de la communauté. Cependant, ce <strong>n’est pas</strong> un lieu de discussion, rôle que garde la serveur Discord de la Modded Golden Team.",
+    "language_info": "Les messages et descriptions doivent être écrits en anglais !",
+    "active": "Suggestions actives",
     "expired": "Suggestions expirées",
     "showing_one": "{{from}} – {{to}} affichée pour un total de {{count}} suggestions",
     "showing_other": "{{from}} – {{to}} affichées pour un total de {{count}} suggestions",
@@ -1265,7 +1267,7 @@
       "legal_notice": "Mention légale",
       "api_docs": "Documentation API",
       "server_costs": "Vue d’ensemble des coûts du serveur",
-      "credits": "Credits"
+      "credits": "Crédits"
     },
     "issues": {
       "header": "Signaler un problème",
@@ -1299,14 +1301,14 @@
     }
   },
   "credits": {
-    "title": "Credits",
-    "text": "This page lists all contributors to the website",
-    "modelling": "Modelling",
-    "backend_frontend": "Backend & Frontend",
-    "rules": "Rules",
-    "testing": "Testing & Feedback",
-    "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
-    "chinese_translation": "Chinese Translation",
-    "french_translation": "French Translation"
+    "title": "Crédits",
+    "text": "Cette page liste toutes les personnes ayant contribué à la création de ce site.",
+    "modelling": "Mise en page",
+    "backend_frontend": "Backend et frontend",
+    "rules": "Règles",
+    "testing": "Tests et retours",
+    "people": "plein plein de personnes géniales du fil goldberries-net du Discord de la Modded Golden Team",
+    "chinese_translation": "Traduction chinoise",
+    "french_translation": "Traduction française"
   }
 }

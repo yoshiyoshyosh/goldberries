@@ -53,7 +53,7 @@
       "pending": "Ausstehend",
       "rejected": "Abgelehnt",
       "submissions_suffix": {
-        "verified": "Verifierte Submissions",
+        "verified": "Verifizierte Submissions",
         "pending": "Ausstehende Submissions",
         "rejected": "Abgelehnte Submissions"
       },
@@ -280,7 +280,7 @@
       "is_fc": "Ist FC",
       "is_verified": "Ist Verifiziert",
       "proof_url": "Beweis URL",
-      "raw_session_url": "Rohe Sitzung URL",
+      "raw_session_url": "Rohe Aufnahme URL",
       "player_notes": "Player Notiz",
       "is_personal": "Ist Persönlich",
       "personal_note": "'Persönliche' Schwierigkeitsempfehlungen zeigen, dass diese Empfehlung nicht für offizielle Platzierungen verwendet werden soll.",
@@ -940,7 +940,9 @@
       "submitted": "Eingereicht",
       "verification": "Verifikation",
       "status": "Status",
-      "links": "Links"
+      "links": "Links",
+      "video": "Video",
+      "raw_session": "Rohe Aufnahme"
     },
     "delete_modal": {
       "title": "Submission Löschen",
