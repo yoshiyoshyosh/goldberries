@@ -269,12 +269,12 @@ export function DifficultyCountChart({ difficulty_counts }) {
   const difficulty_counts_grouped = {};
   difficulties.forEach((difficulty) => {
     const group_id = getGroupId(difficulty.id);
-    if (group_id !== difficulty.id) {
-      difficulty_counts_grouped[group_id] =
-        (difficulty_counts_grouped[group_id] || 0) + (difficulty_counts[difficulty.id] || 0);
-    } else {
-      difficulty_counts_grouped[difficulty.id] = difficulty_counts[difficulty.id];
+    const count = difficulty_counts[difficulty.id] || 0;
+    const targetId = group_id !== difficulty.id ? group_id : difficulty.id;
+    if (!(targetId in difficulty_counts_grouped)) {
+      difficulty_counts_grouped[targetId] = 0;
     }
+    difficulty_counts_grouped[targetId] += count;
   });
 
   //Filter out the difficulties that are not in the difficulty_counts_grouped object

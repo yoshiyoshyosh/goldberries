@@ -51,7 +51,22 @@
     "verification_status_chip": {
       "verified": "Vérifiée",
       "pending": "En attente",
-      "rejected": "Refusée"
+      "rejected": "Refusée",
+      "submissions_suffix": {
+        "verified": "Verified Submissions",
+        "pending": "Pending Submissions",
+        "rejected": "Rejected Submissions"
+      },
+      "status_prefix": {
+        "verified": "Status: Verified",
+        "pending": "Status: Pending",
+        "rejected": "Status: Rejected"
+      },
+      "claim_prefix": {
+        "verified": "Claim: Verified",
+        "pending": "Claim: Pending",
+        "rejected": "Claim: Rejected"
+      }
     },
     "full_challenge_select": {
       "full_game_label": "Sélectionne une map OU un challenge Full Game"
@@ -261,7 +276,6 @@
       "feedback": {
         "updated": "Entrée mise à jour"
       },
-      "status_prefix": "Statut :",
       "new_challenge_title": "Détails du nouveau challenge",
       "is_fc": "Est un FC",
       "is_verified": "Est vérifié",
@@ -552,7 +566,6 @@
   "account": {
     "title": "Mon compte",
     "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment. Dirige-toi <CustomLink>ici</CustomLink> pour en créer ou en réclamer un !",
-    "claim": "Réclamation :",
     "tabs": {
       "login_methods": {
         "label": "Modes de connexion",
@@ -926,7 +939,8 @@
       "new_challenge": "Nouveau challenge",
       "submitted": "Soumis",
       "verification": "Vérification",
-      "status": "Statut"
+      "status": "Statut",
+      "links": "Links"
     },
     "delete_modal": {
       "title": "Supprimer une entrée",
@@ -1005,6 +1019,9 @@
   "suggestions": {
     "title": "Suggestions",
     "header": "#boîte-à-suggestions",
+    "intro": "In the suggestion box you can suggest changes to challenge placements, general changes to a challenge or general changes to the website itself. It is meant to make it easier to collect opinions from the community. However, it is <strong>not</strong> meant for discussion of changes, for which you should still use the Modded Golden Team Discord server.",
+    "language_info": "Please keep the suggestion box in english!",
+    "active": "Active Suggestions",
     "expired": "Suggestions expirées",
     "showing_one": "{{from}} – {{to}} affichée pour un total de {{count}} suggestions",
     "showing_other": "{{from}} – {{to}} affichées pour un total de {{count}} suggestions",

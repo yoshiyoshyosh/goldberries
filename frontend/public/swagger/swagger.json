@@ -1253,9 +1253,9 @@
             "name": "type",
             "schema": {
               "type": "string",
-              "enum": ["campaign", "player"],
-              "description": "Type of the filter. Use \"campaign\" to filter by campaign ID or \"player\" to filter by player ID."
-            }
+              "enum": ["campaign", "player"]
+            },
+            "description": "Type of the filter. Use \"campaign\" to filter by campaign ID or \"player\" to filter by player ID."
           },
           {
             "in": "query",
@@ -1297,9 +1297,9 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "The ID of the difficulty to retrieve. Use \"all\" to retrieve all difficulties."
-            }
+              "type": "integer"
+            },
+            "description": "The ID of the difficulty to retrieve. Use \"all\" to retrieve all difficulties."
           }
         ],
         "responses": {
@@ -1332,9 +1332,9 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "The ID of the suggestion to retrieve."
-            }
+              "type": "integer"
+            },
+            "description": "The ID of the suggestion to retrieve."
           }
         ],
         "responses": {
@@ -1438,18 +1438,18 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "The ID of the suggestion to retrieve votes for."
-            }
+              "type": "integer"
+            },
+            "description": "The ID of the suggestion to retrieve votes for."
           },
           {
             "in": "query",
             "name": "depth",
             "schema": {
               "type": "integer",
-              "default": 2,
-              "description": "The depth of related data to include in the response."
-            }
+              "default": 2
+            },
+            "description": "The depth of related data to include in the response."
           }
         ],
         "responses": {
@@ -1560,9 +1560,9 @@
             "schema": {
               "type": "integer",
               "default": 1,
-              "minimum": 1,
-              "description": "The page number to retrieve."
-            }
+              "minimum": 1
+            },
+            "description": "The page number to retrieve."
           },
           {
             "in": "query",
@@ -1570,25 +1570,25 @@
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
-              "description": "The number of suggestions per page."
-            }
+              "minimum": 1
+            },
+            "description": "The number of suggestions per page."
           },
           {
             "in": "query",
             "name": "challenge",
             "schema": {
-              "type": "integer",
-              "description": "Optional filter for the challenge ID to filter suggestions by."
-            }
+              "type": "integer"
+            },
+            "description": "Optional filter for the challenge ID to filter suggestions by."
           },
           {
             "in": "query",
             "name": "expired",
             "schema": {
-              "type": "boolean",
-              "description": "Optional filter for expired suggestions. If true, only shows non-expired suggestions; if false, only shows expired suggestions."
-            }
+              "type": "boolean"
+            },
+            "description": "Optional filter for expired suggestions. If true, only shows non-expired suggestions; if false, only shows expired suggestions."
           }
         ],
         "responses": {
@@ -1619,18 +1619,18 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": ["campaign", "map", "challenge", "player"],
-              "description": "The type of the object to retrieve changes for."
-            }
+              "enum": ["campaign", "map", "challenge", "player"]
+            },
+            "description": "The type of the object to retrieve changes for."
           },
           {
             "in": "query",
             "name": "id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "The ID of the object to retrieve changes for."
-            }
+              "type": "integer"
+            },
+            "description": "The ID of the object to retrieve changes for."
           }
         ],
         "responses": {
@@ -1698,9 +1698,9 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": ["campaign", "map", "challenge", "player", "all"],
-              "description": "The type of the object to retrieve changes for."
-            }
+              "enum": ["campaign", "map", "challenge", "player", "all"]
+            },
+            "description": "The type of the object to retrieve changes for."
           },
           {
             "in": "query",
@@ -1708,9 +1708,9 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 1,
-              "description": "The page number to retrieve."
-            }
+              "default": 1
+            },
+            "description": "The page number to retrieve."
           },
           {
             "in": "query",
@@ -1718,9 +1718,9 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "default": 50,
-              "description": "The number of changes to retrieve per page."
-            }
+              "default": 50
+            },
+            "description": "The number of changes to retrieve per page."
           }
         ],
         "responses": {
@@ -1750,9 +1750,9 @@
             "name": "player_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "description": "The ID of the player to retrieve the showcase for."
-            }
+              "type": "integer"
+            },
+            "description": "The ID of the player to retrieve the showcase for."
           }
         ],
         "responses": {
@@ -1785,11 +1785,11 @@
                 "type": "array",
                 "items": {
                   "type": "integer"
-                },
-                "description": "An array of submission IDs to set as the player's showcase."
+                }
               }
             }
-          }
+          },
+          "description": "An array of submission IDs to set as the player's showcase."
         },
         "responses": {
           "200": {
@@ -1831,81 +1831,81 @@
             "in": "query",
             "name": "campaign",
             "schema": {
-              "type": "integer",
-              "description": "Filter by campaign ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by campaign ID."
           },
           {
             "in": "query",
             "name": "map",
             "schema": {
-              "type": "integer",
-              "description": "Filter by map ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by map ID."
           },
           {
             "in": "query",
             "name": "challenge",
             "schema": {
-              "type": "integer",
-              "description": "Filter by challenge ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by challenge ID."
           },
           {
             "in": "query",
             "name": "player",
             "schema": {
-              "type": "integer",
-              "description": "Filter by player ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by player ID."
           },
           {
             "in": "query",
             "name": "verifier",
             "schema": {
-              "type": "integer",
-              "description": "Filter by verifier ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by verifier ID."
           },
           {
             "in": "query",
             "name": "hard",
             "schema": {
-              "type": "boolean",
-              "description": "Filter for submissions with challenge difficulty less than 18."
-            }
+              "type": "boolean"
+            },
+            "description": "Filter for submissions with challenge difficulty less than 18."
           },
           {
             "in": "query",
             "name": "standard",
             "schema": {
-              "type": "boolean",
-              "description": "Filter for submissions with challenge difficulty equal to 18."
-            }
+              "type": "boolean"
+            },
+            "description": "Filter for submissions with challenge difficulty equal to 18."
           },
           {
             "in": "query",
             "name": "undetermined",
             "schema": {
-              "type": "boolean",
-              "description": "Filter for submissions with challenge difficulty equal to 19."
-            }
+              "type": "boolean"
+            },
+            "description": "Filter for submissions with challenge difficulty equal to 19."
           },
           {
             "in": "query",
             "name": "archived",
             "schema": {
-              "type": "boolean",
-              "description": "Filter for non-archived maps (default is false)."
-            }
+              "type": "boolean"
+            },
+            "description": "Filter for non-archived maps (default is false)."
           },
           {
             "in": "query",
             "name": "arbitrary",
             "schema": {
-              "type": "boolean",
-              "description": "Filter for non-arbitrary objectives and challenges (default is false)."
-            }
+              "type": "boolean"
+            },
+            "description": "Filter for non-arbitrary objectives and challenges (default is false)."
           }
         ],
         "responses": {
@@ -1935,51 +1935,51 @@
             "name": "all_submissions",
             "schema": {
               "type": "boolean",
-              "default": false,
-              "description": "Whether to include all submissions for all challenges. If false, will only send the first submission for all challenges."
-            }
+              "default": false
+            },
+            "description": "Whether to include all submissions for all challenges. If false, will only send the first submission for all challenges."
           },
           {
             "in": "query",
             "name": "campaign",
             "schema": {
-              "type": "integer",
-              "description": "Filter by campaign ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by campaign ID."
           },
           {
             "in": "query",
             "name": "map",
             "schema": {
-              "type": "integer",
-              "description": "Filter by map ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by map ID."
           },
           {
             "in": "query",
             "name": "player",
             "schema": {
-              "type": "integer",
-              "description": "Filter by player ID."
-            }
+              "type": "integer"
+            },
+            "description": "Filter by player ID."
           },
           {
             "in": "query",
             "name": "archived",
             "schema": {
               "type": "boolean",
-              "default": false,
-              "description": "Whether archived maps should be included."
-            }
+              "default": false
+            },
+            "description": "Whether archived maps should be included."
           },
           {
             "in": "query",
             "name": "arbitrary",
             "schema": {
               "type": "boolean",
-              "default": false,
-              "description": "Whether arbitrary challenges should be included."
-            }
+              "default": false
+            },
+            "description": "Whether arbitrary challenges should be included."
           },
           {
             "in": "query",
@@ -1988,9 +1988,9 @@
               "type": "array",
               "items": {
                 "type": "integer"
-              },
-              "description": "List of objective IDs to exclude from the search."
-            }
+              }
+            },
+            "description": "List of objective IDs to exclude from the search."
           }
         ],
         "responses": {
@@ -2016,9 +2016,9 @@
             "in": "query",
             "name": "q",
             "schema": {
-              "type": "string",
-              "description": "The search query string."
+              "type": "string"
             },
+            "description": "The search query string.",
             "required": true
           },
           {

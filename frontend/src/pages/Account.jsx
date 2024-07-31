@@ -113,7 +113,7 @@ export function PageAccount() {
             <Stack direction="row" alignItems="center" spacing={1}>
               <Typography>{t_g("player", { count: 1 })}: </Typography>
               <PlayerChip player={auth.user.player ?? auth.user.claimed_player} />
-              <VerificationStatusChip isVerified={claimVerified} prefix={t("claim") + " "} />
+              <VerificationStatusChip isVerified={claimVerified} i18keySuffix="claim_prefix" />
             </Stack>
           </Grid>
         </Grid>

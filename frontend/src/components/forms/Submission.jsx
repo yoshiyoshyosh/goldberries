@@ -133,7 +133,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           {t_g("submission", { count: 1 })} (
           <StyledLink to={"/submission/" + submission.id}>{submission.id}</StyledLink>)
         </Typography>
-        <VerificationStatusChip isVerified={submission.is_verified} prefix={t("status_prefix") + " "} />
+        <VerificationStatusChip isVerified={submission.is_verified} i18keySuffix="status_prefix" />
       </Stack>
 
       {isVerifier ? (

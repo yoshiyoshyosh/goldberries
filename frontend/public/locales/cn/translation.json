@@ -51,7 +51,22 @@
     "verification_status_chip": {
       "verified": "已通过",
       "pending": "验证中",
-      "rejected": "已拒绝"
+      "rejected": "已拒绝",
+      "submissions_suffix": {
+        "verified": "Verified Submissions",
+        "pending": "Pending Submissions",
+        "rejected": "Rejected Submissions"
+      },
+      "status_prefix": {
+        "verified": "Status: Verified",
+        "pending": "Status: Pending",
+        "rejected": "Status: Rejected"
+      },
+      "claim_prefix": {
+        "verified": "Claim: Verified",
+        "pending": "Claim: Pending",
+        "rejected": "Claim: Rejected"
+      }
     },
     "full_challenge_select": {
       "full_game_label": "选择地图或多章节挑战"
@@ -261,7 +276,6 @@
       "feedback": {
         "updated": "内容已更新"
       },
-      "status_prefix": "状态:",
       "new_challenge_title": "详情",
       "is_fc": "FC",
       "is_verified": "已通过",
@@ -552,7 +566,6 @@
   "account": {
     "title": "个人账号",
     "no_player_claimed": "你尚未绑定玩家，请跳转到<CustomLink>此页面</CustomLink>来创建或绑定玩家！",
-    "claim": "玩家绑定：",
     "tabs": {
       "login_methods": {
         "label": "登录管理",
@@ -926,7 +939,8 @@
       "new_challenge": "新挑战项目",
       "submitted": "提交日期",
       "verification": "验证信息",
-      "status": "状态"
+      "status": "状态",
+      "links": "Links"
     },
     "delete_modal": {
       "title": "删除提交内容",
@@ -1005,6 +1019,9 @@
   "suggestions": {
     "title": "意见箱",
     "header": "意见箱",
+    "intro": "In the suggestion box you can suggest changes to challenge placements, general changes to a challenge or general changes to the website itself. It is meant to make it easier to collect opinions from the community. However, it is <strong>not</strong> meant for discussion of changes, for which you should still use the Modded Golden Team Discord server.",
+    "language_info": "Please keep the suggestion box in english!",
+    "active": "Active Suggestions",
     "expired": "已过期的建议",
     "showing_one": "显示第{{from}}至第{{to}}条建议（共{{count}}条建议）",
     "showing_other": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",

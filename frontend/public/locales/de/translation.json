@@ -51,7 +51,22 @@
     "verification_status_chip": {
       "verified": "Verifiziert",
       "pending": "Ausstehend",
-      "rejected": "Abgelehnt"
+      "rejected": "Abgelehnt",
+      "submissions_suffix": {
+        "verified": "Verifierte Submissions",
+        "pending": "Ausstehende Submissions",
+        "rejected": "Abgelehnte Submissions"
+      },
+      "status_prefix": {
+        "verified": "Status: Verifiziert",
+        "pending": "Status: Ausstehend",
+        "rejected": "Status: Abgelehnt"
+      },
+      "claim_prefix": {
+        "verified": "Anspruch: Verifiziert",
+        "pending": "Anspruch: Ausstehend",
+        "rejected": "Anspruch: Abgelehnt"
+      }
     },
     "full_challenge_select": {
       "full_game_label": "Wähle Map ODER Full Game Challenge"
@@ -261,7 +276,6 @@
       "feedback": {
         "updated": "Submission aktualisiert"
       },
-      "status_prefix": "Status:",
       "new_challenge_title": "Neue Challenge Details",
       "is_fc": "Ist FC",
       "is_verified": "Ist Verifiziert",
@@ -552,7 +566,6 @@
   "account": {
     "title": "Mein Account",
     "no_player_claimed": "Du hast noch keinen Player. Gehe zu <CustomLink>dieser Seite</CustomLink> um einen zu erstellen oder zu beanspruchen!",
-    "claim": "Anspruch:",
     "tabs": {
       "login_methods": {
         "label": "Login",
@@ -926,7 +939,8 @@
       "new_challenge": "Neue Challenge",
       "submitted": "Eingereicht",
       "verification": "Verifikation",
-      "status": "Status"
+      "status": "Status",
+      "links": "Links"
     },
     "delete_modal": {
       "title": "Submission Löschen",
@@ -1005,7 +1019,10 @@
   "suggestions": {
     "title": "Vorschläge",
     "header": "#suggestion-box",
-    "expired": "Abgelaufene Suggestions",
+    "intro": "In der Vorschlagsbox kannst du Änderungen an Challenge Platzierungen, allgemeine Änderungen an einer Challenge oder allgemeine Änderungen an der Website selbst vorschlagen. Es soll es einfacher machen, Meinungen aus der Community zu sammeln. Es ist jedoch <strong>nicht</strong> für Diskussionen über Änderungen gedacht, für die du weiterhin den Modded Golden Team Discord Server verwenden solltest.",
+    "language_info": "Bitte halte die Vorschlagsbox in Englisch!",
+    "active": "Aktive Vorschläge",
+    "expired": "Abgelaufene Vorschläge",
     "showing_one": "Zeige {{from}}-{{to}} von {{count}} Vorschlag",
     "showing_other": "Zeige {{from}}-{{to}} von {{count}} Vorschlägen",
     "buttons": {

@@ -77,7 +77,7 @@ import { useAuth } from "../hooks/AuthProvider";
 import { ChallengeSubmissionTable } from "./Challenge";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export function PageSuggestions({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
@@ -107,9 +107,7 @@ export function PageSuggestions({}) {
       <HeadTitle title={t("title")} />
       <Grid container>
         <Grid item xs>
-          <Typography variant="h4" gutterBottom>
-            {t("header")}
-          </Typography>
+          <Typography variant="h4">{t("header")}</Typography>
         </Grid>
         <Grid item xs="auto">
           <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} onClick={newSuggestion}>
@@ -117,6 +115,16 @@ export function PageSuggestions({}) {
           </Button>
         </Grid>
       </Grid>
+      <Typography variant="body1">
+        <Trans t={t} i18nKey="intro" />
+      </Typography>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        {t("language_info")}
+      </Typography>
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6" gutterBottom>
+        {t("active")}
+      </Typography>
       <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" gutterBottom>

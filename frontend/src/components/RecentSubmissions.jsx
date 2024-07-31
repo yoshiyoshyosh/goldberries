@@ -121,7 +121,7 @@ export function RecentSubmissionsHeadless({
         <VerificationStatusChip
           isVerified={verified}
           sx={{ mb: 1, ...chipSx }}
-          suffix={" " + t_g("submission", { count: 30 })}
+          i18keySuffix="submissions_suffix"
           size="small"
         />
       )}

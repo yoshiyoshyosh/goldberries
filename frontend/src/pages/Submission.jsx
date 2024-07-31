@@ -135,7 +135,10 @@ export function SubmissionDisplay({ id, onDelete }) {
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" gap={1}>
-            <ShareButton text={API_BASE_URL + "/embed/submission.php?id=" + submission.id} />
+            <ShareButton
+              text={API_BASE_URL + "/embed/submission.php?id=" + submission.id}
+              disabled={submission.new_challenge !== null}
+            />
             {isVerifier || isOwnSubmission ? (
               <CustomizedMenu title={t("buttons.modify")}>
                 <MenuItem disableRipple onClick={() => editModal.open(submission)}>
@@ -278,6 +281,20 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               ) : (
                 <DifficultyChip difficulty={submission.suggested_difficulty} />
               )
+            }
+            isSecondary
+          />
+        </InfoBox>
+        <InfoBox>
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t("links")} />
+          <InfoBoxIconTextLine
+            text={
+              <Stack direction="row" gap={2}>
+                <StyledExternalLink href={submission.proof_url}>Video</StyledExternalLink>
+                {submission.raw_session_url !== null && (
+                  <StyledExternalLink href={submission.raw_session_url}>Raw Session</StyledExternalLink>
+                )}
+              </Stack>
             }
             isSecondary
           />

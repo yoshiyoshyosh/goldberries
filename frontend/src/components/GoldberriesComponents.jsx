@@ -472,11 +472,12 @@ export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
   );
 }
 
-export function VerificationStatusChip({ isVerified, prefix = "", suffix = "", ...props }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "components.verification_status_chip" });
+export function VerificationStatusChip({ isVerified, i18keySuffix = null, ...props }) {
+  const key = "components.verification_status_chip" + (i18keySuffix ? "." + i18keySuffix : "");
+  const { t } = useTranslation(undefined, { keyPrefix: key });
   const text = isVerified === null ? t("pending") : isVerified ? t("verified") : t("rejected");
   const color = isVerified === null ? "warning" : isVerified ? "success" : "error";
-  return <Chip label={prefix + text + suffix} color={color} {...props} />;
+  return <Chip label={text} color={color} {...props} />;
 }
 
 // ===== Full Select Components =====
