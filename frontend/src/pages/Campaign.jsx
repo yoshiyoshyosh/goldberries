@@ -211,14 +211,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
       <Grid item xs={12} sm={6} display="flex" flexDirection="column" rowGap={1}>
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t("author")} />
-          <InfoBoxIconTextLine
-            text={
-              <StyledExternalLink href={"https://gamebanana.com/members/" + campaign.author_gb_id}>
-                {campaign.author_gb_name}
-              </StyledExternalLink>
-            }
-            isSecondary
-          />
+          <AuthorInfoBoxLine author_gb_id={campaign.author_gb_id} author_gb_name={campaign.author_gb_name} />
         </InfoBox>
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t("links")} />
@@ -257,6 +250,31 @@ function SortInfoBoxLine({ labels, colors }) {
       isSecondary
     />
   );
+}
+export function AuthorInfoBoxLine({ author_gb_id, author_gb_name }) {
+  //If an ID is set, so will be a name
+  //If no ID is set, a name can still be set
+  //If neither is set, return Unknown Author from t_g
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  if (author_gb_id === null && author_gb_name === null) {
+    return <InfoBoxIconTextLine text={t_g("unknown_author")} isSecondary />;
+  }
+
+  if (author_gb_id === null) {
+    return <InfoBoxIconTextLine text={author_gb_name} isSecondary />;
+  } else {
+    return (
+      <InfoBoxIconTextLine
+        text={
+          <StyledExternalLink href={"https://gamebanana.com/members/" + author_gb_id}>
+            {author_gb_name}
+          </StyledExternalLink>
+        }
+        isSecondary
+      />
+    );
+  }
 }
 
 //#endregion

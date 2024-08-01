@@ -950,6 +950,8 @@ export function GamebananaEmbed({ campaign, size = "medium", ...props }) {
   const { t } = useTranslation();
   const embedUrl = getGamebananaEmbedUrl(campaign.url, size);
 
+  if (embedUrl === null) return;
+
   return (
     <Link to={campaign.url} target="_blank" {...props}>
       <img src={embedUrl} alt={t("components.gamebanana_embed.alt")} style={{ borderRadius: "5px" }} />

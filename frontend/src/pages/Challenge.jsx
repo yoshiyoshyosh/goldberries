@@ -51,16 +51,22 @@ import {
   faExternalLinkAlt,
   faFlagCheckered,
   faPlus,
+  faToggleOff,
+  faToggleOn,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
-import { getQueryData, useGetChallenge } from "../hooks/useApi";
+import { getQueryData, useGetChallenge, usePostSubmission } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
+import { AuthorInfoBoxLine } from "./Campaign";
+import { toast } from "react-toastify";
+import { memo } from "react";
 
 const displayNoneOnMobile = {
   display: {
@@ -152,11 +158,15 @@ export function ChallengeDisplay({ id }) {
 
 export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
+  const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
 
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
+
+  const mapUrl = map !== null ? (map.url !== null ? map.url : map.campaign.url) : null;
+  const mapHasAuthor = map !== null && map.author_gb_name !== null;
 
   return (
     <Grid container columnSpacing={1} rowSpacing={1} {...props}>
@@ -226,10 +236,16 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
           <InfoBoxIconTextLine
-            text={<StyledExternalLink href={campaign.url}>{campaign.url}</StyledExternalLink>}
+            text={<StyledExternalLink href={mapUrl}>{mapUrl}</StyledExternalLink>}
             isSecondary
           />
         </InfoBox>
+        {mapHasAuthor && (
+          <InfoBox>
+            <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t_cib("author")} />
+            <AuthorInfoBoxLine author_gb_id={map.author_gb_id} author_gb_name={map.author_gb_name} />
+          </InfoBox>
+        )}
       </Grid>
     </Grid>
   );
@@ -261,6 +277,7 @@ export function ChallengeSubmissionTable({
   hideSubmissionIcon = false,
   ...props
 }) {
+  const auth = useAuth();
   const { t } = useTranslation(undefined, { keyPrefix: "challenge.submission_table" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
@@ -270,7 +287,8 @@ export function ChallengeSubmissionTable({
           <TableRow>
             <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
             <TableCell width={compact ? 1 : undefined}>{t_g("player", { count: 1 })}</TableCell>
-            {compact ? null : (
+            {!compact && auth.hasVerifierPriv && <TableCell width={1} sx={displayNoneOnMobile}></TableCell>}
+            {!compact && (
               <TableCell width={1} align="center" sx={displayNoneOnMobile}>
                 <FontAwesomeIcon icon={faComment} />
               </TableCell>
@@ -296,7 +314,7 @@ export function ChallengeSubmissionTable({
         </TableHead>
         <TableBody>
           {challenge.submissions.map((submission, index) => (
-            <ChallengeSubmissionRow
+            <MemoChallengeSubmissionRow
               key={submission.id}
               submission={submission}
               index={index}
@@ -316,8 +334,20 @@ export function ChallengeSubmissionTable({
 }
 
 export function ChallengeSubmissionRow({ submission, index, compact, hideSubmissionIcon }) {
+  const auth = useAuth();
   const { settings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(submission.player, settings);
+
+  const { mutate: updateSubmission } = usePostSubmission(() => {
+    toast.success("Submission updated");
+  });
+  const handleToggleFcClicked = () => {
+    updateSubmission({
+      ...submission,
+      is_fc: !submission.is_fc,
+    });
+  };
+
   return (
     <TableRow>
       <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile }}>
@@ -336,7 +366,21 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
           <SubmissionFcIcon submission={submission} height="1.3em" />
         </Stack>
       </TableCell>
-      {compact ? null : (
+      {!compact && auth.hasVerifierPriv && (
+        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+          <Button
+            onClick={handleToggleFcClicked}
+            variant="outlined"
+            size="small"
+            startIcon={<FontAwesomeIcon icon={submission.is_fc ? faToggleOn : faToggleOff} />}
+            color={submission.is_fc ? "success" : "success"}
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {submission.is_fc ? "FC" : "Not FC"}
+          </Button>
+        </TableCell>
+      )}
+      {!compact && (
         <TableCell width={1} align="center" sx={displayNoneOnMobile}>
           {submission.player_notes && (
             <Tooltip title={submission.player_notes}>
@@ -358,3 +402,4 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
     </TableRow>
   );
 }
+const MemoChallengeSubmissionRow = memo(ChallengeSubmissionRow);

@@ -53,19 +53,19 @@
       "pending": "验证中",
       "rejected": "已拒绝",
       "submissions_suffix": {
-        "verified": "Verified Submissions",
-        "pending": "Pending Submissions",
-        "rejected": "Rejected Submissions"
+        "verified": "已通过的内容",
+        "pending": "验证中的内容",
+        "rejected": "已拒绝的内容"
       },
       "status_prefix": {
-        "verified": "Status: Verified",
-        "pending": "Status: Pending",
-        "rejected": "Status: Rejected"
+        "verified": "已通过",
+        "pending": "验证中",
+        "rejected": "已拒绝"
       },
       "claim_prefix": {
-        "verified": "Claim: Verified",
-        "pending": "Claim: Pending",
-        "rejected": "Claim: Rejected"
+        "verified": "绑定状态：已通过",
+        "pending": "绑定状态：验证中",
+        "rejected": "绑定状态：已拒绝"
       }
     },
     "full_challenge_select": {
@@ -280,7 +280,7 @@
       "is_fc": "FC",
       "is_verified": "已通过",
       "proof_url": "视频链接",
-      "raw_session_url": "无剪辑原视频链接",
+      "raw_session_url": "无剪辑录像链接",
       "player_notes": "玩家备注",
       "is_personal": "个人差",
       "personal_note": "用于个人路线等原因造成难度差异从而导致此建议不适用于官方难度排名的情况",
@@ -664,7 +664,7 @@
         "label": "慎入",
         "description": "永久删除你的账户",
         "note": "请注意这不会删除任何已经验证通过的内容，只会将你的玩家名称变回未绑定状态，如果你想移除你的提交内容，请联系验证者（一般来说私信我就行：Parabones）",
-        "confirm": "输入DELETE以确认（每个字母都要大写）",
+        "confirm": "输入DELETE以确认",
         "button": "删除账号"
       }
     }
@@ -940,9 +940,9 @@
       "submitted": "提交日期",
       "verification": "验证信息",
       "status": "状态",
-      "links": "Links",
-      "video": "Video",
-      "raw_session": "Raw Session"
+      "links": "链接",
+      "video": "视频",
+      "raw_session": "无剪辑录像"
     },
     "delete_modal": {
       "title": "删除提交内容",
@@ -973,7 +973,7 @@
           }
         },
         "proof_note": "请将视频发布在永久保留的地方，例如b站、油管或twitch切片（特别强调：b站的视频链接只用粘贴到bv号结束就行，如果把后面的部分也打进去会导致网站嵌入的视频播放不了，千万不要把斜杠给打进去了！）",
-        "raw_session_note": "t3及以上的金草莓需要上传无剪辑的原视频或整个直播回放（如果视频过短或第一局就出了就再传上一份时长更长的录像）",
+        "raw_session_note": "t3及以上的金草莓需要上传完整的全程录像或整个直播回放（如果视频过短或第一局就出了就再传上一份时长更长的录像）",
         "is_fc": "FC（一般情况下不需要手动勾选，如果你提交了C/FC的内容则需要手动勾选）",
         "button": "提交"
       },

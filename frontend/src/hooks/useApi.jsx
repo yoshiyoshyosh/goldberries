@@ -418,6 +418,14 @@ export function usePostSubmission(onSuccess) {
     onSuccess: (response, submission) => {
       queryClient.invalidateQueries(["recent_submissions"]);
       queryClient.invalidateQueries(["submission", response.data.id]);
+      if (response.data.challenge_id !== null) {
+        queryClient.invalidateQueries(["challenge", response.data.challenge_id]);
+        if (response.data.challenge.map_id !== null) {
+          queryClient.invalidateQueries(["map", response.data.challenge.map_id]);
+        } else {
+          queryClient.invalidateQueries(["campaign", response.data.challenge.campaign_id]);
+        }
+      }
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
     },
