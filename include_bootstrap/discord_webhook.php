@@ -218,7 +218,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
 {
   global $DB;
   global $webhooks_enabled;
-  if (!$webhooks_enabled) {
+  if (!$webhooks_enabled || true) { //Disable webhooks for now
     return;
   }
 

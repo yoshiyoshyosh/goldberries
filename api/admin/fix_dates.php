@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $account = get_user_data();
-check_access($account, true);
+check_access($account, false);
 if (!$account->is_admin) {
   die_json(403, 'Not authorized');
 }
@@ -51,7 +51,7 @@ while ($row = pg_fetch_assoc($result)) {
   $check = [];
   $check[] = "youtube";
   $check[] = "bilibili";
-  // $check[] = "known_other";
+  $check[] = "known_other";
   $check[] = "other";
 
   if ($youtube_id) {

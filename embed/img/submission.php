@@ -88,12 +88,14 @@ if ($python_command === false || $python_command === null) {
   die();
 }
 
+$date_created = $submission->date_created ? $submission->date_created->format('Y-m-d') : " ";
+
 //pack data into an array
 $data = array(
   "submission_id" => $id,
   "submission_is_verified" => $submission->is_verified,
   "submission_is_fc" => $submission->is_fc,
-  "submission_date_created" => $submission->date_created->format('Y-m-d'),
+  "submission_date_created" => $date_created,
   "mod_id" => $modId,
   "player_name" => $player->name,
   "player_name_color_start" => $player->account['name_color_start'],

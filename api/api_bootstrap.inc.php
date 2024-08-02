@@ -10,7 +10,9 @@ header('Content-Type: application/json; charset=UTF-8');
 //In the test environment, the frontend runs on localhost:3000 while the backend runs on localhost. This is a cross-origin request.
 //In order to allow the test frontend to make credentialed requests, the access control allow origin header must have the correct value.
 //Any other origin should not use the main domain's cookies, and thus will receive the wildcard value *, which does not allow credentials.
-$http_origin = $_SERVER['HTTP_ORIGIN'];
+//Check if $_SERVER even has the HTTP_ORIGIN key, as it may not be set in some cases.
+// $http_origin = $_SERVER['HTTP_ORIGIN'];
+$http_origin = key_exists('HTTP_ORIGIN', $_SERVER) ? $_SERVER['HTTP_ORIGIN'] : null;
 if ($http_origin === "http://localhost:3000") {
   header("Access-Control-Allow-Origin: http://localhost:3000");
   header('Access-Control-Allow-Credentials: true');

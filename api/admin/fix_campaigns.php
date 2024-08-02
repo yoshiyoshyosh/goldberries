@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $account = get_user_data();
-check_access($account, true);
+check_access($account, false);
 if (!$account->is_admin) {
   die_json(403, "Not authorized");
 }
@@ -143,7 +143,7 @@ $sj = array(
     "sort_order" => 6,
   ),
   array(
-    "name" => "Blueberry Bay: The Beginner Heart Side",
+    "name" => "Blueberry Bay",
     "sort_major" => 0,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -257,7 +257,7 @@ $sj = array(
     "sort_order" => 6,
   ),
   array(
-    "name" => "Raspberry Roots: The Intermediate Heart Side",
+    "name" => "Raspberry Roots",
     "sort_major" => 1,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -413,7 +413,7 @@ $sj = array(
     "sort_order" => 11,
   ),
   array(
-    "name" => "Mango Mesa: The Advanced Heart Side",
+    "name" => "Mango Mesa",
     "sort_major" => 2,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -593,7 +593,7 @@ $sj = array(
     "sort_order" => 7,
   ),
   array(
-    "name" => "Starfruit Supernova: The Expert Heart Side",
+    "name" => "Starfruit Supernova",
     "sort_major" => 3,
     "sort_minor" => 4,
     "sort_order" => NULL,
@@ -707,13 +707,13 @@ $sj = array(
     "sort_order" => 4,
   ),
   array(
-    "name" => "Passionfruit Pantheon: The Grandmaster Heart Side",
+    "name" => "Passionfruit Pantheon",
     "sort_major" => 4,
     "sort_minor" => 4,
     "sort_order" => NULL,
   ),
 );
-fix_campaign_sorts(1164, $sj);
+fix_campaign_sorts(1199, $sj);
 
 
 $winter_collab = array(
@@ -850,7 +850,7 @@ $winter_collab = array(
     "sort_order" => NULL,
   ),
 );
-fix_campaign_sorts(954, $winter_collab);
+fix_campaign_sorts(977, $winter_collab);
 
 
 
@@ -883,7 +883,7 @@ function fix_campaign_sorts($campaign_id, $maps)
         $map->sort_major = $map_data['sort_major'];
         $map->sort_minor = $map_data['sort_minor'];
         $map->sort_order = $map_data['sort_order'];
-        if ($campaign_id == 1128) {
+        if ($campaign_id == 1199) {
           //For SJ specifically, get the challenges of the map and set their objective id's to 2 if the map name doesnt contain "Heart Side"
           $map->fetch_challenges($DB);
           foreach ($map->challenges as $challenge) {
