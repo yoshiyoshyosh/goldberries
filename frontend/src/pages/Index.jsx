@@ -49,12 +49,12 @@ export function PageIndex() {
             <BorderedBox>
               <GlobalStatsComponent />
             </BorderedBox>
-            {/* <BorderedBox>
-              <ReleaseNotice />
-            </BorderedBox> */}
             <BorderedBox>
-              <PublicTestNotice />
+              <ReleaseNotice />
             </BorderedBox>
+            {/* <BorderedBox>
+              <PublicTestNotice />
+            </BorderedBox> */}
           </Stack>
         </Grid>
         <Grid item xs={12} lg={6}>

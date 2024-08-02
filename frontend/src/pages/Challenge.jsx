@@ -373,7 +373,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
             variant="outlined"
             size="small"
             startIcon={<FontAwesomeIcon icon={submission.is_fc ? faToggleOn : faToggleOff} />}
-            color={submission.is_fc ? "success" : "success"}
+            color={submission.is_fc ? "warning" : "success"}
             sx={{ whiteSpace: "nowrap" }}
           >
             {submission.is_fc ? "FC" : "Not FC"}

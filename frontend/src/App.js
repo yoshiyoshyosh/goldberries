@@ -451,12 +451,12 @@ export function Layout() {
         { divider: true },
         {
           name: "Strawberry Jam",
-          path: "/campaign/935",
+          path: "/campaign/1199",
           icon: <CampaignIcon campaign={{ name: "Strawberry Jam", icon_url: "/icons/campaigns/sj.png" }} />,
         },
         {
           name: "Celeste 2021 Winter Collab",
-          path: "/campaign/778",
+          path: "/campaign/977",
           icon: (
             <CampaignIcon
               campaign={{
@@ -468,14 +468,14 @@ export function Layout() {
         },
         {
           name: "Monika's D-Sides",
-          path: "/campaign/238",
+          path: "/campaign/867",
           icon: (
             <CampaignIcon
               campaign={{ name: "Monika's D-Sides", icon_url: "/icons/campaigns/d-sides-monika.png" }}
             />
           ),
         },
-        { name: "Lunar Ruins", path: "/campaign/869", icon: <JournalIcon height="1.3em" /> },
+        { name: "Spring Collab", path: "/campaign/1200", icon: <JournalIcon height="1.3em" /> },
       ],
     },
     otherChallenges: {

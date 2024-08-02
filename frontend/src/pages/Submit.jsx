@@ -1082,12 +1082,12 @@ function NotificationNotice({}) {
   const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
   return (
     <>
-      <Grid item xs={12} sm={12}>
+      {/* <Grid item xs={12} sm={12}>
         <Typography variant="caption" color="error">
           * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
           <StyledLink to="/">Public Test notice</StyledLink> for more info.
         </Typography>
-      </Grid>
+      </Grid> */}
       {(notifsEnabled || true) && (
         <Grid item xs={12} sm={12}>
           <Typography variant="caption" color="textSecondary">

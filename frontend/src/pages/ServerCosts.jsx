@@ -280,7 +280,7 @@ export function PageServerCosts({}) {
           </TableBody>
         </Table>
       </BasicContainerBox>
-      <Link to="/campaign/645">
+      <Link to="/campaign/758">
         <AnyImage
           path="/img/touhoes-shrimp-station.png"
           height="100px"

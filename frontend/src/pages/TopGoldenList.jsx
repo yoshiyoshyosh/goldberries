@@ -56,7 +56,7 @@ export function PageTopGoldenList({}) {
             </Stack>
           </BasicBox>
         </Grid>
-        <Grid item xs={12} sm="auto" display="flex" flexDirection="row" alignItems="center">
+        {/* <Grid item xs={12} sm="auto" display="flex" flexDirection="row" alignItems="center">
           <BasicBox>
             <Stack direction="column" gap={0.25} alignItems="center">
               <FontAwesomeIcon icon={faInfoCircle} fontSize="1.5em" color={theme.palette.error.main} />
@@ -70,7 +70,7 @@ export function PageTopGoldenList({}) {
               </Typography>
             </Stack>
           </BasicBox>
-        </Grid>
+        </Grid> */}
       </Grid>
       <TopGoldenList type={type} id={id} filter={filter} isOverallList />
     </Box>
