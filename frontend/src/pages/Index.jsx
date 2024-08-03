@@ -167,14 +167,14 @@ export function UsefulLinksComponent() {
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
+          <StyledExternalLink href="https://discord.gg/XVxrn84eum" target="_blank" rel="noreferrer">
             {t("celeste_discord_fr")}
           </StyledExternalLink>{" "}
           <LanguageFlag code="fr" height="15" />
         </li>
         <li>
           <FontAwesomeIcon icon={faDiscord} color="#5865f2" />{" "}
-          <StyledExternalLink href="https://discord.gg/celeste" target="_blank" rel="noreferrer">
+          <StyledExternalLink href="https://discord.gg/QH3A9AfXk4" target="_blank" rel="noreferrer">
             {t("celeste_discord_pt_br")}
           </StyledExternalLink>{" "}
           <LanguageFlag code="pt" height="15" /> <LanguageFlag code="br" height="15" />
