@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = parse_post_body_as_json();
   $submission = new Submission();
   $submission->apply_db_data(format_assoc_array_bools($data));
+  $skip_webhook = isset($data['skip_webhook']) && $data['skip_webhook'] === true;
 
   if (!$submission->has_fields_set(['player_id', 'proof_url'])) {
     die_json(400, "player_id or proof_url is missing");
@@ -121,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($old_submission->update($DB)) {
         submission_embed_change($old_submission->id, "submission");
         $old_submission->expand_foreign_keys($DB, 5);
-        if ($was_verified) {
+        if ($was_verified && !$skip_webhook) {
           send_webhook_submission_verified($old_submission);
         }
         api_write($old_submission);
@@ -199,7 +200,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Notes can't be longer than 5000 characters");
     }
 
-    $submission->date_created = new JsonDateTime();
+    if ($submission->date_created === null || !is_verifier($account)) {
+      $submission->date_created = new JsonDateTime();
+    }
     $submission->insert($DB);
     $submission->expand_foreign_keys($DB, 5);
     api_write($submission);
