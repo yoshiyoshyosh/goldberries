@@ -139,15 +139,17 @@ function send_webhook_suggestion_notification($suggestion)
   $challenge_name = $challenge->get_name_for_discord();
 
   $ping_list = [];
+  $allowed_mentions = ["users" => []];
   foreach ($challenge->submissions as $submission) {
     $account = $submission->player->get_account($DB);
     if ($account !== null && $account->discord_id !== null && $account->n_suggestion) {
       $ping_list[] = "<@{$account->discord_id}>";
+      $allowed_mentions["users"][] = $account->discord_id;
     }
   }
   $ping_addition = count($ping_list) > 0 ? " " . implode(" ", $ping_list) : "";
   $message = ":memo: A new suggestion was made for {$challenge_name}!{$ping_addition}";
-  send_simple_webhook_message($webhook_url, $message);
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 
@@ -161,7 +163,7 @@ function send_webhook_submission_verified($submission)
 
   $account = $submission->player->get_account($DB);
   $player_name = "@`{$submission->player->get_name_escaped()}`";
-  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $webhook_url = constant('NOTIFICATIONS_WEBHOOK_URL');
   $allowed_mentions = ["users" => []];
 
   if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
@@ -187,11 +189,11 @@ function send_webhook_challenge_marked_personal($challenge)
   }
 
   $challenge->expand_foreign_keys($DB, 5);
-  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $webhook_url = constant('CHANGELOG_WEBHOOK_URL');
   $challenge_name = $challenge->get_name_for_discord();
 
   $list_impacted = [];
-
+  $allowed_mentions = ["users" => []];
   foreach ($challenge->submissions as $submission) {
     if ($submission->suggested_difficulty_id !== null && !$submission->is_personal) {
       $submission_url = $submission->get_url();
@@ -199,6 +201,7 @@ function send_webhook_challenge_marked_personal($challenge)
       $account = $submission->player->get_account($DB);
       if ($account !== null && $account->discord_id !== null && $account->n_chall_personal) {
         $name .= " (<@{$account->discord_id}>)";
+        $allowed_mentions["users"][] = $account->discord_id;
       }
       $list_impacted[] = $name;
     }
@@ -211,14 +214,14 @@ function send_webhook_challenge_marked_personal($challenge)
   $impacted_count = count($list_impacted);
   $total_count = count($challenge->submissions);
   $message = ":bangbang: All difficulty suggestions for {$challenge_name} were marked as personal, as new strats have been discovered! Impacted submissions (**$impacted_count** out of **$total_count**): {$impacted_str}";
-  send_simple_webhook_message($webhook_url, $message);
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 function send_webhook_challenge_moved($challenge, $new_difficulty_id)
 {
   global $DB;
   global $webhooks_enabled;
-  if (!$webhooks_enabled || true) { //Disable webhooks for now
+  if (!$webhooks_enabled) { //Disable webhooks for now
     return;
   }
 
@@ -226,22 +229,24 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   if ($challenge->submissions === null) {
     $challenge->fetch_submissions($DB);
   }
-  $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
+  $webhook_url = constant('CHANGELOG_WEBHOOK_URL');
   $challenge_name = $challenge->get_name_for_discord();
   $old_difficulty = $challenge->difficulty->to_tier_name();
   $new_difficulty = Difficulty::get_by_id($DB, $new_difficulty_id)->to_tier_name();
 
   $ping_list = [];
+  $allowed_mentions = ["users" => []];
   foreach ($challenge->submissions as $submission) {
     $account = $submission->player->get_account($DB);
     if ($account !== null && $account->discord_id !== null && $account->n_chall_moved) {
       $ping_list[] = "<@{$account->discord_id}>";
+      $allowed_mentions["users"][] = $account->discord_id;
     }
   }
-  $ping_addition = count($ping_list) > 0 ? " " . implode(" ", $ping_list) : "";
+  $ping_addition = count($ping_list) > 0 ? "\n" . implode(" ", $ping_list) : "";
 
-  $message = ":arrows_counterclockwise: Difficulty for {$challenge_name} was changed from **$old_difficulty** to **$new_difficulty**!{$ping_addition}";
-  send_simple_webhook_message($webhook_url, $message);
+  $message = "{$challenge_name} **$old_difficulty** → **$new_difficulty**{$ping_addition}";
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 function send_simple_webhook_message($url, $message, $allowed_mentions = null)
