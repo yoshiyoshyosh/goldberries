@@ -122,7 +122,7 @@ foreach ($newly_cleared_t3 as $challenge) {
 
 //Challenge changes
 $time_filter = "change_date >= '$month-01' AND change_date < '$month-01'::date + INTERVAL '1 month'";
-$query = "SELECT * FROM view_challenge_changes WHERE $time_filter AND change_description ILIKE 'Moved%'";
+$query = "SELECT * FROM view_challenge_changes WHERE $time_filter AND change_description ILIKE 'Moved from%'";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");
