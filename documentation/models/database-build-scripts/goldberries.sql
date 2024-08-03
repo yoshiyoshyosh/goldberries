@@ -5,8 +5,8 @@ DROP VIEW view_challenge_changes;
 DROP VIEW view_challenges;
 DROP VIEW view_submissions;
 
-DROP TABLE showcase;
 DROP TABLE fwg_data;
+DROP TABLE showcase;
 DROP TABLE suggestion_vote;
 
 DROP TABLE change;
@@ -16,15 +16,15 @@ DROP TABLE suggestion;
 DROP TABLE challenge;
 DROP TABLE "session";
 
-DROP TABLE "map";
 DROP TABLE account;
+DROP TABLE "map";
 
-DROP TABLE player;
+DROP TABLE campaign;
+DROP TABLE difficulty;
 DROP TABLE logging;
 DROP TABLE new_challenge;
-DROP TABLE difficulty;
 DROP TABLE objective;
-DROP TABLE campaign;
+DROP TABLE player;
 
 
 
@@ -131,7 +131,7 @@ CREATE TABLE account
  CONSTRAINT account_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT account_claimed_player_id_fkey FOREIGN KEY ( claimed_player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT account_player_id_fkey FOREIGN KEY ( player_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
- CONSTRAINT check_account_input_method CHECK ( input_method IS NULL OR input_method IN ('keyboard', 'controller', 'hybrid', 'other') )
+ CONSTRAINT check_account_input_method CHECK ( input_method IS NULL OR input_method IN ('keyboard', 'dpad', 'analog', 'hybrid', 'other') )
 );
 
 -- ====== session ======
