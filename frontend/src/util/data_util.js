@@ -236,8 +236,10 @@ export function getPlayerNameColorStyle(player, settings = null) {
   if (settings !== null && settings.visual.playerNames.preferSingleOverGradientColor) {
     nameColorEnd = nameColorStart;
   }
-  let contrastColorStart = lightTheme.palette.getContrastText(nameColorStart);
-  let contrastColorEnd = lightTheme.palette.getContrastText(nameColorEnd);
+  let contrastColorStart = lightTheme.palette.getContrastText(
+    nameColorStart === "" ? "#000000" : nameColorStart
+  );
+  let contrastColorEnd = lightTheme.palette.getContrastText(nameColorEnd === "" ? "#000000" : nameColorEnd);
   const outlineColor = contrastColorStart === contrastColorEnd ? contrastColorStart : "rgba(0, 0, 0, 0.87)";
   // const outlineColor = contrastColorStart;
   const outline = settings?.visual.playerNames.showOutline

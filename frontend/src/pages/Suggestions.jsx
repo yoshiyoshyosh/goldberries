@@ -320,9 +320,9 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 export function DifficultyMoveDisplay({ from, to, ...props }) {
   return (
     <Stack direction="row" gap={1} alignItems="center" {...props}>
-      <DifficultyChip difficulty={from} useSubtierColors />
+      {from && <DifficultyChip difficulty={from} useSubtierColors />}
       <FontAwesomeIcon icon={faArrowRight} />
-      <DifficultyChip difficulty={to} useSubtierColors />
+      {to && <DifficultyChip difficulty={to} useSubtierColors />}
     </Stack>
   );
 }

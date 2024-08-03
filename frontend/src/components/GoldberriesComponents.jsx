@@ -39,6 +39,7 @@ import {
   faKeyboard,
   faLink,
   faPersonDrowning,
+  faQuestionCircle,
   faShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
@@ -702,7 +703,7 @@ export const INPUT_METHOD_ICONS = {
   dpad: faGamepad,
   analog: faGamepad,
   hybrid: faPersonDrowning,
-  other: faChildCombatant,
+  other: faQuestionCircle,
 };
 export function InputMethodIcon({ method, ...props }) {
   const { t } = useTranslation();

@@ -475,7 +475,18 @@ export function Layout() {
             />
           ),
         },
-        { name: "Spring Collab", path: "/campaign/1200", icon: <JournalIcon height="1.3em" /> },
+        {
+          name: "Spring Collab",
+          path: "/campaign/1200",
+          icon: (
+            <CampaignIcon
+              campaign={{
+                name: "Celeste 2020 Spring Collab",
+                icon_url: "/icons/campaigns/spring-collab-20.png",
+              }}
+            />
+          ),
+        },
       ],
     },
     otherChallenges: {
