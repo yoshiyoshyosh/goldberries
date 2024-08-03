@@ -55,6 +55,8 @@ import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { Trans, useTranslation } from "react-i18next";
 import { FullChallengeDisplay } from "./Submission";
+import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -361,6 +363,28 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             />
             <TooltipInfoButton title={t_fs("personal_note")} />
           </Grid>
+          {auth.hasVerifierPriv && (
+            <Grid item xs={12} sm={12}>
+              <Controller
+                control={form.control}
+                name="date_created"
+                render={({ field }) => (
+                  <DateTimePicker
+                    label={t("date_created")}
+                    value={dayjs(field.value)}
+                    onChange={(value) => {
+                      field.onChange(value.toISOString());
+                    }}
+                    viewRenderers={{
+                      hours: renderTimeViewClock,
+                      minutes: renderTimeViewClock,
+                    }}
+                    sx={{ mt: 2, width: "100%" }}
+                  />
+                )}
+              />
+            </Grid>
+          )}
           <Grid item xs={12} sm={12}>
             <Button
               variant="contained"
