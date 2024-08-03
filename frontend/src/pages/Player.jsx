@@ -270,11 +270,10 @@ export function DifficultyCountChart({ difficulty_counts }) {
   difficulties.forEach((difficulty) => {
     const group_id = getGroupId(difficulty.id);
     const count = difficulty_counts[difficulty.id] || 0;
-    const targetId = group_id !== difficulty.id ? group_id : difficulty.id;
-    if (!(targetId in difficulty_counts_grouped)) {
-      difficulty_counts_grouped[targetId] = 0;
+    if (!(group_id in difficulty_counts_grouped)) {
+      difficulty_counts_grouped[group_id] = 0;
     }
-    difficulty_counts_grouped[targetId] += count;
+    difficulty_counts_grouped[group_id] += count;
   });
 
   //Filter out the difficulties that are not in the difficulty_counts_grouped object
@@ -297,7 +296,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
     data.push({
       id: difficulty.id,
       name: difficulty.id === 19 ? "Undet." : getDifficultyName(difficulty.id),
-      count: difficulty_counts[difficulty.id] || 0,
+      count: difficulty_counts_grouped[getGroupId(difficulty.id)] || 0,
     });
   });
 
