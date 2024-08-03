@@ -36,6 +36,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
   faCheckCircle,
+  faEdit,
   faExternalLink,
   faListDots,
   faUser,
@@ -59,6 +60,9 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
+import { CustomModal, useModal } from "../hooks/useModal";
+import { useAuth } from "../hooks/AuthProvider";
+import { FormCampaignWrapper } from "../components/forms/Campaign";
 
 const STYLE_CONSTS = {
   player: {
@@ -106,8 +110,12 @@ export function PageCampaign() {
 }
 
 export function CampaignDisplay({ id, tab, setTab = () => {} }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "campaign" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const auth = useAuth();
   const query = useGetCampaignView(id);
+
+  const editCampaignModal = useModal();
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -133,6 +141,19 @@ export function CampaignDisplay({ id, tab, setTab = () => {} }) {
         <GamebananaEmbed campaign={campaign} size="large" />
       </Stack>
 
+      {auth.hasVerifierPriv && (
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
+          <Button
+            onClick={editCampaignModal.open}
+            variant="outlined"
+            startIcon={<FontAwesomeIcon icon={faEdit} />}
+            sx={{ mb: 1 }}
+          >
+            {t("buttons.edit")}
+          </Button>
+        </Stack>
+      )}
+
       <CampaignDetailsList campaign={campaign} sx={{ mt: 0 }} />
 
       <Divider sx={{ mt: 2 }} />
@@ -152,6 +173,10 @@ export function CampaignDisplay({ id, tab, setTab = () => {} }) {
 
       <Divider sx={{ my: 2 }} />
       <Changelog type="campaign" id={id} />
+
+      <CustomModal modalHook={editCampaignModal} options={{ hideFooter: true }}>
+        <FormCampaignWrapper id={id} onSave={editCampaignModal.close} />
+      </CustomModal>
     </>
   );
 }
