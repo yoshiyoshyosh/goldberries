@@ -82,7 +82,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const [player, setPlayer] = useState(submission.player ?? null);
 
   const form = useForm({
-    defaultValues: submission,
+    defaultValues: { ...submission, skip_webhook: false },
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
     saveSubmission({ ...data, challenge_id: challenge?.id, player_id: player.id });
@@ -350,8 +350,23 @@ export function FormSubmission({ submission, onSave, ...props }) {
         />
       ) : null}
 
-      <Divider sx={{ my: 2 }} />
+      <Divider sx={{ mt: 2, mb: 1 }} />
 
+      {isVerifier && submission.is_verified === null && (
+        <Controller
+          control={form.control}
+          name="skip_webhook"
+          render={({ field }) => (
+            <FormControlLabel
+              onChange={field.onChange}
+              label={"Temporary: Skip Webhook"}
+              checked={field.value}
+              control={<Checkbox />}
+              sx={{ mb: 1 }}
+            />
+          )}
+        />
+      )}
       {isVerifier ? (
         submission.is_verified !== null ? (
           <Button
