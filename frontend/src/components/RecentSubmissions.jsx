@@ -192,7 +192,7 @@ export function RecentSubmissionsTable({
           )}
         </TableBody>
       </Table>
-      {data.submissions !== null && data.submissions.length !== 0 && hasMoreThanOnePage && (
+      {data.submissions !== null && data.submissions.length !== 0 && (hasMoreThanOnePage || perPage > 15) && (
         <TablePagination
           component="div"
           count={data.max_count ?? -1}
