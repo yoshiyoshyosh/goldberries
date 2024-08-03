@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $query = "SELECT * FROM view_submissions";
 
-$where = "WHERE submission_is_verified = true";
+$where = "WHERE submission_is_verified = true AND map_id IS NOT NULL";
 if (isset($_GET['campaign'])) {
   $where .= " AND campaign_id = " . intval($_GET['campaign']);
 } else if (isset($_GET['map'])) {
