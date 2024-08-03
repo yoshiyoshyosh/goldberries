@@ -196,8 +196,7 @@ export function ProofEmbed({ url, ...props }) {
       </div>
     );
   } else if (url.includes("bilibili.com")) {
-    //get video id, which is after the last slash, and before a possible question mark
-    const videoId = url.split("/").pop().split("?")[0];
+    let videoId = getBilibiliIdFromLink(url);
     url = `https://player.bilibili.com/player.html?bvid=${videoId}&page=1&high_quality=1&autoplay=false`;
 
     return (
@@ -224,6 +223,18 @@ export function ProofEmbed({ url, ...props }) {
       </Typography>
     </div>
   );
+}
+function getBilibiliIdFromLink(link) {
+  //If it starts with an 'av', it is an aid
+  if (link.includes("/av")) {
+    //Extract the AV id
+    let id = link.match(/av[0-9]+/g)[0];
+    return id;
+  }
+
+  //Extract the BV id
+  let id = link.match(/[bB][vV][0-9a-zA-Z]+/g)[0];
+  return id;
 }
 
 export function CustomizedMenu({ title, button, children, ...props }) {
