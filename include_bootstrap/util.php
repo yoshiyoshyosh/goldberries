@@ -113,6 +113,8 @@ function get_tier_index($difficulty)
       return 7;
     case "Undetermined":
       return 8;
+    case "Standard":
+      return 9;
   }
 }
 

@@ -9,16 +9,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $all_submissions = isset($_GET['all_submissions']) && $_GET['all_submissions'] === "true";
 
 $query = "SELECT * FROM view_submissions";
+$where = "WHERE submission_is_verified = true";
 
-$where = "WHERE submission_is_verified = true AND challenge_difficulty_id != 18";
-if (isset($_GET['campaign'])) {
-  $where .= " AND campaign_id = " . intval($_GET['campaign']);
+$is_player = isset($_GET['player']);
+$is_campaign = isset($_GET['campaign']);
+$show_standard = false;
+if ($is_player) {
+  $where .= " AND player_id = " . intval($_GET['player']);
+  $show_standard = true;
 }
+if ($is_campaign) {
+  $where .= " AND campaign_id = " . intval($_GET['campaign']);
+  $show_standard = true;
+}
+if (!$show_standard) {
+  $where .= " AND challenge_difficulty_id != 18";
+}
+
+
 if (isset($_GET['map'])) {
   $where .= " AND map_id = " . intval($_GET['map']);
-}
-if (isset($_GET['player'])) {
-  $where .= " AND player_id = " . intval($_GET['player']);
 }
 
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
@@ -42,7 +52,12 @@ if (!$result) {
 }
 
 
-$queryDifficulties = "SELECT * FROM difficulty WHERE difficulty.id != 18 AND difficulty.id != 13 ORDER BY sort DESC";
+$difficulty_filter = "difficulty.id != 13";
+if (!$show_standard) {
+  $difficulty_filter .= " AND difficulty.id != 18";
+}
+
+$queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
 $resultDifficulties = pg_query($DB, $queryDifficulties);
 if (!$resultDifficulties) {
   die_json(500, "Failed to query database");
@@ -72,6 +87,9 @@ while ($row = pg_fetch_assoc($resultDifficulties)) {
   $response['tiers'][$tierIndex][$subtierIndex] = $difficulty;
   $difficulties[$difficulty->id] = $difficulty;
 }
+
+//Flatten tiers object
+$response['tiers'] = array_values($response['tiers']);
 
 //loop through result rows
 while ($row = pg_fetch_assoc($result)) {
