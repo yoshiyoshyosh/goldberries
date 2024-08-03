@@ -113,21 +113,21 @@ export function ChallengeDisplay({ id }) {
       </Stack>
       {auth.hasPlayerClaimed && (
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 1 }}>
+          <Link to={"/submit/single-challenge/" + id}>
+            <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} sx={{ mt: 0, mb: 0 }}>
+              {t("buttons.submit")}
+            </Button>
+          </Link>
           {auth.hasVerifierPriv && (
-            <Link to={"/submit/single-challenge/" + id}>
-              <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} sx={{ mt: 0, mb: 0 }}>
-                {t("buttons.submit")}
-              </Button>
-            </Link>
+            <Button
+              onClick={editChallengeModal.open}
+              variant="outlined"
+              sx={{ mr: 1, mt: 0 }}
+              startIcon={<FontAwesomeIcon icon={faEdit} />}
+            >
+              {t("buttons.edit")}
+            </Button>
           )}
-          <Button
-            onClick={editChallengeModal.open}
-            variant="outlined"
-            sx={{ mr: 1, mt: 0 }}
-            startIcon={<FontAwesomeIcon icon={faEdit} />}
-          >
-            {t("buttons.edit")}
-          </Button>
         </Stack>
       )}
       <ChallengeDetailsList map={challenge.map} challenge={challenge} sx={{ mb: 1, mt: 0.5 }} />
@@ -165,7 +165,8 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
 
-  const mapUrl = map !== null ? (map.url !== null ? map.url : map.campaign.url) : null;
+  const mapUrl =
+    map !== null ? (map.url !== null ? map.url : map.campaign.url) : campaign !== null ? campaign.url : null;
   const mapHasAuthor = map !== null && map.author_gb_name !== null;
 
   return (
