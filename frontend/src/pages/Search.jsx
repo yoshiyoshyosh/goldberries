@@ -13,7 +13,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { PlayerChip } from "../components/GoldberriesComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
-import { getCampaignName, getMapLobbyInfo } from "../util/data_util";
+import { getCampaignName, getMapLobbyInfo, getMapName, getMapNameClean } from "../util/data_util";
 import { useTranslation } from "react-i18next";
 
 export function PageSearch({ isDirectSearch = false }) {
@@ -62,12 +62,12 @@ export function PageSearch({ isDirectSearch = false }) {
         label={t("search_label")}
         isDirectSearch={isDirectSearch}
       />
-      {search && search.length >= 3 && <SearchDisplay search={search} />}
       {search && search.length < 3 && search.length > 0 && (
         <Typography variant="body1" color="gray">
-          {t("feedback.min_length")}
+          {t("feedback.min_length", { count: 3 })}
         </Typography>
       )}
+      {search && search.length >= 1 && <SearchDisplay search={search} />}
     </BasicContainerBox>
   );
 }
@@ -140,7 +140,7 @@ function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = 
                         textShadow: textShadow,
                       }}
                     >
-                      {map.name}
+                      {getMapName(map, campaign, false)}
                     </Link>
                   </Typography>
                 );
@@ -166,21 +166,24 @@ function SearchResultsMaps({ maps, heading = "h5" }) {
           {t("no_maps")}
         </Typography>
       )}
-      {maps.map((map) => (
-        <Stack direction="column" gap={1}>
-          <Link to={"/map/" + map.id} style={{ color: "var(--toastify-color-info)" }}>
-            <Typography variant="h6">{map.name}</Typography>
-          </Link>
-          {map.campaign && map.campaign.name !== map.name && (
-            <Typography variant="body2" sx={{ pl: 2 }}>
-              <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-                <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
-                {getCampaignName(map.campaign, t_g)}
-              </Link>
-            </Typography>
-          )}
-        </Stack>
-      ))}
+      {maps.map((map) => {
+        const isSameName = map.campaign.name === map.name;
+        return (
+          <Stack direction="column" gap={1}>
+            <Link to={"/map/" + map.id} style={{ color: "var(--toastify-color-info)" }}>
+              <Typography variant="h6">{getMapNameClean(map, map.campaign, t_g, !isSameName)}</Typography>
+            </Link>
+            {!isSameName && (
+              <Typography variant="body2" sx={{ pl: 2 }}>
+                <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
+                  <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
+                  {getCampaignName(map.campaign, t_g)}
+                </Link>
+              </Typography>
+            )}
+          </Stack>
+        );
+      })}
     </Stack>
   );
 }

@@ -203,7 +203,16 @@ export function getMapNameClean(map, campaign, t, noAuthor = false) {
   if (isSide) {
     return campaign.name + " [" + map.name + "]";
   }
-  return map.name + (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")");
+
+  const oldPrefix = map.is_archived ? "[Old] " : "";
+  const rejectedPrefix = map.is_rejected ? "[Rejected] " : "";
+
+  return (
+    oldPrefix +
+    rejectedPrefix +
+    map.name +
+    (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")")
+  );
 }
 export function getCampaignName(campaign, t, noAuthor = false) {
   if (noAuthor) return campaign.name;

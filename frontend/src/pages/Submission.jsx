@@ -29,7 +29,12 @@ import {
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
-import { DifficultyChip, VerificationStatusChip, PlayerChip } from "../components/GoldberriesComponents";
+import {
+  DifficultyChip,
+  VerificationStatusChip,
+  PlayerChip,
+  SubmissionFcIcon,
+} from "../components/GoldberriesComponents";
 import {
   displayDate,
   getChallengeCampaign,
@@ -131,7 +136,10 @@ export function SubmissionDisplay({ id, onDelete }) {
       )}
       <Grid container spacing={1} sx={{ mb: 1 }} alignItems="center">
         <Grid item xs={12} sm>
-          <Typography variant="h4">{t_g("submission", { count: 1 })}</Typography>
+          <Stack direction="row" alignItems="center" gap={1}>
+            <Typography variant="h4">{t_g("submission", { count: 1 })}</Typography>
+            <SubmissionFcIcon submission={submission} height="1.7rem" />
+          </Stack>
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" gap={1}>

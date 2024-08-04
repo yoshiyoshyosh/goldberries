@@ -99,7 +99,8 @@ export function MapSelect({ campaign, selected, setSelected, disabled, ...props 
   const maps = query.data?.data?.maps ?? [];
 
   const getOptionLabel = (map) => {
-    return map.name;
+    const oldPrefix = map.is_archived ? "[Old] " : "";
+    return oldPrefix + map.name;
   };
 
   return (

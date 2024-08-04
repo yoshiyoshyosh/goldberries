@@ -264,7 +264,7 @@ function ManagePlayerNamesTab() {
               color="primary"
               fullWidth
               onClick={onSubmit}
-              disabled={newName === player.name || newName.trim() === "" || newName.length < 3}
+              disabled={newName === player.name || newName.trim() === "" || newName.length < 2}
               sx={{ mt: 2 }}
             >
               {t("button")}
