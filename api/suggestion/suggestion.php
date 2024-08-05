@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
       }
+      $suggestion->current_difficulty_id = $challenge->difficulty_id;
       if (isset($data['suggested_difficulty_id'])) {
         $difficulty = Difficulty::get_by_id($DB, $data['suggested_difficulty_id']);
         if ($difficulty === false) {
@@ -85,6 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
     } else {
+      if (isset($data['current_difficulty_id'])) {
+        die_json(400, "General suggestions must not have a difficulty suggestion set");
+      }
       if (isset($data['suggested_difficulty_id'])) {
         die_json(400, "General suggestions must not have a difficulty suggestion set");
       }

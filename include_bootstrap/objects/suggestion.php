@@ -7,6 +7,7 @@ class Suggestion extends DbObject
 
   public ?int $author_id = null;
   public ?int $challenge_id = null;
+  public ?int $current_difficulty_id = null;
   public ?int $suggested_difficulty_id = null;
   public ?string $comment = null;
   public ?bool $is_verified = null;
@@ -16,6 +17,7 @@ class Suggestion extends DbObject
   // Linked Objects
   public ?Player $author = null;
   public ?Challenge $challenge = null;
+  public ?Difficulty $current_difficulty = null;
   public ?Difficulty $suggested_difficulty = null;
 
   // Associative Objects
@@ -27,6 +29,7 @@ class Suggestion extends DbObject
     return array(
       'author_id' => $this->author_id,
       'challenge_id' => $this->challenge_id,
+      'current_difficulty_id' => $this->current_difficulty_id,
       'suggested_difficulty_id' => $this->suggested_difficulty_id,
       'comment' => $this->comment,
       'is_verified' => $this->is_verified,
@@ -44,6 +47,8 @@ class Suggestion extends DbObject
       $this->author_id = intval($arr[$prefix . 'author_id']);
     if (isset($arr[$prefix . 'challenge_id']))
       $this->challenge_id = intval($arr[$prefix . 'challenge_id']);
+    if (isset($arr[$prefix . 'current_difficulty_id']))
+      $this->current_difficulty_id = intval($arr[$prefix . 'current_difficulty_id']);
     if (isset($arr[$prefix . 'suggested_difficulty_id']))
       $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
     if (isset($arr[$prefix . 'comment']))
@@ -66,6 +71,9 @@ class Suggestion extends DbObject
     }
     if ($this->author_id !== null) {
       $this->author = Player::get_by_id($DB, $this->author_id, 3, false);
+    }
+    if ($this->current_difficulty_id !== null) {
+      $this->current_difficulty = Difficulty::get_by_id($DB, $this->current_difficulty_id);
     }
     if ($this->suggested_difficulty_id !== null) {
       $this->suggested_difficulty = Difficulty::get_by_id($DB, $this->suggested_difficulty_id);
