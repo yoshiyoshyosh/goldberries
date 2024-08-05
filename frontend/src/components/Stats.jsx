@@ -7,7 +7,7 @@ import { DifficultyChip } from "./GoldberriesComponents";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
 
-export function SuggestedDifficultyChart({ challenge }) {
+export function SuggestedDifficultyChart({ challenge, scale = 1 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.stats" });
   const { settings } = useAppSettings();
   const [spin, setSpin] = useState(false);
@@ -59,11 +59,11 @@ export function SuggestedDifficultyChart({ challenge }) {
               arcLabel: (item) => `${item.label}`,
               arcLabelMinAngle: 60,
               data: data,
-              innerRadius: 25,
-              outerRadius: 150,
+              innerRadius: 25 * scale,
+              outerRadius: 150 * scale,
               cornerRadius: 5,
               paddingAngle: 2,
-              cx: 150,
+              cx: 150 * scale,
               highlightScope: { faded: "global", highlighted: "item" },
               faded: { innerRadius: 30, additionalRadius: -10, color: "gray" },
             },
@@ -80,8 +80,8 @@ export function SuggestedDifficultyChart({ challenge }) {
               fontWeight: "bold",
             },
           }}
-          height={300}
-          width={310}
+          height={300 * scale}
+          width={310 * scale}
           onClick={startSpin}
         />
       )}

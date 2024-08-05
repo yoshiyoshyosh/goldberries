@@ -679,39 +679,6 @@ function ViewSuggestionModal({ id }) {
           </Grid>
         )}
 
-        {suggestion.challenge_id !== null && (
-          <>
-            <Grid item xs={12}>
-              <Divider>
-                <Chip label={t_g("submission", { count: 30 })} size="small" />
-              </Divider>
-            </Grid>
-            <Grid item xs={12}>
-              <ChallengeSubmissionTable challenge={suggestion.challenge} hideSubmissionIcon />
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <Stack direction="row" justifyContent="space-around">
-                <SuggestedDifficultyChart challenge={suggestion.challenge} />
-              </Stack>
-            </Grid>
-            <Grid item xs={12} sm>
-              <Divider orientation="vertical" />
-            </Grid>
-            <Grid item xs={12} sm>
-              <Typography variant="body1" gutterBottom>
-                {t("totals")}
-              </Typography>
-              <SuggestedDifficultyTierCounts
-                challenge={suggestion.challenge}
-                direction="column"
-                useSubtierColors
-              />
-            </Grid>
-          </>
-        )}
         <Grid item xs={12}>
           <Divider>
             <Chip label={t_s("votes.label")} size="small" />
@@ -752,6 +719,42 @@ function ViewSuggestionModal({ id }) {
             </Grid>
           </Grid>
         </Grid>
+
+        {suggestion.challenge_id !== null && (
+          <>
+            <Grid item xs={12}>
+              <Divider sx={{ mt: 2 }}>
+                <Chip label={"Stats"} size="small" />
+              </Divider>
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <Stack direction="row" justifyContent="space-around">
+                <SuggestedDifficultyChart challenge={suggestion.challenge} scale={0.75} />
+              </Stack>
+            </Grid>
+            <Grid item xs={12} sm>
+              <Divider orientation="vertical" />
+            </Grid>
+            <Grid item xs={12} sm>
+              <Typography variant="body1" gutterBottom>
+                {t("totals")}
+              </Typography>
+              <SuggestedDifficultyTierCounts
+                challenge={suggestion.challenge}
+                direction="column"
+                useSubtierColors
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Divider>
+                <Chip label={t_g("submission", { count: 30 })} size="small" />
+              </Divider>
+            </Grid>
+            <Grid item xs={12}>
+              <ChallengeSubmissionTable challenge={suggestion.challenge} hideSubmissionIcon />
+            </Grid>
+          </>
+        )}
       </Grid>
     </>
   );
@@ -772,16 +775,18 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
         <FontAwesomeIcon icon={voteIcon} color={voteColor} />
       </Typography>
       <Typography variant="body2">{t("count", { count: count })}</Typography>
-      {votesFiltered.map((vote) => (
-        <Stack direction="row" gap={0.5} alignItems="center">
-          <PlayerChip player={vote.player} size="small" />
-          {vote.comment && (
-            <Tooltip title={vote.comment} arrow placement="top">
-              <FontAwesomeIcon icon={faComment} />
-            </Tooltip>
-          )}
-        </Stack>
-      ))}
+      <Stack direction="row" columnGap={2} rowGap={0.5} flexWrap="wrap">
+        {votesFiltered.map((vote) => (
+          <Stack direction="row" gap={0.5} alignItems="center">
+            <PlayerChip player={vote.player} size="small" />
+            {vote.comment && (
+              <Tooltip title={vote.comment} arrow placement="top">
+                <FontAwesomeIcon icon={faComment} />
+              </Tooltip>
+            )}
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 }
