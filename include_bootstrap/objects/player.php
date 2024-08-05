@@ -144,10 +144,10 @@ class Player extends DbObject
     return $players;
   }
 
-  static function name_exists($DB, string $name): bool
+  static function name_exists($DB, string $name, int $ignore_id = 0): bool
   {
-    $query = "SELECT id FROM player WHERE LOWER(name) = LOWER($1)";
-    $result = pg_query_params($DB, $query, array($name)) or die('Query failed: ' . pg_last_error());
+    $query = "SELECT id FROM player WHERE LOWER(name) = LOWER($1) AND id != $2";
+    $result = pg_query_params($DB, $query, array($name, $ignore_id)) or die('Query failed: ' . pg_last_error());
     return pg_num_rows($result) > 0;
   }
 

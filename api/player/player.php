@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 2) {
         die_json(400, "Name needs to be between 2 and 32 characters long");
       }
-      if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
+      if ($new_name !== $target->name && Player::name_exists($DB, $new_name, $id)) {
         die_json(400, "Player name is already taken");
       }
       if (!is_valid_name($new_name)) {
@@ -77,6 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(403, "Not authorized");
       }
 
+      //Check if the account has a player set
+      $target = $account->player;
+      if ($target === null) {
+        die_json(400, "Account does not have a player");
+      }
+
       $last_rename = $account->last_player_rename;
       //$last_rename is null if the player has never renamed themselves, otherwise its a JsonDateTime
       if ($last_rename !== null && $last_rename->getTimestamp() + 86400 > time()) {
@@ -90,14 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 2) {
         die_json(400, "Name needs to be between 2 and 32 characters long");
       }
-      if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
+      if ($new_name !== $target->name && Player::name_exists($DB, $new_name, $target->id)) {
         die_json(400, "Player name is already taken");
       }
       if (!is_valid_name($new_name)) {
         die_json(400, "Invalid name");
       }
 
-      $target = $account->player;
       $old_name = $target->name;
 
       if ($old_name !== $new_name && $log_change) {
