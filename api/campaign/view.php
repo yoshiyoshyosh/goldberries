@@ -236,13 +236,15 @@ function parse_campaign_view($result)
         if ($b["last_submission"] === null) {
           return -1;
         }
-        return $a["last_submission"]->diff($b["last_submission"]);
+        if ($a["last_submission"] === $b["last_submission"]) {
+          return 0;
+        }
+        return $a["last_submission"] < $b["last_submission"] ? -1 : 1;
       }
       return $b["stats"]["full_clears"] - $a["stats"]["full_clears"];
     }
     return $b["stats"]["clears"] - $a["stats"]["clears"];
   });
-
 
   return array(
     "campaign" => $campaigns[0],
