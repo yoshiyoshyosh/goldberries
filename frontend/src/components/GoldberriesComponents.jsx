@@ -41,8 +41,18 @@ import {
   faPersonDrowning,
   faQuestionCircle,
   faShield,
+  faTrophy
 } from "@fortawesome/free-solid-svg-icons";
-import { faDiscord, faTwitch, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import {
+  faDiscord,
+  faTwitch,
+  faYoutube,
+  faSteam,
+  faXTwitter,
+  faGithub,
+  faInstagram,
+  faReddit
+} from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
@@ -720,6 +730,13 @@ const LINK_ICONS = {
   youtube: { icon: faYoutube, color: "red", identifier: ["youtu.be/", "youtube.com/"] },
   twitch: { icon: faTwitch, color: "purple", identifier: ["twitch.tv/"] },
   discord: { icon: faDiscord, color: "#5460ef", identifier: ["discord.gg/"] },
+  twitter: { icon: faXTwitter, color: "black", identifier: ["twitter.com/", "x.com/"] },
+  github: { icon: faGithub, color: "#161414", identifier: ["github.com/"] },
+  // instagram has a complicated gradient logo, not sure if this is possible/worth the effort
+  instagram: { icon: faInstagram, color: "#ff2083", identifier: ["instagram.com/"] },
+  speedrun: { icon: faTrophy, color: "#ffcf33", identifier: ["speedrun.com/"] },
+  reddit: { icon: faReddit, color: "#ff4500", identifier: ["reddit.com/"] },
+  steam: { icon: faSteam, color: "#1e3050", identifier: ["steamcommunity.com/", "steampowered.com/"] },
 };
 export function LinkIcon({ url }) {
   const theme = useTheme();
