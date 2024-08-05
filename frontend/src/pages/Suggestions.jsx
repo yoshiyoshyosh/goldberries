@@ -249,10 +249,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
           flexWrap={{ xs: "wrap", sm: "unset" }}
           sx={{ mb: 1.5 }}
         >
-          <DifficultyMoveDisplay
-            from={suggestion.challenge.difficulty}
-            to={suggestion.suggested_difficulty}
-          />
+          <DifficultyMoveDisplay from={suggestion.current_difficulty} to={suggestion.suggested_difficulty} />
           {difficultiesSorted.length > 0 && (
             <Stack direction="row" gap={1}>
               ( {((difficultiesSorted[0].value / difficultiesCountTotal) * 100).toFixed(0)}%{" "}
@@ -602,7 +599,7 @@ function ViewSuggestionModal({ id }) {
         {suggestion.challenge !== null && suggestion.suggested_difficulty !== null && (
           <Grid item xs={12}>
             <DifficultyMoveDisplay
-              from={suggestion.challenge.difficulty}
+              from={suggestion.current_difficulty}
               to={suggestion.suggested_difficulty}
             />
           </Grid>

@@ -2018,7 +2018,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The search query string.",
+            "description": "The search query string. If the query is only 1 or 2 characters long, only exact matches will be returned.",
             "required": true
           },
           {
@@ -2648,6 +2648,10 @@
           "challenge_id": {
             "type": "integer",
             "description": "Identifier for the associated challenge"
+          },
+          "current_difficulty_id": {
+            "type": "integer",
+            "description": "Identifier for the challenge difficulty at the time of creation"
           },
           "suggested_difficulty_id": {
             "type": "integer",
