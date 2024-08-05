@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(400, "Missing parameter 'name'");
       }
       $new_name = trim($request['name']);
-      if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 3) {
-        die_json(400, "Name needs to be between 3 and 32 characters long");
+      if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 2) {
+        die_json(400, "Name needs to be between 2 and 32 characters long");
       }
       if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
         die_json(400, "Player name is already taken");
@@ -87,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(400, "Missing parameter 'name'");
       }
       $new_name = trim($request['name']);
-      if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 3) {
-        die_json(400, "Name needs to be between 3 and 32 characters long");
+      if ($new_name === "" || strlen($new_name) > 32 || strlen($new_name) < 2) {
+        die_json(400, "Name needs to be between 2 and 32 characters long");
       }
       if ($new_name !== $target->name && Player::name_exists($DB, $new_name)) {
         die_json(400, "Player name is already taken");
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($account->update($DB) === false) {
         log_error("Failed to update {$account} in database after renaming self {$target}", "Account");
       }
-      log_info("Renamed self  from '{$old_name}' to '{$new_name}'", "Player");
+      log_info("Renamed self from '{$old_name}' to '{$new_name}'", "Player");
       submission_embed_change($target->id, "player");
       api_write($target);
       exit();
