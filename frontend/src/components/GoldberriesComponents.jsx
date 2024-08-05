@@ -730,13 +730,13 @@ const LINK_ICONS = {
   youtube: { icon: faYoutube, color: "red", identifier: ["youtu.be/", "youtube.com/"] },
   twitch: { icon: faTwitch, color: "purple", identifier: ["twitch.tv/"] },
   discord: { icon: faDiscord, color: "#5460ef", identifier: ["discord.gg/"] },
-  twitter: { icon: faXTwitter, color: "black", identifier: ["twitter.com/", "x.com/"] },
-  github: { icon: faGithub, color: "#161414", identifier: ["github.com/"] },
-  // instagram has a complicated gradient logo, not sure if this is possible/worth the effort
+  twitter: { icon: faXTwitter, color: "black", darkModeColor: "white", identifier: ["twitter.com/", "x.com/"] },
+  github: { icon: faGithub, color: "#161414", darkModeColor: "white", identifier: ["github.com/"] },
   instagram: { icon: faInstagram, color: "#ff2083", identifier: ["instagram.com/"] },
   speedrun: { icon: faTrophy, color: "#ffcf33", identifier: ["speedrun.com/"] },
   reddit: { icon: faReddit, color: "#ff4500", identifier: ["reddit.com/"] },
-  steam: { icon: faSteam, color: "#1e3050", identifier: ["steamcommunity.com/", "steampowered.com/"] },
+  steam: { icon: faSteam, color: "#1e3050", darkModeColor: "white",
+    identifier: ["steamcommunity.com/", "steampowered.com/"] },
 };
 export function LinkIcon({ url }) {
   const theme = useTheme();
@@ -751,7 +751,9 @@ export function LinkIcon({ url }) {
   let linkIconElement = null;
   for (const [key, value] of Object.entries(LINK_ICONS)) {
     if (value.identifier.some((i) => url.includes(i))) {
-      linkIconElement = <FontAwesomeIcon icon={value.icon} color={value.color} />;
+      linkIconElement = <FontAwesomeIcon icon={value.icon}
+                                         color={theme.palette.mode === "dark" && value.darkModeColor ?
+                                             value.darkModeColor : value.color} />;
       break;
     }
   }
