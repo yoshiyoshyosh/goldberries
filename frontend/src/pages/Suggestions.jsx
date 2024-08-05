@@ -242,7 +242,13 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
       </Grid>
 
       {suggestion.challenge !== null && suggestion.suggested_difficulty !== null && (
-        <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 1.5 }}>
+        <Stack
+          direction="row"
+          gap={1}
+          alignItems="center"
+          flexWrap={{ xs: "wrap", sm: "unset" }}
+          sx={{ mb: 1.5 }}
+        >
           <DifficultyMoveDisplay
             from={suggestion.challenge.difficulty}
             to={suggestion.suggested_difficulty}
@@ -267,7 +273,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 
       <Grid container sx={{ mb: 1 }}>
         <Grid item xs={12} sm={8}>
-          <Stack direction="row" gap={1}>
+          <Stack direction="row" gap={1} flexWrap={{ xs: "wrap", sm: "unset" }}>
             <Typography variant="body2">
               {suggestion.author_id === null ? (
                 t("deleted_player")

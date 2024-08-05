@@ -281,7 +281,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                   <TableCell align="left" width="35%">
                     {map && (
                       <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
-                        <Typography variant="body2">{challenge.map.name}</Typography>
+                        <Typography variant="body2">{getMapName(challenge.map, campaign)}</Typography>
                         <CustomizedMenu
                           button={
                             <IconButton

@@ -32,11 +32,8 @@ export function getChallengeName(challenge, includeFc = true) {
   const challengeSuffix =
     getChallengeSuffix(challenge) === null ? "" : " [" + getChallengeSuffix(challenge) + "]";
   return (
-    oldPrefix +
-    challengeFc +
-    challenge.objective.name +
-    getChallengeObjectiveSuffix(challenge) +
-    challengeSuffix
+    // oldPrefix +
+    challengeFc + challenge.objective.name + getChallengeObjectiveSuffix(challenge) + challengeSuffix
   );
 }
 
