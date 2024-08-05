@@ -207,11 +207,12 @@ class Map extends DbObject
     $campaign_name = $this->campaign->name;
     $campaign_name_with_author = $this->campaign->get_name();
     $is_same = $campaign_name === $this->name;
+    $archived_prefix = $this->is_archived ? "[Old] " : "";
 
     if ($is_same)
       return $campaign_name_with_author;
     else
-      return "{$campaign_name_with_author} / {$this->name}";
+      return "{$campaign_name_with_author} / {$archived_prefix}{$this->name}";
   }
 
   function get_name_for_discord()
@@ -221,10 +222,11 @@ class Map extends DbObject
     $is_same = $campaign_name === $this->name;
     $campaign_url = $this->campaign->get_url();
     $map_url = $this->get_url();
+    $archived_prefix = $this->is_archived ? "[Old] " : "";
 
     if ($is_same)
       return "[$campaign_name_with_author](<$campaign_url>)";
     else
-      return "[{$campaign_name_with_author}](<$campaign_url>) / [{$this->name}](<$map_url>)";
+      return "[{$campaign_name_with_author}](<$campaign_url>) / [{$archived_prefix}{$this->name}](<$map_url>)";
   }
 }
