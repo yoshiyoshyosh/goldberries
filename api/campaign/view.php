@@ -209,22 +209,17 @@ function parse_campaign_view($result)
   //   return $b["stats"]["clears"] - $a["stats"]["clears"];
   // });
 
-  //new sort:
   // Sort criteria:
   // 1. Highest lobby sweep (max amount of clears for a lobby)
-  // 2. Amount of full clears in highest swept lobby (still needs max amount of clears)
-  // 3. Amount clears in total
-  // 4. Amount of full clears in total
-  // 5. Date of last submission. Older means higher up
+  // 2. Amount clears in total
+  // 3. Amount of full clears in total
+  // 4. Date of most recent submission. Older means higher up
   usort($players, function ($a, $b) use ($campaign) {
     if ($campaign->sort_major_name !== null) {
-      //Check 1. and 2.
+      //Check 1.
       if ($a["highest_lobby_sweep"] !== $b["highest_lobby_sweep"]) {
         return $b["highest_lobby_sweep"] - $a["highest_lobby_sweep"];
       }
-      // if ($a["highest_lobby_sweep_fcs"] !== $b["highest_lobby_sweep_fcs"]) {
-      //   return $b["highest_lobby_sweep_fcs"] - $a["highest_lobby_sweep_fcs"];
-      // }
     }
     //Check the remaining points
     if ($a["stats"]["clears"] === $b["stats"]["clears"]) {

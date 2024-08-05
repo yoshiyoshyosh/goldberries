@@ -51,8 +51,8 @@ while ($row = pg_fetch_assoc($result)) {
   $check = [];
   $check[] = "youtube";
   $check[] = "bilibili";
-  $check[] = "known_other";
-  $check[] = "other";
+  // $check[] = "known_other";
+  // $check[] = "other";
 
   if ($youtube_id) {
     if (!in_array("youtube", $check))
@@ -62,6 +62,10 @@ while ($row = pg_fetch_assoc($result)) {
     echo "Processing submission (#$count): $submission\n";
     echo "  Link: $link\n";
     echo "  Link Type: YouTube\n";
+    if (!in_array($youtube_id, array_keys($video_details))) {
+      echo "  Video not found in video-details.json\n";
+      continue;
+    }
     $video = $video_details[$youtube_id];
     if ($video["error"]) {
       echo "  Video had an error: $video[error]\n";
@@ -87,6 +91,10 @@ while ($row = pg_fetch_assoc($result)) {
     echo "Processing submission (#$count): $submission\n";
     echo "  Link: $link\n";
     echo "  Link Type: BiliBili\n";
+    if (!in_array($bilibili_id, array_keys($bilibili_video_details))) {
+      echo "  Video not found in bilibili-video-details.json\n";
+      continue;
+    }
     $video = $bilibili_video_details[$bilibili_id];
     if ($video["error"]) {
       echo "  Video had an error: $video[error]\n";
