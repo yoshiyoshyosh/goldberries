@@ -96,7 +96,8 @@ export function SearchDisplay({ search }) {
 function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = true }) {
   const { t } = useTranslation(undefined, { keyPrefix: "search" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const showCampaign = (campaign) => campaign.maps.length > 1 || campaign.maps[0].name !== campaign.name;
+  const showCampaign = (campaign) =>
+    campaign.maps.length !== 0 && (campaign.maps.length > 1 || campaign.maps[0].name !== campaign.name);
   const filteredCampaigns = filterStandalone ? campaigns.filter(showCampaign) : campaigns;
 
   return (

@@ -140,7 +140,7 @@ export function getMapLobbyInfo(map, campaign = null) {
   return lobbyInfo;
 }
 
-export function getMapName(map, campaign, includeMapWithSide = true) {
+export function getMapName(map, campaign, includeMapWithSide = true, includeOld = true) {
   campaign = campaign || map.campaign;
 
   if (map === null || map === undefined) {
@@ -155,7 +155,7 @@ export function getMapName(map, campaign, includeMapWithSide = true) {
       : map.name;
 
   const isOld = map.is_archived ?? false;
-  const oldPrefix = isOld ? "[Old] " : "";
+  const oldPrefix = isOld && includeOld ? "[Old] " : "";
   const rejectedPrefix = map.is_rejected ? "[Rejected] " : "";
 
   return rejectedPrefix + oldPrefix + mapName;

@@ -391,7 +391,7 @@ function TopGoldenListSubtier({
     const mapB = maps[b.map_id];
     const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
     const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
-    return getMapName(mapA, campaignA).localeCompare(getMapName(mapB, campaignB));
+    return getMapName(mapA, campaignA, true, false).localeCompare(getMapName(mapB, campaignB, true, false));
   });
 
   const isFwgSubtier = subtier.id === 12; //low tier 3 -> add fwg at the end

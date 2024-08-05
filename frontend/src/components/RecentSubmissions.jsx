@@ -28,7 +28,7 @@ import {
   VerificationStatusChip,
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
-import { getChallengeCampaign, getChallengeSuffix } from "../util/data_util";
+import { getChallengeCampaign, getChallengeSuffix, getMapName } from "../util/data_util";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -241,7 +241,8 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const new_challenge = submission.new_challenge;
   const map = challenge?.map;
   const campaign = getChallengeCampaign(challenge);
-  const campaignNameSame = campaign?.name === map?.name;
+  const mapName = map ? getMapName(map, campaign, false) : null;
+  const campaignNameSame = campaign?.name === mapName;
 
   return (
     <TableRow
@@ -266,7 +267,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
                     {map && <Typography>-</Typography>}
                   </>
                 )}
-                {map && <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>}
+                {map && <StyledLink to={"/map/" + map.id}>{mapName}</StyledLink>}
                 {getChallengeSuffix(challenge) !== null && (
                   <Typography variant="body2" color={theme.palette.text.secondary}>
                     [{getChallengeSuffix(challenge)}]
