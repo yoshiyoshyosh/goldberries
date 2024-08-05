@@ -121,7 +121,7 @@ class Campaign extends DbObject
   {
     $found = array();
 
-    $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '%" . $search . "%' ORDER BY name";
+    $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '" . $search . "' ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
       die_json(500, "Could not query database");

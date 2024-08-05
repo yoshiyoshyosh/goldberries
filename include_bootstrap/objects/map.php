@@ -114,7 +114,7 @@ class Map extends DbObject
 
   static function search_by_name($DB, $name)
   {
-    $query = "SELECT * FROM map WHERE map.name ILIKE '%" . $name . "%' ORDER BY name";
+    $query = "SELECT * FROM map WHERE map.name ILIKE '" . $name . "' ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
       die_json(500, "Could not query database");

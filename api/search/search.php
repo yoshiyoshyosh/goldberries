@@ -16,12 +16,17 @@ $search = trim($search);
 if ($search == "") {
   die_json(400, "Search parameter cannot be empty");
 }
-//Make sure the string is at least 3 characters long
-if (strlen($search) < 3) {
-  die_json(400, "Search parameter must be at least 3 characters long");
-}
-$search = pg_escape_string($search);
 
+$search = pg_escape_string($search);
+$unmodified_search = $search;
+//Replace % with \% and _ with \_
+$search = str_replace("%", "\%", $search);
+$search = str_replace("_", "\_", $search);
+
+if (strlen($search) >= 3) {
+  //When the search string is too short, we will only search for exact matches
+  $search = "%" . $search . "%";
+}
 
 //query parameter 'in' is optional and is an arraya of what data to search in
 $in = $_REQUEST['in'] ?? null;
@@ -39,7 +44,7 @@ if ($in == null) {
 
 
 $response = array();
-$response['q'] = $search;
+$response['q'] = $unmodified_search;
 $response['in'] = $in;
 
 if (in_array("players", $in)) {
@@ -61,7 +66,7 @@ if (in_array("authors", $in)) {
   //Authors are searched for in campaigns and maps
   //Fields: campaign.author_gb_name and map.author_gb_name
 
-  $query = "SELECT DISTINCT author_gb_name FROM campaign WHERE campaign.author_gb_name ILIKE '%" . $search . "%'";
+  $query = "SELECT DISTINCT author_gb_name FROM campaign WHERE campaign.author_gb_name ILIKE '" . $search . "'";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Could not query database");
@@ -72,7 +77,7 @@ if (in_array("authors", $in)) {
     $response['authors'][$name] = array();
   }
 
-  $query = "SELECT DISTINCT author_gb_name FROM map WHERE map.author_gb_name ILIKE '%" . $search . "%'";
+  $query = "SELECT DISTINCT author_gb_name FROM map WHERE map.author_gb_name ILIKE '" . $search . "'";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Could not query database");

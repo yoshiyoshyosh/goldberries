@@ -153,7 +153,7 @@ class Player extends DbObject
 
   static function search_by_name($DB, string $search)
   {
-    $query = "SELECT * FROM player WHERE player.name ILIKE '%" . $search . "%' ORDER BY name";
+    $query = "SELECT * FROM player WHERE player.name ILIKE '" . $search . "' ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
       die_json(500, "Could not query database");
