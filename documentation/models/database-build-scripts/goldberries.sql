@@ -227,6 +227,7 @@ CREATE TABLE suggestion
  is_verified             boolean NULL,
  date_created            timestamptz NOT NULL,
  is_accepted             boolean NULL,
+ CONSTRAINT suggestion_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT suggestion_author_id_fkey FOREIGN KEY ( author_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT suggestion_challenge_id_fkey FOREIGN KEY ( challenge_id ) REFERENCES challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT suggestion_current_difficulty_id_fkey FOREIGN KEY ( current_difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,

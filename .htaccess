@@ -10,23 +10,25 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
 # General rule to route "/api/{endpoint}" to "/api/{endpoint}/{endpoint}.php"
 RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/([^/]+)/?$ api/$1/$1.php [L]
 
 # General rule to route "/api/{endpoint}/{sub-endpoint}" to "/api/{endpoint}/{sub-endpoint}.php"
 RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/([^/]+)/([^/]+)/?$ api/$1/$2.php [L]
 
 # General rule to route "/api/{endpoint}/{sub-endpoint}/{sub-sub-endpoint}" to "/api/{endpoint}/{sub-endpoint}/{sub-sub-endpoint}.php"
 RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/([^/]+)/([^/]+)/([^/]+)/?$ api/$1/$2/$3.php [L]
 
-# Rule 2: Return a 404 for any .sh file requests
+# Return a 404 for any .sh file requests
 RewriteRule ^.*\.sh$ - [L,R=404]
 
-# Rule 3: Check if the requested file exists, if not, redirect to /index.html
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/submission/([0-9]+)$
+RewriteRule ^submission/([0-9]+)$ /embed/submission.php?id=$1 [QSA,L]
+
+# Check if the requested file exists, if not, redirect to /index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]
