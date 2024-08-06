@@ -86,7 +86,11 @@ foreach ($submissions as $submission) {
 
 foreach ($grouped_submissions as $player_id => $campaigns) {
   foreach ($campaigns as $campaign_id => $submissions) {
-    send_webhook_multi_submission_verified($submissions);
+    if (count($submissions) === 1) {
+      send_webhook_submission_verified($submissions[0]);
+    } else {
+      send_webhook_multi_submission_verified($submissions);
+    }
   }
 }
 
