@@ -21,7 +21,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getQueryData, useGetSubmissionQueue, usePostSubmission } from "../../hooks/useApi";
+import {
+  getQueryData,
+  useGetSubmissionQueue,
+  useMassVerifySubmissions,
+  usePostSubmission,
+} from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
@@ -146,6 +151,7 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
   const [selected, setSelected] = useState([]);
   const [note, setNote] = useState("");
   const { mutateAsync: updateSubmission } = usePostSubmission();
+  const { mutateAsync: massVerifySubmissions } = useMassVerifySubmissions();
 
   let defaultPage = 0;
   if (selectedSubmissionId !== null) {
@@ -183,20 +189,22 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
 
   const verifyAll = (verified) => {
     const submissions = queue.filter((submission) => selected.includes(submission.id));
-    const promises = submissions.map((submission) => {
-      const data = { ...submission, is_verified: verified };
-      if (note !== undefined && note !== null && note !== "") {
-        data.verifier_notes = note;
-      }
-      return updateSubmission(data);
-    });
-    Promise.all(promises)
+
+    const data = {
+      ids: submissions.map((submission) => submission.id),
+      is_verified: verified,
+    };
+    if (note !== undefined && note !== null && note !== "") {
+      data.verifier_notes = note;
+    }
+
+    massVerifySubmissions(data)
       .then(() => {
         setSelected([]);
         toast.success(t(verified ? "feedback.all_verified" : "feedback.all_rejected"));
       })
-      .catch(() => {
-        //Do nothing, error is handled by usePostSubmission
+      .catch((error) => {
+        //Do nothing, handles by api hook
       });
   };
 

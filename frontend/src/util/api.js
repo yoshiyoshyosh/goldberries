@@ -359,6 +359,9 @@ export function postChallengeMarkPersonal(data) {
 export function postSubmission(data) {
   return axios.post("/submission", formatDataForApi(data));
 }
+export function massVerifySubmissions(data) {
+  return axios.post("/submission/mass-verify", formatDataForApi(data));
+}
 
 export function claimPlayer(player) {
   return axios.post(

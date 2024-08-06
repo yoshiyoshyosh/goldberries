@@ -62,6 +62,7 @@ import {
   fetchStatsMonthlyRecap,
   fetchStatsPlayerTierClearCounts,
   fetchStatsMonthlyTierClears,
+  massVerifySubmissions,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -424,6 +425,30 @@ export function usePostSubmission(onSuccess) {
           queryClient.invalidateQueries(["map", response.data.challenge.map_id]);
         } else {
           queryClient.invalidateQueries(["campaign", response.data.challenge.campaign_id]);
+        }
+      }
+      invalidateJointQueries(queryClient);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+export function useMassVerifySubmissions(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => massVerifySubmissions(data),
+    onSuccess: (response, params) => {
+      queryClient.invalidateQueries(["recent_submissions"]);
+      for (let i = 0; i < response.data.length; i++) {
+        const submission = response.data[i];
+        queryClient.invalidateQueries(["submission", submission.id]);
+        if (submission.challenge_id !== null) {
+          queryClient.invalidateQueries(["challenge", submission.challenge_id]);
+          if (submission.challenge.map_id !== null) {
+            queryClient.invalidateQueries(["map", submission.challenge.map_id]);
+          } else {
+            queryClient.invalidateQueries(["campaign", submission.challenge.campaign_id]);
+          }
         }
       }
       invalidateJointQueries(queryClient);
