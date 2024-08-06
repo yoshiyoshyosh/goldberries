@@ -179,6 +179,33 @@ function send_webhook_submission_verified($submission)
   $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str!";
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
+function send_webhook_multi_submission_verified($submissions)
+{
+  global $DB;
+  global $webhooks_enabled;
+  if (!$webhooks_enabled) {
+    return;
+  }
+
+  $account = $submissions[0]->player->get_account($DB);
+  $player_name = "@`{$submissions[0]->player->get_name_escaped()}`";
+  $webhook_url = constant('NOTIFICATIONS_WEBHOOK_URL');
+  $allowed_mentions = ["users" => []];
+
+  if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
+    $player_name = "<@{$account->discord_id}>";
+    $allowed_mentions["users"][] = $account->discord_id;
+  }
+
+  $count = count($submissions);
+
+  $campaign_name = $submissions[0]->challenge->get_campaign()->get_name_for_discord();
+  $is_rejected = $submissions[0]->is_verified === false;
+  $emote = $is_rejected ? ":x:" : ":white_check_mark:";
+  $verified_str = $is_rejected ? "rejected" : "verified";
+  $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name} were $verified_str!";
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
+}
 
 function send_webhook_challenge_marked_personal($challenge)
 {
