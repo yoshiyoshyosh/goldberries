@@ -472,7 +472,7 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
       {/* <Typography variant="h6">Player Details</Typography> */}
       {hasMajorSort ? (
         campaign.sort_major_labels.map((major, index) => {
-          const maps = campaign.maps.filter((map) => map.sort_major === index);
+          const maps = validMaps.filter((map) => map.sort_major === index);
           const countCompleted = maps.reduce((acc, map) => {
             return acc + (mapData[map.id] !== undefined ? 1 : 0);
           }, 0);

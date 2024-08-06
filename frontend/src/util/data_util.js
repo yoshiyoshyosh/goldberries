@@ -50,11 +50,8 @@ export function getChallengeNameShort(challenge, withSuffix = false, includeFc =
     withSuffix && getChallengeSuffix(challenge) !== null ? " [" + getChallengeSuffix(challenge) + "]" : "";
   const cfcSuffix = includeFc ? " " + getChallengeFcShort(challenge) : "";
   return (
-    oldPrefix +
-    challenge.objective.name +
-    cfcSuffix +
-    getChallengeObjectiveSuffix(challenge) +
-    challengeSuffix
+    // oldPrefix +
+    challenge.objective.name + cfcSuffix + getChallengeObjectiveSuffix(challenge) + challengeSuffix
   );
 }
 

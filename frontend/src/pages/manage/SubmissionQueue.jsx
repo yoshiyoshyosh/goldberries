@@ -25,7 +25,7 @@ import { getQueryData, useGetSubmissionQueue, usePostSubmission } from "../../ho
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
-import { getChallengeCampaign, getChallengeSuffix } from "../../util/data_util";
+import { getChallengeCampaign, getChallengeSuffix, getMapName } from "../../util/data_util";
 import { useTranslation } from "react-i18next";
 
 export function PageSubmissionQueue() {
@@ -315,7 +315,9 @@ function SubmissionQueueTableRow({
   const campaign = getChallengeCampaign(challenge);
   const textTop =
     submission.player.name +
-    (challenge === null ? "" : " - " + (map === null ? getChallengeSuffix(challenge) : map.name));
+    (challenge === null
+      ? ""
+      : " - " + (map === null ? getChallengeSuffix(challenge) : getMapName(map, campaign)));
   const textBottom =
     challenge === null ? t("new_challenge") + " " + submission.new_challenge.name : campaign.name;
   const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;

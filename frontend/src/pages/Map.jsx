@@ -38,6 +38,7 @@ import {
   getGamebananaEmbedUrl,
   getMapAuthor,
   getMapLobbyInfo,
+  getMapName,
 } from "../util/data_util";
 import {
   BasicContainerBox,
@@ -94,7 +95,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
   const firstChallenge = map.challenges[0];
   const selectedChallenge = map.challenges.find((c) => c.id === selectedChallengeId) ?? firstChallenge;
   const campaign = map.campaign;
-  const title = map.name + " - " + getCampaignName(map.campaign, t_g);
+  const title = getMapName(map, campaign) + " - " + getCampaignName(map.campaign, t_g);
 
   return (
     <>

@@ -37,6 +37,7 @@ import {
   getChallengeNameShort,
   getChallengeSuffix,
   getMapLobbyInfo,
+  getMapName,
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
@@ -180,10 +181,10 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
           <InfoBoxIconTextLine text={campaign.name} isSecondary />
         </InfoBox>
         {map !== null ? (
-          map.name === campaign.name ? null : (
+          getMapName(map, campaign) === campaign.name ? null : (
             <InfoBox>
               <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
-              <InfoBoxIconTextLine text={map.name} isSecondary />
+              <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
             </InfoBox>
           )
         ) : (

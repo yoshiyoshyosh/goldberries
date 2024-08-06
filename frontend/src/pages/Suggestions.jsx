@@ -724,7 +724,7 @@ function ViewSuggestionModal({ id }) {
           <>
             <Grid item xs={12}>
               <Divider sx={{ mt: 2 }}>
-                <Chip label={"Stats"} size="small" />
+                <Chip label={t("stats")} size="small" />
               </Divider>
             </Grid>
             <Grid item xs={12} sm={9}>

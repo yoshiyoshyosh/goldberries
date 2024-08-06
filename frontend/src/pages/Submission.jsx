@@ -41,6 +41,7 @@ import {
   getChallengeFlags,
   getChallengeName,
   getChallengeNameShort,
+  getMapName,
   getSubmissionVerifier,
 } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
@@ -143,10 +144,6 @@ export function SubmissionDisplay({ id, onDelete }) {
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" gap={1}>
-            <ShareButton
-              text={API_BASE_URL + "/embed/submission.php?id=" + submission.id}
-              disabled={submission.new_challenge !== null}
-            />
             {isVerifier || isOwnSubmission ? (
               <CustomizedMenu title={t("buttons.modify")}>
                 <MenuItem disableRipple onClick={() => editModal.open(submission)}>
@@ -379,11 +376,11 @@ function ChallengeInfoBoxes({ challenge, map, campaign, hideMap = false, showObj
         </InfoBox>
       )}
       {map !== null ? (
-        map.name === campaign.name ? null : (
+        getMapName(map, campaign) === campaign.name ? null : (
           !hideMap && (
             <InfoBox>
               <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
-              <InfoBoxIconTextLine text={map.name} isSecondary />
+              <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
             </InfoBox>
           )
         )
