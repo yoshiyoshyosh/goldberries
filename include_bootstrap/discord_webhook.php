@@ -2,6 +2,11 @@
 
 $webhooks_enabled = true;
 
+function remove_backticks($str)
+{
+  return preg_replace('/`/', '', $str);
+}
+
 function send_webhook_suggestion_verified($suggestion)
 {
   global $DB;
@@ -33,8 +38,8 @@ function send_webhook_suggestion_verified($suggestion)
   $fields = [];
 
   $fields[] = [
-    "name" => "Author: " . $suggestion->author->name,
-    "value" => "Comment: " . $suggestion->comment,
+    "name" => "Author: `" . $suggestion->author->get_name_escaped() . "`",
+    "value" => "Comment: `" . remove_backticks($suggestion->comment) . "`",
     "inline" => false,
   ];
 
@@ -53,31 +58,59 @@ function send_webhook_suggestion_verified($suggestion)
       "inline" => false
     ];
 
-    $submission_index = 0;
+
+    //Put in the embed:
+    // - # of (non-personal) suggested difficulties (and % of all submissions)
+    // - count of each tier suggested, sorted from most common to least common (and % of all suggestions) 
+
+    $difficulties = [];
+    $count_submissions = count($challenge->submissions);
+    $count_suggestions = 0;
     foreach ($challenge->submissions as $submission) {
       $diff_suggestion = $submission->suggested_difficulty;
       //Not sure if this is the best way to handle personal suggestions in the embed
+      if ($diff_suggestion === null)
+        continue;
       if ($submission->is_personal)
-        $diff_suggestion = null;
-      $as_text = $diff_suggestion !== null ? "{$diff_suggestion->to_tier_name()}" : "<none>";
-      $fields[] = [
-        "name" => "`" . $submission->player->get_name_escaped() . "`",
-        "value" => $as_text,
-        "inline" => true
-      ];
-      $submission_index++;
+        continue;
 
-      //If there are 24 submissions at this point, break
-      if (count($fields) >= 24) {
-        $count = count($challenge->submissions) - 24;
-        $fields[] = [
-          "name" => "And more...",
-          "value" => "There are $count more submissions for this challenge",
-          "inline" => false
+      $count_suggestions++;
+
+      $diff_id = $diff_suggestion->id;
+      if (!isset($difficulties[$diff_id])) {
+        $difficulties[$diff_id] = [
+          "difficulty" => $diff_suggestion,
+          "count" => 0
         ];
-        break;
       }
+      $difficulties[$diff_id]["count"]++;
     }
+
+    $difficulties = array_values($difficulties);
+    usort($difficulties, function ($a, $b) {
+      return $b["count"] - $a["count"];
+    });
+
+    $difficulties_str_arr = [];
+    foreach ($difficulties as $diff) {
+      $diff_name = $diff["difficulty"]->to_tier_name();
+      $diff_count = $diff["count"];
+      $diff_percent = round($diff_count / $count_suggestions * 100, 1);
+      $difficulties_str_arr[] = "$diff_name: $diff_count ($diff_percent%)";
+    }
+    $difficulties_str = implode(", ", $difficulties_str_arr);
+
+    $suggestions_percent = round($count_suggestions / $count_submissions * 100, 1);
+    // $fields[] = [
+    //   "name" => "Data",
+    //   "value" => "$count_suggestions difficulty suggestions ({$suggestions_percent}%, from {$count_submissions} submissions)",
+    //   "inline" => false
+    // ];
+    $fields[] = [
+      "name" => "Difficulty Suggestions ({$count_suggestions}/{$count_submissions} submissions)",
+      "value" => "$difficulties_str",
+      "inline" => false
+    ];
   }
 
 
