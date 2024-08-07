@@ -232,11 +232,37 @@ function send_webhook_multi_submission_verified($submissions)
 
   $count = count($submissions);
 
-  $campaign_name = $submissions[0]->challenge->get_campaign()->get_name_for_discord();
+  $campaign = $submissions[0]->challenge->get_campaign();
+  $campaign_name = $campaign->get_name_for_discord();
+
+  $campaign_addition = "";
+  //Check if all maps for the submission have the same major_sort
+  //But first, check if all challenges even have maps
+  $all_have_maps = true;
+  foreach ($submissions as $submission) {
+    if ($submission->challenge->map_id === null) {
+      $all_have_maps = false;
+      break;
+    }
+  }
+  if ($all_have_maps) {
+    $sort_major = $submissions[0]->challenge->map->sort_major;
+    $all_same_sort_major = true;
+    foreach ($submissions as $submission) {
+      if ($submission->challenge->map->sort_major !== $sort_major) {
+        $all_same_sort_major = false;
+        break;
+      }
+    }
+    if ($all_same_sort_major && $sort_major !== null) {
+      $campaign_addition = " / `{$campaign->sort_major_labels[$sort_major]}`";
+    }
+  }
+
   $is_rejected = $submissions[0]->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
-  $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name} were $verified_str!";
+  $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name}{$campaign_addition} were $verified_str!";
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
