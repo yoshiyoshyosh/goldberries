@@ -113,6 +113,8 @@ $data = array(
 if ($map !== null) {
   $data["map_name"] = $map->name;
   $data["fields"][] = "map_name";
+  $data["map_is_archived"] = $map->is_archived;
+  $data["fields"][] = "map_is_archived";
 }
 
 // Encode in base64

@@ -179,6 +179,10 @@
               mapName = campaignName + " [" + mapName + "]";
               sameNames = true;
             }
+            let mapIsArchived = getCookie('map_is_archived') === "True";
+            if(mapIsArchived){
+              mapName = "[Old] " + mapName;
+            }
           }
           sel("#mapName").innerHTML = isFullGame ? campaignName : mapName;
           sel("#mapSuffix").innerHTML = challengeLabel === "None" ? "" : " ["+challengeLabel+"]";

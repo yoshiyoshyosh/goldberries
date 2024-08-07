@@ -71,7 +71,7 @@ foreach ($ids as $id) {
 $grouped_submissions = [];
 foreach ($submissions as $submission) {
   $player_id = $submission->player_id;
-  $campaign_id = $submission->challenge->campaign_id;
+  $campaign_id = $submission->challenge->get_campaign()->id;
 
   if (!isset($grouped_submissions[$player_id])) {
     $grouped_submissions[$player_id] = [];

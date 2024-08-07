@@ -43,7 +43,7 @@ function send_webhook_suggestion_verified($suggestion)
     "inline" => false,
   ];
 
-  if ($challenge) {
+  if ($challenge && $suggestion->suggested_difficulty_id !== null) {
     $objective = $challenge->objective->name;
     if ($challenge->get_suffix() !== null) {
       $objective += " [" . $challenge->get_suffix() . "]";
