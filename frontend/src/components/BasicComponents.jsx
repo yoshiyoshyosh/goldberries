@@ -216,10 +216,7 @@ export function ProofEmbed({ url, ...props }) {
   return (
     <div {...props}>
       <Typography color="text.secondary">
-        {t("video_embed.error")}{" "}
-        <Link to={url} target="_blank">
-          {url}
-        </Link>
+        {t("video_embed.error")} <StyledExternalLink href={url}>{url}</StyledExternalLink>
       </Typography>
     </div>
   );

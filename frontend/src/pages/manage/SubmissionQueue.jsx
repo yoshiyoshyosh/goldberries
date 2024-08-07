@@ -8,6 +8,7 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   Paper,
   Stack,
   Table,
@@ -18,20 +19,28 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   getQueryData,
+  useDeleteVerificationNotice,
   useGetSubmissionQueue,
   useMassVerifySubmissions,
   usePostSubmission,
+  usePostVerificationNotice,
 } from "../../hooks/useApi";
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
 import { getChallengeCampaign, getChallengeSuffix, getMapName } from "../../util/data_util";
 import { useTranslation } from "react-i18next";
+import { GridArrowDownwardIcon, GridArrowUpwardIcon } from "@mui/x-data-grid";
+import { useTheme } from "@emotion/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../hooks/AuthProvider";
 
 export function PageSubmissionQueue() {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
@@ -50,10 +59,11 @@ export function PageSubmissionQueue() {
   };
 
   const query = useGetSubmissionQueue();
-  const queue = getQueryData(query);
+  const data = getQueryData(query);
 
   useEffect(() => {
-    if (queue === null || queue === undefined) return;
+    if (data === null || data === undefined) return;
+    const queue = data.queue;
 
     if (submissionId === null && queue.length > 0) {
       updateSubmissionId(queue[0].id);
@@ -92,6 +102,8 @@ export function PageSubmissionQueue() {
     );
   }
 
+  const { queue, notices } = data;
+
   const goToNextSubmission = (currentSubmission) => {
     const currentIndex = queue.findIndex((submission) => submission.id === currentSubmission.id);
     if (currentIndex === -1) {
@@ -128,6 +140,7 @@ export function PageSubmissionQueue() {
         >
           <SubmissionQueueTable
             queue={queue}
+            notices={notices}
             selectedSubmissionId={parseInt(submissionId)}
             setSubmissionId={updateSubmissionId}
           />
@@ -143,14 +156,15 @@ export function PageSubmissionQueue() {
   );
 }
 
-function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) {
+function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmissionId }) {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_a } = useTranslation();
+  const theme = useTheme();
   const [rowsPerPage, setRowsPerPage] = useLocalStorage("submission_queue_rows_per_page", 10);
   const [selected, setSelected] = useState([]);
   const [note, setNote] = useState("");
-  const { mutateAsync: updateSubmission } = usePostSubmission();
+  const [switchSort, setSwitchSort] = useState(false);
   const { mutateAsync: massVerifySubmissions } = useMassVerifySubmissions();
 
   let defaultPage = 0;
@@ -164,7 +178,9 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
 
   const onSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = queue.map((submission) => submission.id);
+      //Filter all new challenges
+      const validSelects = queue.filter((submission) => submission.challenge !== null);
+      const newSelecteds = validSelects.map((submission) => submission.id);
       setSelected(newSelecteds);
       return;
     }
@@ -208,49 +224,10 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
       });
   };
 
+  const queueFlipped = switchSort ? queue.slice().reverse() : queue;
+
   return (
-    <TableContainer component={Paper} sx={{ width: { xs: "100%", xl: "400px" } }}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ p: 0 }} width={1}>
-              <Checkbox
-                indeterminate={selected.length > 0 && selected.length < queue.length}
-                onClick={onSelectAllClick}
-              />
-            </TableCell>
-            <TableCell sx={{ pl: 1 }}>
-              {selected.length > 0 ? (
-                <Typography variant="h6">{t("selected", { count: selected.length })}</Typography>
-              ) : (
-                <Typography variant="h6">{t("total", { count: queue.length })}</Typography>
-              )}
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {queue.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={2}>
-                <Typography variant="body1">{t("queue_empty")}</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-          {(rowsPerPage === -1
-            ? queue
-            : queue.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          ).map((submission) => (
-            <SubmissionQueueTableRow
-              key={submission.id}
-              submission={submission}
-              selectedSubmissionId={selectedSubmissionId}
-              setSubmissionId={setSubmissionId}
-              isSelected={selected.includes(submission.id)}
-              onSelect={onSelectSubmission}
-            />
-          ))}
-        </TableBody>
-      </Table>
+    <TableContainer component={Paper} sx={{ width: { xs: "100%", xl: "430px" } }}>
       <TablePagination
         labelRowsPerPage={t_g("table_rows_per_page")}
         rowsPerPageOptions={[5, 10, 25, 50, 100, { label: t_g("all"), value: -1 }]}
@@ -270,7 +247,58 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
             },
           },
         }}
+        sx={{ borderBottom: `1px solid ${theme.palette.tableRowBorder}` }}
       />
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ p: 0 }} width={1}>
+              <Checkbox
+                indeterminate={selected.length > 0 && selected.length < queue.length}
+                onClick={onSelectAllClick}
+              />
+            </TableCell>
+            <TableCell sx={{ pl: 1 }}>
+              {selected.length > 0 ? (
+                <Typography variant="h6">{t("selected", { count: selected.length })}</Typography>
+              ) : (
+                <Typography variant="h6">{t("total", { count: queue.length })}</Typography>
+              )}
+            </TableCell>
+            <TableCell sx={{ pl: 0, pr: 1 }} width={1}>
+              <IconButton size="small" onClick={() => setSwitchSort(!switchSort)}>
+                {switchSort ? <GridArrowDownwardIcon /> : <GridArrowUpwardIcon />}
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {queue.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={3}>
+                <Typography variant="body1">{t("queue_empty")}</Typography>
+              </TableCell>
+            </TableRow>
+          )}
+          {(rowsPerPage === -1
+            ? queueFlipped
+            : queueFlipped.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          ).map((submission) => {
+            const notice = notices.find((notice) => notice.submission_id === submission.id);
+            return (
+              <SubmissionQueueTableRow
+                key={submission.id}
+                submission={submission}
+                notice={notice}
+                selectedSubmissionId={selectedSubmissionId}
+                setSubmissionId={setSubmissionId}
+                isSelected={selected.includes(submission.id)}
+                onSelect={onSelectSubmission}
+              />
+            );
+          })}
+        </TableBody>
+      </Table>
       {selected.length > 0 && (
         <Grid container spacing={1} sx={{ p: 1 }}>
           <Grid item xs={12} md={12}>
@@ -312,12 +340,29 @@ function SubmissionQueueTable({ queue, selectedSubmissionId, setSubmissionId }) 
 
 function SubmissionQueueTableRow({
   submission,
+  notice,
   selectedSubmissionId,
   setSubmissionId,
   isSelected,
   onSelect,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
+  const auth = useAuth();
+  const { mutateAsync: postNotice } = usePostVerificationNotice();
+  const { mutateAsync: deleteNotice } = useDeleteVerificationNotice();
+
+  const onClickNotice = () => {
+    if (notice) {
+      if (auth.user.player_id !== notice.verifier.id) {
+        toast.error(t("feedback.already_locked"));
+        return;
+      }
+      deleteNotice(notice.id);
+    } else {
+      postNotice({ submission_id: submission.id });
+    }
+  };
+
   const challenge = submission.challenge;
   const map = challenge !== null ? challenge.map : null;
   const campaign = getChallengeCampaign(challenge);
@@ -330,6 +375,19 @@ function SubmissionQueueTableRow({
     challenge === null ? t("new_challenge") + " " + submission.new_challenge.name : campaign.name;
   const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;
   const isNewChallenge = challenge === null;
+
+  const noticeButton = (
+    <Button
+      variant={notice ? "contained" : "outlined"}
+      color={notice ? (notice.verifier.id === auth.user.player_id ? "success" : "warning") : "primary"}
+      size="small"
+      sx={{ minWidth: "unset" }}
+      onClick={onClickNotice}
+    >
+      {notice ? <FontAwesomeIcon icon={faLock} /> : <FontAwesomeIcon icon={faLockOpen} />}
+    </Button>
+  );
+
   return (
     <TableRow
       key={submission.id}
@@ -348,6 +406,7 @@ function SubmissionQueueTableRow({
           setSubmissionId(submission.id);
         }}
         sx={{ pl: 1 }}
+        colSpan={1}
       >
         <Stack direction="row">
           <Typography variant="body1" sx={{ flex: 1 }}>
@@ -361,6 +420,9 @@ function SubmissionQueueTableRow({
           </Typography>
           <DifficultyChip difficulty={diff} />
         </Stack>
+      </TableCell>
+      <TableCell sx={{ pl: 0, pr: 0 }} width={1}>
+        {notice ? <Tooltip title={notice.verifier.name}>{noticeButton}</Tooltip> : noticeButton}
       </TableCell>
     </TableRow>
   );

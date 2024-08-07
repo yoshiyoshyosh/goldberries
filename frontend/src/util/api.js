@@ -355,6 +355,9 @@ export function postChallengeMarkPersonal(data) {
   data.mark_personal = true;
   return axios.post("/challenge", formatDataForApi(data));
 }
+export function postVerificationNotice(data) {
+  return axios.post("/verification-notice", formatDataForApi(data));
+}
 
 export function postSubmission(data) {
   return axios.post("/submission", formatDataForApi(data));
@@ -514,6 +517,14 @@ export function deleteSuggestion(id) {
 }
 export function deleteSuggestionVote(id) {
   return axios.delete("/suggestion/vote", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function deleteVerificationNotice(id) {
+  return axios.delete("/verification-notice", {
     params: {
       id: id,
     },

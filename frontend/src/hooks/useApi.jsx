@@ -63,6 +63,8 @@ import {
   fetchStatsPlayerTierClearCounts,
   fetchStatsMonthlyTierClears,
   massVerifySubmissions,
+  postVerificationNotice,
+  deleteVerificationNotice,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -622,6 +624,18 @@ export function useChallengeMarkPersonal(onSuccess) {
     onError: errorToast,
   });
 }
+
+export function usePostVerificationNotice(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => postVerificationNotice(data),
+    onSuccess: (response, data) => {
+      queryClient.invalidateQueries(["submission_queue"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
 //#endregion
 
 //#region == DELETE ==
@@ -767,6 +781,19 @@ export function useDeleteSuggestionVote(onSuccess) {
       queryClient.invalidateQueries(["suggestions"]);
       if (onSuccess) onSuccess(response);
       else toast.success("Vote deleted");
+    },
+    onError: errorToast,
+  });
+}
+
+export function useDeleteVerificationNotice(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deleteVerificationNotice(id),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(["submission_queue"]);
+      if (onSuccess) onSuccess(response);
+      else toast.success("Notice removed");
     },
     onError: errorToast,
   });

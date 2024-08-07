@@ -177,7 +177,7 @@ const router = createBrowserRouter([
           {
             path: "submission-queue/:submission?",
             element: (
-              <ProtectedRoute redirect="manage/submission-queue">
+              <ProtectedRoute needsVerifier redirect="manage/submission-queue">
                 <PageSubmissionQueue />
               </ProtectedRoute>
             ),
@@ -279,6 +279,7 @@ export const lightTheme = createTheme({
     },
     tableDivider: "#949494",
     tableDividerStrong: "#949494",
+    tableRowBorder: "rgba(224, 224, 224, 1)",
     box: {
       border: "#cccccc99",
       hover: "#f0f0f0",
@@ -316,6 +317,7 @@ const darkTheme = createTheme({
     },
     tableDivider: "#515151",
     tableDividerStrong: "#515151",
+    tableRowBorder: "rgba(81, 81, 81, 1)",
     box: {
       border: "#cccccc99",
       hover: "#333",

@@ -71,6 +71,11 @@ export function PageManageChallenges() {
   const [searchInternal, setSearchInternal] = useLocalStorage("manage_challenges_search", "");
   const [search, setSearch] = useState(searchInternal ?? "");
 
+  const updateSearch = (value) => {
+    setSearch(value);
+    setPage(1);
+  };
+
   const modalRefs = {
     campaign: {
       create: useRef(),
@@ -108,7 +113,7 @@ export function PageManageChallenges() {
           <CreateAnyButton />
         </Grid>
       </Grid>
-      <ManageChallengesSearchField search={search} setSearch={setSearch} />
+      <ManageChallengesSearchField search={search} setSearch={updateSearch} />
       <ManageChallengesTable
         page={page}
         perPage={perPage}
@@ -137,10 +142,6 @@ function ManageChallengesSearchField({ search, setSearch }) {
       }}
       sx={{ mb: 2, mt: { xs: 2, sm: 0 } }}
       fullWidth
-      onFocus={(e) => {
-        setSearchInternal("");
-        setSearchDebounced("");
-      }}
     />
   );
 }
