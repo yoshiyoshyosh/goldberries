@@ -350,7 +350,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         />
       ) : null}
 
-      <Divider sx={{ mt: 2, mb: 1 }} />
+      <Divider sx={{ my: 2 }} />
 
       {isVerifier && submission.is_verified === null && (
         <Controller
@@ -367,19 +367,8 @@ export function FormSubmission({ submission, onSave, ...props }) {
           )}
         />
       )}
-      {isVerifier ? (
-        submission.is_verified !== null ? (
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={onUpdateSubmit}
-            disabled={submitDisabled}
-          >
-            {t("buttons.update")}
-          </Button>
-        ) : (
+      {isVerifier && submission.is_verified === null && (
+        <>
           <Stack direction="row" gap={2}>
             <Button
               variant="contained"
@@ -400,18 +389,18 @@ export function FormSubmission({ submission, onSave, ...props }) {
               {t("buttons.reject")}
             </Button>
           </Stack>
-        )
-      ) : (
-        <Button
-          variant="contained"
-          fullWidth
-          color="primary"
-          onClick={onUpdateSubmit}
-          disabled={submitDisabled}
-        >
-          {t("buttons.update")}
-        </Button>
+          <Divider sx={{ my: 2 }} />
+        </>
       )}
+      <Button
+        variant="contained"
+        fullWidth
+        color="primary"
+        onClick={onUpdateSubmit}
+        disabled={submitDisabled}
+      >
+        {t("buttons.update")}
+      </Button>
     </form>
   );
 }

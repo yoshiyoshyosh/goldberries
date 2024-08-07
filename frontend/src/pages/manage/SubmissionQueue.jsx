@@ -34,7 +34,7 @@ import {
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
-import { getChallengeCampaign, getChallengeSuffix, getMapName } from "../../util/data_util";
+import { getCampaignName, getChallengeCampaign, getChallengeSuffix, getMapName } from "../../util/data_util";
 import { useTranslation } from "react-i18next";
 import { GridArrowDownwardIcon, GridArrowUpwardIcon } from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
@@ -105,6 +105,7 @@ export function PageSubmissionQueue() {
   const { queue, notices } = data;
 
   const goToNextSubmission = (currentSubmission) => {
+    if (currentSubmission.is_verified === null) return;
     const currentIndex = queue.findIndex((submission) => submission.id === currentSubmission.id);
     if (currentIndex === -1) {
       updateSubmissionId(null);
@@ -165,6 +166,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
   const [selected, setSelected] = useState([]);
   const [note, setNote] = useState("");
   const [switchSort, setSwitchSort] = useState(false);
+  const [filterText, setFilterText] = useState("");
   const { mutateAsync: massVerifySubmissions } = useMassVerifySubmissions();
 
   let defaultPage = 0;
@@ -176,10 +178,29 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
   }
   const [page, setPage] = useState(defaultPage);
 
+  const queueFlipped = switchSort ? queue.slice().reverse() : queue;
+  const queueFiltered =
+    filterText === ""
+      ? queueFlipped
+      : queueFlipped.filter((submission) => {
+          let text = submission.player.name;
+          if (submission.challenge !== null) {
+            const challenge = submission.challenge;
+            const campaign = getChallengeCampaign(challenge);
+            if (challenge.map !== null) {
+              text += " " + getMapName(challenge.map, campaign);
+            }
+            text += " " + getCampaignName(campaign, t_g, true);
+          } else {
+            text += " " + submission.new_challenge.name;
+          }
+          return text.toLowerCase().includes(filterText.toLowerCase());
+        });
+
   const onSelectAllClick = (event) => {
     if (event.target.checked) {
       //Filter all new challenges
-      const validSelects = queue.filter((submission) => submission.challenge !== null);
+      const validSelects = queueFiltered.filter((submission) => submission.challenge !== null);
       const newSelecteds = validSelects.map((submission) => submission.id);
       setSelected(newSelecteds);
       return;
@@ -224,7 +245,10 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
       });
   };
 
-  const queueFlipped = switchSort ? queue.slice().reverse() : queue;
+  const changedFilterText = (text) => {
+    setFilterText(text);
+    setPage(0);
+  };
 
   return (
     <TableContainer component={Paper} sx={{ width: { xs: "100%", xl: "430px" } }}>
@@ -232,7 +256,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
         labelRowsPerPage={t_g("table_rows_per_page")}
         rowsPerPageOptions={[5, 10, 25, 50, 100, { label: t_g("all"), value: -1 }]}
         component="div"
-        count={queue.length}
+        count={queueFiltered.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(event, newPage) => setPage(newPage)}
@@ -249,6 +273,16 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
         }}
         sx={{ borderBottom: `1px solid ${theme.palette.tableRowBorder}` }}
       />
+      <Box sx={{ p: 1, borderBottom: `1px solid ${theme.palette.tableRowBorder}` }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder={t("filter_placeholder")}
+          value={filterText}
+          onChange={(event) => changedFilterText(event.target.value)}
+          size="small"
+        />
+      </Box>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -262,7 +296,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
               {selected.length > 0 ? (
                 <Typography variant="h6">{t("selected", { count: selected.length })}</Typography>
               ) : (
-                <Typography variant="h6">{t("total", { count: queue.length })}</Typography>
+                <Typography variant="h6">{t("total", { count: queueFiltered.length })}</Typography>
               )}
             </TableCell>
             <TableCell sx={{ pl: 0, pr: 1 }} width={1}>
@@ -281,8 +315,8 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
             </TableRow>
           )}
           {(rowsPerPage === -1
-            ? queueFlipped
-            : queueFlipped.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ? queueFiltered
+            : queueFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           ).map((submission) => {
             const notice = notices.find((notice) => notice.submission_id === submission.id);
             return (
