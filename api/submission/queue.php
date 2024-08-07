@@ -7,4 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $submissions = Submission::get_submission_queue($DB);
-api_write($submissions);
+$notices = VerificationNotice::get_all($DB);
+
+api_write(
+  array(
+    'queue' => $submissions,
+    'notices' => $notices,
+  )
+);

@@ -8,6 +8,7 @@ DROP VIEW view_submissions;
 DROP TABLE fwg_data;
 DROP TABLE showcase;
 DROP TABLE suggestion_vote;
+DROP TABLE verification_notice;
 
 DROP TABLE change;
 DROP TABLE submission;
@@ -301,6 +302,18 @@ CREATE TABLE showcase
  CONSTRAINT showcase_account_id_fkey FOREIGN KEY ( account_id ) REFERENCES account ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT showcase_submission_id_fkey FOREIGN KEY ( submission_id ) REFERENCES submission ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT check_showcase_index CHECK ( index > -1 AND index < 10 )
+);
+
+-- ====== verification_notice ======
+CREATE TABLE verification_notice
+(
+ "id"          integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+ verifier_id   integer NOT NULL,
+ submission_id integer NOT NULL,
+ CONSTRAINT verification_notice_pkey PRIMARY KEY ( "id" ),
+ CONSTRAINT verification_notice_submission_id_unique UNIQUE ( submission_id ),
+ CONSTRAINT verification_notice_submission_id_fkey FOREIGN KEY ( submission_id ) REFERENCES submission ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
+ CONSTRAINT verification_notice_verifier_id_fkey FOREIGN KEY ( verifier_id ) REFERENCES player ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 

@@ -22,6 +22,7 @@ $requireObjects = array(
   "suggestion",
   "suggestion_vote",
   "showcase",
+  "verification_notice",
 );
 
 foreach ($requireObjects as $obj) {

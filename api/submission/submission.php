@@ -123,6 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         submission_embed_change($old_submission->id, "submission");
         if (!$was_verified) {
           log_info("'{$account->player->name}' updated {$old_submission}", "Submission");
+        } else {
+          VerificationNotice::delete_for_submission_id($DB, $old_submission->id);
         }
         $old_submission->expand_foreign_keys($DB, 5);
         if ($was_verified && !$skip_webhook) {

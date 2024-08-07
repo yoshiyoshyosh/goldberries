@@ -56,6 +56,7 @@ foreach ($ids as $id) {
 
   if ($submission->update($DB)) {
     submission_embed_change($submission->id, "submission");
+    VerificationNotice::delete_for_submission_id($DB, $submission->id);
     $submission->expand_foreign_keys($DB, 5);
     $submissions[] = $submission;
   } else {
