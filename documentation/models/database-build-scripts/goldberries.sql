@@ -47,6 +47,7 @@ CREATE TABLE campaign
  sort_minor_colors text NULL,
  author_gb_id             integer NULL,
  author_gb_name           varchar(128) NULL,
+ note                     text NULL,
  CONSTRAINT campaign_pkey PRIMARY KEY ( "id" )
 );
 
@@ -163,6 +164,7 @@ CREATE TABLE "map"
  sort_order       integer NULL,
  author_gb_id     integer NULL,
  author_gb_name   varchar(128) NULL,
+ note             text NULL,
  CONSTRAINT map_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT map_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -333,6 +335,7 @@ CREATE VIEW "view_submissions" AS SELECT
   COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
   COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,
   COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,
+  COALESCE(campaign.note, fg_campaign.note) AS campaign_note,
 
   map.id AS map_id,
   map.campaign_id AS map_campaign_id,
@@ -348,6 +351,7 @@ CREATE VIEW "view_submissions" AS SELECT
   map.sort_order AS map_sort_order,
   map.author_gb_id AS map_author_gb_id,
   map.author_gb_name AS map_author_gb_name,
+  map.note AS map_note,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -454,6 +458,7 @@ CREATE VIEW "view_challenges" AS SELECT
   COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
   COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,
   COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,
+  COALESCE(campaign.note, fg_campaign.note) AS campaign_note,
 
   map.id AS map_id,
   map.campaign_id AS map_campaign_id,
@@ -469,6 +474,7 @@ CREATE VIEW "view_challenges" AS SELECT
   map.sort_order AS map_sort_order,
   map.author_gb_id AS map_author_gb_id,
   map.author_gb_name AS map_author_gb_name,
+  map.note AS map_note,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -525,6 +531,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   COALESCE(campaign.sort_minor_colors, fg_campaign.sort_minor_colors) AS campaign_sort_minor_colors,
   COALESCE(campaign.author_gb_id, fg_campaign.author_gb_id) AS campaign_author_gb_id,                        
   COALESCE(campaign.author_gb_name, fg_campaign.author_gb_name) AS campaign_author_gb_name,                  
+  COALESCE(campaign.note, fg_campaign.note) AS campaign_note,
                                                                          
   map.id AS map_id,                                                      
   map.campaign_id AS map_campaign_id,                                    
@@ -540,6 +547,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   map.sort_order AS map_sort_order,
   map.author_gb_id AS map_author_gb_id,
   map.author_gb_name AS map_author_gb_name,
+  map.note AS map_note,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,

@@ -16,6 +16,7 @@ class Campaign extends DbObject
   public ?array $sort_minor_colors = null;
   public ?int $author_gb_id = null;
   public ?string $author_gb_name = null;
+  public ?string $note = null;
 
   /* Associative objects */
   public ?array $maps = null;
@@ -38,6 +39,7 @@ class Campaign extends DbObject
       'sort_minor_colors' => $this->sort_minor_colors ? implode("\t", $this->sort_minor_colors) : null,
       'author_gb_id' => $this->author_gb_id,
       'author_gb_name' => $this->author_gb_name,
+      'note' => $this->note,
     );
   }
 
@@ -79,6 +81,9 @@ class Campaign extends DbObject
       $this->author_gb_id = intval($arr[$prefix . 'author_gb_id']);
     if (isset($arr[$prefix . 'author_gb_name']))
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
+
+    if (isset($arr[$prefix . 'note']))
+      $this->note = $arr[$prefix . 'note'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)

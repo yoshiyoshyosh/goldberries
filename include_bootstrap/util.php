@@ -80,6 +80,65 @@ class JsonDateTime extends \DateTime implements \JsonSerializable
   }
 }
 
+class StringList implements \JsonSerializable
+{
+  static $ITEM_SEPERATOR = "\t";
+  static $VALUE_SEPERATOR = "|";
+
+  public $arr = [];
+  public $value_count = 1;
+
+  public function __construct($value_count, $str = '')
+  {
+    $this->value_count = $value_count;
+    if ($str !== '')
+      $this->parse($str);
+  }
+
+  function parse($str)
+  {
+    $this->arr = StringList::parse_list($str, $this->value_count);
+  }
+
+  static function parse_list($str, $value_count)
+  {
+    //Within 1 string there will be a list of items, seperated by a tab. the items iteself are a value and a description, seperated by a semi-colon
+    //Trim and remove items with empty values
+    $items = explode(StringList::$ITEM_SEPERATOR, $str);
+    $output = array();
+    foreach ($items as $item) {
+      $item = trim($item);
+      if ($item === '') {
+        continue;
+      }
+      $parts = array_map('trim', explode(StringList::$VALUE_SEPERATOR, $item));
+      if (count($parts) !== $value_count) {
+        return false;
+      }
+      $output[] = $parts;
+    }
+    return $output;
+  }
+
+  function __toString(): string
+  {
+    $outputArr = [];
+    foreach ($this->arr as $item) {
+      //$item is an array of X elements
+      if (count($item) !== $this->value_count) {
+        continue; //Effectively delete this item
+      }
+      $outputArr[] = implode(StringList::$VALUE_SEPERATOR, $item);
+    }
+    return implode(StringList::$ITEM_SEPERATOR, $outputArr);
+  }
+
+  public function jsonSerialize()
+  {
+    return $this->arr;
+  }
+}
+
 
 // Top Golden List utils
 function find_challenge_in_array($arr, $challenge_id)

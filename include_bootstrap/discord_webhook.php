@@ -46,7 +46,7 @@ function send_webhook_suggestion_verified($suggestion)
   if ($challenge && $suggestion->suggested_difficulty_id !== null) {
     $objective = $challenge->objective->name;
     if ($challenge->get_suffix() !== null) {
-      $objective += " [" . $challenge->get_suffix() . "]";
+      $objective .= " [" . $challenge->get_suffix() . "]";
     }
 
     $current_diff_name = $challenge->difficulty->to_tier_name();

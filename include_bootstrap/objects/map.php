@@ -5,7 +5,7 @@ class Map extends DbObject
   public static string $table_name = 'map';
 
   public string $name;
-  public ?string $url = null;
+  public ?StringList $url = null;
   public ?JsonDateTime $date_added = null;
   public bool $has_fc = false;
   public bool $is_rejected = false;
@@ -16,6 +16,7 @@ class Map extends DbObject
   public ?int $sort_order = null;
   public ?int $author_gb_id = null;
   public ?string $author_gb_name = null;
+  public ?string $note = null;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -33,7 +34,7 @@ class Map extends DbObject
   {
     return array(
       'name' => $this->name,
-      'url' => $this->url,
+      'url' => $this->url === null ? null : $this->url->__toString(),
       'date_added' => $this->date_added,
       'has_fc' => $this->has_fc,
       'is_rejected' => $this->is_rejected,
@@ -45,6 +46,7 @@ class Map extends DbObject
       'author_gb_id' => $this->author_gb_id,
       'author_gb_name' => $this->author_gb_name,
       'campaign_id' => $this->campaign_id,
+      'note' => $this->note,
     );
   }
 
@@ -58,8 +60,15 @@ class Map extends DbObject
 
     if (isset($arr[$prefix . 'date_added']))
       $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
-    if (isset($arr[$prefix . 'url']))
-      $this->url = $arr[$prefix . 'url'];
+    if (isset($arr[$prefix . 'url'])) {
+      $value = $arr[$prefix . 'url'];
+      if (is_array($value)) {
+        $this->url = new StringList(2);
+        $this->url->arr = $value;
+      } else {
+        $this->url = new StringList(2, $value);
+      }
+    }
     if (isset($arr[$prefix . 'side']))
       $this->side = $arr[$prefix . 'side'];
     if (isset($arr[$prefix . 'rejection_reason']))
@@ -76,6 +85,8 @@ class Map extends DbObject
       $this->author_gb_name = $arr[$prefix . 'author_gb_name'];
     if (isset($arr[$prefix . 'campaign_id']))
       $this->campaign_id = intval($arr[$prefix . 'campaign_id']);
+    if (isset($arr[$prefix . 'note']))
+      $this->note = $arr[$prefix . 'note'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -182,9 +193,9 @@ class Map extends DbObject
       $newCampaign = Campaign::get_by_id($DB, $new->campaign_id);
       Change::create_change($DB, 'map', $new->id, "Moved map from campaign '{$oldCampaign->name}' to '{$newCampaign->name}'");
     }
-    if ($old->url !== $new->url) {
-      Change::create_change($DB, 'map', $new->id, "Changed url from '{$old->url}' to '{$new->url}'");
-    }
+    // if ($old->url !== $new->url) {
+    //   Change::create_change($DB, 'map', $new->id, "Changed url from '{$old->url}' to '{$new->url}'");
+    // }
     if ($old->is_archived !== $new->is_archived) {
       $stateNow = $new->is_archived ? "Archived the map" : "Unarchived the map";
       Change::create_change($DB, 'map', $new->id, $stateNow);
