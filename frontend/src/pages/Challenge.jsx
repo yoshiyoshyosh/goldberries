@@ -46,6 +46,7 @@ import {
   faArrowRight,
   faBook,
   faCheckCircle,
+  faClock,
   faComment,
   faEdit,
   faExternalLink,
@@ -68,6 +69,7 @@ import { useTranslation } from "react-i18next";
 import { AuthorInfoBoxLine } from "./Campaign";
 import { toast } from "react-toastify";
 import { memo } from "react";
+import { jsonDateToJsDate } from "../util/util";
 
 const displayNoneOnMobile = {
   display: {
@@ -289,16 +291,23 @@ export function ChallengeSubmissionTable({
           <TableRow>
             <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
             <TableCell width={compact ? 1 : undefined}>{t_g("player", { count: 1 })}</TableCell>
-            {!compact && auth.hasVerifierPriv && <TableCell width={1} sx={displayNoneOnMobile}></TableCell>}
+            {!compact && auth.hasVerifierPriv && (
+              <TableCell width={1} sx={{ ...displayNoneOnMobile, px: 0 }}></TableCell>
+            )}
             {!compact && (
               <TableCell width={1} align="center" sx={displayNoneOnMobile}>
                 <FontAwesomeIcon icon={faComment} />
               </TableCell>
             )}
+            {!compact && (
+              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+                <FontAwesomeIcon icon={faClock} />
+              </TableCell>
+            )}
             <TableCell width={1} align="center" sx={displayNoneOnMobile}>
               <FontAwesomeIcon icon={faYoutube} />
             </TableCell>
-            {compact ? null : (
+            {!compact && (
               <TableCell
                 width={1}
                 align="center"
@@ -369,16 +378,15 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
         </Stack>
       </TableCell>
       {!compact && auth.hasVerifierPriv && (
-        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+        <TableCell width={1} align="center" sx={{ ...displayNoneOnMobile, px: 0 }}>
           <Button
             onClick={handleToggleFcClicked}
             variant="outlined"
             size="small"
-            startIcon={<FontAwesomeIcon icon={submission.is_fc ? faToggleOn : faToggleOff} />}
             color={submission.is_fc ? "warning" : "success"}
-            sx={{ whiteSpace: "nowrap" }}
+            sx={{ whiteSpace: "nowrap", minWidth: "unset" }}
           >
-            {submission.is_fc ? "FC" : "Not FC"}
+            <FontAwesomeIcon icon={submission.is_fc ? faToggleOn : faToggleOff} />
           </Button>
         </TableCell>
       )}
@@ -389,6 +397,11 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
               <FontAwesomeIcon icon={faComment} />
             </Tooltip>
           )}
+        </TableCell>
+      )}
+      {!compact && (
+        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+          {submission.date_created && jsonDateToJsDate(submission.date_created).toLocaleDateString()}
         </TableCell>
       )}
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
