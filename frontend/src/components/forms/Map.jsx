@@ -17,6 +17,7 @@ import { CampaignSelect } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 import { getQueryData, usePostMap } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
+import { StringListEditor } from "../StringListEditor";
 
 export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -35,7 +36,7 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
         id: null,
         campaign: null,
         name: defaultMapName ?? "",
-        url: "",
+        url: null,
         has_fc: false,
         is_rejected: false,
         rejection_reason: "",
@@ -104,6 +105,7 @@ export function FormMap({ map, onSave, ...props }) {
 
   const campaign = form.watch("campaign");
   const is_rejected = form.watch("is_rejected");
+  const url = form.watch("url");
 
   return (
     <form {...props}>
@@ -132,7 +134,6 @@ export function FormMap({ map, onSave, ...props }) {
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />
-      <TextField label={t_g("url")} sx={{ mt: 2 }} fullWidth {...form.register("url")} />
 
       <Controller
         control={form.control}
@@ -183,6 +184,22 @@ export function FormMap({ map, onSave, ...props }) {
         />
       )}
 
+      <TextField label={t("note")} sx={{ mt: 2 }} fullWidth {...form.register("note")} />
+
+      <Divider sx={{ my: 2 }} />
+      <Controller
+        control={form.control}
+        name="url"
+        render={({ field }) => (
+          <StringListEditor
+            label="URL List"
+            valueLabels={["URL", "Description (optional)"]}
+            list={field.value}
+            setList={field.onChange}
+            valueCount={2}
+          />
+        )}
+      />
       <Divider sx={{ my: 2 }} />
 
       <TextField label={t_ca("author_gb_id")} fullWidth {...form.register("author_gb_id")} />

@@ -63,6 +63,7 @@ import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilt
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormCampaignWrapper } from "../components/forms/Campaign";
+import { NoteDisclaimer } from "./Challenge";
 
 const STYLE_CONSTS = {
   player: {
@@ -155,6 +156,8 @@ export function CampaignDisplay({ id, tab, setTab = () => {} }) {
       )}
 
       <CampaignDetailsList campaign={campaign} sx={{ mt: 0 }} />
+
+      {campaign.note && <NoteDisclaimer note={campaign.note} title={t("note")} sx={{ mt: 1 }} />}
 
       <Divider sx={{ mt: 2 }} />
 

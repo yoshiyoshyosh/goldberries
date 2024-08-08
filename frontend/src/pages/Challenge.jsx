@@ -52,6 +52,7 @@ import {
   faExternalLink,
   faExternalLinkAlt,
   faFlagCheckered,
+  faInfoCircle,
   faPlus,
   faToggleOff,
   faToggleOn,
@@ -134,6 +135,9 @@ export function ChallengeDisplay({ id }) {
         </Stack>
       )}
       <ChallengeDetailsList map={challenge.map} challenge={challenge} sx={{ mb: 1, mt: 0.5 }} />
+      {challenge.description && (
+        <NoteDisclaimer title={t("description")} note={challenge.description} sx={{ mb: 2 }} />
+      )}
       <ChallengeSubmissionTable challenge={challenge} />
 
       <Divider sx={{ my: 2 }}>
@@ -168,8 +172,14 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
 
-  const mapUrl =
-    map !== null ? (map.url !== null ? map.url : map.campaign.url) : campaign !== null ? campaign.url : null;
+  const mapUrls =
+    map !== null
+      ? map.url !== null
+        ? map.url
+        : [[map.campaign.url, ""]]
+      : campaign !== null
+      ? [[campaign.url, ""]]
+      : null;
   const mapHasAuthor = map !== null && map.author_gb_name !== null;
 
   return (
@@ -229,20 +239,34 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
               <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
               <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
             </InfoBox>
-            {challenge.description !== null && (
+            {/* {challenge.description !== null && (
               <InfoBox>
                 <InfoBoxIconTextLine text={t_g("description")} icon={<FontAwesomeIcon icon={faComment} />} />
                 <InfoBoxIconTextLine text={challenge.description} isSecondary />
               </InfoBox>
-            )}
+            )} */}
           </>
         )}
         <InfoBox>
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
-          <InfoBoxIconTextLine
-            text={<StyledExternalLink href={mapUrl}>{mapUrl}</StyledExternalLink>}
-            isSecondary
-          />
+          {mapUrls.map((item, index) => (
+            <>
+              <InfoBoxIconTextLine
+                key={index + "-1"}
+                text={<StyledExternalLink href={item[0]}>{item[0]}</StyledExternalLink>}
+                isSecondary
+              />
+              <InfoBoxIconTextLine
+                key={index + "-2"}
+                text={
+                  <Typography variant="body2" sx={{ ml: 1 }}>
+                    {item[1]}
+                  </Typography>
+                }
+                isSecondary
+              />
+            </>
+          ))}
         </InfoBox>
         {mapHasAuthor && (
           <InfoBox>
@@ -418,3 +442,17 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
   );
 }
 const MemoChallengeSubmissionRow = memo(ChallengeSubmissionRow);
+
+export function NoteDisclaimer({ title, note, sx = {} }) {
+  return (
+    <Stack direction="column" gap={1} sx={sx}>
+      <Stack direction="row" gap={1} alignItems="center">
+        <FontAwesomeIcon icon={faInfoCircle} />
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {title}
+        </Typography>
+      </Stack>
+      <Typography variant="body2">{note}</Typography>
+    </Stack>
+  );
+}

@@ -199,16 +199,18 @@ export function FormCampaign({ campaign, onSave, ...props }) {
           </Tooltip>
         </Grid>
       </Grid>
-      <TextField label={t("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
-
-      <Divider sx={{ my: 2 }} />
-
       <Controller
         control={form.control}
         name="author_gb_id"
         defaultValue=""
         render={({ field }) => (
-          <TextField label={t("author_gb_id")} fullWidth value={field.value} onChange={field.onChange} />
+          <TextField
+            label={t("author_gb_id")}
+            fullWidth
+            value={field.value}
+            onChange={field.onChange}
+            sx={{ mt: 2 }}
+          />
         )}
       />
       <Controller
@@ -225,6 +227,11 @@ export function FormCampaign({ campaign, onSave, ...props }) {
           />
         )}
       />
+
+      <Divider sx={{ my: 2 }} />
+
+      <TextField label={t("icon_url")} fullWidth {...form.register("icon_url")} />
+      <TextField label={t("note")} sx={{ mt: 2 }} fullWidth {...form.register("note")} />
 
       <Divider sx={{ my: 2 }}>
         <Chip size="small" label={t("sort_category_major")} />

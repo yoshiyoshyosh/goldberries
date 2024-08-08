@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ChallengeDetailsList, ChallengeSubmissionTable } from "./Challenge";
+import { ChallengeDetailsList, ChallengeSubmissionTable, NoteDisclaimer } from "./Challenge";
 import {
   faArrowRightToBracket,
   faArrowRightToFile,
@@ -118,6 +118,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
         </Stack>
       )}
       <ChallengeDetailsList map={map} />
+      {map.note && <NoteDisclaimer note={map.note} title={"Map Note"} sx={{ mt: 1 }} />}
       <Divider sx={{ my: 2 }}>
         <Chip label="Challenges" size="small" />
       </Divider>
@@ -132,6 +133,13 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
               map={map}
             />
           </Box>
+          {selectedChallenge.description && (
+            <NoteDisclaimer
+              note={selectedChallenge.description}
+              title={"Challenge Description"}
+              sx={{ mt: 1, mb: 1 }}
+            />
+          )}
           <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
             <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
             <span>{getChallengeFcShort(selectedChallenge)}</span>
