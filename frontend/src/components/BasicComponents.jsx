@@ -171,22 +171,20 @@ export function ProofEmbed({ url, ...props }) {
     );
   }
 
-  if (url.includes("youtube.com") || url.includes("youtu.be")) {
-    let ytUrl = null;
-    if (url.includes("youtu.be")) {
-      ytUrl = url.replace("youtu.be", "youtube.com/embed");
-    } else {
-      ytUrl = url.replace("watch?v=", "embed/");
+  const youtubeData = parseYouTubeUrl(url);
+  if (youtubeData !== null) {
+    //Create embed url
+    let embedUrl = `https://www.youtube.com/embed/${youtubeData.videoId}`;
+    if (youtubeData.timestamp) {
+      embedUrl += `?start=${youtubeData.timestamp.replace("s", "")}`;
     }
-
-    //Get rid of any extra url parameters
-    ytUrl = ytUrl.split("&")[0];
+    console.log(embedUrl);
 
     return (
       <div {...props}>
         <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%" }}>
           <iframe
-            src={ytUrl}
+            src={embedUrl}
             title="YouTube video player"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -232,6 +230,23 @@ function getBilibiliIdFromLink(link) {
   //Extract the BV id
   let id = link.match(/[bB][vV][0-9a-zA-Z]+/g)[0];
   return id;
+}
+function parseYouTubeUrl(url) {
+  const urlRegex =
+    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^#&?]*)([&?]t=([^#&?]+))?.*/;
+  const match = url.match(urlRegex);
+
+  if (!match || !match[5]) {
+    return null;
+  }
+
+  const videoId = match[5];
+  const timestamp = match[7] || null;
+
+  return {
+    videoId: videoId || null,
+    timestamp: timestamp || null,
+  };
 }
 
 export function CustomizedMenu({ title, button, children, ...props }) {
