@@ -236,14 +236,19 @@ function TopGoldenListGroup({
   if (!render) return null;
 
   const tierMap = tier.map((subtier) => subtier.id);
-  const isEmptyTier =
-    challenges.filter((challenge) =>
-      tierMap.includes(
-        useSuggested
-          ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-          : challenge.difficulty.id
-      )
-    ).length === 0;
+  const challengesInTier = challenges.filter((challenge) =>
+    tierMap.includes(
+      useSuggested
+        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+        : challenge.difficulty.id
+    )
+  );
+  const challengeCount = challengesInTier.length;
+  const isEmptyTier = challengeCount === 0;
+  const submissionCount = challengesInTier.reduce(
+    (acc, challenge) => acc + challenge.data.submission_count,
+    0
+  );
 
   if (settings.visual.topGoldenList.hideEmptyTiers && isEmptyTier) {
     return null;
@@ -286,7 +291,14 @@ function TopGoldenListGroup({
                         {useSuggested ? "Actual" : "Sug."}
                       </Tooltip>
                     ) : (
-                      <Tooltip title={t("note_number_people")} arrow placement="top">
+                      <Tooltip
+                        title={t("note_number_people", {
+                          challenges: challengeCount,
+                          submissions: submissionCount,
+                        })}
+                        arrow
+                        placement="top"
+                      >
                         <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
                       </Tooltip>
                     )}
