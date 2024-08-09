@@ -321,6 +321,10 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
     }
   }, [showAll]);
 
+  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const countFcs = validMaps.filter((map) =>
+    map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
+  ).length;
   const reducedPlayerAmount = 100;
   const playersToShow = actuallyShowAll
     ? Object.values(players)
@@ -337,7 +341,13 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
             {t("progress")}
           </TableCell>
           <TableCell width={1} sx={{ pl: 0, pr: 1, display: { xs: "none", md: "table-cell" } }}></TableCell>
-          <TableCell width={1} sx={{ px: 1 }}></TableCell>
+          <TableCell width={1} sx={{ px: 1 }}>
+            <Stack direction="row" gap={0.5} alignItems="center" justifyContent="flex-start">
+              (
+              <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
+              <span style={{ fontWeight: "bold" }}>{countFcs}</span>)
+            </Stack>
+          </TableCell>
         </TableHead>
         <TableBody>
           {playersToShow.length === 0 && (
@@ -383,9 +393,14 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
   } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const { player, stats, last_submission, highest_lobby_sweep, highest_lobby_sweep_fcs } = playerEntry;
-  const mapsInCampaign = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected).length;
+  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const mapsInCampaign = validMaps.length;
+  const countFcs = validMaps.filter((map) =>
+    map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
+  ).length;
+  const hasAllFcs = stats.full_clears === countFcs;
   const hasAllClears = stats.clears === mapsInCampaign;
-  const progressColor = hasAllClears ? "primary" : "success";
+  const progressColor = hasAllClears ? (hasAllFcs ? "warning" : "primary") : "success";
   const backgroundColor = hasAllClears ? campaignPage.sweepBackground : "transparent";
   const backgroundHover = hasAllClears
     ? campaignPage.sweepHightlightBackground
@@ -439,10 +454,10 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
             </span>
           </Stack>
         </TableCell>
-        <TableCell width={1} sx={{ px: 1 }}>
-          <Stack direction="row" gap={1} alignItems="center">
+        <TableCell width={1} align="right" sx={{ px: 1 }}>
+          <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
             <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
-            <span>{stats.full_clears}</span>
+            <span style={{ whiteSpace: "nowrap" }}>{stats.full_clears}</span>
           </Stack>
         </TableCell>
       </TableRow>
