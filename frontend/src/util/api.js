@@ -282,10 +282,11 @@ export function fetchLogs(page, perPage, level, topic, search, start_date, end_d
   });
 }
 
-export function fetchSuggestions(page, perPage, expired = null, challengeId = null) {
+export function fetchSuggestions(page, perPage, expired = null, challengeId = null, type = "all") {
   const params = {
     page: page,
     per_page: perPage,
+    type: type,
   };
   if (expired !== null) params.expired = expired;
   if (challengeId !== null) params.challenge = challengeId;

@@ -301,10 +301,10 @@ export function useGetLogs(page, perPage, level, topic, search, start_date, end_
   });
 }
 
-export function useGetSuggestions(page, perPage, expired = null, challengeId = null) {
+export function useGetSuggestions(page, perPage, expired = null, challengeId = null, type = "all") {
   return useQuery({
-    queryKey: ["suggestions", page, perPage, expired, challengeId],
-    queryFn: () => fetchSuggestions(page, perPage, expired, challengeId),
+    queryKey: ["suggestions", page, perPage, expired, challengeId, type],
+    queryFn: () => fetchSuggestions(page, perPage, expired, challengeId, type),
     onError: errorToast,
     refetchInterval: 15 * 1000,
   });

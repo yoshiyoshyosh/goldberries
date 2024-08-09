@@ -31,7 +31,9 @@ import {
   FormHelperText,
   Grid,
   IconButton,
+  MenuItem,
   Pagination,
+  Select,
   Stack,
   TextField,
   Tooltip,
@@ -86,6 +88,7 @@ export function PageSuggestions({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
   const { id } = useParams();
   const navigate = useNavigate();
+  const [type, setType] = useState("all");
 
   const newSuggestion = () => {
     modalRefs.create.current.open();
@@ -124,28 +127,36 @@ export function PageSuggestions({}) {
       <Typography variant="body2" sx={{ mb: 1 }}>
         {t("language_info")}
       </Typography>
+      <Typography variant="h6" gutterBottom>
+        Filter by type
+      </Typography>
+      <Select value={type} onChange={(e) => setType(e.target.value)} MenuProps={{ disableScrollLock: true }}>
+        <MenuItem value="all">{t("filter.all")}</MenuItem>
+        <MenuItem value="general">{t("filter.general")}</MenuItem>
+        <MenuItem value="challenge">{t("filter.challenge")}</MenuItem>
+      </Select>
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" gutterBottom>
         {t("active")}
       </Typography>
-      <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} />
+      <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} filterType={type} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" gutterBottom>
         {t("expired")}
       </Typography>
-      <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} />
+      <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} filterType={type} />
       <SuggestionsModalContainer modalRefs={modalRefs} suggestionId={id} closeModal={onCloseSuggestion} />
     </BasicContainerBox>
   );
 }
 
 //#region == Suggestions List ==
-function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
+function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(defaultPerPage);
 
-  const query = useGetSuggestions(page, perPage, expired);
+  const query = useGetSuggestions(page, perPage, expired, null, filterType);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -155,6 +166,12 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs }) {
 
   const response = getQueryData(query);
   const { suggestions, max_page, max_count } = response;
+
+  // const filteredSuggestions = suggestions.filter((suggestion) => {
+  //   if (filterType === "general") return suggestion.challenge_id === null;
+  //   if (filterType === "challenges") return suggestion.challenge_id !== null;
+  //   return true;
+  // });
 
   return (
     <Stack direction="column" gap={2}>
@@ -578,7 +595,7 @@ function ViewSuggestionModal({ id }) {
   const rejectVariant =
     suggestion.is_verified === false || suggestion.is_accepted === false ? "contained" : "outlined";
 
-  let highlightedPlayers = null;
+  let highlightedPlayers = {};
   if (!isGeneral && hasMap) {
     //Go through the other challenges in the map and construct an array of players that associate to the challenges/submissions of the related challenges
     highlightedPlayers = {};
@@ -847,6 +864,8 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission, highlightedPlayer
               {isHighlighted && (
                 <Tooltip
                   title={t("related_challenge", { challenge: getChallengeNameShort(relatedChallenge) })}
+                  arrow
+                  placement="top"
                 >
                   <FontAwesomeIcon icon={faInfoCircle} />
                 </Tooltip>
