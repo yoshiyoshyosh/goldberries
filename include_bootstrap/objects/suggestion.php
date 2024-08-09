@@ -180,10 +180,18 @@ class Suggestion extends DbObject
     return "(Suggestion, id:{$this->id}{$challengeStr}, author:{$authorStr}, date:{$dateStr})";
   }
 
+  //This function assumes a fully expanded structure
   function fetch_associated_content($DB)
   {
     if ($this->challenge_id !== null) {
       $this->challenge->fetch_submissions($DB);
+      if ($this->challenge->map_id !== null) {
+        $this->challenge->map->fetch_challenges($DB, true);
+        //Remove the $this->challenge from the map's challenges
+        $this->challenge->map->challenges = array_values(array_filter($this->challenge->map->challenges, function ($c) {
+          return $c->id !== $this->challenge->id;
+        }));
+      }
     }
     $this->fetch_votes($DB);
   }
