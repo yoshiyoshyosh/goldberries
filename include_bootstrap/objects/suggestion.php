@@ -192,7 +192,7 @@ class Suggestion extends DbObject
     if ($this->challenge_id !== null) {
       $this->challenge->fetch_submissions($DB);
       if ($this->challenge->map_id !== null) {
-        $this->challenge->map->fetch_challenges($DB, true);
+        $this->challenge->map->fetch_challenges($DB, true, false);
         //Remove the $this->challenge from the map's challenges
         $this->challenge->map->challenges = array_values(array_filter($this->challenge->map->challenges, function ($c) {
           return $c->id !== $this->challenge->id;

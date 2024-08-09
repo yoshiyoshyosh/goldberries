@@ -227,9 +227,9 @@ class Challenge extends DbObject
     return null;
   }
 
-  function get_name(): string
+  function get_name($no_campaign = false): string
   {
-    $map_name = $this->map !== null ? $this->map->get_name() : $this->campaign->get_name();
+    $map_name = $this->map !== null ? $this->map->get_name($no_campaign) : $this->campaign->get_name();
     $objective_name = $this->objective->name;
     $c_fc = $this->get_c_fc();
     $label_suffix = $this->get_suffix() !== null ? " [{$this->get_suffix()}]" : "";

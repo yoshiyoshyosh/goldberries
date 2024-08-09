@@ -213,17 +213,22 @@ class Map extends DbObject
     return constant('BASE_URL') . "/map/{$this->id}";
   }
 
-  function get_name()
+  function get_name($no_campaign = false)
   {
     $campaign_name = $this->campaign->name;
     $campaign_name_with_author = $this->campaign->get_name();
     $is_same = $campaign_name === $this->name;
     $archived_prefix = $this->is_archived ? "[Old] " : "";
 
-    if ($is_same)
+    if ($is_same) {
       return $campaign_name_with_author;
-    else
-      return "{$campaign_name_with_author} / {$archived_prefix}{$this->name}";
+    } else {
+      if ($no_campaign) {
+        return "{$archived_prefix}{$this->name}";
+      } else {
+        return "{$campaign_name_with_author} / {$archived_prefix}{$this->name}";
+      }
+    }
   }
 
   function get_name_for_discord()
