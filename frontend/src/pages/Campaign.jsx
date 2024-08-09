@@ -398,7 +398,7 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
   const countFcs = validMaps.filter((map) =>
     map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
   ).length;
-  const hasAllFcs = stats.full_clears === countFcs;
+  const hasAllFcs = stats.full_clears === countFcs && countFcs > 0;
   const hasAllClears = stats.clears === mapsInCampaign;
   const progressColor = hasAllClears ? (hasAllFcs ? "warning" : "primary") : "success";
   const backgroundColor = hasAllClears ? campaignPage.sweepBackground : "transparent";

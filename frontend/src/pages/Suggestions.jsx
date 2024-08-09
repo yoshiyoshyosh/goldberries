@@ -16,6 +16,7 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  StyledLink,
 } from "../components/BasicComponents";
 import {
   Box,
@@ -39,6 +40,8 @@ import {
 import {
   getChallengeCampaign,
   getChallengeIsFullGame,
+  getChallengeName,
+  getChallengeNameShort,
   getChallengeSuffix,
   getMapNameClean,
   getSortedSuggestedDifficulties,
@@ -350,10 +353,12 @@ function SuggestionName({ suggestion, expired }) {
         ) : (
           <>
             <Stack direction="column" gap={1}>
-              <Typography variant="h6">
-                {getMapNameClean(map, campaign, t_g, true)}
-                {getChallengeSuffix(challenge) && " [" + getChallengeSuffix(challenge) + "]"}
-              </Typography>
+              <StyledLink to={"/challenge/" + challenge.id} onClick={(e) => e.stopPropagation()}>
+                <Typography variant="h6">
+                  {getMapNameClean(map, campaign, t_g, true)}
+                  {getChallengeSuffix(challenge) && " [" + getChallengeSuffix(challenge) + "]"}
+                </Typography>
+              </StyledLink>
             </Stack>
             <ObjectiveIcon objective={challenge.objective} height="1.2em" />
             <ChallengeFcIcon challenge={challenge} height="1.4em" />
@@ -521,6 +526,8 @@ function ViewSuggestionModal({ id }) {
   const isExpired =
     suggestion.is_accepted !== null || dateCreated < new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const isGeneral = suggestion.challenge_id === null;
+  const challenge = suggestion.challenge;
+  const hasMap = challenge?.map_id;
 
   const hasVoted =
     auth.hasPlayerClaimed && suggestion.votes.some((vote) => vote.player_id === auth.user.player.id);
@@ -570,6 +577,22 @@ function ViewSuggestionModal({ id }) {
   const acceptVariant = suggestion.is_accepted === true ? "contained" : "outlined";
   const rejectVariant =
     suggestion.is_verified === false || suggestion.is_accepted === false ? "contained" : "outlined";
+
+  let highlightedPlayers = null;
+  if (!isGeneral && hasMap) {
+    //Go through the other challenges in the map and construct an array of players that associate to the challenges/submissions of the related challenges
+    highlightedPlayers = {};
+    challenge.map.challenges.forEach((challenge) => {
+      challenge.submissions.forEach((submission) => {
+        if (highlightedPlayers[submission.player_id] !== undefined) return;
+        highlightedPlayers[submission.player_id] = {
+          player: submission.player,
+          submission: submission,
+          challenge: challenge,
+        };
+      });
+    });
+  }
 
   return (
     <>
@@ -709,13 +732,28 @@ function ViewSuggestionModal({ id }) {
           {!isGeneral && <Typography variant="body1">{t("not_done_challenge")}</Typography>}
           <Grid container columnSpacing={1}>
             <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={false} />
+              <VotesDetailsDisplay
+                votes={suggestion.votes}
+                voteType="+"
+                hasSubmission={false}
+                highlightedPlayers={highlightedPlayers}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="-" hasSubmission={false} />
+              <VotesDetailsDisplay
+                votes={suggestion.votes}
+                voteType="-"
+                hasSubmission={false}
+                highlightedPlayers={highlightedPlayers}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <VotesDetailsDisplay votes={suggestion.votes} voteType="i" hasSubmission={false} />
+              <VotesDetailsDisplay
+                votes={suggestion.votes}
+                voteType="i"
+                hasSubmission={false}
+                highlightedPlayers={highlightedPlayers}
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -753,6 +791,25 @@ function ViewSuggestionModal({ id }) {
             <Grid item xs={12}>
               <ChallengeSubmissionTable challenge={suggestion.challenge} hideSubmissionIcon />
             </Grid>
+            {suggestion.challenge.map_id !== null && suggestion.challenge.map.challenges.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <Divider>
+                    <Chip label={t("related_challenges", { count: 30 })} size="small" />
+                  </Divider>
+                </Grid>
+                {suggestion.challenge.map.challenges.map((challenge) => (
+                  <>
+                    <Grid item xs={12}>
+                      <Typography variant="body1">
+                        {getChallengeNameShort(challenge)} {getChallengeSuffix(challenge)}
+                      </Typography>
+                      <ChallengeSubmissionTable challenge={challenge} hideSubmissionIcon />
+                    </Grid>
+                  </>
+                ))}
+              </>
+            )}
           </>
         )}
       </Grid>
@@ -760,7 +817,7 @@ function ViewSuggestionModal({ id }) {
   );
 }
 
-function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
+function VotesDetailsDisplay({ votes, voteType, hasSubmission, highlightedPlayers = {} }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions.votes" });
   const votesFiltered = votes.filter(
     (vote) => vote.vote === voteType && (hasSubmission ? vote.submission !== null : vote.submission === null)
@@ -776,16 +833,32 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission }) {
       </Typography>
       <Typography variant="body2">{t("count", { count: count })}</Typography>
       <Stack direction="row" columnGap={2} rowGap={0.5} flexWrap="wrap">
-        {votesFiltered.map((vote) => (
-          <Stack direction="row" gap={0.5} alignItems="center">
-            <PlayerChip player={vote.player} size="small" />
-            {vote.comment && (
-              <Tooltip title={vote.comment} arrow placement="top">
-                <FontAwesomeIcon icon={faComment} />
-              </Tooltip>
-            )}
-          </Stack>
-        ))}
+        {votesFiltered.map((vote) => {
+          const player = vote.player;
+          const isHighlighted = highlightedPlayers[player.id] !== undefined;
+          const relatedChallenge = highlightedPlayers[player.id]?.challenge;
+          return (
+            <Stack direction="row" gap={0.5} alignItems="center">
+              <PlayerChip
+                player={player}
+                size="small"
+                className={isHighlighted ? "player-highlighted" : ""}
+              />
+              {isHighlighted && (
+                <Tooltip
+                  title={t("related_challenge", { challenge: getChallengeNameShort(relatedChallenge) })}
+                >
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                </Tooltip>
+              )}
+              {vote.comment && (
+                <Tooltip title={vote.comment} arrow placement="top">
+                  <FontAwesomeIcon icon={faComment} />
+                </Tooltip>
+              )}
+            </Stack>
+          );
+        })}
       </Stack>
     </Stack>
   );

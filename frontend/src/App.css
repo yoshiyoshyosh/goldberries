@@ -17,6 +17,10 @@
   -webkit-filter: drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px) drop-shadow(white 0 0 0.5px);
 }
 
+.player-highlighted {
+  box-shadow: 0px 0px 2px yellow, 0px 0px 2px yellow, 0px 0px 2px yellow, 0px 0px 2px yellow, 0px 0px 2px yellow;
+}
+
 /* spin animation */
 @keyframes spin {
   0% {

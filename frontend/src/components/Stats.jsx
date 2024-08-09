@@ -76,8 +76,7 @@ export function SuggestedDifficultyChart({ challenge, scale = 1 }) {
           sx={{
             animation: spin ? "spin 3s ease-in-out infinite" : "",
             [`& .${pieArcLabelClasses.root}`]: {
-              fill: "white",
-              fontWeight: "bold",
+              fill: "black",
             },
           }}
           height={300 * scale}
