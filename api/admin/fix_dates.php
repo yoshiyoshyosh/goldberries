@@ -170,7 +170,18 @@ function bilibili_id($link)
 
   $pattern = '/bilibili\.com\/video\/([bB][vV][a-zA-Z0-9_-]+|[aA][vV][0-9]+)/';
   preg_match($pattern, $link, $matches);
-  if (!$matches)
-    return false;
+  if (!$matches) {
+    //Also check the short link format
+    //Example: https://b23.tv/BV1Qq4y1B7Q2/p64
+    //Example: https://b23.tv/knlgMNv
+
+    //The short link id is not related to the actual video id, so just extract the short link id
+    //Ignore the page number if it exists
+    $pattern = '/b23\.tv\/([a-zA-Z0-9_-]+)/';
+    preg_match($pattern, $link, $matches);
+    if (!$matches)
+      return false;
+    return $matches[1];
+  }
   return $matches[1];
 }
