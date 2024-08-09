@@ -52,6 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $accountReq = new Account();
     $accountReq->apply_db_data($request);
 
+    if ($target->player_id !== null) {
+      submission_embed_change($target->player_id, "player");
+    }
+    if ($accountReq->player_id !== null) {
+      submission_embed_change($accountReq->player_id, "player");
+    }
     $target->player_id = $accountReq->player_id;
     $target->claimed_player_id = $accountReq->claimed_player_id;
     //Customization stuff
@@ -240,6 +246,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       die_json(500, "Failed to update account in database");
     }
     log_info("Updated {$account} in database with changes: {$changes}", "Account");
+    if ($account->player_id !== null) {
+      submission_embed_change($account->player_id, "player");
+    }
     $account->remove_sensitive_info();
     api_write($account);
     exit();
