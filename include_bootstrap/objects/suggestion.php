@@ -96,7 +96,7 @@ class Suggestion extends DbObject
     return true;
   }
 
-  static function get_paginated($DB, $page, $per_page, $challenge = null, $expired = null, $account = null)
+  static function get_paginated($DB, $page, $per_page, $challenge = null, $expired = null, $account = null, $type = "all")
   {
     $query = "SELECT * FROM suggestion";
 
@@ -122,6 +122,12 @@ class Suggestion extends DbObject
       } else {
         $where[] = "(is_verified = true OR author_id = " . $account->player_id . ")";
       }
+    }
+
+    if ($type === "general") {
+      $where[] = "challenge_id IS NULL";
+    } else if ($type === "challenge") {
+      $where[] = "challenge_id IS NOT NULL";
     }
 
     if (count($where) > 0) {
