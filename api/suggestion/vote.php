@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($suggestion === false) {
     die_json(404, "suggestion with id {$data['suggestion_id']} does not exist");
   }
-  if ($suggestion->is_verified !== true) {
+  if ($suggestion->is_verified !== true && !is_verifier($account)) {
     die_json(400, "Suggestion is not verified yet");
   }
   if ($suggestion->is_closed()) {
