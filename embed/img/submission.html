@@ -79,8 +79,13 @@
         right: 20px;
       }
       #playerName-h1 {
-        margin-top: 0;
+        margin-top: 25px;
         margin-bottom: 0;
+        text-align: center;
+        /* padding-left: 10px;
+        padding-right: 10px; */
+        max-width: 80%;
+        font-size: 1.8em;
       }
       #playerName {
         /* background-image: linear-gradient(90deg, red 0%, blue 100%); */
@@ -90,6 +95,11 @@
         -webkit-text-fill-color: transparent;
         color: transparent;
         font-weight: bold;
+        /* word-break: break-word; */
+        display: inline-block;
+        max-width: 100%;
+        /* overflow: hidden;
+        text-overflow: ellipsis; */
       }
       #mapName {
         font-size: 160%;
@@ -224,7 +234,12 @@
       <img id="fcIcon" class="outlined-small-white" style="height: 64px" />
       <span id="submissionDate" class="outlined-tiny">Date</span>
       <div>
-        <h1 id="playerName-h1" style="text-align: center;"><span id="playerName" class="outlined-big">Player</span></h1>
+        <div class="horizontal-stack" style="justify-content: space-around;">
+          <h1 id="playerName-h1">
+            <span id="playerName" class="outlined-big">Player</span>
+          </h1>
+        </div>
+        
         <p class="detail-small outlined-small" style="margin-top: 20px; margin-bottom: 4px;">
           <span id="mapName">
             Map Name

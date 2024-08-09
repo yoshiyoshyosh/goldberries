@@ -4,6 +4,7 @@ require_once (dirname(__FILE__) . '/../bootstrap.inc.php');
 
 $DB = db_connect();
 
+$regen = isset($_REQUEST['regen']) && $_REQUEST['regen'] === "true";
 $id = intval($_REQUEST['id']);
 if ($id <= 0) {
   http_response_code(400);
@@ -33,7 +34,8 @@ if ($challenge === null) {
 
 $real_url = constant("BASE_URL") . "/submission/" . $submission->id;
 $proof_url = $submission->proof_url;
-$embed_image_url = "/embed/img/submission.php?id=" . $submission->id;
+$regen_param = $regen ? "&regen=true" : "";
+$embed_image_url = "/embed/img/submission.php?id=" . $submission->id . $regen_param;
 
 ?>
 

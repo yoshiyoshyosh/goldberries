@@ -7,6 +7,7 @@ $cache_folder = dirname(__FILE__) . '/cache';
 
 $DB = db_connect();
 
+$regen = isset($_REQUEST['regen']) && $_REQUEST['regen'] === "true";
 $id = intval($_REQUEST['id']);
 if ($id <= 0) {
   http_response_code(400);
@@ -46,7 +47,7 @@ if ($modId !== null) {
 
 // Check if the embed has already been generated before
 $img_name = submission_embed_get_name($submission);
-if (file_exists("submission/$id.jpg")) {
+if (file_exists("submission/$img_name.jpg") && $regen === false) {
   // Output the image
   header("Content-type: image/jpg");
   echo file_get_contents("submission/$img_name.jpg");
