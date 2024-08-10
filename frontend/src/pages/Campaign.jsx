@@ -43,7 +43,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/Campaign.css";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { getCampaignName, getChallengeNameShort, getMapLobbyInfo, getMapName } from "../util/data_util";
 import { getNewDifficultyColors } from "../util/constants";
 import { Changelog } from "../components/Changelog";
@@ -64,6 +64,7 @@ import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormCampaignWrapper } from "../components/forms/Campaign";
 import { NoteDisclaimer } from "./Challenge";
+import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
 
 const STYLE_CONSTS = {
   player: {
@@ -519,40 +520,18 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
   );
 }
 function CampaignPlayerTableRowExpandedMapGroup({ maps, mapData, campaign }) {
-  const hasMajorSort = campaign.sort_major_name !== null;
-  const hasMinorSort = campaign.sort_minor_name !== null;
-  const borderLeft = hasMajorSort ? "10px solid " + campaign.sort_major_colors[maps[0].sort_major] : "none";
   return (
     <TableContainer component={Paper}>
       <Table size="small">
         <TableBody>
           {maps.map((map) => {
-            const hasSubmission = mapData[map.id] !== undefined;
-            const submission = hasSubmission ? mapData[map.id].challenges[0].submissions[0] : null;
-            const borderRight = hasMinorSort
-              ? "15px solid " + campaign.sort_minor_colors[map.sort_minor]
-              : "none";
             return (
-              <TableRow key={map.id}>
-                <TableCell sx={{ px: 2, borderLeft }}>
-                  <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
-                </TableCell>
-                <TableCell width={1} align="right" sx={{ px: 2, borderRight }}>
-                  <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
-                    {hasSubmission ? (
-                      <>
-                        <SubmissionFcIcon submission={submission} />
-                        <StyledLink to={"/submission/" + submission.id}>
-                          <FontAwesomeIcon icon={faBook} />
-                        </StyledLink>
-                        <FontAwesomeIcon icon={faCheckCircle} color="green" />
-                      </>
-                    ) : (
-                      <FontAwesomeIcon icon={faXmark} color="red" />
-                    )}
-                  </Stack>
-                </TableCell>
-              </TableRow>
+              <CampaignPlayerTableRowExpandedMapGroupRowMemo
+                key={map.id}
+                map={map}
+                mapData={mapData}
+                campaign={campaign}
+              />
             );
           })}
         </TableBody>
@@ -560,7 +539,54 @@ function CampaignPlayerTableRowExpandedMapGroup({ maps, mapData, campaign }) {
     </TableContainer>
   );
 }
-
+function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
+  const auth = useAuth();
+  const hasMajorSort = campaign.sort_major_name !== null;
+  const hasMinorSort = campaign.sort_minor_name !== null;
+  const borderLeft = hasMajorSort ? "10px solid " + campaign.sort_major_colors[map.sort_major] : "none";
+  const hasSubmission = mapData[map.id] !== undefined;
+  const submission = hasSubmission ? mapData[map.id].challenges[0].submissions[0] : null;
+  const borderRight = hasMinorSort ? "15px solid " + campaign.sort_minor_colors[map.sort_minor] : "none";
+  return (
+    <TableRow key={map.id}>
+      <TableCell sx={{ px: 2, borderLeft }}>
+        <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
+      </TableCell>
+      <TableCell width={1} align="right" sx={{ pr: 0 }}>
+        {hasSubmission && auth.hasVerifierPriv && <ToggleSubmissionFcButton submission={submission} />}
+      </TableCell>
+      <TableCell width={1} align="right" sx={{ px: 2, borderRight }}>
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
+          {hasSubmission ? (
+            <>
+              <SubmissionFcIcon submission={submission} />
+              <StyledLink to={"/submission/" + submission.id}>
+                <FontAwesomeIcon icon={faBook} />
+              </StyledLink>
+              <FontAwesomeIcon icon={faCheckCircle} color="green" />
+            </>
+          ) : (
+            <FontAwesomeIcon icon={faXmark} color="red" />
+          )}
+        </Stack>
+      </TableCell>
+    </TableRow>
+  );
+}
+const CampaignPlayerTableRowExpandedMapGroupRowMemo = memo(
+  CampaignPlayerTableRowExpandedMapGroupRow,
+  (oldProps, newProps) => {
+    //If no submission is found, dont update
+    if (oldProps.mapData[oldProps.map.id] === undefined) {
+      return true;
+    }
+    //Only update if the submission.is_fc changed
+    return (
+      oldProps.mapData[oldProps.map.id].challenges[0].submissions[0].is_fc ===
+      newProps.mapData[newProps.map.id].challenges[0].submissions[0].is_fc
+    );
+  }
+);
 //#endregion
 
 //#region Campaign Map List

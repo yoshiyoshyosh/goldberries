@@ -71,6 +71,7 @@ import { AuthorInfoBoxLine } from "./Campaign";
 import { toast } from "react-toastify";
 import { memo } from "react";
 import { jsonDateToJsDate } from "../util/util";
+import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
 
 const displayNoneOnMobile = {
   display: {
@@ -373,16 +374,6 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
   const { settings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(submission.player, settings);
 
-  const { mutate: updateSubmission } = usePostSubmission(() => {
-    toast.success("Submission updated");
-  });
-  const handleToggleFcClicked = () => {
-    updateSubmission({
-      ...submission,
-      is_fc: !submission.is_fc,
-    });
-  };
-
   return (
     <TableRow>
       <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile }}>
@@ -403,15 +394,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       </TableCell>
       {!compact && auth.hasVerifierPriv && (
         <TableCell width={1} align="center" sx={{ ...displayNoneOnMobile, px: 0 }}>
-          <Button
-            onClick={handleToggleFcClicked}
-            variant="outlined"
-            size="small"
-            color={submission.is_fc ? "warning" : "success"}
-            sx={{ whiteSpace: "nowrap", minWidth: "unset" }}
-          >
-            <FontAwesomeIcon icon={submission.is_fc ? faToggleOn : faToggleOff} />
-          </Button>
+          <ToggleSubmissionFcButton submission={submission} />
         </TableCell>
       )}
       {!compact && (

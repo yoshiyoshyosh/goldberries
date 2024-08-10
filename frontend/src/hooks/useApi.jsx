@@ -420,6 +420,8 @@ export function usePostSubmission(onSuccess) {
     mutationFn: (submission) => postSubmission(submission),
     onSuccess: (response, submission) => {
       queryClient.invalidateQueries(["recent_submissions"]);
+      queryClient.invalidateQueries(["campaign_view_player"]);
+      // queryClient.invalidateQueries(["campaign_view"]);
       queryClient.invalidateQueries(["submission", response.data.id]);
       if (response.data.challenge_id !== null) {
         queryClient.invalidateQueries(["challenge", response.data.challenge_id]);
@@ -558,6 +560,7 @@ export function usePostSuggestion(onSuccess) {
     mutationFn: (data) => postSuggestion(data),
     onSuccess: (response, data) => {
       queryClient.invalidateQueries(["suggestions"]);
+      queryClient.invalidateQueries(["overall_stats"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,
