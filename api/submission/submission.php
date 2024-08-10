@@ -67,7 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $old_submission->player_id = $submission->player_id;
       }
-      $old_submission->is_fc = $submission->is_fc;
+      if ($old_submission->is_fc !== $submission->is_fc) {
+        if ($old_submission->challenge_id !== null) {
+          $challenge = Challenge::get_by_id($DB, $old_submission->challenge_id);
+          if (!$challenge->requires_fc && !$challenge->has_fc && $submission->is_fc) {
+            die_json(400, "Cannot set is_fc on this challenge");
+          }
+          if ($challenge->requires_fc && !$submission->is_fc) {
+            die_json(400, "Cannot unset is_fc on this challenge");
+          }
+          $old_submission->is_fc = $submission->is_fc;
+        }
+      }
       $old_submission->is_personal = $submission->is_personal;
       if ($old_submission->proof_url !== $submission->proof_url) {
         check_url($submission->proof_url, 'proof_url');
@@ -187,6 +198,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       if ($challenge->requires_fc) {
         $submission->is_fc = true;
+      }
+      if (!$challenge->requires_fc && !$challenge->has_fc) {
+        $submission->is_fc = false;
       }
       if ($challenge->map_id !== null) {
         $map = Map::get_by_id($DB, $challenge->map_id);
