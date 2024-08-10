@@ -830,7 +830,12 @@ function ModalContainer({ modalRefs }) {
 
   return (
     <>
-      <CustomModal modalHook={showMapModal} options={{ hideFooter: true }}>
+      <CustomModal
+        modalHook={showMapModal}
+        maxWidth={false}
+        sx={{ maxWidth: "720px", margin: "auto" }}
+        options={{ hideFooter: true }}
+      >
         {showMapModal.data?.id == null ? (
           <LoadingSpinner />
         ) : showMapModal.data?.isCampaign ? (

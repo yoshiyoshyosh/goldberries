@@ -386,7 +386,15 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
               <FontAwesomeIcon icon={faBook} />
             </StyledLink>
           )}
-          <StyledLink to={"/player/" + submission.player.id} style={{ whiteSpace: "nowrap", ...nameStyle }}>
+          <StyledLink
+            to={"/player/" + submission.player.id}
+            style={{
+              whiteSpace: "nowrap",
+              maxWidth: "150px",
+              overflow: "hidden",
+              ...nameStyle,
+            }}
+          >
             {submission.player.name}
           </StyledLink>
           <SubmissionFcIcon submission={submission} height="1.3em" />
