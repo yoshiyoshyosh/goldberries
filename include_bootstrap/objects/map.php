@@ -219,14 +219,15 @@ class Map extends DbObject
     $campaign_name_with_author = $this->campaign->get_name();
     $is_same = $campaign_name === $this->name;
     $archived_prefix = $this->is_archived ? "[Old] " : "";
+    $rejected_prefix = $this->is_rejected ? "[Rejected] " : "";
 
     if ($is_same) {
       return $campaign_name_with_author;
     } else {
       if ($no_campaign) {
-        return "{$archived_prefix}{$this->name}";
+        return "{$rejected_prefix}{$archived_prefix}{$this->name}";
       } else {
-        return "{$campaign_name_with_author} / {$archived_prefix}{$this->name}";
+        return "{$campaign_name_with_author} / {$rejected_prefix}{$archived_prefix}{$this->name}";
       }
     }
   }

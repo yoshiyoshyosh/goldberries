@@ -1,6 +1,7 @@
 <?php
 
 require_once (dirname(__FILE__) . '/../bootstrap.inc.php');
+require_once (dirname(__FILE__) . '/embed_include.php');
 
 $DB = db_connect();
 
@@ -23,7 +24,8 @@ $submission->expand_foreign_keys($DB, 5);
 $player = $submission->player;
 $challenge = $submission->challenge;
 $for_str = "";
-if ($challenge === null) {
+$is_new_challenge = $challenge === null;
+if ($is_new_challenge) {
   $new_challenge = $submission->new_challenge;
   $for_str = "New Challenge: " . $new_challenge->name;
 } else {
@@ -35,41 +37,9 @@ if ($challenge === null) {
 $real_url = constant("BASE_URL") . "/submission/" . $submission->id;
 $proof_url = $submission->proof_url;
 $regen_param = $regen ? "&regen=true" : "";
-$embed_image_url = "/embed/img/submission.php?id=" . $submission->id . $regen_param;
+$embed_image_url = $is_new_challenge ? "" : "/embed/img/submission.php?id=" . $submission->id . $regen_param;
 
-?>
+$title_str = "Submission by '{$player->name}'";
+$description_str = "for {$for_str}";
 
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>Submission</title>
-
-  <meta name="theme-color" content="#f3d16b" data-react-helmet="true" />
-
-  <meta property="og:url" content="<?php echo $proof_url; ?>" />
-
-  <meta name="twitter:title" content="Submission by '<?php echo $submission->player->name; ?>'" />
-  <meta property="twitter:description" content="for <?php echo $for_str; ?>" />
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:image:src" content="<?php echo $embed_image_url; ?>" />
-
-  <!-- <meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Lorem ipsum sit dolor">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image:src" content="https://www.example.com/hello-world/thumbnail.png"> -->
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(function () {
-        window.location = "<?php echo $real_url; ?>";
-      }, 50);
-    });
-  </script>
-</head>
-
-<body>
-
-</body>
-
-</html>
+output_image_embed($real_url, $title_str, $description_str, $embed_image_url);

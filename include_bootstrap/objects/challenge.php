@@ -227,14 +227,18 @@ class Challenge extends DbObject
     return null;
   }
 
-  function get_name($no_campaign = false): string
+  function get_name($no_campaign = false, $no_map = false): string
   {
     $map_name = $this->map !== null ? $this->map->get_name($no_campaign) : $this->campaign->get_name();
     $objective_name = $this->objective->name;
     $c_fc = $this->get_c_fc();
     $label_suffix = $this->get_suffix() !== null ? " [{$this->get_suffix()}]" : "";
 
-    return "{$map_name} / {$objective_name} [{$c_fc}]{$label_suffix}";
+    if ($no_map) {
+      return "{$objective_name} [{$c_fc}]{$label_suffix}";
+    } else {
+      return "{$map_name} / {$objective_name} [{$c_fc}]{$label_suffix}";
+    }
   }
   function get_name_for_discord(): string
   {

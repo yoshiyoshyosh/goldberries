@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{title}}</title>
+
+  <meta name="theme-color" content="#f3d16b" data-react-helmet="true" />
+  <meta property="og:url" content="{{url}}" />
+  <meta name="twitter:title" content="{{title}}" />
+  <meta property="twitter:description" content="{{description}}" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:image:src" content="{{image_url}}" />
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        window.location = "{{url}}";
+      }, 50);
+    });
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
