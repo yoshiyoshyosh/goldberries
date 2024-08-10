@@ -194,8 +194,8 @@ export function ProofEmbed({ url, ...props }) {
       </div>
     );
   } else if (url.includes("bilibili.com")) {
-    let videoId = getBilibiliIdFromLink(url);
-    url = `https://player.bilibili.com/player.html?bvid=${videoId}&page=1&high_quality=1&autoplay=false`;
+    let data = parseBilibiliUrl(url);
+    url = `https://player.bilibili.com/player.html?bvid=${data.id}&page=${data.page}&high_quality=1&autoplay=false`;
 
     return (
       <div {...props}>
@@ -219,17 +219,27 @@ export function ProofEmbed({ url, ...props }) {
     </div>
   );
 }
-function getBilibiliIdFromLink(link) {
-  //If it starts with an 'av', it is an aid
+function parseBilibiliUrl(link) {
+  let id;
+
+  // If it starts with 'av', it is an aid
   if (link.includes("/av")) {
-    //Extract the AV id
-    let id = link.match(/av[0-9]+/g)[0];
-    return id;
+    // Extract the AV id
+    id = link.match(/av[0-9]+/g)[0];
+  } else {
+    // Extract the BV id
+    id = link.match(/[bB][vV][0-9a-zA-Z]+/g)[0];
   }
 
-  //Extract the BV id
-  let id = link.match(/[bB][vV][0-9a-zA-Z]+/g)[0];
-  return id;
+  // Extract the page number, default to 1 if not found
+  let pageMatch = link.match(/(\?|&)p=(\d+)/);
+  let page = pageMatch ? parseInt(pageMatch[2]) : 1;
+
+  // Return the result as an object
+  return {
+    id: id,
+    page: page,
+  };
 }
 function parseYouTubeUrl(url) {
   const urlRegex =
