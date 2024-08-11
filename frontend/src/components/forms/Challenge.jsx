@@ -124,6 +124,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
           <ObjectiveSelect objectiveId={field.value} setObjectiveId={(id) => field.onChange(id)} fullWidth />
         )}
       />
+      <TextField label={t_g("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
 
       <TextField label={t_g("label")} sx={{ mt: 2 }} fullWidth {...form.register("label")} />
       <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />

@@ -796,8 +796,8 @@ function UserAccountShowcaseSubForm({ playerId, submissions }) {
               playerId={playerId}
               submission={submission}
               setSubmission={(s) => setSubmission(index, s)}
-              moveUp={() => moveUp(index)}
-              moveDown={() => moveDown(index)}
+              moveUp={index === 0 ? null : () => moveUp(index)}
+              moveDown={index === showcase.length - 1 ? null : () => moveDown(index)}
             />
           </Stack>
         ))}
@@ -837,10 +837,10 @@ function UserAccountShowcaseEntry({ playerId, submission, setSubmission, moveUp,
       </Grid>
       <Grid item xs={12} sm="auto" display="flex" alignItems="center">
         <Stack direction="column" gap={1}>
-          <CustomIconButton onClick={() => moveUp()}>
+          <CustomIconButton onClick={() => moveUp()} disabled={moveUp === null}>
             <FontAwesomeIcon icon={faArrowUp} />
           </CustomIconButton>
-          <CustomIconButton onClick={() => moveDown()}>
+          <CustomIconButton onClick={() => moveDown()} disabled={moveDown === null}>
             <FontAwesomeIcon icon={faArrowDown} />
           </CustomIconButton>
         </Stack>

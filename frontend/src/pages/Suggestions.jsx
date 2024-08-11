@@ -377,7 +377,7 @@ function SuggestionName({ suggestion, expired }) {
                 </Typography>
               </StyledLink>
             </Stack>
-            <ObjectiveIcon objective={challenge.objective} height="1.2em" />
+            <ObjectiveIcon objective={challenge.objective} challenge={challenge} height="1.2em" />
             <ChallengeFcIcon challenge={challenge} height="1.4em" />
           </>
         )}

@@ -43,6 +43,13 @@ export function getChallengeSuffix(challenge) {
   return null;
 }
 
+export function getChallengeIcon(challenge) {
+  if (challenge.icon_url !== null) {
+    return challenge.icon_url;
+  }
+  return challenge.objective.icon_url;
+}
+
 export function getChallengeNameShort(challenge, withSuffix = false, includeFc = true) {
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";

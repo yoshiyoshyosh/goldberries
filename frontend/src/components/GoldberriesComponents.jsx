@@ -14,6 +14,7 @@ import {
   getCampaignName,
   getChallengeFcLong,
   getChallengeFcShort,
+  getChallengeIcon,
   getChallengeName,
   getChallengeNameClean,
   getDifficultyName,
@@ -871,9 +872,16 @@ export function ArbitraryIcon({ height = "1em" }) {
   return <Tooltip title="Arbitrary">(A)</Tooltip>;
 }
 
-export function ObjectiveIcon({ objective, challengeLabel, height = "1em" }) {
-  const description = challengeLabel ? objective.name + ": " + challengeLabel : objective.description;
-  if (objective.icon_url === null || objective.icon_url === undefined)
+export function ObjectiveIcon({ objective, challenge = null, height = "1em" }) {
+  const description = objective.description;
+  let icon_url = null;
+  if (challenge) {
+    icon_url = getChallengeIcon(challenge);
+  } else {
+    icon_url = objective.icon_url;
+  }
+
+  if (icon_url === null || icon_url === undefined)
     return (
       <Tooltip title={description}>
         <FontAwesomeIcon icon={faInfoCircle} height={height} />
@@ -883,7 +891,7 @@ export function ObjectiveIcon({ objective, challengeLabel, height = "1em" }) {
   return (
     <Tooltip title={description}>
       <img
-        src={objective.icon_url}
+        src={icon_url}
         alt={objective.name}
         className="outlined"
         style={{

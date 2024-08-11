@@ -273,7 +273,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
                     [{getChallengeSuffix(challenge)}]
                   </Typography>
                 )}
-                <ObjectiveIcon objective={challenge.objective} height="1.3em" />
+                <ObjectiveIcon objective={challenge.objective} challenge={challenge} height="1.3em" />
               </>
             ) : (
               <Typography variant="body2" color={theme.palette.text.secondary}>

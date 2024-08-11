@@ -215,7 +215,8 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
             <InfoBoxIconTextLine
               text={
                 <Stack direction="row" alignItems="center" gap={0.5}>
-                  {challenge.objective.name} <ObjectiveIcon objective={challenge.objective} />
+                  {challenge.objective.name}{" "}
+                  <ObjectiveIcon objective={challenge.objective} challenge={challenge} />
                   <ChallengeFcIcon challenge={challenge} />
                 </Stack>
               }
