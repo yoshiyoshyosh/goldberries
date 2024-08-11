@@ -58,6 +58,36 @@ RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
 RewriteCond %{REQUEST_URI} ^/top-golden-list/?(.*?)$
 RewriteRule ^top-golden-list/?(.*?)$ /embed/top-golden-list.php [QSA,L]
 
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/campaign-list/?(.*?)$
+RewriteRule ^campaign-list/?(.*?)$ /embed/campaign-list.php [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/faq/?(.*?)$
+RewriteRule ^faq/?(.*?)$ /embed/faq.php [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/rules/?(.*?)$
+RewriteRule ^rules/?(.*?)$ /embed/rules.php [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/monthly-recap/?(.*?)$
+RewriteRule ^monthly-recap/?(.*?)$ /embed/monthly-recap.php [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/rejected-maps/?(.*?)$
+RewriteRule ^rejected-maps/?(.*?)$ /embed/rejected-maps.php [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/submit/?(.*?)$
+RewriteRule ^submit/?(.*?)$ /embed/submit.php [QSA,L]
+
 # Check if the requested file exists, if not, redirect to /index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

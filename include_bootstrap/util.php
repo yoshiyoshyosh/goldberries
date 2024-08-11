@@ -224,3 +224,9 @@ function input_method_to_string($input_method)
       return "Unknown";
   }
 }
+
+function is_side_name($name)
+{
+  //If the name is in the pattern X-Side, with X being either 1 or 2 letters long, then it's a side name
+  return preg_match("/^[a-zA-Z]{1,2}-Side$/", $name) === 1;
+}
