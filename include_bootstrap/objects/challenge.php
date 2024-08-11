@@ -11,6 +11,7 @@ class Challenge extends DbObject
   public bool $has_fc = false;
   public ?bool $is_arbitrary = null;
   public ?int $sort = null;
+  public ?string $icon_url = null;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -46,6 +47,7 @@ class Challenge extends DbObject
       'objective_id' => $this->objective_id,
       'difficulty_id' => $this->difficulty_id,
       'sort' => $this->sort,
+      'icon_url' => $this->icon_url
     );
   }
 
@@ -71,6 +73,8 @@ class Challenge extends DbObject
       $this->is_arbitrary = $arr[$prefix . 'is_arbitrary'] === 't';
     if (isset($arr[$prefix . 'sort']))
       $this->sort = intval($arr[$prefix . 'sort']);
+    if (isset($arr[$prefix . 'icon_url']))
+      $this->icon_url = $arr[$prefix . 'icon_url'];
   }
 
   function expand_foreign_keys($DB, $depths = 2, $expand_structure = true)
@@ -160,6 +164,17 @@ class Challenge extends DbObject
   function get_campaign(): ?Campaign
   {
     return $this->campaign_id === null ? $this->map->campaign : $this->campaign;
+  }
+
+  function get_icon_url(): string
+  {
+    if ($this->objective === null)
+      return null;
+
+    if ($this->icon_url !== null) {
+      return $this->icon_url;
+    }
+    return $this->objective->icon_url;
   }
 
   function __toString()
