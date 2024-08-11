@@ -459,3 +459,11 @@ export function LanguageFlag({ code, height = "20", style }) {
   const alt = LANGUAGES.find((lang) => lang.code === code)?.name;
   return <img src={`/locales/flags/${code}.png`} height={height} alt={alt} style={style} />;
 }
+
+export function CustomIconButton({ children, sx = {}, ...props }) {
+  return (
+    <Button variant="outlined" sx={{ minWidth: "unset", ...sx }} {...props}>
+      {children}
+    </Button>
+  );
+}

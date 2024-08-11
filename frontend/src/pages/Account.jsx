@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   FormHelperText,
   Grid,
+  IconButton,
   MenuItem,
   Select,
   Stack,
@@ -17,6 +18,7 @@ import {
 } from "@mui/material";
 import {
   BasicContainerBox,
+  CustomIconButton,
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
@@ -46,7 +48,9 @@ import { useEffect, useState } from "react";
 import { API_URL, DISCORD_INVITE, FormOptions } from "../util/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowDown,
   faArrowRightArrowLeft,
+  faArrowUp,
   faCheckSquare,
   faEdit,
   faEnvelope,
@@ -756,6 +760,22 @@ function UserAccountShowcaseSubForm({ playerId, submissions }) {
   const setSubmission = (index, submission) => {
     setShowcase(showcase.map((s, i) => (i === index ? submission : s)));
   };
+  const moveUp = (index) => {
+    if (index > 0) {
+      const newShowcase = [...showcase];
+      newShowcase[index] = showcase[index - 1];
+      newShowcase[index - 1] = showcase[index];
+      setShowcase(newShowcase);
+    }
+  };
+  const moveDown = (index) => {
+    if (index < showcase.length - 1) {
+      const newShowcase = [...showcase];
+      newShowcase[index] = showcase[index + 1];
+      newShowcase[index + 1] = showcase[index];
+      setShowcase(newShowcase);
+    }
+  };
 
   return (
     <>
@@ -776,6 +796,8 @@ function UserAccountShowcaseSubForm({ playerId, submissions }) {
               playerId={playerId}
               submission={submission}
               setSubmission={(s) => setSubmission(index, s)}
+              moveUp={() => moveUp(index)}
+              moveDown={() => moveDown(index)}
             />
           </Stack>
         ))}
@@ -791,7 +813,7 @@ function UserAccountShowcaseSubForm({ playerId, submissions }) {
     </>
   );
 }
-function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
+function UserAccountShowcaseEntry({ playerId, submission, setSubmission, moveUp, moveDown }) {
   const { t } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
   const [isAdding, setIsAdding] = useState(false);
 
@@ -813,7 +835,17 @@ function UserAccountShowcaseEntry({ playerId, submission, setSubmission }) {
       <Grid item xs={12} sm={4}>
         <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
       </Grid>
-      <Grid item xs={12} sm={8} display="flex" alignItems="center">
+      <Grid item xs={12} sm="auto" display="flex" alignItems="center">
+        <Stack direction="column" gap={1}>
+          <CustomIconButton onClick={() => moveUp()}>
+            <FontAwesomeIcon icon={faArrowUp} />
+          </CustomIconButton>
+          <CustomIconButton onClick={() => moveDown()}>
+            <FontAwesomeIcon icon={faArrowDown} />
+          </CustomIconButton>
+        </Stack>
+      </Grid>
+      <Grid item xs={12} sm="auto" display="flex" alignItems="center">
         <Button variant="outlined" color="error" onClick={() => setSubmission(null)}>
           {t("buttons.remove_submission")}
         </Button>
