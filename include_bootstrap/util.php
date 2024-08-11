@@ -194,3 +194,33 @@ function get_subtier_index($difficulty)
 
   return 0;
 }
+
+function fetch_data($url)
+{
+  $ch = curl_init();
+  $timeout = 5;
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+  $data = curl_exec($ch);
+  curl_close($ch);
+  return $data;
+}
+
+function input_method_to_string($input_method)
+{
+  switch ($input_method) {
+    case "keyboard":
+      return "Keyboard";
+    case "dpad":
+      return "Controller (D-Pad)";
+    case "analog":
+      return "Controller (Analog)";
+    case "hybrid":
+      return "Hybrid";
+    case "other":
+      return "Other";
+    default:
+      return "Unknown";
+  }
+}

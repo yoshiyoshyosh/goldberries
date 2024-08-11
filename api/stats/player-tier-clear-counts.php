@@ -24,9 +24,14 @@ $query = "SELECT
     COUNT(*) AS total
   FROM submission
   JOIN challenge ON submission.challenge_id = challenge.id
+  JOIN objective ON challenge.objective_id = objective.id
   JOIN difficulty ON challenge.difficulty_id = difficulty.id
   JOIN player ON submission.player_id = player.id
   LEFT JOIN account ON player.id = account.player_id
+  LEFT JOIN map ON challenge.map_id = map.id
+  WHERE submission.is_verified = TRUE 
+    AND ((challenge.is_arbitrary IS NULL AND objective.is_arbitrary = false)
+    OR challenge.is_arbitrary = false)
   GROUP BY player.id, account.id
   ORDER BY player.name ASC";
 $result = pg_query($DB, $query);

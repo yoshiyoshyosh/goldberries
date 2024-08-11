@@ -11,7 +11,7 @@ if ($id <= 0) {
   $real_url = constant("BASE_URL") . "/suggestions";
   $title_str = "Suggestion Box";
   $description_str = "See what other people have suggested for challenge placements or other website features";
-  output_text_embed($real_url, $title_str, $description_str);
+  output_text_embed($real_url, $title_str, $description_str, "");
   exit();
 }
 

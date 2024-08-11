@@ -40,13 +40,23 @@ RewriteRule ^challenge/([0-9]+)$ /embed/challenge.php?id=$1 [QSA,L]
 
 # Rewrite specifically the Discordbot user agent from submission page to embed page
 RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
-RewriteCond %{REQUEST_URI} ^/map/([0-9]+)$
-RewriteRule ^map/([0-9]+)$ /embed/map.php?id=$1 [QSA,L]
+RewriteCond %{REQUEST_URI} ^/map/([0-9]+)/?(.*?)$
+RewriteRule ^map/([0-9]+)/?(.*?)$ /embed/map.php?id=$1 [QSA,L]
 
 # Rewrite specifically the Discordbot user agent from submission page to embed page
 RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
-RewriteCond %{REQUEST_URI} ^/campaign/([0-9]+)$
-RewriteRule ^campaign/([0-9]+)$ /embed/campaign.php?id=$1 [QSA,L]
+RewriteCond %{REQUEST_URI} ^/campaign/([0-9]+)/?(.*?)$
+RewriteRule ^campaign/([0-9]+)/?(.*?)$ /embed/campaign.php?id=$1 [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/player/([0-9]+)/?(.*?)$
+RewriteRule ^player/([0-9]+)/?(.*?)$ /embed/player.php?id=$1 [QSA,L]
+
+# Rewrite specifically the Discordbot user agent from submission page to embed page
+RewriteCond %{HTTP_USER_AGENT} Discordbot [NC]
+RewriteCond %{REQUEST_URI} ^/top-golden-list/?(.*?)$
+RewriteRule ^top-golden-list/?(.*?)$ /embed/top-golden-list.php [QSA,L]
 
 # Check if the requested file exists, if not, redirect to /index.html
 RewriteCond %{REQUEST_FILENAME} !-f

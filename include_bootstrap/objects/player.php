@@ -185,6 +185,11 @@ class Player extends DbObject
     return "(Player, id:{$this->id}, name:'{$this->name}')";
   }
 
+  function get_url()
+  {
+    return constant('BASE_URL') . "/player/{$this->id}";
+  }
+
   static function generate_changelog($DB, $old, $new)
   {
     if ($old->id !== $new->id)
