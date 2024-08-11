@@ -91,7 +91,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
     const newMapObjs = mapNames.map((name) => {
       return {
         name: name,
-        generate_challenges: "c", //c, c_fc, c_fc_distinct
+        generate_challenges: "c_fc", //c, c_fc, c_fc_distinct
       };
     });
     form.setValue("mapObjs", newMapObjs);
