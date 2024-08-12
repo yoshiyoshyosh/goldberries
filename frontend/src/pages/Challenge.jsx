@@ -222,8 +222,8 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
               }
               isSecondary
             />
-            {getChallengeSuffix(challenge) !== null && (
-              <InfoBoxIconTextLine text={"[" + getChallengeSuffix(challenge) + "]"} isSecondary />
+            {getChallengeSuffix(challenge, true) !== null && (
+              <InfoBoxIconTextLine text={"[" + getChallengeSuffix(challenge, true) + "]"} isSecondary />
             )}
           </InfoBox>
         )}

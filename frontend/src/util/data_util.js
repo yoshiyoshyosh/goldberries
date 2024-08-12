@@ -33,13 +33,17 @@ export function getChallengeName(challenge, includeFc = true) {
     getChallengeSuffix(challenge) === null ? "" : " [" + getChallengeSuffix(challenge) + "]";
   return (
     // oldPrefix +
-    challengeFc + challenge.objective.name + getChallengeObjectiveSuffix(challenge) + challengeSuffix
+    challengeFc + challenge.objective.name + challengeSuffix
   );
 }
 
-export function getChallengeSuffix(challenge) {
+export function getChallengeSuffix(challenge, checkDifferent = false) {
   if (challenge.label !== null) return challenge.label;
-  else if (challenge.objective.display_name_suffix !== null) return challenge.objective.display_name_suffix;
+  else if (
+    challenge.objective.display_name_suffix !== null &&
+    (!checkDifferent || challenge.objective.name !== challenge.objective.display_name_suffix)
+  )
+    return challenge.objective.display_name_suffix;
   return null;
 }
 
@@ -54,11 +58,13 @@ export function getChallengeNameShort(challenge, withSuffix = false, includeFc =
   const isOld = challenge.map?.is_archived ?? false;
   const oldPrefix = isOld ? "[Old] " : "";
   const challengeSuffix =
-    withSuffix && getChallengeSuffix(challenge) !== null ? " [" + getChallengeSuffix(challenge) + "]" : "";
+    withSuffix && getChallengeSuffix(challenge, true) !== null
+      ? " [" + getChallengeSuffix(challenge, true) + "]"
+      : "";
   const cfcSuffix = includeFc ? " " + getChallengeFcShort(challenge) : "";
   return (
     // oldPrefix +
-    challenge.objective.name + cfcSuffix + getChallengeObjectiveSuffix(challenge) + challengeSuffix
+    challenge.objective.name + cfcSuffix + challengeSuffix
   );
 }
 

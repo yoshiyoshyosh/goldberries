@@ -49,7 +49,12 @@ import {
   StyledLink,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
-import { ChallengeFcIcon, DifficultyChip, GamebananaEmbed } from "../components/GoldberriesComponents";
+import {
+  ChallengeFcIcon,
+  DifficultyChip,
+  GamebananaEmbed,
+  ObjectiveIcon,
+} from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
 import { useAuth } from "../hooks/AuthProvider";
@@ -141,6 +146,11 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             />
           )}
           <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
+            <ObjectiveIcon
+              objective={selectedChallenge.objective}
+              challenge={selectedChallenge}
+              height="1.3em"
+            />
             <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
             <span>{getChallengeFcShort(selectedChallenge)}</span>
             <DifficultyChip difficulty={selectedChallenge.difficulty} />
