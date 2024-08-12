@@ -35,6 +35,8 @@ import {
   Pagination,
   Select,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Tooltip,
   Typography,
@@ -89,6 +91,7 @@ export function PageSuggestions({}) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [type, setType] = useState("all");
+  const [tab, setTab] = useState("active");
 
   const newSuggestion = () => {
     modalRefs.create.current.open();
@@ -135,20 +138,31 @@ export function PageSuggestions({}) {
         <MenuItem value="general">{t("filter.general")}</MenuItem>
         <MenuItem value="challenge">{t("filter.challenge")}</MenuItem>
       </Select>
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="h6" gutterBottom>
-        {t("active")}
-      </Typography>
-      <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} filterType={type} />
-      <Divider sx={{ my: 2 }} />
-      <Typography variant="h6" gutterBottom>
-        {t("expired")}
-      </Typography>
-      <SuggestionsList expired={true} defaultPerPage={15} modalRefs={modalRefs} filterType={type} />
+      <Divider sx={{ mt: 2 }} />
+
+      <Tabs variant="fullWidth" value={tab} onChange={(event, newTab) => setTab(newTab)} sx={{ mt: 0 }}>
+        <Tab label={t("active")} value="active" />
+        <Tab label={t("undecided")} value="undecided" />
+        <Tab label={t("expired")} value="expired" />
+      </Tabs>
+      <Divider sx={{ my: 0 }} />
+
+      {tab === "active" && (
+        <SuggestionsList expired={false} defaultPerPage={30} modalRefs={modalRefs} filterType={type} />
+      )}
+      {tab === "undecided" && (
+        <SuggestionsList expired={null} defaultPerPage={30} modalRefs={modalRefs} filterType={type} />
+      )}
+      {tab === "expired" && (
+        <SuggestionsList expired={true} defaultPerPage={30} modalRefs={modalRefs} filterType={type} />
+      )}
+
       <SuggestionsModalContainer modalRefs={modalRefs} suggestionId={id} closeModal={onCloseSuggestion} />
     </BasicContainerBox>
   );
 }
+
+function SuggestionListTab({ expired, defaultPerPage, modalRefs, filterType }) {}
 
 //#region == Suggestions List ==
 function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
@@ -159,7 +173,7 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
   const query = useGetSuggestions(page, perPage, expired, null, filterType);
 
   if (query.isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner sx={{ mt: 1 }} />;
   } else if (query.isError) {
     return <ErrorDisplay error={query.error} />;
   }
@@ -175,16 +189,8 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
 
   return (
     <Stack direction="column" gap={2}>
-      {!expired && <HeadTitle title={t("title")} />}
-      {suggestions.map((suggestion) => (
-        <SuggestionDisplay
-          key={suggestion.id}
-          suggestion={suggestion}
-          expired={expired}
-          modalRefs={modalRefs}
-        />
-      ))}
-      <Stack direction="row" gap={2} alignItems="center">
+      {expired === false && <HeadTitle title={t("title")} />}
+      <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
         <Typography variant="body2">
           {t("showing", {
             from: max_count === 0 ? 0 : (page - 1) * perPage + 1,
@@ -194,6 +200,14 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
         </Typography>
         <Pagination count={max_page} page={page} onChange={(e, value) => setPage(value)} />
       </Stack>
+      {suggestions.map((suggestion) => (
+        <SuggestionDisplay
+          key={suggestion.id}
+          suggestion={suggestion}
+          expired={expired}
+          modalRefs={modalRefs}
+        />
+      ))}
     </Stack>
   );
 }
@@ -381,7 +395,7 @@ function SuggestionName({ suggestion, expired }) {
             <ChallengeFcIcon challenge={challenge} height="1.4em" />
           </>
         )}
-        {suggestion.is_verified !== false && expired && (
+        {suggestion.is_verified !== false && (expired === true || expired === null) && (
           <SuggestionAcceptedIcon isAccepted={suggestion.is_accepted} />
         )}
         {suggestion.is_verified === null && (
