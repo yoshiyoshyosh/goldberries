@@ -419,47 +419,95 @@ function SuggestionName({ suggestion, expired }) {
 }
 
 function VotesDisplay({ votes, hasSubmission, isGeneral }) {
+  const auth = useAuth();
   const countFor = votes.filter((vote) => vote.vote === "+").length;
+  const votedFor =
+    auth.hasPlayerClaimed &&
+    votes.some((vote) => vote.vote === "+" && vote.player_id === auth.user.player_id);
   const countAgainst = votes.filter((vote) => vote.vote === "-").length;
+  const votedAgainst =
+    auth.hasPlayerClaimed &&
+    votes.some((vote) => vote.vote === "-" && vote.player_id === auth.user.player_id);
   const countIndifferent = votes.filter((vote) => vote.vote === "i").length;
+  const votedIndifferent =
+    auth.hasPlayerClaimed &&
+    votes.some((vote) => vote.vote === "i" && vote.player_id === auth.user.player_id);
   const hideEmpty = false;
 
   return (
     <Stack direction="row" gap={2}>
       {(!hideEmpty || countFor > 0) && (
-        <VoteDisplay type="+" count={countFor} hasSubmission={hasSubmission} isGeneral={isGeneral} />
+        <VoteDisplay
+          type="+"
+          count={countFor}
+          selfVoted={votedFor}
+          hasSubmission={hasSubmission}
+          isGeneral={isGeneral}
+        />
       )}
       {(!hideEmpty || countAgainst > 0) && (
-        <VoteDisplay type="-" count={countAgainst} hasSubmission={hasSubmission} isGeneral={isGeneral} />
+        <VoteDisplay
+          type="-"
+          count={countAgainst}
+          selfVoted={votedAgainst}
+          hasSubmission={hasSubmission}
+          isGeneral={isGeneral}
+        />
       )}
       {(!hideEmpty || countIndifferent > 0) && (
-        <VoteDisplay type="i" count={countIndifferent} hasSubmission={hasSubmission} isGeneral={isGeneral} />
+        <VoteDisplay
+          type="i"
+          count={countIndifferent}
+          selfVoted={votedIndifferent}
+          hasSubmission={hasSubmission}
+          isGeneral={isGeneral}
+        />
       )}
     </Stack>
   );
 }
 
-function VoteDisplay({ type, count, hasSubmission, isGeneral }) {
+function getSelfVotedIconColor(type, general, theme) {
+  if (general) {
+    if (type === "+") return theme.palette.success.main;
+    else if (type === "-") return theme.palette.error.main;
+    else return "#000000";
+  } else {
+    if (type === "+") return theme.palette.text.primary;
+    else if (type === "-") return theme.palette.text.primary;
+    else return theme.palette.text.primary;
+  }
+}
+function VoteDisplay({ type, count, selfVoted = false, hasSubmission, isGeneral }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions.votes" });
   const theme = useTheme();
   const icon = type === "+" ? faThumbsUp : type === "-" ? faThumbsDown : faEquals;
-  const color = type === "+" ? theme.palette.success.main : type === "-" ? theme.palette.error.main : "gray";
+  let fillColor = "transparent";
+  let iconColor =
+    type === "+" ? theme.palette.success.main : type === "-" ? theme.palette.error.main : "#808080";
+  let borderColor = hasSubmission ? iconColor : theme.palette.box.border;
+
+  if (selfVoted) {
+    fillColor = borderColor;
+    iconColor = getSelfVotedIconColor(type, isGeneral || !hasSubmission, theme);
+  }
 
   const tooltip = hasSubmission ? t("did_challenge") : t("others");
 
   const comp = (
     <Box
       sx={{
-        border: "1px solid " + (hasSubmission ? color : theme.palette.box.border),
+        border: "1px solid " + borderColor,
         borderRadius: "5px",
         px: 1,
         py: 0.5,
         opacity: count === 0 ? 0.3 : 1,
+        background: fillColor,
       }}
     >
       <Stack direction="row" gap={1} alignItems="center">
         <span>{count}</span>
-        <FontAwesomeIcon icon={icon} height="1em" color={color} />
+        <FontAwesomeIcon icon={icon} height="1em" color={iconColor} />
       </Stack>
     </Box>
   );
