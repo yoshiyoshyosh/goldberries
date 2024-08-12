@@ -971,7 +971,9 @@ export function MultiUserSubmissionMapRow({
           <FormControlLabel
             control={<Checkbox />}
             checked={mapData.is_fc}
-            disabled={mapData.challenge.requires_fc || !mapData.challenge.has_fc}
+            disabled={
+              mapData.challenge === null || mapData.challenge.requires_fc || !mapData.challenge.has_fc
+            }
             onChange={(e, v) => updateMapDataRow(index, { ...mapData, is_fc: v })}
             label={t_fs("is_fc")}
             slotProps={{

@@ -117,6 +117,8 @@ export function FormCampaign({ campaign, onSave, ...props }) {
   const errors = form.formState.errors;
   const onUpdateSubmit = form.handleSubmit((data) => {
     console.log("Submitting campaign", data);
+    //Unset maps field to save data
+    data.maps = undefined;
     postCampaign(data);
   });
 
