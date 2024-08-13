@@ -104,14 +104,17 @@ class Suggestion extends DbObject
     if ($challenge !== null) {
       $where[] = "challenge_id = " . $challenge;
     }
-    if ($expired !== null) {
-      if ($expired === true) {
-        $where[] = "(date_created < NOW() - INTERVAL '" . self::$expiration_days . " days' OR is_accepted IS NOT NULL OR is_verified = false)";
-      } else {
-        $where[] = "date_created >= NOW() - INTERVAL '" . self::$expiration_days . " days'";
-        $where[] = "is_accepted IS NULL";
-        $where[] = "(is_verified = true OR is_verified IS NULL)";
-      }
+    if ($expired === true) {
+      $where[] = "(is_accepted IS NOT NULL OR is_verified = false)";
+    } else if ($expired === false) {
+      $where[] = "date_created >= NOW() - INTERVAL '" . self::$expiration_days . " days'";
+      $where[] = "is_accepted IS NULL";
+      $where[] = "(is_verified = true OR is_verified IS NULL)";
+    } else {
+      //expired === null -> get expired but undecided suggestions
+      $where[] = "date_created < NOW() - INTERVAL '" . self::$expiration_days . " days'";
+      $where[] = "is_accepted IS NULL";
+      $where[] = "(is_verified = true OR is_verified IS NULL)";
     }
 
     if ($account === null || (!is_verifier($account) && $account->player_id === null)) {
