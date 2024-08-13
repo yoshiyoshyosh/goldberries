@@ -94,10 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       $was_verified = false;
-      if (
-        $old_submission->verifier_id === null
-        && $old_submission->is_verified !== $submission->is_verified
-      ) {
+      if ($old_submission->is_verified !== $submission->is_verified) {
         if ($old_submission->challenge_id === null && $submission->is_verified) {
           die_json(400, "Cannot verify a submission without a challenge");
         }
