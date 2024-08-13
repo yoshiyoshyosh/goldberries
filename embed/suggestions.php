@@ -30,26 +30,6 @@ $comment = $suggestion->comment;
 $comment_str = $comment === null ? "-" : $comment;
 $description_str = "";
 
-$challenge = $suggestion->challenge;
-$campaign_str = "General";
-if ($challenge !== null) {
-  $campaign_str = $challenge->get_campaign()->get_name();
-  // $description_str .= "For Campaign: " . $campaign_str . "\n\n";
-}
-
-$description_str .= "{$author->name}: {$comment_str}\n\n";
-
-//Count votes
-$votes = $suggestion->votes;
-$votes_count = [
-  "+" => 0,
-  "-" => 0,
-  "i" => 0
-];
-foreach ($votes as $vote) {
-  $votes_count[$vote->vote]++;
-}
-
 $title_str = "";
 if ($challenge !== null) {
   $title_str = "Suggestion: '" . $challenge->get_name(true) . "'";
@@ -62,14 +42,36 @@ if ($challenge !== null) {
   $title_str = "General Suggestion";
 }
 
+//Count votes
+$votes = $suggestion->votes;
+$votes_count = [
+  "+" => 0,
+  "-" => 0,
+  "i" => 0
+];
+foreach ($votes as $vote) {
+  $votes_count[$vote->vote]++;
+}
 $description_str .= "Votes: +{$votes_count['+']}, -{$votes_count['-']}, ={$votes_count['i']}\n";
+
+
 $status_str = $suggestion->is_closed() ? "Closed" : "Open";
 if ($suggestion->is_accepted === true) {
   $status_str .= " (Accepted)";
 } else if ($suggestion->is_accepted === false) {
   $status_str .= " (Rejected)";
 }
-$description_str .= "Status: {$status_str}\n";
+$description_str .= "Status: {$status_str}\n\n";
+
+
+$challenge = $suggestion->challenge;
+$campaign_str = "";
+if ($challenge !== null) {
+  $campaign_str = $challenge->get_campaign()->get_name();
+}
+
+$description_str .= "{$author->name}: {$comment_str}";
+
 
 $real_url = constant("BASE_URL") . "/suggestion/" . $submission->id;
 
