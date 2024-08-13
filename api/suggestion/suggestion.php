@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $toLog = $suggestion->is_accepted ? "accepted" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_accepted = $suggestion->is_accepted;
+      send_webhook_suggestion_accepted($old_suggestion);
     }
 
     if ($old_suggestion->update($DB)) {

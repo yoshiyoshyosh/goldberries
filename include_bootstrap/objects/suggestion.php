@@ -216,4 +216,9 @@ class Suggestion extends DbObject
     $diff = $now->diff($this->date_created);
     return $diff->days > self::$expiration_days;
   }
+
+  function get_url()
+  {
+    return constant("BASE_URL") . "/suggestions/" . $this->id;
+  }
 }
