@@ -46,6 +46,7 @@ import {
   faArrowRight,
   faBook,
   faCheckCircle,
+  faCircleExclamation,
   faClock,
   faComment,
   faEdit,
@@ -310,6 +311,7 @@ export function ChallengeSubmissionTable({
   const auth = useAuth();
   const { t } = useTranslation(undefined, { keyPrefix: "challenge.submission_table" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   return (
     <TableContainer component={Paper} {...props}>
       <Table size="small" stickyHeader>
@@ -322,7 +324,16 @@ export function ChallengeSubmissionTable({
             )}
             {!compact && (
               <TableCell width={1} align="center" sx={displayNoneOnMobile}>
-                <FontAwesomeIcon icon={faComment} />
+                <Tooltip arrow placement="top" title={t_fs("verifier_notes")}>
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                </Tooltip>
+              </TableCell>
+            )}
+            {!compact && (
+              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+                <Tooltip arrow placement="top" title={t_fs("player_notes")}>
+                  <FontAwesomeIcon icon={faComment} />
+                </Tooltip>
               </TableCell>
             )}
             {!compact && (
@@ -408,8 +419,17 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       )}
       {!compact && (
         <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+          {submission.verifier_notes && (
+            <Tooltip title={submission.verifier_notes} arrow placement="top">
+              <FontAwesomeIcon icon={faCircleExclamation} />
+            </Tooltip>
+          )}
+        </TableCell>
+      )}
+      {!compact && (
+        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
           {submission.player_notes && (
-            <Tooltip title={submission.player_notes}>
+            <Tooltip title={submission.player_notes} arrow placement="top">
               <FontAwesomeIcon icon={faComment} />
             </Tooltip>
           )}
@@ -417,7 +437,12 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       )}
       {!compact && (
         <TableCell width={1} align="center" sx={displayNoneOnMobile}>
-          {submission.date_created && jsonDateToJsDate(submission.date_created).toLocaleDateString()}
+          {submission.date_created &&
+            jsonDateToJsDate(submission.date_created).toLocaleDateString(undefined, {
+              year: "2-digit",
+              month: "2-digit",
+              day: "2-digit",
+            })}
         </TableCell>
       )}
       <TableCell width={1} align="center" sx={displayNoneOnMobile}>
