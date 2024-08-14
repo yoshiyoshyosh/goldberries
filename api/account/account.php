@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 if ($account === null) {
@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $target->name_color_end = $accountReq->name_color_end;
     $target->input_method = $accountReq->input_method;
     $target->about_me = $accountReq->about_me;
+    $target->last_player_rename = $accountReq->last_player_rename;
 
     $new_email = isset($request['new_email']) ? $request['new_email'] : null;
     if ($new_email !== null) {
