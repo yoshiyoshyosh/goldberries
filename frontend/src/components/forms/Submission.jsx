@@ -297,7 +297,6 @@ export function FormSubmission({ submission, onSave, ...props }) {
               label={t("date_submitted") + " *"}
               value={dayjs(field.value)}
               onChange={(value) => {
-                console.log("New date value", value);
                 field.onChange(value.toISOString());
               }}
               viewRenderers={{

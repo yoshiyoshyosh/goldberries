@@ -18,9 +18,11 @@ import { getAccountName } from "../../util/data_util";
 import { FormOptions } from "../../util/constants";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faLink, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ManageUserLinks } from "../../pages/Account";
 import { useTranslation } from "react-i18next";
+import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 export function FormAccountWrapper({ account, id, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -197,6 +199,37 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
         control={form.control}
         name="links"
         render={({ field }) => <ManageUserLinks links={field.value} setLinks={field.onChange} />}
+      />
+
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography variant="h6">{t("about_me")}</Typography>
+        <FontAwesomeIcon icon={faComment} />
+      </Stack>
+      <Controller
+        name="about_me"
+        control={form.control}
+        render={({ field }) => (
+          <TextField {...field} fullWidth multiline minRows={4} placeholder={t("about_me_placeholder")} />
+        )}
+      />
+
+      <Controller
+        control={form.control}
+        name="last_player_rename"
+        render={({ field }) => (
+          <DateTimePicker
+            label={t("last_player_rename")}
+            value={field.value ? dayjs(field.value) : null}
+            onChange={(value) => {
+              field.onChange(value.toISOString());
+            }}
+            viewRenderers={{
+              hours: renderTimeViewClock,
+              minutes: renderTimeViewClock,
+            }}
+            sx={{ mt: 2, width: "100%" }}
+          />
+        )}
       />
 
       <Divider sx={{ my: 2 }} />
