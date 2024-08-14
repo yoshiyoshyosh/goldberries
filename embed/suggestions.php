@@ -1,7 +1,7 @@
 <?php
 
-require_once (dirname(__FILE__) . '/../bootstrap.inc.php');
-require_once (dirname(__FILE__) . '/embed_include.php');
+require_once(dirname(__FILE__) . '/../bootstrap.inc.php');
+require_once(dirname(__FILE__) . '/embed_include.php');
 
 $DB = db_connect();
 
@@ -25,6 +25,7 @@ $suggestion->expand_foreign_keys($DB, 5);
 $suggestion->fetch_associated_content($DB);
 
 //Objects
+$challenge = $suggestion->challenge;
 $author = $suggestion->author;
 $comment = $suggestion->comment;
 $comment_str = $comment === null ? "-" : $comment;
@@ -64,7 +65,6 @@ if ($suggestion->is_accepted === true) {
 $description_str .= "Status: {$status_str}\n\n";
 
 
-$challenge = $suggestion->challenge;
 $campaign_str = "";
 if ($challenge !== null) {
   $campaign_str = $challenge->get_campaign()->get_name();
