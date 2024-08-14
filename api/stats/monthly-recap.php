@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Invalid request method');
@@ -20,8 +20,8 @@ if ($all_clears_tier_sort < 7) {
 } else if ($all_clears_tier_sort > 19) {
   die_json(400, 'all_clears_tier_sort has to be at most High Tier 0');
 }
-if ($first_clears_tier_sort < 3) {
-  die_json(400, 'first_clears_tier_sort has to be at least Tier 7');
+if ($first_clears_tier_sort < 2) {
+  die_json(400, 'first_clears_tier_sort has to be at least Standard');
 } else if ($first_clears_tier_sort > 19) {
   die_json(400, 'first_clears_tier_sort has to be at most High Tier 0');
 }
@@ -75,39 +75,27 @@ while ($row = pg_fetch_assoc($result)) {
 
 
 //Newly cleared t3+ challenges
-$time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-$query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND submission_new_challenge_id IS NULL AND difficulty_sort >= $first_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
+$query = "SELECT 
+  challenge_id, 
+  MIN(submission_date_created AT TIME ZONE 'UTC') AS first_clear_date 
+FROM view_submissions 
+WHERE challenge_id IS NOT NULL AND difficulty_sort >= $first_clears_tier_sort AND submission_is_verified = TRUE
+GROUP BY challenge_id
+HAVING MIN(submission_date_created AT TIME ZONE 'UTC') >= '$month-01' AND MIN(submission_date_created AT TIME ZONE 'UTC') < '$month-01'::date + INTERVAL '1 month'
+ORDER BY first_clear_date DESC";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");
 }
-$submissions_t3 = array();
-while ($row = pg_fetch_assoc($result)) {
-  $submission = new Submission();
-  $submission->apply_db_data($row, "submission_");
-  $submission->expand_foreign_keys($row, 5);
-  $submissions_t3[] = $submission;
-}
-//Loop through t3 submissions, have the challenge fetch all submissions and check if all submissions are from this month or newer
 $newly_cleared_t3 = array();
-foreach ($submissions_t3 as $submission) {
-  $challenge = $submission->challenge;
+while ($row = pg_fetch_assoc($result)) {
+  $challenge = Challenge::get_by_id($DB, $row['challenge_id']);
+  $challenge->expand_foreign_keys($DB, 5);
   $challenge->fetch_submissions($DB);
-  $newly_cleared = true;
-  $first_submission = $challenge->submissions[0];
-  if ($first_submission->date_created >= $month . "-01") {
-    //Check if the challenge has already been added
-    $already_added = false;
-    foreach ($newly_cleared_t3 as $c) {
-      if ($c->id === $challenge->id) {
-        $already_added = true;
-        break;
-      }
-    }
-    if (!$already_added)
-      $newly_cleared_t3[] = $challenge;
-  }
+  $newly_cleared_t3[] = $challenge;
 }
+
+
 //Loop through newly cleared t3 challenges and remove the first submission from the t0 submissions, if it exists
 foreach ($newly_cleared_t3 as $challenge) {
   foreach ($submissions_t0 as $key => $t0_submission) {
