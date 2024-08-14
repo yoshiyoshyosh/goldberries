@@ -126,8 +126,9 @@ function MonthlyRecap({ month }) {
           fullWidth
           difficultyId={firstClearsDifficulty?.id ?? 12}
           setDifficulty={setFirstClearsDifficulty}
-          minSort={3}
+          minSort={2}
           maxSort={19}
+          noGuard
         />
       </Grid>
       <Grid item xs={12}>

@@ -400,6 +400,7 @@ export function DifficultySelectControlled({
   isSuggestion = false,
   minSort = null,
   maxSort = null,
+  noGuard = false,
   ...props
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
@@ -421,6 +422,9 @@ export function DifficultySelectControlled({
   //filter out id 13 (fwg) and 19 (undetermined)
   if (isSuggestion) {
     difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+  }
+  if (noGuard) {
+    difficulties = difficulties.filter((d) => d.id !== 13);
   }
   if (minSort !== null) {
     difficulties = difficulties.filter((d) => d.sort >= minSort);
