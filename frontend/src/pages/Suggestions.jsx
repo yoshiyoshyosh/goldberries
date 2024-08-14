@@ -327,7 +327,11 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
           }}
         >
           <Typography variant="body2">
-            <Tooltip title={jsonDateToJsDate(suggestion.date_created).toLocaleString()} arrow placement="top">
+            <Tooltip
+              title={jsonDateToJsDate(suggestion.date_created).toLocaleString(navigator.language)}
+              arrow
+              placement="top"
+            >
               <span>{dateToTimeAgoString(jsonDateToJsDate(suggestion.date_created))}</span>
             </Tooltip>
           </Typography>

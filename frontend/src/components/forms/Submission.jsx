@@ -313,7 +313,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         {!isVerifier && (
           <ListItem>
             <ListItemText
-              primary={jsonDateToJsDate(submission.date_created).toLocaleString()}
+              primary={jsonDateToJsDate(submission.date_created).toLocaleString(navigator.language)}
               secondary={t("date_submitted")}
             />
           </ListItem>
@@ -323,7 +323,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
             <ListItem>
               <ListItemText
                 primary={
-                  submission.date_verified ? jsonDateToJsDate(submission.date_verified).toLocaleString() : "-"
+                  submission.date_verified
+                    ? jsonDateToJsDate(submission.date_verified).toLocaleString(navigator.language)
+                    : "-"
                 }
                 secondary={t("date_verified")}
               />

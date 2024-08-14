@@ -91,7 +91,7 @@ export function getChallengeFlags(challenge) {
 
 export function displayDate(dateObj, t) {
   if (dateObj === null || dateObj === undefined) return "<" + t("unknown_date") + ">";
-  return jsonDateToJsDate(dateObj).toLocaleDateString();
+  return jsonDateToJsDate(dateObj).toLocaleDateString(navigator.language);
 }
 
 export function getGamebananaEmbedUrl(url, size = "medium") {

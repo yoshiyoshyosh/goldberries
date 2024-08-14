@@ -230,10 +230,10 @@ function LogsTable({ logs, maxCount, deleteLog, page, setPage, perPage, setPerPa
           {logs.map((log) => (
             <TableRow key={log.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell component="th" scope="row">
-                {jsonDateToJsDate(log.date).toLocaleDateString()}
+                {jsonDateToJsDate(log.date).toLocaleDateString(navigator.language)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {jsonDateToJsDate(log.date).toLocaleTimeString()}
+                {jsonDateToJsDate(log.date).toLocaleTimeString(navigator.language)}
               </TableCell>
               <TableCell align="center" sx={{ textTransform: "capitalize" }}>
                 {log.level}
