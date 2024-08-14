@@ -5,7 +5,8 @@ import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
 export function StringListEditor({ label, valueLabels = [], list, valueCount, setList, inline = false }) {
   const addItem = () => {
     const newItem = Array(valueCount).fill("");
-    setList([...list, newItem]);
+    const oldList = list || [];
+    setList([...oldList, newItem]);
   };
   const removeItem = (index) => {
     setList(list.filter((_, i) => i !== index));
