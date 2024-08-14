@@ -715,7 +715,7 @@ export const INPUT_METHOD_ICONS = {
   dpad: faGamepad,
   analog: faGamepad,
   hybrid: faPersonDrowning,
-  other: faQuestionCircle,
+  other: faChildCombatant,
 };
 export function InputMethodIcon({ method, ...props }) {
   const { t } = useTranslation();
