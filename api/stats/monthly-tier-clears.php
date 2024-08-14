@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Invalid request method');
@@ -29,9 +29,14 @@ while ($row = pg_fetch_assoc($result)) {
   $count = intval($row['count']);
 
   if (!isset($data[$date])) {
-    $data[$date] = array();
+    $data[$date] = array(
+      "date" => $date
+    );
   }
   $data[$date][$difficulty] = $count;
 }
+
+//Flatten data
+$data = array_values($data);
 
 api_write($data);
