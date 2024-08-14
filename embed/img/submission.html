@@ -180,7 +180,7 @@
 
           sel("#playerName").innerHTML = playerName;
           if(playerNameColorStart === "None") playerNameColorStart = "rgb(255, 255, 255)";
-          if(playerNameColorEnd === "None") playerNameColorEnd = "rgb(255, 255, 255)";
+          if(playerNameColorEnd === "None") playerNameColorEnd = playerNameColorStart;
           sel("#playerName").style.backgroundImage = "linear-gradient(90deg, "+playerNameColorStart+" 0%, "+playerNameColorEnd+" 100%)";
 
 
