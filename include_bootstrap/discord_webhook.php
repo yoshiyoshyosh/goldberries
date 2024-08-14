@@ -31,6 +31,10 @@ function send_webhook_suggestion_verified($suggestion)
   send_webhook_suggestion_notification($suggestion);
 
   $name = $map === null ? ($campaign === null ? "General Suggestion" : $campaign->get_name()) : $map->get_name();
+  $title = "Suggestion for '$name' by {$suggestion->author->name}";
+  if ($map === null && $campaign === null) {
+    $title = "General Suggestion by {$suggestion->author->name}";
+  }
   $suggestion_url = constant("BASE_URL") . "/suggestions/" . $suggestion->id;
 
   $objective = "";
@@ -125,7 +129,7 @@ function send_webhook_suggestion_verified($suggestion)
     ],
     "embeds" => [
       [
-        "title" => "Suggestion for '$name' by {$suggestion->author->name}",
+        "title" => $title,
         "type" => "rich",
         "description" => $objective,
         "url" => $suggestion_url,
