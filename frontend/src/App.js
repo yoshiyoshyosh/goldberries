@@ -246,7 +246,7 @@ const router = createBrowserRouter([
       { path: "search/:q?", element: <PageSearch /> },
       { path: "suggestions/:id?", element: <PageSuggestions /> },
       { path: "monthly-recap/:month?", element: <PageMonthlyRecap /> },
-      // { path: "stats/:tab?", element: <PageStats /> },
+      { path: "stats/:tab?/:subtab?", element: <PageStats /> },
 
       { path: "rules", element: <PageRules /> },
       { path: "faq", element: <PageFAQ /> },
@@ -291,6 +291,9 @@ export const lightTheme = createTheme({
       highlightBackground: "rgba(0,0,0,0.1)",
       sweepHightlightBackground: "rgba(255,191,0,0.2)",
     },
+    stats: {
+      chartBackdrop: "rgba(255,255,255,75%)",
+    },
   },
   components: {
     MuiContainer: {
@@ -328,6 +331,9 @@ const darkTheme = createTheme({
       sweepBackground: "rgba(255,191,0,0.1)",
       highlightBackground: "rgba(255,255,255,0.1)",
       sweepHightlightBackground: "rgba(255,191,0,0.2)",
+    },
+    stats: {
+      chartBackdrop: "rgba(0,0,0,25%)",
     },
   },
   components: {
