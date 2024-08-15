@@ -56,6 +56,25 @@ abstract class DbObject
     return $obj;
   }
 
+  static function get_many_by_id($DB, array $ids, int $depth = 2, $expand_structure = true): array|bool
+  {
+    if ($ids === null)
+      return false;
+
+    $result = db_fetch_id_many($DB, static::$table_name, $ids);
+    if ($result === false)
+      return false;
+
+    $ret = [];
+    while ($row = pg_fetch_assoc($result)) {
+      $obj = new static;
+      $obj->apply_db_data($row);
+      $obj->expand_foreign_keys($DB, $depth, $expand_structure);
+      $ret[] = $obj;
+    }
+    return $ret;
+  }
+
   // $id can be an ID, an array of IDs, or "all"
   static function get_request($DB, $id, int $depth = 2, $expand_structure = true)
   {

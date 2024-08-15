@@ -90,6 +90,26 @@ class Campaign extends DbObject
   {
   }
 
+  static function get_view_fields(): array
+  {
+    return [
+      'campaign_id',
+      'campaign_name',
+      'campaign_url',
+      'campaign_date_added',
+      'campaign_icon_url',
+      'campaign_sort_major_name',
+      'campaign_sort_major_labels',
+      'campaign_sort_major_colors',
+      'campaign_sort_minor_name',
+      'campaign_sort_minor_labels',
+      'campaign_sort_minor_colors',
+      'campaign_author_gb_id',
+      'campaign_author_gb_name',
+      'campaign_note',
+    ];
+  }
+
   // === Find Functions ===
   function fetch_maps($DB, $with_challenges = false, $with_submissions = false, $include_archived = true, $include_arbitrary = true): bool
   {

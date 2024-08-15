@@ -21,6 +21,19 @@ function db_fetch_id($DB, string $table_noesc, int $id)
    * no more rows, or on any other error. anything else typejuggles to true */
   return pg_fetch_assoc($result);
 }
+function db_fetch_id_many($DB, string $table_noesc, array $ids)
+{
+  $table = pg_escape_identifier(strtolower($table_noesc));
+  $id_list = "{" . implode(",", $ids) . "}";
+  $result = pg_query_params(
+    $DB,
+    "SELECT * FROM {$table} WHERE id = ANY ($1);",
+    array($id_list)
+  );
+  /* false is returned if row exceeds the number of rows in the set, there are
+   * no more rows, or on any other error. anything else typejuggles to true */
+  return $result;
+}
 
 // Same as above, but with a where clause instead of an id
 function db_fetch_where($DB, string $table_noesc, string $where, $params = array())

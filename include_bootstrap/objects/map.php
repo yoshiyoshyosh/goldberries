@@ -107,6 +107,27 @@ class Map extends DbObject
     }
   }
 
+  static function get_view_fields(): array
+  {
+    return [
+      'map_id',
+      'map_name',
+      'map_url',
+      'map_date_added',
+      'map_has_fc',
+      'map_is_rejected',
+      'map_rejection_reason',
+      'map_is_archived',
+      'map_sort_major',
+      'map_sort_minor',
+      'map_sort_order',
+      'map_author_gb_id',
+      'map_author_gb_name',
+      'map_campaign_id',
+      'map_note',
+    ];
+  }
+
   // === Find Functions ===
   function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true): bool
   {
