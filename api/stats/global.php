@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Invalid Request Method');
@@ -43,18 +43,17 @@ $overall_stats['players'] = intval($row['count_players']);
 $overall_stats['real_campaigns'] = intval($row['real_campaign_count']);
 
 
-$time_filter = $month === null ? "" : "WHERE date_trunc('month', submission.date_created, 'UTC') < '$month-01'::date + INTERVAL '1 month'";
-$query = "
-SELECT
+$time_filter = $month === null ? "1 = 1" : "date_trunc('month', submission.date_created, 'UTC') < '$month-01'::date + INTERVAL '1 month'";
+$query = "SELECT
 difficulty.id,
 COUNT(submission.id) AS count_submissions
 FROM submission
 JOIN challenge ON submission.challenge_id = challenge.id
+LEFT JOIN map ON challenge.map_id = map.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-$time_filter
+WHERE $time_filter AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
 GROUP BY difficulty.id
-ORDER BY difficulty.id
-";
+ORDER BY difficulty.id";
 $result = pg_query($DB, $query);
 $difficulty_stats = array();
 

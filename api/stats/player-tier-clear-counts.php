@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Invalid request method');
@@ -30,8 +30,8 @@ $query = "SELECT
   LEFT JOIN account ON player.id = account.player_id
   LEFT JOIN map ON challenge.map_id = map.id
   WHERE submission.is_verified = TRUE 
-    AND ((challenge.is_arbitrary IS NULL AND objective.is_arbitrary = false)
-    OR challenge.is_arbitrary = false)
+    AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
+    AND ((challenge.is_arbitrary IS NULL AND objective.is_arbitrary = false) OR challenge.is_arbitrary = false)
   GROUP BY player.id, account.id
   ORDER BY player.name ASC";
 $result = pg_query($DB, $query);

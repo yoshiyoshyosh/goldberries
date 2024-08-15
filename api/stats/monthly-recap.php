@@ -30,15 +30,15 @@ if ($first_clears_tier_sort < 2) {
 
 //Tier clears
 $time_filter = "date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC' = '$month-01'";
-$query = "
-SELECT
+$query = "SELECT
 date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC' AS date_achieved,
 difficulty.id,
 COUNT(submission.id) AS count_submissions
 FROM submission
 JOIN challenge ON submission.challenge_id = challenge.id
+LEFT JOIN map ON challenge.map_id = map.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-WHERE $time_filter AND submission.is_verified = true
+WHERE $time_filter AND submission.is_verified = true AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
 GROUP BY date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC', difficulty.id
 ORDER BY date_achieved DESC, difficulty.id
 ";
