@@ -323,6 +323,11 @@ export function fetchStatsMonthlyTierClears() {
 export function fetchStatsPlayerTierClearCounts() {
   return axios.get("/stats/player-tier-clear-counts");
 }
+export function fetchStatsMostGoldened(date) {
+  const data = {};
+  if (date) data.date = date;
+  return axios.get("/stats/most-goldened", { params: data });
+}
 
 export function fetchModInfo(url) {
   const params = { url };

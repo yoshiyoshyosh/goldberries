@@ -229,7 +229,8 @@ function ClaimPlayerClaimExistingPlayer({ onGoBack }) {
   });
   const query = useQuery({
     queryKey: ["golden_list", "player", selectedPlayer?.id],
-    queryFn: () => fetchGoldenList("player", selectedPlayer?.id),
+    queryFn: () =>
+      fetchGoldenList("player", selectedPlayer?.id, { include_arbitrary: true, include_archived: true }),
     enabled: selectedPlayer !== null,
   });
 

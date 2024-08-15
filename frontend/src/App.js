@@ -611,11 +611,11 @@ export function Layout() {
           path: "/monthly-recap",
           icon: <FontAwesomeIcon icon={faSquarePollHorizontal} />,
         },
-        // {
-        //   name: t("other_menu.stats"),
-        //   path: "/stats",
-        //   icon: <FontAwesomeIcon icon={faTable} />,
-        // },
+        {
+          name: t("other_menu.stats"),
+          path: "/stats",
+          icon: <FontAwesomeIcon icon={faTable} />,
+        },
       ],
     },
     suggestions: {},
