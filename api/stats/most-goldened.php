@@ -10,7 +10,7 @@ $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : null;
 if ($date !== null && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
   die_json(400, 'Invalid date');
 }
-$time_filter = $date !== null ? "DATE_TRUNC('month', submission_date_created, 'UTC') AT TIME ZONE 'UTC' <= '$date'" : "TRUE";
+$time_filter = $date !== null ? "DATE_TRUNC('day', submission_date_created, 'UTC') AT TIME ZONE 'UTC' <= '$date'" : "TRUE";
 
 $data = [
   "campaigns" => [],
@@ -24,8 +24,7 @@ $query = "SELECT
   campaign_id,
   COUNT(*) AS submission_count
 FROM view_submissions
-WHERE ((challenge_is_arbitrary IS NULL AND objective_is_arbitrary = false) OR challenge_is_arbitrary = false)
-  AND (map_is_rejected = FALSE OR map_is_rejected IS NULL)
+WHERE (map_is_rejected = FALSE OR map_is_rejected IS NULL)
   AND submission_is_verified = TRUE
   AND $time_filter
 GROUP BY
