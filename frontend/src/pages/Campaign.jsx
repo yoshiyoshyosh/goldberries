@@ -52,6 +52,7 @@ import {
   ChallengeFcIcon,
   DifficultyChip,
   GamebananaEmbed,
+  ObjectiveIcon,
   PlayerLink,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
@@ -663,6 +664,7 @@ function CampaignMapListMapEntry({ map, campaign, sx = {}, ...props }) {
                       true,
                       isMdScreen ? true : useTextFcIcons ? true : false
                     )}
+                    <ObjectiveIcon objective={challenge.objective} />
                     <ChallengeFcIcon
                       challenge={challenge}
                       style={{ display: isMdScreen ? "block" : useTextFcIcons ? "none" : "block" }}
@@ -702,9 +704,13 @@ function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
   return (
     <BorderedBox sx={{ p: 1, borderRadius: 1, ...sx }} {...props}>
       <Stack direction="column" gap={0.25}>
-        <StyledLink to={"/challenge/" + challenge.id}>
-          <Typography variant="h6">{getChallengeNameShort(challenge, true, true)}</Typography>
-        </StyledLink>
+        <Stack direction="row" gap={1} alignItems="center">
+          <StyledLink to={"/challenge/" + challenge.id}>
+            <Typography variant="h6">{getChallengeNameShort(challenge, true, true)}</Typography>
+          </StyledLink>
+          <ObjectiveIcon objective={challenge.objective} height="1.3em" />
+          <ChallengeFcIcon challenge={challenge} height="1.3em" />
+        </Stack>
         {challenge.description && <Typography variant="body1">{challenge.description}</Typography>}
       </Stack>
     </BorderedBox>
