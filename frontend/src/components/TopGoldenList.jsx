@@ -468,7 +468,7 @@ function TopGoldenListRow({
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
   if (nameSuffix !== "") {
-    if (tpgSettings.switchMapAndChallenge) {
+    if (!tpgSettings.switchMapAndChallenge) {
       nameSuffix = ` [${nameSuffix}]`;
     } else {
       name = ` [${name}]`;
@@ -513,8 +513,8 @@ function TopGoldenListRow({
       style={{
         overflow: "hidden",
         textOverflow: "ellipsis",
-        color: nameSuffix !== "" && !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-        order: tpgSettings.switchMapAndChallenge ? 1 : 2,
+        color: nameSuffix !== "" && tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
+        order: !tpgSettings.switchMapAndChallenge ? 1 : 2,
         // fontWeight: isReference ? "bold" : "normal",
       }}
     >
@@ -527,8 +527,8 @@ function TopGoldenListRow({
       style={{
         overflow: "hidden",
         textOverflow: "ellipsis",
-        color: tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
-        order: tpgSettings.switchMapAndChallenge ? 2 : 1,
+        color: !tpgSettings.switchMapAndChallenge ? suffixColor : "inherit",
+        order: !tpgSettings.switchMapAndChallenge ? 2 : 1,
       }}
     >
       {nameSuffix}
