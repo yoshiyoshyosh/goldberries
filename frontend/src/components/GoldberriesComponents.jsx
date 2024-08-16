@@ -53,6 +53,7 @@ import {
   faGithub,
   faInstagram,
   faReddit,
+  faBilibili,
 } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -746,6 +747,7 @@ const LINK_ICONS = {
   instagram: { icon: faInstagram, color: "#ff2083", identifier: ["instagram.com/"] },
   speedrun: { icon: faTrophy, color: "#ffcf33", identifier: ["speedrun.com/"] },
   reddit: { icon: faReddit, color: "#ff4500", identifier: ["reddit.com/"] },
+  reddit: { icon: faBilibili, color: "#00a2d7", identifier: ["bilibili.com/"] },
   steam: {
     icon: faSteam,
     color: "#1e3050",
