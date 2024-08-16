@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { APP_NAME_LONG } from "../util/constants";
+import { APP_NAME_LONG, APP_URL, TWITCH_EMBED_PARENT } from "../util/constants";
 import { useTheme } from "@emotion/react";
 import { LANGUAGES } from "../i18n/config";
 import { useTranslation } from "react-i18next";
@@ -209,6 +209,21 @@ export function ProofEmbed({ url, ...props }) {
         </div>
       </div>
     );
+  } else if (url.includes("twitch.tv")) {
+    const { id } = parseTwitchUrl(url);
+    const embedUrl = `https://player.twitch.tv/?video=${id}&parent=${TWITCH_EMBED_PARENT}`;
+    return (
+      <div {...props}>
+        <div style={{ position: "relative", width: "100%", paddingBottom: "56.25%" }}>
+          <iframe
+            src={embedUrl}
+            title="Twitch Video Player"
+            allowFullScreen
+            style={{ width: "100%", height: "100%", position: "absolute", top: "0", left: "0" }}
+          ></iframe>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -241,9 +256,21 @@ function parseBilibiliUrl(link) {
     page: page,
   };
 }
+function parseTwitchUrl(url) {
+  //URLs look like: https://www.twitch.tv/videos/2222820930
+  const urlRegex = /^(https?:\/\/)?(www\.)?(twitch\.tv)\/videos\/([^#&?]*).*/;
+  const match = url.match(urlRegex);
+  if (!match || !match[4]) {
+    return null;
+  }
+  const id = match[4];
+  return {
+    id: id || null,
+  };
+}
 function parseYouTubeUrl(url) {
   const urlRegex =
-    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^#&?]*)([&?]t=([^#&?]+))?.*/;
+    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^#&?]*)(?:[?&][^#&?=]+=[^#&?]*)*/;
   const match = url.match(urlRegex);
 
   if (!match || !match[5]) {
@@ -251,12 +278,20 @@ function parseYouTubeUrl(url) {
   }
 
   const videoId = match[5];
-  const timestamp = match[7] || null;
 
-  return {
-    videoId: videoId || null,
-    timestamp: timestamp || null,
-  };
+  try {
+    const parsedUrl = new URL(url);
+    const params = new URLSearchParams(parsedUrl.search);
+    const timestamp = params.get("t") || null;
+
+    return {
+      videoId: videoId || null,
+      timestamp: timestamp || null,
+    };
+  } catch (error) {
+    console.error("Invalid URL:", error);
+    return null;
+  }
 }
 
 export function CustomizedMenu({ title, button, children, ...props }) {

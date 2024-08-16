@@ -4,6 +4,7 @@ import Color from "color";
 
 export const APP_URL = process.env.REACT_APP_URL;
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+export const TWITCH_EMBED_PARENT = process.env.REACT_APP_TWITCH_EMBED_PARENT;
 export const API_URL = API_BASE_URL + "/api";
 export const DISCORD_AUTH_URL = API_URL + "/auth/discord_auth";
 export const APP_NAME_SHORT = "GBN";
