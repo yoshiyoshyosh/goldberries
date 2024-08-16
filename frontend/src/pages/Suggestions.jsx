@@ -463,20 +463,20 @@ function VotesDisplay({ votes, hasSubmission, isGeneral }) {
           isGeneral={isGeneral}
         />
       )}
-      {(!hideEmpty || countIndifferent > 0) && (
-        <VoteDisplay
-          type="i"
-          count={countIndifferent}
-          selfVoted={votedIndifferent}
-          hasSubmission={hasSubmission}
-          isGeneral={isGeneral}
-        />
-      )}
       {(!hideEmpty || countAgainst > 0) && (
         <VoteDisplay
           type="-"
           count={countAgainst}
           selfVoted={votedAgainst}
+          hasSubmission={hasSubmission}
+          isGeneral={isGeneral}
+        />
+      )}
+      {(!hideEmpty || countIndifferent > 0) && (
+        <VoteDisplay
+          type="i"
+          count={countIndifferent}
+          selfVoted={votedIndifferent}
           hasSubmission={hasSubmission}
           isGeneral={isGeneral}
         />
@@ -739,16 +739,6 @@ function ViewSuggestionModal({ id }) {
                 </Box>
               </Button>
               <Button
-                variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "i" ? "outlined" : "contained"}
-                fullWidth
-                onClick={() => vote("i")}
-              >
-                <FontAwesomeIcon icon={faHorse} style={{ height: "1.4em" }} />
-                <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
-                  {t_s("votes.indifferent")}
-                </Box>
-              </Button>
-              <Button
                 variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "-" ? "outlined" : "contained"}
                 color="error"
                 fullWidth
@@ -757,6 +747,16 @@ function ViewSuggestionModal({ id }) {
                 <FontAwesomeIcon icon={faThumbsDown} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
                   {t_s("votes.against")}
+                </Box>
+              </Button>
+              <Button
+                variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "i" ? "outlined" : "contained"}
+                fullWidth
+                onClick={() => vote("i")}
+              >
+                <FontAwesomeIcon icon={faHorse} style={{ height: "1.4em" }} />
+                <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
+                  {t_s("votes.indifferent")}
                 </Box>
               </Button>
             </Stack>
@@ -799,10 +799,10 @@ function ViewSuggestionModal({ id }) {
                   <VotesDetailsDisplay votes={suggestion.votes} voteType="+" hasSubmission={true} />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <VotesDetailsDisplay votes={suggestion.votes} voteType="i" hasSubmission={true} />
+                  <VotesDetailsDisplay votes={suggestion.votes} voteType="-" hasSubmission={true} />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <VotesDetailsDisplay votes={suggestion.votes} voteType="-" hasSubmission={true} />
+                  <VotesDetailsDisplay votes={suggestion.votes} voteType="i" hasSubmission={true} />
                 </Grid>
               </Grid>
             </Grid>
@@ -825,7 +825,7 @@ function ViewSuggestionModal({ id }) {
             <Grid item xs={12} sm={4}>
               <VotesDetailsDisplay
                 votes={suggestion.votes}
-                voteType="i"
+                voteType="-"
                 hasSubmission={false}
                 highlightedPlayers={highlightedPlayers}
               />
@@ -833,7 +833,7 @@ function ViewSuggestionModal({ id }) {
             <Grid item xs={12} sm={4}>
               <VotesDetailsDisplay
                 votes={suggestion.votes}
-                voteType="-"
+                voteType="i"
                 hasSubmission={false}
                 highlightedPlayers={highlightedPlayers}
               />
