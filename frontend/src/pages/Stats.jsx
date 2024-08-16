@@ -277,6 +277,10 @@ function TabMonthlyTierClears() {
       <Typography variant="body1" gutterBottom>
         {t("text")}
       </Typography>
+      <Stack direction="column" gap={1}>
+        <Typography variant="h5">{t("total_tiered")}</Typography>
+        <TabMonthlyTierClearsSingleChart difficulty={null} />
+      </Stack>
       {difficulties.map((difficulty) => (
         <Stack key={difficulty.id} direction="column" gap={1}>
           <Typography variant="h5">{getDifficultyName(difficulty)}</Typography>
@@ -288,7 +292,7 @@ function TabMonthlyTierClears() {
 }
 
 function TabMonthlyTierClearsSingleChart({ difficulty }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "player.chart" });
+  const { t } = useTranslation(undefined, { keyPrefix: "stats.tabs.historical_clears" });
   const theme = useTheme();
   const queryData = useGetStatsMonthlyTierClears();
 
@@ -302,7 +306,9 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
   const monthlyClears = getQueryData(queryData);
 
   const getChartDifficultyColor = (id) => {
-    if (id === 18) {
+    if (id === "total") {
+      return theme.palette.text.primary;
+    } else if (id === 18) {
       return theme.palette.text.primary;
     } else {
       return DIFFICULTY_COLORS[id].color;
@@ -314,8 +320,15 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
     //Clean the date string. Current it looks like "2024-08-01 00:00"
     //It should look like "2024-08"
     const cleanedDate = entry.date.substring(0, 7);
+    const id = difficulty?.id || "total";
+    const value =
+      id === "total"
+        ? Object.keys(entry)
+            .filter((key) => !isNaN(key))
+            .reduce((acc, key) => (key === "18" ? acc : acc + entry[key]), 0)
+        : entry[id] || 0;
     data.push({
-      [difficulty.id]: entry[difficulty.id] || 0,
+      [id]: value,
       date: cleanedDate,
       index: index,
     });
@@ -338,15 +351,13 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
           <YAxis tick={{ fill: theme.palette.text.primary }} />
           <Legend />
           <Tooltip allowEscapeViewBox contentStyle={{ color: "black" }} itemStyle={{ color: "black" }} />
-          {
-            <Line
-              type="monotone"
-              dataKey={difficulty.id}
-              stroke={getChartDifficultyColor(difficulty.id)}
-              strokeWidth={3}
-              name={getDifficultyName(difficulty)}
-            />
-          }
+          <Line
+            type="monotone"
+            dataKey={difficulty?.id || "total"}
+            stroke={getChartDifficultyColor(difficulty?.id || "total")}
+            strokeWidth={3}
+            name={difficulty ? getDifficultyName(difficulty) : t("total_tiered")}
+          />
         </LineChart>
       </ResponsiveContainer>
     </Stack>
@@ -377,7 +388,7 @@ function TabMostGoldened() {
             setDate(value.toISOString());
           }
         }}
-        minDate={dayjs("2018-10-12")}
+        minDate={dayjs(new Date(2018, 9, 12, 12))}
         maxDate={dayjs(new Date())}
         sx={{ mt: 1, maxWidth: "200px" }}
       />
@@ -388,7 +399,6 @@ function TabMostGoldened() {
     </Stack>
   );
 }
-
 const SHOW_AMOUNT = 10;
 function TabMostGoldenedCampaigns({ date }) {
   const { t } = useTranslation(undefined, { keyPrefix: "stats" });
@@ -456,7 +466,6 @@ function TabMostGoldenedCampaigns({ date }) {
     </Stack>
   );
 }
-
 function TabMostGoldenedMaps({ date }) {
   const { t } = useTranslation(undefined, { keyPrefix: "stats" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
