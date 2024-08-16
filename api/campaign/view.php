@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -16,6 +16,8 @@ $campaign = Campaign::get_request($DB, $campaign_id, 2, false);
 if ($campaign === null) {
   die_json(404, "Campaign not found");
 }
+$campaign->fetch_maps($DB, true);
+$campaign->fetch_challenges($DB, false, false);
 
 $query = "SELECT * FROM view_submissions WHERE submission_is_verified = true AND campaign_id = $campaign_id AND map_is_archived = false AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 $result = pg_query($DB, $query);
@@ -23,60 +25,25 @@ if (!$result) {
   die_json(500, "Failed to query database");
 }
 
-$campaign_view = parse_campaign_view($result);
-if ($campaign_view["campaign"] === null) {
-  $campaign_view["campaign"] = $campaign;
-}
-$campaign_view["campaign"]->fetch_maps($DB, true);
-$campaign_view["campaign"]->fetch_challenges($DB, false, true);
-api_write($campaign_view);
+$players = parse_campaign_view($result, $campaign);
+api_write([
+  "campaign" => $campaign,
+  "players" => $players
+]);
 
-function parse_campaign_view($result)
+function parse_campaign_view($result, $campaign)
 {
-  $campaigns = array(); //dictionary id -> campaign
   $players = array();
 
   //loop through result rows
   while ($row = pg_fetch_assoc($result)) {
-    $campaign_id = intval($row['campaign_id']);
-    if (!array_key_exists($campaign_id, $campaigns)) {
-      $campaign = new Campaign();
-      $campaign->apply_db_data($row, "campaign_");
-      $campaign->maps = array();
-      $campaign->challenges = array();
-      $campaigns[$campaign_id] = $campaign;
-    }
-    $campaign = $campaigns[$campaign_id];
-
+    $map_id = intval($row['map_id']);
     $map = null;
-    if (isset($row['map_id'])) {
-      $map_id = intval($row['map_id']);
-      if (!array_key_exists($map_id, $campaign->maps)) {
-        $map = new Map();
-        $map->apply_db_data($row, "map_");
-        $map->challenges = array();
-        $campaign->maps[$map_id] = $map;
-      }
-      $map = $campaign->maps[$map_id];
-    }
-
-    $challenge_id = intval($row['challenge_id']);
-    $challenge = null;
-    if (($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
-      $challenge = new Challenge();
-      $challenge->apply_db_data($row, "challenge_");
-      $challenge->submissions = array();
-      $challenge->expand_foreign_keys($row, 1, false);
-      if ($challenge->map_id === null) {
-        $campaign->challenges[$challenge_id] = $challenge;
-      } else {
-        $map->challenges[$challenge_id] = $challenge;
-      }
-    } else {
-      if ($map !== null) {
-        $challenge = $map->challenges[$challenge_id];
-      } else {
-        $challenge = $campaign->challenges[$challenge_id];
+    //Find map in $campaign->maps
+    foreach ($campaign->maps as $c_map) {
+      if ($c_map->id === $map_id) {
+        $map = $c_map;
+        break;
       }
     }
 
@@ -146,18 +113,6 @@ function parse_campaign_view($result)
     }
   }
 
-  foreach ($campaigns as $campaign) {
-    foreach ($campaign->maps as $map) {
-      // foreach ($map->challenges as $challenge) {
-      //   $challenge->submissions = array_values($challenge->submissions);
-      // }
-      $map->challenges = array_values($map->challenges);
-    }
-    $campaign->maps = array_values($campaign->maps);
-    $campaign->challenges = array_values($campaign->challenges);
-  }
-  $campaigns = array_values($campaigns);
-
   //Unset the map_data to save data
   foreach ($players as $player_id => $player_data) {
     unset($players[$player_id]["map_data"]);
@@ -200,15 +155,6 @@ function parse_campaign_view($result)
   //Flatten players array
   $players = array_values($players);
 
-  //old sort
-  // //Sort by clears descending, 2nd sort by full clears descending
-  // usort($players, function ($a, $b) {
-  //   if ($a["stats"]["clears"] === $b["stats"]["clears"]) {
-  //     return $b["stats"]["full_clears"] - $a["stats"]["full_clears"];
-  //   }
-  //   return $b["stats"]["clears"] - $a["stats"]["clears"];
-  // });
-
   // Sort criteria:
   // 1. Highest lobby sweep (max amount of clears for a lobby)
   // 2. Amount clears in total
@@ -241,8 +187,5 @@ function parse_campaign_view($result)
     return $b["stats"]["clears"] - $a["stats"]["clears"];
   });
 
-  return array(
-    "campaign" => $campaigns[0],
-    "players" => $players
-  );
+  return $players;
 }
