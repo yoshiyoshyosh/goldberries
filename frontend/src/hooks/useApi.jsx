@@ -66,6 +66,7 @@ import {
   postVerificationNotice,
   deleteVerificationNotice,
   fetchStatsMostGoldened,
+  fetchStatsMisc,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -352,6 +353,13 @@ export function useGetStatsMostGoldened(date = null) {
   return useQuery({
     queryKey: ["stats_most_goldened", date],
     queryFn: () => fetchStatsMostGoldened(date),
+    onError: errorToast,
+  });
+}
+export function useGetStatsMisc() {
+  return useQuery({
+    queryKey: ["stats_misc"],
+    queryFn: () => fetchStatsMisc(),
     onError: errorToast,
   });
 }

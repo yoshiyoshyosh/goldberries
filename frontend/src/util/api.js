@@ -328,6 +328,9 @@ export function fetchStatsMostGoldened(date) {
   if (date) data.date = date;
   return axios.get("/stats/most-goldened", { params: data });
 }
+export function fetchStatsMisc() {
+  return axios.get("/stats/misc");
+}
 
 export function fetchModInfo(url) {
   const params = { url };
