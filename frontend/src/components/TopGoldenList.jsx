@@ -180,7 +180,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
               }
               label={t("use_suggested")}
             />
-            {ownPlayer && (
+            {(ownPlayer || auth.hasVerifierPriv) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -494,6 +494,7 @@ function TopGoldenListRow({
   showDivider = false,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
+  const auth = useAuth();
   const theme = useTheme();
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
@@ -739,7 +740,7 @@ function TopGoldenListRow({
               )}
             </StyledLink>
           )}
-          {isPlayer && isOwnPlayer && editSuggestions && (
+          {isPlayer && (isOwnPlayer || auth.hasVerifierPriv) && editSuggestions && (
             <CustomIconButton onClick={onEditSuggestion} sx={{ py: 3 / 8 }}>
               <FontAwesomeIcon icon={faEdit} size="sm" />
             </CustomIconButton>
