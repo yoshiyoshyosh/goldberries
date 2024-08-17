@@ -178,7 +178,6 @@ export function ProofEmbed({ url, ...props }) {
     if (youtubeData.timestamp) {
       embedUrl += `?start=${youtubeData.timestamp.replace("s", "")}`;
     }
-    console.log(embedUrl);
 
     return (
       <div {...props}>
