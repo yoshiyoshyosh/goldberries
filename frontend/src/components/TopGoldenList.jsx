@@ -1,6 +1,13 @@
 import { useQuery } from "react-query";
 import { fetchTopGoldenList } from "../util/api";
-import { BasicBox, ErrorDisplay, LoadingSpinner, StyledExternalLink, StyledLink } from "./BasicComponents";
+import {
+  BasicBox,
+  CustomIconButton,
+  ErrorDisplay,
+  LoadingSpinner,
+  StyledExternalLink,
+  StyledLink,
+} from "./BasicComponents";
 import {
   Box,
   Button,
@@ -49,6 +56,7 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { MapDisplay } from "../pages/Map";
 import Color from "color";
 import { useTranslation } from "react-i18next";
+import { FormSubmissionWrapper } from "./forms/Submission";
 
 export function TopGoldenList({ type, id, filter, isOverallList = false }) {
   return (
@@ -59,11 +67,14 @@ export function TopGoldenList({ type, id, filter, isOverallList = false }) {
 }
 function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
+  const auth = useAuth();
   const { settings } = useAppSettings();
   const [useSuggestedDifficulties, setUseSuggestedDifficulties] = useLocalStorage(
     "top_golden_list_useSuggestedDifficulties",
     false
   );
+  const [editSuggestions, setEditSuggestions] = useState(false);
+
   const currentKey =
     "" +
     type +
@@ -114,6 +125,9 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     challenge: {
       edit: useRef(),
     },
+    submission: {
+      edit: useRef(),
+    },
   };
 
   const onFinishRendering = useCallback((index) => {
@@ -129,6 +143,9 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
   });
   const openEditChallenge = useCallback((id) => {
     modalRefs.challenge.edit.current.open({ id });
+  });
+  const openEditSubmission = useCallback((id) => {
+    modalRefs.submission.edit.current.open({ id });
   });
 
   if (query.isLoading) {
@@ -147,12 +164,13 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
 
   const topGoldenList = getQueryData(query);
   const isPlayer = type === "player";
+  const ownPlayer = isPlayer && auth.hasPlayerClaimed && auth.user.player_id + "" === id;
 
   return (
     <Stack direction="column" gap={1}>
       {isPlayer && (
         <BasicBox>
-          <Stack direction="row" spacing={2} sx={{ py: 0 }}>
+          <Stack direction="column" gap={0} sx={{ py: 0, pl: 1 }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -162,6 +180,17 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
               }
               label={t("use_suggested")}
             />
+            {ownPlayer && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={editSuggestions}
+                    onChange={(e) => setEditSuggestions(e.target.checked)}
+                  />
+                }
+                label={t("toggle_edit_mode")}
+              />
+            )}
           </Stack>
         </BasicBox>
       )}
@@ -190,8 +219,11 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
               maps={topGoldenList.maps}
               challenges={topGoldenList.challenges}
               isPlayer={isPlayer}
+              isOwnPlayer={ownPlayer}
               useSuggested={isPlayer && useSuggestedDifficulties}
+              editSuggestions={isPlayer && editSuggestions}
               openEditChallenge={openEditChallenge}
+              openEditSubmission={openEditSubmission}
               showMap={showMap}
               render={index <= renderUpTo.index}
               onFinishRendering={onFinishRendering}
@@ -213,8 +245,11 @@ function TopGoldenListGroup({
   maps,
   challenges,
   isPlayer = false,
+  isOwnPlayer = false,
   useSuggested = false,
+  editSuggestions = false,
   openEditChallenge,
+  openEditSubmission,
   showMap,
   render,
   onFinishRendering,
@@ -359,8 +394,11 @@ function TopGoldenListGroup({
                       maps={maps}
                       campaigns={campaigns}
                       isPlayer={isPlayer}
+                      isOwnPlayer={isOwnPlayer}
                       useSuggested={useSuggested}
+                      editSuggestions={editSuggestions}
                       openEditChallenge={openEditChallenge}
+                      openEditSubmission={openEditSubmission}
                       showMap={showMap}
                       isOverallList={isOverallList}
                       hadEntriesBefore={hadEntriesBefore}
@@ -380,7 +418,8 @@ const MemoTopGoldenListGroup = memo(TopGoldenListGroup, (prevProps, newProps) =>
   return (
     prevProps.index === newProps.index &&
     prevProps.render === newProps.render &&
-    prevProps.useSuggested === newProps.useSuggested
+    prevProps.useSuggested === newProps.useSuggested &&
+    prevProps.editSuggestions === newProps.editSuggestions
   );
 });
 
@@ -390,8 +429,11 @@ function TopGoldenListSubtier({
   maps,
   campaigns,
   isPlayer,
+  isOwnPlayer,
   useSuggested,
+  editSuggestions,
   openEditChallenge,
+  openEditSubmission,
   showMap,
   isOverallList,
   hadEntriesBefore,
@@ -422,8 +464,11 @@ function TopGoldenListSubtier({
             campaign={campaign}
             map={map}
             isPlayer={isPlayer}
+            isOwnPlayer={isOwnPlayer}
             useSuggested={useSuggested}
+            editSuggestions={editSuggestions}
             openEditChallenge={openEditChallenge}
+            openEditSubmission={openEditSubmission}
             showMap={showMap}
             showDivider={index === 0 && hadEntriesBefore}
           />
@@ -440,13 +485,15 @@ function TopGoldenListRow({
   campaign,
   map,
   isPlayer,
+  isOwnPlayer,
   useSuggested,
+  editSuggestions,
   openEditChallenge,
+  openEditSubmission,
   showMap,
   showDivider = false,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
-  const auth = useAuth();
   const theme = useTheme();
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
@@ -534,6 +581,10 @@ function TopGoldenListRow({
       {nameSuffix}
     </span>
   );
+
+  const onEditSuggestion = () => {
+    openEditSubmission(firstSubmission.id);
+  };
 
   return (
     <TableRow style={rowStyle}>
@@ -669,7 +720,7 @@ function TopGoldenListRow({
       </TableCell>
       <TableCell style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}>
         <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
-          {challenge.submissions.length === 0 ? null : (
+          {challenge.submissions.length !== 0 && (
             <StyledExternalLink
               style={{ color: "inherit", textDecoration: "none", lineHeight: "1" }}
               href={firstSubmission.proof_url}
@@ -679,7 +730,7 @@ function TopGoldenListRow({
               ▶
             </StyledExternalLink>
           )}
-          {isPlayer ? (
+          {isPlayer && (
             <StyledLink to={"/submission/" + firstSubmission.id} style={{ display: "flex" }}>
               {firstSubmission.is_fc ? (
                 <SubmissionFcIcon submission={firstSubmission} height="1.0em" disableTooltip />
@@ -687,7 +738,12 @@ function TopGoldenListRow({
                 <FontAwesomeIcon icon={faBook} />
               )}
             </StyledLink>
-          ) : null}
+          )}
+          {isPlayer && isOwnPlayer && editSuggestions && (
+            <CustomIconButton onClick={onEditSuggestion} sx={{ py: 3 / 8 }}>
+              <FontAwesomeIcon icon={faEdit} size="sm" />
+            </CustomIconButton>
+          )}
         </Stack>
       </TableCell>
     </TableRow>
@@ -823,10 +879,12 @@ function TopGoldenListFwgRow({}) {
 function ModalContainer({ modalRefs }) {
   const showMapModal = useModal();
   const editChallengeModal = useModal();
+  const editSubmissionModal = useModal();
 
   // Setting the refs
   modalRefs.map.show.current = showMapModal;
   modalRefs.challenge.edit.current = editChallengeModal;
+  modalRefs.submission.edit.current = editSubmissionModal;
 
   return (
     <>
@@ -850,6 +908,14 @@ function ModalContainer({ modalRefs }) {
           <LoadingSpinner />
         ) : (
           <FormChallengeWrapper id={editChallengeModal.data.id} onSave={editChallengeModal.close} />
+        )}
+      </CustomModal>
+
+      <CustomModal modalHook={editSubmissionModal} options={{ hideFooter: true }}>
+        {editSubmissionModal.data?.id == null ? (
+          <LoadingSpinner />
+        ) : (
+          <FormSubmissionWrapper id={editSubmissionModal.data.id} onSave={editSubmissionModal.close} />
         )}
       </CustomModal>
     </>
