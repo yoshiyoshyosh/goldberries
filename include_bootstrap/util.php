@@ -112,9 +112,15 @@ class StringList implements \JsonSerializable
         continue;
       }
       $parts = array_map('trim', explode(StringList::$VALUE_SEPERATOR, $item));
-      if (count($parts) !== $value_count) {
-        return false;
-      }
+
+      //If too big, truncate
+      if (count($parts) > $value_count)
+        $parts = array_slice($parts, 0, $value_count);
+
+      //If too small, pad with empty strings
+      if (count($parts) < $value_count)
+        $parts = array_pad($parts, $value_count, "");
+
       $output[] = $parts;
     }
     return $output;
@@ -125,9 +131,19 @@ class StringList implements \JsonSerializable
     $outputArr = [];
     foreach ($this->arr as $item) {
       //$item is an array of X elements
-      if (count($item) !== $this->value_count) {
-        continue; //Effectively delete this item
-      }
+      //If too big, truncate
+      if (count($item) > $this->value_count)
+        $item = array_slice($item, 0, $this->value_count);
+
+      //If too small, pad with empty strings
+      if (count($item) < $this->value_count)
+        $item = array_pad($item, $this->value_count, "");
+
+      //Remove VALUE_SEPERATOR and ITEM_SEPERATOR from the values
+      $item = array_map(function ($value) {
+        return str_replace(StringList::$VALUE_SEPERATOR, "", str_replace(StringList::$ITEM_SEPERATOR, "", $value));
+      }, $item);
+
       $outputArr[] = implode(StringList::$VALUE_SEPERATOR, $item);
     }
     return implode(StringList::$ITEM_SEPERATOR, $outputArr);
