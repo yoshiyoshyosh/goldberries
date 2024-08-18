@@ -138,16 +138,16 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
       {isVerifier ? (
         <FullChallengeSelect challenge={challenge} setChallenge={setChallenge} />
-      ) : new_challenge_id === null ? (
-        <FullChallengeDisplay challenge={challenge} />
-      ) : null}
+      ) : (
+        new_challenge_id === null && <FullChallengeDisplay challenge={challenge} />
+      )}
 
-      {new_challenge_id ? (
+      {new_challenge_id && (
         <Stack direction="column" gap={2} sx={{ mt: 2 }}>
           <Divider flexItem />
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="h6">{t("new_challenge_title")}</Typography>
-            {isVerifier ? (
+            {isVerifier && (
               <Stack direction="row" gap={2}>
                 <CreateAnyButton
                   defaultCampaignName={submission.new_challenge?.name}
@@ -157,7 +157,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
                   onCreateChallenge={onCreateChallenge}
                 />
               </Stack>
-            ) : null}
+            )}
           </Stack>
           <TextField
             label={t_g("url")}
@@ -180,7 +180,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             {...form.register("new_challenge.description")}
           />
         </Stack>
-      ) : null}
+      )}
 
       <Divider sx={{ my: 2 }} />
 
@@ -207,7 +207,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           />
         )}
       />
-      {isVerifier && submission.is_verified !== null ? (
+      {isVerifier && submission.is_verified !== null && (
         <>
           <Controller
             control={form.control}
@@ -222,8 +222,21 @@ export function FormSubmission({ submission, onSave, ...props }) {
               />
             )}
           />
+          <Controller
+            control={form.control}
+            name="is_obsolete"
+            defaultValue={submission.is_obsolete}
+            render={({ field }) => (
+              <FormControlLabel
+                onChange={field.onChange}
+                label={t("is_obsolete")}
+                checked={field.value}
+                control={<Checkbox />}
+              />
+            )}
+          />
         </>
-      ) : null}
+      )}
 
       <TextField
         {...form.register("proof_url")}
@@ -233,9 +246,9 @@ export function FormSubmission({ submission, onSave, ...props }) {
         sx={{ my: 2 }}
         InputLabelProps={{ shrink: true }}
       />
-      {proofUrlDebounced ? <ProofEmbed url={proofUrlDebounced} /> : null}
+      {proofUrlDebounced && <ProofEmbed url={proofUrlDebounced} />}
 
-      {submission.raw_session_url ? (
+      {submission.raw_session_url && (
         <TextField
           {...form.register("raw_session_url")}
           label={t("raw_session_url") + " *"}
@@ -244,7 +257,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           disabled={!isVerifier}
           InputLabelProps={{ shrink: true }}
         />
-      ) : null}
+      )}
       <TextField
         {...form.register("player_notes")}
         label={t("player_notes")}
@@ -353,7 +366,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
-      {isVerifier && submission.is_verified === null && (
+      {/* {isVerifier && submission.is_verified === null && (
         <Controller
           control={form.control}
           name="skip_webhook"
@@ -367,7 +380,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             />
           )}
         />
-      )}
+      )} */}
       {isVerifier && submission.is_verified === null && (
         <>
           <Stack direction="row" gap={2}>

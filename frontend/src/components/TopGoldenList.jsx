@@ -32,6 +32,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
   faEdit,
+  faExclamationTriangle,
   faExternalLink,
   faHashtag,
   faInfoCircle,
@@ -687,6 +688,11 @@ function TopGoldenListRow({
                 <FontAwesomeIcon icon={faInfoCircle} color="lightgrey" />
               </Tooltip>
             )}
+          {isPlayer && firstSubmission.is_obsolete === true && (
+            <Tooltip title={"This submission is marked as obsolete"} arrow placement="top">
+              <FontAwesomeIcon icon={faExclamationTriangle} color="lightgrey" />
+            </Tooltip>
+          )}
         </Stack>
       </TableCell>
       <TableCell
