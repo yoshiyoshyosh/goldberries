@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -24,6 +24,7 @@ $query = "SELECT
     AND submission_is_verified = true
     AND (objective_is_arbitrary = false 
     AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL))
+    AND submission_is_obsolete = false
   GROUP BY difficulty_id, difficulty_sort";
 
 $result = pg_query($DB, $query);

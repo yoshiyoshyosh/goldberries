@@ -13,6 +13,7 @@ class Submission extends DbObject
   public ?JsonDateTime $date_verified = null;
   public ?string $verifier_notes = null;
   public bool $is_fc = false;
+  public bool $is_obsolete = false;
 
 
   // Foreign Keys
@@ -49,6 +50,7 @@ class Submission extends DbObject
       'suggested_difficulty_id' => $this->suggested_difficulty_id,
       'verifier_id' => $this->verifier_id,
       'new_challenge_id' => $this->new_challenge_id,
+      'is_obsolete' => $this->is_obsolete,
     );
   }
 
@@ -59,6 +61,7 @@ class Submission extends DbObject
     $this->is_personal = $arr[$prefix . 'is_personal'] === 't';
     $this->proof_url = $arr[$prefix . 'proof_url'];
     $this->is_fc = $arr[$prefix . 'is_fc'] === 't';
+    $this->is_obsolete = $arr[$prefix . 'is_obsolete'] === 't';
 
     if (isset($arr[$prefix . 'is_verified']))
       $this->is_verified = $arr[$prefix . 'is_verified'] === 't';

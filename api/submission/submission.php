@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 // ===== GET Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $old_submission->is_fc = $submission->is_fc;
         }
       }
+      $old_submission->is_obsolete = $submission->is_obsolete;
       $old_submission->is_personal = $submission->is_personal;
       if ($old_submission->proof_url !== $submission->proof_url) {
         check_url($submission->proof_url, 'proof_url');
