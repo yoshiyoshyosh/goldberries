@@ -6,14 +6,17 @@ import {
   Divider,
   FormControlLabel,
   FormHelperText,
+  Menu,
+  MenuItem,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useEffect, useMemo } from "react";
-import { CampaignSelect } from "../GoldberriesComponents";
+import { useEffect, useMemo, useState } from "react";
+import { AnyImage, CampaignSelect, EmoteImage, OtherIcon } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 import { getQueryData, usePostMap } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
@@ -79,6 +82,7 @@ export function FormMap({ map, onSave, ...props }) {
   const { t: t_ch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const [collectibles, setCollectibles] = useState(null);
 
   const newMap = map.id === null;
 
@@ -137,19 +141,6 @@ export function FormMap({ map, onSave, ...props }) {
 
       <Controller
         control={form.control}
-        name="has_fc"
-        defaultValue={map.has_fc}
-        render={({ field }) => (
-          <FormControlLabel
-            onChange={field.onChange}
-            label={t_ch("has_fc")}
-            checked={field.value}
-            control={<Checkbox />}
-          />
-        )}
-      />
-      <Controller
-        control={form.control}
         name="is_rejected"
         defaultValue={map.is_rejected}
         render={({ field }) => (
@@ -193,6 +184,7 @@ export function FormMap({ map, onSave, ...props }) {
         render={({ field }) => (
           <StringListEditor
             label="URL List"
+            valueTypes={[{ type: "string" }, { type: "string" }]}
             valueLabels={["URL", "Description (optional)"]}
             list={field.value}
             setList={field.onChange}
@@ -213,6 +205,36 @@ export function FormMap({ map, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
+      <Controller
+        control={form.control}
+        name="collectibles"
+        render={({ field }) => (
+          <StringListEditor
+            label={t("collectibles.label")}
+            valueTypes={[
+              {
+                type: "enum",
+                options: getCollectibleOptions(),
+              },
+              { type: "enum", options: (item, index, value) => getCollectibleVariantOptions(item[0]) },
+              { type: "string" },
+              { type: "string", multiline: true },
+            ]}
+            valueLabels={[
+              t("collectibles.label"),
+              t("collectibles.variant"),
+              t("collectibles.count"),
+              t("collectibles.note"),
+            ]}
+            list={field.value}
+            setList={field.onChange}
+            valueCount={4}
+          />
+        )}
+      />
+
+      <Divider sx={{ my: 2 }} />
+
       <Button
         variant="contained"
         fullWidth
@@ -224,4 +246,81 @@ export function FormMap({ map, onSave, ...props }) {
       </Button>
     </form>
   );
+}
+
+export const COLLECTIBLES = [
+  {
+    value: "0",
+    name: "Golden Berry",
+    icon: "/icons/goldenberry-8x.png",
+    variants: [
+      { value: "1", name: "Solaris Golden", icon: "/icons/golden-solaris.png" },
+      { value: "2", name: "Anomaly Golden", icon: "/icons/golden-anomaly.png" },
+      { value: "3", name: "Madeline in China Golden", icon: "/icons/golden-china.png" },
+      { value: "4", name: "Cryoshock Golden", icon: "/icons/golden-cryoshock.png" },
+      { value: "5", name: "Drizzle Golden", icon: "/icons/golden-drizzle.png" },
+      { value: "6", name: "Solar Purgatory Golden", icon: "/icons/golden-sumber.png" },
+      { value: "7", name: "Taswell Golden", icon: "/icons/golden-taswell.png" },
+      { value: "8", name: "Velvet Golden", icon: "/icons/golden-velvet.png" },
+    ],
+  },
+  { value: "1", name: "Silver Berry", icon: "/icons/silverberry-8x.png", variants: [] },
+  { value: "2", name: "Strawberry", icon: "/icons/strawberry-8x.png", variants: [] },
+  { value: "6", name: "Cassette", icon: "/icons/cassette.png", variants: [] },
+  {
+    value: "7",
+    name: "Crystal Heart",
+    icon: "/icons/heartA.png",
+    variants: [
+      { value: "1", name: "Red Heart", icon: "/icons/heartB.png" },
+      { value: "2", name: "Yellow Heart", icon: "/icons/heartC.png" },
+    ],
+  },
+  { value: "3", name: "Moonberry", icon: "/icons/moonberry-8x.png", variants: [] },
+  { value: "4", name: "Winged Golden Berry", icon: "/icons/winged-goldenberry-8x.png", variants: [] },
+  { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
+];
+export function getCollectibleIcon(collectibleId, variantId) {
+  const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
+  if (variantId) {
+    const variant = collectible.variants.find((v) => v.value === variantId);
+    if (variant) {
+      return variant.icon;
+    }
+  }
+  return collectible.icon;
+}
+function getCollectibleOptions() {
+  return COLLECTIBLES.map((collectible) => (
+    <MenuItem key={collectible.value} value={collectible.value}>
+      <Stack direction="row" gap={1} alignItems="center">
+        <OtherIcon url={collectible.icon} />
+        <Typography variant="body1">{collectible.name}</Typography>
+      </Stack>
+    </MenuItem>
+  ));
+}
+
+function getCollectibleVariantOptions(collectibleId) {
+  const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
+  if (!collectible) {
+    return [];
+  }
+  const options = collectible.variants.map((variant) => (
+    <MenuItem key={variant.value} value={variant.value}>
+      <Stack direction="row" gap={1} alignItems="center">
+        <OtherIcon url={variant.icon} />
+        <Typography variant="body1">{variant.name}</Typography>
+      </Stack>
+    </MenuItem>
+  ));
+  options.unshift(
+    <MenuItem key="default" value="0">
+      <Stack direction="row" gap={1} alignItems="center">
+        <OtherIcon url={collectible.icon} />
+        <Typography variant="body1">Default: {collectible.name}</Typography>
+      </Stack>
+    </MenuItem>
+  );
+  return options;
 }

@@ -1,8 +1,16 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
+import { Button, Divider, Grid, Select, TextField, Typography } from "@mui/material";
 
-export function StringListEditor({ label, valueLabels = [], list, valueCount, setList, inline = false }) {
+export function StringListEditor({
+  label,
+  list,
+  valueCount,
+  valueTypes,
+  valueLabels = [],
+  setList,
+  inline = false,
+}) {
   const addItem = () => {
     const newItem = Array(valueCount).fill("");
     const oldList = list || [];
@@ -13,6 +21,7 @@ export function StringListEditor({ label, valueLabels = [], list, valueCount, se
   };
 
   const updateValue = (itemIndex, index, value) => {
+    console.log("Updating value with itemIndex", itemIndex, "index", index, "value", value);
     const newList = list.map((item, i) => {
       if (i === itemIndex) {
         return item.map((v, j) => {
@@ -26,6 +35,14 @@ export function StringListEditor({ label, valueLabels = [], list, valueCount, se
     });
     setList(newList);
   };
+
+  if (!valueTypes || valueTypes.length !== valueCount) {
+    return (
+      <Typography variant="body2" color={(t) => t.palette.error.main}>
+        Error: valueTypes and valueCount do not match
+      </Typography>
+    );
+  }
 
   return (
     <>
@@ -50,21 +67,26 @@ export function StringListEditor({ label, valueLabels = [], list, valueCount, se
             <>
               <Grid key={itemIndex} item xs={12}>
                 <Grid container spacing={1.5}>
-                  {item.map((value, index) => (
-                    <Grid
-                      key={index}
-                      item
-                      xs={12}
-                      sm={inline ? 12 / valueCount - (index === valueCount - 1 ? 1 : 0) : 12}
-                    >
-                      <TextField
-                        fullWidth
-                        label={valueLabels[index]}
-                        value={value}
-                        onChange={(e) => updateValue(itemIndex, index, e.target.value)}
-                      />
-                    </Grid>
-                  ))}
+                  {item.map((value, index) => {
+                    const typeInfo = valueTypes[index];
+                    return (
+                      <Grid
+                        key={index}
+                        item
+                        xs={12}
+                        sm={inline ? 12 / valueCount - (index === valueCount - 1 ? 1 : 0) : 12}
+                      >
+                        <StringListItem
+                          item={item}
+                          index={index}
+                          typeInfo={typeInfo}
+                          label={valueLabels[index]}
+                          value={value}
+                          setValue={(value) => updateValue(itemIndex, index, value)}
+                        />
+                      </Grid>
+                    );
+                  })}
                   <Grid item xs={inline ? "auto" : 12}>
                     <Button
                       variant="outlined"
@@ -88,4 +110,39 @@ export function StringListEditor({ label, valueLabels = [], list, valueCount, se
       </Grid>
     </>
   );
+}
+
+function StringListItem({ item, index, typeInfo, label, value, setValue }) {
+  const type = typeInfo.type;
+  if (type === "string") {
+    const multiline = typeInfo.multiline || false;
+    return (
+      <TextField
+        fullWidth
+        label={label}
+        value={value}
+        multiline={multiline}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  } else if (type === "enum") {
+    let options = typeInfo.options; //Array of MenuItems
+    //if options is a function, call it with the item, index and value as arguments
+    if (typeof options === "function") {
+      options = options(item, index, value);
+    }
+    return (
+      <TextField
+        label={label}
+        select
+        fullWidth
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        displayEmpty
+        MenuProps={{ disableScrollLock: true }}
+      >
+        {options}
+      </TextField>
+    );
+  }
 }

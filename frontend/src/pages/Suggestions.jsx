@@ -17,6 +17,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import {
   Box,
@@ -162,8 +163,6 @@ export function PageSuggestions({}) {
   );
 }
 
-function SuggestionListTab({ expired, defaultPerPage, modalRefs, filterType }) {}
-
 //#region == Suggestions List ==
 function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
@@ -180,12 +179,6 @@ function SuggestionsList({ expired, defaultPerPage, modalRefs, filterType }) {
 
   const response = getQueryData(query);
   const { suggestions, max_page, max_count } = response;
-
-  // const filteredSuggestions = suggestions.filter((suggestion) => {
-  //   if (filterType === "general") return suggestion.challenge_id === null;
-  //   if (filterType === "challenges") return suggestion.challenge_id !== null;
-  //   return true;
-  // });
 
   return (
     <Stack direction="column" gap={2}>
@@ -937,9 +930,9 @@ function VotesDetailsDisplay({ votes, voteType, hasSubmission, highlightedPlayer
                 </Tooltip>
               )}
               {vote.comment && (
-                <Tooltip title={vote.comment} arrow placement="top">
+                <TooltipLineBreaks title={vote.comment}>
                   <FontAwesomeIcon icon={faComment} />
-                </Tooltip>
+                </TooltipLineBreaks>
               )}
             </Stack>
           );

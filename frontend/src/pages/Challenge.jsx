@@ -24,12 +24,14 @@ import {
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import {
   ChallengeFcIcon,
   DifficultyChip,
   GamebananaEmbed,
   ObjectiveIcon,
+  OtherIcon,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import {
@@ -44,6 +46,7 @@ import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
+  faBasketShopping,
   faBook,
   faCheckCircle,
   faCircleExclamation,
@@ -73,6 +76,7 @@ import { toast } from "react-toastify";
 import { memo } from "react";
 import { jsonDateToJsDate } from "../util/util";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
+import { COLLECTIBLES, getCollectibleIcon } from "../components/forms/Map";
 
 const displayNoneOnMobile = {
   display: {
@@ -195,12 +199,17 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
           <InfoBoxIconTextLine text={campaign.name} isSecondary />
         </InfoBox>
         {map !== null ? (
-          getMapName(map, campaign) === campaign.name ? null : (
-            <InfoBox>
-              <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
-              <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
-            </InfoBox>
-          )
+          <>
+            {getMapName(map, campaign) === campaign.name ? null : (
+              <InfoBox>
+                <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
+                <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
+              </InfoBox>
+            )}
+            {map.collectibles !== null && challenge === null && (
+              <CollectiblesInfoBox collectibles={map.collectibles} />
+            )}
+          </>
         ) : (
           <InfoBox>
             <InfoBoxIconTextLine text={t("is_full_game")} />
@@ -301,6 +310,43 @@ function LobbyInfoSpan({ lobbyInfo }) {
     </Stack>
   );
 }
+function CollectiblesInfoBox({ collectibles }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "map" });
+  return (
+    <InfoBox>
+      <InfoBoxIconTextLine text={t("collectibles")} icon={<FontAwesomeIcon icon={faBasketShopping} />} />
+      {collectibles.map((item, index) => {
+        const collectible = COLLECTIBLES.find((c) => c.value === item[0]);
+        if (!collectible) return null;
+        return (
+          <InfoBoxIconTextLine
+            key={collectibles.value}
+            text={
+              <Stack direction="row" gap={1} alignItems="center">
+                <Stack
+                  direction="row"
+                  gap={1}
+                  alignItems="center"
+                  justifyContent="space-around"
+                  sx={{ minWidth: "30px" }}
+                >
+                  <OtherIcon url={getCollectibleIcon(item[0], item[1])} />
+                </Stack>
+                <Typography variant="body1">{collectible.name + " x" + (item[2] ? item[2] : "1")}</Typography>
+                {item[3] && (
+                  <TooltipLineBreaks title={item[3]}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                  </TooltipLineBreaks>
+                )}
+              </Stack>
+            }
+            isSecondary
+          />
+        );
+      })}
+    </InfoBox>
+  );
+}
 
 export function ChallengeSubmissionTable({
   challenge,
@@ -323,14 +369,14 @@ export function ChallengeSubmissionTable({
               <TableCell width={1} sx={{ ...displayNoneOnMobile, px: 0 }}></TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+              <TableCell width={1} align="center">
                 <Tooltip arrow placement="top" title={t_fs("verifier_notes")}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                 </Tooltip>
               </TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+              <TableCell width={1} align="center">
                 <Tooltip arrow placement="top" title={t_fs("player_notes")}>
                   <FontAwesomeIcon icon={faComment} />
                 </Tooltip>
@@ -418,20 +464,20 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+        <TableCell width={1} align="center">
           {submission.verifier_notes && (
-            <Tooltip title={submission.verifier_notes} arrow placement="top">
+            <TooltipLineBreaks title={submission.verifier_notes}>
               <FontAwesomeIcon icon={faCircleExclamation} />
-            </Tooltip>
+            </TooltipLineBreaks>
           )}
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+        <TableCell width={1} align="center">
           {submission.player_notes && (
-            <Tooltip title={submission.player_notes} arrow placement="top">
+            <TooltipLineBreaks title={submission.player_notes}>
               <FontAwesomeIcon icon={faComment} />
-            </Tooltip>
+            </TooltipLineBreaks>
           )}
         </TableCell>
       )}
