@@ -1,6 +1,7 @@
 -- Reset Sequences after importing data
 SELECT setval('account_id_seq', (SELECT MAX(id) FROM account)+1);
 SELECT setval('player_id_seq', (SELECT MAX(id) FROM player)+1);
+SELECT setval('session_id_seq', (SELECT MAX(id) FROM session)+1);
 
 SELECT setval('campaign_id_seq', (SELECT MAX(id) FROM campaign)+1);
 SELECT setval('map_id_seq', (SELECT MAX(id) FROM "map")+1);
@@ -21,6 +22,7 @@ SELECT setval('showcase_id_seq', (SELECT MAX(id) FROM showcase)+1);
 -- Set sequences to 0 to start from scratch
 SELECT setval('account_id_seq', 1);
 SELECT setval('player_id_seq', 1);
+SELECT setval('session_id_seq', 1);
 
 SELECT setval('campaign_id_seq', 1);
 SELECT setval('map_id_seq', 1);
