@@ -40,7 +40,6 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
         campaign: null,
         name: defaultMapName ?? "",
         url: null,
-        has_fc: false,
         is_rejected: false,
         rejection_reason: "",
         is_archived: false,
@@ -49,6 +48,8 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
         sort_order: null,
         author_gb_id: "",
         author_gb_name: "",
+        collectibles: null,
+        golden_changes: "",
       }
     );
   }, [data]);
@@ -267,7 +268,7 @@ export const COLLECTIBLES = [
       { value: "3", name: "Madeline in China Golden", icon: "/icons/golden-china.png" },
       { value: "4", name: "Cryoshock Golden", icon: "/icons/golden-cryoshock.png" },
       { value: "5", name: "Drizzle Golden", icon: "/icons/golden-drizzle.png" },
-      { value: "6", name: "Solar Purgatory Golden", icon: "/icons/golden-sumber.png" },
+      { value: "6", name: "Neon Golden", icon: "/icons/golden-neon.png" },
       { value: "7", name: "Taswell Golden", icon: "/icons/golden-taswell.png" },
       { value: "8", name: "Velvet Golden", icon: "/icons/golden-velvet.png" },
       { value: "9", name: "FFFFF Golden", icon: "/icons/golden-fffff.png" },
@@ -279,13 +280,30 @@ export const COLLECTIBLES = [
     value: "3",
     name: "Moonberry",
     icon: "/icons/moonberry-8x.png",
-    variants: [{ value: "1", name: "Madeline in China Moonberry", icon: "/icons/moonberry-china.png" }],
+    variants: [
+      { value: "2", name: "Solaris Moonberry", icon: "/icons/moonberry-solaris-1.png" },
+      { value: "3", name: "Lunaris Moonberry", icon: "/icons/moonberry-solaris-2.png" },
+      { value: "4", name: "Stellaris Moonberry", icon: "/icons/moonberry-solaris-3.png" },
+      { value: "1", name: "Madeline in China Moonberry", icon: "/icons/moonberry-china.png" },
+      { value: "5", name: "Cryoshock Moonberry", icon: "/icons/moonberry-cryoshock.png" },
+      { value: "6", name: "Velvet Moonberry", icon: "/icons/moonberry-cryoshock.png" },
+      { value: "7", name: "FFFFF Moonberry", icon: "/icons/moonberry-fffff.png" },
+    ],
   },
   {
     value: "2",
     name: "Strawberry",
     icon: "/icons/strawberry-8x.png",
-    variants: [{ value: "1", name: "Madeline in China Strawberry", icon: "/icons/strawberry-china.png" }],
+    variants: [
+      { value: "5", name: "Solaris Strawberry", icon: "/icons/strawberry-solaris.png" },
+      { value: "1", name: "Madeline in China Strawberry", icon: "/icons/strawberry-china.png" },
+      { value: "2", name: "Cryoshock Strawberry", icon: "/icons/strawberry-cryoshock.png" },
+      { value: "3", name: "Drizzle Strawberry", icon: "/icons/strawberry-drizzle.png" },
+      { value: "8", name: "Neon Strawberry", icon: "/icons/strawberry-neon.png" },
+      { value: "6", name: "Taswell Strawberry", icon: "/icons/strawberry-taswell.png" },
+      { value: "7", name: "Velvet Strawberry", icon: "/icons/strawberry-velvet.png" },
+      { value: "4", name: "FFFFF Strawberry", icon: "/icons/strawberry-fffff.png" },
+    ],
   },
   {
     value: "7",
@@ -296,8 +314,15 @@ export const COLLECTIBLES = [
       { value: "2", name: "Yellow Heart", icon: "/icons/heartC.png" },
     ],
   },
-  { value: "6", name: "Cassette", icon: "/icons/cassette.png", variants: [] },
+  {
+    value: "6",
+    name: "Cassette",
+    icon: "/icons/cassette.png",
+    variants: [{ value: "1", name: "D-Sides Cassette", icon: "/icons/cassette-d-sides.png" }],
+  },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
+  { value: "8", name: "Bouncy Berry", icon: "/icons/bouncy-berry.png", variants: [] },
+  { value: "9", name: "Void Berry", icon: "/icons/voidberry.png", variants: [] },
 ];
 export function getCollectibleIcon(collectibleId, variantId) {
   const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
