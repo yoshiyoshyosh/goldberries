@@ -156,15 +156,15 @@
           const submissionIsFc = getCookie('submission_is_fc');
           const submissionDateCreated = getCookie('submission_date_created');
           const modId = getCookie('mod_id');
-          let playerName = getCookie('player_name');
+          let playerName = escapeHtml(getCookie('player_name'));
           let playerNameColorStart = getCookie('player_name_color_start');
           let playerNameColorEnd = getCookie('player_name_color_end');
-          let mapName = getCookie('map_name');
-          const campaignName = getCookie('campaign_name');
+          let mapName = escapeHtml(getCookie('map_name'));
+          const campaignName = escapeHtml(getCookie('campaign_name'));
           let sameNames = mapName === campaignName;
           const isFullGame = mapName === null;
-          const campaignAuthor = getCookie('campaign_author');
-          const challengeLabel = getCookie('challenge_label');
+          const campaignAuthor = escapeHtml(getCookie('campaign_author'));
+          const challengeLabel = escapeHtml(getCookie('challenge_label'));
           let objectiveIconUrl = getCookie('objective_icon_url');
           const difficultyId = getCookie('difficulty_id');
 

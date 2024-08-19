@@ -11,6 +11,16 @@ function getCookie(name, dontDecode = false) {
   return value;
 }
 
+function escapeHtml(unsafe) {
+  if (unsafe === null || unsafe === undefined) return null;
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function sel(selector) {
   return document.querySelector(selector);
 }
