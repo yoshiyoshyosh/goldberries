@@ -664,7 +664,7 @@ function CampaignMapListMapEntry({ map, campaign, sx = {}, ...props }) {
                       true,
                       isMdScreen ? true : useTextFcIcons ? true : false
                     )}
-                    <ObjectiveIcon objective={challenge.objective} />
+                    <ObjectiveIcon objective={challenge.objective} challenge={challenge} />
                     <ChallengeFcIcon
                       challenge={challenge}
                       style={{ display: isMdScreen ? "block" : useTextFcIcons ? "none" : "block" }}
@@ -708,7 +708,7 @@ function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
           <StyledLink to={"/challenge/" + challenge.id}>
             <Typography variant="h6">{getChallengeNameShort(challenge, true, true)}</Typography>
           </StyledLink>
-          <ObjectiveIcon objective={challenge.objective} height="1.3em" />
+          <ObjectiveIcon objective={challenge.objective} challenge={challenge} height="1.3em" />
           <ChallengeFcIcon challenge={challenge} height="1.3em" />
         </Stack>
         {challenge.description && <Typography variant="body1">{challenge.description}</Typography>}

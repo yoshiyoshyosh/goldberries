@@ -270,11 +270,23 @@ export const COLLECTIBLES = [
       { value: "6", name: "Solar Purgatory Golden", icon: "/icons/golden-sumber.png" },
       { value: "7", name: "Taswell Golden", icon: "/icons/golden-taswell.png" },
       { value: "8", name: "Velvet Golden", icon: "/icons/golden-velvet.png" },
+      { value: "9", name: "FFFFF Golden", icon: "/icons/golden-fffff.png" },
     ],
   },
   { value: "1", name: "Silver Berry", icon: "/icons/silverberry-8x.png", variants: [] },
-  { value: "2", name: "Strawberry", icon: "/icons/strawberry-8x.png", variants: [] },
-  { value: "6", name: "Cassette", icon: "/icons/cassette.png", variants: [] },
+  { value: "4", name: "Winged Golden Berry", icon: "/icons/winged-goldenberry-8x.png", variants: [] },
+  {
+    value: "3",
+    name: "Moonberry",
+    icon: "/icons/moonberry-8x.png",
+    variants: [{ value: "1", name: "Madeline in China Moonberry", icon: "/icons/moonberry-china.png" }],
+  },
+  {
+    value: "2",
+    name: "Strawberry",
+    icon: "/icons/strawberry-8x.png",
+    variants: [{ value: "1", name: "Madeline in China Strawberry", icon: "/icons/strawberry-china.png" }],
+  },
   {
     value: "7",
     name: "Crystal Heart",
@@ -284,8 +296,7 @@ export const COLLECTIBLES = [
       { value: "2", name: "Yellow Heart", icon: "/icons/heartC.png" },
     ],
   },
-  { value: "3", name: "Moonberry", icon: "/icons/moonberry-8x.png", variants: [] },
-  { value: "4", name: "Winged Golden Berry", icon: "/icons/winged-goldenberry-8x.png", variants: [] },
+  { value: "6", name: "Cassette", icon: "/icons/cassette.png", variants: [] },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
 ];
 export function getCollectibleIcon(collectibleId, variantId) {
