@@ -17,6 +17,7 @@ class Map extends DbObject
   public ?string $author_gb_name = null;
   public ?string $note = null;
   public ?StringList $collectibles = null;
+  public ?string $golden_changes = null;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -47,6 +48,7 @@ class Map extends DbObject
       'campaign_id' => $this->campaign_id,
       'note' => $this->note,
       'collectibles' => $this->collectibles === null ? null : $this->collectibles->__toString(),
+      'golden_changes' => $this->golden_changes,
     );
   }
 
@@ -105,6 +107,8 @@ class Map extends DbObject
         $this->collectibles = new StringList(4, $value);
       }
     }
+    if (isset($arr[$prefix . 'golden_changes']))
+      $this->golden_changes = $arr[$prefix . 'golden_changes'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)

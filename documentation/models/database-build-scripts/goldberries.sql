@@ -165,6 +165,7 @@ CREATE TABLE "map"
  author_gb_name   varchar(128) NULL,
  note             text NULL,
  collectibles     text NULL,
+ golden_changes   text NULL,
  CONSTRAINT map_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT map_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -354,6 +355,7 @@ CREATE VIEW "view_submissions" AS SELECT
   map.author_gb_name AS map_author_gb_name,
   map.note AS map_note,
   map.collectibles AS map_collectibles,
+  map.golden_changes AS map_golden_changes,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -479,6 +481,7 @@ CREATE VIEW "view_challenges" AS SELECT
   map.author_gb_name AS map_author_gb_name,
   map.note AS map_note,
   map.collectibles AS map_collectibles,
+  map.golden_changes AS map_golden_changes,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -553,6 +556,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   map.author_gb_name AS map_author_gb_name,
   map.note AS map_note,
   map.collectibles AS map_collectibles,
+  map.golden_changes AS map_golden_changes,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
