@@ -125,6 +125,23 @@ export function AppSettingsGeneralForm() {
         </Select>
       </SettingsEntry>
 
+      <Divider sx={{ mt: 2, mb: 1 }} />
+
+      <SettingsEntry note={t("golden_changes.note")}>
+        <Controller
+          name="hideGoldenChanges"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("golden_changes.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
+
       {isAprilFools && (
         <Button
           fullWidth

@@ -9,6 +9,7 @@ export function AppSettingsProvider({ children }) {
     return {
       general: {
         //language: "en",
+        hideGoldenChanges: false,
       },
       visual: {
         darkmode: prefersDarkMode ?? true,

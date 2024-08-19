@@ -172,7 +172,9 @@ export function ChallengeDisplay({ id }) {
 export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
+  const { t: t_mib } = useTranslation(undefined, { keyPrefix: "map.info_boxes" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { settings } = useAppSettings();
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
 
   const lobbyInfo = getMapLobbyInfo(map);
@@ -286,6 +288,12 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
             <AuthorInfoBoxLine author_gb_id={map.author_gb_id} author_gb_name={map.author_gb_name} />
           </InfoBox>
         )}
+        {map !== null && challenge === null && map.golden_changes && !settings.general.hideGoldenChanges && (
+          <InfoBox>
+            <InfoBoxIconTextLine text={t_mib("golden_changes")} />
+            <InfoBoxIconTextLine text={map.golden_changes} isSecondary isMultiline />
+          </InfoBox>
+        )}
       </Grid>
     </Grid>
   );
@@ -311,7 +319,7 @@ function LobbyInfoSpan({ lobbyInfo }) {
   );
 }
 function CollectiblesInfoBox({ collectibles }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "map" });
+  const { t } = useTranslation(undefined, { keyPrefix: "map.info_boxes" });
   return (
     <InfoBox>
       <InfoBoxIconTextLine text={t("collectibles")} icon={<FontAwesomeIcon icon={faBasketShopping} />} />

@@ -470,7 +470,7 @@ export function InfoBox({ children }) {
     </Box>
   );
 }
-export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false }) {
+export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false, isMultiline = false }) {
   const theme = useTheme();
   let textColor = isSecondary ? theme.palette.text.secondary : theme.palette.text.primary;
   textColor = color ? color : textColor;
@@ -481,7 +481,7 @@ export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false }) 
         variant="body1"
         color={textColor}
         fontWeight={isSecondary ? "normal" : "bold"}
-        sx={{ width: "100%", wordBreak: "break-word" }}
+        sx={{ width: "100%", wordBreak: "break-word", whiteSpace: isMultiline ? "pre-line" : "unset" }}
       >
         {text}
       </Typography>

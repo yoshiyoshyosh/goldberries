@@ -177,6 +177,14 @@ export function FormMap({ map, onSave, ...props }) {
 
       <TextField label={t("note")} sx={{ mt: 2 }} fullWidth {...form.register("note")} />
 
+      <TextField
+        label={t("golden_changes")}
+        sx={{ mt: 2 }}
+        fullWidth
+        multiline
+        {...form.register("golden_changes")}
+      />
+
       <Divider sx={{ my: 2 }} />
       <Controller
         control={form.control}
