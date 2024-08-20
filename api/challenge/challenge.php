@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($submissions) {
     if (is_array($challenges)) {
       foreach ($challenges as $challenge) {
-        $challenge->fetch_submissions($DB);
+        $challenge->fetch_submissions($DB, true);
       }
     } else {
-      $challenges->fetch_submissions($DB);
+      $challenges->fetch_submissions($DB, true);
     }
   }
 

@@ -151,7 +151,7 @@ class Map extends DbObject
   }
 
   // === Find Functions ===
-  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true): bool
+  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true, $filter_suspended = false): bool
   {
     $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
     $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, id ASC");
@@ -160,7 +160,7 @@ class Map extends DbObject
     $this->challenges = $challenges;
     foreach ($this->challenges as $challenge) {
       if ($with_submissions)
-        $challenge->fetch_submissions($DB);
+        $challenge->fetch_submissions($DB, $filter_suspended);
       $challenge->expand_foreign_keys($DB, 3, false);
     }
     return true;

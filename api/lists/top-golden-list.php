@@ -17,6 +17,8 @@ $show_standard = false;
 if ($is_player) {
   $where .= " AND player_id = " . intval($_GET['player']);
   $show_standard = true;
+} else {
+  $where .= " AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
 if ($is_campaign) {
   $where .= " AND campaign_id = " . intval($_GET['campaign']);

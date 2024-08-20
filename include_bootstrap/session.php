@@ -127,6 +127,9 @@ function get_user_data()
   if ($account == false) {
     return null;
   }
+  if (is_suspended($account)) {
+    return null;
+  }
   $account->expand_foreign_keys($DB);
   return $account;
 }

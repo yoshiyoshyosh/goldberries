@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $query = "SELECT * FROM view_submissions";
 
-$where = "WHERE submission_is_verified = true AND map_id IS NOT NULL";
+$where = "WHERE submission_is_verified = true AND map_id IS NOT NULL AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 if (isset($_GET['campaign'])) {
   $where .= " AND campaign_id = " . intval($_GET['campaign']);
 } else if (isset($_GET['map'])) {

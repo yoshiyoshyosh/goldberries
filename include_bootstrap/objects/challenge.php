@@ -117,7 +117,7 @@ class Challenge extends DbObject
   }
 
   // === Find Functions ===
-  function fetch_submissions($DB): bool
+  function fetch_submissions($DB, $filter_suspended = false): bool
   {
     $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, "is_verified = true", "ORDER BY date_created ASC, id ASC");
     if ($submissions === false)
@@ -125,6 +125,13 @@ class Challenge extends DbObject
     $this->submissions = $submissions;
     foreach ($this->submissions as $submission) {
       $submission->expand_foreign_keys($DB, 2, false);
+    }
+    if ($filter_suspended) {
+      $this->submissions = array_filter($this->submissions, function ($submission) {
+        $account = $submission->player->account;
+        return $account === null || $account['is_suspended'] === false || $account['is_suspended'] === null;
+      });
+      $this->submissions = array_values($this->submissions);
     }
     return true;
   }

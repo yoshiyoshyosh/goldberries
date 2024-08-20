@@ -19,7 +19,15 @@ if ($campaign === null) {
 $campaign->fetch_maps($DB, true);
 $campaign->fetch_challenges($DB, false, false);
 
-$query = "SELECT * FROM view_submissions WHERE submission_is_verified = true AND campaign_id = $campaign_id AND map_is_archived = false AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
+$query = "SELECT 
+  * 
+FROM view_submissions 
+WHERE submission_is_verified = true 
+  AND campaign_id = $campaign_id 
+  AND map_is_archived = false 
+  AND objective_is_arbitrary = false 
+  AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)
+  AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");

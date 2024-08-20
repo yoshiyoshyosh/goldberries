@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($challenges) {
     if (is_array($maps)) {
       foreach ($maps as $map) {
-        $map->fetch_challenges($DB, $submissions);
+        $map->fetch_challenges($DB, $submissions, true, true);
       }
     } else {
-      $maps->fetch_challenges($DB, $submissions);
+      $maps->fetch_challenges($DB, $submissions, true, true);
     }
   }
 
