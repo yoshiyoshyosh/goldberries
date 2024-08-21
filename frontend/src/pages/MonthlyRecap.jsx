@@ -1,6 +1,7 @@
 import { Button, Checkbox, Chip, Divider, FormControlLabel, Grid, Stack, Typography } from "@mui/material";
 import {
   BasicContainerBox,
+  CustomIconButton,
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
@@ -42,51 +43,65 @@ import { useEffect, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { DifficultyMoveDisplay } from "./Suggestions";
 import { useTranslation } from "react-i18next";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 export function PageMonthlyRecap() {
   const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.settings" });
   const { month } = useParams();
   const navigate = useNavigate();
 
-  const sliceMonth = (date) => date.toISOString().slice(0, 7);
-  const [selectedMonth, setSelectedMonth] = useState(month ? month : sliceMonth(new Date()));
-  //month is in format: YYYY-MM
+  const defaultDate = month ? new Date(month + "-02") : new Date();
+  const [date, setDate] = useState(defaultDate.toISOString());
+  //Format date into a string like 2024-08
+  const selectedMonth = date ? date.slice(0, 7) : null;
 
-  const newerMonth = new Date(selectedMonth + "-02");
-  newerMonth.setMonth(newerMonth.getMonth() + 1);
-  const olderMonth = new Date(selectedMonth + "-02");
-  olderMonth.setMonth(olderMonth.getMonth() - 1);
-  const hasNewerMonth = newerMonth <= new Date();
-
-  const setMonth = (date) => {
-    setSelectedMonth(sliceMonth(date));
-    navigate("/monthly-recap/" + sliceMonth(date), { replace: true });
+  const setMonth = (dateISO) => {
+    const toSet = dateISO ? new Date(dateISO) : new Date();
+    setDate(toSet.toISOString());
+    const dateFormatted = toSet.toISOString().slice(0, 7);
+    navigate("/monthly-recap/" + dateFormatted, { replace: true });
+  };
+  const navigateMonth = (direction) => {
+    const newDate = new Date(date);
+    newDate.setMonth(newDate.getMonth() + direction);
+    setMonth(newDate.toISOString());
   };
 
   useEffect(() => {
     if (month !== selectedMonth && month !== undefined) {
-      setSelectedMonth(month);
+      setMonth(month + "-02");
     }
   }, [month]);
 
   return (
     <BasicContainerBox maxWidth="md">
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <Button variant="outlined" onClick={() => setMonth(olderMonth)}>
-          <Stack direction="row" alignItems="center" gap={1}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }} alignItems="center">
+        <Typography variant="h4" textAlign="center">
+          {t("header")}
+        </Typography>
+        <span style={{ flex: 1 }} />
+        <Stack direction="row" spacing={0.25} alignItems="center">
+          <CustomIconButton color="info" onClick={() => navigateMonth(-1)} sx={{ alignSelf: "stretch" }}>
             <FontAwesomeIcon icon={faArrowLeft} />
-            {t("less_recent", { month: sliceMonth(olderMonth) })}
-          </Stack>
-        </Button>
-        <span style={{ flex: 1 }}></span>
-        <Button disabled={!hasNewerMonth} variant="outlined" onClick={() => setMonth(newerMonth)}>
-          <Stack direction="row" alignItems="center" gap={1}>
-            {t("more_recent", { month: sliceMonth(newerMonth) })}
+          </CustomIconButton>
+          <DatePicker
+            value={date ? dayjs(date) : null}
+            onChange={(value) => {
+              if (value.isValid()) {
+                setMonth(value.toISOString());
+              }
+            }}
+            minDate={dayjs(new Date(2018, 9, 12, 12))}
+            maxDate={dayjs(new Date())}
+            views={["year", "month"]}
+            sx={{ mt: 1, maxWidth: "200px" }}
+          />
+          <CustomIconButton color="info" onClick={() => navigateMonth(1)} sx={{ alignSelf: "stretch" }}>
             <FontAwesomeIcon icon={faArrowRight} />
-          </Stack>
-        </Button>
+          </CustomIconButton>
+        </Stack>
       </Stack>
-
       <MonthlyRecap month={selectedMonth} />
     </BasicContainerBox>
   );
@@ -109,7 +124,7 @@ function MonthlyRecap({ month }) {
   const snapshotQuery = useGetStatsGlobal(month);
 
   const diffGrid = (
-    <Grid container columnSpacing={2} sx={{ mb: 1 }}>
+    <Grid container columnSpacing={2} rowSpacing={1} sx={{ mb: 0 }}>
       <Grid item xs={12} md={6}>
         <DifficultySelectControlled
           label={t_s("normal_clears")}
@@ -168,11 +183,11 @@ function MonthlyRecap({ month }) {
       <HeadTitle title={t("title", { month: month })} />
       {diffGrid}
 
-      <Divider sx={{ mt: 1, mb: 2 }} />
-
-      <Typography variant="h5" textAlign="center">
-        {t("header", { month: month })}
+      <Typography variant="caption" sx={{ mt: 0 }}>
+        * {t("disclaimer")}
       </Typography>
+
+      <Divider sx={{ mt: 1, mb: 2 }} />
 
       <Typography variant="h6" sx={{ mt: 2 }}>
         {t("total_clears")}
