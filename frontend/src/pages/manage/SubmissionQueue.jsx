@@ -21,6 +21,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -45,6 +46,9 @@ import { useAuth } from "../../hooks/AuthProvider";
 export function PageSubmissionQueue() {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
   const { submission } = useParams();
+  const theme = useTheme();
+  const isXlScreen = useMediaQuery(theme.breakpoints.up("xl"));
+  const isXxlScreen = useMediaQuery(theme.breakpoints.up("xxl"));
   const defaultSubmission = submission === undefined ? null : parseInt(submission);
   const [submissionId, setSubmissionId] = useState(defaultSubmission ?? null);
   const navigate = useNavigate();
@@ -123,20 +127,25 @@ export function PageSubmissionQueue() {
   };
 
   const title = t("title_with_count", { count: queue.length });
+  const isSmallView = isXlScreen && !isXxlScreen;
+  const isBigView = isXxlScreen;
 
   return (
     <>
       <HeadTitle title={title} />
-      <BasicContainerBox sx={{ mt: 0, p: 2, position: "relative" }}>
+      <BasicContainerBox
+        maxWidth={isSmallView ? "sm" : isBigView ? "md" : undefined}
+        sx={{ mt: 0, p: 2, position: "relative" }}
+      >
         <Box
           sx={{
-            position: { xs: "relative", xl: "absolute" },
+            position: { xs: "relative", lg: "absolute" },
             mt: 0,
             p: 1,
             pt: 1,
             top: 0,
             left: 0,
-            transform: { xs: "none", xl: "translate(calc(-100% - 20px), 0)" },
+            transform: { xs: "none", lg: "translate(calc(-100% - 20px), 0)" },
           }}
         >
           <SubmissionQueueTable
@@ -145,7 +154,7 @@ export function PageSubmissionQueue() {
             selectedSubmissionId={parseInt(submissionId)}
             setSubmissionId={updateSubmissionId}
           />
-          <Divider sx={{ my: 2, display: { xs: "block", xl: "none" } }} />
+          <Divider sx={{ my: 2, display: { xs: "block", lg: "none" } }} />
         </Box>
         {submissionId !== null ? (
           <FormSubmissionWrapper id={submissionId} onSave={goToNextSubmission} />

@@ -305,6 +305,16 @@ export const lightTheme = createTheme({
       },
     },
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+      xxl: 1830,
+    },
+  },
 });
 const darkTheme = createTheme({
   palette: {
@@ -359,6 +369,16 @@ const darkTheme = createTheme({
           // background: "#121212",
         },
       },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+      xxl: 1830,
     },
   },
 });

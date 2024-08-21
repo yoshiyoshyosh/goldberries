@@ -257,12 +257,12 @@ function parseBilibiliUrl(link) {
 }
 function parseTwitchUrl(url) {
   //URLs look like: https://www.twitch.tv/videos/2222820930
-  const urlRegex = /^(https?:\/\/)?(www\.)?(twitch\.tv)\/videos\/([^#&?]*).*/;
+  const urlRegex = /^(https?:\/\/)?((www|m)\.)?(twitch\.tv)\/videos\/([^#&?]*).*/;
   const match = url.match(urlRegex);
-  if (!match || !match[4]) {
+  if (!match || !match[5]) {
     return null;
   }
-  const id = match[4];
+  const id = match[5];
   return {
     id: id || null,
   };

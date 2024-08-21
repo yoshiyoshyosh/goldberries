@@ -286,7 +286,7 @@ export const COLLECTIBLES = [
       { value: "4", name: "Stellaris Moonberry", icon: "/icons/moonberry-solaris-3.png" },
       { value: "1", name: "Madeline in China Moonberry", icon: "/icons/moonberry-china.png" },
       { value: "5", name: "Cryoshock Moonberry", icon: "/icons/moonberry-cryoshock.png" },
-      { value: "6", name: "Velvet Moonberry", icon: "/icons/moonberry-cryoshock.png" },
+      { value: "6", name: "Velvet Moonberry", icon: "/icons/moonberry-velvet.png" },
       { value: "7", name: "FFFFF Moonberry", icon: "/icons/moonberry-fffff.png" },
     ],
   },
@@ -321,8 +321,11 @@ export const COLLECTIBLES = [
     variants: [{ value: "1", name: "D-Sides Cassette", icon: "/icons/cassette-d-sides.png" }],
   },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
+  { value: "11", name: "Diamond Berry", icon: "/icons/diamondberry.png", variants: [] },
   { value: "8", name: "Bouncy Berry", icon: "/icons/bouncy-berry.png", variants: [] },
   { value: "9", name: "Void Berry", icon: "/icons/voidberry.png", variants: [] },
+  { value: "10", name: "Speedberry", icon: "/icons/speedberry.png", variants: [] },
+  { value: "12", name: "Bronze Berry", icon: "/icons/bronzeberry.png", variants: [] },
 ];
 export function getCollectibleIcon(collectibleId, variantId) {
   const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
