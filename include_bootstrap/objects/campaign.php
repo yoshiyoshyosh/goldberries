@@ -178,6 +178,24 @@ class Campaign extends DbObject
     return $campaigns;
   }
 
+  static function get_by_gamebanana_id($DB, int $gamebanana_id)
+  {
+    $url = "https://gamebanana.com/mods/$gamebanana_id";
+    $query = "SELECT * FROM campaign WHERE url LIKE '$url' ORDER BY name";
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Could not query database");
+    }
+
+    if (pg_num_rows($result) === 0)
+      return false;
+
+    $row = pg_fetch_assoc($result);
+    $campaign = new Campaign();
+    $campaign->apply_db_data($row);
+    return $campaign;
+  }
+
   // === Utility Functions ===
   static function generate_changelog($DB, $old, $new)
   {

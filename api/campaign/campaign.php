@@ -1,34 +1,55 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $maps = isset($_REQUEST['maps']) && $_REQUEST['maps'] === 'true';
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
 
-  $id = $_REQUEST['id'];
-  $campaigns = Campaign::get_request($DB, $id);
-  if ($maps) {
-    if (is_array($campaigns)) {
-      foreach ($campaigns as $campaign) {
-        $campaign->fetch_maps($DB, $challenges, $submissions);
-      }
-    } else {
-      $campaigns->fetch_maps($DB, $challenges, $submissions);
-    }
-  }
-  if ($challenges) {
-    if (is_array($campaigns)) {
-      foreach ($campaigns as $campaign) {
-        $campaign->fetch_challenges($DB, $submissions);
-      }
-    } else {
-      $campaigns->fetch_challenges($DB, $submissions);
-    }
-  }
+  $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
+  $gb_id = isset($_REQUEST['gamebanana_id']) ? $_REQUEST['gamebanana_id'] : null;
 
-  api_write($campaigns);
+  if ($id !== null) {
+    $campaigns = Campaign::get_request($DB, $id);
+    if ($maps) {
+      if (is_array($campaigns)) {
+        foreach ($campaigns as $campaign) {
+          $campaign->fetch_maps($DB, $challenges, $submissions);
+        }
+      } else {
+        $campaigns->fetch_maps($DB, $challenges, $submissions);
+      }
+    }
+    if ($challenges) {
+      if (is_array($campaigns)) {
+        foreach ($campaigns as $campaign) {
+          $campaign->fetch_challenges($DB, $submissions);
+        }
+      } else {
+        $campaigns->fetch_challenges($DB, $submissions);
+      }
+    }
+
+    api_write($campaigns);
+
+  } else if ($gb_id !== null) {
+    $gb_id = intval($gb_id);
+    $campaign = Campaign::get_by_gamebanana_id($DB, $gb_id);
+    if (!$campaign) {
+      die_json(404, "Campaign not found");
+    }
+    if ($maps) {
+      $campaign->fetch_maps($DB, $challenges, $submissions);
+    }
+    if ($challenges) {
+      $campaign->fetch_challenges($DB, $submissions);
+    }
+
+    api_write($campaign);
+  } else {
+    die_json(400, "Missing id or gamebanana_id");
+  }
 }
 
 
