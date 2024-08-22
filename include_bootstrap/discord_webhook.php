@@ -185,7 +185,21 @@ function send_webhook_suggestion_notification($suggestion)
     }
   }
   $ping_addition = count($ping_list) > 0 ? " " . implode(" ", $ping_list) : "";
-  $message = ":memo: A new suggestion was made for {$challenge_name}!{$ping_addition}";
+
+  $emote = ":memo:";
+  if ($suggestion->suggested_difficulty !== null) {
+    $from_sort = $suggestion->current_difficulty->sort;
+    $to_sort = $suggestion->suggested_difficulty->sort;
+    if ($from_sort === 1) {
+      $emote = "<:chart_with_midwards_trend:1224106596901060768>";
+    } else if ($from_sort > $to_sort) {
+      $emote = ":chart_with_downwards_trend:";
+    } else if ($from_sort < $to_sort) {
+      $emote = ":chart_with_upwards_trend:";
+    }
+  }
+
+  $message = "{$emote} A new suggestion was made for {$challenge_name}!{$ping_addition}";
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
