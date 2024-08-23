@@ -76,7 +76,7 @@ import { toast } from "react-toastify";
 import { memo } from "react";
 import { jsonDateToJsDate } from "../util/util";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
-import { COLLECTIBLES, getCollectibleIcon } from "../components/forms/Map";
+import { COLLECTIBLES, getCollectibleIcon, getCollectibleName } from "../components/forms/Map";
 
 const displayNoneOnMobile = {
   display: {
@@ -340,7 +340,9 @@ function CollectiblesInfoBox({ collectibles }) {
                 >
                   <OtherIcon url={getCollectibleIcon(item[0], item[1])} />
                 </Stack>
-                <Typography variant="body1">{collectible.name + " x" + (item[2] ? item[2] : "1")}</Typography>
+                <Typography variant="body1">
+                  {getCollectibleName(item[0], item[1]) + " x" + (item[2] ? item[2] : "1")}
+                </Typography>
                 {item[3] && (
                   <TooltipLineBreaks title={item[3]}>
                     <FontAwesomeIcon icon={faInfoCircle} />

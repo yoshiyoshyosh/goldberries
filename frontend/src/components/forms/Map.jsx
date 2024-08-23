@@ -288,6 +288,7 @@ export const COLLECTIBLES = [
       { value: "5", name: "Cryoshock Moonberry", icon: "/icons/moonberry-cryoshock.png" },
       { value: "6", name: "Velvet Moonberry", icon: "/icons/moonberry-velvet.png" },
       { value: "7", name: "FFFFF Moonberry", icon: "/icons/moonberry-fffff.png" },
+      { value: "8", name: "Voidberry", displayName: "Voidberry", icon: "/icons/voidberry.png" },
     ],
   },
   {
@@ -312,6 +313,7 @@ export const COLLECTIBLES = [
     variants: [
       { value: "1", name: "Red Heart", icon: "/icons/heartB.png" },
       { value: "2", name: "Yellow Heart", icon: "/icons/heartC.png" },
+      { value: "3", name: "Watcher Egg", displayName: "Watcher Egg", icon: "/icons/watcheregg.png" },
     ],
   },
   {
@@ -322,10 +324,16 @@ export const COLLECTIBLES = [
   },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
   { value: "11", name: "Diamond Berry", icon: "/icons/diamondberry.png", variants: [] },
-  { value: "8", name: "Bouncy Berry", icon: "/icons/bouncy-berry.png", variants: [] },
-  { value: "9", name: "Void Berry", icon: "/icons/voidberry.png", variants: [] },
   { value: "10", name: "Speedberry", icon: "/icons/speedberry.png", variants: [] },
-  { value: "12", name: "Bronze Berry", icon: "/icons/bronzeberry.png", variants: [] },
+  {
+    value: "13",
+    name: "Special Berry",
+    icon: "/icons/bronzeberry.png",
+    variants: [
+      { value: "1", name: "Bronze Berry", displayName: "Bronze Berry", icon: "/icons/bronzeberry.png" },
+      { value: "2", name: "Bouncy Berry", displayName: "Bouncy Berry", icon: "/icons/bouncy-berry.png" },
+    ],
+  },
 ];
 export function getCollectibleIcon(collectibleId, variantId) {
   const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
@@ -336,6 +344,16 @@ export function getCollectibleIcon(collectibleId, variantId) {
     }
   }
   return collectible.icon;
+}
+export function getCollectibleName(collectibleId, variantId) {
+  const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
+  if (variantId) {
+    const variant = collectible.variants.find((v) => v.value === variantId);
+    if (variant && variant.displayName) {
+      return variant.displayName;
+    }
+  }
+  return collectible.name;
 }
 function getCollectibleOptions() {
   return COLLECTIBLES.map((collectible) => (
