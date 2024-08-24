@@ -309,18 +309,39 @@ export const COLLECTIBLES = [
   {
     value: "7",
     name: "Crystal Heart",
-    icon: "/icons/heartA.png",
+    icon: "/icons/crystal-heart-a.png",
     variants: [
-      { value: "1", name: "Red Heart", icon: "/icons/heartB.png" },
-      { value: "2", name: "Yellow Heart", icon: "/icons/heartC.png" },
+      { value: "1", name: "Red Heart", icon: "/icons/crystal-heart-b.png" },
+      { value: "2", name: "Yellow Heart", icon: "/icons/crystal-heart-c.png" },
       { value: "3", name: "Watcher Egg", displayName: "Watcher Egg", icon: "/icons/watcheregg.png" },
+      { value: "4", name: "DMR Heart", icon: "/icons/crystal-heart-dmr.png" },
+      { value: "5", name: "Empty Heart", icon: "/icons/crystal-heart-empty.png" },
+      { value: "6", name: "Glyph Main Heart", icon: "/icons/crystal-heart-glyph-main.png" },
+      {
+        value: "7",
+        name: "Zescent Orb 1",
+        displayName: "Zescent Orb 1",
+        icon: "/icons/orb-zescent-1.png",
+      },
+      {
+        value: "8",
+        name: "Zescent Orb 2",
+        displayName: "Zescent Orb 2",
+        icon: "/icons/orb-zescent-2.png",
+      },
+      {
+        value: "9",
+        name: "Zescent Orb 3",
+        displayName: "Zescent Orb 3",
+        icon: "/icons/orb-zescent-3.png",
+      },
     ],
   },
   {
     value: "6",
     name: "Cassette",
-    icon: "/icons/cassette.png",
-    variants: [{ value: "1", name: "D-Sides Cassette", icon: "/icons/cassette-d-sides.png" }],
+    icon: "/icons/cassette-crisp.png",
+    variants: [{ value: "1", name: "D-Sides Cassette", icon: "/icons/cassette-crisp-d-sides.png" }],
   },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
   { value: "11", name: "Diamond Berry", icon: "/icons/diamondberry.png", variants: [] },
@@ -332,6 +353,16 @@ export const COLLECTIBLES = [
     variants: [
       { value: "1", name: "Bronze Berry", displayName: "Bronze Berry", icon: "/icons/bronzeberry.png" },
       { value: "2", name: "Bouncy Berry", displayName: "Bouncy Berry", icon: "/icons/bouncy-berry.png" },
+      { value: "3", name: "Rainbow Berry", displayName: "Rainbow Berry", icon: "/icons/rainbowberry-8x.png" },
+    ],
+  },
+  {
+    value: "14",
+    name: "Other",
+    icon: "/icons/key.png",
+    variants: [
+      { value: "1", name: "Key", displayName: "Key", icon: "/icons/key.png" },
+      { value: "2", name: "A Jitio", displayName: "A Jitio", icon: "/icons/jitio.png" },
     ],
   },
 ];
