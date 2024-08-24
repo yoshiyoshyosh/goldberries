@@ -280,3 +280,15 @@ export const getChallengeReference = (id) => {
   }
   return REFERENCE_CHALLENGES[id];
 };
+
+const TEMP_VERIFIERS = {
+  275: true,
+  239: true,
+  32: true,
+  20: true,
+  664: true,
+  712: true,
+};
+export function isTempVerifier(id) {
+  return TEMP_VERIFIERS[id] !== undefined;
+}

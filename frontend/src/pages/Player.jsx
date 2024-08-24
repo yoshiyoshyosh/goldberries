@@ -23,10 +23,11 @@ import {
   LinkIcon,
   SubmissionEmbed,
   SuspendedIcon,
+  TempVerifierIcon,
   VerifierIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS, getGroupId } from "../util/constants";
+import { DIFFICULTY_COLORS, getGroupId, isTempVerifier } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
@@ -82,6 +83,8 @@ export function PlayerDisplay({ id }) {
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
 
+  const isTemp = player.account.is_verifier && isTempVerifier(player.id);
+
   const nameStyle = getPlayerNameColorStyle(player, settings);
   const aboutMeSplit = player.account.about_me?.split("\n") || [];
 
@@ -105,6 +108,7 @@ export function PlayerDisplay({ id }) {
           {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
           {player.account.is_verifier && <VerifierIcon />}
           {player.account.is_admin && <AdminIcon />}
+          {isTemp && <TempVerifierIcon />}
           <Box flexGrow={1} />
           <StyledLink to={`/player/${id}/top-golden-list`}>{t("personal_tgl")}</StyledLink>
         </Stack>

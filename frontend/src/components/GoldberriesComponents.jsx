@@ -23,7 +23,7 @@ import {
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { Autocomplete, Chip, Divider, Grid, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
-import { API_BASE_URL, getNewDifficultyColors } from "../util/constants";
+import { API_BASE_URL, getNewDifficultyColors, isTempVerifier } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,6 +36,7 @@ import {
   faChildCombatant,
   faGamepad,
   faHammer,
+  faHourglass,
   faInfoCircle,
   faKeyboard,
   faLink,
@@ -622,6 +623,7 @@ export function PlayerChip({ player, ...props }) {
   }
 
   const style = getPlayerNameColorStyle(player, settings);
+  const isTemp = player.account.is_verifier && isTempVerifier(player.id);
 
   return (
     <Link to={"/player/" + player.id}>
@@ -629,8 +631,11 @@ export function PlayerChip({ player, ...props }) {
         label={
           <Stack direction="row" alignItems="center" gap={1}>
             <span style={style}>{player.name}</span>
-            {player.account.is_verifier && <VerifierIcon />}
-            {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              {player.account.is_verifier && <VerifierIcon />}
+              {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
+              {isTemp && <TempVerifierIcon />}
+            </Stack>
           </Stack>
         }
         {...props}
@@ -657,10 +662,18 @@ export function SubmissionIcon({ submission }) {
   );
 }
 
+export function TempVerifierIcon() {
+  const { t } = useTranslation();
+  return (
+    <Tooltip title={t("components.temp_verifier_icon")} arrow placement="top">
+      <FontAwesomeIcon icon={faHourglass} color="grey" />
+    </Tooltip>
+  );
+}
 export function VerifierIcon() {
   const { t } = useTranslation();
   return (
-    <Tooltip title={t("components.verifier_icon")}>
+    <Tooltip title={t("components.verifier_icon")} arrow placement="top">
       <FontAwesomeIcon icon={faShield} color="grey" />
     </Tooltip>
   );
@@ -668,7 +681,7 @@ export function VerifierIcon() {
 export function AdminIcon() {
   const { t } = useTranslation();
   return (
-    <Tooltip title={t("components.admin_icon")}>
+    <Tooltip title={t("components.admin_icon")} arrow placement="top">
       <FontAwesomeIcon icon={faHammer} color="grey" />
     </Tooltip>
   );
@@ -677,7 +690,7 @@ export function SuspendedIcon({ reason }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.suspended_icon" });
   const text = reason ? t("with_reason", { reason }) : t("no_reason");
   return (
-    <Tooltip title={text}>
+    <Tooltip title={text} arrow placement="top">
       <FontAwesomeIcon icon={faBan} />
     </Tooltip>
   );
@@ -689,7 +702,7 @@ export function CampaignIcon({ campaign, height = "1.3em", doLink = false }) {
   if (iconUrl === null) return null;
 
   const comp = (
-    <Tooltip title={getCampaignName(campaign, t_g)}>
+    <Tooltip title={getCampaignName(campaign, t_g)} arrow placement="top">
       <img
         src={iconUrl}
         alt={campaign.name}
@@ -727,7 +740,7 @@ export function InputMethodIcon({ method, ...props }) {
   const icon = INPUT_METHOD_ICONS[method];
   const inputMethodName = t("components.input_methods." + method);
   return (
-    <Tooltip title={inputMethodName}>
+    <Tooltip title={inputMethodName} arrow placement="top">
       <FontAwesomeIcon icon={icon} {...props} />
     </Tooltip>
   );
@@ -783,7 +796,7 @@ export function LinkIcon({ url }) {
   }
 
   return (
-    <Tooltip title={url} open={tooltipOpen} onOpen={openTooltip} onClose={closeTooltip}>
+    <Tooltip title={url} open={tooltipOpen} onOpen={openTooltip} onClose={closeTooltip} arrow placement="top">
       <StyledExternalLink href={url} onMouseEnter={openTooltip} onMouseLeave={closeTooltip}>
         {linkIconElement}
       </StyledExternalLink>
@@ -819,7 +832,7 @@ export function ChallengeFcIcon({
   }
 
   return (
-    <Tooltip title={alt}>
+    <Tooltip title={alt} arrow placement="top">
       {isTopGoldenList && settings.visual.topGoldenList.useTextFcIcons ? (
         <span style={{ whiteSpace: "nowrap" }}>{shortAlt}</span>
       ) : (
@@ -859,7 +872,11 @@ export function SubmissionFcIcon({ submission, height = "1em", disableTooltip = 
 
   if (disableTooltip) return comp;
 
-  return <Tooltip title={alt}>{comp}</Tooltip>;
+  return (
+    <Tooltip title={alt} arrow placement="top">
+      {comp}
+    </Tooltip>
+  );
 }
 
 export function OtherIcon({ url, title, alt, height = "1em", style = {} }) {
@@ -868,14 +885,18 @@ export function OtherIcon({ url, title, alt, height = "1em", style = {} }) {
   }
 
   return (
-    <Tooltip title={title}>
+    <Tooltip title={title} arrow placement="top">
       <img src={url} className="outlined" alt={alt} style={{ height: height, ...style }} />
     </Tooltip>
   );
 }
 
 export function ArbitraryIcon({ height = "1em" }) {
-  return <Tooltip title="Arbitrary">(A)</Tooltip>;
+  return (
+    <Tooltip title="Arbitrary" arrow placement="top">
+      (A)
+    </Tooltip>
+  );
 }
 
 export function ObjectiveIcon({ objective, challenge = null, height = "1em" }) {
@@ -889,13 +910,13 @@ export function ObjectiveIcon({ objective, challenge = null, height = "1em" }) {
 
   if (icon_url === null || icon_url === undefined)
     return (
-      <Tooltip title={description}>
+      <Tooltip title={description} arrow placement="top">
         <FontAwesomeIcon icon={faInfoCircle} height={height} />
       </Tooltip>
     );
 
   return (
-    <Tooltip title={description}>
+    <Tooltip title={description} arrow placement="top">
       <img
         src={icon_url}
         alt={objective.name}
