@@ -29,6 +29,7 @@
     },
     "name": "Name",
     "url": "URL",
+    "icon_url": "Icon URL",
     "new": "Neu",
     "label": "Etikett",
     "description": "Beschreibung",
@@ -73,6 +74,7 @@
     },
     "verifier_icon": "Teil des Modded Golden Teams",
     "admin_icon": "Website Admin",
+    "temp_verifier_icon": "Vorrübergehender Verifier",
     "suspended_icon": {
       "with_reason": "Dieser Benutzer ist suspendiert: {{reason}}",
       "no_reason": "Dieser Benutzer ist suspendiert"
@@ -125,8 +127,9 @@
     },
     "top_golden_list": {
       "use_suggested": "Verwende Schwierigkeitsempfehlungen für das Ranking",
+      "toggle_edit_mode": "Submission Editiermodus Umschalten",
       "empty": "Ziemlich leer hier. Mach ein paar Goldens von der Top Golden Liste, um deine eigene Liste zu füllen!",
-      "note_number_people": "Diese Spalte zeigt die Anzahl der Personen, die eine Challenge abgeschlossen haben",
+      "note_number_people": "Diese Tier hat {{challenges}} Challenges mit {{submissions}} Submissions",
       "note_suggested_difficulties": "Schwierigkeitsempfehlungen dieses Spielers",
       "note_video_link": "Diese Links führen zu dem Video des Players, der diese Challenge als erstes abgeschlossen hat",
       "placement_difficulty": "Offizielle Schwierigkeit:"
@@ -159,6 +162,9 @@
       "new_password": "Neues Passwort",
       "unlink_discord": "Discord Verknüpfung aufheben",
       "user_links": "Benutzer Links",
+      "about_me": "Über Mich",
+      "about_me_placeholder": "Player's 'Über Mich'",
+      "last_player_rename": "Letzte Player Umbenennung",
       "suspended": "Suspendiert",
       "suspension_reason": "Suspendierungsgrund",
       "is_verifier": "Ist Verifier",
@@ -183,6 +189,7 @@
       "author_gb_name": "Autor GameBanana Name",
       "sort_category_major": "Map Hauptsortierung",
       "sort_category_minor": "Map Untersortierung",
+      "note": "Notiz",
       "buttons": {
         "create": "Campaign Erstellen",
         "update": "Campaign Aktualisieren"
@@ -265,7 +272,15 @@
       },
       "is_rejected": "Ist Abgelehnt",
       "is_archived": "Ist Archiviert",
+      "collectibles": {
+        "label": "Collectibles",
+        "variant": "Variante",
+        "count": "Anzahl (Standard: 1)",
+        "note": "Notiz (optional)"
+      },
       "rejection_reason": "Ablehnungsgrund",
+      "note": "Notiz",
+      "golden_changes": "Golden-Änderungen",
       "author_note": "Lass diese Felder leer, wenn sie dem Autor der Campaign entsprechen.",
       "buttons": {
         "create": "Map Erstellen",
@@ -279,6 +294,7 @@
       "new_challenge_title": "Neue Challenge Details",
       "is_fc": "Ist FC",
       "is_verified": "Ist Verifiziert",
+      "is_obsolete": "Ist Veraltet",
       "proof_url": "Beweis URL",
       "raw_session_url": "Rohe Aufnahme URL",
       "player_notes": "Player Notiz",
@@ -297,7 +313,7 @@
     "feedback": {
       "player_name": {
         "required": "Player Name kann nicht leer sein",
-        "min_length": "Player Name muss mindestens 3 Zeichen lang sein",
+        "min_length": "Player Name muss mindestens 2 Zeichen lang sein",
         "max_length": "Player Name darf nicht länger als 32 Zeichen lang sein"
       },
       "password": {
@@ -493,7 +509,8 @@
       "feedback": {
         "viewing_gone": "Die ausgewählte Submission ist nicht mehr in der Warteschlange. Sie wurde entweder von jemand anderem gelöscht oder verifiziert",
         "all_verified": "Alle ausgewählten Submissions wurden verifiziert",
-        "all_rejected": "Alle ausgewählten Submissions wurden abgelehnt"
+        "all_rejected": "Alle ausgewählten Submissions wurden abgelehnt",
+        "already_locked": "Ein anderer Verifier verifiziert diese Submission"
       },
       "title": "Submission Warteschlange",
       "title_with_count": "({{count}}) Submission Warteschlange",
@@ -501,6 +518,7 @@
       "selected": "{{count}} Ausgewählt",
       "total": "Submissions ({{count}} Gesamt)",
       "note_placeholder": "Verifier Notiz / Ablehnungsgrund",
+      "filter_placeholder": "Player / Map / Campaign",
       "new_challenge": "Neue Challenge:",
       "or": "ODER",
       "buttons": {
@@ -675,7 +693,11 @@
     "tabs": {
       "general": {
         "label": "Allgemein",
-        "language": "Sprache"
+        "language": "Sprache",
+        "golden_changes": {
+          "label": "Verstecke Golden-Änderungen",
+          "note": "Schalte dies ein, um Spoiler von golden Räumen oder anderen golden-exklusiven Map-Änderungen zu verstecken"
+        }
       },
       "visual": {
         "label": "Visuell",
@@ -718,7 +740,7 @@
         },
         "switch_order": {
           "label": "Tausche Map und Challenge",
-          "note": "Tauscht das Format 'Segmentname [Map Name]' gegen 'Map Name [Segmentname]'"
+          "note": "Tauscht das Format 'Map Name [Challenge Name]' gegen 'Challenge Name [Map Name]'"
         },
         "hide_empty_tiers": "Verstecke Leere Tiers"
       },
@@ -748,6 +770,7 @@
     "difficulty_suggestions": "Schwierigkeitsempfehlungen",
     "is_full_game": "Full Game?",
     "lobby_info": "Lobby Info",
+    "description": "Challenge Description",
     "submission_table": {
       "suggestion": "Empfehlung",
       "empty": "Keine Submissions"
@@ -879,7 +902,11 @@
       "edit": "Map Bearbeiten",
       "view_challenge": "Challenge Ansehen"
     },
-    "no_challenges": "There are currently no challenges for this map."
+    "no_challenges": "There are currently no challenges for this map.",
+    "info_boxes": {
+      "collectibles": "Map Collectibles",
+      "golden_changes": "Golden-Änderungen"
+    }
   },
   "player": {
     "title": "Profil",
@@ -901,7 +928,7 @@
     "title_content": "Suche '{{content}}'",
     "title_no_content": "Suche",
     "feedback": {
-      "min_length": "Bitte gib mindestens 3 Zeichen ein zum Suchen"
+      "min_length": "Verwende exakten Suchmodus. Gib {{count}} oder mehr Zeichen ein um eine volle Suche zu starten."
     },
     "header": "Durchsuche die Goldberries Datenbank",
     "info": "Suche nach Players, Campaigns, und Maps nach Namen!",
@@ -915,14 +942,15 @@
   "monthly_recap": {
     "title": "Monatlicher Rückblick '{{month}}'",
     "settings": {
+      "header": "Monatlicher Rückblick",
       "less_recent": "Später '{{month}}'",
       "more_recent": "Früher '{{month}}'",
       "normal_clears": "Normale Clears Min. Schwierigkeit",
       "first_clears": "Erste Clears Min. Schwierigkeit",
       "hide_changelog": "Änderungsprotokoll verstecken"
     },
-    "header": "Monatlicher Rückblick für '{{month}}'",
     "total_clears": "Gesamte Clears diesen Monat",
+    "disclaimer": "Alle Tiers beziehen sich auf die aktuellen Platzierungen der Challenges. Es sind keine Platzierungsänderungen vor dem Veröffentlichungsdatum der Website verfügbar.",
     "timeline": {
       "label": "Zeitstrahl",
       "first_clear": "Erster Clear",
@@ -975,6 +1003,7 @@
         "proof_note": "Lade dein Beweisvideo an einen permanenten Ort hoch, wie YouTube, Bilibili, Twitch Highlight",
         "raw_session_note": "Rohe Aufnahme der Sitzung mit dem Golden Run ist für Tier 3+ Goldens erforderlich.",
         "is_fc": "Run ist Full Clear",
+        "date_created": "[Nur Verifier] Datum Erstellt",
         "button": "Einreichen"
       },
       "multi": {
@@ -1020,10 +1049,11 @@
   },
   "suggestions": {
     "title": "Vorschläge",
-    "header": "#suggestion-box",
+    "header": "Vorschlagsbox",
     "intro": "In der Vorschlagsbox kannst du Änderungen an Challenge Platzierungen, allgemeine Änderungen an einer Challenge oder allgemeine Änderungen an der Website selbst vorschlagen. Es soll es einfacher machen, Meinungen aus der Community zu sammeln. Es ist jedoch <strong>nicht</strong> für Diskussionen über Änderungen gedacht, für die du weiterhin den Modded Golden Team Discord Server verwenden solltest.",
     "language_info": "Bitte halte die Vorschlagsbox in Englisch!",
     "active": "Aktive Vorschläge",
+    "undecided": "Unentschiedene Vorschläge",
     "expired": "Abgelaufene Vorschläge",
     "showing_one": "Zeige {{from}}-{{to}} von {{count}} Vorschlag",
     "showing_other": "Zeige {{from}}-{{to}} von {{count}} Vorschlägen",
@@ -1049,7 +1079,8 @@
       "against": "Dagegen",
       "indifferent": "Gleichgültig",
       "count_one": "{{count}} Stimme",
-      "count_other": "{{count}} Stimmen"
+      "count_other": "{{count}} Stimmen",
+      "related_challenge": "Hat eine ähnliche Challenge abgeschlossen: {{challenge}}"
     },
     "icon": {
       "undecided": "Unentschlossen",
@@ -1064,9 +1095,11 @@
         "claim_player": "Beanspruche einen Player, um in Vorschlägen abstimmen zu können!",
         "your_comment": "Dein Kommentar",
         "comment_note": "Um deinen Kommentar zu ändern, nachdem du abgestimmt hast, entferne deine Stimme und stimme erneut ab.",
+        "stats": "Stats",
         "totals": "Gesamt",
         "done_challenge": "Challenge Abgeschlossen",
         "not_done_challenge": "Challenge Nicht Abgeschlossen",
+        "related_challenges": "Ähnliche Challenges",
         "buttons": {
           "verify": "Verifizieren",
           "accept": "Änderung Akzeptieren",
@@ -1100,6 +1133,11 @@
         "title": "Vorschlag Löschen?",
         "info": "Bist du sicher, dass du diesen Vorschlag und alle anhängenden Stimmen löschen willst?"
       }
+    },
+    "filter": {
+      "all": "Alle Vorschläge",
+      "general": "Generelle Vorschläge",
+      "challenge": "Challenge Vorschläge"
     }
   },
   "top_golden_list": {
@@ -1107,10 +1145,14 @@
     "notes": {
       "fc": "Golden Clear mit allen optionalen Collectibles (Erdbeeren, Kassetten, etc)",
       "c_fc": "Regular Clear und Full Clear haben die selbe Schwierigkeit",
-      "new_old": "Neue und Alte Version einer Map"
+      "new_old": "Old version of the map"
     }
   },
   "campaign": {
+    "note": "Campaign Notiz",
+    "buttons": {
+      "edit": "Campaign Bearbeiten"
+    },
     "info_boxes": {
       "author": "Autor",
       "map_count": "Anzahl Maps",
@@ -1155,7 +1197,7 @@
         "0": "The submission video <strong>must</strong> be uploaded to a permanent place that does not require \"signing in\" to view. The most popular sites for such videos are <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, and <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, but sites outside of these are perfectly fine to be submitted. A messaging service CDN (i.e. <code>cdn.discordapp.com</code> or similar) is not accepted for submissions.",
         "1": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy.",
         "2": "Submissions <strong>must</strong> be done in one contiguous play session.",
-        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomExternalLink href=\"#recommended-mods\">allowed and recommended mods</CustomExternalLink> for more details.",
+        "3": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomLink to=\"#allowed-mods\">allowed and recommended mods</CustomLink> for more details.",
         "4": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked.",
         "5": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges where these may make some difference, but not enough to be exceedingly notable, submissions will be accepted, but with a note. On challenges where these make a big difference, such as subpixel-level alignment or stamina-heavy maps, submissions will likely be rejected.",
         "6": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i> to a degree that trivializes the difficulty of the challenge. Pause buffering can make tight inputs in a map extremely easy, and heavy use of it is grounds for rejection. Since this is vague, it's usually evaluated on a case-by-case basis, but for a quick comparison: Pause buffering <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">this one wallbounce in Aquatic Underground</CustomExternalLink> is fine, whereas pause buffering <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower Golden</CustomExternalLink> is grounds for rejection. Runs which use a non-rejectable amount of pause buffering will have a note placed on them.",
@@ -1271,7 +1313,7 @@
     },
     "issues": {
       "header": "Problem Melden",
-      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">dedicated channel</CustomExternalLink> for this website"
+      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1269306272776458321\">dedicated channel</CustomExternalLink> for this website"
     },
     "global_stats": {
       "header": "Globale Stats",
@@ -1310,5 +1352,44 @@
     "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
     "chinese_translation": "Chinese Translation",
     "french_translation": "French Translation"
+  },
+  "stats": {
+    "title": "Stats",
+    "header": "Stats",
+    "show_all": "Zeige Alle ({{count}})",
+    "show_less": "Zeige Weniger",
+    "tabs": {
+      "historical_clears": {
+        "label": "Historische Clears",
+        "header": "Monatliche Tier Clears",
+        "text": "Diese Charts zeigen die Anzahl an Clears für jede Tier für jeden Monat seit Beginn der Liste.",
+        "total_tiered": "Gesamt Tiered"
+      },
+      "most_goldened": {
+        "label": "Meiste Goldened",
+        "header": "Meiste Goldened Campaigns & Maps",
+        "text": "Diese Campaigns und Maps haben die meisten Submissions.",
+        "time_machine": "Wähle ein Datum unten aus, um die meist goldened Campaigns und Maps zu diesem Zeitpunkt zu sehen.",
+        "date": "Schnappschuss-Datum"
+      },
+      "misc": {
+        "label": "Andere Stats",
+        "header": "Andere Stats",
+        "suggestions": {
+          "header": "Vorschläge",
+          "accepted": "Angenommene Vorschläge",
+          "rejected": "Abgelehnte Vorschläge"
+        },
+        "submissions": {
+          "header": "Submissions seit Veröffentlichung der Website",
+          "text": "Es gab <strong>{{count}}</strong> Submissions seit der Veröffentlichung der Website am 2. August 2024"
+        },
+        "difficulties": {
+          "header": "Schwierigkeitsstats",
+          "text": "Für jede Tier, der Prozentsatz an Players, die mindestens einen Golden in dieser Tier gemacht haben.",
+          "axis_label": "% von Player"
+        }
+      }
+    }
   }
 }

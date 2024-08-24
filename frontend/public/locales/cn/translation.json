@@ -29,6 +29,7 @@
     },
     "name": "名称",
     "url": "网址",
+    "icon_url": "Icon URL",
     "new": "新",
     "label": "标签",
     "description": "简介",
@@ -73,6 +74,7 @@
     },
     "verifier_icon": "验证者",
     "admin_icon": "网站管理员",
+    "temp_verifier_icon": "Temporary Verifier",
     "suspended_icon": {
       "with_reason": "该用户已被封禁: {{reason}}",
       "no_reason": "该用户已被封禁"
@@ -125,8 +127,9 @@
     },
     "top_golden_list": {
       "use_suggested": "使用此玩家的难度建议来排名",
+      "toggle_edit_mode": "Toggle Edit Submissions Mode",
       "empty": "这里什么也没有，试着从排行榜上打点金来丰富你自己的列表吧！",
-      "note_number_people": "达成此挑战的人数与具体数据",
+      "note_number_people": "This tier has {{challenges}} challenges with {{submissions}} submissions",
       "note_suggested_difficulties": "此玩家的难度排名建议",
       "note_video_link": "首位达成此挑战的玩家视频",
       "placement_difficulty": "实际排名："
@@ -159,6 +162,9 @@
       "new_password": "新密码",
       "unlink_discord": "与Discord解绑",
       "user_links": "用户链接",
+      "about_me": "About Me",
+      "about_me_placeholder": "User's About Me",
+      "last_player_rename": "Last Player Rename",
       "suspended": "封禁",
       "suspension_reason": "封禁理由",
       "is_verifier": "设为验证者",
@@ -183,6 +189,7 @@
       "author_gb_name": "作者的香蕉网名称（必填，不然会导致地图加载不出来）",
       "sort_category_major": "地图主要排序（注：暂时仅多大厅合集需要填写）",
       "sort_category_minor": "地图次要排序（注：暂时仅合集小图/心门需要填写，单大厅合集则仅需填写这项）",
+      "note": "Note",
       "buttons": {
         "create": "创建地图包",
         "update": "更新地图包"
@@ -265,7 +272,15 @@
       },
       "is_rejected": "拒绝此地图",
       "is_archived": "旧版本",
+      "collectibles": {
+        "label": "Collectibles",
+        "variant": "Variant",
+        "count": "Count (default: 1)",
+        "note": "Note (optional)"
+      },
       "rejection_reason": "拒绝理由",
+      "note": "Note",
+      "golden_changes": "Golden Changes",
       "author_note": "如果地图包与作者匹配，则将两项留空",
       "buttons": {
         "create": "创建地图",
@@ -279,6 +294,7 @@
       "new_challenge_title": "详情",
       "is_fc": "FC",
       "is_verified": "已通过",
+      "is_obsolete": "Is Obsolete",
       "proof_url": "视频链接",
       "raw_session_url": "无剪辑录像链接",
       "player_notes": "玩家备注",
@@ -297,7 +313,7 @@
     "feedback": {
       "player_name": {
         "required": "玩家名称不可为空",
-        "min_length": "玩家名称必须至少包含3个字符",
+        "min_length": "玩家名称必须至少包含2个字符",
         "max_length": "玩家名称不可超过32个字符"
       },
       "password": {
@@ -493,7 +509,8 @@
       "feedback": {
         "viewing_gone": "此提交内容已不在队列中，可能是被删除或已由他人验证",
         "all_verified": "选择的所有提交内容均已验证通过",
-        "all_rejected": "选择的所有提交内容均已被拒绝"
+        "all_rejected": "选择的所有提交内容均已被拒绝",
+        "already_locked": "A different verifier is verifying this submission"
       },
       "title": "待验证内容队列",
       "title_with_count": "{{count}}条待验证内容",
@@ -501,6 +518,7 @@
       "selected": "{{count}}个内容已选择",
       "total": "提交内容（总数：{{count}}）",
       "note_placeholder": "填写备注或拒绝理由",
+      "filter_placeholder": "Player / Map / Campaign",
       "new_challenge": "新挑战项目或地图",
       "or": "或",
       "buttons": {
@@ -675,7 +693,11 @@
     "tabs": {
       "general": {
         "label": "通用",
-        "language": "多语言"
+        "language": "多语言",
+        "golden_changes": {
+          "label": "Hide Golden Changes",
+          "note": "Turn this on to avoid spoilers on golden rooms or other golden exclusive map changes."
+        }
       },
       "visual": {
         "label": "视图",
@@ -718,7 +740,7 @@
         },
         "switch_order": {
           "label": "切换地图和挑战内容的位置",
-          "note": "从“挑战内容名 [地图名]”切换至“地图名 [挑战内容名]”格式"
+          "note": "Switches from 'Map Name [Challenge Name]' to 'Challenge Name [Map Name]' format"
         },
         "hide_empty_tiers": "隐藏空层级"
       },
@@ -748,6 +770,7 @@
     "difficulty_suggestions": "难度建议",
     "is_full_game": "是否为多地图一命项目",
     "lobby_info": "大厅信息",
+    "description": "Challenge Description",
     "submission_table": {
       "suggestion": "难度建议",
       "empty": "暂无建议"
@@ -879,7 +902,11 @@
       "edit": "编辑",
       "view_challenge": "查看挑战项目"
     },
-    "no_challenges": "该地图暂无挑战项目"
+    "no_challenges": "该地图暂无挑战项目",
+    "info_boxes": {
+      "collectibles": "Map Collectibles",
+      "golden_changes": "Golden Changes"
+    }
   },
   "player": {
     "title": "个人页面",
@@ -901,7 +928,7 @@
     "title_content": "搜索'{{content}}'",
     "title_no_content": "搜索",
     "feedback": {
-      "min_length": "至少输入3个字符"
+      "min_length": "Using exact match mode. Enter {{count}} or more characters to use wildcard match mode."
     },
     "header": "搜索",
     "info": "搜索玩家、作者、地图包或地图名称",
@@ -915,14 +942,15 @@
   "monthly_recap": {
     "title": "'{{month}}'的数据",
     "settings": {
+      "header": "Monthly Recap",
       "less_recent": "上个月：{{month}}",
       "more_recent": "下个月：{{month}}",
       "normal_clears": "达成数（设置层级下限）",
       "first_clears": "首位达成数（设置层级下限）",
       "hide_changelog": "隐藏更改日志"
     },
-    "header": "{{month}}的数据",
     "total_clears": "月总数",
+    "disclaimer": "All tiers refer to the up-to-date placements of challenges. No placement changes before the release date of the website are available.",
     "timeline": {
       "label": "时间线",
       "first_clear": "首位达成",
@@ -975,6 +1003,7 @@
         "proof_note": "请将视频发布在永久保留的地方，例如b站、油管或twitch切片（特别强调：b站的视频链接只用粘贴到bv号结束就行，如果把后面的部分也打进去会导致网站嵌入的视频播放不了，千万不要把斜杠给打进去了！）",
         "raw_session_note": "t3及以上的金草莓需要上传完整的全程录像或整个直播回放（如果视频过短或第一局就出了就再传上一份时长更长的录像）",
         "is_fc": "FC（一般情况下不需要手动勾选，如果你提交了C/FC的内容则需要手动勾选）",
+        "date_created": "[Verifier Only] Date Created",
         "button": "提交"
       },
       "multi": {
@@ -1020,10 +1049,11 @@
   },
   "suggestions": {
     "title": "意见箱",
-    "header": "意见箱",
+    "header": "Suggestion Box",
     "intro": "在意见箱中，你可以提出难度排名建议，或对挑战项目、网站本身提出修改建议，让你更轻松地收集社区意见。 但意见箱<strong>不能</strong>用来讨论，你仍然需要在金榜服务器（或国内社区）进行讨论。",
     "language_info": "以及，在意见箱里请用英语表达！",
     "active": "进行中的建议",
+    "undecided": "Undecided Suggestions",
     "expired": "已过期的建议",
     "showing_one": "显示第{{from}}至第{{to}}条建议（共{{count}}条建议）",
     "showing_other": "显示第{{from}}至{{to}}条建议（共{{count}}条建议）",
@@ -1049,7 +1079,8 @@
       "against": "反对",
       "indifferent": "无所谓",
       "count_one": "{{count}}个投票",
-      "count_other": "{{count}}个投票"
+      "count_other": "{{count}}个投票",
+      "related_challenge": "Did a related challenge: {{challenge}}"
     },
     "icon": {
       "undecided": "待定",
@@ -1064,9 +1095,11 @@
         "claim_player": "你尚未绑定或创建玩家",
         "your_comment": "发表你的意见",
         "comment_note": "要更改意见，要暂时先将你的投票移除，修改好意见后再次进行投票",
+        "stats": "Stats",
         "totals": "总计",
         "done_challenge": "达成此挑战的玩家",
         "not_done_challenge": "未达成此挑战的玩家",
+        "related_challenges": "Related Challenges",
         "buttons": {
           "verify": "通过验证",
           "accept": "通过变更",
@@ -1100,6 +1133,11 @@
         "title": "删除建议？",
         "info": "确认删除此建议及所有投票？"
       }
+    },
+    "filter": {
+      "all": "All Suggestions",
+      "general": "General Suggestions",
+      "challenge": "Challenge Suggestions"
     }
   },
   "top_golden_list": {
@@ -1107,10 +1145,14 @@
     "notes": {
       "fc": "收集所有可在正常情况下获得的收集物（红草莓、磁带、月莓等）",
       "c_fc": "单金和FC在同一难度中",
-      "new_old": "地图版本（某些地图会附带版本号）"
+      "new_old": "Old version of the map"
     }
   },
   "campaign": {
+    "note": "Campaign Note",
+    "buttons": {
+      "edit": "Edit Campaign"
+    },
     "info_boxes": {
       "author": "作者",
       "map_count": "地图数量",
@@ -1155,7 +1197,7 @@
         "0": "视频<strong>必须</strong>上传至不需要登录就能观看的地方，目前主流的几个视频网站是：<CustomExternalLink href=\"https://www.youtube.com/\">油管</CustomExternalLink>、<CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>、<CustomExternalLink href=\"https://www.bilibili.com/\">B站</CustomExternalLink>和<CustomExternalLink href=\"https://www.nicovideo.jp/\">niconico动画</CustomExternalLink>，诸如此类的网站均可以进行提交。但不允许提交消息服务内容分发网络（比如<code>cdn.discordapp.com</code>或其他）中的视频。",
         "1": "视频<strong>必须</strong>包含该挑战项目的完整流程，比如从拿到金草莓到结算。但金草莓结算后，在真正结束游戏返回地图前不一定必须一命（比如吃心后死亡）。但是如果在你想打FC金的情况下金草莓结算后还有剩下的收集物例如<CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi FC</CustomExternalLink>这种情况则不允许死亡。如果死亡，该挑战将仅会作为单金记录。 类似于直播回放突然中断导致视频不连续的例子非常少见，因此会根据具体情况进行评估，只要该玩家具有可信度。",
         "2": "挑战<strong>必须</strong>在同一局游戏内完成。",
-        "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomExternalLink href=\"#recommended-mods\">允许和推荐的Mod</CustomExternalLink>。",
+        "3": "<strong>不得</strong>使用会影响游戏玩法的Mod、异变或帮助模式。改变视觉的Mod<strong>可能</strong>会根据一些具体的情况允许。详情请参考<CustomLink to=\"#allowed-mods\">允许和推荐的Mod</CustomLink>。",
         "4": "<strong>t3及以上难度</strong>的挑战<strong>必须</strong>有完整的全程录像。如果在录像的第一局或开头就完成挑战，则需要提供之前的完整录像。",
         "5": "<strong>最好不要</strong>使用任何提供信息的Mod，这类Mod通常会给你提供游戏内无法访问的信息。例如input history、体力条或CelesteTAS里的信息面板。如果在游戏过程中这些东西产生的影响很小，则此类提交内容均会被无条件接受；如果产生了一定量但不值得特别关注的影响，则此类提交内容依然会被接受但会打上注释；如果产生的影响很大，比如通过输入帧数反复调亚像素对准，或者在一些高速/控体力/禁无体力跳的图使用速度计和体力条的情况，则此类提交内容会被拒绝。",
         "6": "<strong>不得</strong>滥用<i>暂停预输入</i>来降低难度。这会使得某些图中一些很难，容错很低的地方变得非常简单，由于定义也很模糊，通常也会根据具体情况进行评估。不过如果你想来点实际参考：比如用暂停过<CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">海鲜市场倒二的蹭墙</CustomExternalLink>是可以的，但<CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">I Wanna Atone the Flower</CustomExternalLink>则不行。使用不会被拒绝的暂停预输入也会被打上注释。",
@@ -1271,7 +1313,7 @@
     },
     "issues": {
       "header": "问题反馈",
-      "text": "如果你发现任何问题，请<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">在Github上创建New issue</CustomExternalLink>或在金榜服务器@viddie，最好用这个<CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1196193088843030708\">网站专用频道</CustomExternalLink>。"
+      "text": "如果你发现任何问题，请<CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">在Github上创建New issue</CustomExternalLink>或在金榜服务器@viddie，最好用这个<CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1269306272776458321\">网站专用频道</CustomExternalLink>。"
     },
     "global_stats": {
       "header": "全球统计",
@@ -1310,5 +1352,44 @@
     "people": "金榜服务器#goldberries-net子区中许多很棒的人",
     "chinese_translation": "汉语",
     "french_translation": "法语"
+  },
+  "stats": {
+    "title": "Stats",
+    "header": "Stats",
+    "show_all": "Show All ({{count}})",
+    "show_less": "Show Less",
+    "tabs": {
+      "historical_clears": {
+        "label": "Historical Clears",
+        "header": "Monthly Tier Clears",
+        "text": "These charts show the number of clears for each tier for every month since the beginning of the list.",
+        "total_tiered": "Total Tiered"
+      },
+      "most_goldened": {
+        "label": "Most Goldened",
+        "header": "Most Goldened Campaigns & Maps",
+        "text": "These are the campaigns and maps with the most amount of submissions.",
+        "time_machine": "Select a date below to see the most goldened campaigns and maps at that time.",
+        "date": "Snapshot Date"
+      },
+      "misc": {
+        "label": "Misc Stats",
+        "header": "Misceallaneous Stats",
+        "suggestions": {
+          "header": "Suggestions",
+          "accepted": "Accepted Suggestions",
+          "rejected": "Rejected Suggestions"
+        },
+        "submissions": {
+          "header": "Submissions Since Website Release",
+          "text": "There have been <strong>{{count}}</strong> submissions since the website was released on the 2nd of August 2024"
+        },
+        "difficulties": {
+          "header": "Difficulty Stats",
+          "text": "For each tier, the percentage of players who have done at least one golden in that tier.",
+          "axis_label": "% of players"
+        }
+      }
+    }
   }
 }
