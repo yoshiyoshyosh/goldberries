@@ -105,39 +105,54 @@ class Suggestion extends DbObject
       $where[] = "challenge_id = " . $challenge;
     }
     if ($expired === true) {
-      $where[] = "(is_accepted IS NOT NULL OR is_verified = false)";
+      $where[] = "(suggestion.is_accepted IS NOT NULL OR suggestion.is_verified = false)";
     } else if ($expired === false) {
-      $where[] = "date_created >= NOW() - INTERVAL '" . self::$expiration_days . " days'";
-      $where[] = "is_accepted IS NULL";
-      $where[] = "(is_verified = true OR is_verified IS NULL)";
+      $where[] = "suggestion.date_created >= NOW() - INTERVAL '" . self::$expiration_days . " days'";
+      $where[] = "suggestion.is_accepted IS NULL";
+      $where[] = "(suggestion.is_verified = true OR suggestion.is_verified IS NULL)";
     } else {
       //expired === null -> get expired but undecided suggestions
-      $where[] = "date_created < NOW() - INTERVAL '" . self::$expiration_days . " days'";
-      $where[] = "is_accepted IS NULL";
-      $where[] = "(is_verified = true OR is_verified IS NULL)";
+      $where[] = "suggestion.date_created < NOW() - INTERVAL '" . self::$expiration_days . " days'";
+      $where[] = "suggestion.is_accepted IS NULL";
+      $where[] = "(suggestion.is_verified = true OR suggestion.is_verified IS NULL)";
     }
 
     if ($account === null || (!is_verifier($account) && $account->player_id === null)) {
-      $where[] = "is_verified = true";
+      $where[] = "suggestion.is_verified = true";
     } else {
       if (is_verifier($account)) {
         //$where[] = "is_verified IS NOT NULL";
       } else {
-        $where[] = "(is_verified = true OR author_id = " . $account->player_id . ")";
+        $where[] = "(suggestion.is_verified = true OR suggestion.author_id = " . $account->player_id . ")";
       }
     }
 
+    $player_id = $account !== null ? $account->player_id : null;
+
     if ($type === "general") {
-      $where[] = "challenge_id IS NULL";
+      $where[] = "suggestion.challenge_id IS NULL";
     } else if ($type === "challenge") {
-      $where[] = "challenge_id IS NOT NULL";
+      $where[] = "suggestion.challenge_id IS NOT NULL";
+    } else if ($type === "challenge_own" && $player_id !== null) {
+      $where[] = "suggestion.challenge_id IS NOT NULL";
+      $query = "SELECT 
+          suggestion.*,
+          BOOL_OR(player.id = $player_id) AS has_player
+        FROM suggestion
+        JOIN challenge ON suggestion.challenge_id = challenge.id
+        JOIN submission ON challenge.id = submission.challenge_id
+        JOIN player ON submission.player_id = player.id";
     }
 
     if (count($where) > 0) {
       $query .= " WHERE " . implode(" AND ", $where);
     }
 
-    $query .= " ORDER BY date_created DESC";
+    if ($type === "challenge_own" && $player_id !== null) {
+      $query .= " GROUP BY suggestion.id HAVING BOOL_OR(player.id = $player_id)";
+    }
+
+    $query .= " ORDER BY suggestion.date_created DESC";
 
     $query = "
     WITH query AS (
@@ -158,15 +173,15 @@ class Suggestion extends DbObject
     $maxCount = 0;
     $suggestions = array();
     while ($row = pg_fetch_assoc($result)) {
+      if ($maxCount === 0) {
+        $maxCount = intval($row['total_count']);
+      }
+
       $suggestion = new Suggestion();
       $suggestion->apply_db_data($row);
       $suggestion->expand_foreign_keys($DB, 5, true);
       $suggestion->fetch_associated_content($DB);
       $suggestions[] = $suggestion;
-
-      if ($maxCount === 0) {
-        $maxCount = intval($row['total_count']);
-      }
     }
 
     return array(
