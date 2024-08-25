@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 // ===== POST Request =====
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -67,11 +67,14 @@ foreach ($ids as $id) {
 // Next, for the submission webhook notification we want to group all notifications by:
 // - Player ID
 // - Campaign ID
+// - Major sort order
 
 $grouped_submissions = [];
 foreach ($submissions as $submission) {
   $player_id = $submission->player_id;
-  $campaign_id = $submission->challenge->get_campaign()->id;
+  $campaign = $submission->challenge->get_campaign();
+  $map = $submission->challenge->map;
+  $campaign_id = $campaign->id;
 
   if (!isset($grouped_submissions[$player_id])) {
     $grouped_submissions[$player_id] = [];
@@ -80,17 +83,30 @@ foreach ($submissions as $submission) {
     $grouped_submissions[$player_id][$campaign_id] = [];
   }
 
-  $grouped_submissions[$player_id][$campaign_id][] = $submission;
+  $has_major_sort = $campaign->sort_major_name !== null;
+  $major_sort = -1;
+
+  if ($has_major_sort && $map && $map->sort_major) {
+    $major_sort = $map->sort_major;
+  }
+
+  if (!isset($grouped_submissions[$player_id][$campaign_id][$major_sort])) {
+    $grouped_submissions[$player_id][$campaign_id][$major_sort] = [];
+  }
+
+  $grouped_submissions[$player_id][$campaign_id][$major_sort][] = $submission;
 }
 
 // Then we can send the webhook notification for each group
 
 foreach ($grouped_submissions as $player_id => $campaigns) {
-  foreach ($campaigns as $campaign_id => $submissions) {
-    if (count($submissions) === 1) {
-      send_webhook_submission_verified($submissions[0]);
-    } else {
-      send_webhook_multi_submission_verified($submissions);
+  foreach ($campaigns as $campaign_id => $major_sorts) {
+    foreach ($major_sorts as $sort => $submissions) {
+      if (count($submissions) === 1) {
+        send_webhook_submission_verified($submissions[0]);
+      } else {
+        send_webhook_multi_submission_verified($submissions);
+      }
     }
   }
 }
