@@ -428,7 +428,7 @@ export function ChallengeSubmissionTable({
           ))}
           {challenge.submissions.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5}>{t("empty")}</TableCell>
+              <TableCell colSpan={99}>{t("empty")}</TableCell>
             </TableRow>
           )}
         </TableBody>

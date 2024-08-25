@@ -624,6 +624,7 @@ export function PlayerChip({ player, ...props }) {
 
   const style = getPlayerNameColorStyle(player, settings);
   const isTemp = player.account.is_verifier && isTempVerifier(player.id);
+  const hasOneIcon = player.account.is_verifier || player.account.is_suspended || isTemp;
 
   return (
     <Link to={"/player/" + player.id}>
@@ -631,11 +632,13 @@ export function PlayerChip({ player, ...props }) {
         label={
           <Stack direction="row" alignItems="center" gap={1}>
             <span style={style}>{player.name}</span>
-            <Stack direction="row" alignItems="center" gap={0.5}>
-              {player.account.is_verifier && <VerifierIcon />}
-              {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
-              {isTemp && <TempVerifierIcon />}
-            </Stack>
+            {hasOneIcon && (
+              <Stack direction="row" alignItems="center" gap={0.5}>
+                {player.account.is_verifier && <VerifierIcon />}
+                {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
+                {isTemp && <TempVerifierIcon />}
+              </Stack>
+            )}
           </Stack>
         }
         {...props}
