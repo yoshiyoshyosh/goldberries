@@ -133,7 +133,7 @@ export function PageSuggestions({}) {
         {t("language_info")}
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Filter by type
+        {t("filter_by_type")}
       </Typography>
       <Select value={type} onChange={(e) => setType(e.target.value)} MenuProps={{ disableScrollLock: true }}>
         <MenuItem value="all">{t("filter.all")}</MenuItem>

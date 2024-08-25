@@ -689,7 +689,7 @@ function TopGoldenListRow({
               </Tooltip>
             )}
           {isPlayer && firstSubmission.is_obsolete === true && (
-            <Tooltip title={"This submission is marked as obsolete"} arrow placement="top">
+            <Tooltip title={t("obsolete_notice")} arrow placement="top">
               <FontAwesomeIcon icon={faExclamationTriangle} color="lightgrey" />
             </Tooltip>
           )}
