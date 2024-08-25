@@ -92,6 +92,12 @@ export function PageSubmissionQueue() {
     }
   }, [submissionId, query]);
 
+  useEffect(() => {
+    if (query.isRefetchError) {
+      toast.error("Error while refetching submission queue");
+    }
+  }, [query.isRefetchError]);
+
   if (query.isLoading) {
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
@@ -101,7 +107,7 @@ export function PageSubmissionQueue() {
         <LoadingSpinner />
       </BasicContainerBox>
     );
-  } else if (query.isError) {
+  } else if (query.isError && data === null) {
     return (
       <BasicContainerBox sx={{ mt: 0, p: 2 }}>
         <Typography variant="h4" sx={{ mt: 0 }}>
