@@ -320,7 +320,7 @@ export function GlobalStatsComponent() {
           />
         </li>
         <li>
-          <Trans t={t} i18nKey="totals.maps" values={{ maps }} />
+          <Trans t={t} i18nKey="totals.maps" values={{ maps, challenges }} />
         </li>
         <li>
           <Trans t={t} i18nKey="totals.submissions" values={{ submissions, players }} />
