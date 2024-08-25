@@ -35,7 +35,13 @@ import {
 import { DifficultyChip } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
-import { getCampaignName, getChallengeCampaign, getChallengeSuffix, getMapName } from "../../util/data_util";
+import {
+  getCampaignName,
+  getChallengeCampaign,
+  getChallengeSuffix,
+  getDifficultyName,
+  getMapName,
+} from "../../util/data_util";
 import { useTranslation } from "react-i18next";
 import { GridArrowDownwardIcon, GridArrowUpwardIcon } from "@mui/x-data-grid";
 import { useTheme } from "@emotion/react";
@@ -193,15 +199,21 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
       ? queueFlipped
       : queueFlipped.filter((submission) => {
           let text = submission.player.name;
+          let difficulty = null;
           if (submission.challenge !== null) {
             const challenge = submission.challenge;
+            difficulty = challenge.difficulty;
             const campaign = getChallengeCampaign(challenge);
             if (challenge.map !== null) {
               text += " " + getMapName(challenge.map, campaign);
             }
             text += " " + getCampaignName(campaign, t_g, true);
           } else {
-            text += " " + submission.new_challenge.name;
+            difficulty = submission.suggested_difficulty;
+            text += "New Challenge: " + submission.new_challenge.name;
+          }
+          if (difficulty) {
+            text += " " + getDifficultyName(difficulty);
           }
           return text.toLowerCase().includes(filterText.toLowerCase());
         });
