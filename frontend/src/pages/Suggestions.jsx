@@ -89,6 +89,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 export function PageSuggestions({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions" });
+  const auth = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [type, setType] = useState("all");
@@ -138,6 +139,7 @@ export function PageSuggestions({}) {
         <MenuItem value="all">{t("filter.all")}</MenuItem>
         <MenuItem value="general">{t("filter.general")}</MenuItem>
         <MenuItem value="challenge">{t("filter.challenge")}</MenuItem>
+        {auth.hasPlayerClaimed && <MenuItem value="challenge_own">{t("filter.challenge_own")}</MenuItem>}
       </Select>
       <Divider sx={{ mt: 2 }} />
 
