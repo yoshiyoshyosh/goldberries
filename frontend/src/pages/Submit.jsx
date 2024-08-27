@@ -1128,7 +1128,7 @@ function NotificationNotice({}) {
   );
 }
 
-const disallowedUrls = ["discord.com", "youtube.com/playlist"];
+const disallowedUrls = ["discord.com", "youtube.com/playlist", "youtube.com/live/"];
 //Returns the translation key for the error message, or true if the URL is valid
 function validateUrl(url, required = true) {
   //Trim url
