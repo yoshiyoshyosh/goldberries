@@ -21,6 +21,10 @@ import { FormOptions } from "../../util/constants";
 import { getQueryData, usePostMap } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import { StringListEditor } from "../StringListEditor";
+import { useDebounce } from "@uidotdev/usehooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "@emotion/react";
 
 export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -83,7 +87,7 @@ export function FormMap({ map, onSave, ...props }) {
   const { t: t_ch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_ca } = useTranslation(undefined, { keyPrefix: "forms.campaign" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
-  const [collectibles, setCollectibles] = useState(null);
+  const theme = useTheme();
 
   const newMap = map.id === null;
 
@@ -110,7 +114,13 @@ export function FormMap({ map, onSave, ...props }) {
 
   const campaign = form.watch("campaign");
   const is_rejected = form.watch("is_rejected");
-  const url = form.watch("url");
+
+  const name = form.watch("name");
+  const nameDebounced = useDebounce(name, 200);
+  let sameNameExists = false;
+  if (newMap && nameDebounced.length > 0 && campaign !== null && campaign.maps !== null) {
+    sameNameExists = campaign.maps.some((m) => m.name === nameDebounced);
+  }
 
   return (
     <form {...props}>
@@ -139,6 +149,15 @@ export function FormMap({ map, onSave, ...props }) {
         error={!!errors.name}
         helperText={errors.name ? errors.name.message : ""}
       />
+
+      {sameNameExists && (
+        <Stack direction="row" alignItems="center" gap={0.5} sx={{ mt: 0.25 }}>
+          <FontAwesomeIcon icon={faXmarkCircle} fontSize=".8em" color={theme.palette.error.main} />
+          <Typography variant="caption" color="error">
+            {t("same_name_exists")}
+          </Typography>
+        </Stack>
+      )}
 
       <Controller
         control={form.control}

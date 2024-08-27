@@ -287,11 +287,15 @@ export function useGetAllDifficulties() {
   });
 }
 
-export function useSearch(search) {
+export function useSearch(search, searchIn = null, enabled = true) {
+  if (searchIn === null) {
+    searchIn = ["players", "campaigns", "maps", "authors"];
+  }
   return useQuery({
-    queryKey: ["search", search],
-    queryFn: () => fetchSearch(search),
+    queryKey: ["search", search, searchIn],
+    queryFn: () => fetchSearch(search, searchIn),
     onError: errorToast,
+    enabled: enabled,
   });
 }
 

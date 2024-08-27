@@ -260,10 +260,11 @@ export function fetchPlayerStats(id) {
   });
 }
 
-export function fetchSearch(search) {
+export function fetchSearch(search, searchIn) {
   return axios.get("/search", {
     params: {
       q: search,
+      in: searchIn,
     },
   });
 }

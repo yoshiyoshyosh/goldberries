@@ -20,22 +20,34 @@ import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useMemo, useState } from "react";
 import { FormOptions } from "../../util/constants";
-import { getQueryData, useDeleteMap, useGetModInfo, usePostCampaign, usePostMap } from "../../hooks/useApi";
+import {
+  getQueryData,
+  useDeleteMap,
+  useGetModInfo,
+  usePostCampaign,
+  usePostMap,
+  useSearch,
+} from "../../hooks/useApi";
 import { fetchCampaign } from "../../util/api";
 import { MuiColorInput } from "mui-color-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
+  faCheckCircle,
   faDownload,
+  faExclamationTriangle,
   faLightbulb,
   faPlus,
   faSpinner,
   faTrash,
   faXmark,
+  faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { getCampaignName } from "../../util/data_util";
 import { useTranslation } from "react-i18next";
+import { useDebounce } from "@uidotdev/usehooks";
+import { useTheme } from "@emotion/react";
 
 export function FormCampaignWrapper({
   id,
@@ -154,6 +166,8 @@ export function FormCampaign({ campaign, onSave, ...props }) {
   const minor_labels = form.watch("sort_minor_labels");
   const minor_colors = form.watch("sort_minor_colors");
 
+  const name = form.watch("name");
+
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
@@ -176,6 +190,8 @@ export function FormCampaign({ campaign, onSave, ...props }) {
           />
         )}
       />
+
+      {newCampaign && <SameCampaignNameIndicator name={name} />}
 
       <Grid container spacing={1} sx={{ mt: 2 }}>
         <Grid item xs={12} sm>
@@ -282,6 +298,51 @@ export function FormCampaign({ campaign, onSave, ...props }) {
         {t(newCampaign ? "buttons.create" : "buttons.update")}
       </Button>
     </form>
+  );
+}
+
+export function SameCampaignNameIndicator({ name }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign.name_feedback" });
+  const theme = useTheme();
+  const nameDebounced = useDebounce(name, 500);
+  const searchQuery = useSearch(nameDebounced, ["campaigns"], nameDebounced.length > 0);
+  const data = getQueryData(searchQuery);
+  let sameNameExists = false;
+  if (searchQuery.isSuccess && data.campaigns.length > 0) {
+    sameNameExists = data.campaigns.some((c) => c.name === nameDebounced);
+  }
+
+  if (nameDebounced.length === 0) return null;
+
+  return (
+    <Stack direction="row" gap={0.5} sx={{ mt: 0.25 }} alignItems="center">
+      {searchQuery.isLoading && <LoadingSpinner sx={{ fontSize: ".8em" }} />}
+      {searchQuery.isError && (
+        <>
+          <FontAwesomeIcon icon={faExclamationTriangle} fontSize=".8em" color={theme.palette.error.main} />
+          <Typography variant="caption" color="error">
+            {t("generic_error")}
+          </Typography>
+        </>
+      )}
+      {searchQuery.isSuccess &&
+        nameDebounced.length > 0 &&
+        (sameNameExists ? (
+          <>
+            <FontAwesomeIcon icon={faXmarkCircle} fontSize=".8em" color={theme.palette.error.main} />
+            <Typography variant="caption" color="error">
+              {t("duplicate")}
+            </Typography>
+          </>
+        ) : (
+          <>
+            <FontAwesomeIcon icon={faCheckCircle} fontSize=".8em" color={theme.palette.success.main} />
+            <Typography variant="caption" color={(t) => t.palette.success.main}>
+              {t("unique")}
+            </Typography>
+          </>
+        ))}
+    </Stack>
   );
 }
 

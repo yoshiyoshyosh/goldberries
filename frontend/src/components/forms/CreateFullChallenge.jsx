@@ -13,11 +13,20 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useMemo, useState } from "react";
 import { DifficultySelectControlled, ObjectiveSelect } from "../GoldberriesComponents";
-import { useGetModInfo, usePostCampaign, usePostChallenge, usePostMap } from "../../hooks/useApi";
+import {
+  getQueryData,
+  useGetModInfo,
+  usePostCampaign,
+  usePostChallenge,
+  usePostMap,
+  useSearch,
+} from "../../hooks/useApi";
 import { FormOptions } from "../../util/constants";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faDownload, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useDebounce } from "@uidotdev/usehooks";
+import { SameCampaignNameIndicator } from "./Campaign";
 
 export function FormCreateFullChallengeWrapper({
   onSuccess,
@@ -125,6 +134,8 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   const fetchingButtonIcon = fetchingButtonIcons[modFetchState];
   const fetchingButtonSpin = modFetchState === 1;
 
+  const campaignName = form.watch("campaign_name");
+
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
@@ -150,6 +161,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
           />
         )}
       />
+      <SameCampaignNameIndicator name={campaignName} />
       <Grid container spacing={1} sx={{ mt: 2 }}>
         <Grid item xs={12} sm>
           <TextField

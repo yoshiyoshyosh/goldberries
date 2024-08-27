@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchChallenge, postChallenge } from "../../util/api";
-import { Button, Checkbox, Divider, FormControlLabel, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, Divider, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
 import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -14,6 +14,10 @@ import {
 } from "../GoldberriesComponents";
 import { getQueryData, usePostChallenge } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "@emotion/react";
+import { useDebounce } from "@uidotdev/usehooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -72,6 +76,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const [map, setMap] = useState(challenge.map);
   const [campaign, setCampaign] = useState(challenge.map?.campaign ?? challenge.campaign);
+  const theme = useTheme();
 
   const newChallenge = challenge.id === null;
 
@@ -97,6 +102,22 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   useEffect(() => {
     form.reset(challenge);
   }, [challenge]);
+
+  const objective_id = form.watch("objective_id");
+  const requires_fc = form.watch("requires_fc");
+  const has_fc = form.watch("has_fc");
+  const label = form.watch("label");
+  const labelDebounced = useDebounce(label, 200);
+  let sameChallengeExists = false;
+  if (newChallenge && map !== null && map.challenges !== null) {
+    sameChallengeExists = map.challenges.some(
+      (c) =>
+        c.label === (labelDebounced === "" ? null : labelDebounced) &&
+        c.objective_id === objective_id &&
+        c.requires_fc === requires_fc &&
+        c.has_fc === has_fc
+    );
+  }
 
   return (
     <form {...props}>
@@ -189,12 +210,21 @@ export function FormChallenge({ challenge, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
+      {sameChallengeExists && (
+        <Stack direction="row" alignItems="center" gap={0.5} sx={{ mb: 0.25 }}>
+          <FontAwesomeIcon icon={faXmarkCircle} fontSize=".8em" color={theme.palette.error.main} />
+          <Typography variant="caption" color="error">
+            {t("same_challenge_exists")}
+          </Typography>
+        </Stack>
+      )}
+
       <Button
         variant="contained"
         fullWidth
         color={newChallenge ? "success" : "primary"}
         onClick={onUpdateSubmit}
-        disabled={campaign === null}
+        disabled={campaign === null || sameChallengeExists}
       >
         {t(newChallenge ? "buttons.create" : "buttons.update")}
       </Button>
