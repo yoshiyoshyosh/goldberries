@@ -46,7 +46,7 @@ import dayjs from "dayjs";
 import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { ChallengeDetailsList } from "../../pages/Challenge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faBasketShopping } from "@fortawesome/free-solid-svg-icons";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -438,7 +438,11 @@ export function FormSubmission({ submission, onSave, ...props }) {
         {mapCollectiblesModal.data && (
           <>
             <Typography variant="h6" gutterBottom>
-              {t("map_information")} (
+              {t_g("campaign", { count: 1 })} (
+              <StyledLink to={"/campaign/" + mapCollectiblesModal.data.campaign_id}>
+                {mapCollectiblesModal.data.campaign_id}
+              </StyledLink>
+              ) <FontAwesomeIcon icon={faArrowRight} /> {t("map_information")} (
               <StyledLink to={"/map/" + mapCollectiblesModal.data.id}>
                 {mapCollectiblesModal.data.id}
               </StyledLink>
