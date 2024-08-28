@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -22,7 +22,15 @@ if ($player_id === null) {
   die_json(400, "Missing required parameter 'player_id'");
 }
 
-$query = "SELECT * FROM view_submissions WHERE submission_is_verified = true AND campaign_id = $campaign_id AND player_id = $player_id AND map_is_archived = false AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
+$query = "SELECT 
+  * 
+FROM view_submissions
+WHERE submission_is_verified = true
+  AND campaign_id = $campaign_id
+  AND player_id = $player_id
+  AND map_is_archived = false
+  AND objective_is_arbitrary = false
+  AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");
