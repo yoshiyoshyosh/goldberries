@@ -257,6 +257,7 @@ export function FormMap({ map, onSave, ...props }) {
             list={field.value}
             setList={field.onChange}
             valueCount={4}
+            reorderable
           />
         )}
       />
@@ -288,12 +289,20 @@ export const COLLECTIBLES = [
       { value: "4", name: "Cryoshock Golden", icon: "/icons/golden-cryoshock.png" },
       { value: "5", name: "Drizzle Golden", icon: "/icons/golden-drizzle.png" },
       { value: "6", name: "Neon Golden", icon: "/icons/golden-neon.png" },
-      { value: "7", name: "Taswell Golden", icon: "/icons/golden-taswell.png" },
       { value: "8", name: "Velvet Golden", icon: "/icons/golden-velvet.png" },
       { value: "9", name: "FFFFF Golden", icon: "/icons/golden-fffff.png" },
+      { value: "10", name: "Blueberry Golden", icon: "/icons/golden-blueberry.png" },
     ],
   },
-  { value: "1", name: "Silver Berry", icon: "/icons/silverberry-8x.png", variants: [] },
+  {
+    value: "1",
+    name: "Silver Berry",
+    icon: "/icons/silverberry-8x.png",
+    variants: [
+      { value: "1", name: "Taswell Silver", icon: "/icons/golden-taswell.png" },
+      { value: "2", name: "Diamond Berry", icon: "/icons/diamondberry.png", variants: [] },
+    ],
+  },
   { value: "4", name: "Winged Golden Berry", icon: "/icons/winged-goldenberry-8x.png", variants: [] },
   {
     value: "3",
@@ -308,6 +317,7 @@ export const COLLECTIBLES = [
       { value: "6", name: "Velvet Moonberry", icon: "/icons/moonberry-velvet.png" },
       { value: "7", name: "FFFFF Moonberry", icon: "/icons/moonberry-fffff.png" },
       { value: "8", name: "Voidberry", displayName: "Voidberry", icon: "/icons/voidberry.png" },
+      { value: "9", name: "Startside Moonberry", icon: "/icons/moonberry-startside.png" },
     ],
   },
   {
@@ -323,6 +333,7 @@ export const COLLECTIBLES = [
       { value: "6", name: "Taswell Strawberry", icon: "/icons/strawberry-taswell.png" },
       { value: "7", name: "Velvet Strawberry", icon: "/icons/strawberry-velvet.png" },
       { value: "4", name: "FFFFF Strawberry", icon: "/icons/strawberry-fffff.png" },
+      { value: "9", name: "Blueberry", icon: "/icons/strawberry-blueberry.png" },
     ],
   },
   {
@@ -339,19 +350,16 @@ export const COLLECTIBLES = [
       {
         value: "7",
         name: "Zescent Orb 1",
-        displayName: "Zescent Orb 1",
         icon: "/icons/orb-zescent-1.png",
       },
       {
         value: "8",
         name: "Zescent Orb 2",
-        displayName: "Zescent Orb 2",
         icon: "/icons/orb-zescent-2.png",
       },
       {
         value: "9",
         name: "Zescent Orb 3",
-        displayName: "Zescent Orb 3",
         icon: "/icons/orb-zescent-3.png",
       },
     ],
@@ -363,7 +371,6 @@ export const COLLECTIBLES = [
     variants: [{ value: "1", name: "D-Sides Cassette", icon: "/icons/cassette-crisp-d-sides.png" }],
   },
   { value: "5", name: "Platinum Berry", icon: "/icons/platinumberry-8x.png", variants: [] },
-  { value: "11", name: "Diamond Berry", icon: "/icons/diamondberry.png", variants: [] },
   { value: "10", name: "Speedberry", icon: "/icons/speedberry.png", variants: [] },
   {
     value: "13",
@@ -373,6 +380,8 @@ export const COLLECTIBLES = [
       { value: "1", name: "Bronze Berry", displayName: "Bronze Berry", icon: "/icons/bronzeberry.png" },
       { value: "2", name: "Bouncy Berry", displayName: "Bouncy Berry", icon: "/icons/bouncy-berry.png" },
       { value: "3", name: "Rainbow Berry", displayName: "Rainbow Berry", icon: "/icons/rainbowberry-8x.png" },
+      { value: "4", name: "SCA Green Berry", displayName: "Green Berry", icon: "/icons/sca-greenberry.png" },
+      { value: "5", name: "SCA Blue Berry", displayName: "Blue Berry", icon: "/icons/sca-blueberry.png" },
     ],
   },
   {

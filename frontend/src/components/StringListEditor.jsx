@@ -1,6 +1,7 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Divider, Grid, Select, TextField, Typography } from "@mui/material";
+import { Button, Divider, Grid, Select, Stack, TextField, Typography } from "@mui/material";
+import { CustomIconButton } from "./BasicComponents";
 
 export function StringListEditor({
   label,
@@ -10,6 +11,7 @@ export function StringListEditor({
   valueLabels = [],
   setList,
   inline = false,
+  reorderable = false,
 }) {
   const addItem = () => {
     const newItem = Array(valueCount).fill("");
@@ -21,7 +23,6 @@ export function StringListEditor({
   };
 
   const updateValue = (itemIndex, index, value) => {
-    console.log("Updating value with itemIndex", itemIndex, "index", index, "value", value);
     const newList = list.map((item, i) => {
       if (i === itemIndex) {
         return item.map((v, j) => {
@@ -33,6 +34,18 @@ export function StringListEditor({
       }
       return item;
     });
+    setList(newList);
+  };
+  const moveItem = (index, direction) => {
+    const oldList = list || [];
+    const newList = [...oldList];
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= newList.length) {
+      return;
+    }
+    const temp = newList[index];
+    newList[index] = newList[newIndex];
+    newList[newIndex] = temp;
     setList(newList);
   };
 
@@ -88,15 +101,39 @@ export function StringListEditor({
                     );
                   })}
                   <Grid item xs={inline ? "auto" : 12}>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => removeItem(itemIndex)}
-                      startIcon={<FontAwesomeIcon icon={faTrash} />}
-                      sx={{ minWidth: "unset" }}
-                    >
-                      Remove Item
-                    </Button>
+                    <Stack direction="row" gap={1} alignItems="center">
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => removeItem(itemIndex)}
+                        startIcon={<FontAwesomeIcon icon={faTrash} />}
+                        sx={{ minWidth: "unset" }}
+                      >
+                        Remove Item
+                      </Button>
+                      {reorderable && (
+                        <>
+                          <CustomIconButton
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => moveItem(itemIndex, -1)}
+                            sx={{ alignSelf: "stretch" }}
+                            disabled={itemIndex === 0}
+                          >
+                            <FontAwesomeIcon icon={faArrowUp} />
+                          </CustomIconButton>
+                          <CustomIconButton
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => moveItem(itemIndex, 1)}
+                            sx={{ alignSelf: "stretch" }}
+                            disabled={itemIndex === list.length - 1}
+                          >
+                            <FontAwesomeIcon icon={faArrowDown} />
+                          </CustomIconButton>
+                        </>
+                      )}
+                    </Stack>
                   </Grid>
                 </Grid>
               </Grid>
