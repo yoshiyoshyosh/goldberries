@@ -360,7 +360,10 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $webhook_url = constant('CHANGELOG_WEBHOOK_URL');
   $challenge_name = $challenge->get_name_for_discord();
   $old_difficulty = $challenge->difficulty->to_tier_name();
-  $new_difficulty = Difficulty::get_by_id($DB, $new_difficulty_id)->to_tier_name();
+  $old_sort = $challenge->difficulty->sort;
+  $new_difficulty_obj = Difficulty::get_by_id($DB, $new_difficulty_id);
+  $new_difficulty = $new_difficulty_obj->to_tier_name();
+  $new_sort = $new_difficulty_obj->sort;
 
   $ping_list = [];
   $allowed_mentions = ["users" => []];
@@ -373,7 +376,16 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   }
   $ping_addition = count($ping_list) > 0 ? "\n" . implode(" ", $ping_list) : "";
 
-  $message = "{$challenge_name} **$old_difficulty** → **$new_difficulty**{$ping_addition}";
+  $emote = ":memo:";
+  if ($old_sort === 1) {
+    $emote = "<:chart_with_midwards_trend:1224106596901060768>";
+  } else if ($old_sort > $new_sort) {
+    $emote = ":chart_with_downwards_trend:";
+  } else if ($old_sort < $new_sort) {
+    $emote = ":chart_with_upwards_trend:";
+  }
+
+  $message = "{$emote} {$challenge_name} **$old_difficulty** → **$new_difficulty**{$ping_addition}";
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
