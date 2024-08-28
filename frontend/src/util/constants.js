@@ -282,7 +282,6 @@ export const getChallengeReference = (id) => {
 };
 
 const TEMP_VERIFIERS = {
-  275: true,
   239: true,
   32: true,
   20: true,

@@ -199,30 +199,39 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
   }
   const [page, setPage] = useState(defaultPage);
 
+  const filterSubmission = (submission) => {
+    //The filter text can include tokens like the following:
+    //Normal Search Text -"exluding this text"
+    //Make a regex that matches these tokens, put them in an array, and then remove them from the filter text
+    let { search, excludeTokens } = parseSearchString(filterText);
+
+    let text = submission.player.name;
+    let difficulty = null;
+    if (submission.challenge !== null) {
+      const challenge = submission.challenge;
+      difficulty = challenge.difficulty;
+      const campaign = getChallengeCampaign(challenge);
+      if (challenge.map !== null) {
+        text += " " + getMapName(challenge.map, campaign);
+      }
+      text += " " + getCampaignName(campaign, t_g, true);
+    } else {
+      difficulty = submission.suggested_difficulty;
+      text += "New Challenge: " + submission.new_challenge.name;
+    }
+    if (difficulty) {
+      text += " " + getDifficultyName(difficulty);
+    }
+
+    const containsText = text.toLowerCase().includes(search);
+    const doesntContainExcluded = excludeTokens.every(
+      (token) => !text.toLowerCase().includes(token.toLowerCase())
+    );
+    return containsText && doesntContainExcluded;
+  };
+
   const queueFlipped = switchSort ? queue.slice().reverse() : queue;
-  const queueFiltered =
-    filterText === ""
-      ? queueFlipped
-      : queueFlipped.filter((submission) => {
-          let text = submission.player.name;
-          let difficulty = null;
-          if (submission.challenge !== null) {
-            const challenge = submission.challenge;
-            difficulty = challenge.difficulty;
-            const campaign = getChallengeCampaign(challenge);
-            if (challenge.map !== null) {
-              text += " " + getMapName(challenge.map, campaign);
-            }
-            text += " " + getCampaignName(campaign, t_g, true);
-          } else {
-            difficulty = submission.suggested_difficulty;
-            text += "New Challenge: " + submission.new_challenge.name;
-          }
-          if (difficulty) {
-            text += " " + getDifficultyName(difficulty);
-          }
-          return text.toLowerCase().includes(filterText.toLowerCase());
-        });
+  const queueFiltered = filterText === "" ? queueFlipped : queueFlipped.filter(filterSubmission);
 
   const onSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -487,4 +496,26 @@ function SubmissionQueueTableRow({
       </TableCell>
     </TableRow>
   );
+}
+
+function parseSearchString(searchString) {
+  // Regular expression to match exclusion terms
+  const excludeRegex = /-"([^"]+)"/g;
+
+  // Array to hold exclusion terms
+  let excludeTokens = [];
+  let match;
+
+  // Find all matches and add them to the excludeTokens array
+  while ((match = excludeRegex.exec(searchString)) !== null) {
+    excludeTokens.push(match[1]);
+  }
+
+  // Remove the exclusion terms from the original search string to get the search part
+  let search = searchString.replace(excludeRegex, "").trim();
+
+  return {
+    search: search,
+    excludeTokens: excludeTokens,
+  };
 }
