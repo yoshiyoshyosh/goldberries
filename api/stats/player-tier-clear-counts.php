@@ -12,28 +12,27 @@ $query = "SELECT
     account.name_color_start AS account_name_color_start,
     account.name_color_end AS account_name_color_end,
     account.input_method AS account_input_method,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 0') AS t0,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 1') AS t1,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 2') AS t2,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 3') AS t3,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 4') AS t4,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 5') AS t5,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 6') AS t6,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Tier 7') AS t7,
-    COUNT(*) FILTER (WHERE difficulty.name = 'Standard') AS standard,
-    COUNT(*) AS total
-  FROM submission
-  JOIN challenge ON submission.challenge_id = challenge.id
-  JOIN objective ON challenge.objective_id = objective.id
-  JOIN difficulty ON challenge.difficulty_id = difficulty.id
-  JOIN player ON submission.player_id = player.id
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 0') AS t0,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 1') AS t1,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 2') AS t2,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 3') AS t3,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 4') AS t4,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 5') AS t5,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 6') AS t6,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 7') AS t7,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Standard') AS standard,
+    COUNT(submission.id) AS total
+  FROM player
+  LEFT JOIN submission ON submission.player_id = player.id
   LEFT JOIN account ON player.id = account.player_id
+  LEFT JOIN challenge ON submission.challenge_id = challenge.id
+  LEFT JOIN objective ON challenge.objective_id = objective.id
+  LEFT JOIN difficulty ON challenge.difficulty_id = difficulty.id
   LEFT JOIN map ON challenge.map_id = map.id
-  WHERE submission.is_verified = TRUE 
-    AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
-    AND ((challenge.is_arbitrary IS NULL AND objective.is_arbitrary = false) OR challenge.is_arbitrary = false)
+  WHERE submission.id IS NULL OR 
+    (submission.is_verified = TRUE AND (map.is_rejected = FALSE OR map.id IS NULL) AND submission.is_obsolete = FALSE)
   GROUP BY player.id, account.id
-  ORDER BY player.name ASC";
+  ORDER BY total DESC";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");
