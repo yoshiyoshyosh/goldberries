@@ -22,8 +22,6 @@ $query = "SELECT
   FROM view_submissions 
   WHERE player_id = $id 
     AND submission_is_verified = true
-    AND (objective_is_arbitrary = false 
-    AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL))
     AND submission_is_obsolete = false
   GROUP BY difficulty_id, difficulty_sort";
 

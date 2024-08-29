@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
   if (count($submissions) === 0) {
     //If none were found, take the 10 hardest submissions the player has done instead
-    $query = "SELECT * FROM view_submissions WHERE submission_is_verified = true AND player_id = $1 ORDER BY difficulty_sort DESC LIMIT 9";
+    $query = "SELECT * FROM view_submissions WHERE submission_is_verified = true AND player_id = $1 AND submission_is_obsolete = false ORDER BY difficulty_sort DESC LIMIT 9";
     $result = pg_query_params($DB, $query, array($player->id));
     while ($row = pg_fetch_assoc($result)) {
       $submission = new Submission();
