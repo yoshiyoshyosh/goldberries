@@ -350,6 +350,7 @@ export function TiersCountDisplay({ stats, differences, hideEmpty = false, equal
     <Grid container rowSpacing={1} columnSpacing={2}>
       {difficulties.map((diff) => {
         if (diff.id === 13) return null; //Skip "tier 3 (guard)"
+        if (diff.id === 20) return null; //Skip "trivial"
         const count = stats[diff.id] || 0;
         const difference = differences ? differences[diff.id] : null;
         const isEmpty = count === 0;

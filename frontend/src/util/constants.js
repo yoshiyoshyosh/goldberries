@@ -129,6 +129,9 @@ export const DIFFICULTY_COLORS = {
 
   //Undetermined
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
+
+  //Trivial
+  20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000" },
 };
 
 function darkenDiffColor(color, amount) {
@@ -159,17 +162,18 @@ const DIFFICULTY_BASE_COLORS = {
   17: "#96a6ff",
   18: "#ffffff",
   19: "#aaaaaa",
+  20: "#c6c6c6",
 };
 function getSettingsDifficultyColor(settings, id) {
   const groupId = getGroupId(id);
 
   let groupColor = settings.visual.difficultyColors[groupId];
-  if (groupColor === "") {
+  if (groupColor === "" || groupColor === undefined) {
     groupColor = DIFFICULTY_BASE_COLORS[groupId];
   }
 
   let color = settings.visual.difficultyColors[id];
-  if (color === "") {
+  if (color === "" || color === undefined) {
     color = modifyBaseColor(groupColor, id);
   }
 
@@ -196,6 +200,7 @@ const GROUP_ID_MAPPINGS = {
   17: 17,
   18: 18,
   19: 19,
+  20: 20,
 };
 export function getGroupId(id) {
   return GROUP_ID_MAPPINGS[id];
@@ -228,6 +233,7 @@ const DIFFICULTY_ID_SUBTIERS = {
   17: "none",
   18: "none",
   19: "none",
+  20: "none",
 };
 function getDifficultySubtier(id) {
   return DIFFICULTY_ID_SUBTIERS[id];
@@ -259,6 +265,7 @@ const DIFFICULTY_ID_SUBTIER_SHARES = {
   17: 1,
   18: 1,
   19: 1,
+  20: 1,
 };
 export function getDifficultySubtierShares(id, ignoreGuard = false) {
   let shares = DIFFICULTY_ID_SUBTIER_SHARES[id];
@@ -287,6 +294,7 @@ const TEMP_VERIFIERS = {
   20: true,
   664: true,
   712: true,
+  232: true,
 };
 export function isTempVerifier(id) {
   return TEMP_VERIFIERS[id] !== undefined;

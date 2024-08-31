@@ -263,7 +263,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
   const rawDiffs = getQueryData(query);
   let difficulties = rawDiffs.filter((d) => d.id !== 13);
   if (!showStandard) {
-    difficulties = difficulties.filter((d) => d.id !== 18 && d.id !== 19);
+    difficulties = difficulties.filter((d) => d.id !== 18 && d.id !== 19 && d.id !== 20);
   }
 
   //Loop through all difficulties and do the following:
