@@ -223,7 +223,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
       text += " " + getDifficultyName(difficulty);
     }
 
-    const containsText = text.toLowerCase().includes(search);
+    const containsText = text.toLowerCase().includes(search.toLowerCase());
     const doesntContainExcluded = excludeTokens.every(
       (token) => !text.toLowerCase().includes(token.toLowerCase())
     );
