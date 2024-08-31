@@ -206,13 +206,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (isset($data['id'])) {
+    $skip_webhook = isset($data['skip_webhook']) && $data['skip_webhook'] === 't';
     // Update
     $old_challenge = Challenge::get_by_id($DB, $data['id']);
     if ($challenge->update($DB)) {
       Challenge::generate_changelog($DB, $old_challenge, $challenge);
       log_info("'{$account->player->name}' updated {$challenge}", "Challenge");
       submission_embed_change($challenge->id, "challenge");
-      if ($old_challenge->difficulty_id !== $challenge->difficulty_id) {
+      if ($old_challenge->difficulty_id !== $challenge->difficulty_id && !$skip_webhook) {
         send_webhook_challenge_moved($old_challenge, $challenge->difficulty_id);
       }
       api_write($challenge);
