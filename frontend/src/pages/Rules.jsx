@@ -68,6 +68,11 @@ function RulesList() {
           }}
         />
       </Typography>
+      <Typography variant="body2" color="error" gutterBottom sx={{ mt: 1 }}>
+        PLEASE NOTE: These rules are in the process of being reworked, and may not match exactly with what is
+        and isn't allowed by today's standards. If you have any questions, feel free to ask in the Modded
+        Golden Team Discord server.
+      </Typography>
       {Object.keys(allRules).map((key) => (
         <RulesSection key={key} sectionKey={key} section={allRules[key]} />
       ))}
