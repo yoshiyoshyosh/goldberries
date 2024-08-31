@@ -86,7 +86,10 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   });
 
   const form = useForm({
-    defaultValues: challenge,
+    defaultValues: {
+      ...challenge,
+      skip_webhook: false,
+    },
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
     const toSubmit = {
@@ -209,6 +212,20 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       <TextField label={t("sort_order")} type="number" fullWidth {...form.register("sort")} />
 
       <Divider sx={{ my: 2 }} />
+
+      <Controller
+        control={form.control}
+        name="skip_webhook"
+        defaultValue={challenge.skip_webhook}
+        render={({ field }) => (
+          <FormControlLabel
+            onChange={field.onChange}
+            label={t("skip_webhook")}
+            checked={field.value}
+            control={<Checkbox />}
+          />
+        )}
+      />
 
       {sameChallengeExists && (
         <Stack direction="row" alignItems="center" gap={0.5} sx={{ mb: 0.25 }}>
