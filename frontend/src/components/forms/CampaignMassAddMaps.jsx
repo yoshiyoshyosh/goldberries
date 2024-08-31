@@ -1,6 +1,6 @@
 import { Button, Chip, Divider, FormHelperText, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { CampaignSelect } from "../GoldberriesComponents";
+import { Controller, useForm } from "react-hook-form";
+import { CampaignSelect, ObjectiveSelect } from "../GoldberriesComponents";
 import { useState } from "react";
 import { usePostChallenge, usePostMap } from "../../hooks/useApi";
 import { toast } from "react-toastify";
@@ -47,14 +47,14 @@ export function FormCampaignMassAddMaps({ onSave }) {
           promises.push(
             addChallengeAsync({
               map_id: newMapId,
-              objective_id: 1,
+              objective_id: map.challenge_objective_id,
               difficulty_id: 19,
               requires_fc: true,
               has_fc: false,
             }),
             addChallengeAsync({
               map_id: newMapId,
-              objective_id: 1,
+              objective_id: map.challenge_objective_id,
               difficulty_id: 19,
               requires_fc: false,
               has_fc: false,
@@ -64,7 +64,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
           promises.push(
             addChallengeAsync({
               map_id: newMapId,
-              objective_id: 1,
+              objective_id: map.challenge_objective_id,
               difficulty_id: 19,
               has_fc: map.generate_challenges === "c_fc",
             })
@@ -92,6 +92,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
       return {
         name: name,
         generate_challenges: "c_fc", //c, c_fc, c_fc_distinct
+        challenge_objective_id: 2,
       };
     });
     form.setValue("mapObjs", newMapObjs);
@@ -150,6 +151,17 @@ export function FormCampaignMassAddMaps({ onSave }) {
                 <MenuItem value="c_fc">C/FC</MenuItem>
                 <MenuItem value="c_fc_distinct">{t("step_2.c_fc_distinct")}</MenuItem>
               </TextField>
+              <Controller
+                control={form.control}
+                name={`mapObjs.${i}.challenge_objective_id`}
+                render={({ field }) => (
+                  <ObjectiveSelect
+                    fullWidth
+                    objectiveId={map.challenge_objective_id}
+                    setObjectiveId={field.onChange}
+                  />
+                )}
+              />
             </Stack>
           ))}
           <Divider sx={{ my: 2 }} />
