@@ -25,7 +25,7 @@ if ($is_campaign) {
   $show_standard = true;
 }
 if (!$show_standard) {
-  $where .= " AND challenge_difficulty_id != 18";
+  $where .= " AND challenge_difficulty_id != 20 AND challenge_difficulty_id != 18";
 }
 
 
@@ -56,7 +56,7 @@ if (!$result) {
 
 $difficulty_filter = "difficulty.id != 13";
 if (!$show_standard) {
-  $difficulty_filter .= " AND difficulty.id != 18";
+  $difficulty_filter .= " AND difficulty.id != 20 AND difficulty.id != 18";
 }
 
 $queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
