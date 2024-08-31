@@ -56,7 +56,6 @@ class Map extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
-    $this->has_fc = $arr[$prefix . 'has_fc'] === 't';
     $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
 
