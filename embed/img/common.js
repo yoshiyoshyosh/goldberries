@@ -64,6 +64,9 @@ const DIFFICULTIES = {
 
   //Undetermined
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000", name: "Undetermined" },
+
+  //Standard
+  20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000", name: "Trivial" },
 };
 
 function decodeBase64(base64) {
