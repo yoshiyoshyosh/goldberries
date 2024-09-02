@@ -18,7 +18,13 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
-import { getChallengeName, getChallengeSuffix, getDifficultyName, getMapName } from "../util/data_util";
+import {
+  getChallengeFcShort,
+  getChallengeName,
+  getChallengeSuffix,
+  getDifficultyName,
+  getMapName,
+} from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useState } from "react";
 
@@ -151,6 +157,10 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
             } else {
               combinedName = `${name} [${nameSuffix}]`;
             }
+          }
+
+          if (challenge.requires_fc || challenge.has_fc) {
+            combinedName += " " + getChallengeFcShort(challenge, true);
           }
 
           text += `${combinedName}`;
