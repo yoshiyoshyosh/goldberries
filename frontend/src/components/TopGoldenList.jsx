@@ -438,13 +438,7 @@ function TopGoldenListSubtier({
   isHidingObjective1,
 }) {
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
-  challenges.sort((a, b) => {
-    const mapA = maps[a.map_id];
-    const mapB = maps[b.map_id];
-    const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
-    const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
-    return getMapName(mapA, campaignA, true, false).localeCompare(getMapName(mapB, campaignB, true, false));
-  });
+  sortChallengesForTGL(challenges, maps, campaigns);
 
   const isFwgSubtier = subtier.id === 12; //low tier 3 -> add fwg at the end
 
@@ -475,6 +469,16 @@ function TopGoldenListSubtier({
       {isFwgSubtier && isOverallList && !isHidingObjective1 ? <TopGoldenListFwgRow /> : null}
     </>
   );
+}
+export function sortChallengesForTGL(challenges, maps, campaigns) {
+  challenges.sort((a, b) => {
+    const mapA = maps[a.map_id];
+    const mapB = maps[b.map_id];
+    const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
+    const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
+    return getMapName(mapA, campaignA, true, false).localeCompare(getMapName(mapB, campaignB, true, false));
+  });
+  return challenges;
 }
 
 function TopGoldenListRow({

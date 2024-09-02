@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, FormControlLabel, Grid, IconButton, Stack, Typography } from "@mui/material";
-import { TopGoldenList } from "../components/TopGoldenList";
+import { TopGoldenList, sortChallengesForTGL } from "../components/TopGoldenList";
 import { useParams } from "react-router-dom";
 import {
   BasicBox,
@@ -88,6 +88,7 @@ export function PageTopGoldenList({}) {
 }
 
 export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list.export" });
   const query = useGetTopGoldenList(type, id, filter);
   const topGoldenList = getQueryData(query);
   const { settings } = useAppSettings();
@@ -112,6 +113,8 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
 
         if (filteredChallenges.length === 0) continue;
 
+        sortChallengesForTGL(filteredChallenges, maps, campaigns);
+
         if (includeHeader) {
           if (index > 0 && hadContent) {
             text += "\n";
@@ -119,10 +122,10 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
 
           text += `${getDifficultyName(difficulty)}`;
           if (includeCount) {
-            text += `\tSubmission Count`;
+            text += `\t${t("submission_count")}`;
           }
           if (includeLink) {
-            text += `\tFirst Clear URL`;
+            text += `\t${t("first_clear_url")}`;
           }
           text += "\n";
         }
@@ -171,40 +174,36 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        toast.success("Copied to clipboard");
+        toast.success(t("feedback.copied"));
       })
       .catch(() => {
-        toast.error("Failed to copy to clipboard");
+        toast.error(t("feedback.error"));
       });
   };
   return (
-    <CustomModal
-      modalHook={modalHook}
-      actions={[ModalButtons.close]}
-      options={{ title: "Export Top Golden List" }}
-    >
+    <CustomModal modalHook={modalHook} actions={[ModalButtons.close]} options={{ title: t("header") }}>
       {query.isLoading && <LoadingSpinner />}
       {query.isError && <ErrorDisplay error={query.error} />}
       {query.isSuccess && (
         <>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            Use the button below to copy all visible challenges to your clipboard.
+            {t("text")}
           </Typography>
           <Stack direction="column" gap={0} sx={{ mb: 2 }}>
             <FormControlLabel
-              label="Include data header"
+              label={t("include_header")}
               checked={includeHeader}
               onChange={(e) => setIncludeHeader(e.target.checked)}
               control={<Checkbox />}
             />
             <FormControlLabel
-              label="Include submission count"
+              label={t("include_submission_count")}
               checked={includeCount}
               onChange={(e) => setIncludeCount(e.target.checked)}
               control={<Checkbox />}
             />
             <FormControlLabel
-              label="Include first clear URL"
+              label={t("include_first_clear_url")}
               checked={includeLink}
               onChange={(e) => setIncludeLink(e.target.checked)}
               control={<Checkbox />}
@@ -216,7 +215,7 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
             startIcon={<FontAwesomeIcon icon={faClipboard} />}
             onClick={copyToClipboard}
           >
-            Copy to Clipboard
+            {t("button")}
           </Button>
         </>
       )}
