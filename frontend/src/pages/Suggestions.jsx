@@ -121,9 +121,11 @@ export function PageSuggestions({}) {
           <Typography variant="h4">{t("header")}</Typography>
         </Grid>
         <Grid item xs="auto">
-          <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} onClick={newSuggestion}>
-            {t("buttons.create")}
-          </Button>
+          {auth.hasPlayerClaimed && (
+            <Button variant="contained" startIcon={<FontAwesomeIcon icon={faPlus} />} onClick={newSuggestion}>
+              {t("buttons.create")}
+            </Button>
+          )}
         </Grid>
       </Grid>
       <Typography variant="body1">
