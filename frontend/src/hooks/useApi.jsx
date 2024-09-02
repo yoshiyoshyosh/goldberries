@@ -67,6 +67,7 @@ import {
   deleteVerificationNotice,
   fetchStatsMostGoldened,
   fetchStatsMisc,
+  fetchTopGoldenList,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -284,6 +285,13 @@ export function useGetAllDifficulties() {
     queryKey: ["all_difficulties"],
     queryFn: () => fetchAllDifficulties(),
     onError: errorToast,
+  });
+}
+
+export function useGetTopGoldenList(type, id, filter) {
+  return useQuery({
+    queryKey: ["top_golden_list", type, id, filter],
+    queryFn: () => fetchTopGoldenList(type, id, filter),
   });
 }
 

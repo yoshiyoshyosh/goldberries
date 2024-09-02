@@ -1,4 +1,14 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import {
   BasicBox,
   BasicContainerBox,
@@ -49,6 +59,10 @@ import {
 } from "recharts";
 import { useState } from "react";
 import { useTheme } from "@emotion/react";
+import { ExportTopGoldenListModal } from "./TopGoldenList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExport } from "@fortawesome/free-solid-svg-icons";
+import { useModal } from "../hooks/useModal";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -214,6 +228,9 @@ export function PagePlayerTopGoldenList({ id }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player" });
   const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
   const query = useGetPlayer(id);
+  const theme = useTheme();
+
+  const exportModal = useModal();
   const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
 
   if (query.isLoading) {
@@ -241,9 +258,15 @@ export function PagePlayerTopGoldenList({ id }) {
         <Typography variant="h4">
           <StyledLink to={`/player/${id}`}>{player.name}</StyledLink> - {t("personal_tgl")}
         </Typography>
-        <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
+        <Stack direction="row" gap={1}>
+          <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
+          <IconButton onClick={exportModal.open}>
+            <FontAwesomeIcon color={theme.palette.text.secondary} icon={faFileExport} fixedWidth size="2xs" />
+          </IconButton>
+        </Stack>
       </BasicBox>
       <TopGoldenList type="player" id={id} filter={filter} />
+      <ExportTopGoldenListModal modalHook={exportModal} type="player" id={id} filter={filter} />
     </Box>
   );
 }

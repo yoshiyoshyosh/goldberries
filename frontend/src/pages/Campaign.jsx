@@ -17,6 +17,7 @@ import {
   Button,
   Divider,
   Grid,
+  IconButton,
   LinearProgress,
   Paper,
   Stack,
@@ -38,6 +39,7 @@ import {
   faCheckCircle,
   faEdit,
   faExternalLink,
+  faFileExport,
   faListDots,
   faUser,
   faXmark,
@@ -66,6 +68,7 @@ import { useAuth } from "../hooks/AuthProvider";
 import { FormCampaignWrapper } from "../components/forms/Campaign";
 import { NoteDisclaimer } from "./Challenge";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
+import { ExportTopGoldenListModal } from "./TopGoldenList";
 
 const STYLE_CONSTS = {
   player: {
@@ -759,6 +762,8 @@ function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
 
 export function PageCampaignTopGoldenList({ id }) {
   const query = useGetCampaignView(id);
+  const theme = useTheme();
+  const exportModal = useModal();
   const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
 
   if (query.isLoading) {
@@ -783,9 +788,15 @@ export function PageCampaignTopGoldenList({ id }) {
         <Typography variant="h4">
           Top Golden List: <StyledLink to={`/campaign/${id}`}>{response.campaign.name}</StyledLink>
         </Typography>
-        <SubmissionFilter type="campaign" id={id} filter={filter} setFilter={setFilter} />
+        <Stack direction="row" gap={1}>
+          <SubmissionFilter type="campaign" id={id} filter={filter} setFilter={setFilter} />
+          <IconButton onClick={exportModal.open}>
+            <FontAwesomeIcon color={theme.palette.text.secondary} icon={faFileExport} fixedWidth size="2xs" />
+          </IconButton>
+        </Stack>
       </BasicBox>
       <TopGoldenList type="campaign" id={id} filter={filter} />
+      <ExportTopGoldenListModal modalHook={exportModal} type="campaign" id={id} filter={filter} />
     </Box>
   );
 }

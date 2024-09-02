@@ -48,7 +48,7 @@ import {
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
-import { getQueryData } from "../hooks/useApi";
+import { getQueryData, useGetTopGoldenList } from "../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormChallengeWrapper } from "./forms/Challenge";
@@ -88,10 +88,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     settings.visual.topGoldenList.useTextFcIcons;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
 
-  const query = useQuery({
-    queryKey: ["top_golden_list", type, id, filter],
-    queryFn: () => fetchTopGoldenList(type, id, filter),
-  });
+  const query = useGetTopGoldenList(type, id, filter);
 
   // Reset the render up to index when the key changes
   useEffect(() => {
