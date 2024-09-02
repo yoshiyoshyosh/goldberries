@@ -189,8 +189,9 @@ function send_webhook_suggestion_notification($suggestion)
   $emote = ":memo:";
   if ($suggestion->suggested_difficulty !== null) {
     $from_sort = $suggestion->current_difficulty->sort;
+    $from_id = $suggestion->current_difficulty_id;
     $to_sort = $suggestion->suggested_difficulty->sort;
-    if ($from_sort === 1) {
+    if ($from_id === 19) {
       $emote = "<:chart_with_midwards_trend:1224106596901060768>";
     } else if ($from_sort > $to_sort) {
       $emote = ":chart_with_downwards_trend:";
@@ -361,6 +362,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $challenge_name = $challenge->get_name_for_discord();
   $old_difficulty = $challenge->difficulty->to_tier_name();
   $old_sort = $challenge->difficulty->sort;
+  $old_id = $challenge->difficulty_id;
   $new_difficulty_obj = Difficulty::get_by_id($DB, $new_difficulty_id);
   $new_difficulty = $new_difficulty_obj->to_tier_name();
   $new_sort = $new_difficulty_obj->sort;
@@ -377,7 +379,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $ping_addition = count($ping_list) > 0 ? "\n" . implode(" ", $ping_list) : "";
 
   $emote = ":memo:";
-  if ($old_sort === 1) {
+  if ($old_id === 19) {
     $emote = "<:chart_with_midwards_trend:1224106596901060768>";
   } else if ($old_sort > $new_sort) {
     $emote = ":chart_with_downwards_trend:";
