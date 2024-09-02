@@ -313,7 +313,7 @@ export function AuthorInfoBoxLine({ author_gb_id, author_gb_name }) {
 
 export function CampaignPlayerTable({ campaign, players, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "campaign.tabs.players" });
-  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const auth = useAuth();
   const [showAll, setShowAll] = useState(false);
   const [actuallyShowAll, setActuallyShowAll] = useState(false);
 
@@ -328,68 +328,102 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
     map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
   ).length;
   const reducedPlayerAmount = 100;
-  const playersToShow = actuallyShowAll
-    ? Object.values(players)
-    : Object.values(players).slice(0, reducedPlayerAmount);
+  const playersToShow = actuallyShowAll ? players : players.slice(0, reducedPlayerAmount);
+
+  const selfIndex = auth.hasPlayerClaimed
+    ? players.findIndex((player) => player.player.id === auth.user.player_id)
+    : -1;
+  const showSelf = auth.hasPlayerClaimed && selfIndex > 9;
+
   return (
-    <TableContainer component={Paper} {...props}>
-      <Table size="small">
-        <TableHead>
-          <TableCell width={1} sx={{ pl: 1 }}></TableCell>
-          <TableCell width={1} sx={{ pl: 1, pr: 0 }}>
-            {t_g("player", { count: 30 })}
-          </TableCell>
-          <TableCell sx={{ pl: 0.5, pr: 1 }} colSpan={2}>
-            {t("progress")}
-          </TableCell>
-          <TableCell width={1} sx={{ pl: 0, pr: 1, display: { xs: "none", md: "table-cell" } }}></TableCell>
-          <TableCell width={1} sx={{ px: 1 }}>
-            <Stack direction="row" gap={0.5} alignItems="center" justifyContent="flex-start">
-              (
-              <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
-              <span style={{ fontWeight: "bold" }}>{countFcs}</span>)
-            </Stack>
-          </TableCell>
-        </TableHead>
-        <TableBody>
-          {playersToShow.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={6} align="center">
-                {t("no_players")}
-              </TableCell>
-            </TableRow>
-          )}
-          {playersToShow.map((player, index) => (
-            <CampaignPlayerTableRow key={player.id} index={index} campaign={campaign} playerEntry={player} />
-          ))}
-          {!actuallyShowAll && players.length > reducedPlayerAmount && (
-            <>
+    <Stack direction="column" gap={1}>
+      {showSelf && (
+        <TableContainer component={Paper} {...props}>
+          <Table size="small">
+            <CampaignPlayerTableHead countFcs={countFcs} isSelf />
+            <TableBody>
+              <CampaignPlayerTableRow
+                index={selfIndex}
+                campaign={campaign}
+                playerEntry={players[selfIndex]}
+                isSelf
+              />
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      <TableContainer component={Paper} {...props}>
+        <Table size="small">
+          <CampaignPlayerTableHead countFcs={countFcs} />
+          <TableBody>
+            {playersToShow.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center">
-                  <Typography variant="caption">
-                    {t("more_players", { count: players.length - playersToShow.length })}
-                  </Typography>
+                  {t("no_players")}
                 </TableCell>
               </TableRow>
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  {showAll ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <Button size="small" fullWidth onClick={() => setShowAll(!showAll)}>
-                      {t("show_all")}
-                    </Button>
-                  )}
-                </TableCell>
-              </TableRow>
-            </>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            )}
+            {playersToShow.map((player, index) => (
+              <CampaignPlayerTableRow
+                key={player.id}
+                index={index}
+                campaign={campaign}
+                playerEntry={player}
+              />
+            ))}
+            {!actuallyShowAll && players.length > reducedPlayerAmount && (
+              <>
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    <Typography variant="caption">
+                      {t("more_players", { count: players.length - playersToShow.length })}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    {showAll ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <Button size="small" fullWidth onClick={() => setShowAll(!showAll)}>
+                        {t("show_all")}
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Stack>
   );
 }
-function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
+function CampaignPlayerTableHead({ countFcs, isSelf = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "campaign.tabs.players" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  return (
+    <TableHead>
+      <TableCell width={1} sx={{ pl: 1, pr: 0 }}></TableCell>
+      <TableCell width={1} sx={{ pl: 1, pr: 0 }}>
+        {isSelf ? t("you") : t_g("player", { count: 30 })}
+      </TableCell>
+      <TableCell sx={{ pl: 0.5, pr: 1 }} colSpan={2}>
+        {t("progress")}
+      </TableCell>
+      <TableCell width={1} sx={{ pl: 0, pr: 1, display: { xs: "none", md: "table-cell" } }}></TableCell>
+      <TableCell width={1} sx={{ px: 1 }}>
+        <Stack direction="row" gap={0.5} alignItems="center" justifyContent="flex-start">
+          (
+          <ChallengeFcIcon challenge={{ requires_fc: true, has_fc: false }} height="1.0em" />
+          <span style={{ fontWeight: "bold" }}>{countFcs}</span>)
+        </Stack>
+      </TableCell>
+    </TableHead>
+  );
+}
+function CampaignPlayerTableRow({ index, campaign, playerEntry, isSelf = false }) {
   const {
     palette: { campaignPage },
   } = useTheme();
@@ -410,6 +444,7 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
   const sweepColor =
     campaign.sort_major_name !== null ? campaign.sort_major_colors[highest_lobby_sweep] ?? "white" : null;
   const borderLeft = sweepColor ? "20px solid " + sweepColor : "none";
+  const selfStyle = isSelf ? { borderBottomWidth: "5px" } : {};
 
   const onClick = () => {
     setExpanded(!expanded);
@@ -418,7 +453,10 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry }) {
   return (
     <>
       <TableRow
-        sx={{ backgroundColor, "&:hover": { backgroundColor: backgroundHover, cursor: "pointer" } }}
+        sx={{
+          backgroundColor,
+          "&:hover": { backgroundColor: backgroundHover, cursor: "pointer" },
+        }}
         onClick={onClick}
       >
         <TableCell width={1} align="center" sx={{ pl: 1, pr: 0, borderLeft }}>
