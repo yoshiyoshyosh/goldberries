@@ -223,6 +223,12 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
       text += " " + getDifficultyName(difficulty);
     }
 
+    //Find if the submission is locked by another verifier (present in the notices)
+    const notice = notices.find((notice) => notice.submission_id === submission.id);
+    if (notice) {
+      text += " Locked";
+    }
+
     const containsText = text.toLowerCase().includes(search.toLowerCase());
     const doesntContainExcluded = excludeTokens.every(
       (token) => !text.toLowerCase().includes(token.toLowerCase())
