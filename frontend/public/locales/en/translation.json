@@ -132,7 +132,22 @@
       "note_number_people": "This tier has {{challenges}} challenges with {{submissions}} submissions",
       "note_suggested_difficulties": "Suggested difficulties of this player",
       "note_video_link": "These links lead to the video of the first clear of a challenge",
-      "placement_difficulty": "Placement Difficulty:"
+      "obsolete_notice": "This submission is marked as obsolete",
+      "placement_difficulty": "Placement Difficulty:",
+      "export": {
+        "feedback": {
+          "copied": "Copied to clipboard",
+          "error": "Error copying to clipboard"
+        },
+        "submission_count": "Submission Count",
+        "first_clear_url": "First Clear URL",
+        "header": "Export Top Golden List",
+        "text": "Use the button below to copy all visible challenges to your clipboard.",
+        "include_header": "Include data header",
+        "include_submission_count": "Include submission count",
+        "include_first_clear_url": "Include first clear URL",
+        "button": "Copy to Clipboard"
+      }
     },
     "custom_links": {
       "label": "Custom Links",
@@ -182,6 +197,11 @@
         "created": "Campaign created",
         "updated": "Campaign updated",
         "deleted": "Campaign deleted"
+      },
+      "name_feedback": {
+        "generic_error": "Error searching for campaign name",
+        "duplicate": "Campaign name already exists",
+        "unique": "Campaign name is unique"
       },
       "icon_url": "Icon URL",
       "url_fetch_tooltip": "Fetch the campaign's data from GameBanana",
@@ -240,11 +260,13 @@
         "created": "Challenge created",
         "updated": "Challenge updated"
       },
+      "same_challenge_exists": "A challenge with the same configuration already exists",
       "full_game_notice": "Not selecting a map will mean it's a full game challenge.",
       "requires_fc": "Requires FC",
       "has_fc": "Has FC",
       "is_arbitrary": "Is Arbitrary",
       "sort_order": "Sort Order",
+      "skip_webhook": "Skip Placement Change Webhook",
       "buttons": {
         "create": "Create Challenge",
         "update": "Update Challenge"
@@ -270,6 +292,7 @@
         "created": "Map created",
         "updated": "Map updated"
       },
+      "same_name_exists": "This map name already exists in the campaign",
       "is_rejected": "Is Rejected",
       "is_archived": "Is Archived",
       "collectibles": {
@@ -304,6 +327,7 @@
       "date_verified": "Date Verified",
       "verifier": "Verifier",
       "verifier_notes": "Verifier Notes",
+      "map_information": "Map Information",
       "buttons": {
         "update": "Update Submission",
         "verify": "Verify",
@@ -1052,6 +1076,7 @@
     "header": "Suggestion Box",
     "intro": "In the suggestion box you can suggest changes to challenge placements, general changes to a challenge or general changes to the website itself. It is meant to make it easier to collect opinions from the community. However, it is <strong>not</strong> meant for discussion of changes, for which you should still use the Modded Golden Team Discord server.",
     "language_info": "Please keep the suggestion box in English!",
+    "filter_by_type": "Filter by type",
     "active": "Active Suggestions",
     "undecided": "Undecided Suggestions",
     "expired": "Expired Suggestions",
@@ -1137,7 +1162,8 @@
     "filter": {
       "all": "All Suggestions",
       "general": "General Suggestions",
-      "challenge": "Challenge Suggestions"
+      "challenge": "Challenge Suggestions",
+      "challenge_own": "Own Completed Challenges"
     }
   },
   "top_golden_list": {
@@ -1171,6 +1197,7 @@
         "no_players": "No players yet.",
         "more_players_one": "+ {{count}} more player",
         "more_players_other": "+ {{count}} more players",
+        "you": "You",
         "show_all": "Show All"
       }
     }
@@ -1320,7 +1347,7 @@
       "totals": {
         "header": "There are currently:",
         "campaigns": "<strong>{{campaigns}}</strong> campaigns ({{standalone}} of them are stand-alone maps)",
-        "maps": "<strong>{{maps}}</strong> maps",
+        "maps": "<strong>{{maps}}</strong> maps (with <strong>{{challenges}}</strong> total challenges)",
         "submissions": "and <strong>{{submissions}}</strong> submissions from <strong>{{players}}</strong> players!"
       },
       "difficulty_stats": {
