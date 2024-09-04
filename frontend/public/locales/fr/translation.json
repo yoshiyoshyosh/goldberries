@@ -132,7 +132,22 @@
       "note_number_people": "Ce tier contient {{challenges}} challenges pour {{submissions}} entrées",
       "note_suggested_difficulties": "Les difficultés ressenties de cette personne",
       "note_video_link": "Ces liens mènent à la vidéo du premier clear d’un challenge",
-      "placement_difficulty": "Positionnement de cette difficulté :"
+      "obsolete_notice": "This submission is marked as obsolete",
+      "placement_difficulty": "Positionnement de cette difficulté :",
+      "export": {
+        "feedback": {
+          "copied": "Copied to clipboard",
+          "error": "Error copying to clipboard"
+        },
+        "submission_count": "Submission Count",
+        "first_clear_url": "First Clear URL",
+        "header": "Export Top Golden List",
+        "text": "Use the button below to copy all visible challenges to your clipboard.",
+        "include_header": "Include data header",
+        "include_submission_count": "Include submission count",
+        "include_first_clear_url": "Include first clear URL",
+        "button": "Copy to Clipboard"
+      }
     },
     "custom_links": {
       "label": "Liens custom",
@@ -182,6 +197,11 @@
         "created": "Campagne créée",
         "updated": "Campagne mise à jour",
         "deleted": "Campaign supprimée"
+      },
+      "name_feedback": {
+        "generic_error": "Error searching for campaign name",
+        "duplicate": "Campaign name already exists",
+        "unique": "Campaign name is unique"
       },
       "icon_url": "Lien de l’icône",
       "url_fetch_tooltip": "Récupérer les infos de la campagne directement depuis GameBanana",
@@ -240,11 +260,13 @@
         "created": "Challenge créé",
         "updated": "Challenge mis à jour"
       },
+      "same_challenge_exists": "A challenge with the same configuration already exists",
       "full_game_notice": "Ne pas sélectionner de map signifie qu’il s’agit d’un challenge Full Game.",
       "requires_fc": "Nécessite le FC",
       "has_fc": "A un FC",
       "is_arbitrary": "Est arbitraire",
       "sort_order": "Trier l’ordre",
+      "skip_webhook": "Skip Placement Change Webhook",
       "buttons": {
         "create": "Créer ce challenge",
         "update": "Mettre à jour ce challenge"
@@ -270,6 +292,7 @@
         "created": "Map créée",
         "updated": "Map mise à jour"
       },
+      "same_name_exists": "This map name already exists in the campaign",
       "is_rejected": "Est rejetée",
       "is_archived": "Est archivée",
       "collectibles": {
@@ -304,6 +327,7 @@
       "date_verified": "Date de vérification",
       "verifier": "Vérification",
       "verifier_notes": "Notes de vérification",
+      "map_information": "Map Information",
       "buttons": {
         "update": "Mettre à jour cette entrée",
         "verify": "Vérifier",
@@ -335,7 +359,8 @@
       "submission_url": {
         "required": "Le lien de l’entrée ne peut pas être vide",
         "invalid": "Lien invalide",
-        "disallowed": "Ce type de lien n’est pas autorisé pour les entrées. (<CustomLink to=\"/rules#submissions-all\">Entrées → Règle nº 1</CustomLink>)"
+        "disallowed": "Ce type de lien n’est pas autorisé pour les entrées. (<CustomLink to=\"/rules#submissions-all\">Entrées → Règle nº 1</CustomLink>)",
+        "disallowed_variant": "This website is allowed for submissions, but you have to use the direct video link instead!"
       }
     }
   },
@@ -1052,6 +1077,7 @@
     "header": "Boîte à suggestions",
     "intro": "Dans la boîte à suggestions, tu peux demander à déplacer ou à modifier un challenge, ou même faire des remarques d’ordre général sur le site. Cette page existe dans le but de partager facilement les opinions de la communauté. Cependant, ce <strong>n’est pas</strong> un lieu de discussion, rôle que garde la serveur Discord de la Modded Golden Team.",
     "language_info": "Les messages et descriptions doivent être écrits en anglais !",
+    "filter_by_type": "Filter by type",
     "active": "Suggestions actives",
     "undecided": "Suggestions non décidées",
     "expired": "Suggestions expirées",
@@ -1137,7 +1163,8 @@
     "filter": {
       "all": "Toutes les suggestions",
       "general": "Suggestions générales",
-      "challenge": "Suggestions liées à un challenge en particulier"
+      "challenge": "Suggestions liées à un challenge en particulier",
+      "challenge_own": "Own Completed Challenges"
     }
   },
   "top_golden_list": {
@@ -1171,119 +1198,9 @@
         "no_players": "No players yet.",
         "more_players_one": "+ {{count}} autre",
         "more_players_other": "+ {{count}} autres",
+        "you": "You",
         "show_all": "Tout afficher"
       }
-    }
-  },
-  "rules": {
-    "title": "Règles",
-    "toc": "Sommaire",
-    "description": "Cette page existe dans le but de formaliser les règles et leurs cas limites. En gros, il y est dit à peu près ce à quoi on peut s’attendre de règles : ne triche pas, n’utilise pas de mods qui modifient trop le gameplay, et les trucs dans le genre. Si un point te semble un peu vague ou souhaite des recommandations pour faire des challenges <i>deathless</i>, on t’invite à lire les sections concernées.",
-    "maps": {
-      "header": "Règles pour les maps",
-      "rules": {
-        "0": "Pour apparaître sur ce site, une map ou un map pack <strong>doit</strong> figurer sur <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. Si une map se trouvait sur GameBanana mais n’y est plus, elle sera disponible sur <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">cet item archive.org</CustomExternalLink> sauf si la personne à l’origine de la map a personnellement demandé à ce qu’elle n’y soit pas.",
-        "1": "La map ou le <i>map pack</i> ne <strong>doit pas</strong> être de difficulté triviale, même s’il se trouve être très facile. Les maps qui contiennent peu de danger ou quasiment aucun moyen de mourir seront refusées.",
-        "2": "La map ou le <i>map pack</i> <strong>doit</strong> faire au moins trois écrans de gameplay de longueur, tout comme les faces C du jeu de base.",
-        "3": "La map ou le <i>map pack</i> ne <strong>doit pas</strong> comporter de contenu NSFW.",
-        "4": "La map ou le <i>map pack</i> <strong>ne doit pas trop</strong> ressembler à une map du jeu de base ou à une map qui existe déjà. Les <i>map packs</i> uniques tels que <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> ou les versions modifiées difficiles (ou dont la construction est réfléchie) de maps, comme <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> sont acceptables, alors que les maps comme <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> seront plus probablement refusées.",
-        "5": "La map ou le <i>map pack</i> ne <strong>doit pas trop</strong> être de basse qualité. Les maps « shitpost » ou « meme » sont généralement OK, tant qu’elles restent jouables et contiennent du gameplay un minimum réfléchi. Puisque tout ça reste flou, les différentes situations sont étudiées cas par cas, mais voici une petite comparaison : les maps comme <CustomExternalLink href=\"https://www.youtube.com/watch?v=MsScIP3ZqCM\">Shitpost Summit</CustomExternalLink> ou <CustomExternalLink href=\"https://www.youtube.com/watch?v=XODzWNSNKZk\">The Decline</CustomExternalLink> sont OK, là où les maps comme <CustomExternalLink href=\"https://youtu.be/qRz5XC0P7MQ\">frickyou</CustomExternalLink> ne le sont pas."
-      }
-    },
-    "goldens": {
-      "header": "Entrées",
-      "rules": {
-        "header": "Règles pour toutes les entrées",
-        "0": "Les preuves vidéos <strong>doivent</strong> être disponibles en permanence sur une plateforme qui ne demande pas de se connecter pour les voir. Les sites les plus utilisés sont <CustomExternalLink href=\"https://www.youtube.com/\">YouTube</CustomExternalLink>, <CustomExternalLink href=\"https://www.twitch.tv/\">Twitch</CustomExternalLink>, <CustomExternalLink href=\"https://www.bilibili.com/\">bilibili</CustomExternalLink>, et <CustomExternalLink href=\"https://www.nicovideo.jp/\">nicovideo</CustomExternalLink>, mais d’autres sites sont parfaitement acceptables. Les services de messagerie CDN (comme <code>cdn.discordapp.com</code>) ne sont pas acceptés pour les entrées.",
-        "1": "Les preuves vidéos <strong>doivent</strong> contenir l’entièreté du challenge, par exemple du moment où la golden est prise au moment où elle est collectée. Il n’est pas obligatoire de rester vivant après la complétion du challenge (c’est le cas des “Heart Deaths”, où mourir après avoir touché un cœur permet de récupérer la golden, comme on peut le voir dans la <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Face B de Magnetic Dawn</CustomExternalLink>). Récupérer une golden ne signifie pas toujours la fin d’un challenge, par exemple s’il reste des fraises dans un challenge full clear, comme c’est le cas du <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">full clear d’Anubi</CustomExternalLink>. Des exceptions à cela se font très rares et sont étudiées au cas par cas, comme par exemple si un livestream coupe pendant un moment, tant que la personne et les circonstances de l’incident sont dignes de confiance.",
-        "2": "Les challenges <strong>doivent</strong> être effectués lors d’une seule session de jeu continue.",
-        "3": "Les entrées <strong>ne doivent pas</strong> faire usage du mode assisté, des variantes proposées par le jeu de base ou de mods ayant un impact sur le gameplay. Les mods et variantes ayant uniquement un impact visuel <strong>peuvent</strong> être autorisés dans certains cas. Voir <CustomLink to=\"#allowed-mods\">mods autorisés et recommandés</CustomLink> pour plus de détails.",
-        "4": "Pour les challenges de <strong>Tier 3</strong> ou plus difficiles, un enregistrement de la session entière est demandé. Si jamais le challenge a été complété au début d’une session, la session de jeu précédente peut être demandée.",
-        "5": "Il est <strong>recommandé de ne pas</strong> utiliser d’“info mods”, qui donnent des informations qui ne seraient pas disponibles sans eux, comme la fonctionnalité “show frame count” du mod Input History (qui permet d’afficher l’historique des boutons pressés), une jauge de <i>stamina</i>, ou encore l’info HUD de CelesteTAS. Sur certains challenges où de tels mods font peu de différence, les entrées seront acceptées sans problème. Si de tels mods rendent un challenge plus simple, mais pas <i>vraiment</i> trop simple, une note sera attribuée aux entrées concernées. Si de tels mods donnent un avantage considérable, comme pour des maps centrées sur l’endurance ou demandant des alignements au <i>subpixel</i>, de telles entrées seront probablement rejetées.",
-        "6": "Les entrées <strong>ne doivent pas</strong> abuser de <i>pause buffering</i>, au point de trivialiser un challenge. Le pause buffer peut rendre des sections difficiles extrêmement faciles, donc en faire un usage important peut suffire à invalider un challenge. Puisque tout ça reste flou, les entrées sont étudiées cas pas car, mais voici une petit comparaison : faire usage de pause buffer pour <CustomExternalLink href=\"https://youtu.be/rpSFgT29hK8?t=61\">ce rebond mural dans Aquatic Underground</CustomExternalLink> est OK, alors que pause buffer <CustomExternalLink href=\"https://www.youtube.com/watch?v=G-bmAvDaBtY\">la golden de I Wanna Atone the Flower</CustomExternalLink> n’est pas acceptable. Les runs faisant un usage non-abusif de pause buffer seront indiquées par une note.",
-        "7": "Les entrées ne <strong>doivent pas</strong> faire usage de <i>spinner freezing</i> (sauf dans le cas où c’est demandé par la map), technique qui consiste à attendre près de 118 heures dans le jeu pour empêcher certaines boules de cristal (ou <i>spinners</i>) de charger. Les entrées <strong>peuvent</strong> faire usage de la technique appelée <i>spinner stunning</i>, de par sa difficulté. <CustomExternalLink href=\"https://youtu.be/bbmV7yJSzPg&t=14\">Deeper Descent C-Side</CustomExternalLink> est un exemple de golden faisant usage de <i>spinner stunning</i>, pour plus d’informations sur ces techniques, regarde <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">cette vidéo</CustomExternalLink>.",
-        "8": "Si une map ne possède pas de golden, il est <strong>permis</strong> d’en faire apparaître en utilisant la commande <code>give_golden</code> dans la console. Cette commande <strong>doit</strong> être utilisée dans la <strong>première</strong> salle de la map. Il est aussi permis d’utiliser <CustomExternalLink href=\"https://github.com/CelestialCartographers/Ahorn\">Ahorn</CustomExternalLink> ou <CustomExternalLink href=\"https://github.com/CelestialCartographers/Loenn\">Lönn</CustomExternalLink> pour directement ajouter une golden dans la map.",
-        "9": "Pour les goldens (ou les fraises similaires), il n’est pas <strong>requis</strong> de collecter la fraise, tant que la run suit les mêmes règles qu’en la prenant (c’est-à-dire une run <i>deathless</i> mais sans récupérer la fraise). Si jamais prendre une golden change fondamentalement le challenge, comme avec une golden room, de telles entrées ne seront <strong>probablement pas</strong> acceptées. Bien que cette pratique ne soit pas encouragée, il est compréhensible que ces choses-là arrivent sans faire exprès, et une telle complétion reste tout de même légitime. Une note sera donnée à de telles runs.",
-        "10": "Pour les maps ne contenant pas de <i>trigger</i> permettant de collecter une golden (ou une fraise similaires), il est <strong>permis</strong> d’en ajouter un à la fin d’une map. Si un cœur de cristal indique la fin d’une map mais ne renvoie pas sur l’écran de sélection, le modifier est OK. Cela est très rare, et sera étudié au cas par cas.",
-        "11": "Si la map comprend des séquences où une golden (ou une fraise similaire) se <strong>détache volontairement</strong> de Madeline, il est autorisé de mourir autant de fois que voulu durant ces séquences. Cela ne s’applique <strong>pas</strong> aux détachements permettant de régler quelconque problème (comme dans <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) ainsi qu’aux détachements involontaires."
-      },
-      "full_game_additional": {
-        "header": "Règles supplémentaires pour les challenges Full Game",
-        "explanation": "Il existe deux types de challenges “full game” : ceux qui complètent sans mourir un sous-ensemble pertinent de maps d’un map pack (qu’on appellera des <i>challenges full game partiels</i>), comme par exemple faire toutes les faces C ou un lobby sans mourir, et les challenges plus complets, comme par exemple faire toutes les maps sans mourir, ou même un 100 % <i>deathless</i> (qu’on appellera des <i>challenges full game complets</i>). Les règles s’appliquant seulement sur une de ces deux catégories le mentionneront.",
-        "0": "Une preuve vidéo <strong>doit</strong> contenir la run dans son entièreté. Pour un challenge partiel, la vidéo doit commencer avant ou à l’écran de sélection de la première map complétée, et doit finir après avoir complété la dernière map. Pour un challenge complet, la vidéo doit commencer avant ou à l’écran de sélection de fichier, et doit finir après la complétion de la dernière map.",
-        "1": "Pour les challenges complets, les entrées <strong>doivent</strong> compléter les maps comme elles le seraient en commençant d’un nouveau fichier de sauvegarde. Il est recommandé de <strong>toujours</strong> créer un nouveau fichier de sauvegarde pour les challenges complets et donc de <strong>ne pas</strong> activer le <i>cheat mode</i>. Les challenges partiels sont autorisés à compléter les maps dans n’importe quel ordre.",
-        "2": "Les entrées de challenges full game <strong>ne doivent pas</strong> utiliser de « Retour à la carte » ou quelconque option similaire permettant d’éviter une mort certaine ou de rendre une map plus facile. Sont inclues les situations où Madeline se retrouve “softlocked” dans une map.",
-        "3": "Les entrées de challenges full game <strong>ne doivent</strong> faire usage que d’un seul fichier de sauvegarde.",
-        "4": "Si un challenge contient des morts forcées ou inévitables (comme dans le style de la <i>moon berry</i> de <i>Farewell</i>), les runs sont autorisées à mourir, mais <strong>pas plus de fois que le minimum requis</i> pour finir la map.",
-        "5": "Le « compteur de speedrun » (chronomètre) <strong>doit</strong> être activé en mode <i>file</i>, <strong>et non</strong> en mode <i>chapitre</i> pour les entrées de challenges full game.",
-        "6": "Les preuves vidéo <strong>ne doivent pas</strong> contenir d’<i>overlay</i> cachant une grande partie ou une partie essentielle de l’écran. Les parties devant apparaître sont le chronomètre (ou « compteur de speedrun »), le compteur de fraises en haut à gauche, le <i>tracker</i> de fraises en bas du menu pause, et l’icône de sauvegarde en bas à droite.",
-        "7": "Il est <strong>recommandé</strong> de ne pas faire de pauses trop longues sur le menu principal ou sur le menu pause. Il est autorisé de faire des pauses à l’intérieur d’une map sans utiliser le menu pause, bien que des pauses trop fréquentes peuvent éveiller les soupçons et nécessiter plus de preuves.",
-        "8": "Si une entrée ne collecte pas de goldens (ou de fraises similaires), elle <strong>peut</strong> être considérée comme une entrée pour une map individuelle, si le challenge suit les mêmes règles que celles mentionnées plus haut pour de telles runs."
-      }
-    },
-    "general_recommendations": {
-      "header": "Recommandations générales",
-      "section": {
-        "explanation": "Il n’est pas <strong>vraiment</strong> obligatoire de suivre ces règles, mais elle peuvent renforcer la légitimité d’une entrée, l’empêcher d’avoir une note, aider les autres à compléter un challenge, et les suivre est en quelque sorte une forme de courtoisie envers les autres.",
-        "0": "Activer un des chronomètres (ou « compteur de speedrun ») proposés par le jeu de base renforce la crédibilité d’une entrée, mais n’est obligatoire que pour les maps individuelles. Le chronomètre en mode <i>file</i> est cependant <strong>nécessaire</strong> aux entrées de challenges full game.",
-        "1": "Utiliser un programme permettant de rendre compte des boutons appuyés comme <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> pour Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> pour Linux (X11), ou <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> pour les autres, est généralement apprécié.",
-        "2": "Pour les compilations contenant plusieurs maps, ajouter des <i>timestamps</i> dans la description de la vidéo ou directement dans le lien de l’entrée aide grandement à la vérification.",
-        "3": "Essaie de garder un ou deux enregistrements de sessions de jeu complets sous la main, surtout pour les goldens haut placées, au cas où plus de preuves sont demandées."
-      }
-    },
-    "allowed_mods": {
-      "header": "Mods autorisés et recommandés",
-      "section": {
-        "explanation": "Tous les mods listés ici sont autorisés, sauf mention du contraire. Les mods non listés ici sont aussi autorisés, tant qu’ils respectent la règle d’altération de gameplay ou celle de gain d’information.",
-        "0": "Le <strong>seul</strong> mod ayant un impact sur le gameplay autorisé est la variante <i>No Freeze Frames</i> des <CustomExternalLink href=\"https://gamebanana.com/mods/53650\">Variantes Étendues</CustomExternalLink>. Ce mod ne change pas vraiment le jeu en lui-même et le rend même plus dur dans la plupart du cas.",
-        "1": "Pour les runs de challenges full game complets, le mod <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">hardcore mode</CustomExternalLink> peut aider à recommencer des runs plus facilement, mais n’est pas obligatoire. Le <i>hardcore mode</i> permet également de faire apparaître les goldens sans utiliser le <i>cheat mode</i>, ce qui permet aux runs full game d’être considérées comme des runs de maps individuelles sans problème.",
-        "2": "Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> est autorisé. Ce mod ajoute plusieurs fonctionnalités utiles à la complétion de challenges, comme par exemple rendre les fraises transparentes, placer de manière permanente une golden sans avoir à modifier la map, ou encore se téléporter dans la salle dans laquelle on vient de mourir en golden.",
-        "3": "Les mods <CustomExternalLink href=\"https://gamebanana.com/tools/6597\">Speedrun Tool</CustomExternalLink> et <CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink> peuvent aider à trouver des stratégies et des <i>setups</i>. Ils sont autorisés, tant que les fonctionnalités utilisées durant la run n’enfreignent pas les règles 4 et 6 des entrées.",
-        "4": "D’autres mods sont communément utilisés dans la complétion de challenges <i>deathless</i>, comme <CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink> et <CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>."
-      }
-    }
-  },
-  "faq": {
-    "title": "FAQ",
-    "0": {
-      "question": "Est-ce que je peux demander à ajouter des maps qui ne sont pas encore sur la liste ?",
-      "answer": "Oui, tu peux ajouter une golden qui ne se trouve pas déjà sur la liste. Il te suffit de fournir un lien vers la map, en t’assurant que la map en question respecte bien toutes les règles. Mais même si c’est le cas, il se peut que la map ne soit pas ajoutée pour une raison qui sera spécifiée sur la page des maps rejetées."
-    },
-    "1": {
-      "question": "Quelle est la difficulté minimale requise pour qu’une map apparaisse sur la liste ?",
-      "answer": "Pour figurer sur le site, une map doit comporter au moins quelques obstacles sur le chemin et ne doit pas être trop courte. Tout ça reste très flou, mais tu peux te faire une idée de la limite en jetant un œil à la liste des maps rejetées ou aux maps les plus faciles de la Standard List."
-    },
-    "2": {
-      "question": "Qu’est-ce que je fais si une map n’a pas de golden ?",
-      "answer": "Dans ce cas, tu peux utiliser la console de debug (presse ~ pour l’ouvrir et pour la fermer) et y entrer la commande give_golden pour te donner une golden. Sinon, tu peux ajouter manuellement une golden dans la map en utilisant un éditeur de maps (Ahorn ou Lönn). Assure-toi de placer la golden au début de la map et fais en sorte qu’elle soit peut être évitée dans une run sans golden."
-    },
-    "3": {
-      "question": "Pourquoi est-ce que certaines maps sont-elles plus simples que ce qui est demandé dans les règles ?",
-      "answer": "Certaines maps ne satisfaisant pas le critère de difficulté peuvent tout de même figurer sur la liste à la décision de la Modded Golden Team pour plusieurs raisons. Par exemple, si une map fait moins de deux écrans de longueur, mais fait partie d’une collab dans laquelle toutes les autres maps sont éligibles à être sur la liste."
-    },
-    "4": {
-      "question": "Est-ce que les boutons de demodash ou plusieurs touches de sauts sont autorisés ?",
-      "answer": "Les boutons de demodash et utiliser plusieurs touches de saut sont autorisés. Il va de même pour toutes les combinaisons d’actions que le jeu autorise à associer à une touche, mais les macros externes qui activent plusieurs touches automatiquement sur différentes frames est interdit."
-    },
-    "5": {
-      "question": "Est-ce que le pause buffer est autorisé ?",
-      "answer": "Tu as bien sûr le droit de mettre le jeu en pause, mais entrer et sortir du menu pause afin de faire avancer le jeu frame par frame peut faire valoir à une run une note indiquant un usage agressif de pause buffering. Une run qui abuse de pause buffer sera probablement rejetée."
-    },
-    "6": {
-      "question": "Et le spinner stunning ?",
-      "answer": "Puisque cette technique est très difficile et peu faisable en golden, le spinner stunning est autorisé (pauser sur la bonne frame plusieurs fois à la suite afin d’empêcher des spinners (boules de cristal) ou de l’électricité de charger). Cependant, décharger les spinners en attendant plus de 118 heures n’est pas autorisé."
-    },
-    "7": {
-      "question": "Qu’est-ce qui est considéré comme un full clear ?",
-      "answer": "Les maps peuvent contenir des collectibles optionnels pouvant ou non être récupérés en golden, dont un cœur, une cassette, des fraises rouges, et d’autres fraises comme des moon berry, des dashless berry ou autres. Généralement, les runs en full clear (FC) demandent d’obtenir tous les collectibles optionnels, sauf si l’un d’entre eux change fondamentalement la nature du challenge, comme par exemple la golden dashless de 1A. Dans ce cas, le collectible concerné sera considéré comme une « fraise spéciale », et les runs le collectant auront le tag [SB] (pour “special berry”). Voici quelques exemples de maps avec une fraise spéciale optionnelle : A Christmas Night par JaThePlayer, Starship Ruins de la Winter Collab et la face A du premier chapitre d’Into The Jungle. Une fraise spécial n’est pas toujours optionnelle, et donc une run doit obligatoirement la collecter pour figurer sur la liste, comme le montre l’exemple de Rite of the Jungle."
-    },
-    "8": {
-      "question": "Pourquoi est-ce que certaines maps n’ont pas de full clear ?",
-      "answer": "Des maps comme Hell Gym peuvent comporter des collectibles qui ne sont pas optionnels. Pour les autres, il se peut que récupérer les collectibles ne change en rien la difficulté d’un challenge, auquel cas les runs les prenant ne sont pas différenciées des autres, comme la moon berry de Path of D-espair ou la cassette de la Void Side de Glyph."
-    },
-    "9": {
-      "question": "Au fait, c’est quoi la Top Golden List ?",
-      "answer": "La Top Golden List est une liste des fraises dorées (ou goldens) les plus difficiles ayant été collectées. La golden d’une map figure sur la liste si elle est plus difficile que le Hell Trio, les goldens des faces B des chapitres 6, 7 et 8 du jeu de base. Les goldens sont séparées par des tiers indiqués par des couleurs, qui permettent de quantifier la difficulté d’une golden. Il faut noter que ces classements sont subjectifs, et sont décidés en accord des personnes ayant de l’expérience sur la golden, donc ils ne sont pas très fiables, et ne devraient pas être considérés comme l’étant. Si très peu de personnes ont collecté une golden, son placement sur la liste sera peu précis. Nous faisons de notre mieux pour classer du mieux possible les goldens en fonction des retours de ceux qui l’ont eu, donc les placements changent au fil du temps, quand de nouvelles personnes obtiennent des goldens. On compare principalement les goldens en fonction de quelques facteurs, comme par exemple le temps de jeu total qu’elles ont pris, l’expérience sur le jeu au moment de la collection, le temps pris sur les maps avant d’essayer la golden, et une analyse plus subjective de la longueur des maps, de la distribution de leur difficulté, de la consistency de leur gameplay…"
     }
   },
   "index": {
@@ -1320,7 +1237,7 @@
       "totals": {
         "header": "Il y a actuellement :",
         "campaigns": "<strong>{{campaigns}}</strong> campagnes (dont {{standalone}} stand-alone)",
-        "maps": "<strong>{{maps}}</strong> maps",
+        "maps": "<strong>{{maps}}</strong> maps (with <strong>{{challenges}}</strong> total challenges)",
         "submissions": "et <strong>{{submissions}}</strong> entrées de <strong>{{players}}</strong> joueuses et joueurs !"
       },
       "difficulty_stats": {
