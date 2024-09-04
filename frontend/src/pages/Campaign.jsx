@@ -751,6 +751,7 @@ function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
           </StyledLink>
           <ObjectiveIcon objective={challenge.objective} challenge={challenge} height="1.3em" />
           <ChallengeFcIcon challenge={challenge} height="1.3em" />
+          <DifficultyChip difficulty={challenge.difficulty} />
         </Stack>
         {challenge.description && <Typography variant="body1">{challenge.description}</Typography>}
       </Stack>
