@@ -252,7 +252,13 @@ function send_webhook_submission_verified($submission)
   $is_rejected = $submission->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
-  $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str!";
+
+  if ($submission->verifier_notes !== null) {
+    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str with a note! :notepad_spiral: `{$submission->verifier_notes}`";
+  } else {
+    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str!";
+  }
+
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 function send_webhook_multi_submission_verified($submissions)
@@ -305,7 +311,13 @@ function send_webhook_multi_submission_verified($submissions)
   $is_rejected = $submissions[0]->is_verified === false;
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
-  $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name}{$campaign_addition} were $verified_str!";
+
+  if ($submission->verifier_notes !== null) {
+    $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name}{$campaign_addition} were $verified_str with a note! :notepad_spiral: `{$submission->verifier_notes}`";
+  } else {
+    $message = "$emote $player_name → **{$count}** of your submissions for {$campaign_name}{$campaign_addition} were $verified_str!";
+  }
+
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
