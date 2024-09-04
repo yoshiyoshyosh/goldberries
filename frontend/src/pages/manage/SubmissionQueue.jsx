@@ -32,7 +32,7 @@ import {
   usePostSubmission,
   usePostVerificationNotice,
 } from "../../hooks/useApi";
-import { DifficultyChip } from "../../components/GoldberriesComponents";
+import { DifficultyChip, SubmissionFcIcon } from "../../components/GoldberriesComponents";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
 import {
@@ -490,10 +490,11 @@ function SubmissionQueueTableRow({
           </Typography>
           <Typography variant="body1">{submission.id}</Typography>
         </Stack>
-        <Stack direction="row">
-          <Typography variant="body2" sx={{ flex: 1 }}>
-            {textBottom}
-          </Typography>
+        <Stack direction="row" alignItems="center">
+          <Stack direction="row" gap={1} alignItems="center" sx={{ flex: 1 }}>
+            <Typography variant="body2">{textBottom}</Typography>
+            <SubmissionFcIcon submission={submission} />
+          </Stack>
           <DifficultyChip difficulty={diff} />
         </Stack>
       </TableCell>
