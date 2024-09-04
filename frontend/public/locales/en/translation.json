@@ -359,7 +359,8 @@
       "submission_url": {
         "required": "Submission URL can't be empty",
         "invalid": "Invalid URL",
-        "disallowed": "This type of URL is not allowed for submissions (<CustomLink to=\"/rules#submissions-all\">Submissions > Rule 1</CustomLink>)"
+        "disallowed": "This type of URL is not allowed for submissions (<CustomLink to=\"/rules#submissions-all\">Submissions > Rule 1</CustomLink>)",
+        "disallowed_variant": "This website is allowed for submissions, but you have to use the direct video link instead!"
       }
     }
   },

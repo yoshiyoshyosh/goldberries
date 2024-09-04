@@ -1128,7 +1128,8 @@ function NotificationNotice({}) {
   );
 }
 
-const disallowedUrls = ["discord.com", "youtube.com/playlist", "youtube.com/live/"];
+const disallowedUrls = ["discord.com", "imgur.com"];
+const disallowedVariantUrls = ["youtube.com/playlist", "youtube.com/live/", "b23.tv/"];
 //Returns the translation key for the error message, or true if the URL is valid
 function validateUrl(url, required = true) {
   //Trim url
@@ -1153,6 +1154,9 @@ function validateUrl(url, required = true) {
   //Check if the URL contains disallowed strings
   if (disallowedUrls.some((disallowed) => url.includes(disallowed))) {
     return "disallowed";
+  }
+  if (disallowedVariantUrls.some((disallowed) => url.includes(disallowed))) {
+    return "disallowed_variant";
   }
 
   return true;
