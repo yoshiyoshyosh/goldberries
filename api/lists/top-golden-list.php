@@ -46,7 +46,7 @@ if (isset($_GET["hide_objectives"])) {
 }
 
 $query = $query . " " . $where;
-$query .= " ORDER BY challenge_sort DESC, map_name ASC, submission_id ASC";
+$query .= " ORDER BY challenge_sort DESC, map_name ASC, submission_date_created ASC, submission_id ASC";
 
 $result = pg_query($DB, $query);
 if (!$result) {
