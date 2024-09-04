@@ -26,6 +26,7 @@ import {
   PlayerChip,
   SubmissionFcIcon,
   VerificationStatusChip,
+  VerifierNotesIcon,
 } from "./GoldberriesComponents";
 import { ErrorDisplay, StyledLink } from "./BasicComponents";
 import { getChallengeCampaign, getChallengeSuffix, getMapName } from "../util/data_util";
@@ -283,6 +284,9 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
               </Typography>
             )}
             <SubmissionFcIcon submission={submission} height="1.3em" />
+            {submission.verifier_notes && (
+              <VerifierNotesIcon notes={submission.verifier_notes} fontSize="1.0em" />
+            )}
           </Stack>
         </Link>
       </TableCell>

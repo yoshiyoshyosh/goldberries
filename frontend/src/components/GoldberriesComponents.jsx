@@ -34,6 +34,8 @@ import {
   faBan,
   faBook,
   faChildCombatant,
+  faCircleExclamation,
+  faComment,
   faGamepad,
   faHammer,
   faHourglass,
@@ -59,7 +61,7 @@ import {
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
-import { StyledExternalLink, StyledLink } from "./BasicComponents";
+import { StyledExternalLink, StyledLink, TooltipLineBreaks } from "./BasicComponents";
 import { useTranslation } from "react-i18next";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
@@ -1046,4 +1048,18 @@ export function AnyImage({ path, alt, height = "1em", style = {}, ...props }) {
       {...props}
     />
   );
+}
+
+export function TooltipIcon({ title, icon, fontSize = "1em" }) {
+  return (
+    <TooltipLineBreaks title={title}>
+      <FontAwesomeIcon icon={icon} fontSize={fontSize} />
+    </TooltipLineBreaks>
+  );
+}
+export function VerifierNotesIcon({ notes, fontSize = "1em" }) {
+  return <TooltipIcon title={notes} icon={faCircleExclamation} fontSize={fontSize} />;
+}
+export function PlayerNotesIcon({ notes, fontSize = "1em" }) {
+  return <TooltipIcon title={notes} icon={faComment} fontSize={fontSize} />;
 }

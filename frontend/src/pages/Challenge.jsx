@@ -32,7 +32,9 @@ import {
   GamebananaEmbed,
   ObjectiveIcon,
   OtherIcon,
+  PlayerNotesIcon,
   SubmissionFcIcon,
+  VerifierNotesIcon,
 } from "../components/GoldberriesComponents";
 import {
   getChallengeCampaign,
@@ -379,25 +381,25 @@ export function ChallengeSubmissionTable({
               <TableCell width={1} sx={{ ...displayNoneOnMobile, px: 0 }}></TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center">
+              <TableCell width={1} align="center" sx={{ px: 0.75 }}>
                 <Tooltip arrow placement="top" title={t_fs("verifier_notes")}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                 </Tooltip>
               </TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center">
+              <TableCell width={1} align="center" sx={{ px: 0.75 }}>
                 <Tooltip arrow placement="top" title={t_fs("player_notes")}>
                   <FontAwesomeIcon icon={faComment} />
                 </Tooltip>
               </TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+              <TableCell width={1} align="center" sx={{ px: 0.75, ...displayNoneOnMobile }}>
                 <FontAwesomeIcon icon={faClock} />
               </TableCell>
             )}
-            <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+            <TableCell width={1} align="center" sx={{ pl: 0.75, pr: 0.25 }}>
               <FontAwesomeIcon icon={faYoutube} />
             </TableCell>
             {!compact && (
@@ -474,25 +476,17 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center">
-          {submission.verifier_notes && (
-            <TooltipLineBreaks title={submission.verifier_notes}>
-              <FontAwesomeIcon icon={faCircleExclamation} />
-            </TooltipLineBreaks>
-          )}
+        <TableCell width={1} align="center" sx={{ px: 0.75 }}>
+          {submission.verifier_notes && <VerifierNotesIcon notes={submission.verifier_notes} />}
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center">
-          {submission.player_notes && (
-            <TooltipLineBreaks title={submission.player_notes}>
-              <FontAwesomeIcon icon={faComment} />
-            </TooltipLineBreaks>
-          )}
+        <TableCell width={1} align="center" sx={{ px: 0.75 }}>
+          {submission.player_notes && <PlayerNotesIcon notes={submission.player_notes} />}
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+        <TableCell width={1} align="center" sx={{ px: 0.75, ...displayNoneOnMobile }}>
           {submission.date_created &&
             jsonDateToJsDate(submission.date_created).toLocaleDateString(navigator.language, {
               year: "2-digit",
@@ -501,7 +495,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
             })}
         </TableCell>
       )}
-      <TableCell width={1} align="center" sx={displayNoneOnMobile}>
+      <TableCell width={1} align="center" sx={{ pl: 0.75, pr: 0.25 }}>
         <StyledLink to={submission.proof_url} target="_blank">
           <FontAwesomeIcon icon={faExternalLinkAlt} />
         </StyledLink>
