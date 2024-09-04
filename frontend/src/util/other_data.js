@@ -4,13 +4,13 @@ export const NewRules = {
     rules: {
       id: "submissions-all",
       type: "ordered",
-      count: 12,
+      count: 15,
     },
     full_game_additional: {
       id: "submissions-fullgame",
       explanation: true,
       type: "ordered",
-      count: 9,
+      count: 8,
     },
   },
   general_recommendations: {
@@ -20,7 +20,7 @@ export const NewRules = {
       explanation: true,
       type: "unordered",
       size: "small",
-      count: 4,
+      count: 3,
     },
   },
   allowed_mods: {
@@ -30,7 +30,7 @@ export const NewRules = {
       explanation: true,
       type: "unordered",
       size: "small",
-      count: 5,
+      count: 6,
     },
   },
   maps: {

@@ -20,7 +20,7 @@ function FAQList() {
   const { t } = useTranslation(undefined, { keyPrefix: "faq" });
   const { t: t_a } = useTranslation();
 
-  const entryCount = 10;
+  const entryCount = 5;
 
   return (
     <>
