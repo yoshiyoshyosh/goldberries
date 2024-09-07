@@ -227,7 +227,7 @@ export function SuggestedDifficultySelect({ defaultValue, ...props }) {
   });
   let difficulties = query.data?.data ?? [];
   //filter out id 13 (fwg) and 19 (undetermined)
-  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13 && d.id !== 20);
 
   return (
     <TextField
@@ -313,16 +313,27 @@ export function DifficultyChip({
   sx = {},
   ...props
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_chip" });
   const { settings } = useAppSettings();
   if (difficulty === null) return null;
 
   const text = getDifficultyName(difficulty);
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
+  const isTrivial = difficulty.id === 20;
+
   const chip = (
     <Chip
-      label={prefix + text + suffix}
+      label={
+        <Stack direction="row" gap={1} alignItems="center">
+          <span>{prefix + text + suffix}</span>
+          {isTrivial && (
+            <Tooltip title={t("trivial_explanation")} arrow>
+              <FontAwesomeIcon icon={faInfoCircle} />
+            </Tooltip>
+          )}
+        </Stack>
+      }
       size="small"
       {...props}
       sx={{
@@ -340,7 +351,7 @@ export function DifficultyChip({
 
   if (isPersonal) {
     return (
-      <Tooltip title={t("components.difficulty_chip.personal_tooltip")} placement="top">
+      <Tooltip title={t("personal_tooltip")} placement="top" arrow>
         {chip}
       </Tooltip>
     );
@@ -425,7 +436,7 @@ export function DifficultySelectControlled({
   let difficulties = query.data?.data ?? [];
   //filter out id 13 (fwg) and 19 (undetermined)
   if (isSuggestion) {
-    difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13);
+    difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13 && d.id !== 20);
   }
   if (noGuard) {
     difficulties = difficulties.filter((d) => d.id !== 13);
