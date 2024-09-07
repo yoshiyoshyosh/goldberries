@@ -95,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       $was_verified = false;
+      $is_first_clear = false;
       if ($old_submission->is_verified !== $submission->is_verified) {
         if ($old_submission->challenge_id === null && $submission->is_verified) {
           die_json(400, "Cannot verify a submission without a challenge");
@@ -104,6 +105,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $was_verified = true;
         $old_submission->date_verified = new JsonDateTime();
         $old_submission->verifier_id = $account->player->id;
+
+        //Check if this is the first submission for this challenge
+        if ($submission->is_verified) {
+          $challenge = Challenge::get_by_id($DB, $old_submission->challenge_id);
+          $challenge->fetch_submissions($DB);
+          if (count($challenge->submissions) === 0) {
+            $is_first_clear = true;
+          }
+        }
       }
       $old_submission->is_verified = $submission->is_verified;
       if ($submission->player_notes !== null && strlen($submission->player_notes) > 5000) {
@@ -138,6 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $old_submission->expand_foreign_keys($DB, 5);
         if ($was_verified && !$skip_webhook) {
           send_webhook_submission_verified($old_submission);
+          if ($is_first_clear) {
+            send_webhook_first_clear_verified($old_submission);
+          }
         }
         api_write($old_submission);
       } else {
@@ -159,6 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           die_json(400, "Cannot suggest 'Guard Tier 3' as difficulty");
         } else if ($difficulty->id === 19) {
           die_json(400, "Cannot suggest 'Undetermined' as difficulty");
+        } else if ($difficulty->id === 20) {
+          die_json(400, "Cannot suggest 'Trivial' as difficulty");
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;

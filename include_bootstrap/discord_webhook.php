@@ -321,6 +321,32 @@ function send_webhook_multi_submission_verified($submissions)
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
+function send_webhook_first_clear_verified($submission)
+{
+  global $DB;
+  global $webhooks_enabled;
+  if (!$webhooks_enabled) {
+    return;
+  }
+
+  $submission->expand_foreign_keys($DB, 5);
+
+  $account = $submission->player->get_account($DB);
+  $player_name = "@`{$submission->player->get_name_escaped()}`";
+  $webhook_url = constant('CHANGELOG_WEBHOOK_URL');
+  $allowed_mentions = ["users" => []];
+
+  $challenge_name = $submission->get_challenge_name_for_discord();
+  $submission_url = $submission->get_url();
+
+  $difficulty = $submission->challenge->difficulty;
+  $tier_name = $difficulty->to_tier_name();
+
+  $message = ":white_check_mark: $player_name → [First clear](<{$submission_url}>) on {$challenge_name} ($tier_name)!";
+
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
+}
+
 function send_webhook_challenge_marked_personal($challenge)
 {
   global $DB;
