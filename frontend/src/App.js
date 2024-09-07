@@ -483,7 +483,19 @@ export function Layout() {
           icon: <CampaignIcon campaign={{ name: "Strawberry Jam", icon_url: "/icons/campaigns/sj.png" }} />,
         },
         {
-          name: "Celeste 2021 Winter Collab",
+          name: "Spring Collab 2020",
+          path: "/campaign/1200",
+          icon: (
+            <CampaignIcon
+              campaign={{
+                name: "Celeste 2020 Spring Collab",
+                icon_url: "/icons/campaigns/spring-collab-20.png",
+              }}
+            />
+          ),
+        },
+        {
+          name: "Winter Collab 2021",
           path: "/campaign/977",
           icon: (
             <CampaignIcon
@@ -504,13 +516,13 @@ export function Layout() {
           ),
         },
         {
-          name: "Spring Collab",
-          path: "/campaign/1200",
+          name: "Secret Santa Collab 2024",
+          path: "/campaign/1216",
           icon: (
             <CampaignIcon
               campaign={{
-                name: "Celeste 2020 Spring Collab",
-                icon_url: "/icons/campaigns/spring-collab-20.png",
+                name: "Secret Santa Collab 2024",
+                icon_url: "/icons/campaigns/secret-santa-collab-2024.png",
               }}
             />
           ),
