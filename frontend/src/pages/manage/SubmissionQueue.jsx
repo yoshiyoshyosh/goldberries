@@ -280,10 +280,12 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
     massVerifySubmissions(data)
       .then(() => {
         setSelected([]);
+        setNote("");
         toast.success(t(verified ? "feedback.all_verified" : "feedback.all_rejected"));
       })
       .catch((error) => {
-        //Do nothing, handles by api hook
+        //Do nothing, handled by api hook
+        setNote("");
       });
   };
 
