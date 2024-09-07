@@ -139,9 +139,45 @@ foreach ($response['challenges'] as $challengeIndex => $challenge) {
   $response['challenges'][$challengeIndex]->data = array(
     "submission_count" => count($challenge->submissions),
   );
+
+  if (!$is_player) {
+    $response['challenges'][$challengeIndex]->data["is_stable"] = is_challenge_stable($challenge);
+  }
+
   if (!$all_submissions) {
     $response['challenges'][$challengeIndex]->submissions = array($challenge->submissions[0]);
   }
 }
 
 api_write($response);
+
+function is_challenge_stable($challenge)
+{
+  $min_suggestions = 10;
+  $min_overlap = 0.8;
+
+  if ($challenge->difficulty_id === 20 || $challenge->difficulty_id === 19) {
+    return false;
+  }
+
+  $count_suggestions = 0;
+  $count_for = 0;
+  $count_against = 0;
+  foreach ($challenge->submissions as $submission) {
+    if ($submission->suggested_difficulty_id !== null && $submission->is_personal === false) {
+      $count_suggestions++;
+      if ($submission->suggested_difficulty_id === $challenge->difficulty_id) {
+        $count_for++;
+      } else {
+        $count_against++;
+      }
+    }
+  }
+
+  if ($count_suggestions < $min_suggestions) {
+    return false;
+  }
+
+  $overlap = $count_for / $count_suggestions;
+  return $overlap >= $min_overlap;
+}
