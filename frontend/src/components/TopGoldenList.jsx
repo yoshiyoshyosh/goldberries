@@ -502,8 +502,8 @@ function TopGoldenListRow({
   const tpgSettings = settings.visual.topGoldenList;
   const darkmode = settings.visual.darkmode;
   const colors = getNewDifficultyColors(settings, subtier.id, true);
-  const challengeRef = getChallengeReference(challenge.id);
-  const isReference = challengeRef !== null;
+  // const challengeRef = getChallengeReference(challenge.id);
+  const isReference = challenge.data.is_stable;
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -666,7 +666,7 @@ function TopGoldenListRow({
             <CampaignIcon campaign={campaign} height="1em" doLink />
           )}
           {isReference && (
-            <Tooltip title="This challenge serves as a primary difficulty reference" arrow placement="top">
+            <Tooltip title={t("stable_explanation")} arrow placement="top">
               <span style={{ userSelect: "none", cursor: "default" }}>🟊</span>
             </Tooltip>
           )}

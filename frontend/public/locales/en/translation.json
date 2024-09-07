@@ -47,7 +47,8 @@
       "no_selection": "No Selection"
     },
     "difficulty_chip": {
-      "personal_tooltip": "This difficulty suggestion is personal and should not be used for difficulty placements"
+      "personal_tooltip": "This difficulty suggestion is personal and should not be used for difficulty placements",
+      "trivial_explanation": "Trivial challenges contain no risk of death, or are no different from a regular clear of the map"
     },
     "verification_status_chip": {
       "verified": "Verified",
@@ -133,6 +134,7 @@
       "note_suggested_difficulties": "Suggested difficulties of this player",
       "note_video_link": "These links lead to the video of the first clear of a challenge",
       "obsolete_notice": "This submission is marked as obsolete",
+      "stable_explanation": "This challenge has a stable difficulty placement",
       "placement_difficulty": "Placement Difficulty:",
       "export": {
         "feedback": {
