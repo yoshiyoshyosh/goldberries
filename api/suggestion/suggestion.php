@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 
@@ -76,7 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
       }
+
       $suggestion->current_difficulty_id = $challenge->difficulty_id;
+
       if (isset($data['suggested_difficulty_id'])) {
         $difficulty = Difficulty::get_by_id($DB, $data['suggested_difficulty_id']);
         if ($difficulty === false) {
@@ -84,6 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         if ($difficulty->id === 13) {
           die_json(400, "Tier 3 (guard) difficulty is not allowed for suggestions");
+        } else if ($difficulty->id === 20) {
+          die_json(400, "Trivial difficulty is not allowed for suggestions");
+        }
+
+        //Placement suggestions are not allowed for trivial challenges
+        if ($challenge->difficulty_id === 20) {
+          die_json(400, "Placement suggestions cannot be made for trivial challenges");
         }
       }
     } else {
