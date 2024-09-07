@@ -62,6 +62,7 @@ import { getQueryData, useGetMap } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 
 export function PageMap() {
   const { id, challengeId } = useParams();
@@ -75,6 +76,7 @@ export function PageMap() {
 
 export function MapDisplay({ id, challengeId, isModal = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map" });
+  const { t: t_c } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const navigate = useNavigate();
@@ -161,6 +163,18 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             </StyledLink>
           </Stack>
           <ChallengeSubmissionTable key={selectedChallenge.id} challenge={selectedChallenge} />
+          <Divider sx={{ my: 2 }}>
+            <Chip label={t_c("difficulty_suggestions")} size="small" />
+          </Divider>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <SuggestedDifficultyChart challenge={selectedChallenge} />
+          </div>
+          <SuggestedDifficultyTierCounts
+            challenge={selectedChallenge}
+            sx={{
+              mt: 2,
+            }}
+          />
         </>
       )}
 
