@@ -94,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($challenge->difficulty_id === 20) {
           die_json(400, "Placement suggestions cannot be made for trivial challenges");
         }
+
+        //Check if the same challenge had a recent suggestion for placement change
+        if (Suggestion::had_recent_placement_suggestion($DB, $challenge->id)) {
+          $placement_suggestion_cooldown = Suggestion::$placement_cooldown_days;
+          die_json(400, "At least {$placement_suggestion_cooldown} days must pass between placement suggestions for the same challenge");
+        }
       }
     } else {
       if (isset($data['current_difficulty_id'])) {

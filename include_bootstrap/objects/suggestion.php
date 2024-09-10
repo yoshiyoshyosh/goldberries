@@ -3,6 +3,7 @@
 class Suggestion extends DbObject
 {
   public static int $expiration_days = 7;
+  public static int $placement_cooldown_days = 14;
   public static string $table_name = 'suggestion';
 
   public ?int $author_id = null;
@@ -191,6 +192,43 @@ class Suggestion extends DbObject
       'page' => $page,
       'per_page' => $per_page,
     );
+  }
+
+  static function get_last_placement_suggestion($DB, $challenge_id, $placement = true)
+  {
+    $query = "SELECT * FROM suggestion WHERE is_verified = TRUE AND challenge_id = " . $challenge_id;
+    if ($placement === true) {
+      $query .= " AND suggested_difficulty_id IS NOT NULL";
+    }
+    $query .= " ORDER BY date_created DESC LIMIT 1";
+
+    $result = pg_query($DB, $query);
+    if (!$result) {
+      die_json(500, "Failed to query database");
+    }
+
+    $suggestion = new Suggestion();
+    if ($row = pg_fetch_assoc($result)) {
+      $suggestion->apply_db_data($row);
+      $suggestion->expand_foreign_keys($DB, 5, true);
+      $suggestion->fetch_associated_content($DB);
+    } else {
+      $suggestion = null;
+    }
+
+    return $suggestion;
+  }
+
+  static function had_recent_placement_suggestion($DB, $challenge_id)
+  {
+    $suggestion = self::get_last_placement_suggestion($DB, $challenge_id);
+    if ($suggestion === null) {
+      return false;
+    }
+
+    $now = new DateTime();
+    $diff = $now->diff($suggestion->date_created);
+    return $diff->days < self::$placement_cooldown_days;
   }
 
   // === Utility Functions ===
