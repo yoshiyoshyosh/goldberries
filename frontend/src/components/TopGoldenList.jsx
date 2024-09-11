@@ -7,6 +7,7 @@ import {
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
+  TooltipLineBreaks,
 } from "./BasicComponents";
 import {
   Box,
@@ -31,6 +32,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
+  faComment,
   faEdit,
   faExclamationTriangle,
   faExternalLink,
@@ -693,6 +695,11 @@ function TopGoldenListRow({
             <Tooltip title={t("obsolete_notice")} arrow placement="top">
               <FontAwesomeIcon icon={faExclamationTriangle} color="lightgrey" />
             </Tooltip>
+          )}
+          {isPlayer && firstSubmission.player_notes && (
+            <TooltipLineBreaks title={firstSubmission.player_notes}>
+              <FontAwesomeIcon icon={faComment} />
+            </TooltipLineBreaks>
           )}
         </Stack>
       </TableCell>
