@@ -392,6 +392,322 @@ class Map extends DbObject
       "abbreviation" => ["cnym", "nym", "cny"],
       "id" => 2070,
     ],
+    [
+      "abbreviation" => ["0d"],
+      "id" => 3019,
+    ],
+    [
+      "abbreviation" => ["0d1d"],
+      "id" => 3193,
+    ],
+    [
+      "abbreviation" => ["df+"],
+      "id" => 2504,
+    ],
+    [
+      "abbreviation" => ["o8d"],
+      "id" => 2875,
+    ],
+    [
+      "abbreviation" => ["8e"],
+      "id" => 1750,
+    ],
+    [
+      "abbreviation" => ["7e"],
+      "id" => 1749,
+    ],
+    [
+      "abbreviation" => ["oo7d", "o7d"],
+      "id" => 2548,
+    ],
+    [
+      "abbreviation" => ["o7d"],
+      "id" => 2876,
+    ],
+    [
+      "abbreviation" => ["o3d", "o3dark", "3dark"],
+      "id" => 2877,
+    ],
+    [
+      "abbreviation" => ["oo3d", "o3d"],
+      "id" => 2547,
+    ],
+    [
+      "abbreviation" => ["o9d"],
+      "id" => 2879,
+    ],
+    [
+      "abbreviation" => ["5bgv"],
+      "id" => 2878,
+    ],
+    [
+      "abbreviation" => ["o8d"],
+      "id" => 2549,
+    ],
+    [
+      "abbreviation" => ["o6d"],
+      "id" => 2550,
+    ],
+    [
+      "abbreviation" => ["9^9"],
+      "id" => 2101,
+    ],
+    [
+      "abbreviation" => ["9e"],
+      "id" => 3210,
+    ],
+    [
+      "abbreviation" => ["9e+"],
+      "id" => 3212,
+    ],
+    [
+      "abbreviation" => ["9c"],
+      "id" => 714,
+    ],
+    [
+      "abbreviation" => ["1cc"],
+      "id" => 695,
+    ],
+    [
+      "abbreviation" => ["2cc"],
+      "id" => 696,
+    ],
+    [
+      "abbreviation" => ["3cc"],
+      "id" => 697,
+    ],
+    [
+      "abbreviation" => ["4cc"],
+      "id" => 698,
+    ],
+    [
+      "abbreviation" => ["5cc"],
+      "id" => 699,
+    ],
+    [
+      "abbreviation" => ["6cc"],
+      "id" => 700,
+    ],
+    [
+      "abbreviation" => ["7cc"],
+      "id" => 702,
+    ],
+    [
+      "abbreviation" => ["8cc"],
+      "id" => 701,
+    ],
+    [
+      "abbreviation" => ["9cc"],
+      "id" => 703,
+    ],
+    [
+      "abbreviation" => ["9d", "a9d"],
+      "id" => 1219,
+    ],
+    [
+      "abbreviation" => ["z1a"],
+      "id" => 2632,
+    ],
+    [
+      "abbreviation" => ["z0a"],
+      "id" => 2005,
+    ],
+    [
+      "abbreviation" => ["z1b1", "1b1"],
+      "id" => 2633,
+    ],
+    [
+      "abbreviation" => ["z1b2", "1b2"],
+      "id" => 2634,
+    ],
+    [
+      "abbreviation" => ["cg"],
+      "id" => 2538,
+    ],
+    [
+      "abbreviation" => ["shite"],
+      "id" => 2192,
+    ],
+    [
+      "abbreviation" => ["for"],
+      "id" => 2103,
+    ],
+    [
+      "abbreviation" => ["solex"],
+      "id" => 2362,
+    ],
+    [
+      "abbreviation" => ["7b1d"],
+      "id" => 8,
+    ],
+    [
+      "abbreviation" => ["1c+", "1ce"],
+      "id" => 300,
+    ],
+    [
+      "abbreviation" => ["2c+", "2ce"],
+      "id" => 301,
+    ],
+    [
+      "abbreviation" => ["3c+", "3ce"],
+      "id" => 302,
+    ],
+    [
+      "abbreviation" => ["4c+", "4ce"],
+      "id" => 303,
+    ],
+    [
+      "abbreviation" => ["5c+", "5ce"],
+      "id" => 304,
+    ],
+    [
+      "abbreviation" => ["6c+", "6ce"],
+      "id" => 305,
+    ],
+    [
+      "abbreviation" => ["7c+", "7ce"],
+      "id" => 306,
+    ],
+    [
+      "abbreviation" => ["8c+", "8ce"],
+      "id" => 307,
+    ],
+    [
+      "abbreviation" => ["1p"],
+      "id" => 1389,
+    ],
+    [
+      "abbreviation" => ["5p"],
+      "id" => 1390,
+    ],
+    [
+      "abbreviation" => ["7p"],
+      "id" => 1391,
+    ],
+    [
+      "abbreviation" => ["2e"],
+      "id" => 632,
+    ],
+    [
+      "abbreviation" => ["1e"],
+      "id" => 794,
+    ],
+    [
+      "abbreviation" => ["1e+"],
+      "id" => 2108,
+    ],
+    [
+      "abbreviation" => ["cgll"],
+      "id" => 2503,
+    ],
+    [
+      "abbreviation" => ["hv"],
+      "id" => 2122,
+    ],
+    [
+      "abbreviation" => ["t2ahc"],
+      "id" => 98,
+    ],
+    [
+      "abbreviation" => ["dw", "dasteland"],
+      "id" => 2088,
+    ],
+    [
+      "abbreviation" => ["twh"],
+      "id" => 1215,
+    ],
+    [
+      "abbreviation" => ["swut"],
+      "id" => 2511,
+    ],
+    [
+      "abbreviation" => ["motu"],
+      "id" => 2509,
+    ],
+    [
+      "abbreviation" => ["kummit", "kerummit", "krummit"],
+      "id" => 2137,
+    ],
+    [
+      "abbreviation" => ["gflow"],
+      "id" => 840,
+    ],
+    [
+      "abbreviation" => ["sruins"],
+      "id" => 2146,
+    ],
+    [
+      "abbreviation" => ["cca"],
+      "id" => 2073,
+    ],
+    [
+      "abbreviation" => ["ccb"],
+      "id" => 2858,
+    ],
+    [
+      "abbreviation" => ["ccc"],
+      "id" => 2074,
+    ],
+    [
+      "abbreviation" => ["fundercity"],
+      "id" => 2109,
+    ],
+    [
+      "abbreviation" => ["ceak"],
+      "id" => 2071,
+    ],
+    [
+      "abbreviation" => ["speak"],
+      "id" => 2196,
+    ],
+    [
+      "abbreviation" => ["scenter", "scentre"],
+      "id" => 2507,
+    ],
+    [
+      "abbreviation" => ["cocm"],
+      "id" => 1897,
+    ],
+    [
+      "abbreviation" => ["cma"],
+      "id" => 2441,
+    ],
+    [
+      "abbreviation" => ["9c+"],
+      "id" => 2100,
+    ],
+    [
+      "abbreviation" => ["afc"],
+      "id" => 2527,
+    ],
+    [
+      "abbreviation" => ["hsc"],
+      "id" => 887,
+    ],
+    [
+      "abbreviation" => ["rue", "aarboretum", "arboretum"],
+      "id" => 3251,
+    ],
+    [
+      "abbreviation" => ["lehearsal"],
+      "id" => 1113,
+    ],
+    [
+      "abbreviation" => ["lehearsal+"],
+      "id" => 2144,
+    ],
+    [
+      "abbreviation" => ["lultras"],
+      "id" => 1118,
+    ],
+    [
+      "abbreviation" => ["lultras+", "lultras"],
+      "id" => 1119,
+    ],
+    [
+      "abbreviation" => ["lultras"],
+      "id" => 1120,
+    ]
   ];
 
   public string $name;

@@ -68,6 +68,62 @@ class Campaign extends DbObject
       "abbreviation" => ["cny"],
       "id" => 168,
     ],
+    [
+      "abbreviation" => ["zescent"],
+      "id" => 992,
+    ],
+    [
+      "abbreviation" => ["egc"],
+      "id" => 310,
+    ],
+    [
+      "abbreviation" => ["wc"],
+      "id" => 977,
+    ],
+    [
+      "abbreviation" => ["ec"],
+      "id" => 332,
+    ],
+    [
+      "abbreviation" => ["intest"],
+      "id" => 1309,
+    ],
+    [
+      "abbreviation" => ["gollab", "gc"],
+      "id" => 387,
+    ],
+    [
+      "abbreviation" => ["vontest", "vc"],
+      "id" => 948,
+    ],
+    [
+      "abbreviation" => ["shrontest"],
+      "id" => 758,
+    ],
+    [
+      "abbreviation" => ["sca"],
+      "id" => 730,
+    ],
+    [
+      "abbreviation" => ["luins"],
+      "id" => 1106,
+    ],
+    [
+      "abbreviation" => ["cc"],
+      "id" => 1036,
+    ],
+    [
+      "abbreviation" => ["froject"],
+      "id" => 872,
+    ],
+    [
+      "abbreviation" => ["socm"],
+      "id" => 889,
+    ],
+    [
+      "abbreviation" => ["sc2020"],
+      "id" => 1200,
+    ]
   ];
 
   public string $name;
