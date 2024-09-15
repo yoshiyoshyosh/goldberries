@@ -142,7 +142,7 @@ class Campaign extends DbObject
   }
 
 
-  static function search_by_name($DB, $search)
+  static function search_by_name($DB, $search, $raw_search)
   {
     $found = array();
 
@@ -157,6 +157,37 @@ class Campaign extends DbObject
       $campaign->fetch_maps($DB);
       $found[] = $campaign;
     }
+
+    //Sort by:
+    // 1. Exact match
+    // 2. Start of name
+    // 3. Alphabetical
+    usort($found, function ($a, $b) use ($raw_search) {
+      $a_name = strtolower($a->name);
+      $b_name = strtolower($b->name);
+      $search = strtolower($raw_search);
+
+      $a_exact = $a_name === $search;
+      $b_exact = $b_name === $search;
+
+      if ($a_exact && !$b_exact) {
+        return -1;
+      } else if (!$a_exact && $b_exact) {
+        return 1;
+      }
+
+      $a_start = strpos($a_name, $search) === 0;
+      $b_start = strpos($b_name, $search) === 0;
+
+      if ($a_start && !$b_start) {
+        return -1;
+      } else if (!$a_start && $b_start) {
+        return 1;
+      }
+
+      return strcmp($a_name, $b_name);
+    });
+
 
     return $found;
   }

@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -48,17 +48,17 @@ $response['q'] = $unmodified_search;
 $response['in'] = $in;
 
 if (in_array("players", $in)) {
-  $players = Player::search_by_name($DB, $search);
+  $players = Player::search_by_name($DB, $search, $unmodified_search);
   $response['players'] = $players;
 }
 
 if (in_array("campaigns", $in)) {
-  $campaigns = Campaign::search_by_name($DB, $search);
+  $campaigns = Campaign::search_by_name($DB, $search, $unmodified_search);
   $response['campaigns'] = $campaigns;
 }
 
 if (in_array("maps", $in)) {
-  $maps = Map::search_by_name($DB, $search);
+  $maps = Map::search_by_name($DB, $search, $unmodified_search);
   $response['maps'] = $maps;
 }
 

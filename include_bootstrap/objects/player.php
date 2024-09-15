@@ -151,7 +151,7 @@ class Player extends DbObject
     return pg_num_rows($result) > 0;
   }
 
-  static function search_by_name($DB, string $search)
+  static function search_by_name($DB, string $search, string $raw_search)
   {
     $query = "SELECT * FROM player WHERE player.name ILIKE '" . $search . "' ORDER BY name";
     $result = pg_query($DB, $query);
@@ -165,6 +165,37 @@ class Player extends DbObject
       $player->expand_foreign_keys($DB, 2, false);
       $players[] = $player;
     }
+
+    //Sort by:
+    // 1. Exact match
+    // 2. Start of name
+    // 3. Alphabetical
+    usort($players, function ($a, $b) use ($raw_search) {
+      $a_name = strtolower($a->name);
+      $b_name = strtolower($b->name);
+      $search = strtolower($raw_search);
+
+      $a_exact = $a_name === $search;
+      $b_exact = $b_name === $search;
+
+      if ($a_exact && !$b_exact) {
+        return -1;
+      } else if (!$a_exact && $b_exact) {
+        return 1;
+      }
+
+      $a_start = strpos($a_name, $search) === 0;
+      $b_start = strpos($b_name, $search) === 0;
+
+      if ($a_start && !$b_start) {
+        return -1;
+      } else if (!$a_start && $b_start) {
+        return 1;
+      }
+
+      return strcmp($a_name, $b_name);
+    });
+
     return $players;
   }
 
