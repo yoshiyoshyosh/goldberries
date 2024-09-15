@@ -3,6 +3,396 @@
 class Map extends DbObject
 {
   public static string $table_name = 'map';
+  public static array $known_abbreviations = [
+    [
+      "abbreviation" => ["1d"],
+      "id" => 1752,
+    ],
+    [
+      "abbreviation" => ["a1d", "1d"],
+      "id" => 113,
+    ],
+    [
+      "abbreviation" => ["2d"],
+      "id" => 1753,
+    ],
+    [
+      "abbreviation" => ["a2d", "2d"],
+      "id" => 114,
+    ],
+    [
+      "abbreviation" => ["3d"],
+      "id" => 1754,
+    ],
+    [
+      "abbreviation" => ["a3d", "3d"],
+      "id" => 2912,
+    ],
+    [
+      "abbreviation" => ["4d"],
+      "id" => 1755,
+    ],
+    [
+      "abbreviation" => ["a4d", "4d"],
+      "id" => 115,
+    ],
+    [
+      "abbreviation" => ["5d"],
+      "id" => 1756,
+    ],
+    [
+      "abbreviation" => ["a5d", "5d"],
+      "id" => 116,
+    ],
+    [
+      "abbreviation" => ["6d"],
+      "id" => 1757,
+    ],
+    [
+      "abbreviation" => ["a6d", "6d"],
+      "id" => 119,
+    ],
+    [
+      "abbreviation" => ["7d"],
+      "id" => 1758,
+    ],
+    [
+      "abbreviation" => ["a7d", "7d"],
+      "id" => 120,
+    ],
+    [
+      "abbreviation" => ["8d"],
+      "id" => 1759,
+    ],
+    [
+      "abbreviation" => ["8d", "a8d"],
+      "id" => 117,
+    ],
+    [
+      "abbreviation" => ["9d"],
+      "id" => 2508,
+    ],
+    [
+      "abbreviation" => ["1dark"],
+      "id" => 1760,
+    ],
+    [
+      "abbreviation" => ["2dark"],
+      "id" => 1761,
+    ],
+    [
+      "abbreviation" => ["3dark"],
+      "id" => 1762,
+    ],
+    [
+      "abbreviation" => ["4dark"],
+      "id" => 1763,
+    ],
+    [
+      "abbreviation" => ["bhs", "bjs", "sjbhs"],
+      "id" => 2270,
+    ],
+    [
+      "abbreviation" => ["ihs", "sjihs"],
+      "id" => 2289,
+    ],
+    [
+      "abbreviation" => ["ahs", "sjahs"],
+      "id" => 2315,
+    ],
+    [
+      "abbreviation" => ["ehs", "sjehs"],
+      "id" => 2345,
+    ],
+    [
+      "abbreviation" => ["gmhs", "sjgmhs"],
+      "id" => 2364,
+    ],
+    [
+      "abbreviation" => ["bhs", "scbhs"],
+      "id" => 2383,
+    ],
+    [
+      "abbreviation" => ["ihs", "scihs"],
+      "id" => 2406,
+    ],
+    [
+      "abbreviation" => ["ahs", "scahs"],
+      "id" => 2427,
+    ],
+    [
+      "abbreviation" => ["ehs", "scehs"],
+      "id" => 2443,
+    ],
+    [
+      "abbreviation" => ["gmhs", "ngmhs", "scgmhs"],
+      "id" => 2457,
+    ],
+    [
+      "abbreviation" => ["ogmhs"],
+      "id" => 2545,
+    ],
+    [
+      "abbreviation" => ["7d1d", "n7d1d"],
+      "id" => 2038,
+    ],
+    [
+      "abbreviation" => ["7d1d", "o7d1d"],
+      "id" => 2039,
+    ],
+    [
+      "abbreviation" => ["dmr"],
+      "id" => 2078,
+    ],
+    [
+      "abbreviation" => ["sumber"],
+      "id" => 2513,
+    ],
+    [
+      "abbreviation" => ["wountain", "wm"],
+      "id" => 2244,
+    ],
+    [
+      "abbreviation" => ["3l"],
+      "id" => 2066,
+    ],
+    [
+      "abbreviation" => ["pumber"],
+      "id" => 2361,
+    ],
+    [
+      "abbreviation" => ["tbr"],
+      "id" => 2217,
+    ],
+    [
+      "abbreviation" => ["vabyss", "vbyss"],
+      "id" => 2240,
+    ],
+    [
+      "abbreviation" => ["cg"],
+      "id" => 2075,
+    ],
+    [
+      "abbreviation" => ["9bb"],
+      "id" => 2095,
+    ],
+    [
+      "abbreviation" => ["fw^9"],
+      "id" => 2101,
+    ],
+    [
+      "abbreviation" => ["strunter"],
+      "id" => 2201,
+    ],
+    [
+      "abbreviation" => ["sp"],
+      "id" => 2205,
+    ],
+    [
+      "abbreviation" => ["abm"],
+      "id" => 2040,
+    ],
+    [
+      "abbreviation" => ["aa"],
+      "id" => 2056,
+    ],
+    [
+      "abbreviation" => ["cotm"],
+      "id" => 2147,
+    ],
+    [
+      "abbreviation" => ["totm"],
+      "id" => 2148,
+    ],
+    [
+      "abbreviation" => ["rff"],
+      "id" => 124,
+    ],
+    [
+      "abbreviation" => ["sbww"],
+      "id" => 2183,
+    ],
+    [
+      "abbreviation" => ["sash"],
+      "id" => 2185,
+    ],
+    [
+      "abbreviation" => ["sbl"],
+      "id" => 2210,
+    ],
+    [
+      "abbreviation" => ["2kahc", "ahc"],
+      "id" => 98,
+    ],
+    [
+      "abbreviation" => ["d+"],
+      "id" => 2505,
+    ],
+    [
+      "abbreviation" => ["dreep"],
+      "id" => 2354,
+    ],
+    [
+      "abbreviation" => ["gchs"],
+      "id" => 843,
+    ],
+    [
+      "abbreviation" => ["7a1d"],
+      "id" => 2037,
+    ],
+    [
+      "abbreviation" => ["9b"],
+      "id" => 2099,
+    ],
+    [
+      "abbreviation" => ["frummit"],
+      "id" => 2110,
+    ],
+    [
+      "abbreviation" => ["afm"],
+      "id" => 2050,
+    ],
+    [
+      "abbreviation" => ["bfm"],
+      "id" => 2051,
+    ],
+    [
+      "abbreviation" => ["cfm"],
+      "id" => 2052,
+    ],
+    [
+      "abbreviation" => ["fs+"],
+      "id" => 2102,
+    ],
+    [
+      "abbreviation" => ["hots"],
+      "id" => 2456,
+    ],
+    [
+      "abbreviation" => ["pk"],
+      "id" => 2340,
+    ],
+    [
+      "abbreviation" => ["mawn"],
+      "id" => 2151,
+    ],
+    [
+      "abbreviation" => ["mbwn"],
+      "id" => 2152,
+    ],
+    [
+      "abbreviation" => ["wabyss"],
+      "id" => 2355,
+    ],
+    [
+      "abbreviation" => ["ff"],
+      "id" => 1986,
+    ],
+    [
+      "abbreviation" => ["kth"],
+      "id" => 692,
+    ],
+    [
+      "abbreviation" => ["shong"],
+      "id" => 2358,
+    ],
+    [
+      "abbreviation" => ["stodyssey"],
+      "id" => 2356,
+    ],
+    [
+      "abbreviation" => ["aip"],
+      "id" => 2053,
+    ],
+    [
+      "abbreviation" => ["botb"],
+      "id" => 2351,
+    ],
+    [
+      "abbreviation" => ["cm"],
+      "id" => 2441,
+    ],
+    [
+      "abbreviation" => ["cmb"],
+      "id" => 2352,
+    ],
+    [
+      "abbreviation" => ["danopy"],
+      "id" => 2085,
+    ],
+    [
+      "abbreviation" => ["floint"],
+      "id" => 2328,
+    ],
+    [
+      "abbreviation" => ["fota"],
+      "id" => 2449,
+    ],
+    [
+      "abbreviation" => ["gdd"],
+      "id" => 834,
+    ],
+    [
+      "abbreviation" => ["gloria submersi"],
+      "id" => 2599,
+    ],
+    [
+      "abbreviation" => ["ror"],
+      "id" => 2303,
+    ],
+    [
+      "abbreviation" => ["cotv"],
+      "id" => 2314,
+    ],
+    [
+      "abbreviation" => ["flattery"],
+      "id" => 2316,
+    ],
+    [
+      "abbreviation" => ["coblem"],
+      "id" => 2317,
+    ],
+    [
+      "abbreviation" => ["mubble", "mtb"],
+      "id" => 2337,
+    ],
+    [
+      "abbreviation" => ["chromplex"],
+      "id" => 2338,
+    ],
+    [
+      "abbreviation" => ["ffall"],
+      "id" => 2339,
+    ],
+    [
+      "abbreviation" => ["sds"],
+      "id" => 2343,
+    ],
+    [
+      "abbreviation" => ["fliffside", "fc"],
+      "id" => 2346,
+    ],
+    [
+      "abbreviation" => ["kts"],
+      "id" => 2348,
+    ],
+    [
+      "abbreviation" => ["fi"],
+      "id" => 2349,
+    ],
+    [
+      "abbreviation" => ["cotcs"],
+      "id" => 2353,
+    ],
+    [
+      "abbreviation" => ["ud"],
+      "id" => 2455,
+    ],
+    [
+      "abbreviation" => ["cnym", "nym", "cny"],
+      "id" => 2070,
+    ],
+  ];
 
   public string $name;
   public ?StringList $url = null;
@@ -167,6 +557,8 @@ class Map extends DbObject
 
   static function search_by_name($DB, $search, $raw_search)
   {
+    $raw_search_lower = strtolower($raw_search);
+
     $query = "SELECT * FROM map WHERE map.name ILIKE '" . $search . "' ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
@@ -184,10 +576,10 @@ class Map extends DbObject
     // 1. Exact match
     // 2. Start of name
     // 3. Alphabetical
-    usort($maps, function ($a, $b) use ($raw_search) {
+    usort($maps, function ($a, $b) use ($raw_search_lower) {
       $a_name = strtolower($a->name);
       $b_name = strtolower($b->name);
-      $search = strtolower($raw_search);
+      $search = $raw_search_lower;
 
       $a_exact = $a_name === $search;
       $b_exact = $b_name === $search;
@@ -209,6 +601,21 @@ class Map extends DbObject
 
       return strcmp($a_name, $b_name);
     });
+
+    //Check if the raw_search matches a known abbreviation. If yes, fetch the map and add it to the front of the list
+    $abbreviation_matches = [];
+    foreach (self::$known_abbreviations as $abbreviation) {
+      if (array_search($raw_search_lower, $abbreviation['abbreviation']) !== false) {
+        $map_id = $abbreviation['id'];
+        $map = Map::get_by_id($DB, $map_id, 2);
+        if ($map !== false) {
+          $abbreviation_matches[] = $map;
+        }
+      }
+    }
+    if (count($abbreviation_matches) > 0) {
+      $maps = array_merge($abbreviation_matches, $maps);
+    }
 
     return $maps;
   }

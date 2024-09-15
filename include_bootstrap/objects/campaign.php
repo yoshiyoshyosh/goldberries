@@ -3,6 +3,72 @@
 class Campaign extends DbObject
 {
   public static string $table_name = 'campaign';
+  public static array $known_abbreviations = [
+    [
+      "abbreviation" => ["7d1d"],
+      "id" => 1005,
+    ],
+    [
+      "abbreviation" => ["d sides", "d-sides"],
+      "id" => 51,
+    ],
+    [
+      "abbreviation" => ["d sides", "d-sides"],
+      "id" => 867,
+    ],
+    [
+      "abbreviation" => ["itj"],
+      "id" => 467,
+    ],
+    [
+      "abbreviation" => ["sc"],
+      "id" => 1200,
+    ],
+    [
+      "abbreviation" => ["sj"],
+      "id" => 1199,
+    ],
+    [
+      "abbreviation" => ["cg"],
+      "id" => 1037,
+    ],
+    [
+      "abbreviation" => ["mte"],
+      "id" => 582,
+    ],
+    [
+      "abbreviation" => ["afm"],
+      "id" => 1016,
+    ],
+    [
+      "abbreviation" => ["mawn"],
+      "id" => 1109,
+    ],
+    [
+      "abbreviation" => ["nsssc"],
+      "id" => 614,
+    ],
+    [
+      "abbreviation" => ["ssc", "ssc1"],
+      "id" => 1142,
+    ],
+    [
+      "abbreviation" => ["ssc", "ssc2"],
+      "id" => 1201,
+    ],
+    [
+      "abbreviation" => ["ssc", "ssc3"],
+      "id" => 1216,
+    ],
+    [
+      "abbreviation" => ["flp"],
+      "id" => 872,
+    ],
+    [
+      "abbreviation" => ["cny"],
+      "id" => 168,
+    ],
+  ];
 
   public string $name;
   public string $url;
@@ -144,7 +210,8 @@ class Campaign extends DbObject
 
   static function search_by_name($DB, $search, $raw_search)
   {
-    $found = array();
+    $campaigns = array();
+    $raw_search_lower = strtolower($raw_search);
 
     $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '" . $search . "' ORDER BY name";
     $result = pg_query($DB, $query);
@@ -155,17 +222,17 @@ class Campaign extends DbObject
       $campaign = new Campaign();
       $campaign->apply_db_data($row);
       $campaign->fetch_maps($DB);
-      $found[] = $campaign;
+      $campaigns[] = $campaign;
     }
 
     //Sort by:
     // 1. Exact match
     // 2. Start of name
     // 3. Alphabetical
-    usort($found, function ($a, $b) use ($raw_search) {
+    usort($campaigns, function ($a, $b) use ($raw_search_lower) {
       $a_name = strtolower($a->name);
       $b_name = strtolower($b->name);
-      $search = strtolower($raw_search);
+      $search = $raw_search_lower;
 
       $a_exact = $a_name === $search;
       $b_exact = $b_name === $search;
@@ -188,8 +255,23 @@ class Campaign extends DbObject
       return strcmp($a_name, $b_name);
     });
 
+    //Check if the raw_search matches a known abbreviation. If yes, fetch the map and add it to the front of the list
+    $abbreviation_matches = [];
+    foreach (self::$known_abbreviations as $abbreviation) {
+      if (array_search($raw_search_lower, $abbreviation['abbreviation']) !== false) {
+        $campaign_id = $abbreviation['id'];
+        $campaign = Campaign::get_by_id($DB, $campaign_id);
+        if ($campaign !== false) {
+          $campaign->fetch_maps($DB);
+          $abbreviation_matches[] = $campaign;
+        }
+      }
+    }
+    if (count($abbreviation_matches) > 0) {
+      $campaigns = array_merge($abbreviation_matches, $campaigns);
+    }
 
-    return $found;
+    return $campaigns;
   }
 
   static function find_by_author($DB, $author)
