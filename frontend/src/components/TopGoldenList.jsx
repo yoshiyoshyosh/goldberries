@@ -669,7 +669,7 @@ function TopGoldenListRow({
           )}
           {isReference && (
             <Tooltip title={t("stable_explanation")} arrow placement="top">
-              <span style={{ userSelect: "none", cursor: "default" }}>🟊</span>
+              <span style={{ userSelect: "none", cursor: "default" }}>★</span>
             </Tooltip>
           )}
           {isPlayer &&
