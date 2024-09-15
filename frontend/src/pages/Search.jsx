@@ -101,56 +101,58 @@ function SearchResultsCampaigns({ campaigns, heading = "h5", filterStandalone = 
   const filteredCampaigns = filterStandalone ? campaigns.filter(showCampaign) : campaigns;
 
   return (
-    <Stack direction="column" gap={1}>
-      <Typography variant={heading}>
-        {t_g("campaign", { count: 30 })} - {filteredCampaigns.length}
-      </Typography>
-      {filteredCampaigns.length === 0 && (
-        <Typography variant="body1" color="gray">
-          {t("no_campaigns")}
+    filteredCampaigns.length > 0 && (
+      <Stack direction="column" gap={1}>
+        <Typography variant={heading}>
+          {t_g("campaign", { count: 30 })} - {filteredCampaigns.length}
         </Typography>
-      )}
-      {filteredCampaigns.map((campaign) => (
-        <Stack direction="column">
-          <Stack direction="row" gap={2} alignItems="center">
-            <Link to={"/campaign/" + campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-              <Typography variant="h6">{getCampaignName(campaign, t_g)}</Typography>
-            </Link>
-          </Stack>
-          {showCampaign(campaign) && (
-            <Stack direction="column" gap={1}>
-              {campaign.maps.map((map) => {
-                const lobbyInfo = getMapLobbyInfo(map, campaign);
-                const borderColor = lobbyInfo.major ? lobbyInfo.major.color : "transparent";
-                const textColor = lobbyInfo.minor ? lobbyInfo.minor.color : "var(--toastify-color-info)";
-                const textShadow = lobbyInfo.minor
-                  ? "0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, " +
-                    "0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black"
-                  : "none";
-                return (
-                  <Typography
-                    key={map.id}
-                    variant="body2"
-                    sx={{ pl: 2, borderLeft: "3px solid " + borderColor }}
-                  >
-                    <Link
-                      to={"/map/" + map.id}
-                      style={{
-                        textDecoration: "none",
-                        color: textColor,
-                        textShadow: textShadow,
-                      }}
-                    >
-                      {getMapName(map, campaign, false)}
-                    </Link>
-                  </Typography>
-                );
-              })}
+        {filteredCampaigns.length === 0 && (
+          <Typography variant="body1" color="gray">
+            {t("no_campaigns")}
+          </Typography>
+        )}
+        {filteredCampaigns.map((campaign) => (
+          <Stack direction="column">
+            <Stack direction="row" gap={2} alignItems="center">
+              <Link to={"/campaign/" + campaign.id} style={{ color: "var(--toastify-color-info)" }}>
+                <Typography variant="h6">{getCampaignName(campaign, t_g)}</Typography>
+              </Link>
             </Stack>
-          )}
-        </Stack>
-      ))}
-    </Stack>
+            {showCampaign(campaign) && (
+              <Stack direction="column" gap={1}>
+                {campaign.maps.map((map) => {
+                  const lobbyInfo = getMapLobbyInfo(map, campaign);
+                  const borderColor = lobbyInfo.major ? lobbyInfo.major.color : "transparent";
+                  const textColor = lobbyInfo.minor ? lobbyInfo.minor.color : "var(--toastify-color-info)";
+                  const textShadow = lobbyInfo.minor
+                    ? "0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, " +
+                      "0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black"
+                    : "none";
+                  return (
+                    <Typography
+                      key={map.id}
+                      variant="body2"
+                      sx={{ pl: 2, borderLeft: "3px solid " + borderColor }}
+                    >
+                      <Link
+                        to={"/map/" + map.id}
+                        style={{
+                          textDecoration: "none",
+                          color: textColor,
+                          textShadow: textShadow,
+                        }}
+                      >
+                        {getMapName(map, campaign, false)}
+                      </Link>
+                    </Typography>
+                  );
+                })}
+              </Stack>
+            )}
+          </Stack>
+        ))}
+      </Stack>
+    )
   );
 }
 
@@ -158,34 +160,36 @@ function SearchResultsMaps({ maps, heading = "h5" }) {
   const { t } = useTranslation(undefined, { keyPrefix: "search" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
-    <Stack direction="column" gap={1}>
-      <Typography variant={heading}>
-        {t_g("map", { count: 30 })} - {maps.length}
-      </Typography>
-      {maps.length === 0 && (
-        <Typography variant="body1" color="gray">
-          {t("no_maps")}
+    maps.length > 0 && (
+      <Stack direction="column" gap={1}>
+        <Typography variant={heading}>
+          {t_g("map", { count: 30 })} - {maps.length}
         </Typography>
-      )}
-      {maps.map((map) => {
-        const isSameName = map.campaign.name === map.name;
-        return (
-          <Stack direction="column" gap={1}>
-            <Link to={"/map/" + map.id} style={{ color: "var(--toastify-color-info)" }}>
-              <Typography variant="h6">{getMapNameClean(map, map.campaign, t_g, !isSameName)}</Typography>
-            </Link>
-            {!isSameName && (
-              <Typography variant="body2" sx={{ pl: 2 }}>
-                <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
-                  <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
-                  {getCampaignName(map.campaign, t_g)}
-                </Link>
-              </Typography>
-            )}
-          </Stack>
-        );
-      })}
-    </Stack>
+        {maps.length === 0 && (
+          <Typography variant="body1" color="gray">
+            {t("no_maps")}
+          </Typography>
+        )}
+        {maps.map((map) => {
+          const isSameName = map.campaign.name === map.name;
+          return (
+            <Stack direction="column" gap={1}>
+              <Link to={"/map/" + map.id} style={{ color: "var(--toastify-color-info)" }}>
+                <Typography variant="h6">{getMapNameClean(map, map.campaign, t_g, !isSameName)}</Typography>
+              </Link>
+              {!isSameName && (
+                <Typography variant="body2" sx={{ pl: 2 }}>
+                  <Link to={"/campaign/" + map.campaign.id} style={{ color: "var(--toastify-color-info)" }}>
+                    <FontAwesomeIcon icon={faBook} style={{ marginRight: "5px" }} />
+                    {getCampaignName(map.campaign, t_g)}
+                  </Link>
+                </Typography>
+              )}
+            </Stack>
+          );
+        })}
+      </Stack>
+    )
   );
 }
 
@@ -193,49 +197,57 @@ function SearchResultsPlayers({ players }) {
   const { t } = useTranslation(undefined, { keyPrefix: "search" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   return (
-    <Stack direction="column" gap={1}>
-      <Typography variant="h5">
-        {t_g("player", { count: 30 })} - {players.length}
-      </Typography>
-      {players.length === 0 ? (
-        <Typography variant="body1" color="gray">
-          {t("no_players")}
+    players.length > 0 && (
+      <Stack direction="column" gap={1}>
+        <Typography variant="h5">
+          {t_g("player", { count: 30 })} - {players.length}
         </Typography>
-      ) : (
-        <Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
-          {players.map((player) => (
-            <PlayerChip key={player.id} player={player} />
-          ))}
-        </Stack>
-      )}
-    </Stack>
+        {players.length === 0 ? (
+          <Typography variant="body1" color="gray">
+            {t("no_players")}
+          </Typography>
+        ) : (
+          <Stack direction="row" gap={1} alignItems="center" flexWrap="wrap">
+            {players.map((player) => (
+              <PlayerChip key={player.id} player={player} />
+            ))}
+          </Stack>
+        )}
+      </Stack>
+    )
   );
 }
 
 function SearchResultsAuthors({ authors }) {
   const { t } = useTranslation(undefined, { keyPrefix: "search" });
   return (
-    <Stack direction="column" gap={1}>
-      <Typography variant="h5">
-        {t("authors")} - {authors.length}
-      </Typography>
-      {authors.length === 0 && (
-        <Typography variant="body1" color="gray">
-          {t("no_authors")}
+    authors.length > 0 && (
+      <Stack direction="column" gap={1}>
+        <Typography variant="h5">
+          {t("authors")} - {authors.length}
         </Typography>
-      )}
-      {authors.map((author) => (
-        <BasicBox key={author.id} sx={{ width: "100%", px: 2 }}>
-          <Stack direction="column" gap={1}>
-            <Typography variant="h6">{author.name}</Typography>
-            {author.campaigns.length > 0 && (
-              <SearchResultsCampaigns campaigns={author.campaigns} heading="body1" filterStandalone={false} />
-            )}
-            {author.maps.length > 0 && <SearchResultsMaps maps={author.maps} heading="body1" />}
-          </Stack>
-        </BasicBox>
-      ))}
-    </Stack>
+        {authors.length === 0 && (
+          <Typography variant="body1" color="gray">
+            {t("no_authors")}
+          </Typography>
+        )}
+        {authors.map((author) => (
+          <BasicBox key={author.id} sx={{ width: "100%", px: 2 }}>
+            <Stack direction="column" gap={1}>
+              <Typography variant="h6">{author.name}</Typography>
+              {author.campaigns.length > 0 && (
+                <SearchResultsCampaigns
+                  campaigns={author.campaigns}
+                  heading="body1"
+                  filterStandalone={false}
+                />
+              )}
+              {author.maps.length > 0 && <SearchResultsMaps maps={author.maps} heading="body1" />}
+            </Stack>
+          </BasicBox>
+        ))}
+      </Stack>
+    )
   );
 }
 
