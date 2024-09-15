@@ -776,6 +776,7 @@ function ViewSuggestionModal({ id }) {
               value={userText}
               onChange={(e) => setUserText(e.target.value)}
             />
+            <CharsCountLabel text={userText} maxChars={1500} />
             <Typography variant="body2" color={(t) => t.palette.text.secondary} sx={{ mt: 0.25 }}>
               <FontAwesomeIcon icon={faInfoCircle} /> {t("comment_note")}
             </Typography>
@@ -1111,6 +1112,7 @@ function CreateSuggestionModal({ onSuccess }) {
           variant="outlined"
           {...form.register("comment")}
         />
+        <CharsCountLabel text={comment} maxChars={1000} />
         {(isGeneral || selectedChallenge === null) && comment.length < 10 && (
           <FormHelperText sx={{ color: theme.palette.error.main }}>{t("comment.required")}</FormHelperText>
         )}
@@ -1121,6 +1123,18 @@ function CreateSuggestionModal({ onSuccess }) {
         </Button>
       </Grid>
     </Grid>
+  );
+}
+
+export function CharsCountLabel({ text, minChars = -1, maxChars }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.chars_count_label" });
+  text = text ?? "";
+  const length = text.length;
+  const color = length < minChars || length > maxChars ? "error" : "text.secondary";
+  return (
+    <Typography variant="caption" color={color}>
+      {t("label", { count: length, max: maxChars })}
+    </Typography>
   );
 }
 //#endregion

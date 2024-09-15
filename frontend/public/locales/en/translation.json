@@ -164,6 +164,9 @@
       "show_arbitrary": "Show Arbitrary Challenges",
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden"
+    },
+    "chars_count_label": {
+      "label": "({{count}}/{{max}} characters)"
     }
   },
   "forms": {

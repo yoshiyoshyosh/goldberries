@@ -69,6 +69,7 @@ import { getPlayerNameColorStyle } from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { SettingsEntry } from "./AppSettings";
 import { Trans, useTranslation } from "react-i18next";
+import { CharsCountLabel } from "./Suggestions";
 
 export function PageAccount() {
   const { t } = useTranslation(undefined, { keyPrefix: "account" });
@@ -596,6 +597,7 @@ export function UserAccountProfileForm() {
           <TextField {...field} fullWidth multiline minRows={4} placeholder={t("about_me.placeholder")} />
         )}
       />
+      <CharsCountLabel text={formAccount.about_me} maxChars={5000} />
 
       <Divider sx={{ my: 2 }} />
 

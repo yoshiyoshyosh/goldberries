@@ -57,6 +57,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { FullChallengeDisplay } from "./Submission";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { CharsCountLabel } from "./Suggestions";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -326,6 +327,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               minRows={2}
               {...form.register("player_notes")}
             />
+            <CharsCountLabel text={form.watch("player_notes")} maxChars={5000} />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Controller
@@ -881,6 +883,7 @@ export function NewChallengeUserSubmission({}) {
               minRows={2}
               {...form.register("player_notes")}
             />
+            <CharsCountLabel text={form.watch("player_notes")} maxChars={5000} />
           </Grid>
           <Grid item xs={12} sm={12}>
             <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label={t_ts("is_fc")} />

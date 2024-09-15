@@ -47,6 +47,7 @@ import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { ChallengeDetailsList } from "../../pages/Challenge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBasketShopping } from "@fortawesome/free-solid-svg-icons";
+import { CharsCountLabel } from "../../pages/Suggestions";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -299,6 +300,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           sx={{ mt: 2 }}
           InputLabelProps={{ shrink: true }}
         />
+        <CharsCountLabel text={form.watch("player_notes")} maxChars={5000} />
 
         <Grid container columnSpacing={2} sx={{ mt: 2 }}>
           <Grid item xs={12} sm>
