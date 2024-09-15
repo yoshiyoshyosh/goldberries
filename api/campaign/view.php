@@ -130,7 +130,7 @@ function parse_campaign_view($result, $campaign)
   $max_major_sorts = array();
   if ($campaign->sort_major_name !== null) {
     foreach ($campaign->maps as $map) {
-      if ($map->is_archived === false && $map->sort_major !== null) {
+      if ($map->is_archived === false && $map->is_rejected === false && $map->sort_major !== null) {
         if (!array_key_exists($map->sort_major, $max_major_sorts)) {
           $max_major_sorts[$map->sort_major] = 0;
         }
