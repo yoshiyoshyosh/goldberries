@@ -89,23 +89,23 @@ class Map extends DbObject
       "id" => 1763,
     ],
     [
-      "abbreviation" => ["bhs", "bjs", "sjbhs"],
+      "abbreviation" => ["bhs", "bjs", "sjbhs", "bb"],
       "id" => 2270,
     ],
     [
-      "abbreviation" => ["ihs", "sjihs"],
+      "abbreviation" => ["ihs", "sjihs", "rr"],
       "id" => 2289,
     ],
     [
-      "abbreviation" => ["ahs", "sjahs"],
+      "abbreviation" => ["ahs", "sjahs", "mm"],
       "id" => 2315,
     ],
     [
-      "abbreviation" => ["ehs", "sjehs"],
+      "abbreviation" => ["ehs", "sjehs", "ss", "exhs"],
       "id" => 2345,
     ],
     [
-      "abbreviation" => ["gmhs", "sjgmhs"],
+      "abbreviation" => ["gmhs", "sjgmhs", "pp"],
       "id" => 2364,
     ],
     [
@@ -121,7 +121,7 @@ class Map extends DbObject
       "id" => 2427,
     ],
     [
-      "abbreviation" => ["ehs", "scehs"],
+      "abbreviation" => ["ehs", "scehs", "exhs"],
       "id" => 2443,
     ],
     [
@@ -233,7 +233,7 @@ class Map extends DbObject
       "id" => 2354,
     ],
     [
-      "abbreviation" => ["gchs"],
+      "abbreviation" => ["gchs", "artside"],
       "id" => 843,
     ],
     [
@@ -253,11 +253,11 @@ class Map extends DbObject
       "id" => 2050,
     ],
     [
-      "abbreviation" => ["bfm"],
+      "abbreviation" => ["bfm", "afmb"],
       "id" => 2051,
     ],
     [
-      "abbreviation" => ["cfm"],
+      "abbreviation" => ["cfm", "afmc"],
       "id" => 2052,
     ],
     [
@@ -333,7 +333,7 @@ class Map extends DbObject
       "id" => 834,
     ],
     [
-      "abbreviation" => ["gloria submersi"],
+      "abbreviation" => ["gloria submersi", "gloria"],
       "id" => 2599,
     ],
     [
@@ -426,11 +426,15 @@ class Map extends DbObject
     ],
     [
       "abbreviation" => ["o3d", "o3dark", "3dark"],
-      "id" => 2877,
+      "id" => 2546,
     ],
     [
       "abbreviation" => ["oo3d", "o3d"],
       "id" => 2547,
+    ],
+    [
+      "abbreviation" => ["o6d"],
+      "id" => 2877,
     ],
     [
       "abbreviation" => ["o9d"],
@@ -502,7 +506,7 @@ class Map extends DbObject
     ],
     [
       "abbreviation" => ["9d", "a9d"],
-      "id" => 1219,
+      "id" => 2528,
     ],
     [
       "abbreviation" => ["z1a"],
@@ -649,7 +653,7 @@ class Map extends DbObject
       "id" => 2074,
     ],
     [
-      "abbreviation" => ["fundercity"],
+      "abbreviation" => ["fundercity", "1u"],
       "id" => 2109,
     ],
     [
@@ -707,6 +711,214 @@ class Map extends DbObject
     [
       "abbreviation" => ["lultras"],
       "id" => 1120,
+    ],
+    [
+      "abbreviation" => ["7tree"],
+      "id" => 2656,
+    ],
+    [
+      "abbreviation" => ["jetro"],
+      "id" => 2129,
+    ],
+    [
+      "abbreviation" => ["7down"],
+      "id" => 2343,
+    ],
+    [
+      "abbreviation" => ["movel"],
+      "id" => 818,
+    ],
+    [
+      "abbreviation" => ["bjv"],
+      "id" => 821,
+    ],
+    [
+      "abbreviation" => ["ccw"],
+      "id" => 1211,
+    ],
+    [
+      "abbreviation" => ["bchs"],
+      "id" => 196,
+    ],
+    [
+      "abbreviation" => ["a1"],
+      "id" => 2899,
+    ],
+    [
+      "abbreviation" => ["b1"],
+      "id" => 2908,
+    ],
+    [
+      "abbreviation" => ["c1"],
+      "id" => 625,
+    ],
+    [
+      "abbreviation" => ["a2"],
+      "id" => 615,
+    ],
+    [
+      "abbreviation" => ["b2"],
+      "id" => 622,
+    ],
+    [
+      "abbreviation" => ["c2"],
+      "id" => 2901,
+    ],
+    [
+      "abbreviation" => ["a3"],
+      "id" => 616,
+    ],
+    [
+      "abbreviation" => ["b3"],
+      "id" => 2909,
+    ],
+    [
+      "abbreviation" => ["c3"],
+      "id" => 627,
+    ],
+    [
+      "abbreviation" => ["a4"],
+      "id" => 617,
+    ],
+    [
+      "abbreviation" => ["b4"],
+      "id" => 624,
+    ],
+    [
+      "abbreviation" => ["c4"],
+      "id" => 628,
+    ],
+    [
+      "abbreviation" => ["a5"],
+      "id" => 618,
+    ],
+    [
+      "abbreviation" => ["b5"],
+      "id" => 634,
+    ],
+    [
+      "abbreviation" => ["c5"],
+      "id" => 2903,
+    ],
+    [
+      "abbreviation" => ["a6"],
+      "id" => 619,
+    ],
+    [
+      "abbreviation" => ["b6"],
+      "id" => 2902,
+    ],
+    [
+      "abbreviation" => ["c6"],
+      "id" => 630,
+    ],
+    [
+      "abbreviation" => ["a7"],
+      "id" => 633,
+    ],
+    [
+      "abbreviation" => ["b7"],
+      "id" => 636,
+    ],
+    [
+      "abbreviation" => ["c7"],
+      "id" => 2904,
+    ],
+    [
+      "abbreviation" => ["a8"],
+      "id" => 620,
+    ],
+    [
+      "abbreviation" => ["b8"],
+      "id" => 637,
+    ],
+    [
+      "abbreviation" => ["c8"],
+      "id" => 632,
+    ],
+    [
+      "abbreviation" => ["a9"],
+      "id" => 638,
+    ],
+    [
+      "abbreviation" => ["oa1", "a1"],
+      "id" => 613,
+    ],
+    [
+      "abbreviation" => ["ob1", "b1"],
+      "id" => 621,
+    ],
+    [
+      "abbreviation" => ["oc2", "c2"],
+      "id" => 626,
+    ],
+    [
+      "abbreviation" => ["oa3", "a3"],
+      "id" => 2906,
+    ],
+    [
+      "abbreviation" => ["ob3", "b3"],
+      "id" => 623,
+    ],
+    [
+      "abbreviation" => ["oa4", "a4"],
+      "id" => 2907,
+    ],
+    [
+      "abbreviation" => ["oa5", "a5"],
+      "id" => 2539,
+    ],
+    [
+      "abbreviation" => ["ob5", "b5"],
+      "id" => 2900,
+    ],
+    [
+      "abbreviation" => ["oc5", "c5"],
+      "id" => 629,
+    ],
+    [
+      "abbreviation" => ["ob6", "b6"],
+      "id" => 635,
+    ],
+    [
+      "abbreviation" => ["ob7", "b7"],
+      "id" => 2905,
+    ],
+    [
+      "abbreviation" => ["oc7", "c7"],
+      "id" => 631,
+    ],
+    [
+      "abbreviation" => ["mtb"],
+      "id" => 1232,
+    ],
+    [
+      "abbreviation" => ["mtc"],
+      "id" => 1230,
+    ],
+    [
+      "abbreviation" => ["mtd"],
+      "id" => 2874,
+    ],
+    [
+      "abbreviation" => ["em"],
+      "id" => 2092,
+    ],
+    [
+      "abbreviation" => ["agfts"],
+      "id" => 2266,
+    ],
+    [
+      "abbreviation" => ["txvi"],
+      "id" => 2306,
+    ],
+    [
+      "abbreviation" => ["bvd"],
+      "id" => 2311,
+    ],
+    [
+      "abbreviation" => ["acid"],
+      "id" => 2324,
     ]
   ];
 

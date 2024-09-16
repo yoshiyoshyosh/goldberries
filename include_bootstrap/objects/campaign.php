@@ -123,6 +123,18 @@ class Campaign extends DbObject
     [
       "abbreviation" => ["sc2020"],
       "id" => 1200,
+    ],
+    [
+      "abbreviation" => ["bc"],
+      "id" => 92,
+    ],
+    [
+      "abbreviation" => ["mic"],
+      "id" => 539,
+    ],
+    [
+      "abbreviation" => ["pdbc"],
+      "id" => 655,
     ]
   ];
 
