@@ -30,6 +30,7 @@ WHERE submission_is_verified = true
   AND player_id = $player_id
   AND map_is_archived = false
   AND objective_is_arbitrary = false
+  AND submission_is_obsolete = false
   AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 $result = pg_query($DB, $query);
 if (!$result) {
