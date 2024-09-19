@@ -1,142 +1,9 @@
 <?php
+require_once('../../assets/data/campaign-abbreviations.php');
 
 class Campaign extends DbObject
 {
   public static string $table_name = 'campaign';
-  public static array $known_abbreviations = [
-    [
-      "abbreviation" => ["7d1d"],
-      "id" => 1005,
-    ],
-    [
-      "abbreviation" => ["d sides", "d-sides"],
-      "id" => 51,
-    ],
-    [
-      "abbreviation" => ["d sides", "d-sides"],
-      "id" => 867,
-    ],
-    [
-      "abbreviation" => ["itj"],
-      "id" => 467,
-    ],
-    [
-      "abbreviation" => ["sc"],
-      "id" => 1200,
-    ],
-    [
-      "abbreviation" => ["sj"],
-      "id" => 1199,
-    ],
-    [
-      "abbreviation" => ["cg"],
-      "id" => 1037,
-    ],
-    [
-      "abbreviation" => ["mte"],
-      "id" => 582,
-    ],
-    [
-      "abbreviation" => ["afm"],
-      "id" => 1016,
-    ],
-    [
-      "abbreviation" => ["mawn"],
-      "id" => 1109,
-    ],
-    [
-      "abbreviation" => ["nsssc"],
-      "id" => 614,
-    ],
-    [
-      "abbreviation" => ["ssc", "ssc1"],
-      "id" => 1142,
-    ],
-    [
-      "abbreviation" => ["ssc", "ssc2"],
-      "id" => 1201,
-    ],
-    [
-      "abbreviation" => ["ssc", "ssc3"],
-      "id" => 1216,
-    ],
-    [
-      "abbreviation" => ["flp"],
-      "id" => 872,
-    ],
-    [
-      "abbreviation" => ["cny"],
-      "id" => 168,
-    ],
-    [
-      "abbreviation" => ["zescent"],
-      "id" => 992,
-    ],
-    [
-      "abbreviation" => ["egc"],
-      "id" => 310,
-    ],
-    [
-      "abbreviation" => ["wc"],
-      "id" => 977,
-    ],
-    [
-      "abbreviation" => ["ec"],
-      "id" => 332,
-    ],
-    [
-      "abbreviation" => ["intest"],
-      "id" => 1309,
-    ],
-    [
-      "abbreviation" => ["gollab", "gc"],
-      "id" => 387,
-    ],
-    [
-      "abbreviation" => ["vontest", "vc"],
-      "id" => 948,
-    ],
-    [
-      "abbreviation" => ["shrontest"],
-      "id" => 758,
-    ],
-    [
-      "abbreviation" => ["sca"],
-      "id" => 730,
-    ],
-    [
-      "abbreviation" => ["luins"],
-      "id" => 1106,
-    ],
-    [
-      "abbreviation" => ["cc"],
-      "id" => 1036,
-    ],
-    [
-      "abbreviation" => ["froject"],
-      "id" => 872,
-    ],
-    [
-      "abbreviation" => ["socm"],
-      "id" => 889,
-    ],
-    [
-      "abbreviation" => ["sc2020"],
-      "id" => 1200,
-    ],
-    [
-      "abbreviation" => ["bc"],
-      "id" => 92,
-    ],
-    [
-      "abbreviation" => ["mic"],
-      "id" => 539,
-    ],
-    [
-      "abbreviation" => ["pdbc"],
-      "id" => 655,
-    ]
-  ];
 
   public string $name;
   public string $url;
@@ -278,6 +145,8 @@ class Campaign extends DbObject
 
   static function search_by_name($DB, $search, $raw_search)
   {
+    global $CAMPAIGN_ABBREVIATIONS;
+
     $campaigns = array();
     $raw_search_lower = strtolower($raw_search);
 
@@ -325,7 +194,7 @@ class Campaign extends DbObject
 
     //Check if the raw_search matches a known abbreviation. If yes, fetch the map and add it to the front of the list
     $abbreviation_matches = [];
-    foreach (self::$known_abbreviations as $abbreviation) {
+    foreach ($CAMPAIGN_ABBREVIATIONS as $abbreviation) {
       if (array_search($raw_search_lower, $abbreviation['abbreviation']) !== false) {
         $campaign_id = $abbreviation['id'];
         $campaign = Campaign::get_by_id($DB, $campaign_id);
