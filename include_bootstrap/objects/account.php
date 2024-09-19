@@ -1,5 +1,5 @@
 <?php
-
+require_once('../../assets/data/country-codes.php');
 $session_expire_days = 7;
 
 class Account extends DbObject
@@ -23,6 +23,7 @@ class Account extends DbObject
   public ?string $about_me = null;
   public ?string $name_color_start = null;
   public ?string $name_color_end = null;
+  public ?string $country = null;
 
   // Other
   public ?JsonDateTime $last_player_rename = null;
@@ -94,6 +95,8 @@ class Account extends DbObject
       $this->name_color_start = $arr[$prefix . 'name_color_start'];
     if (isset($arr[$prefix . 'name_color_end']))
       $this->name_color_end = $arr[$prefix . 'name_color_end'];
+    if (isset($arr[$prefix . 'country']))
+      $this->country = $arr[$prefix . 'country'];
 
     if (isset($arr[$prefix . 'last_player_rename'])) {
       $this->last_player_rename = new JsonDateTime($arr[$prefix . 'last_player_rename']);
@@ -138,6 +141,7 @@ class Account extends DbObject
       'about_me' => $this->about_me,
       'name_color_start' => $this->name_color_start,
       'name_color_end' => $this->name_color_end,
+      'country' => $this->country,
       'last_player_rename' => $this->last_player_rename,
       'n_sub_verified' => $this->n_sub_verified,
       'n_chall_personal' => $this->n_chall_personal,
@@ -205,5 +209,14 @@ class Account extends DbObject
     if ($remove_email) {
       $this->email = null;
     }
+  }
+
+  static function is_valid_country(string $country): bool
+  {
+    global $COUNTRY_CODES;
+    if ($country === null) {
+      return true;
+    }
+    return array_key_exists($country, $COUNTRY_CODES);
   }
 }

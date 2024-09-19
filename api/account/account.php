@@ -66,6 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $target->name_color_end = $accountReq->name_color_end;
     $target->input_method = $accountReq->input_method;
     $target->about_me = $accountReq->about_me;
+
+    if (Account::is_valid_country($accountReq->country)) {
+      $target->country = $accountReq->country;
+    }
+
     $target->last_player_rename = $accountReq->last_player_rename;
 
     $new_email = isset($request['new_email']) ? $request['new_email'] : null;
@@ -224,20 +229,28 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $account->about_me = $request['about_me'];
       $changes .= "about_me ({$account->about_me}), ";
     }
+    if (array_key_exists("country", $request) && $request['country'] !== $account->country) {
+      if (!Account::is_valid_country($request['country'])) {
+        die_json(400, "Invalid country");
+      }
+      $account->country = $request['country'];
+      $changes .= "country ({$account->country}), ";
+    }
+
     //Notification settings
-    if (array_key_exists("n_sub_verified", $request) && $request['n_sub_verified'] !== $account->n_sub_verified) {
+    if (array_key_exists("n_sub_verified", $request) && ($request['n_sub_verified'] === 't') !== $account->n_sub_verified) {
       $account->n_sub_verified = $request['n_sub_verified'] === 't';
       $changes .= "n_sub_verified ({$account->n_sub_verified}), ";
     }
-    if (array_key_exists("n_chall_personal", $request) && $request['n_chall_personal'] !== $account->n_chall_personal) {
+    if (array_key_exists("n_chall_personal", $request) && ($request['n_chall_personal'] === 't') !== $account->n_chall_personal) {
       $account->n_chall_personal = $request['n_chall_personal'] === 't';
       $changes .= "n_chall_personal ({$account->n_chall_personal}), ";
     }
-    if (array_key_exists("n_suggestion", $request) && $request['n_suggestion'] !== $account->n_suggestion) {
+    if (array_key_exists("n_suggestion", $request) && ($request['n_suggestion'] === 't') !== $account->n_suggestion) {
       $account->n_suggestion = $request['n_suggestion'] === 't';
       $changes .= "n_suggestion ({$account->n_suggestion}), ";
     }
-    if (array_key_exists("n_chall_moved", $request) && $request['n_chall_moved'] !== $account->n_chall_moved) {
+    if (array_key_exists("n_chall_moved", $request) && ($request['n_chall_moved'] === 't') !== $account->n_chall_moved) {
       $account->n_chall_moved = $request['n_chall_moved'] === 't';
       $changes .= "n_chall_moved ({$account->n_chall_moved}), ";
     }
