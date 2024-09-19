@@ -292,6 +292,7 @@ export const COLLECTIBLES = [
       { value: "8", name: "Velvet Golden", icon: "/icons/golden-velvet.png" },
       { value: "9", name: "FFFFF Golden", icon: "/icons/golden-fffff.png" },
       { value: "10", name: "Blueberry Golden", icon: "/icons/golden-blueberry.png" },
+      { value: "11", name: "Trans Golden", icon: "/icons/golden-trans.png" },
     ],
   },
   {
@@ -318,6 +319,7 @@ export const COLLECTIBLES = [
       { value: "7", name: "FFFFF Moonberry", icon: "/icons/moonberry-fffff.png" },
       { value: "8", name: "Voidberry", displayName: "Voidberry", icon: "/icons/voidberry.png" },
       { value: "9", name: "Startside Moonberry", icon: "/icons/moonberry-startside.png" },
+      { value: "10", name: "DMR Moonberry", icon: "/icons/moonberry-dmr.png" },
     ],
   },
   {
