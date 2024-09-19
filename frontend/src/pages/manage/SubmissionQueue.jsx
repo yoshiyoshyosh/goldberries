@@ -189,6 +189,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
   const [switchSort, setSwitchSort] = useState(false);
   const [filterText, setFilterText] = useState("");
   const { mutateAsync: massVerifySubmissions } = useMassVerifySubmissions();
+  const auth = useAuth();
 
   let defaultPage = 0;
   if (selectedSubmissionId !== null) {
@@ -225,7 +226,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
 
     //Find if the submission is locked by another verifier (present in the notices)
     const notice = notices.find((notice) => notice.submission_id === submission.id);
-    if (notice) {
+    if (notice && notice.verifier.id !== auth.user.player_id) {
       text += " Locked";
     }
 
