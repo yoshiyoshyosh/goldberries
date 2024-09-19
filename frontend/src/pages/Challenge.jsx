@@ -75,7 +75,7 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
 import { AuthorInfoBoxLine } from "./Campaign";
 import { toast } from "react-toastify";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { jsonDateToJsDate } from "../util/util";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
 import { COLLECTIBLES, getCollectibleIcon, getCollectibleName } from "../components/forms/Map";
@@ -290,12 +290,7 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
             <AuthorInfoBoxLine author_gb_id={map.author_gb_id} author_gb_name={map.author_gb_name} />
           </InfoBox>
         )}
-        {map !== null && challenge === null && map.golden_changes && !settings.general.hideGoldenChanges && (
-          <InfoBox>
-            <InfoBoxIconTextLine text={t_mib("golden_changes")} />
-            <InfoBoxIconTextLine text={map.golden_changes} isSecondary isMultiline />
-          </InfoBox>
-        )}
+        {map !== null && challenge === null && <MapGoldenChangesBox map={map} />}
       </Grid>
     </Grid>
   );
@@ -356,6 +351,32 @@ function CollectiblesInfoBox({ collectibles }) {
           />
         );
       })}
+    </InfoBox>
+  );
+}
+function MapGoldenChangesBox({ map }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "map.info_boxes.golden_changes" });
+  const { settings } = useAppSettings();
+  const [open, setOpen] = useState(false);
+
+  const showChanges = open || settings.general.alwaysShowGoldenChanges;
+
+  return (
+    <InfoBox>
+      <InfoBoxIconTextLine text={t("label")} />
+      {showChanges ? (
+        <InfoBoxIconTextLine text={map.golden_changes ?? t("no_changes")} isSecondary isMultiline />
+      ) : (
+        <InfoBoxIconTextLine
+          text={
+            <Button variant="outlined" size="small" onClick={() => setOpen(true)}>
+              {t("show")}
+            </Button>
+          }
+          isSecondary
+          isMultiline
+        />
+      )}
     </InfoBox>
   );
 }

@@ -129,7 +129,7 @@ export function AppSettingsGeneralForm() {
 
       <SettingsEntry note={t("golden_changes.note")}>
         <Controller
-          name="hideGoldenChanges"
+          name="alwaysShowGoldenChanges"
           control={form.control}
           render={({ field }) => (
             <FormControlLabel

@@ -729,8 +729,8 @@
         "label": "General",
         "language": "Language",
         "golden_changes": {
-          "label": "Hide Golden Changes",
-          "note": "Turn this on to avoid spoilers on golden rooms or other golden exclusive map changes."
+          "label": "Always Show Golden Changes",
+          "note": "Turn this on to remove the anti-spoiler button on the map page for golden rooms or other golden exclusive map changes."
         }
       },
       "visual": {
@@ -939,7 +939,11 @@
     "no_challenges": "There are currently no challenges for this map.",
     "info_boxes": {
       "collectibles": "Map Collectibles",
-      "golden_changes": "Golden Changes"
+      "golden_changes": {
+        "label": "Golden Changes",
+        "no_changes": "No golden changes",
+        "show": "Show Golden Changes"
+      }
     }
   },
   "player": {
