@@ -492,9 +492,19 @@ export function InfoBoxIconTextLine({ icon, text, color, isSecondary = false, is
   );
 }
 
-export function LanguageFlag({ code, height = "20", style }) {
-  const alt = LANGUAGES.find((lang) => lang.code === code)?.name;
-  return <img src={`/locales/flags/${code}.png`} height={height} alt={alt} style={style} />;
+export function LanguageFlag({ code, height = "20", style, showTooltip = false }) {
+  const alt = COUNTRY_CODES[code];
+  const img = (
+    <img src={`/locales/flags/${code}.png`} height={height} loading="lazy" alt={alt} style={style} />
+  );
+  if (showTooltip) {
+    return (
+      <Tooltip title={alt} arrow placement="top">
+        {img}
+      </Tooltip>
+    );
+  }
+  return img;
 }
 
 export function CustomIconButton({ children, sx = {}, ...props }) {

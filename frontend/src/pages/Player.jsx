@@ -14,6 +14,7 @@ import {
   BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
+  LanguageFlag,
   LoadingSpinner,
   StyledLink,
   getErrorFromMultiple,
@@ -122,6 +123,7 @@ export function PlayerDisplay({ id }) {
           {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
           {player.account.is_verifier && <VerifierIcon />}
           {player.account.is_admin && <AdminIcon />}
+          {player.account.country && <LanguageFlag code={player.account.country} showTooltip height="24px" />}
           {isTemp && <TempVerifierIcon />}
           <Box flexGrow={1} />
           <StyledLink to={`/player/${id}/top-golden-list`}>{t("personal_tgl")}</StyledLink>
