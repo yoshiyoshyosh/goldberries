@@ -211,7 +211,7 @@ class Account extends DbObject
     }
   }
 
-  static function is_valid_country(string $country): bool
+  static function is_valid_country(?string $country): bool
   {
     global $COUNTRY_CODES;
     if ($country === null) {

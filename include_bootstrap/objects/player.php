@@ -48,6 +48,8 @@ class Player extends DbObject
       $this->account['input_method'] = $arr[$prefix . 'account_input_method'];
     if (isset($arr[$prefix . 'account_about_me']))
       $this->account['about_me'] = $arr[$prefix . 'account_about_me'];
+    if (isset($arr[$prefix . 'account_country']))
+      $this->account['country'] = $arr[$prefix . 'account_country'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -75,6 +77,7 @@ class Player extends DbObject
       $this->account['links'] = $account->links;
       $this->account['input_method'] = $account->input_method;
       $this->account['about_me'] = $account->about_me;
+      $this->account['country'] = $account->country;
     }
   }
 
