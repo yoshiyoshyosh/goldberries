@@ -167,6 +167,10 @@
     },
     "chars_count_label": {
       "label": "({{count}}/{{max}} characters)"
+    },
+    "country_select": {
+      "label": "Country",
+      "not_specified": "Not Specified"
     }
   },
   "forms": {

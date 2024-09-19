@@ -8,7 +8,9 @@ import {
   DialogContent,
   DialogContentText,
   Menu,
+  MenuItem,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -16,6 +18,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { APP_NAME_LONG, APP_URL, TWITCH_EMBED_PARENT } from "../util/constants";
+import { COUNTRY_CODES } from "../util/country_codes";
 import { useTheme } from "@emotion/react";
 import { LANGUAGES } from "../i18n/config";
 import { useTranslation } from "react-i18next";
@@ -507,5 +510,35 @@ export function TooltipLineBreaks({ title, children }) {
     <Tooltip title={<span style={{ whiteSpace: "pre-line" }}>{title}</span>} arrow placement="top">
       {children}
     </Tooltip>
+  );
+}
+
+export function CountrySelect({ value, setValue, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.country_select" });
+  return (
+    <TextField
+      select
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      fullWidth
+      SelectProps={{
+        MenuProps: {
+          disableScrollLock: true,
+        },
+      }}
+      {...props}
+    >
+      <MenuItem value="">
+        <em>{t("not_specified")}</em>
+      </MenuItem>
+      {Object.keys(COUNTRY_CODES).map((code) => (
+        <MenuItem key={code} value={code}>
+          <Stack direction="row" alignItems="center">
+            <LanguageFlag code={code} height="20" style={{ marginRight: "0.5rem" }} />
+            {COUNTRY_CODES[code]}
+          </Stack>
+        </MenuItem>
+      ))}
+    </TextField>
   );
 }

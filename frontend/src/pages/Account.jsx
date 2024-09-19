@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import {
   BasicContainerBox,
+  CountrySelect,
   CustomIconButton,
   ErrorDisplay,
   HeadTitle,
@@ -441,6 +442,7 @@ export function UserAccountProfileForm() {
   const { t: t_nc } = useTranslation(undefined, { keyPrefix: "account.tabs.profile.name_color" });
   const { t: t_lm } = useTranslation(undefined, { keyPrefix: "account.tabs.login_methods" });
   const { t: t_im } = useTranslation(undefined, { keyPrefix: "components.input_methods" });
+  const { t: t_cs } = useTranslation(undefined, { keyPrefix: "components.country_select" });
   const auth = useAuth();
   const { settings } = useAppSettings();
   const { mutate: postAccount } = usePostAccount((account) => {
@@ -601,9 +603,9 @@ export function UserAccountProfileForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Typography variant="h6">{t_im("label", { count: 1 })}</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
+          <Typography variant="h6">{t_im("label", { count: 1 })}</Typography>
           <Controller
             name="input_method"
             control={form.control}
@@ -628,6 +630,14 @@ export function UserAccountProfileForm() {
                 ))}
               </TextField>
             )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h6">{t_cs("label", { count: 1 })}</Typography>
+          <Controller
+            name="country"
+            control={form.control}
+            render={({ field }) => <CountrySelect value={field.value} setValue={field.onChange} fullWidth />}
           />
         </Grid>
       </Grid>

@@ -110,13 +110,13 @@ export function AppSettingsGeneralForm() {
               <Stack direction="row" alignItems="center" gap={1}>
                 <Box
                   sx={{
-                    minWidth: "40px",
+                    minWidth: "36px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-around",
                   }}
                 >
-                  <LanguageFlag code={lang.code} />
+                  <LanguageFlag code={lang.code} height="32" />
                 </Box>
                 {lang.name}
               </Stack>
