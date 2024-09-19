@@ -1032,6 +1032,7 @@
         },
         "proof_note": "Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight",
         "raw_session_note": "Raw session recording of the winning run is required for Tier 3+ goldens.",
+        "raw_session_same_url_info": "Are you sure you want to use the same URL for the raw session?",
         "is_fc": "Run is Full Clear",
         "date_created": "[Verifier Only] Date Created",
         "button": "Submit"

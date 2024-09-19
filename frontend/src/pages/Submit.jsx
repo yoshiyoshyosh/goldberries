@@ -58,6 +58,7 @@ import { FullChallengeDisplay } from "./Submission";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CharsCountLabel } from "./Suggestions";
+import { useTheme } from "@emotion/react";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -160,6 +161,9 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
     });
   });
   const errors = form.formState.errors;
+  const proof_url = form.watch("proof_url");
+  const raw_session_url = form.watch("raw_session_url");
+  const sameUrl = proof_url === raw_session_url;
 
   const onCampaignSelect = (campaign) => {
     setCampaign(campaign);
@@ -317,6 +321,11 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
                 }
               />
               <FormHelperText>{t("raw_session_note")}</FormHelperText>
+              {sameUrl && (
+                <Typography variant="caption" color="error">
+                  {t("raw_session_same_url_info")}
+                </Typography>
+              )}
             </Grid>
           )}
           <Grid item xs={12}>
@@ -790,6 +799,9 @@ export function NewChallengeUserSubmission({}) {
   });
   const errors = form.formState.errors;
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
+  const proof_url = form.watch("proof_url");
+  const raw_session_url = form.watch("raw_session_url");
+  const sameUrl = proof_url === raw_session_url;
 
   return (
     <>
@@ -873,6 +885,11 @@ export function NewChallengeUserSubmission({}) {
                 }
               />
               <FormHelperText>{t_ts("raw_session_note")}</FormHelperText>
+              {sameUrl && (
+                <Typography variant="caption" color="error">
+                  {t_ts("raw_session_same_url_info")}
+                </Typography>
+              )}
             </Grid>
           )}
           <Grid item xs={12}>
