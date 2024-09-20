@@ -68,7 +68,7 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
-import { getQueryData, useGetChallenge, usePostSubmission } from "../hooks/useApi";
+import { getQueryData, useGetChallenge, usePostMap, usePostSubmission } from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -357,7 +357,16 @@ function CollectiblesInfoBox({ collectibles }) {
 function MapGoldenChangesBox({ map }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map.info_boxes.golden_changes" });
   const { settings } = useAppSettings();
+  const auth = useAuth();
   const [open, setOpen] = useState(false);
+  const { mutate: postMap } = usePostMap();
+
+  const setNoChanges = () => {
+    postMap({
+      ...map,
+      golden_changes: null,
+    });
+  };
 
   const showChanges = open || settings.general.alwaysShowGoldenChanges;
 
@@ -371,6 +380,17 @@ function MapGoldenChangesBox({ map }) {
           text={
             <Button variant="outlined" size="small" onClick={() => setOpen(true)}>
               {t("show")}
+            </Button>
+          }
+          isSecondary
+          isMultiline
+        />
+      )}
+      {auth.hasVerifierPriv && map.golden_changes === "Unknown" && (
+        <InfoBoxIconTextLine
+          text={
+            <Button variant="outlined" color="warning" size="small" onClick={setNoChanges}>
+              Set to "No changes"
             </Button>
           }
           isSecondary
