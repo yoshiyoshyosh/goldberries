@@ -213,11 +213,6 @@ function send_webhook_suggestion_accepted($suggestion)
   }
 
   $suggestion->expand_foreign_keys($DB, 5);
-  if ($suggestion->challenge_id !== null && $suggestion->is_accepted === true && $suggestion->suggested_difficulty_id !== null) {
-    //Don't send a notification for a challenge placement suggestion if it was accepted, as it causes a changelog notification anyways
-    return;
-  }
-
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
 
   $icon = $suggestion->is_accepted === true ? ":white_check_mark:" : ($suggestion->is_accepted === null ? ":question:" : ":x:");
