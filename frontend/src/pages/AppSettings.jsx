@@ -558,6 +558,21 @@ function AppSettingsTopGoldenListForm() {
         />
       </SettingsEntry>
 
+      <SettingsEntry note={t("hide_time_taken_column.note")}>
+        <Controller
+          name="topGoldenList.hideTimeTakenColumn"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("hide_time_taken_column.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
+
       <Footnote />
     </form>
   );

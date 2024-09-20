@@ -32,6 +32,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
+  faClock,
   faComment,
   faEdit,
   faExclamationTriangle,
@@ -41,7 +42,7 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
-import { getChallengeSuffix, getMapName } from "../util/data_util";
+import { getChallengeSuffix, getMapName, secondsToDuration } from "../util/data_util";
 import {
   CampaignIcon,
   ChallengeFcIcon,
@@ -289,6 +290,8 @@ function TopGoldenListGroup({
     return null;
   }
 
+  const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
+
   const cellStyle = {
     borderBottom: "1px solid " + theme.palette.tableDivider,
   };
@@ -352,6 +355,21 @@ function TopGoldenListGroup({
                     </Tooltip>
                   </Typography>
                 </TableCell>
+                {showTimeTakenColumn && (
+                  <TableCell
+                    sx={{
+                      ...cellStyle,
+                      borderLeft: "1px solid " + theme.palette.tableDivider,
+                    }}
+                    align="center"
+                  >
+                    <Typography fontWeight="bold">
+                      <Tooltip title={t("note_time_taken")} arrow placement="top">
+                        <FontAwesomeIcon icon={faClock} fontSize=".8em" />
+                      </Tooltip>
+                    </Typography>
+                  </TableCell>
+                )}
               </TableRow>
             </TableHead>
             {collapsed || !render ? null : (
@@ -506,6 +524,8 @@ function TopGoldenListRow({
   const colors = getNewDifficultyColors(settings, subtier.id, true);
   // const challengeRef = getChallengeReference(challenge.id);
   const isReference = challenge.data.is_stable;
+
+  const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
 
   const rowStyle = {
     backgroundColor: colors.color,
@@ -761,6 +781,15 @@ function TopGoldenListRow({
           )}
         </Stack>
       </TableCell>
+      {showTimeTakenColumn && (
+        <TableCell
+          style={{ ...rowStyle, ...cellStyle, borderLeft: "1px solid " + theme.palette.tableDivider }}
+        >
+          <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+            {secondsToDuration(firstSubmission.time_taken)}
+          </Stack>
+        </TableCell>
+      )}
     </TableRow>
   );
 }

@@ -19,6 +19,7 @@ export function AppSettingsProvider({ children }) {
           darkenTierColors: 55,
           switchMapAndChallenge: false,
           hideEmptyTiers: false,
+          hideTimeTakenColumn: false,
         },
         background: {
           dark: "", //Indicates default, solid color background. Otherwise this is the image name

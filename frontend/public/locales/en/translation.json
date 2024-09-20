@@ -133,6 +133,7 @@
       "note_number_people": "This tier has {{challenges}} challenges with {{submissions}} submissions",
       "note_suggested_difficulties": "Suggested difficulties of this player",
       "note_video_link": "These links lead to the video of the first clear of a challenge",
+      "note_time_taken": "User provided time taken for the challenge",
       "obsolete_notice": "This submission is marked as obsolete",
       "stable_explanation": "This challenge has a stable difficulty placement",
       "placement_difficulty": "Placement Difficulty:",
@@ -332,6 +333,8 @@
       "player_notes": "Player Notes",
       "is_personal": "Is Personal",
       "personal_note": "'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements",
+      "time_taken": "Time Taken",
+      "time_taken_error": "Duration string has to have the pattern '(hh:)mm:ss'",
       "date_submitted": "Date Submitted",
       "date_verified": "Date Verified",
       "verifier": "Verifier",
@@ -776,7 +779,11 @@
           "label": "Switch Map and Challenge",
           "note": "Switches from 'Map Name [Challenge Name]' to 'Challenge Name [Map Name]' format"
         },
-        "hide_empty_tiers": "Hide Empty Tiers"
+        "hide_empty_tiers": "Hide Empty Tiers",
+        "hide_time_taken_column": {
+          "label": "Hide Time Taken Column",
+          "note": "Hides the 'Time Taken' column in the personal Top Golden List of players"
+        }
       },
       "difficulty_colors": {
         "label": "Difficulty Colors",

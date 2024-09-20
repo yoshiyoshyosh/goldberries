@@ -332,3 +332,34 @@ export function extractDifficultiesFromChangelog(entry, difficulties) {
 
   return [fromDiff, toDiff];
 }
+
+export function secondsToDuration(seconds) {
+  if (isNaN(seconds) || seconds < 0 || seconds === null) {
+    return "";
+  }
+
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  const hoursStr = String(hours).padStart(2, "0");
+  const minutesStr = String(minutes).padStart(2, "0");
+  const secsStr = String(secs).padStart(2, "0");
+
+  return `${hoursStr}:${minutesStr}:${secsStr}`;
+}
+export function durationToSeconds(duration) {
+  const regex = /^(\d{1,5}:)?([0-5]?\d):([0-5]?\d)$/;
+  const match = duration.match(regex);
+  if (!match) {
+    return null;
+  }
+
+  let hours = match[1] ? parseInt(match[1].slice(0, -1)) : 0;
+  let minutes = parseInt(match[2]);
+  let seconds = parseInt(match[3]);
+
+  return hours * 3600 + minutes * 60 + seconds;
+}

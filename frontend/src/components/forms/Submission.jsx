@@ -15,6 +15,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  duration,
 } from "@mui/material";
 import {
   CustomIconButton,
@@ -48,6 +49,7 @@ import { ChallengeDetailsList } from "../../pages/Challenge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBasketShopping } from "@fortawesome/free-solid-svg-icons";
 import { CharsCountLabel } from "../../pages/Suggestions";
+import { durationToSeconds, secondsToDuration } from "../../util/data_util";
 
 export function FormSubmissionWrapper({ id, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -99,10 +101,18 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const [player, setPlayer] = useState(submission.player ?? null);
 
   const form = useForm({
-    defaultValues: { ...submission, skip_webhook: false },
+    defaultValues: {
+      ...submission,
+      time_taken: secondsToDuration(submission.time_taken),
+    },
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
-    saveSubmission({ ...data, challenge_id: challenge?.id, player_id: player.id });
+    saveSubmission({
+      ...data,
+      time_taken: durationToSeconds(data.time_taken),
+      challenge_id: challenge?.id,
+      player_id: player.id,
+    });
   });
   const onVerifySubmit = () => {
     form.setValue("is_verified", true);
@@ -118,7 +128,10 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
   useEffect(() => {
     //Update all fields from submission to the form
-    form.reset(submission);
+    form.reset({
+      ...submission,
+      time_taken: secondsToDuration(submission.time_taken),
+    });
     setChallenge(submission.challenge ?? null);
     setPlayer(submission.player ?? null);
   }, [submission]);
@@ -334,6 +347,26 @@ export function FormSubmission({ submission, onSave, ...props }) {
             <TooltipInfoButton title={t("personal_note")} />
           </Grid>
         </Grid>
+
+        <TextField
+          {...form.register("time_taken", {
+            pattern: {
+              value: /^(\d{1,5}:)?[0-5]?\d:[0-5]?\d$/,
+              message: t("time_taken_error"),
+            },
+          })}
+          label={t("time_taken")}
+          fullWidth
+          sx={{ mt: 2 }}
+          InputLabelProps={{ shrink: true }}
+          placeholder="(hh:)mm:ss"
+          error={!!form.formState.errors.time_taken}
+        />
+        {form.formState.errors.time_taken && (
+          <Typography variant="caption" color="error">
+            {form.formState.errors.time_taken.message}
+          </Typography>
+        )}
 
         {isVerifier && (
           <Controller
