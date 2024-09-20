@@ -14,6 +14,7 @@ class Suggestion extends DbObject
   public ?bool $is_verified = null;
   public JsonDateTime $date_created;
   public ?bool $is_accepted = null;
+  public ?JsonDateTime $date_accepted = null;
 
   // Linked Objects
   public ?Player $author = null;
@@ -36,6 +37,7 @@ class Suggestion extends DbObject
       'is_verified' => $this->is_verified,
       'date_created' => $this->date_created,
       'is_accepted' => $this->is_accepted,
+      'date_accepted' => $this->date_accepted,
     );
   }
 
@@ -58,6 +60,8 @@ class Suggestion extends DbObject
       $this->is_verified = $arr[$prefix . 'is_verified'] === 't';
     if (isset($arr[$prefix . 'is_accepted']))
       $this->is_accepted = $arr[$prefix . 'is_accepted'] === 't';
+    if (isset($arr[$prefix . 'date_accepted']))
+      $this->date_accepted = new JsonDateTime($arr[$prefix . 'date_accepted']);
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -153,7 +157,7 @@ class Suggestion extends DbObject
       $query .= " GROUP BY suggestion.id HAVING BOOL_OR(player.id = $player_id)";
     }
 
-    $query .= " ORDER BY suggestion.date_created DESC";
+    $query .= " ORDER BY suggestion.date_accepted DESC, suggestion.date_created DESC";
 
     $query = "
     WITH query AS (

@@ -52,12 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       if ($suggestion->is_verified === true) {
         send_webhook_suggestion_verified($old_suggestion);
+      } else {
+        $old_suggestion->date_accepted = new JsonDateTime();
       }
     }
     if ($old_suggestion->is_accepted !== $suggestion->is_accepted) {
       $toLog = $suggestion->is_accepted ? "accepted" : "rejected";
       log_info("{$old_suggestion} was {$toLog} by '{$account->player->name}'", "Suggestion");
       $old_suggestion->is_accepted = $suggestion->is_accepted;
+      $old_suggestion->date_accepted = new JsonDateTime();
       send_webhook_suggestion_accepted($old_suggestion);
     }
 
