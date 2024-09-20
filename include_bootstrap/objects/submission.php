@@ -14,6 +14,7 @@ class Submission extends DbObject
   public ?string $verifier_notes = null;
   public bool $is_fc = false;
   public bool $is_obsolete = false;
+  public ?int $time_taken = null; //In seconds
 
 
   // Foreign Keys
@@ -51,6 +52,7 @@ class Submission extends DbObject
       'verifier_id' => $this->verifier_id,
       'new_challenge_id' => $this->new_challenge_id,
       'is_obsolete' => $this->is_obsolete,
+      'time_taken' => $this->time_taken,
     );
   }
 
@@ -75,6 +77,8 @@ class Submission extends DbObject
       $this->player_notes = $arr[$prefix . 'player_notes'];
     if (isset($arr[$prefix . 'suggested_difficulty_id']))
       $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
+    if (isset($arr[$prefix . 'time_taken']))
+      $this->time_taken = intval($arr[$prefix . 'time_taken']);
 
     if (isset($arr[$prefix . 'date_verified']))
       $this->date_verified = new JsonDateTime($arr[$prefix . 'date_verified']);

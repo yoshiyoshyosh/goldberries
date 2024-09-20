@@ -134,8 +134,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($submission->verifier_notes !== null && strlen($submission->verifier_notes) > 5000) {
         die_json(400, "Verifier notes can't be longer than 5000 characters");
       }
-      $old_submission->date_created = $submission->date_created;
       $old_submission->verifier_notes = $submission->verifier_notes;
+
+      if ($submission->time_taken !== null) {
+        if ($submission->time_taken < 0) {
+          die_json(400, "Time taken can't be negative");
+        } else if ($submission->time_taken > 60 * 60 * 99999) {
+          die_json(400, "Time taken can't be this high");
+        }
+      }
+      $old_submission->time_taken = $submission->time_taken;
+
+      $old_submission->date_created = $submission->date_created;
       $old_submission->new_challenge_id = $submission->is_verified === true ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
@@ -178,6 +188,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
       $old_submission->is_personal = $submission->is_personal;
+
+      if ($submission->time_taken !== null) {
+        if ($submission->time_taken < 0) {
+          die_json(400, "Time taken can't be negative");
+        } else if ($submission->time_taken > 60 * 60 * 99999) {
+          die_json(400, "Time taken can't be this high");
+        }
+      }
+      $old_submission->time_taken = $submission->time_taken;
 
       if ($old_submission->update($DB)) {
         //Dont need to delete embed, as user changes never appear in the embed anyways
