@@ -349,12 +349,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         </Grid>
 
         <TextField
-          {...form.register("time_taken", {
-            pattern: {
-              value: /^(\d{1,5}:)?[0-5]?\d:[0-5]?\d$/,
-              message: t("time_taken_error"),
-            },
-          })}
+          {...form.register("time_taken", FormOptions.TimeTaken(t_ff))}
           label={t("time_taken")}
           fullWidth
           sx={{ mt: 2 }}

@@ -334,7 +334,6 @@
       "is_personal": "Is Personal",
       "personal_note": "'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements",
       "time_taken": "Time Taken",
-      "time_taken_error": "Duration string has to have the pattern '(hh:)mm:ss'",
       "date_submitted": "Date Submitted",
       "date_verified": "Date Verified",
       "verifier": "Verifier",
@@ -373,6 +372,9 @@
         "invalid": "Invalid URL",
         "disallowed": "This type of URL is not allowed for submissions (<CustomLink to=\"/rules#submissions-all\">Submissions > Rule 1</CustomLink>)",
         "disallowed_variant": "This website is allowed for submissions, but you have to use the direct video link instead!"
+      },
+      "time_taken": {
+        "invalid": "Duration string has to have the pattern '(hh:)mm:ss'"
       }
     }
   },

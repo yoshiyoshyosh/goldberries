@@ -88,6 +88,12 @@ export const FormOptions = {
       message: t("url.required"),
     },
   }),
+  TimeTaken: (t) => ({
+    pattern: {
+      value: /^(\d{1,5}:)?[0-5]?\d:[0-5]?\d$/,
+      message: t("time_taken.invalid"),
+    },
+  }),
 };
 
 export const DIFFICULTY_COLORS = {

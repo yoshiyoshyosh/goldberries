@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "react-query";
 import { fetchChallenge } from "../util/api";
-import { getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
+import { durationToSeconds, getChallengeIsArbitrary, getMapLobbyInfo } from "../util/data_util";
 import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
@@ -151,6 +151,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       is_fc: false,
       suggested_difficulty_id: null,
       is_personal: false,
+      time_taken: "",
     },
   });
   const onSubmit = form.handleSubmit((data) => {
@@ -158,12 +159,13 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       challenge_id: challenge.id,
       player_id: selectedPlayer.id,
       ...data,
+      time_taken: durationToSeconds(data.time_taken),
     });
   });
   const errors = form.formState.errors;
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
-  const sameUrl = proof_url === raw_session_url;
+  const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
 
   const onCampaignSelect = (campaign) => {
     setCampaign(campaign);
@@ -373,6 +375,22 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               )}
             />
             <TooltipInfoButton title={t_fs("personal_note")} />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              {...form.register("time_taken", FormOptions.TimeTaken(t_ff))}
+              label={t_fs("time_taken")}
+              fullWidth
+              sx={{ mt: 2 }}
+              InputLabelProps={{ shrink: true }}
+              placeholder="(hh:)mm:ss"
+              error={!!errors.time_taken}
+            />
+            {errors.time_taken && (
+              <Typography variant="caption" color="error">
+                {errors.time_taken.message}
+              </Typography>
+            )}
           </Grid>
           {auth.hasVerifierPriv && (
             <Grid item xs={12} sm={12}>
@@ -789,19 +807,21 @@ export function NewChallengeUserSubmission({}) {
       is_fc: false,
       suggested_difficulty_id: null,
       is_personal: false,
+      time_taken: "",
     },
   });
   const onSubmit = form.handleSubmit((data) => {
     submitRun({
       player_id: selectedPlayer.id,
       ...data,
+      time_taken: durationToSeconds(data.time_taken),
     });
   });
   const errors = form.formState.errors;
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
-  const sameUrl = proof_url === raw_session_url;
+  const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
 
   return (
     <>
@@ -925,6 +945,22 @@ export function NewChallengeUserSubmission({}) {
               )}
             />
             <TooltipInfoButton title={t_fs("personal_note")} />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              {...form.register("time_taken", FormOptions.TimeTaken(t_ff))}
+              label={t_fs("time_taken")}
+              fullWidth
+              sx={{ mt: 2 }}
+              InputLabelProps={{ shrink: true }}
+              placeholder="(hh:)mm:ss"
+              error={!!errors.time_taken}
+            />
+            {errors.time_taken && (
+              <Typography variant="caption" color="error">
+                {errors.time_taken.message}
+              </Typography>
+            )}
           </Grid>
           <Grid item xs={12} sm={12}>
             <Button variant="contained" fullWidth onClick={onSubmit}>
