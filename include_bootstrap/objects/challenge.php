@@ -136,6 +136,18 @@ class Challenge extends DbObject
     return true;
   }
 
+  function fetch_all_submissions($DB): bool
+  {
+    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, null, "ORDER BY date_created ASC, id ASC");
+    if ($submissions === false)
+      return false;
+    $this->submissions = $submissions;
+    foreach ($this->submissions as $submission) {
+      $submission->expand_foreign_keys($DB, 2, false);
+    }
+    return true;
+  }
+
   function get_player_submission($DB, $player_id)
   {
     $query = "SELECT * FROM submission WHERE challenge_id = $1 AND player_id = $2 AND (is_verified = true OR is_verified IS NULL)";

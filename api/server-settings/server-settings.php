@@ -2,14 +2,13 @@
 
 require_once('../api_bootstrap.inc.php');
 
-$account = get_user_data();
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $settings = ServerSettings::get_settings($DB);
   api_write($settings);
   exit();
 }
 
+$account = get_user_data();
 // ===== POST Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   check_access($account, true);

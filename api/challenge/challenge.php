@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Step 3: Update FC submissions to point to the new challenge
     //For this, first get all submissions of the original challenge
 
-    if (!$challenge->fetch_submissions($DB)) {
+    if (!$challenge->fetch_all_submissions($DB)) {
       die_json(500, "Failed to fetch submissions");
     }
 
@@ -127,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     //Reassign submissions from challenge_b to challenge_a
-    if (!$challenge_b->fetch_submissions($DB)) {
-      die_json(500, "Failed to fetch submissions");
+    if (!$challenge_b->fetch_all_submissions($DB)) {
+      die_json(500, "Failed to fetch all submissions");
     }
 
     foreach ($challenge_b->submissions as $submission) {
