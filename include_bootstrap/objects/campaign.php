@@ -1,5 +1,5 @@
 <?php
-require_once('../../assets/data/campaign-abbreviations.php');
+require_once(__DIR__ . '/../../assets/data/campaign-abbreviations.php');
 
 class Campaign extends DbObject
 {

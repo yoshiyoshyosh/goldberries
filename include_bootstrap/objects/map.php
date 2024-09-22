@@ -1,5 +1,5 @@
 <?php
-require_once('../../assets/data/map-abbreviations.php');
+require_once(__DIR__ . '/../../assets/data/map-abbreviations.php');
 
 class Map extends DbObject
 {
