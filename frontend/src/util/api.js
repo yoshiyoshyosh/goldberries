@@ -339,6 +339,10 @@ export function fetchModInfo(url) {
     params: params,
   });
 }
+
+export function fetchServerSettings() {
+  return axios.get("/server-settings");
+}
 //#endregion
 
 //#region == POST ==
@@ -443,6 +447,10 @@ export function postSuggestionVote(data) {
 
 export function postShowcase(submissions) {
   return axios.post("/showcase", formatDataForApi(submissions));
+}
+
+export function postServerSettings(settings) {
+  return axios.post("/server-settings", formatDataForApi(settings));
 }
 //#endregion
 

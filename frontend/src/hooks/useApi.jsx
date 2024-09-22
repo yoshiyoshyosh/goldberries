@@ -68,6 +68,8 @@ import {
   fetchStatsMostGoldened,
   fetchStatsMisc,
   fetchTopGoldenList,
+  fetchServerSettings,
+  postServerSettings,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -385,6 +387,15 @@ export function useGetModInfo(onSuccess, onError) {
     onError: onError ?? errorToast,
   });
 }
+
+export function useGetServerSettings() {
+  return useQuery({
+    queryKey: ["server_settings"],
+    queryFn: () => fetchServerSettings(),
+    onError: errorToast,
+    refetchInterval: 1000 * 60 * 5, // 5 minutes
+  });
+}
 //#endregion
 
 //#region == POST ==
@@ -662,6 +673,18 @@ export function usePostVerificationNotice(onSuccess) {
     mutationFn: (data) => postVerificationNotice(data),
     onSuccess: (response, data) => {
       queryClient.invalidateQueries(["submission_queue"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+
+export function usePostServerSettings(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => postServerSettings(data),
+    onSuccess: (response, data) => {
+      queryClient.invalidateQueries(["server_settings"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,

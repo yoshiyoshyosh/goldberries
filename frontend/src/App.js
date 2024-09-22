@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PageForgotPassword, PageLogin, PageRegister, PageVerifyEmail } from "./pages/Login";
 import { AuthProvider, useAuth } from "./hooks/AuthProvider";
 import axios from "axios";
-import { API_URL, APP_URL } from "./util/constants";
+import { API_URL } from "./util/constants";
 import { PageLogs } from "./pages/manage/Logs";
 import { PagePostOAuthLogin } from "./pages/PostOAuthLogin";
 import { Page403, Page404, PageNoPlayerClaimed } from "./pages/ErrorPages";
@@ -26,7 +26,6 @@ import {
   Collapse,
   CssBaseline,
   Dialog,
-  DialogContent,
   Divider,
   Drawer,
   Grid,
@@ -37,7 +36,6 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
-  Modal,
   Stack,
   ThemeProvider,
   Toolbar,
@@ -47,15 +45,11 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowDown,
-  faArrowUp,
   faBalanceScale,
   faBan,
   faBars,
-  faBook,
-  faBullseye,
-  faBurger,
   faChartBar,
+  faCheckCircle,
   faCheckToSlot,
   faChevronDown,
   faChevronLeft,
@@ -63,35 +57,25 @@ import {
   faCog,
   faCogs,
   faEdit,
-  faEye,
+  faExclamationCircle,
+  faExclamationTriangle,
   faHammer,
-  faHeart,
   faHome,
   faInbox,
-  faList,
+  faInfoCircle,
   faMailBulk,
-  faMailForward,
   faMoon,
-  faOtter,
-  faPerson,
   faPlayCircle,
-  faPlus,
-  faPoll,
-  faQuestion,
-  faRegistered,
   faSearch,
   faSignIn,
   faSignOut,
   faSquarePollHorizontal,
   faSun,
   faTable,
-  faTooth,
   faUser,
   faUserAlt,
   faUserEdit,
   faUserNinja,
-  faWeight,
-  faWeightHanging,
 } from "@fortawesome/free-solid-svg-icons";
 import { createRef, useEffect, useState } from "react";
 import { PageGoldenList } from "./pages/GoldenList";
@@ -106,7 +90,7 @@ import { PageTopGoldenList } from "./pages/TopGoldenList";
 import { PageSubmissionQueue } from "./pages/manage/SubmissionQueue";
 import { PageManageChallenges } from "./pages/manage/Challenges";
 import { PageManageAccounts } from "./pages/manage/Accounts";
-import { useGetStatsVerifierTools } from "./hooks/useApi";
+import { getQueryData, useGetServerSettings, useGetStatsVerifierTools } from "./hooks/useApi";
 import { PagePlayer } from "./pages/Player";
 import { PageCampaign } from "./pages/Campaign";
 import { PageAccount } from "./pages/Account";
@@ -294,6 +278,9 @@ export const lightTheme = createTheme({
     stats: {
       chartBackdrop: "rgba(255,255,255,75%)",
     },
+    globalNotices: {
+      background: "#eeeeee",
+    },
   },
   components: {
     MuiContainer: {
@@ -344,6 +331,9 @@ const darkTheme = createTheme({
     },
     stats: {
       chartBackdrop: "rgba(0,0,0,25%)",
+    },
+    globalNotices: {
+      background: "#333333",
     },
   },
   components: {
@@ -1051,6 +1041,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
         </Grid>
         <Grid item sm={5} sx={{ pt: "0 !important" }}>
           <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+            <GlobalNoticesIcon />
             {auth.hasVerifierPriv && <VerifierStatsNavDesktop />}
             {rightMenu.map((entry, index) => {
               if (entry.items) {
@@ -1188,6 +1179,103 @@ function DesktopSubMenuItem({ item, closeMenu }) {
       <ListItemText primary={item.name} />
     </MenuItem>
   );
+}
+
+function GlobalNoticesIcon({}) {
+  const query = useGetServerSettings();
+  const theme = useTheme();
+  const serverSettings = getQueryData(query);
+  if (serverSettings === null) return null;
+
+  const { global_notices, maintenance_mode } = getQueryData(query);
+  if (global_notices === null && maintenance_mode === false) {
+    return null;
+  }
+
+  let severityInfo = getWorstSeverityInfo(theme, global_notices, maintenance_mode);
+
+  return (
+    <Tooltip
+      title={
+        <Stack direction="column" gap={1}>
+          {maintenance_mode && (
+            <GlobalNoticeRow
+              notice={["info", "The site is currently in maintenance mode. Things might break."]}
+            />
+          )}
+          {global_notices?.map((notice, index) => (
+            <GlobalNoticeRow key={index} notice={notice} />
+          ))}
+        </Stack>
+      }
+      arrow
+      slotProps={{
+        tooltip: {
+          sx: {
+            backgroundColor: theme.palette.globalNotices.background,
+            maxWidth: 400,
+            // border: "1px solid " + theme.palette.globalNotices.border,
+            boxShadow: theme.shadows[2],
+          },
+        },
+        arrow: {
+          sx: {
+            color: theme.palette.globalNotices.background,
+          },
+        },
+      }}
+    >
+      <FontAwesomeIcon
+        icon={severityInfo.icon}
+        color={severityInfo.color}
+        fontSize="1.2em"
+        style={{ marginRight: "5px" }}
+      />
+    </Tooltip>
+  );
+}
+function GlobalNoticeRow({ notice }) {
+  const theme = useTheme();
+  const severity = notice[0];
+  const message = notice[1];
+
+  const severityInfo = getGlobalNoticeSeverityInfo(theme, severity);
+
+  return (
+    <Stack direction="row" gap={1} alignItems="center">
+      <div style={{ backgroundColor: severityInfo.color, minWidth: "5px", alignSelf: "stretch" }} />
+      <FontAwesomeIcon icon={severityInfo.icon} color={severityInfo.color} fontSize="1.5em" />
+      <Typography variant="body1" fontSize="1.3em" color={theme.palette.text.primary}>
+        {message}
+      </Typography>
+    </Stack>
+  );
+}
+function getGlobalNoticeSeverityInfo(theme, severity) {
+  const info = { icon: faInfoCircle, color: theme.palette.primary.main };
+  switch (severity) {
+    case "warning":
+      return { icon: faExclamationCircle, color: theme.palette.warning.main };
+    case "error":
+      return { icon: faExclamationTriangle, color: theme.palette.error.main };
+    case "success":
+      return { icon: faCheckCircle, color: theme.palette.success.main };
+  }
+  return info;
+}
+function getWorstSeverityInfo(theme, globalNotices, isMaintenance) {
+  if (globalNotices === null) return getGlobalNoticeSeverityInfo(theme, "info");
+
+  const severities = ["success", "info", "warning", "error"];
+  let worstIndex = isMaintenance ? 1 : 0;
+  for (let i = 0; i < globalNotices.length; i++) {
+    const severity = globalNotices[i][0];
+    const index = severities.indexOf(severity);
+    if (index > worstIndex) {
+      worstIndex = index;
+    }
+  }
+  return getGlobalNoticeSeverityInfo(theme, severities[worstIndex]);
 }
 
 function VerifierStatsNavDesktop() {
