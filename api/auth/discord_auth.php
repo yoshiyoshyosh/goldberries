@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if (isset($_REQUEST['code'])) {
   //Got code from discord oauth, now get access token
@@ -55,12 +55,12 @@ if (isset($_REQUEST['code'])) {
 
   //Non-linking stuff
   if ($accounts == false) {
-    //No account was found
-    // if ($_SESSION['login'] == true) {
-    //   header('Location: ' . constant('REGISTER_URL') . "/" . "Discord ID not linked to an account. Please register an account first.");
-    //   exit();
-    // }
     //User is not in database, create new account
+    $settings = ServerSettings::get_settings($DB);
+    if (!$settings->registrations_enabled) {
+      die_json(400, "Registrations are currently disabled");
+    }
+
     $account = new Account();
     $account->discord_id = $user_id;
     if ($account->insert($DB) === false) {

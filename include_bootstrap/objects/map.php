@@ -69,7 +69,7 @@ class Map extends DbObject
           $this->url = new StringList(2);
           $this->url->arr = $value;
         } else {
-          $this->collectibles = null;
+          $this->url = null;
         }
       } else {
         $this->url = new StringList(2, $value);

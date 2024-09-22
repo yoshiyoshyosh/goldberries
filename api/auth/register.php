@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 //=== Verification ===
 if (isset($_GET['verify'])) {
@@ -38,6 +38,11 @@ if (isset($_GET['verify'])) {
 //=== Registration ===
 $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
+
+$settings = ServerSettings::get_settings($DB);
+if (!$settings->registrations_enabled) {
+  die_json(400, "Registrations are currently disabled");
+}
 
 if ($email == null || $password == null) {
   die_json(400, "Missing email or password");

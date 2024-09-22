@@ -26,6 +26,7 @@ DROP TABLE logging;
 DROP TABLE new_challenge;
 DROP TABLE objective;
 DROP TABLE player;
+DROP TABLE server_settings;
 
 
 
@@ -324,6 +325,17 @@ CREATE TABLE verification_notice
  CONSTRAINT verification_notice_verifier_id_fkey FOREIGN KEY ( verifier_id ) REFERENCES player ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- ====== server_settings ======
+CREATE TABLE server_settings
+(
+ "id"                  integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+ registrations_enabled boolean NOT NULL DEFAULT true,
+ submissions_enabled   boolean NOT NULL DEFAULT true,
+ global_notices        text NULL,
+ maintenance_mode      boolean NOT NULL DEFAULT false,
+ CONSTRAINT server_settings_pkey PRIMARY KEY ( "id" ),
+ CONSTRAINT check_server_settings_id CHECK ( id = 1 )
+);
 
 
 -- =========== VIEWS ===========

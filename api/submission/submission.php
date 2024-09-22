@@ -210,6 +210,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   } else {
     //Create a new submission
+    $settings = ServerSettings::get_settings($DB);
+    if (!$settings->submissions_enabled) {
+      die_json(400, "Submissions are currently disabled");
+    }
 
     //new challenge stuff
     if (isset($data['new_challenge'])) {
@@ -250,6 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($data['player_notes']) && strlen($data['player_notes']) > 5000) {
       die_json(400, "Notes can't be longer than 5000 characters");
+    }
+
+    if ($submission->time_taken !== null) {
+      if ($submission->time_taken < 0) {
+        die_json(400, "Time taken can't be negative");
+      } else if ($submission->time_taken > 60 * 60 * 99999) {
+        die_json(400, "Time taken can't be this high");
+      }
     }
 
     if ($submission->date_created === null || !is_verifier($account)) {
