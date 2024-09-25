@@ -53,7 +53,7 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
         author_gb_id: "",
         author_gb_name: "",
         collectibles: null,
-        golden_changes: "",
+        golden_changes: "Unknown",
       }
     );
   }, [data]);

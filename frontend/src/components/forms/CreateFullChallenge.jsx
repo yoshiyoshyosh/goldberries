@@ -90,6 +90,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
     };
     const map = {
       name: data.map_name,
+      golden_changes: "Unknown",
     };
     const challenge = {
       objective_id: data.objective_id,
