@@ -1231,14 +1231,13 @@
     "toc": "Table of Contents",
     "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The most basic form of requied submission rules is \"don't cheat, don't use gameplay-altering mods, have a full session recording for challenges harder than tier 3, and make sure to show the end screen\". However, this formalization exists to cover potential confusion for certain edge cases and all the like. This list isn't exhaustive. It can't be. Mappers come up with ways to subvert our expectations all the time, and if we tried to formalize the minefield that it is, we would get nowhere. If you have an edge case not covered by this list, or general questions about it, please ask us! Ask us before you make a submission that results in days of debate that may or may not result in it getting rejected. Thank you.",
     "maps": {
-      "header": "Rules for Maps",
+      "header": "Rules for Maps and Challenges",
       "rules": {
         "0": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability.",
         "1": "The map or map pack <strong>must</strong> contain a challenge that poses a non-trivial amount of danger, even if that danger may be small. Maps where all challenges contain little to no danger will be rejected. An example of a map that, while difficult, does not meet the danger requirement is <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. In rare circumstances, usually when a map is part of a more complete campaign or lobby, exceptions will be made, such as for <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">Summit Down-Side Silver</CustomExternalLink>. Maps with this property will be labeled as \"Trivial\".",
-        "2": "The map or map pack <strong>must</strong> be at least two gameplay screens or checkpoints in length. Otherwise, any challenges within a map would be identical to a clear.",
-        "3": "The map or map pack <strong>must not</strong> contain adult or offensive content. This includes, but is not limited to, nudity, pornography, gore, extreme fetish material, or offensive statements or depictions of a protected minority.",
-        "4": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. For some examples, unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
-        "5": "Challenges in a map pack <strong>must not</code> involve activities performed outside of Celeste. An example of such a case is <CustomExternalLink href=\"https://goldberries.net/submission/46033\">The Golden Challenge</CustomExternalLink>."
+        "2": "The map or map pack <strong>must not</strong> contain adult or offensive content. This includes, but is not limited to, nudity, pornography, gore, extreme fetish material, or offensive statements or depictions of a protected minority.",
+        "3": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. For some examples, unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected.",
+        "4": "Challenges in a map pack <strong>must not</code> involve activities performed outside of Celeste. An example of such a case is <CustomExternalLink href=\"https://goldberries.net/submission/46033\">The Golden Challenge</CustomExternalLink>."
       }
     },
     "goldens": {
@@ -1308,7 +1307,7 @@
     },
     "2": {
       "question": "What is the criteria for getting a full clear?",
-      "answer": "Because of how different maps this can, this has the potential to vary. The most basic form of a full clear is obtaining all collectibles that do not represent a different challenge than the one being performed. For example, consider a map that has red berries, a cassette, a crystal heart, and a dashless golden berry. If one were to perform a full clear of the map, they would be required to collect the red berries, the cassette, and the crystal heart. The dashless golden berry represents a different challenge--doing the map dashless--and thus is not needed for a full clear. If it is impossible to get all the collectibles dashless, the dashless challenge would not contain a full clear flag. If it is possible, both the normal challenge and the dashless challenge will have full clear flags."
+      "answer": "Because of how different maps can be, this has the potential to vary wildly. The most basic form of a full clear is obtaining all collectibles that do not represent a different challenge than the one being performed. For example, consider a map that has red berries, a cassette, a crystal heart, and a dashless golden berry. If one were to perform a full clear of the map, they would be required to collect the red berries, the cassette, and the crystal heart. The dashless golden berry represents a different challenge--doing the map dashless--and thus is not needed for a full clear. If it is impossible to get all the collectibles dashless, the dashless challenge would not contain a full clear flag. If it is possible, both the normal challenge and the dashless challenge will have full clear flags.",
     },
     "3": {
       "question": "Why are some maps ineligible for full clear runs?",
@@ -1316,7 +1315,19 @@
     },
     "4": {
       "question": "What is the Top Golden List Rankings?",
-      "answer": "The Top Golden List Rankings is a list of the hardest golden strawberry clears, where the minimum requirement to get on the list is to be harder than 'Hell Trio' from vanilla, which are the B-Side golden strawberries of chapters 6, 7, and 8. These are ordered by tier, so each color represents a different tier, and the higher up on the list means the harder it is. Please note that these are all decided subjectively by people with experience on the goldens, so these won't be perfectly accurate, and shouldn't be treated as such. The fewer people with the golden the more possible variance there is, so less popular goldens are more likely to be more inaccurate. It's intended to be our best estimate based on what the people who have done the goldens so far have said, so they're subject to change if and when more people do them. People generally try to base off a few things: their total playtime/experience with the game at the time of the golden, how much time they took on the map individually, and a more subjective analysis of the map's length, difficulty distribution, and gameplay consistency, among other things."
+      "answer": "There are three categories of difficulty tracked here: Trivial, Standard, and Hard. The top golden list rankings is a ranking of the difficulty of challenges in the \"Hard\" category. At minimum, to get on the hard list, a challenge must be <em>loosely</em> more difficult than what is considered \"Hell Trio\" in the vanilla game, that being 6B, 7B, and 8B, on average. From then, a map is roughly placed where it fits in relation to other maps in the similar difficulty tier. Placements are never set and stone and 100% accurate, as easier strats may be found later and difficulty is endlessly subjective. Aspects taken into account for placement include, but are not limited to, the map length, the distribution of difficulty, input density, and gameplay consistency."
+    }
+    "5": {
+      "question": "This map is way harder than what it says on the list! What gives?",
+      "answer": "A challenge is ranked by the easiest strategies possible to complete it. If a map contains major cheese, the route with the major cheese will be what is used to rank the map. Additionally, again, rankings are subjective and based on those who have completed the challenge. One can suggest a difficulty change for any challenge if they so wish."
+    }
+    "6" {
+      "question": "What is the trivial difficulty for?",
+      "answer": "The trivial difficulty is reserved for challenges that are, well, trivial to complete compared to a clear. These include one-room maps where a normal clear clear is the exact same as the golden as well as campaign maps where it is impossible to die."
+    }
+    "7" {
+      "question": "Are co-op maps allowed? Are maps involving X allowed?",
+      "answer": "If a map follows all the rules established for map rules, it is allowed. In the case of co-op maps, the difficulty will be gauged based on the intended player count of the map."
     }
   },
   "index": {
