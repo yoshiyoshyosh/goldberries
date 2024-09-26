@@ -153,10 +153,25 @@ function RulesSubSection({ sectionKey, subSectionKey, subsection }) {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: "rules." + sectionKey + "." + subSectionKey });
   const { type, count } = subsection;
+  const entries = t("entries", { returnObjects: true });
   const tabelSize = subsection.size === "small" ? "small" : "medium";
   const hasExplanation = subsection.explanation === true;
   const hasHeader = subsection.header !== false;
   const id = subsection.id;
+  const isDarkmode = theme.palette.mode === "dark";
+  const codeStyle = {
+    fontWeight: "bold",
+    borderRadius: "5px",
+    padding: "0 3px",
+  };
+  if (isDarkmode) {
+    codeStyle.background = "rgba(255,255,255,.1)";
+    codeStyle.border = "1px solid white";
+  } else {
+    codeStyle.background = "rgba(0,0,0,.07)";
+    codeStyle.border = "1px solid black";
+  }
+
   return (
     <>
       {hasHeader && (
@@ -186,22 +201,28 @@ function RulesSubSection({ sectionKey, subSectionKey, subsection }) {
       <TableContainer component={Paper}>
         <Table size={tabelSize}>
           <TableBody>
-            {Array.from({ length: count }, (_, i) => i).map((i) => {
+            {entries.map((entry, i) => {
               const label = type === "ordered" ? i + 1 + "." : "-";
               return (
                 <TableRow key={i}>
                   <TableCell align="center">{label}</TableCell>
                   <TableCell>
                     <>
+                      {entry.heading && (
+                        <Typography variant="body1" fontWeight="bold">
+                          {entry.heading}
+                        </Typography>
+                      )}
                       <Trans
                         t={t}
-                        i18nKey={"" + i}
                         components={{
                           CustomExternalLink: <StyledExternalLink />,
                           CustomLink: <StyledLink />,
-                          code: <code />,
+                          code: <code style={codeStyle} />,
                         }}
-                      />
+                      >
+                        {entry.text}
+                      </Trans>
                     </>
                   </TableCell>
                 </TableRow>

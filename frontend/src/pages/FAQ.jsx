@@ -20,7 +20,7 @@ function FAQList() {
   const { t } = useTranslation(undefined, { keyPrefix: "faq" });
   const { t: t_a } = useTranslation();
 
-  const entryCount = 5;
+  const entries = t("entries", { returnObjects: true });
 
   return (
     <>
@@ -33,20 +33,17 @@ function FAQList() {
           {t_a("rules.title")}
         </StyledLink>
       </Stack>
-      {Array.from({ length: entryCount }, (_, index) => (
-        <FAQEntry key={index} index={index} />
+      {entries.map((entry, index) => (
+        <FAQEntry key={index} entry={entry} />
       ))}
     </>
   );
 }
 
-function FAQEntry({ index }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "faq" });
+function FAQEntry({ entry }) {
   const [expanded, setExpanded] = useState(false);
-
-  const question = t(index + ".question");
-  const answer = t(index + ".answer");
-
+  const question = entry.question;
+  const answer = entry.answer;
   return (
     <Paper style={{ marginBottom: "1em" }}>
       <StyledLink onClick={() => setExpanded(!expanded)}>
