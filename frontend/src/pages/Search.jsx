@@ -259,7 +259,7 @@ function DebouncedTextField({ value, setValue, label, clearOnFocus = false, isDi
   const onKeyDown = (event) => {
     if (event.key === "Enter") {
       if (isDirectSearch) {
-        navigate("/search/" + valueInternal);
+        navigate("/search/" + encodeURIComponent(valueInternal));
       } else {
         setValue(valueInternal);
       }
