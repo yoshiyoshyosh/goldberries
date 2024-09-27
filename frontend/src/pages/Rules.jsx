@@ -209,7 +209,7 @@ function RulesSubSection({ sectionKey, subSectionKey, subsection }) {
                   <TableCell>
                     <>
                       {entry.heading && (
-                        <Typography variant="body1" fontWeight="bold">
+                        <Typography variant="body1" fontWeight="bold" sx={{ textDecoration: "underline" }}>
                           {entry.heading}
                         </Typography>
                       )}

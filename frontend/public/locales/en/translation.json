@@ -1239,15 +1239,15 @@
             "text": "The map or map pack <strong>must</strong> be uploaded to <CustomExternalLink href=\"https://gamebanana.com/games/6460\">GameBanana</CustomExternalLink>. If a map was previously on GameBanana but taken down afterwards, it will be uploaded to <CustomExternalLink href=\"https://archive.org/details/celeste-golden-list-removed-from-gb-maps\">this archive.org item</CustomExternalLink> unless the map creator specifically requests to remove its downloadability."
           },
           {
-            "heading": "Trivial",
-            "text": "The map or map pack <strong>must</strong> contain a challenge that poses a non-trivial amount of danger, even if that danger may be small. Maps where all challenges contain little to no danger will be rejected. An example of a map that, while difficult, does not meet the danger requirement is <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. Maps <strong>must also</strong> be different to clear than to golden. If a maps golden is effectively the same as its clear, it will be rejected. In rare circumstances, usually when a map is part of a more complete campaign or lobby, exceptions will be made, such as for <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">Summit Down-Side Silver</CustomExternalLink>. Maps with this property will be labeled as \"Trivial\"."
+            "heading": "Non-Trivial",
+            "text": "The map or map pack <strong>must</strong> contain a challenge that poses a non-trivial amount of danger, even if that danger may be small. Maps where all challenges contain little to no danger will be rejected. An example of a map that, while difficult, does not meet the danger requirement is <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. In rare circumstances, usually when a map is part of a more complete campaign or lobby, exceptions will be made, such as for <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">Summit Down-Side Silver</CustomExternalLink>. Maps with this property will be labeled as \"Trivial\"."
           },
           {
-            "heading": "Duplicate",
+            "heading": "Non-Duplicate",
             "text": "The map or map pack <strong>is recommended to not</strong> resemble a base game map or an existing custom map to a high degree. For some examples, unique map packs such as <CustomExternalLink href=\"https://gamebanana.com/mods/150418\">Etselec</CustomExternalLink> or more thoughtful, usually more difficult edits such as <CustomExternalLink href=\"https://www.youtube.com/watch?v=aYpean9AahU\">Farewell^9</CustomExternalLink> are acceptable, while maps such as <CustomExternalLink href=\"https://gamebanana.com/mods/349586\">1a Undefined</CustomExternalLink> are likely to be rejected."
           },
           {
-            "heading": "NSFW",
+            "heading": "Non-NSFW",
             "text": "The map or map pack <strong>must not</strong> contain adult or offensive content. This includes, but is not limited to, nudity, pornography, gore, extreme fetish material, or offensive statements or depictions of a protected minority."
           },
           {
@@ -1313,10 +1313,6 @@
           {
             "heading": "Intended Golden Detach",
             "text": "For golden strawberry (or other similar berry) submissions, submissions <strong>are allowed to</strong> die during <strong>map intentional golden strawberry detachments</strong> as many times as one would like. This does <strong>not</strong> apply to golden detachments made to fix an issue (such as in <CustomExternalLink href=\"https://youtu.be/iJuGoYOPFt4?t=782\">A Beautiful Meadow</CustomExternalLink>) or unintentional golden detachments."
-          },
-          {
-            "heading": "Endscreen",
-            "text": "Submissions <strong>must</strong> show the end screen of a map upon completing the challenge. If an end screen does not exist, the journal must be shown immediately after exiting. This rule is more loosely applied to standard difficulty goldens, but is more enforced for higher difficulty goldens."
           },
           {
             "heading": "Progression",
