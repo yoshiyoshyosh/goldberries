@@ -614,6 +614,16 @@ function ViewSuggestionModal({ id }) {
   const userVote = hasVoted
     ? suggestion.votes.find((vote) => vote.player_id === auth.user.player.id).vote
     : null;
+  const selfHasDoneChallenge =
+    auth.hasPlayerClaimed &&
+    suggestion.challenge !== null &&
+    challenge.submissions.some((s) => s.player_id === auth.user.player_id);
+  const isPlacementSuggestion = suggestion.suggested_difficulty_id !== null;
+  const requiresComment = !selfHasDoneChallenge && isPlacementSuggestion;
+  const voteButtonsDisabled =
+    !auth.hasPlayerClaimed ||
+    (isExpired && !auth.hasVerifierPriv) ||
+    (requiresComment && userText.trim().length < 10);
 
   const vote = (vote) => {
     if (hasVoted) {
@@ -729,6 +739,7 @@ function ViewSuggestionModal({ id }) {
                 color="success"
                 fullWidth
                 onClick={() => vote("+")}
+                disabled={voteButtonsDisabled}
               >
                 <FontAwesomeIcon icon={faThumbsUp} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
@@ -740,6 +751,7 @@ function ViewSuggestionModal({ id }) {
                 color="error"
                 fullWidth
                 onClick={() => vote("-")}
+                disabled={voteButtonsDisabled}
               >
                 <FontAwesomeIcon icon={faThumbsDown} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
@@ -750,6 +762,7 @@ function ViewSuggestionModal({ id }) {
                 variant={!auth.hasPlayerClaimed || !hasVoted || userVote !== "i" ? "outlined" : "contained"}
                 fullWidth
                 onClick={() => vote("i")}
+                disabled={voteButtonsDisabled}
               >
                 <FontAwesomeIcon icon={faHorse} style={{ height: "1.4em" }} />
                 <Box component="span" sx={{ ml: 1, display: { xs: "none", sm: "block" } }}>
@@ -776,7 +789,14 @@ function ViewSuggestionModal({ id }) {
               value={userText}
               onChange={(e) => setUserText(e.target.value)}
             />
-            <CharsCountLabel text={userText} maxChars={1500} />
+            <Stack direction="row" gap={1} alignItems="center">
+              <CharsCountLabel text={userText} maxChars={1500} minChars={10} />
+              {requiresComment && userText.trim().length < 10 && (
+                <Typography variant="body2" color={(t) => t.palette.error.main} sx={{}}>
+                  <FontAwesomeIcon icon={faInfoCircle} /> {t("comment_required")}
+                </Typography>
+              )}
+            </Stack>
             <Typography variant="body2" color={(t) => t.palette.text.secondary} sx={{ mt: 0.25 }}>
               <FontAwesomeIcon icon={faInfoCircle} /> {t("comment_note")}
             </Typography>

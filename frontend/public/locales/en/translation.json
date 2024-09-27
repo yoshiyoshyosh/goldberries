@@ -1143,6 +1143,7 @@
         },
         "claim_player": "Claim a player to be able to vote on suggestions!",
         "your_comment": "Your Comment",
+        "comment_required": "Please provide a comment for your vote!",
         "comment_note": "To change your comment after you voted, remove your vote and vote again.",
         "stats": "Stats",
         "totals": "Totals",
