@@ -153,7 +153,7 @@ api_write($response);
 
 function is_challenge_stable($challenge)
 {
-  $min_suggestions = 10;
+  $min_suggestions = 5;
   $min_overlap = 0.8;
 
   if ($challenge->difficulty_id === 20 || $challenge->difficulty_id === 19) {
