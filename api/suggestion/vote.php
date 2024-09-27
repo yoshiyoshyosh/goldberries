@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 
@@ -43,6 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (SuggestionVote::has_voted_on_suggestion($DB, $account->player_id, $data['suggestion_id'])) {
     die_json(400, "You already voted on this suggestion");
   }
+  if ($suggestion->challenge_id !== null && $suggestion->suggested_difficulty_id !== null) {
+    //Placement suggestion
+    if (Challenge::get_player_submission($DB, $suggestion->challenge_id, $account->player_id) === null) {
+      //Player has not submitted to this challenge
+      if ($vote->comment === null || $vote->comment === "" || strlen($vote->comment) < 10) {
+        die_json(400, "Please elaborate on your position with a comment");
+      }
+    }
+  }
   $vote->player_id = $account->player_id;
 
   if ($vote->insert($DB)) {
@@ -66,9 +75,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($vote === false) {
     die_json(404, "Vote not found");
   }
-
   if ($vote->player_id !== $account->player_id && !is_verifier($account)) {
     die_json(403, "You can only delete your own votes");
+  }
+
+  $suggestion = Suggestion::get_by_id($DB, $vote->suggestion_id);
+  if ($suggestion === false) {
+    die_json(404, "Suggestion not found");
+  }
+
+  if ($suggestion->is_closed() && !is_verifier($account)) {
+    die_json(400, "Suggestion is closed");
   }
 
   if (!$vote->delete($DB)) {

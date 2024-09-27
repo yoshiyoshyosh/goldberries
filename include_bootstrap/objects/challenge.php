@@ -148,13 +148,21 @@ class Challenge extends DbObject
     return true;
   }
 
-  function get_player_submission($DB, $player_id)
+  function attach_campaign_challenges($DB, $with_submissions = false, $include_arbitrary = false)
+  {
+    if ($this->campaign_id === null) {
+      $this->map->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
+    } else {
+      $this->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
+    }
+  }
+
+  static function get_player_submission($DB, $challenge_id, $player_id)
   {
     $query = "SELECT * FROM submission WHERE challenge_id = $1 AND player_id = $2 AND (is_verified = true OR is_verified IS NULL)";
-    $result = pg_query_params($DB, $query, array($this->id, $player_id));
+    $result = pg_query_params($DB, $query, array($challenge_id, $player_id));
     if ($result === false)
       return null;
-
 
     if (pg_num_rows($result) === 0)
       return null;
@@ -163,15 +171,6 @@ class Challenge extends DbObject
     $submission = new Submission();
     $submission->apply_db_data($row);
     return $submission;
-  }
-
-  function attach_campaign_challenges($DB, $with_submissions = false, $include_arbitrary = false)
-  {
-    if ($this->campaign_id === null) {
-      $this->map->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
-    } else {
-      $this->campaign->fetch_challenges($DB, $with_submissions, $include_arbitrary);
-    }
   }
 
   // === Utility Functions ===

@@ -244,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           die_json(400, "Rejected maps don't accept submissions");
         }
       }
-      $player_submission = $challenge->get_player_submission($DB, $data['player_id']);
+      $player_submission = Challenge::get_player_submission($DB, $challenge->id, $data['player_id']);
       if ($player_submission !== null) {
         die_json(400, "You already have a submission for this challenge");
       }

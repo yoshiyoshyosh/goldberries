@@ -36,8 +36,10 @@ class SuggestionVote extends DbObject
       $this->suggestion_id = intval($arr[$prefix . 'suggestion_id']);
     if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
-    if (isset($arr[$prefix . 'comment']))
+    if (isset($arr[$prefix . 'comment'])) {
       $this->comment = $arr[$prefix . 'comment'];
+      $this->comment = trim($this->comment);
+    }
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
