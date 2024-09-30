@@ -67,6 +67,7 @@ import {
   faMoon,
   faPlayCircle,
   faSearch,
+  faServer,
   faSignIn,
   faSignOut,
   faSquarePollHorizontal,
@@ -121,6 +122,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/en-gb";
 import { PageCredits } from "./pages/Credits";
 import { GlobalNoticesIcon } from "./components/GlobalNotices";
+import { PageManageServerSettings } from "./pages/manage/ServerSettings";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -187,7 +189,7 @@ const router = createBrowserRouter([
             path: "server-settings",
             element: (
               <ProtectedRoute needsAdmin redirect="manage/server-settings">
-                <PageManageAccounts />
+                <PageManageServerSettings />
               </ProtectedRoute>
             ),
           },
@@ -608,7 +610,13 @@ export function Layout() {
     admin: {
       icon: <FontAwesomeIcon icon={faHammer} />,
       name: "Admin",
-      items: [{ name: "Admin Stuff", path: "/admin-panel", icon: <FontAwesomeIcon icon={faHammer} /> }],
+      items: [
+        {
+          name: "Server Settings",
+          path: "/manage/server-settings",
+          icon: <FontAwesomeIcon icon={faServer} />,
+        },
+      ],
     },
     search: {
       name: t("search"),
@@ -662,7 +670,12 @@ export function Layout() {
   const leftMenu = [menus.lists, menus.campaigns, menus.other];
   const rightMenu = [];
   if (auth.isVerifier) {
-    leftMenu.push(menus.verifier);
+    const verifierMenu = menus.verifier;
+    if (auth.isAdmin) {
+      verifierMenu.items.push({ divider: true });
+      menus.admin.items.forEach((item) => verifierMenu.items.push(item));
+    }
+    leftMenu.push(verifierMenu);
   }
   rightMenu.push(menus.submit);
   rightMenu.push(menus.search);

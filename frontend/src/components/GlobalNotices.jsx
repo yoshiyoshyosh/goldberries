@@ -78,7 +78,7 @@ function GlobalNoticeRow({ notice }) {
     </Stack>
   );
 }
-function getGlobalNoticeSeverityInfo(theme, severity) {
+export function getGlobalNoticeSeverityInfo(theme, severity) {
   const info = { icon: faInfoCircle, color: theme.palette.primary.main };
   switch (severity) {
     case "warning":

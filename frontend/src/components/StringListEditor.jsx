@@ -83,12 +83,7 @@ export function StringListEditor({
                   {item.map((value, index) => {
                     const typeInfo = valueTypes[index];
                     return (
-                      <Grid
-                        key={index}
-                        item
-                        xs={12}
-                        sm={inline ? 12 / valueCount - (index === valueCount - 1 ? 1 : 0) : 12}
-                      >
+                      <Grid key={index} item xs={12} sm={inline ? inline[index] : 12}>
                         <StringListItem
                           item={item}
                           index={index}
@@ -100,7 +95,7 @@ export function StringListEditor({
                       </Grid>
                     );
                   })}
-                  <Grid item xs={inline ? "auto" : 12}>
+                  <Grid item xs={12}>
                     <Stack direction="row" gap={1} alignItems="center">
                       <Button
                         variant="outlined"
