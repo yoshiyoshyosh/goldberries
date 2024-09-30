@@ -564,6 +564,25 @@
         "verify": "Verify '{{count}}' Selected",
         "reject": "Reject '{{count}}' Selected"
       }
+    },
+    "server_settings": {
+      "title": "Server Settings",
+      "form": {
+        "feedback": {
+          "updated": "Server settings updated"
+        },
+        "registrations_enabled": "Registrations Enabled",
+        "submissions_enabled": "Submissions Enabled",
+        "maintenance_mode": "Maintenance Mode",
+        "global_notices": {
+          "label": "Global Notices",
+          "severity": "Severity",
+          "message": "Message"
+        },
+        "buttons": {
+          "update": "Update Server Settings"
+        }
+      }
     }
   },
   "server_costs": {
@@ -1443,7 +1462,11 @@
         "question": "Are co-op maps allowed? Are maps involving X allowed?",
         "answer": "If a map follows all the rules established for map rules, it is allowed. In the case of co-op maps, the difficulty will be gauged based on the intended player count of the map."
       }
-    ]
+    ],
+    "vanilla_references": {
+      "question": "Why are vanilla challenges not on this list?",
+      "answer": "Vanilla challenges are not tracked due to them being outside the scope of a modded list, as well as having too many clears to reasonably track. However, many of their difficulties are commonly agreed upon. Below is a reference list of where vanilla challenges would place on the Top Golden List. Any golden not listed is considered Standard difficulty, with the hell trio (Reflection B-Side, The Summit B-Side, Core B-Side) being near the peak of Standard.<br/><br/><i>Note: In the past, Farewell [No DTS] was considered the baseline for Low Tier 3 on the Top Golden List. This is no longer the case, and the golden is now simply within the tier.</i>"
+    }
   },
   "index": {
     "title": "Welcome!",
