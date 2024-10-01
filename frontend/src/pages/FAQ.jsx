@@ -72,7 +72,7 @@ function FAQEntry({ entry }) {
       </StyledLink>
       {expanded && (
         <Typography variant="body1" sx={{ p: "1em", paddingTop: 0 }}>
-          {answer}
+          <Trans>{answer}</Trans>
         </Typography>
       )}
     </Paper>

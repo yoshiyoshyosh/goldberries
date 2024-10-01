@@ -1448,7 +1448,7 @@
       },
       {
         "question": "What is the Top Golden List Rankings?",
-        "answer": "There are three categories of difficulty tracked here: Trivial, Standard, and Hard. The top golden list rankings is a ranking of the difficulty of challenges in the \"Hard\" category. At minimum, to get on the hard list, a challenge must be <em>loosely</em> more difficult than what is considered \"Hell Trio\" in the vanilla game, that being 6B, 7B, and 8B, on average. From then, a map is roughly placed where it fits in relation to other maps in the similar difficulty tier. Placements are never set and stone and 100% accurate, as easier strats may be found later and difficulty is endlessly subjective. Aspects taken into account for placement include, but are not limited to, the map length, the distribution of difficulty, input density, and gameplay consistency."
+        "answer": "There are three categories of difficulty tracked here: Trivial, Standard, and Hard. The top golden list rankings is a ranking of the difficulty of challenges in the \"Hard\" category. At minimum, to get on the hard list, a challenge must be <i>loosely</i> more difficult than what is considered \"Hell Trio\" in the vanilla game, that being 6B, 7B, and 8B, on average. From then, a map is roughly placed where it fits in relation to other maps in the similar difficulty tier. Placements are never set and stone and 100% accurate, as easier strats may be found later and difficulty is endlessly subjective. Aspects taken into account for placement include, but are not limited to, the map length, the distribution of difficulty, input density, and gameplay consistency."
       },
       {
         "question": "This map is way harder than what it says on the list! What gives?",
