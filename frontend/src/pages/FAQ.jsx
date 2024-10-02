@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
@@ -19,7 +20,7 @@ import {
 import { Trans, useTranslation } from "react-i18next";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faChevronDown, faChevronUp, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { getQueryData, useGetAllDifficulties } from "../hooks/useApi";
 import { DifficultyChip } from "../components/GoldberriesComponents";
 
@@ -90,11 +91,15 @@ function FAQEntryVanillaReferences({}) {
     { name: "The Summit A-Side [FC]", difficulty_id: 17 },
     { name: "Farewell [C/FC]", difficulty_id: 14 },
     { name: "Farewell [No DTS] [C/FC]", difficulty_id: 12 },
-    { name: "Any%", difficulty_id: 14 },
-    { name: "All Full Clears", difficulty_id: 10 },
+    { name: "Any%", difficulty_id: 14, note: "Forsaken City through The Summit" },
+    { name: "All Full Clears", difficulty_id: 10, note: "Forsaken City [FC] through Core [FC]" },
     { name: "All B-Sides", difficulty_id: 10 },
     { name: "All C-Sides", difficulty_id: 17 },
-    { name: "100%", difficulty_id: 4 },
+    {
+      name: "100%",
+      difficulty_id: 4,
+      note: "All Full Clears + All B-Sides + All C-Sides + Farewell with Moonberry",
+    },
     { name: "202 Berries", difficulty_id: 3 },
   ];
 
@@ -127,7 +132,14 @@ function FAQEntryVanillaReferences({}) {
                     return (
                       <TableRow key={index}>
                         <TableCell width={1} sx={{ whiteSpace: "nowrap" }}>
-                          {ref.name}
+                          <Stack direction="row" gap={1} alignItems="center">
+                            {ref.name}
+                            {ref.note && (
+                              <Tooltip title={ref.note} placement="top" arrow>
+                                <FontAwesomeIcon icon={faInfoCircle} size="sm" />
+                              </Tooltip>
+                            )}
+                          </Stack>
                         </TableCell>
                         <TableCell align="center">
                           <DifficultyChip difficulty={difficulty} />
