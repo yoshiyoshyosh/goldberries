@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Check if this is the first submission for this challenge
         if ($submission->is_verified) {
           $challenge = Challenge::get_by_id($DB, $old_submission->challenge_id);
-          $challenge->fetch_submissions($DB);
+          $challenge->fetch_submissions($DB, true);
           if (count($challenge->submissions) === 0) {
             $is_first_clear = true;
           }

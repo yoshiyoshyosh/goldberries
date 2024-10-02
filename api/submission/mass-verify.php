@@ -59,6 +59,15 @@ foreach ($ids as $id) {
     VerificationNotice::delete_for_submission_id($DB, $submission->id);
     $submission->expand_foreign_keys($DB, 5);
     $submissions[] = $submission;
+
+    if ($is_verified) {
+      $challenge = Challenge::get_by_id($DB, $submission->challenge_id);
+      $challenge->fetch_submissions($DB, true);
+      if (count($challenge->submissions) === 1) {
+        send_webhook_first_clear_verified($submission);
+      }
+    }
+
   } else {
     die_json(500, "Failed to update submission (id:{$id})");
   }
