@@ -962,7 +962,8 @@
   "map": {
     "buttons": {
       "edit": "Edit Map",
-      "view_challenge": "View Challenge"
+      "view_challenge": "View Challenge",
+      "submit": "Submit a run"
     },
     "no_challenges": "There are currently no challenges for this map.",
     "info_boxes": {

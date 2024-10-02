@@ -13,6 +13,7 @@ import {
   Select,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChallengeDetailsList, ChallengeSubmissionTable, NoteDisclaimer } from "./Challenge";
@@ -24,6 +25,7 @@ import {
   faExternalLink,
   faFlagCheckered,
   faLandmark,
+  faPlus,
   faRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -63,6 +65,7 @@ import { Changelog } from "../components/Changelog";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
+import { useTheme } from "@emotion/react";
 
 export function PageMap() {
   const { id, challengeId } = useParams();
@@ -79,6 +82,8 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
   const { t: t_c } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
   const navigate = useNavigate();
   const query = useGetMap(id);
   const [selectedChallengeId, setSelectedChallengeId] = useState(challengeId ?? null);
@@ -143,11 +148,11 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
           {selectedChallenge.description && (
             <NoteDisclaimer
               note={selectedChallenge.description}
-              title={"Challenge Description"}
+              title={t_c("description")}
               sx={{ mt: 1, mb: 1 }}
             />
           )}
-          <Stack direction="row" gap={1} alignItems="center" sx={{ m: 1 }}>
+          <Stack direction="row" gap={1} alignItems="center" flexWrap="wrap" sx={{ m: 1 }}>
             <ObjectiveIcon
               objective={selectedChallenge.objective}
               challenge={selectedChallenge}
@@ -156,7 +161,18 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
             <span>{getChallengeFcShort(selectedChallenge)}</span>
             <DifficultyChip difficulty={selectedChallenge.difficulty} />
-            <StyledLink to={"/challenge/" + selectedChallenge.id} style={{ marginLeft: "auto" }}>
+            <StyledLink
+              to={"/submit/single-challenge/" + selectedChallenge.id}
+              style={{ marginLeft: "auto", display: isMdScreen ? "block" : "none" }}
+            >
+              <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faPlus} />}>
+                {t("buttons.submit")}
+              </Button>
+            </StyledLink>
+            <StyledLink
+              to={"/challenge/" + selectedChallenge.id}
+              style={{ marginLeft: isMdScreen ? "0" : "auto" }}
+            >
               <Button variant="text" startIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}>
                 {t("buttons.view_challenge")}
               </Button>

@@ -64,6 +64,16 @@ export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
   const { tab, challengeId } = useParams();
   const [selectedTab, setSelectedTab] = useState(tab ?? "single-challenge");
+  const navigate = useNavigate();
+
+  const setTab = (tab) => {
+    setSelectedTab(tab);
+    if (tab === "single-challenge") {
+      navigate("/submit", { replace: true });
+    } else {
+      navigate(`/submit/${tab}`, { replace: true });
+    }
+  };
 
   const query = useQuery({
     queryKey: ["challenge", challengeId],
@@ -76,7 +86,7 @@ export function PageSubmit() {
       <BasicContainerBox maxWidth="md">
         <Tabs
           value={selectedTab}
-          onChange={(event, newValue) => setSelectedTab(newValue)}
+          onChange={(event, newValue) => setTab(newValue)}
           variant="scrollable"
           scrollButtons="auto"
         >
@@ -102,7 +112,7 @@ export function PageSubmit() {
       <HeadTitle title={t("title")} />
       <Tabs
         value={selectedTab}
-        onChange={(event, newValue) => setSelectedTab(newValue)}
+        onChange={(event, newValue) => setTab(newValue)}
         variant="scrollable"
         scrollButtons="auto"
       >
