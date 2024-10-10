@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $all_submissions = isset($_GET['all_submissions']) && $_GET['all_submissions'] === "true";
+$limit_challenges = isset($_GET['limit_challenges']) ? intval($_GET['limit_challenges']) : null;
 
 $query = "SELECT * FROM view_submissions";
 $where = "WHERE submission_is_verified = true AND (map_is_rejected = FALSE OR map_is_rejected IS NULL)";
@@ -46,7 +47,7 @@ if (isset($_GET["hide_objectives"])) {
 }
 
 $query = $query . " " . $where;
-$query .= " ORDER BY challenge_sort DESC, map_name ASC, submission_date_created ASC, submission_id ASC";
+$query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, submission_date_created ASC, submission_id ASC";
 
 $result = pg_query($DB, $query);
 if (!$result) {
@@ -94,6 +95,7 @@ while ($row = pg_fetch_assoc($resultDifficulties)) {
 $response['tiers'] = array_values($response['tiers']);
 
 //loop through result rows
+$challenge_index = 0;
 while ($row = pg_fetch_assoc($result)) {
   $campaign_id = intval($row['campaign_id']);
   if (!array_key_exists($campaign_id, $response['campaigns'])) {
@@ -113,6 +115,10 @@ while ($row = pg_fetch_assoc($result)) {
 
   $challenge_id = intval($row['challenge_id']);
   if (!array_key_exists($challenge_id, $response['challenges'])) {
+    $challenge_index++;
+    if ($limit_challenges !== null && $challenge_index > $limit_challenges) {
+      break;
+    }
     $challenge = new Challenge();
     $challenge->apply_db_data($row, "challenge_");
     $challenge->submissions = array();
