@@ -621,9 +621,10 @@ function ViewSuggestionModal({ id }) {
   const isPlacementSuggestion = suggestion.suggested_difficulty_id !== null;
   const requiresComment = !selfHasDoneChallenge && isPlacementSuggestion;
   const voteButtonsDisabled =
-    !auth.hasPlayerClaimed ||
-    (isExpired && !auth.hasVerifierPriv) ||
-    (requiresComment && userText.trim().length < 10);
+    (!auth.hasPlayerClaimed ||
+      (isExpired && !auth.hasVerifierPriv) ||
+      (requiresComment && userText.trim().length < 10)) &&
+    !hasVoted;
 
   const vote = (vote) => {
     if (hasVoted) {
