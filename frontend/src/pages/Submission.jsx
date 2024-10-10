@@ -284,7 +284,10 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               submission.suggested_difficulty === null ? (
                 "-"
               ) : (
-                <DifficultyChip difficulty={submission.suggested_difficulty} />
+                <DifficultyChip
+                  difficulty={submission.suggested_difficulty}
+                  isPersonal={submission.is_personal}
+                />
               )
             }
             isSecondary
