@@ -293,6 +293,7 @@ export const COLLECTIBLES = [
       { value: "9", name: "FFFFF Golden", icon: "/icons/golden-fffff.png" },
       { value: "10", name: "Blueberry Golden", icon: "/icons/golden-blueberry.png" },
       { value: "11", name: "Trans Golden", icon: "/icons/golden-trans.png" },
+      { value: "12", name: "Anarchy Golden", icon: "/icons/golden-anarchy.png" },
     ],
   },
   {
@@ -336,6 +337,8 @@ export const COLLECTIBLES = [
       { value: "7", name: "Velvet Strawberry", icon: "/icons/strawberry-velvet.png" },
       { value: "4", name: "FFFFF Strawberry", icon: "/icons/strawberry-fffff.png" },
       { value: "9", name: "Blueberry", icon: "/icons/strawberry-blueberry.png" },
+      { value: "10", name: "Anarchy Strawberry", icon: "/icons/strawberry-anarchy.png" },
+      { value: "11", name: "Trans Strawberry", icon: "/icons/strawberry-trans.png" },
     ],
   },
   {
