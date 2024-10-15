@@ -1,11 +1,21 @@
-import { Box, Button, Checkbox, FormControlLabel, Grid, Popover, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Popover,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { getQueryData, useGetObjectiveSubmissionCount, useGetObjectives } from "../hooks/useApi";
 import { ErrorDisplay, LoadingSpinner, getErrorFromMultiple } from "./BasicComponents";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare, faEyeSlash, faSquare } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 
 /*
@@ -39,6 +49,12 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
       const hide_objectives = prev.hide_objectives.includes(id)
         ? prev.hide_objectives.filter((i) => i !== id)
         : [...prev.hide_objectives, id];
+      return { ...prev, hide_objectives };
+    });
+  };
+  const changedAllObjectives = (newValue) => {
+    setFilter((prev) => {
+      const hide_objectives = newValue ? [] : sortedObjectives.map((o) => o.id);
       return { ...prev, hide_objectives };
     });
   };
@@ -88,7 +104,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
         {isLoading && <LoadingSpinner />}
         {isError && <ErrorDisplay error={error} />}
         {!isLoading && !isError && (
-          <Grid container sx={{ p: 2 }}>
+          <Grid container rowSpacing={1} sx={{ p: 2 }}>
             <Grid item xs={12} md={6}>
               <Stack direction="column" gap={0}>
                 <Typography variant="h6">{t_g("objective", { count: 30 })}</Typography>
@@ -104,6 +120,20 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                     />
                   );
                 })}
+                <ButtonGroup variant="outlined" color="primary">
+                  <Button
+                    startIcon={<FontAwesomeIcon icon={faCheckSquare} />}
+                    onClick={() => changedAllObjectives(true)}
+                  >
+                    {t("all")}
+                  </Button>
+                  <Button
+                    startIcon={<FontAwesomeIcon icon={faSquare} />}
+                    onClick={() => changedAllObjectives(false)}
+                  >
+                    {t("all")}
+                  </Button>
+                </ButtonGroup>
               </Stack>
             </Grid>
             <Grid item xs={12} md={6}>

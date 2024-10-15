@@ -376,7 +376,7 @@ function TopGoldenListGroup({
               <TableBody>
                 {isEmptyTier && (
                   <TableRow>
-                    <TableCell colSpan={4} align="center" style={{ padding: "2px 8px" }}>
+                    <TableCell colSpan={99} align="center" style={{ padding: "2px 8px" }}>
                       <Typography variant="body2" color="textSecondary">
                         -
                       </Typography>
