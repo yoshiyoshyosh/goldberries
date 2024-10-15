@@ -1,4 +1,4 @@
-import { Container, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { BasicContainerBox, StyledLink } from "../components/BasicComponents";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -6,12 +6,14 @@ export function Page403({ message }) {
   const { t } = useTranslation(undefined, { keyPrefix: "error_pages" });
   const defaultMessage = t("403.description");
   return (
-    <Container sx={{ p: 5 }} maxWidth="sm">
-      <h1>403</h1>
+    <BasicContainerBox maxWidth="sm">
+      <Typography variant="h3" color="error.main">
+        403
+      </Typography>
       <Typography color="error.main">
         {t("403.forbidden")}: {message ?? defaultMessage}
       </Typography>
-    </Container>
+    </BasicContainerBox>
   );
 }
 
@@ -19,7 +21,9 @@ export function PageNoPlayerClaimed() {
   const { t } = useTranslation(undefined, { keyPrefix: "error_pages.no_player_claimed" });
   return (
     <BasicContainerBox maxWidth="sm">
-      <Typography color="error.main">{t("title")}</Typography>
+      <Typography variant="h3" color="error.main">
+        {t("title")}
+      </Typography>
       <Typography>
         <Trans t={t} i18nKey="description" components={{ CustomLink: <StyledLink to="/claim-player" /> }} />
       </Typography>

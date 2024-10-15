@@ -894,7 +894,7 @@
       "title": "Your account is missing setup!",
       "description": "Please go to <CustomLink>this page</CustomLink> to create a new player, or claim an existing one!"
     },
-    "404": "This requested page does not exist"
+    "404": "The requested page does not exist"
   },
   "golden_list": {
     "hard": "Hard Golden List",
