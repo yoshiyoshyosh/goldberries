@@ -7,6 +7,8 @@ class NewChallenge extends DbObject
   public string $url;
   public ?string $name = null;
   public ?string $description;
+  public ?StringList $collectibles = null;
+  public ?string $golden_changes = null;
 
 
   // === Abstract Functions ===
@@ -16,6 +18,8 @@ class NewChallenge extends DbObject
       'url' => $this->url,
       'name' => $this->name,
       'description' => $this->description,
+      'collectibles' => $this->collectibles === null ? null : $this->collectibles->__toString(),
+      'golden_changes' => $this->golden_changes,
     );
   }
 
@@ -27,6 +31,21 @@ class NewChallenge extends DbObject
 
     if (isset($arr[$prefix . 'name']))
       $this->name = $arr[$prefix . 'name'];
+    if (isset($arr[$prefix . 'collectibles'])) {
+      $value = $arr[$prefix . 'collectibles'];
+      if (is_array($value)) {
+        if (count($value) > 0) {
+          $this->collectibles = new StringList(4);
+          $this->collectibles->arr = $value;
+        } else {
+          $this->collectibles = null;
+        }
+      } else {
+        $this->collectibles = new StringList(4, $value);
+      }
+    }
+    if (isset($arr[$prefix . 'golden_changes']))
+      $this->golden_changes = $arr[$prefix . 'golden_changes'];
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
