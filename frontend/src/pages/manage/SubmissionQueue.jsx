@@ -446,7 +446,8 @@ function SubmissionQueueTableRow({
   const map = challenge !== null ? challenge.map : null;
   const campaign = getChallengeCampaign(challenge);
   const textTop =
-    submission.player.name +
+    submission.player.name.slice(0, 17) +
+    "..." +
     (challenge === null
       ? ""
       : " - " + (map === null ? getChallengeSuffix(challenge) : getMapName(map, campaign)));

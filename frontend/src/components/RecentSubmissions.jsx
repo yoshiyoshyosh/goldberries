@@ -292,7 +292,7 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
       </TableCell>
       {!hasPlayer && (
         <TableCell align="center" sx={{ pl: 1, pr: 0.5, py: 0 }}>
-          <PlayerChip player={submission.player} size="small" />
+          <PlayerChip player={submission.player} size="small" trimLongNames />
         </TableCell>
       )}
       <TableCell align="center" sx={{ p: 0 }}>

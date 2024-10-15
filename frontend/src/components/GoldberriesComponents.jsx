@@ -629,7 +629,7 @@ export function PlayerSelect({ type, value, onChange, label, ...props }) {
   );
 }
 
-export function PlayerChip({ player, ...props }) {
+export function PlayerChip({ player, trimLongNames = false, ...props }) {
   const { settings } = useAppSettings();
   if (player === undefined || player === null) {
     return <Chip label="<none>" sx={{ mr: 1 }} {...props} />;
@@ -638,6 +638,11 @@ export function PlayerChip({ player, ...props }) {
   const style = getPlayerNameColorStyle(player, settings);
   const isTemp = player.account.is_verifier && isTempVerifier(player.id);
   const hasOneIcon = player.account.is_verifier || player.account.is_suspended || isTemp;
+
+  if (trimLongNames) {
+    style.overflow = "hidden";
+    style.maxWidth = "130px";
+  }
 
   return (
     <Link to={"/player/" + player.id}>
