@@ -26,7 +26,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 
-export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
+export function FormMapWrapper({
+  id,
+  onSave,
+  defaultMapName,
+  defaultMapGoldenChanges,
+  defaultMapCollectibles,
+  ...props
+}) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["map", id],
@@ -52,8 +59,11 @@ export function FormMapWrapper({ id, onSave, defaultMapName, ...props }) {
         sort_order: null,
         author_gb_id: "",
         author_gb_name: "",
-        collectibles: null,
-        golden_changes: "Unknown",
+        collectibles: defaultMapCollectibles ?? null,
+        golden_changes:
+          defaultMapGoldenChanges && defaultMapGoldenChanges.trim() !== ""
+            ? defaultMapGoldenChanges
+            : "Unknown",
       }
     );
   }, [data]);

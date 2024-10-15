@@ -27,10 +27,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faDownload, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useDebounce } from "@uidotdev/usehooks";
 import { SameCampaignNameIndicator } from "./Campaign";
+import { getCollectibleOptions, getCollectibleVariantOptions } from "./Map";
+import { StringListEditor } from "../StringListEditor";
 
 export function FormCreateFullChallengeWrapper({
   onSuccess,
   defaultName,
+  defaultGoldenChanges,
+  defaultCollectibles,
   defaultUrl,
   defaultDifficultyId,
   ...props
@@ -41,7 +45,11 @@ export function FormCreateFullChallengeWrapper({
       campaign_url: defaultUrl ?? "",
       campaign_author_gb_id: "",
       campaign_author_gb_name: "",
+
       map_name: defaultName ?? "",
+      map_golden_changes:
+        defaultGoldenChanges && defaultGoldenChanges.trim() !== "" ? defaultGoldenChanges : "Unknown",
+      map_collectibles: defaultCollectibles ?? null,
 
       objective_id: 1,
       label: "",
@@ -63,6 +71,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   const { t: t_fch } = useTranslation(undefined, { keyPrefix: "forms.challenge" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
+  const { t: t_fm } = useTranslation(undefined, { keyPrefix: "forms.map" });
   const { t: t_a } = useTranslation();
   const [modFetchState, setModFetchState] = useState(0); //0 = not fetched, 1 = fetching, 2 = success, 3 = error
   const { mutateAsync: postCampaign } = usePostCampaign(() => {
@@ -90,7 +99,8 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
     };
     const map = {
       name: data.map_name,
-      golden_changes: "Unknown",
+      golden_changes: data.map_golden_changes,
+      collectibles: data.map_collectibles,
     };
     const challenge = {
       objective_id: data.objective_id,
@@ -225,6 +235,43 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         {...form.register("map_name", FormOptions.Name128Required(t_ff))}
         error={!!errors.map_name}
         helperText={errors.map_name ? errors.map_name.message : ""}
+      />
+      <TextField
+        label={t_fm("golden_changes.label")}
+        fullWidth
+        multiline
+        minRows={2}
+        {...form.register("map_golden_changes")}
+        sx={{ mt: 2 }}
+      />
+      <Controller
+        control={form.control}
+        name="map_collectibles"
+        render={({ field }) => (
+          <StringListEditor
+            label={t_fm("collectibles.label")}
+            sx={{ mt: 2 }}
+            valueTypes={[
+              {
+                type: "enum",
+                options: getCollectibleOptions(),
+              },
+              { type: "enum", options: (item, index, value) => getCollectibleVariantOptions(item[0]) },
+              { type: "string" },
+              { type: "string", multiline: true },
+            ]}
+            valueLabels={[
+              t_fm("collectibles.label"),
+              t_fm("collectibles.variant"),
+              t_fm("collectibles.count"),
+              t_fm("collectibles.note"),
+            ]}
+            list={field.value}
+            setList={field.onChange}
+            valueCount={4}
+            reorderable
+          />
+        )}
       />
 
       <Divider sx={{ mt: 2, mb: 1 }}>

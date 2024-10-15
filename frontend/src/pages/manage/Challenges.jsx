@@ -543,6 +543,8 @@ export function CreateAnyButton({
   defaultCampaignName,
   defaultCampaignUrl,
   defaultMapName,
+  defaultMapGoldenChanges,
+  defaultMapCollectibles,
   defaultDifficultyId,
   onCreateChallenge,
 }) {
@@ -610,7 +612,13 @@ export function CreateAnyButton({
       </CustomModal>
 
       <CustomModal modalHook={createMapModal} options={{ hideFooter: true }}>
-        <FormMapWrapper id={null} onSave={createMapModal.close} defaultMapName={defaultMapName} />
+        <FormMapWrapper
+          id={null}
+          onSave={createMapModal.close}
+          defaultMapName={defaultMapName}
+          defaultMapGoldenChanges={defaultMapGoldenChanges}
+          defaultMapCollectibles={defaultMapCollectibles}
+        />
       </CustomModal>
 
       <CustomModal modalHook={createChallengeModal} options={{ hideFooter: true }}>
@@ -625,6 +633,8 @@ export function CreateAnyButton({
         <FormCreateFullChallengeWrapper
           onSuccess={onCreatedFullChallenge}
           defaultName={defaultMapName}
+          defaultGoldenChanges={defaultMapGoldenChanges}
+          defaultCollectibles={defaultMapCollectibles}
           defaultUrl={defaultCampaignUrl}
           defaultDifficultyId={defaultDifficultyId}
         />

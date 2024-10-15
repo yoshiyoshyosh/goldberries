@@ -12,6 +12,7 @@ export function StringListEditor({
   setList,
   inline = false,
   reorderable = false,
+  sx = {},
 }) {
   const addItem = () => {
     const newItem = Array(valueCount).fill("");
@@ -59,7 +60,7 @@ export function StringListEditor({
 
   return (
     <>
-      <Grid container spacing={1} sx={{ mb: 1 }}>
+      <Grid container spacing={1} sx={{ mb: 1, ...sx }}>
         <Grid item xs="auto">
           <Typography variant="h6">{label}</Typography>
         </Grid>

@@ -185,6 +185,8 @@ export function FormSubmission({ submission, onSave, ...props }) {
                     defaultCampaignName={submission.new_challenge?.name}
                     defaultCampaignUrl={submission.new_challenge?.url}
                     defaultMapName={submission.new_challenge?.name}
+                    defaultMapGoldenChanges={submission.new_challenge?.golden_changes}
+                    defaultMapCollectibles={submission.new_challenge?.collectibles}
                     defaultDifficultyId={submission.suggested_difficulty_id ?? undefined}
                     onCreateChallenge={onCreateChallenge}
                   />
