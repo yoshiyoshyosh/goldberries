@@ -339,6 +339,7 @@
       "verifier": "Verifier",
       "verifier_notes": "Verifier Notes",
       "map_information": "Map Information",
+      "golden_changes": "Golden Changes",
       "buttons": {
         "update": "Update Submission",
         "verify": "Verify",
@@ -1105,6 +1106,10 @@
         "challenge_description": {
           "label": "Challenge Description",
           "placeholder": "Description of the challenge, if different from a regular deathless run"
+        },
+        "golden_changes": {
+          "label": "Golden Changes",
+          "placeholder": "Description of all golden-exclusive changes in this challenge"
         },
         "button": "Submit"
       }

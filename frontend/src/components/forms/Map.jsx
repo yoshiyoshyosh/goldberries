@@ -419,7 +419,7 @@ export function getCollectibleName(collectibleId, variantId) {
   }
   return collectible.name;
 }
-function getCollectibleOptions() {
+export function getCollectibleOptions() {
   return COLLECTIBLES.map((collectible) => (
     <MenuItem key={collectible.value} value={collectible.value}>
       <Stack direction="row" gap={1} alignItems="center">
@@ -430,7 +430,7 @@ function getCollectibleOptions() {
   ));
 }
 
-function getCollectibleVariantOptions(collectibleId) {
+export function getCollectibleVariantOptions(collectibleId) {
   const collectible = COLLECTIBLES.find((c) => c.value === collectibleId);
   if (!collectible) {
     return [];

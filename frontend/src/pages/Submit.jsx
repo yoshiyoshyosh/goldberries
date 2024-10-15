@@ -59,6 +59,8 @@ import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CharsCountLabel } from "./Suggestions";
 import { useTheme } from "@emotion/react";
+import { getCollectibleOptions, getCollectibleVariantOptions } from "../components/forms/Map";
+import { StringListEditor } from "../components/StringListEditor";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -793,6 +795,7 @@ export function NewChallengeUserSubmission({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.new" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_fm } = useTranslation(undefined, { keyPrefix: "forms.map" });
   const { t: t_ts } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
   const { t: t_a } = useTranslation();
   const auth = useAuth();
@@ -810,6 +813,8 @@ export function NewChallengeUserSubmission({}) {
         url: "",
         name: "",
         description: "",
+        collectibles: null,
+        golden_changes: "",
       },
       proof_url: "",
       raw_session_url: "",
@@ -862,6 +867,43 @@ export function NewChallengeUserSubmission({}) {
             {...form.register("new_challenge.description")}
             InputLabelProps={{ shrink: true }}
             placeholder={t("challenge_description.placeholder")}
+          />
+          <TextField
+            label={t("golden_changes.label")}
+            fullWidth
+            multiline
+            minRows={2}
+            {...form.register("new_challenge.golden_changes")}
+            InputLabelProps={{ shrink: true }}
+            placeholder={t("golden_changes.placeholder")}
+          />
+          <Controller
+            control={form.control}
+            name="new_challenge.collectibles"
+            render={({ field }) => (
+              <StringListEditor
+                label={t_fm("collectibles.label")}
+                valueTypes={[
+                  {
+                    type: "enum",
+                    options: getCollectibleOptions(),
+                  },
+                  { type: "enum", options: (item, index, value) => getCollectibleVariantOptions(item[0]) },
+                  { type: "string" },
+                  { type: "string", multiline: true },
+                ]}
+                valueLabels={[
+                  t_fm("collectibles.label"),
+                  t_fm("collectibles.variant"),
+                  t_fm("collectibles.count"),
+                  t_fm("collectibles.note"),
+                ]}
+                list={field.value}
+                setList={field.onChange}
+                valueCount={4}
+                reorderable
+              />
+            )}
           />
         </Stack>
         <Divider sx={{ my: 3 }} />

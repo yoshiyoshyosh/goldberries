@@ -315,7 +315,7 @@ function LobbyInfoSpan({ lobbyInfo }) {
     </Stack>
   );
 }
-function CollectiblesInfoBox({ collectibles }) {
+export function CollectiblesInfoBox({ collectibles }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map.info_boxes" });
   return (
     <InfoBox>

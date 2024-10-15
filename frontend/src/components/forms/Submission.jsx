@@ -45,7 +45,7 @@ import { useTranslation } from "react-i18next";
 import { DatePicker, DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
-import { ChallengeDetailsList } from "../../pages/Challenge";
+import { ChallengeDetailsList, CollectiblesInfoBox } from "../../pages/Challenge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBasketShopping } from "@fortawesome/free-solid-svg-icons";
 import { CharsCountLabel } from "../../pages/Suggestions";
@@ -144,6 +144,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const submitDisabled = player === null || (challenge === null && !submission.new_challenge_id);
 
   const new_challenge_id = form.watch("new_challenge_id");
+  const new_challenge = form.watch("new_challenge");
 
   if (!isVerifier && submission.player.id !== auth.user.player.id) {
     return (
@@ -210,6 +211,15 @@ export function FormSubmission({ submission, onSave, ...props }) {
               fullWidth
               {...form.register("new_challenge.description")}
             />
+            <TextField
+              label={t("golden_changes")}
+              multiline
+              minRows={2}
+              disabled={!isVerifier}
+              fullWidth
+              {...form.register("new_challenge.golden_changes")}
+            />
+            {new_challenge.collectibles && <CollectiblesInfoBox collectibles={new_challenge.collectibles} />}
           </Stack>
         )}
 
