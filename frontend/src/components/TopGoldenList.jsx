@@ -86,6 +86,11 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     filter.archived +
     filter.arbitrary +
     filter.hide_objectives.join(",") +
+    filter.sub_count +
+    filter.sub_count_is_min +
+    filter.clear_state +
+    filter.start_date +
+    filter.end_date +
     settings.visual.topGoldenList.showCampaignIcons +
     settings.visual.topGoldenList.darkenTierColors +
     settings.visual.topGoldenList.useTextFcIcons;
@@ -106,6 +111,11 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     filter.archived,
     filter.arbitrary,
     filter.hide_objectives,
+    filter.sub_count,
+    filter.sub_count_is_min,
+    filter.clear_state,
+    filter.start_date,
+    filter.end_date,
     settings.visual.topGoldenList.showCampaignIcons,
     settings.visual.topGoldenList.darkenTierColors,
     settings.visual.topGoldenList.useTextFcIcons,

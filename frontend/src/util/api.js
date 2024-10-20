@@ -35,7 +35,13 @@ export function fetchTopGoldenList(type, id = null, filter) {
     archived: filter.archived,
     arbitrary: filter.arbitrary,
     hide_objectives: filter.hide_objectives,
+    sub_count_is_min: filter.sub_count_is_min ?? false,
+    clear_state: filter.clear_state ?? 0,
   };
+
+  if (filter.sub_count !== null && filter.sub_count !== "") data.sub_count = filter.sub_count;
+  if (filter.start_date !== null && filter.start_date !== "") data.start_date = filter.start_date;
+  if (filter.end_date !== null && filter.end_date !== "") data.end_date = filter.end_date;
 
   let endpoint = "/lists/top-golden-list";
   if (type === "all") {

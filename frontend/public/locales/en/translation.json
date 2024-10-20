@@ -165,7 +165,28 @@
       "show_arbitrary": "Show Arbitrary Challenges",
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden",
-      "all": "All"
+      "all": "All",
+      "clear_state": {
+        "label": "Clear State",
+        "all": "All Challenges",
+        "only_c": "Only Regular Clears",
+        "only_fc": "Only Full Clears",
+        "no_c": "No Regular Clears",
+        "no_fc": "No Full Clears"
+      },
+      "submission_count": {
+        "label": "Submission Count",
+        "explanation": "Only show challenges with at least or at most this many submissions.",
+        "none": "No Filter",
+        "max": "max",
+        "min": "min"
+      },
+      "date_range": {
+        "label": "Date Range",
+        "explanation": "Only considers submissions that were made during this date range.\nIf used with the submission count filter it requires the specified amount of submissions to be made within the date range.",
+        "start_date": "Start Date",
+        "end_date": "End Date"
+      }
     },
     "chars_count_label": {
       "label": "({{count}}/{{max}} characters)"

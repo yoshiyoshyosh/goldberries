@@ -5,18 +5,31 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  MenuItem,
   Popover,
   Stack,
+  TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { getQueryData, useGetObjectiveSubmissionCount, useGetObjectives } from "../hooks/useApi";
-import { ErrorDisplay, LoadingSpinner, getErrorFromMultiple } from "./BasicComponents";
+import { ErrorDisplay, LoadingSpinner, TooltipLineBreaks, getErrorFromMultiple } from "./BasicComponents";
 import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckSquare, faEyeSlash, faSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckSquare,
+  faEyeSlash,
+  faGreaterThan,
+  faGreaterThanEqual,
+  faLessThanEqual,
+  faQuestionCircle,
+  faSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 /*
   filter structure:
@@ -24,6 +37,11 @@ import { useTranslation } from "react-i18next";
     hide_objectives: [id, id, id], //IDs of all objectives to hide
     archived: bool, //true if archived maps should be shown
     arbitrary: bool, //true if arbitrary objectives/challenges should be shown
+    clear_state: int, //0 for all, 1 for Only C, 2 for Only FC, 3 for Only FC or C/FC, 4 for Only C or C/FC
+    sub_count: int, //count of submissions to filter for
+    sub_count_is_min: bool, //true if sub_count is a minimum, false if it is a maximum (both inclusive)
+    start_date: string, //start date for date range
+    end_date: string, //end date for date range
   }
 */
 export function SubmissionFilter({ type, id, filter, setFilter }) {
@@ -31,21 +49,24 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
   const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const [localFilter, setLocalFilter] = useState(filter);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setFilter(localFilter);
   };
   const open = Boolean(anchorEl);
   const elemId = open ? "submission-filter" : undefined;
 
-  const changedBoolFilter = (key, newValue) => {
-    setFilter((prev) => ({ ...prev, [key]: newValue }));
+  const changedFilter = (key, newValue) => {
+    setLocalFilter((prev) => ({ ...prev, [key]: newValue }));
   };
   const changedObjectiveFilter = (id, newValue) => {
-    setFilter((prev) => {
+    setLocalFilter((prev) => {
       const hide_objectives = prev.hide_objectives.includes(id)
         ? prev.hide_objectives.filter((i) => i !== id)
         : [...prev.hide_objectives, id];
@@ -53,7 +74,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
     });
   };
   const changedAllObjectives = (newValue) => {
-    setFilter((prev) => {
+    setLocalFilter((prev) => {
       const hide_objectives = newValue ? [] : sortedObjectives.map((o) => o.id);
       return { ...prev, hide_objectives };
     });
@@ -71,10 +92,10 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
   const error = isError ? getErrorFromMultiple(queryObjectives, queryObjectiveSubmissionCount) : null;
 
   const disabledFilters = [];
-  if (!filter.archived) disabledFilters.push("Archived Maps");
-  if (!filter.arbitrary) disabledFilters.push("Arbitrary Challenges");
+  if (!localFilter.archived) disabledFilters.push("Archived Maps");
+  if (!localFilter.arbitrary) disabledFilters.push("Arbitrary Challenges");
   sortedObjectives.forEach((objective) => {
-    if (filter.hide_objectives.includes(objective.id)) disabledFilters.push(objective.name);
+    if (localFilter.hide_objectives.includes(objective.id)) disabledFilters.push(objective.name);
   });
 
   return (
@@ -112,7 +133,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                   const submissionCount = objectiveSubmissionCount[objective.id] || 0;
                   return (
                     <FormControlLabel
-                      checked={!filter.hide_objectives.includes(objective.id)}
+                      checked={!localFilter.hide_objectives.includes(objective.id)}
                       onChange={(e) => changedObjectiveFilter(objective.id, e.target.checked)}
                       control={<Checkbox />}
                       label={`${objective.name} (${submissionCount})`}
@@ -139,18 +160,102 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
             <Grid item xs={12} md={6}>
               <Typography variant="h6">{t("additional_filters")}</Typography>
               <FormControlLabel
-                checked={filter.archived}
-                onChange={(e) => changedBoolFilter("archived", e.target.checked)}
+                checked={localFilter.archived}
+                onChange={(e) => changedFilter("archived", e.target.checked)}
                 control={<Checkbox />}
                 label={t("show_archived")}
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
               <FormControlLabel
-                checked={filter.arbitrary}
-                onChange={(e) => changedBoolFilter("arbitrary", e.target.checked)}
+                checked={localFilter.arbitrary}
+                onChange={(e) => changedFilter("arbitrary", e.target.checked)}
                 control={<Checkbox />}
                 label={t("show_arbitrary")}
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
+              />
+              <TextField
+                select
+                label={t("clear_state.label")}
+                fullWidth
+                value={localFilter.clear_state ?? 0}
+                onChange={(e) => changedFilter("clear_state", e.target.value)}
+                SelectProps={{
+                  MenuProps: { disableScrollLock: true },
+                }}
+                sx={{ mt: 1 }}
+              >
+                <MenuItem value="0">{t("clear_state.all")}</MenuItem>
+                <MenuItem value="1">{t("clear_state.only_c")}</MenuItem>
+                <MenuItem value="2">{t("clear_state.only_fc")}</MenuItem>
+                <MenuItem value="3">{t("clear_state.no_c")}</MenuItem>
+                <MenuItem value="4">{t("clear_state.no_fc")}</MenuItem>
+              </TextField>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                {t("submission_count.label")}{" "}
+                <Tooltip arrow placement="top" title={t("submission_count.explanation")}>
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                </Tooltip>
+              </Typography>
+              <Grid container spacing={0.5}>
+                <Grid item xs={6}>
+                  <TextField
+                    type="number"
+                    fullWidth
+                    value={localFilter.sub_count ?? ""}
+                    onChange={(e) => changedFilter("sub_count", e.target.value)}
+                    placeholder={t("submission_count.none")}
+                  />
+                </Grid>
+                <Grid item xs={6} display="flex">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => changedFilter("sub_count_is_min", !localFilter.sub_count_is_min)}
+                    fullWidth
+                    startIcon={
+                      <FontAwesomeIcon
+                        icon={localFilter.sub_count_is_min ? faGreaterThanEqual : faLessThanEqual}
+                      />
+                    }
+                    sx={{ alignSelf: "stretch" }}
+                  >
+                    {localFilter.sub_count_is_min ? t("submission_count.min") : t("submission_count.max")}
+                  </Button>
+                </Grid>
+              </Grid>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                {t("date_range.label")}{" "}
+                <TooltipLineBreaks arrow placement="top" title={t("date_range.explanation")}>
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                </TooltipLineBreaks>
+              </Typography>
+              <DatePicker
+                label={t("date_range.start_date")}
+                value={localFilter.start_date ? dayjs(localFilter.start_date) : null}
+                onChange={(value) => {
+                  if (value && value.isValid()) {
+                    changedFilter("start_date", value.toISOString());
+                  } else {
+                    changedFilter("start_date", null);
+                  }
+                }}
+                minDate={dayjs(new Date(2018, 9, 12, 12))}
+                maxDate={dayjs(new Date())}
+                sx={{ mt: 1 }}
+              />
+              <DatePicker
+                label={t("date_range.end_date")}
+                value={localFilter.end_date ? dayjs(localFilter.end_date) : null}
+                onChange={(value) => {
+                  if (value && value.isValid()) {
+                    changedFilter("end_date", value.toISOString());
+                  } else {
+                    changedFilter("end_date", null);
+                  }
+                }}
+                minDate={dayjs(new Date(2018, 9, 12, 12))}
+                maxDate={dayjs(new Date())}
+                sx={{ mt: 1 }}
               />
             </Grid>
           </Grid>

@@ -405,6 +405,7 @@ export function usePostCampaign(onSuccess) {
     mutationFn: (campaign) => postCampaign(campaign),
     onSuccess: (response, campaign) => {
       queryClient.invalidateQueries(["campaign", response.data.id]);
+      queryClient.invalidateQueries(["campaign_view", response.data.id]);
       queryClient.invalidateQueries(["all_campaigns"]);
       invalidateJointQueries(queryClient);
       if (onSuccess) onSuccess(response.data);
