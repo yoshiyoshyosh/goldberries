@@ -84,6 +84,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
   const objectives = getQueryData(queryObjectives);
   const sortedObjectives = objectives ? objectives.sort((a, b) => a.id - b.id) : [];
 
+  const isPlayer = type === "player";
   const queryObjectiveSubmissionCount = useGetObjectiveSubmissionCount(type, id);
   const objectiveSubmissionCount = getQueryData(queryObjectiveSubmissionCount);
 
@@ -190,39 +191,43 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 <MenuItem value="3">{t("clear_state.no_c")}</MenuItem>
                 <MenuItem value="4">{t("clear_state.no_fc")}</MenuItem>
               </TextField>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {t("submission_count.label")}{" "}
-                <Tooltip arrow placement="top" title={t("submission_count.explanation")}>
-                  <FontAwesomeIcon icon={faQuestionCircle} />
-                </Tooltip>
-              </Typography>
-              <Grid container spacing={0.5}>
-                <Grid item xs={6}>
-                  <TextField
-                    type="number"
-                    fullWidth
-                    value={localFilter.sub_count ?? ""}
-                    onChange={(e) => changedFilter("sub_count", e.target.value)}
-                    placeholder={t("submission_count.none")}
-                  />
-                </Grid>
-                <Grid item xs={6} display="flex">
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => changedFilter("sub_count_is_min", !localFilter.sub_count_is_min)}
-                    fullWidth
-                    startIcon={
-                      <FontAwesomeIcon
-                        icon={localFilter.sub_count_is_min ? faGreaterThanEqual : faLessThanEqual}
+              {!isPlayer && (
+                <>
+                  <Typography variant="body1" sx={{ mt: 1 }}>
+                    {t("submission_count.label")}{" "}
+                    <Tooltip arrow placement="top" title={t("submission_count.explanation")}>
+                      <FontAwesomeIcon icon={faQuestionCircle} />
+                    </Tooltip>
+                  </Typography>
+                  <Grid container spacing={0.5}>
+                    <Grid item xs={6}>
+                      <TextField
+                        type="number"
+                        fullWidth
+                        value={localFilter.sub_count ?? ""}
+                        onChange={(e) => changedFilter("sub_count", e.target.value)}
+                        placeholder={t("submission_count.none")}
                       />
-                    }
-                    sx={{ alignSelf: "stretch" }}
-                  >
-                    {localFilter.sub_count_is_min ? t("submission_count.min") : t("submission_count.max")}
-                  </Button>
-                </Grid>
-              </Grid>
+                    </Grid>
+                    <Grid item xs={6} display="flex">
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => changedFilter("sub_count_is_min", !localFilter.sub_count_is_min)}
+                        fullWidth
+                        startIcon={
+                          <FontAwesomeIcon
+                            icon={localFilter.sub_count_is_min ? faGreaterThanEqual : faLessThanEqual}
+                          />
+                        }
+                        sx={{ alignSelf: "stretch" }}
+                      >
+                        {localFilter.sub_count_is_min ? t("submission_count.min") : t("submission_count.max")}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </>
+              )}
               <Typography variant="body1" sx={{ mt: 1 }}>
                 {t("date_range.label")}{" "}
                 <TooltipLineBreaks arrow placement="top" title={t("date_range.explanation")}>
