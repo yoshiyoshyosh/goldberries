@@ -247,6 +247,11 @@ class Campaign extends DbObject
   }
 
   // === Utility Functions ===
+  function __toString()
+  {
+    return "(Campaign, id:{$this->id}, name:'{$this->get_name()}')";
+  }
+
   static function generate_changelog($DB, $old, $new)
   {
     if ($old->id !== $new->id)
