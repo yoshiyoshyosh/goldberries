@@ -9,44 +9,88 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $all_submissions = isset($_GET['all_submissions']) && $_GET['all_submissions'] === "true";
 $limit_challenges = isset($_GET['limit_challenges']) ? intval($_GET['limit_challenges']) : null;
 
+//Advanced filters
+$sub_count = isset($_GET['sub_count']) ? intval($_GET['sub_count']) : null;
+$sub_count_is_min = isset($_GET['sub_count_is_min']) ? $_GET['sub_count_is_min'] === 'true' : true;
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
+//Clear states: 0 = all, 1 = Only C, 2 = Only FC, 3 = Only FC or C/FC (No C), 4 = Only C or C/FC (No FC)
+$clear_state = isset($_GET['clear_state']) ? intval($_GET['clear_state']) : 0;
+
+
+
 $query = "SELECT * FROM view_submissions";
-$where = "WHERE submission_is_verified = true AND (map_is_rejected = FALSE OR map_is_rejected IS NULL)";
+$where = [];
+$where[] = "submission_is_verified = true";
+$where[] = "(map_is_rejected = FALSE OR map_is_rejected IS NULL)";
 
 $is_player = isset($_GET['player']);
 $is_campaign = isset($_GET['campaign']);
 $show_standard = false;
 if ($is_player) {
-  $where .= " AND player_id = " . intval($_GET['player']);
+  $where[] = "player_id = " . intval($_GET['player']);
   $show_standard = true;
 } else {
-  $where .= " AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
+  $where[] = "(player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
 if ($is_campaign) {
-  $where .= " AND campaign_id = " . intval($_GET['campaign']);
+  $where[] = "campaign_id = " . intval($_GET['campaign']);
   $show_standard = true;
 }
 if (!$show_standard) {
-  $where .= " AND challenge_difficulty_id != 20 AND challenge_difficulty_id != 18";
+  $where[] = "challenge_difficulty_id != 20";
+  $where[] = "challenge_difficulty_id != 18";
 }
 
 
 if (isset($_GET['map'])) {
-  $where .= " AND map_id = " . intval($_GET['map']);
+  $where[] = "map_id = " . intval($_GET['map']);
 }
 
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
-  $where .= " AND (map_is_archived = false OR map_is_archived IS NULL)";
+  $where[] = "(map_is_archived = FALSE OR map_is_archived IS NULL)";
 }
 if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
-  $where .= " AND objective_is_arbitrary = false AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
+  $where[] = "objective_is_arbitrary = false";
+  $where[] = "(challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
 }
+
+//Filters
 if (isset($_GET["hide_objectives"])) {
   //hide_objectives will be an array of objective.id's to not include in the search
   $hide_objectives = $_GET["hide_objectives"];
-  $where .= " AND objective_id NOT IN (" . implode(",", $hide_objectives) . ")";
+  $where[] = "objective_id NOT IN (" . implode(",", $hide_objectives) . ")";
+}
+if ($clear_state !== 0) {
+  if ($clear_state === 1) {
+    $where[] = "challenge_has_fc = false";
+    $where[] = "challenge_requires_fc = false";
+  } else if ($clear_state === 2) {
+    $where[] = "challenge_requires_fc = true";
+    $where[] = "challenge_has_fc = false";
+  } else if ($clear_state === 3) {
+    $where[] = "(challenge_requires_fc = true OR challenge_has_fc = true)";
+  } else if ($clear_state === 4) {
+    $where[] = "challenge_requires_fc = false";
+  }
+}
+if ($start_date !== null) {
+  //Validate date to be in ISO format: 2024-10-19T22:00:00.000Z
+  if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/', $start_date)) {
+    die_json(400, "Invalid start_date format");
+  }
+  $where[] = "submission_date_created AT TIME ZONE 'UTC' >= '$start_date'";
+}
+if ($end_date !== null) {
+  if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/', $end_date)) {
+    die_json(400, "Invalid end_date format");
+  }
+  $where[] = "submission_date_created AT TIME ZONE 'UTC' <= '$end_date'";
 }
 
-$query = $query . " " . $where;
+
+$where_string = implode(" AND ", $where);
+$query = $query . " WHERE " . $where_string;
 $query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, submission_date_created ASC, submission_id ASC";
 
 $result = pg_query($DB, $query);
@@ -134,26 +178,37 @@ while ($row = pg_fetch_assoc($result)) {
   $challenge->submissions[$submission->id] = $submission;
 }
 
-//Flatten challenges
-$response['challenges'] = array_values($response['challenges']);
-
 //Flatten submissions
-foreach ($response['challenges'] as $challengeIndex => $challenge) {
-  $response['challenges'][$challengeIndex]->submissions = array_values($challenge->submissions);
+foreach ($response['challenges'] as $challenge_id => $challenge) {
+  if ($sub_count !== null) {
+    $count = count($challenge->submissions);
+    if ($sub_count_is_min && $count < $sub_count) {
+      unset($response['challenges'][$challenge_id]);
+      continue;
+    } else if (!$sub_count_is_min && $count > $sub_count) {
+      unset($response['challenges'][$challenge_id]);
+      continue;
+    }
+  }
+
+  $response['challenges'][$challenge_id]->submissions = array_values($challenge->submissions);
   //Set challenge->data->submission_count to the number of submissions
   //Then, delete all submissions except the first one from the challenge
-  $response['challenges'][$challengeIndex]->data = array(
+  $response['challenges'][$challenge_id]->data = array(
     "submission_count" => count($challenge->submissions),
   );
 
   if (!$is_player) {
-    $response['challenges'][$challengeIndex]->data["is_stable"] = is_challenge_stable($challenge);
+    $response['challenges'][$challenge_id]->data["is_stable"] = is_challenge_stable($challenge);
   }
 
   if (!$all_submissions) {
-    $response['challenges'][$challengeIndex]->submissions = array($challenge->submissions[0]);
+    $response['challenges'][$challenge_id]->submissions = array($challenge->submissions[0]);
   }
 }
+
+//Flatten challenges
+$response['challenges'] = array_values($response['challenges']);
 
 api_write($response);
 
