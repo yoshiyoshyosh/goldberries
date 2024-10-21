@@ -166,6 +166,7 @@
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden",
       "all": "All",
+      "apply": "Apply Filters",
       "clear_state": {
         "label": "Clear State",
         "all": "All Challenges",

@@ -765,7 +765,7 @@ export function PageCampaignTopGoldenList({ id }) {
   const query = useGetCampaignView(id);
   const theme = useTheme();
   const exportModal = useModal();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_campaign", getDefaultFilter());
 
   if (query.isLoading) {
     return (

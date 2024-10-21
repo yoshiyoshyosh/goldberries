@@ -233,7 +233,7 @@ export function PagePlayerTopGoldenList({ id }) {
   const theme = useTheme();
 
   const exportModal = useModal();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", getDefaultFilter());
 
   if (query.isLoading) {
     return (

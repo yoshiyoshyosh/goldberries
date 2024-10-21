@@ -19,6 +19,7 @@ import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCheck,
   faCheckSquare,
   faEyeSlash,
   faGreaterThan,
@@ -262,6 +263,15 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 maxDate={dayjs(new Date())}
                 sx={{ mt: 1 }}
               />
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleClose}
+                sx={{ mt: 1 }}
+                startIcon={<FontAwesomeIcon icon={faCheck} size="xs" />}
+              >
+                {t("apply")}
+              </Button>
             </Grid>
           </Grid>
         )}
@@ -286,5 +296,10 @@ export function getDefaultFilter() {
     hide_objectives: [],
     archived: true,
     arbitrary: true,
+    clear_state: 0,
+    sub_count: null,
+    sub_count_is_min: false,
+    start_date: null,
+    end_date: null,
   };
 }
