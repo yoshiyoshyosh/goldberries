@@ -195,7 +195,7 @@ export function ProofEmbed({ url, ...props }) {
         </div>
       </div>
     );
-  } else if (url.includes("bilibili.com")) {
+  } else if (url.includes("bilibili.com") && !url.includes("space.bilibili.com")) {
     let data = parseBilibiliUrl(url);
     url = `https://player.bilibili.com/player.html?bvid=${data.id}&page=${data.page}&high_quality=1&autoplay=false`;
 

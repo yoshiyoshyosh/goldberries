@@ -1237,7 +1237,7 @@ function NotificationNotice({}) {
 }
 
 const disallowedUrls = ["discord.com", "imgur.com"];
-const disallowedVariantUrls = ["youtube.com/playlist", "youtube.com/live/", "b23.tv/"];
+const disallowedVariantUrls = ["youtube.com/playlist", "youtube.com/live/", "b23.tv/", "space.bilibili.com/"];
 //Returns the translation key for the error message, or true if the URL is valid
 function validateUrl(url, required = true) {
   //Trim url
