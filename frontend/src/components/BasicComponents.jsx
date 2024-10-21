@@ -355,6 +355,7 @@ const SafeExternalDomains = [
   "https://discord.gg",
   "https://www.twitch.tv",
   "https://bilibili.com",
+  "https://www.bilibili.com",
   "https://github.com",
   "https://archive.org",
   "https://gamebanana.com",
