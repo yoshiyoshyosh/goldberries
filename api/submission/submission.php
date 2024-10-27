@@ -289,6 +289,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($submission->player_id !== $account->player->id && !is_verifier($account)) {
     die_json(403, "You are not allowed to delete submissions for other players");
   }
+  if ($submission->id === 46033) { //The golden challenge
+    die_json(403, "This submission cannot be deleted (we use this as example in the rules)");
+  }
 
   if ($submission->delete($DB)) {
     log_info("'{$account->player->name}' deleted {$submission}", "Submission");
