@@ -26,7 +26,7 @@ import { toast } from "react-toastify";
 import { DifficultyMoveDisplay } from "../pages/Suggestions";
 import { useTranslation } from "react-i18next";
 
-export function Changelog({ type, id }) {
+export function Changelog({ type, id, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.changelog" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
@@ -55,7 +55,7 @@ export function Changelog({ type, id }) {
   const canManage = auth.hasVerifierPriv || (type === "player" && id === auth.user?.player_id);
 
   return (
-    <Accordion>
+    <Accordion {...props}>
       <AccordionSummary
         expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
         aria-controls="panel1-content"
@@ -97,31 +97,31 @@ export function ChangelogEntry({ entry, deleteEntry, canManage = false }) {
     return <ChangelogEntryMovedChallenge entry={entry} deleteEntry={deleteEntry} canManage={canManage} />;
 
   return (
-    <Box component={Paper} sx={{ p: 1 }}>
+    <Paper elevation={4} sx={{ p: 1 }}>
       <Grid container>
-        <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 1, md: 1 } }}>
+        <Grid item xs="auto" display="flex" alignItems="center">
           <PlayerChip player={entry.author} size="small" />
         </Grid>
-        <Grid item xs={12} md="auto" display="flex" alignItems="center" sx={{ order: { xs: 5, md: 2 } }}>
-          <Typography variant="body1" sx={{ flex: 1, ml: 1 }}>
-            {entry.description}
-          </Typography>
-        </Grid>
-        <Grid item xs="auto" md sx={{ order: { xs: 2, md: 3 } }}></Grid>
-        <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 3, md: 4 } }}>
+        <Grid item xs="auto" md></Grid>
+        <Grid item xs="auto" display="flex" alignItems="center">
           <Typography variant="body1" sx={{ ml: { xs: 1, md: 0 } }}>
             {displayDate(entry.date, t_g)}
           </Typography>
         </Grid>
         {canManage && (
-          <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 4, md: 5 } }}>
+          <Grid item xs="auto" display="flex" alignItems="center">
             <IconButton color="error" onClick={() => deleteEntry(entry.id)} sx={{ ml: 1 }}>
               <FontAwesomeIcon icon={faTrash} style={{ fontSize: "65%" }} />
             </IconButton>
           </Grid>
         )}
+        <Grid item xs={12} display="flex" alignItems="center">
+          <Typography variant="body1" sx={{ flex: 1, ml: 1 }}>
+            {entry.description}
+          </Typography>
+        </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 }
 
@@ -139,31 +139,31 @@ function ChangelogEntryMovedChallenge({ entry, deleteEntry, canManage = false })
   const [fromDiff, toDiff] = result;
 
   return (
-    <Box component={Paper} sx={{ p: 1 }}>
+    <Paper elevation={4} sx={{ p: 1 }}>
       <Grid container>
-        <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 1, md: 1 } }}>
+        <Grid item xs="auto" display="flex" alignItems="center">
           <PlayerChip player={entry.author} size="small" />
         </Grid>
-        <Grid item xs={12} md="auto" display="flex" alignItems="center" sx={{ order: { xs: 5, md: 2 } }}>
-          <Stack direction="row" alignItems="center" gap={1} sx={{ ml: { xs: 0, md: 1 } }}>
-            <Typography variant="body1">{t("moved_from")}</Typography>
-            <DifficultyMoveDisplay from={fromDiff} to={toDiff} />
-          </Stack>
-        </Grid>
-        <Grid item xs="auto" md sx={{ order: { xs: 2, md: 3 } }}></Grid>
-        <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 3, md: 4 } }}>
+        <Grid item xs="auto" md></Grid>
+        <Grid item xs="auto" display="flex" alignItems="center">
           <Typography variant="body1" sx={{ ml: { xs: 1, md: 0 } }}>
             {displayDate(entry.date, t_g)}
           </Typography>
         </Grid>
         {canManage && (
-          <Grid item xs="auto" display="flex" alignItems="center" sx={{ order: { xs: 4, md: 5 } }}>
+          <Grid item xs="auto" display="flex" alignItems="center">
             <IconButton color="error" onClick={() => deleteEntry(entry.id)} sx={{ ml: 1 }}>
               <FontAwesomeIcon icon={faTrash} style={{ fontSize: "65%" }} />
             </IconButton>
           </Grid>
         )}
+        <Grid item xs={12} display="flex" alignItems="center">
+          <Stack direction="row" alignItems="center" gap={1} sx={{ ml: { xs: 0, md: 1 } }}>
+            <Typography variant="body1">{t("moved_from")}</Typography>
+            <DifficultyMoveDisplay from={fromDiff} to={toDiff} />
+          </Stack>
+        </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 }

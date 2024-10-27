@@ -3,51 +3,22 @@ import {
   Button,
   Chip,
   Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  ListSubheader,
   MenuItem,
   Select,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChallengeDetailsList, ChallengeSubmissionTable, NoteDisclaimer } from "./Challenge";
-import {
-  faArrowRightToBracket,
-  faArrowRightToFile,
-  faBook,
-  faEdit,
-  faExternalLink,
-  faFlagCheckered,
-  faLandmark,
-  faPlus,
-  faRightFromBracket,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightToBracket, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  getCampaignName,
-  getChallengeFcLong,
-  getChallengeFcShort,
-  getChallengeName,
-  getChallengeNameClean,
-  getChallengeNameShort,
-  getGamebananaEmbedUrl,
-  getMapAuthor,
-  getMapLobbyInfo,
-  getMapName,
-} from "../util/data_util";
+import { getCampaignName, getChallengeFcShort, getChallengeNameShort, getMapName } from "../util/data_util";
 import {
   BasicContainerBox,
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
-  StyledExternalLink,
   StyledLink,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
@@ -191,6 +162,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
               mt: 2,
             }}
           />
+          <Changelog type="challenge" id={selectedChallenge.id} sx={{ mt: 2 }} />
         </>
       )}
 
