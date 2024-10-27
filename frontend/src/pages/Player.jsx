@@ -3,7 +3,6 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
-  Grid,
   IconButton,
   Paper,
   Stack,
@@ -64,6 +63,7 @@ import { ExportTopGoldenListModal } from "./TopGoldenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { useModal } from "../hooks/useModal";
+import Grid from "@mui/material/Unstable_Grid2";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -186,6 +186,17 @@ function SubmissionShowcase({ id }) {
   const typeStr = type === "custom" ? t_as("title") : t("showcase_hardest");
 
   const widths = [12, 6, 6, 4, 4, 4, 4, 4, 4, 4];
+  const offsets = [null, [1, 3], null, [3, 4], [3, 2], null, [6, 4], [6, 2], null];
+  const getOffset = (index, length) => {
+    const offset = offsets[length - 1];
+    if (!offset || offset === null) {
+      return undefined;
+    }
+    if (offset[0] === index) {
+      return offset[1];
+    }
+    return undefined;
+  };
 
   return (
     <>
@@ -194,7 +205,13 @@ function SubmissionShowcase({ id }) {
       </Typography>
       <Grid container spacing={2}>
         {submissions.map((submission, index) => (
-          <Grid item xs={12} md={widths[index]} display="flex" justifyContent="space-around">
+          <Grid
+            xs={12}
+            md={widths[index]}
+            display="flex"
+            justifyContent="space-around"
+            mdOffset={getOffset(index, submissions.length)}
+          >
             <StyledLink to={`/submission/${submission.id}`}>
               <SubmissionEmbed submission={submission} style={{ width: "100%", maxWidth: "540px" }} />
             </StyledLink>
