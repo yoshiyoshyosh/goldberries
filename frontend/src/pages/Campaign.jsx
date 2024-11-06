@@ -587,7 +587,27 @@ function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
   const hasMinorSort = campaign.sort_minor_name !== null;
   const borderLeft = hasMajorSort ? "10px solid " + campaign.sort_major_colors[map.sort_major] : "none";
   const hasSubmission = mapData[map.id] !== undefined;
-  const submission = hasSubmission ? mapData[map.id].challenges[0].submissions[0] : null;
+  const hasOtherSubmission = Object.values(mapData).some((mapDataMap) => map.id === mapDataMap.counts_for_id);
+  const hasAnySubmission = hasSubmission || hasOtherSubmission;
+  let submission = null;
+  if (hasSubmission) {
+    submission = mapData[map.id].challenges[0].submissions[0];
+  } else if (hasOtherSubmission) {
+    submission = Object.values(mapData).find((mapDataMap) => map.id === mapDataMap.counts_for_id)
+      .challenges[0].submissions[0];
+  }
+  console.log(
+    "map_id",
+    map.id,
+    "hasSubmission",
+    hasSubmission,
+    "hasOtherSubmission",
+    hasOtherSubmission,
+    "submission",
+    submission,
+    "mapData",
+    mapData
+  );
   const borderRight = hasMinorSort ? "15px solid " + campaign.sort_minor_colors[map.sort_minor] : "none";
   return (
     <TableRow key={map.id}>
@@ -595,11 +615,11 @@ function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
         <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
       </TableCell>
       <TableCell width={1} align="right" sx={{ pr: 0 }}>
-        {hasSubmission && auth.hasVerifierPriv && <ToggleSubmissionFcButton submission={submission} />}
+        {hasAnySubmission && auth.hasVerifierPriv && <ToggleSubmissionFcButton submission={submission} />}
       </TableCell>
       <TableCell width={1} align="right" sx={{ px: 2, borderRight }}>
         <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">
-          {hasSubmission ? (
+          {hasAnySubmission ? (
             <>
               <SubmissionFcIcon submission={submission} />
               <StyledLink to={"/submission/" + submission.id}>

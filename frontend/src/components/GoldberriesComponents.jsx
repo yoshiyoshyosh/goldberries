@@ -104,14 +104,15 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
 export function MapSelect({ campaign, selected, setSelected, disabled, ...props }) {
   const { t } = useTranslation();
   const query = useQuery({
-    queryKey: ["all_maps", campaign.id],
-    queryFn: () => fetchAllMapsInCampaign(campaign.id),
+    queryKey: ["all_maps", campaign?.id],
+    queryFn: () => fetchAllMapsInCampaign(campaign?.id),
     onError: (error) => {
       toast.error(error.message);
     },
+    enabled: campaign !== null,
   });
 
-  const maps = query.data?.data?.maps ?? [];
+  const maps = campaign ? getQueryData(query)?.maps ?? [] : [];
 
   const getOptionLabel = (map) => {
     const oldPrefix = map.is_archived ? "[Old] " : "";

@@ -338,6 +338,10 @@
       "note": "Note",
       "golden_changes": "Golden Changes",
       "author_note": "Leave these blank if they match the author of the campaign.",
+      "counts_for_map": {
+        "label": "Counts For Map",
+        "note": "Make this map count for a different map in the campaign view"
+      },
       "buttons": {
         "create": "Create Map",
         "update": "Update Map"

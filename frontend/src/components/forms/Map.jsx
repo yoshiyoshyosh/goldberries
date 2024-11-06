@@ -16,7 +16,7 @@ import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
-import { AnyImage, CampaignSelect, EmoteImage, OtherIcon } from "../GoldberriesComponents";
+import { AnyImage, CampaignSelect, EmoteImage, MapSelect, OtherIcon } from "../GoldberriesComponents";
 import { FormOptions } from "../../util/constants";
 import { getQueryData, usePostMap } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
@@ -64,6 +64,7 @@ export function FormMapWrapper({
           defaultMapGoldenChanges && defaultMapGoldenChanges.trim() !== ""
             ? defaultMapGoldenChanges
             : "Unknown",
+        counts_for: null,
       }
     );
   }, [data]);
@@ -114,6 +115,7 @@ export function FormMap({ map, onSave, ...props }) {
     const toSubmit = {
       ...data,
       campaign_id: data.campaign.id,
+      counts_for_id: data.counts_for?.id,
     };
     saveMap(toSubmit);
   });
@@ -123,6 +125,7 @@ export function FormMap({ map, onSave, ...props }) {
   }, [map]);
 
   const campaign = form.watch("campaign");
+  const counts_for = form.watch("counts_for");
   const is_rejected = form.watch("is_rejected");
 
   const name = form.watch("name");
@@ -149,6 +152,20 @@ export function FormMap({ map, onSave, ...props }) {
           />
         )}
       />
+
+      <Typography variant="h6" sx={{ mt: 2, fontSize: ".9em" }} gutterBottom>
+        {t("counts_for_map.label")}
+      </Typography>
+      <Controller
+        control={form.control}
+        name="counts_for"
+        render={({ field }) => (
+          <MapSelect campaign={campaign} selected={counts_for} setSelected={(map) => field.onChange(map)} />
+        )}
+      />
+      <Typography variant="caption" color="text.secondary" gutterBottom>
+        {t("counts_for_map.note")}
+      </Typography>
 
       <Divider sx={{ my: 2 }} />
 
