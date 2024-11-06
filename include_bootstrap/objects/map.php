@@ -22,9 +22,11 @@ class Map extends DbObject
 
   // Foreign Keys
   public ?int $campaign_id = null;
+  public ?int $counts_for_id = null;
 
   // Linked Objects
   public Campaign $campaign;
+  public ?Map $counts_for = null;
 
   // Associative Objects
   public ?array $challenges = null; /* Challenge[] */
@@ -50,6 +52,7 @@ class Map extends DbObject
       'note' => $this->note,
       'collectibles' => $this->collectibles === null ? null : $this->collectibles->__toString(),
       'golden_changes' => $this->golden_changes,
+      'counts_for_id' => $this->counts_for_id,
     );
   }
 
@@ -109,6 +112,9 @@ class Map extends DbObject
     }
     if (isset($arr[$prefix . 'golden_changes']))
       $this->golden_changes = $arr[$prefix . 'golden_changes'];
+
+    if (isset($arr[$prefix . 'counts_for_id']))
+      $this->counts_for_id = intval($arr[$prefix . 'counts_for_id']);
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -125,6 +131,16 @@ class Map extends DbObject
         $this->campaign->expand_foreign_keys($DB, $depth - 1);
       } else {
         $this->campaign = Campaign::get_by_id($DB, $this->campaign_id, $depth - 1);
+      }
+    }
+
+    if (isset($this->counts_for_id)) {
+      if ($isFromSqlResult) {
+        $this->counts_for = new Map();
+        $this->counts_for->apply_db_data($DB, "for_map_");
+        $this->counts_for->expand_foreign_keys($DB, $depth - 1);
+      } else {
+        $this->counts_for = Map::get_by_id($DB, $this->counts_for_id, $depth - 1);
       }
     }
   }
@@ -147,6 +163,8 @@ class Map extends DbObject
       'map_campaign_id',
       'map_note',
       'map_collectibles',
+      'map_golden_changes',
+      'map_counts_for_id',
     ];
   }
 
@@ -292,6 +310,9 @@ class Map extends DbObject
     if ($old->is_rejected !== $new->is_rejected) {
       $stateNow = $new->is_rejected ? "Rejected the map" : "Cleared rejection status";
       Change::create_change($DB, 'map', $new->id, $stateNow);
+    }
+    if ($old->counts_for_id !== $new->counts_for_id) {
+      Change::create_change($DB, 'map', $new->id, "Changed this map counting for a different map in the campaign view from ID '{$old->counts_for_id}' to ID '{$new->counts_for_id}'");
     }
 
     return true;

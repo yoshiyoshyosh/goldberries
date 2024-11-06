@@ -11,9 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($challenges) {
     if (is_array($maps)) {
       foreach ($maps as $map) {
+        $map->expand_foreign_keys($DB, 2, false);
         $map->fetch_challenges($DB, $submissions, true, true);
       }
     } else {
+      $maps->expand_foreign_keys($DB, 2, false);
       $maps->fetch_challenges($DB, $submissions, true, true);
     }
   }

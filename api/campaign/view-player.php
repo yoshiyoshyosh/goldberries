@@ -28,7 +28,7 @@ FROM view_submissions
 WHERE submission_is_verified = true
   AND campaign_id = $campaign_id
   AND player_id = $player_id
-  AND map_is_archived = false
+  -- AND map_is_archived = false
   AND objective_is_arbitrary = false
   AND submission_is_obsolete = false
   AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
@@ -50,6 +50,12 @@ function parse_campaign_player_view($result)
     if (!array_key_exists($map_id, $maps)) {
       $map = new Map();
       $map->apply_db_data($row, "map_");
+
+      //Case: the map is archived BUT doesnt have a count_for set: ignore this submission & map
+      if ($map->is_archived && $map->counts_for_id === null) {
+        continue;
+      }
+
       $map->challenges = array();
       $maps[$map_id] = $map;
     }

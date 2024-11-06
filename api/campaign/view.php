@@ -24,7 +24,7 @@ $query = "SELECT
 FROM view_submissions 
 WHERE submission_is_verified = true 
   AND campaign_id = $campaign_id 
-  AND map_is_archived = false 
+  -- AND map_is_archived = false 
   AND objective_is_arbitrary = false 
   AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)
   AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
@@ -46,14 +46,23 @@ function parse_campaign_view($result, $campaign)
   //loop through result rows
   while ($row = pg_fetch_assoc($result)) {
     $map_id = intval($row['map_id']);
+    $for_map_id = isset($row['for_map_id']) ? intval($row['for_map_id']) : null;
     $map = null;
     //Find map in $campaign->maps
     foreach ($campaign->maps as $c_map) {
-      if ($c_map->id === $map_id) {
+      if ($c_map->id === $map_id || ($for_map_id !== null && $c_map->id === $for_map_id)) {
         $map = $c_map;
         break;
       }
     }
+
+    //Case: the map is archived BUT doesnt have a count_for set: ignore this submission & map
+    if ($row['map_is_archived'] === 't' && $for_map_id === null) {
+      continue;
+    }
+
+    //Overwrite the map_id for the loop, to pretend that the count_for actually is the map
+    $map_id = $map->id;
 
     $submission = new Submission();
     $submission->apply_db_data($row, "submission_");
