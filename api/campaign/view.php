@@ -46,6 +46,12 @@ function parse_campaign_view($result, $campaign)
   //loop through result rows
   while ($row = pg_fetch_assoc($result)) {
     $map_id = intval($row['map_id']);
+
+    //Case: map_id is null (full game challenges)
+    if ($map_id === 0) {
+      continue;
+    }
+
     $for_map_id = isset($row['for_map_id']) ? intval($row['for_map_id']) : null;
     $map = null;
     //Find map in $campaign->maps
