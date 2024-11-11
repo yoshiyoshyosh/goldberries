@@ -306,7 +306,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         />
         {proofUrlDebounced && <ProofEmbed url={proofUrlDebounced} />}
 
-        {submission.raw_session_url && (
+        {(submission.raw_session_url || isVerifier) && (
           <TextField
             {...form.register("raw_session_url")}
             label={t("raw_session_url") + " *"}
