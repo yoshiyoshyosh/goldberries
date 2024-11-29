@@ -214,7 +214,7 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3, challenge_chan
 
   //Group submissions by date
   const submissionsByDate = submissions_t0.reduce((acc, submission) => {
-    const date = new Date(submission.date_created).setHours(0, 0, 0, 0);
+    const date = new Date(submission.date_achieved).setHours(0, 0, 0, 0);
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -224,7 +224,7 @@ function MonthlyRecapTimeline({ submissions_t0, newly_cleared_t3, challenge_chan
 
   //Group newly cleared challenges by date
   const newlyClearedByDate = newly_cleared_t3.reduce((acc, challenge) => {
-    const date = new Date(challenge.submissions[0].date_created).setHours(0, 0, 0, 0);
+    const date = new Date(challenge.submissions[0].date_achieved).setHours(0, 0, 0, 0);
     if (!acc[date]) {
       acc[date] = [];
     }
