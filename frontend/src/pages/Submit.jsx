@@ -837,6 +837,7 @@ export function NewChallengeUserSubmission({}) {
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
+  const needsRawSession = suggested_difficulty_id !== null && suggested_difficulty_id < 13;
   const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
 
   return (
@@ -940,31 +941,31 @@ export function NewChallengeUserSubmission({}) {
             />
             <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
-          {suggested_difficulty_id !== null && suggested_difficulty_id < 13 && (
-            <Grid item xs={12}>
-              <TextField
-                label={t_fs("raw_session_url") + " *"}
-                fullWidth
-                {...form.register("raw_session_url", { validate: validateUrl })}
-                error={errors.raw_session_url}
-                helperText={
-                  errors.raw_session_url?.message ? (
-                    <Trans
-                      t={t_ff}
-                      i18nKey={"submission_url." + errors.raw_session_url?.message}
-                      components={{ CustomLink: <StyledLink /> }}
-                    />
-                  ) : null
-                }
-              />
-              <FormHelperText>{t_ts("raw_session_note")}</FormHelperText>
-              {sameUrl && (
-                <Typography variant="caption" color="error">
-                  {t_ts("raw_session_same_url_info")}
-                </Typography>
-              )}
-            </Grid>
-          )}
+          <Grid item xs={12}>
+            <TextField
+              label={t_fs("raw_session_url") + (needsRawSession ? " *" : " (Optional)")}
+              fullWidth
+              {...form.register("raw_session_url", {
+                validate: needsRawSession ? validateUrl : validateUrlNotRequired,
+              })}
+              error={errors.raw_session_url}
+              helperText={
+                errors.raw_session_url?.message ? (
+                  <Trans
+                    t={t_ff}
+                    i18nKey={"submission_url." + errors.raw_session_url?.message}
+                    components={{ CustomLink: <StyledLink /> }}
+                  />
+                ) : null
+              }
+            />
+            <FormHelperText>{t_ts("raw_session_note")}</FormHelperText>
+            {sameUrl && (
+              <Typography variant="caption" color="error">
+                {t_ts("raw_session_same_url_info")}
+              </Typography>
+            )}
+          </Grid>
           <Grid item xs={12}>
             <TextField
               label={t_fs("player_notes")}
