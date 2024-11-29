@@ -528,8 +528,8 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       )}
       {!compact && (
         <TableCell width={1} align="center" sx={{ px: 0.75, ...displayNoneOnMobile }}>
-          {submission.date_created &&
-            jsonDateToJsDate(submission.date_created).toLocaleDateString(navigator.language, {
+          {submission.date_achieved &&
+            jsonDateToJsDate(submission.date_achieved).toLocaleDateString(navigator.language, {
               year: "2-digit",
               month: "2-digit",
               day: "2-digit",

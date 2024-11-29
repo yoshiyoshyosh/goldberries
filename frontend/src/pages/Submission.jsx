@@ -264,8 +264,8 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           <InfoBoxIconTextLine text={<PlayerChip player={submission.player} size="small" />} isSecondary />
         </InfoBox>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("submitted")} />
-          <InfoBoxIconTextLine text={displayDate(submission.date_created, t_g)} isSecondary />
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("achieved")} />
+          <InfoBoxIconTextLine text={displayDate(submission.date_achieved, t_g)} isSecondary />
         </InfoBox>
         <InfoBox>
           <InfoBoxIconTextLine
@@ -332,10 +332,8 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               />
             </InfoBox>
             <InfoBox>
-              <InfoBoxIconTextLine
-                text={<VerificationStatusChip isVerified={submission.is_verified} size="small" />}
-              />
-              <InfoBoxIconTextLine text={displayDate(submission.date_verified, t_g)} isSecondary />
+              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("submitted")} />
+              <InfoBoxIconTextLine text={displayDate(submission.date_created, t_g)} isSecondary />
             </InfoBox>
             <InfoBox>
               <InfoBoxIconTextLine
@@ -343,6 +341,12 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
                 text={t_a("forms.submission.verifier_notes")}
               />
               <InfoBoxIconTextLine text={submission.verifier_notes ?? "-"} isSecondary />
+            </InfoBox>
+            <InfoBox>
+              <InfoBoxIconTextLine
+                text={<VerificationStatusChip isVerified={submission.is_verified} size="small" />}
+              />
+              <InfoBoxIconTextLine text={displayDate(submission.date_verified, t_g)} isSecondary />
             </InfoBox>
           </>
         ) : (
@@ -353,6 +357,10 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
                 text={<VerificationStatusChip isVerified={submission.is_verified} size="small" />}
                 isSecondary
               />
+            </InfoBox>
+            <InfoBox>
+              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("submitted")} />
+              <InfoBoxIconTextLine text={displayDate(submission.date_created, t_g)} isSecondary />
             </InfoBox>
           </>
         )}

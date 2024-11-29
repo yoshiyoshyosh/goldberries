@@ -362,6 +362,7 @@
       "personal_note": "'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements",
       "time_taken": "Time Taken",
       "date_submitted": "Date Submitted",
+      "date_achieved": "Date Achieved",
       "date_verified": "Date Verified",
       "verifier": "Verifier",
       "verifier_notes": "Verifier Notes",
@@ -1061,6 +1062,7 @@
     "details": {
       "new_challenge": "New Challenge",
       "submitted": "Submitted",
+      "achieved": "Achieved",
       "verification": "Verification",
       "status": "Status",
       "links": "Links",
@@ -1100,6 +1102,8 @@
         "raw_session_same_url_info": "Are you sure you want to use the same URL for the raw session?",
         "is_fc": "Run is Full Clear",
         "date_created": "[Verifier Only] Date Created",
+        "date_achieved": "Date Achieved",
+        "date_achieved_note": "If not set, the current time will be taken as the date that you achieved this challenge. If you enter a very old date here verifiers might request proof for your claim.",
         "button": "Submit"
       },
       "multi": {

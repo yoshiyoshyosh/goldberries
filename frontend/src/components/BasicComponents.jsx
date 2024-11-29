@@ -454,7 +454,7 @@ export function ShareButton({ text, ...props }) {
 
 export function TooltipInfoButton({ title }) {
   return (
-    <Tooltip title={title}>
+    <Tooltip title={title} placement="top" arrow>
       <FontAwesomeIcon icon={faInfoCircle} />
     </Tooltip>
   );

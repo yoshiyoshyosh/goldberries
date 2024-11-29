@@ -63,6 +63,8 @@ import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
 import { StyledExternalLink, StyledLink, TooltipLineBreaks } from "./BasicComponents";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const { t } = useTranslation();
@@ -1079,4 +1081,24 @@ export function VerifierNotesIcon({ notes, fontSize = "1em" }) {
 }
 export function PlayerNotesIcon({ notes, fontSize = "1em" }) {
   return <TooltipIcon title={notes} icon={faComment} fontSize={fontSize} />;
+}
+
+export function DateAchievedTimePicker({ value, onChange, sx = {}, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  return (
+    <DateTimePicker
+      label={t("date_achieved")}
+      value={dayjs(value)}
+      onChange={(value) => {
+        onChange(value.toISOString());
+      }}
+      viewRenderers={{
+        hours: renderTimeViewClock,
+        minutes: renderTimeViewClock,
+      }}
+      maxDateTime={dayjs(new Date())}
+      sx={{ width: "100%", ...sx }}
+      {...props}
+    />
+  );
 }

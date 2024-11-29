@@ -50,6 +50,7 @@ import {
   PlayerSelect,
   PlayerChip,
   CampaignChallengeSelect,
+  DateAchievedTimePicker,
 } from "../components/GoldberriesComponents";
 import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -164,6 +165,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       suggested_difficulty_id: null,
       is_personal: false,
       time_taken: "",
+      date_achieved: new Date().toISOString(),
     },
   });
   const onSubmit = form.handleSubmit((data) => {
@@ -405,28 +407,23 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               </Typography>
             )}
           </Grid>
-          {auth.hasVerifierPriv && (
-            <Grid item xs={12} sm={12}>
-              <Controller
-                control={form.control}
-                name="date_created"
-                render={({ field }) => (
-                  <DateTimePicker
-                    label={t("date_created")}
-                    value={dayjs(field.value)}
-                    onChange={(value) => {
-                      field.onChange(value.toISOString());
-                    }}
-                    viewRenderers={{
-                      hours: renderTimeViewClock,
-                      minutes: renderTimeViewClock,
-                    }}
-                    sx={{ mt: 2, width: "100%" }}
-                  />
-                )}
-              />
-            </Grid>
-          )}
+          <Grid item xs>
+            <Controller
+              control={form.control}
+              name="date_achieved"
+              render={({ field }) => (
+                <DateAchievedTimePicker
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs="auto" display="flex" alignItems="center" justifyContent="center">
+            <TooltipInfoButton title={t("date_achieved_note")} />
+          </Grid>
           <Grid item xs={12} sm={12}>
             <Button
               variant="contained"
@@ -504,6 +501,7 @@ export function MultiUserSubmission() {
         raw_session_url: mapData.raw_session_url,
         suggested_difficulty_id: mapData.suggested_difficulty_id,
         proof_url: mapData.proof_url !== "" ? mapData.proof_url : data.proof_url,
+        date_achieved: mapData.date_achieved,
       })
         .then(() => {
           toast.update(toastId, {
@@ -575,6 +573,7 @@ export function MultiUserSubmission() {
           raw_session_url: "",
           proof_url: "",
           suggested_difficulty_id: null,
+          date_achieved: new Date().toISOString(),
         });
       });
     }
@@ -824,6 +823,7 @@ export function NewChallengeUserSubmission({}) {
       suggested_difficulty_id: null,
       is_personal: false,
       time_taken: "",
+      date_achieved: new Date().toISOString(),
     },
   });
   const onSubmit = form.handleSubmit((data) => {
@@ -1016,6 +1016,23 @@ export function NewChallengeUserSubmission({}) {
               </Typography>
             )}
           </Grid>
+          <Grid item xs>
+            <Controller
+              control={form.control}
+              name="date_achieved"
+              render={({ field }) => (
+                <DateAchievedTimePicker
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs="auto" display="flex" alignItems="center" justifyContent="center">
+            <TooltipInfoButton title={t("date_achieved_note")} />
+          </Grid>
           <Grid item xs={12} sm={12}>
             <Button variant="contained" fullWidth onClick={onSubmit}>
               {t("button")}
@@ -1168,6 +1185,22 @@ export function MultiUserSubmissionMapRow({
                     </Tooltip>
                   </TableCell>
                 </TableRow>
+                <TableRow
+                  sx={{
+                    "& > *": {
+                      borderBottom: "unset",
+                    },
+                  }}
+                >
+                  <TableCell colSpan={99}>
+                    <DateAchievedTimePicker
+                      value={mapData.date_achieved}
+                      onChange={(value) => {
+                        updateMapDataRow(index, { ...mapData, date_achieved: value });
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
                 {mapData.challenge && mapData.challenge.difficulty.id <= 13 && (
                   <TableRow
                     sx={{
@@ -1205,6 +1238,7 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
     prevProps.mapData.suggested_difficulty_id === newProps.mapData.suggested_difficulty_id &&
     prevProps.mapData.raw_session_url === newProps.mapData.raw_session_url &&
     prevProps.mapData.proof_url === newProps.mapData.proof_url &&
+    prevProps.mapData.date_achieved === newProps.mapData.date_achieved &&
     prevProps.multiVideo === newProps.multiVideo &&
     prevProps.index === newProps.index;
 

@@ -34,6 +34,7 @@ import {
   PlayerSelect,
   PlayerChip,
   DifficultySelectControlled,
+  DateAchievedTimePicker,
 } from "../GoldberriesComponents";
 import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -145,6 +146,16 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
   const new_challenge_id = form.watch("new_challenge_id");
   const new_challenge = form.watch("new_challenge");
+
+  const dateAchievedCreatedDiscrepancy = dayjs(submission.date_achieved).diff(dayjs(submission.date_created));
+  const isTooLongAgo = Math.abs(dateAchievedCreatedDiscrepancy) > 1000 * 60 * 60 * 24 * 28; // 28 days
+  const isUnverified = submission.is_verified !== true;
+  console.log(
+    "isUnverified",
+    isUnverified,
+    ", dateAchievedCreatedDiscrepancy",
+    dateAchievedCreatedDiscrepancy
+  );
 
   if (!isVerifier && submission.player.id !== auth.user.player.id) {
     return (
@@ -309,7 +320,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
         {(submission.raw_session_url || isVerifier) && (
           <TextField
             {...form.register("raw_session_url")}
-            label={t("raw_session_url") + " *"}
+            label={t("raw_session_url")}
             fullWidth
             sx={{ mt: 2 }}
             disabled={!isVerifier}
@@ -375,35 +386,38 @@ export function FormSubmission({ submission, onSave, ...props }) {
           </Typography>
         )}
 
-        {isVerifier && (
-          <Controller
-            control={form.control}
-            name="date_created"
-            render={({ field }) => (
-              <DateTimePicker
-                label={t("date_submitted") + " *"}
-                value={dayjs(field.value)}
-                onChange={(value) => {
-                  field.onChange(value.toISOString());
-                }}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                }}
-                sx={{ mt: 2, width: "100%" }}
-              />
-            )}
-          />
-        )}
-        <List dense sx={{ pb: 0 }}>
-          {!isVerifier && (
-            <ListItem>
-              <ListItemText
-                primary={jsonDateToJsDate(submission.date_created).toLocaleString(navigator.language)}
-                secondary={t("date_submitted")}
-              />
-            </ListItem>
+        <Controller
+          control={form.control}
+          name="date_achieved"
+          render={({ field }) => (
+            <DateAchievedTimePicker
+              value={field.value}
+              disabled={!isVerifier}
+              onChange={(value) => {
+                field.onChange(value);
+              }}
+              sx={{
+                mt: 2,
+                "& .MuiOutlinedInput-root":
+                  isUnverified && isTooLongAgo
+                    ? {
+                        "& fieldset": {
+                          borderColor: "yellow",
+                          borderWidth: 2,
+                        },
+                      }
+                    : {},
+              }}
+            />
           )}
+        />
+        <List dense sx={{ pb: 0 }}>
+          <ListItem>
+            <ListItemText
+              primary={jsonDateToJsDate(submission.date_created).toLocaleString(navigator.language)}
+              secondary={t("date_submitted")}
+            />
+          </ListItem>
           {submission.is_verified !== null ? (
             <>
               <ListItem>
