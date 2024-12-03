@@ -25,7 +25,7 @@ $response = [
 $query = "SELECT
   (SELECT COUNT(*) FROM suggestion WHERE is_verified = TRUE AND is_accepted = TRUE) AS count_accepted,
   (SELECT COUNT(*) FROM suggestion WHERE is_verified = TRUE AND is_accepted = false) AS count_rejected,
-  (SELECT COUNT(*) FROM submission WHERE submission.is_verified = TRUE AND date_created >= '2024-08-02') AS submissions_since_release,
+  (SELECT COUNT(*) FROM submission WHERE submission.is_verified = TRUE AND submission.date_achieved >= '2024-08-02') AS submissions_since_release,
   (SELECT COUNT(*) FROM player) AS total_players";
 $result = pg_query($DB, $query);
 if (!$result) {

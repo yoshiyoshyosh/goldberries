@@ -220,6 +220,7 @@ CREATE TABLE submission
  new_challenge_id        integer NULL,
  is_obsolete             boolean NOT NULL DEFAULT false,
  time_taken              integer NULL,
+ date_achieved           timestamptz NULL,
  CONSTRAINT submission_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT submission_challenge_id_fkey FOREIGN KEY ( challenge_id ) REFERENCES challenge ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT submission_new_challenge_id_fkey FOREIGN KEY ( new_challenge_id ) REFERENCES new_challenge ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -438,6 +439,7 @@ CREATE VIEW "view_submissions" AS SELECT
   submission.new_challenge_id AS submission_new_challenge_id,
   submission.is_obsolete AS submission_is_obsolete,
   submission.time_taken AS submission_time_taken,
+  submission.date_achieved AS submission_date_achieved,
 
   p.id AS player_id,
   p.name AS player_name,
@@ -486,7 +488,7 @@ LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
 
 WHERE map.is_rejected = false OR map.is_rejected IS NULL
 
-ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_created, submission.id ;
+ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_achieved, submission.date_created, submission.id ;
 
 
 

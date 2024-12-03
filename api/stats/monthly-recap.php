@@ -29,9 +29,9 @@ if ($first_clears_tier_sort < 2) {
 
 
 //Tier clears
-$time_filter = "date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC' = '$month-01'";
+$time_filter = "date_trunc('month', submission.date_achieved, 'UTC') AT TIME ZONE 'UTC' = '$month-01'";
 $query = "SELECT
-date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC' AS date_achieved,
+date_trunc('month', submission.date_achieved, 'UTC') AT TIME ZONE 'UTC' AS date_achieved,
 difficulty.id,
 COUNT(submission.id) AS count_submissions
 FROM submission
@@ -39,7 +39,7 @@ JOIN challenge ON submission.challenge_id = challenge.id
 LEFT JOIN map ON challenge.map_id = map.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
 WHERE $time_filter AND submission.is_verified = true AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
-GROUP BY date_trunc('month', submission.date_created, 'UTC') AT TIME ZONE 'UTC', difficulty.id
+GROUP BY date_trunc('month', submission.date_achieved, 'UTC') AT TIME ZONE 'UTC', difficulty.id
 ORDER BY date_achieved DESC, difficulty.id
 ";
 
@@ -59,8 +59,8 @@ while ($row = pg_fetch_assoc($result)) {
 
 
 //t0+ submissions
-$time_filter = "submission_date_created AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_created AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
-$query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND submission_new_challenge_id IS NULL AND difficulty_sort >= $all_clears_tier_sort AND $time_filter ORDER BY submission_date_created DESC";
+$time_filter = "submission_date_achieved AT TIME ZONE 'UTC' >= '$month-01' AND submission_date_achieved AT TIME ZONE 'UTC' < '$month-01'::date + INTERVAL '1 month'";
+$query = "SELECT * FROM view_submissions WHERE submission_is_verified = TRUE AND submission_new_challenge_id IS NULL AND difficulty_sort >= $all_clears_tier_sort AND $time_filter ORDER BY submission_date_achieved DESC";
 $result = pg_query($DB, $query);
 if (!$result) {
   die_json(500, "Failed to query database");
@@ -77,11 +77,11 @@ while ($row = pg_fetch_assoc($result)) {
 //Newly cleared t3+ challenges
 $query = "SELECT 
   challenge_id, 
-  MIN(submission_date_created AT TIME ZONE 'UTC') AS first_clear_date 
+  MIN(submission_date_achieved AT TIME ZONE 'UTC') AS first_clear_date 
 FROM view_submissions 
 WHERE challenge_id IS NOT NULL AND difficulty_sort >= $first_clears_tier_sort AND submission_is_verified = TRUE
 GROUP BY challenge_id
-HAVING MIN(submission_date_created AT TIME ZONE 'UTC') >= '$month-01' AND MIN(submission_date_created AT TIME ZONE 'UTC') < '$month-01'::date + INTERVAL '1 month'
+HAVING MIN(submission_date_achieved AT TIME ZONE 'UTC') >= '$month-01' AND MIN(submission_date_achieved AT TIME ZONE 'UTC') < '$month-01'::date + INTERVAL '1 month'
 ORDER BY first_clear_date DESC";
 $result = pg_query($DB, $query);
 if (!$result) {

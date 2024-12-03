@@ -15,7 +15,7 @@ class Submission extends DbObject
   public bool $is_fc = false;
   public bool $is_obsolete = false;
   public ?int $time_taken = null; //In seconds
-
+  public ?JsonDateTime $date_achieved = null;
 
   // Foreign Keys
   public ?int $challenge_id = null;
@@ -53,6 +53,7 @@ class Submission extends DbObject
       'new_challenge_id' => $this->new_challenge_id,
       'is_obsolete' => $this->is_obsolete,
       'time_taken' => $this->time_taken,
+      'date_achieved' => $this->date_achieved,
     );
   }
 
@@ -79,6 +80,8 @@ class Submission extends DbObject
       $this->suggested_difficulty_id = intval($arr[$prefix . 'suggested_difficulty_id']);
     if (isset($arr[$prefix . 'time_taken']))
       $this->time_taken = intval($arr[$prefix . 'time_taken']);
+    if (isset($arr[$prefix . 'date_achieved']))
+      $this->date_achieved = new JsonDateTime($arr[$prefix . 'date_achieved']);
 
     if (isset($arr[$prefix . 'date_verified']))
       $this->date_verified = new JsonDateTime($arr[$prefix . 'date_verified']);
@@ -146,6 +149,7 @@ class Submission extends DbObject
   // === Find Functions ===
   static function get_submission_queue($DB)
   {
+    //Actually use date_created here, so that the oldest submissions are shown first, independent of when they were achieved
     $result = pg_query($DB, "SELECT * FROM submission WHERE is_verified IS NULL ORDER BY date_created ASC, id ASC;");
     if ($result === false)
       die_json(500, "Failed to query database");
@@ -191,7 +195,7 @@ class Submission extends DbObject
       $query .= " WHERE " . implode(" AND ", $where);
     }
     if ($verified === null || $player !== null) {
-      $query .= " ORDER BY submission_date_created DESC NULLS LAST";
+      $query .= " ORDER BY submission_date_achieved DESC NULLS LAST";
     } else {
       $query .= " ORDER BY submission_date_verified DESC NULLS LAST";
     }

@@ -119,7 +119,7 @@ class Challenge extends DbObject
   // === Find Functions ===
   function fetch_submissions($DB, $filter_suspended = false): bool
   {
-    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, "is_verified = true", "ORDER BY date_created ASC, id ASC");
+    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, "is_verified = true", "ORDER BY date_achieved ASC, id ASC");
     if ($submissions === false)
       return false;
     $this->submissions = $submissions;
@@ -138,7 +138,7 @@ class Challenge extends DbObject
 
   function fetch_all_submissions($DB): bool
   {
-    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, null, "ORDER BY date_created ASC, id ASC");
+    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, null, "ORDER BY date_achieved ASC, id ASC");
     if ($submissions === false)
       return false;
     $this->submissions = $submissions;

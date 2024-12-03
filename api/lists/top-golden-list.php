@@ -79,19 +79,19 @@ if ($start_date !== null) {
   if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/', $start_date)) {
     die_json(400, "Invalid start_date format");
   }
-  $where[] = "submission_date_created AT TIME ZONE 'UTC' >= '$start_date'";
+  $where[] = "submission_date_achieved AT TIME ZONE 'UTC' >= '$start_date'";
 }
 if ($end_date !== null) {
   if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/', $end_date)) {
     die_json(400, "Invalid end_date format");
   }
-  $where[] = "submission_date_created AT TIME ZONE 'UTC' <= '$end_date'";
+  $where[] = "submission_date_achieved AT TIME ZONE 'UTC' <= '$end_date'";
 }
 
 
 $where_string = implode(" AND ", $where);
 $query = $query . " WHERE " . $where_string;
-$query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, submission_date_created ASC, submission_id ASC";
+$query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, submission_date_achieved ASC, submission_id ASC";
 
 $result = pg_query($DB, $query);
 if (!$result) {

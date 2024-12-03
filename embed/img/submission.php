@@ -1,6 +1,6 @@
 <?php
 
-require_once (dirname(__FILE__) . '/../../bootstrap.inc.php');
+require_once(dirname(__FILE__) . '/../../bootstrap.inc.php');
 $font_path = dirname(__FILE__) . '/Renogare-Regular.otf';
 $cache_folder = dirname(__FILE__) . '/cache';
 
@@ -89,14 +89,14 @@ if ($python_command === false || $python_command === null) {
   die();
 }
 
-$date_created = $submission->date_created ? $submission->date_created->format('Y-m-d') : " ";
+$date_achieved = $submission->date_achieved ? $submission->date_achieved->format('Y-m-d') : " ";
 
 //pack data into an array
 $data = array(
   "submission_id" => $id,
   "submission_is_verified" => $submission->is_verified,
   "submission_is_fc" => $submission->is_fc,
-  "submission_date_created" => $date_created,
+  "submission_date_achieved" => $date_achieved,
   "mod_id" => $modId,
   "player_name" => $player->name,
   "player_name_color_start" => $player->account['name_color_start'],
@@ -109,7 +109,7 @@ $data = array(
   "wkhtmltoimage_path" => $wkhtmltoimage_path,
   "file_name" => $img_name . "",
   "folder_name" => "submission",
-  "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_created", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_label", "objective_icon_url", "difficulty_id"],
+  "fields" => ["submission_id", "submission_is_verified", "submission_is_fc", "submission_date_achieved", "mod_id", "player_name", "player_name_color_start", "player_name_color_end", "campaign_name", "campaign_author", "challenge_label", "objective_icon_url", "difficulty_id"],
 );
 if ($map !== null) {
   $data["map_name"] = $map->name;

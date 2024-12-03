@@ -1,7 +1,7 @@
 <?php
 
-require_once (dirname(__FILE__) . '/../bootstrap.inc.php');
-require_once (dirname(__FILE__) . '/embed_include.php');
+require_once(dirname(__FILE__) . '/../bootstrap.inc.php');
+require_once(dirname(__FILE__) . '/embed_include.php');
 
 $DB = db_connect();
 
@@ -42,7 +42,7 @@ if ($count_submissions > 0) {
     }
   }
   $description_str .= "\n\n";
-  $description_str .= "First Cleared: " . date_to_short_string($submission->date_created) . " (by " . $submission->player->name . ")";
+  $description_str .= "First Cleared: " . date_to_short_string($submission->date_achieved) . " (by " . $submission->player->name . ")";
 }
 
 $real_url = $challenge->get_url();

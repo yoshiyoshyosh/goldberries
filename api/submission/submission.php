@@ -145,7 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $old_submission->time_taken = $submission->time_taken;
 
-      $old_submission->date_created = $submission->date_created;
+      // $old_submission->date_created = $submission->date_created; //Verifiers no longer need to be able to change this
+      $old_submission->date_achieved = $submission->date_achieved;
       $old_submission->new_challenge_id = $submission->is_verified === true ? null : $submission->new_challenge_id;
 
       if ($old_submission->update($DB)) {
@@ -264,8 +265,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
-    if ($submission->date_created === null || !is_verifier($account)) {
-      $submission->date_created = new JsonDateTime();
+    $submission->date_created = new JsonDateTime();
+    if ($submission->date_achieved === null) {
+      $submission->date_achieved = $submission->date_created;
     }
     $submission->insert($DB);
     $submission->expand_foreign_keys($DB, 5);

@@ -89,8 +89,8 @@ function parse_campaign_view($result, $campaign)
       );
     }
     //Update last submission
-    if ($players[$player_id]["last_submission"] === null || $submission->date_created > $players[$player_id]["last_submission"]) {
-      $players[$player_id]["last_submission"] = $submission->date_created;
+    if ($players[$player_id]["last_submission"] === null || $submission->date_achieved > $players[$player_id]["last_submission"]) {
+      $players[$player_id]["last_submission"] = $submission->date_achieved;
     }
 
     if (!array_key_exists($map_id, $players[$player_id]["map_data"])) {

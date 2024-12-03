@@ -154,7 +154,7 @@
           const submissionId = getCookie('submission_id');
           const submissionIsVerified = getCookie('submission_is_verified');
           const submissionIsFc = getCookie('submission_is_fc');
-          const submissionDateCreated = getCookie('submission_date_created');
+          const submissionDateAchieved = getCookie('submission_date_achieved');
           const modId = getCookie('mod_id');
           let playerName = escapeHtml(getCookie('player_name'));
           let playerNameColorStart = getCookie('player_name_color_start');
@@ -170,7 +170,7 @@
 
           sel("#background").style.backgroundImage = "url('cache/"+modId+".jpg')";
 
-          sel("#submissionDate").innerHTML = submissionDateCreated;
+          sel("#submissionDate").innerHTML = submissionDateAchieved;
 
           if (submissionIsFc === "True") {
             sel("#fcIcon").src = "../../icons/fullclear.png";
