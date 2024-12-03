@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
-import { FormSubmissionWrapper } from "../../components/forms/Submission";
+import { FormSubmissionWrapper, shouldMarkSubmissionDateAchieved } from "../../components/forms/Submission";
 import {
   Box,
   Button,
@@ -48,6 +48,7 @@ import { useTheme } from "@emotion/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../hooks/AuthProvider";
+import { jsonDateToJsDate } from "../../util/util";
 
 export function PageSubmissionQueue() {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
@@ -456,6 +457,7 @@ function SubmissionQueueTableRow({
     challenge === null ? t("new_challenge") + " " + submission.new_challenge.name : campaign.name;
   const diff = challenge === null ? submission.suggested_difficulty : challenge.difficulty;
   const isNewChallenge = challenge === null;
+  const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
 
   const noticeButton = (
     <Button
@@ -490,9 +492,23 @@ function SubmissionQueueTableRow({
         colSpan={1}
       >
         <Stack direction="row">
-          <Typography variant="body1" sx={{ flex: 1 }}>
-            {textTop}
-          </Typography>
+          <Stack direction="row" sx={{ flex: 1 }} gap={0.25} alignItems="center">
+            <Typography variant="body1">{textTop}</Typography>
+            {markDateAchieved && (
+              <Tooltip
+                title={
+                  "Date Achieved set to more than 4 weeks ago: " +
+                  jsonDateToJsDate(submission.date_achieved).toLocaleString(navigator.language)
+                }
+                placement="top"
+                arrow
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
+                  <circle cx="50" cy="50" r="40" fill="yellow" />
+                </svg>
+              </Tooltip>
+            )}
+          </Stack>
           <Typography variant="body1">{submission.id}</Typography>
         </Stack>
         <Stack direction="row" alignItems="center">

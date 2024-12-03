@@ -147,15 +147,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const new_challenge_id = form.watch("new_challenge_id");
   const new_challenge = form.watch("new_challenge");
 
-  const dateAchievedCreatedDiscrepancy = dayjs(submission.date_achieved).diff(dayjs(submission.date_created));
-  const isTooLongAgo = Math.abs(dateAchievedCreatedDiscrepancy) > 1000 * 60 * 60 * 24 * 28; // 28 days
-  const isUnverified = submission.is_verified !== true;
-  console.log(
-    "isUnverified",
-    isUnverified,
-    ", dateAchievedCreatedDiscrepancy",
-    dateAchievedCreatedDiscrepancy
-  );
+  const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
 
   if (!isVerifier && submission.player.id !== auth.user.player.id) {
     return (
@@ -398,15 +390,14 @@ export function FormSubmission({ submission, onSave, ...props }) {
               }}
               sx={{
                 mt: 2,
-                "& .MuiOutlinedInput-root":
-                  isUnverified && isTooLongAgo
-                    ? {
-                        "& fieldset": {
-                          borderColor: "yellow",
-                          borderWidth: 2,
-                        },
-                      }
-                    : {},
+                "& .MuiOutlinedInput-root": markDateAchieved
+                  ? {
+                      "& fieldset": {
+                        borderColor: "yellow",
+                        borderWidth: 2,
+                      },
+                    }
+                  : {},
               }}
             />
           )}
@@ -510,4 +501,11 @@ export function FormSubmission({ submission, onSave, ...props }) {
       </CustomModal>
     </>
   );
+}
+
+export function shouldMarkSubmissionDateAchieved(submission) {
+  const dateAchievedCreatedDiscrepancy = dayjs(submission.date_achieved).diff(dayjs(submission.date_created));
+  const isTooLongAgo = Math.abs(dateAchievedCreatedDiscrepancy) > 1000 * 60 * 60 * 24 * 28; // 28 days
+  const isUnverified = submission.is_verified !== true;
+  return isUnverified && isTooLongAgo;
 }
