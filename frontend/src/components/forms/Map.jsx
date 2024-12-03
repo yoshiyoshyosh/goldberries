@@ -321,6 +321,8 @@ export const COLLECTIBLES = [
       { value: "10", name: "Blueberry Golden", icon: "/icons/golden-blueberry.png" },
       { value: "11", name: "Trans Golden", icon: "/icons/golden-trans.png" },
       { value: "12", name: "Anarchy Golden", icon: "/icons/golden-anarchy.png" },
+      { value: "13", name: "Blackberry Golden", icon: "/icons/golden-blackberry.png" },
+      { value: "14", name: "Moonstone Golden", icon: "/icons/golden-moonstone.png" },
     ],
   },
   {
@@ -348,6 +350,7 @@ export const COLLECTIBLES = [
       { value: "8", name: "Voidberry", displayName: "Voidberry", icon: "/icons/voidberry.png" },
       { value: "9", name: "Startside Moonberry", icon: "/icons/moonberry-startside.png" },
       { value: "10", name: "DMR Moonberry", icon: "/icons/moonberry-dmr.png" },
+      { value: "11", name: "Vivid Abyss Moonberry", icon: "/icons/moonberry-vabyss.png" },
     ],
   },
   {
@@ -366,6 +369,7 @@ export const COLLECTIBLES = [
       { value: "9", name: "Blueberry", icon: "/icons/strawberry-blueberry.png" },
       { value: "10", name: "Anarchy Strawberry", icon: "/icons/strawberry-anarchy.png" },
       { value: "11", name: "Trans Strawberry", icon: "/icons/strawberry-trans.png" },
+      { value: "12", name: "Moonstone Strawberry", icon: "/icons/strawberry-moonstone.png" },
     ],
   },
   {
@@ -414,6 +418,7 @@ export const COLLECTIBLES = [
       { value: "3", name: "Rainbow Berry", displayName: "Rainbow Berry", icon: "/icons/rainbowberry-8x.png" },
       { value: "4", name: "SCA Green Berry", displayName: "Green Berry", icon: "/icons/sca-greenberry.png" },
       { value: "5", name: "SCA Blue Berry", displayName: "Blue Berry", icon: "/icons/sca-blueberry.png" },
+      { value: "6", name: "Moonstone Gem Berry", displayName: "Gem Berry", icon: "/icons/gem-berry.png" },
     ],
   },
   {
