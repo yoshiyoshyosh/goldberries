@@ -1121,6 +1121,7 @@ export function MultiUserSubmissionMapRow({
       <TableRow
         sx={{
           borderBottom: expanded ? "1px solid lightgrey" : "unset",
+          display: expanded ? "table-row" : "none",
           bgcolor: bgColor,
         }}
       >
