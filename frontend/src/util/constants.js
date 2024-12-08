@@ -302,6 +302,7 @@ const TEMP_VERIFIERS = {
   664: true,
   712: true,
   232: true,
+  462: true,
 };
 export function isTempVerifier(id) {
   return TEMP_VERIFIERS[id] !== undefined;
