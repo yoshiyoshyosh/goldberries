@@ -1337,7 +1337,7 @@
           },
           {
             "heading": "Unchanged Gameplay",
-            "text": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode outside what is allowed by the map. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomLink to=\"#allowed-mods\">allowed and recommended mods</CustomLink> for more details."
+            "text": "Submissions <strong>must not</strong> make use of gameplay-altering mods, variants, or assist mode outside what is allowed by the map. This <strong>includes</strong> the No Freeze Frames variant in Extended Variants. Visual-altering mods and variants <strong>may</strong> be allowed on a case-by-case basis. See <CustomLink to=\"#allowed-mods\">allowed and recommended mods</CustomLink> for more details."
           },
           {
             "heading": "Raw Footage",
@@ -1345,11 +1345,11 @@
           },
           {
             "heading": "Info Mods",
-            "text": "Submissions <strong>are recommended to not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be accepted without issue. On challenges or submissions where these make a difference, such as subpixel-level alignment, stamina-heavy challenges, or gauging information to perform a strat or save, submissions will be rejected."
+            "text": "Submissions <strong>must not</strong> make use of \"info mods\" which give you information that you otherwise would not know during gameplay, such as input history, stamina bar, or CelesteTAS's info HUD. On challenges where these make little to no difference, submissions will be given warning notes and eventually rejected. On challenges or submissions where these make a difference, such as subpixel-level alignment, stamina-heavy challenges, or gauging information to perform a strat or save, submissions will be rejected without a warning."
           },
           {
             "heading": "Pause Abuse",
-            "text": "Submissions <strong>must not</strong> abuse the use of <i>pause buffering</i>, wherein the pause button is \"buffered\" between pauses to advance the game frame-by-frame. Pause buffering can make tight inputs in a map extremely easy, and use of it is grounds for rejection. There exist submissions, mainly before 1.4, where buffering the pause button became possible, that include something similar to pause buffering, but these submissions did not rely on buffering the pause button, which made them allowed."
+            "text": "Submissions <strong>must not</strong> abuse the pause button in such a way that makes gameplay easier. One extreme example of pause abuse that would be grounds for rejection is <i>pause buffering</i>, wherein the pause button is \"buffered\" between pauses to advance the game frame-by-frame. Making inputs easier by pausing is <strong>always</strong> banned, even if you are not advancing frame-by-frame. If there is no danger of death, however, pausing may be used to perform otherwise difficult or repetitive setups. Also, pausing may be used sparingly during gameplay in an unexpected scenario to give the player time to think. Even in such a scenario, it is not allowed to pause multiple times to line up an otherwise difficult input. Note that similarly to the <i>No Freeze Frames</i> Extended Variant, a small number of legacy submissions that violate this rule exist that would otherwise be rejected."
           },
           {
             "heading": "Spinner Freeze/Stun",
@@ -1429,7 +1429,7 @@
             "text": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions."
           },
           {
-            "text": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility. One may also use the <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> mod as an input display provided that the settings for showing frame counts or history of inputs is are disabled."
+            "text": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility. Individuals using a controller may also use input displays such as <CustomExternalLink href=\"https://gamepadviewer.com\">GamePad Viewer</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestinaDragoni/open-joystick-displayOpen\">Joystick Display</CustomExternalLink>. One may also use the <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> mod as an input display provided that the settings for showing frame counts and input history are disabled."
           },
           {
             "text": "Keep a few full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof than what is required."
@@ -1443,19 +1443,22 @@
         "explanation": "All mods listed here are allowed for submissions unless otherwise specified. Mods not listed here are also allowed for submissions unless they violate the gameplay altering mod rule or info gaining mod rule.",
         "entries": [
           {
-            "text": "The <i>No Freeze Frames</i> variant in <CustomExternalLink href=\"https://gamebanana.com/mods/53650\">Extended Variants</CustomExternalLink> is allowed for submissions. The rationale is that this mod does not fundamentally change the game as well as makes the game harder in most instances, as well as bearing the weight of legacy runs that utilized this variant."
+            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/421816\">Deadzone Config</CustomExternalLink> and <CustomExternalLink href=\"https://gamebanana.com/tools/13384\">viddie's Toolbox</CustomExternalLink> mods allow individuals using a controller to configure their deadzone, most notably to make fastfalling and other awkward diagonal inputs easier."
           },
           {
-            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/421816\">Deadzone Config</CustomExternalLink> mod allows individuals using a controller to configure their deadzone, most notably to make fastfalling and other awkward diagonal inputs easier."
+            "text": "For complete full game runs, using the <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">Hardcore Mode</CustomExternalLink> mod may help reset runs faster, but is not required. Hardcore mode will also allow goldens to spawn without needing cheat mode, which means the full game run may be submitted to individual maps without issue. <strong>However, picking up a golden when it would not normally be unlocked can be grounds for rejection in the rare case of a map having golden changes which make the deathless run easier.</strong>"
           },
           {
-            "text": "For complete full game runs, using the <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">Hardcore Mode</CustomExternalLink> mod may help reset runs faster, but is not required. Hardcore mode will also allow goldens to spawn without needing cheat mode, which means the full game run may be submitted to individual maps without issue."
-          },
-          {
-            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> mod is allowed for submissions. This mod gives players some helpful quality of life features, such as making the golden berry transparent, being able to place a persistent golden berry without using a map editor, or allowing one to start at the same room they died in a golden run."
+            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> mod is allowed for submissions. This mod gives players some helpful quality of life features, such as making the golden berry transparent, being able to place a persistent golden berry without using a map editor, or allowing one to start at the same room they died in a golden run. The <CustomExternalLink href=\"https://gamebanana.com/tools/6924\">Strawberry Tool</CustomExternalLink> mod is another option for making followers transparent, and is also allowed for submissions."
           },
           {
             "text": "The <CustomExternalLink href=\"https://gamebanana.com/tools/6597\">Speedrun Tool</CustomExternalLink> mod and <CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink> mods can help finding strategies and setups for parts in a challenge. Do note, however, that utilizing any gameplay-altering of info-gaining features of these mods during a challenge is disallowed."
+          },
+          {
+            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/514173\">Motion Smoothing</CustomExternalLink> mod allows players to raise the FPS above 60 without breaking physics. This mod is allowed for submissions, but any other mods which are capable of raising the FPS above 60 are disallowed if they break physics."
+          },
+          {
+            "text": "The <CustomExternalLink href=\"https://gamebanana.com/mods/464283\">izumi’s quality of life</CustomExternalLink> mod adds many general quality of life features, such as being able to take snapshots of the journal and compare them with current stats, showing stats for all the sides of a chapter separately, having a warning icon appear when you’re not recording, and having hotkeys to swap between configurations of keybinds. The mod is allowed for submissions, but utilizing any gameplay-altering or info-gaining features of the mod during a challenge is disallowed. Changing your controls during a challenge is only allowed when you are not in danger of death. For example, changing your controls when you are grounded or grabbing a wall is allowed in most cases, but changing your controls while you are airborne and/or performing a sequence of inputs may be grounds for rejection."
           },
           {
             "text": "Other mods frequently used for deathless challenges include <CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink> and <CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>."
