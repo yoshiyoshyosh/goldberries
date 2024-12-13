@@ -95,6 +95,8 @@ export function displayDate(dateObj, t) {
 }
 
 export function getGamebananaEmbedUrl(url, size = "medium") {
+  if (url === null) return null;
+
   //urls look like: https://gamebanana.com/mods/409812
   if (!url.startsWith("https://gamebanana.com/mods/")) {
     return null;
@@ -201,8 +203,10 @@ export function getChallengeNameClean(challenge, t) {
 }
 export function getMapNameClean(map, campaign, t, noAuthor = false) {
   const isFullGame = map === null;
+  const authorName =
+    campaign.author_gb_name === null ? "<" + t("unknown_author") + ">" : campaign.author_gb_name;
   if (isFullGame) {
-    return campaign.name + (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")");
+    return campaign.name + (noAuthor ? "" : " (" + t("by") + " " + authorName + ")");
   }
 
   // const isSameName = map.name === campaign.name;
@@ -214,12 +218,7 @@ export function getMapNameClean(map, campaign, t, noAuthor = false) {
   const oldPrefix = map.is_archived ? "[Old] " : "";
   const rejectedPrefix = map.is_rejected ? "[Rejected] " : "";
 
-  return (
-    oldPrefix +
-    rejectedPrefix +
-    map.name +
-    (noAuthor ? "" : " (" + t("by") + " " + campaign.author_gb_name + ")")
-  );
+  return oldPrefix + rejectedPrefix + map.name + (noAuthor ? "" : " (" + t("by") + " " + authorName + ")");
 }
 export function getCampaignName(campaign, t, noAuthor = false) {
   if (noAuthor) return campaign.name;

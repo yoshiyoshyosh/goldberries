@@ -1270,7 +1270,8 @@
       "maps_rejected_one": "+{{count}} rejected map",
       "maps_rejected_other": "+{{count}} rejected maps",
       "links": "Links",
-      "campaign_tgl": "Campaign Top Golden List"
+      "campaign_tgl": "Campaign Top Golden List",
+      "no_download": "This campaign is not publicly available anymore."
     },
     "tabs": {
       "players": {

@@ -174,22 +174,12 @@ export function ChallengeDisplay({ id }) {
 export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
-  const { t: t_mib } = useTranslation(undefined, { keyPrefix: "map.info_boxes" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const { settings } = useAppSettings();
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
 
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
 
-  const mapUrls =
-    map !== null
-      ? map.url !== null
-        ? map.url
-        : [[map.campaign.url, ""]]
-      : campaign !== null
-      ? [[campaign.url, ""]]
-      : null;
   const mapHasAuthor = map !== null && map.author_gb_name !== null;
 
   return (
@@ -255,35 +245,9 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
               <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
               <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
             </InfoBox>
-            {/* {challenge.description !== null && (
-              <InfoBox>
-                <InfoBoxIconTextLine text={t_g("description")} icon={<FontAwesomeIcon icon={faComment} />} />
-                <InfoBoxIconTextLine text={challenge.description} isSecondary />
-              </InfoBox>
-            )} */}
           </>
         )}
-        <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
-          {mapUrls.map((item, index) => (
-            <>
-              <InfoBoxIconTextLine
-                key={index + "-1"}
-                text={<StyledExternalLink href={item[0]}>{item[0]}</StyledExternalLink>}
-                isSecondary
-              />
-              <InfoBoxIconTextLine
-                key={index + "-2"}
-                text={
-                  <Typography variant="body2" sx={{ ml: 1 }}>
-                    {item[1]}
-                  </Typography>
-                }
-                isSecondary
-              />
-            </>
-          ))}
-        </InfoBox>
+        {<MapCampaignUrlInfoBox campaign={campaign} map={map} />}
         {mapHasAuthor && (
           <InfoBox>
             <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t_cib("author")} />
@@ -293,6 +257,69 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
         {map !== null && challenge === null && <MapGoldenChangesBox map={map} />}
       </Grid>
     </Grid>
+  );
+}
+
+export function MapCampaignUrlInfoBox({ campaign, map = null }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
+
+  const isCampaign = map === null;
+
+  const getMapUrls = (campaign, map) => {
+    if (campaign === null) throw new Error("Campaign is null");
+    if (map === null) {
+      if (campaign.url !== null) return [[campaign.url, ""]];
+      return null;
+    } else {
+      if (map.url !== null) return map.url;
+      if (campaign.url !== null) return [[campaign.url, ""]];
+      return null;
+    }
+  };
+  const mapUrls = getMapUrls(campaign, map);
+
+  return (
+    <InfoBox>
+      <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t_g("url")} />
+      {mapUrls === null ? (
+        <>
+          <InfoBoxIconTextLine key={0} text={t_cib("no_download")} isSecondary />
+        </>
+      ) : (
+        mapUrls.map((item, index) => (
+          <>
+            <InfoBoxIconTextLine
+              key={index + "-1"}
+              text={<StyledExternalLink href={item[0]}>{item[0]}</StyledExternalLink>}
+              isSecondary
+            />
+            <InfoBoxIconTextLine
+              key={index + "-2"}
+              text={
+                <Typography variant="body2" sx={{ ml: 1 }}>
+                  {item[1]}
+                </Typography>
+              }
+              isSecondary
+            />
+          </>
+        ))
+      )}
+      {isCampaign && (
+        <>
+          <InfoBoxIconTextLine />
+          <InfoBoxIconTextLine
+            text={
+              <StyledLink to={"/campaign/" + campaign.id + "/top-golden-list"}>
+                {t_cib("campaign_tgl")}
+              </StyledLink>
+            }
+            isSecondary
+          />
+        </>
+      )}
+    </InfoBox>
   );
 }
 

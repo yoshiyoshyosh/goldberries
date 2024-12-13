@@ -66,7 +66,7 @@ import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilt
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormCampaignWrapper } from "../components/forms/Campaign";
-import { NoteDisclaimer } from "./Challenge";
+import { MapCampaignUrlInfoBox, NoteDisclaimer } from "./Challenge";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
 import { ExportTopGoldenListModal } from "./TopGoldenList";
 
@@ -246,22 +246,7 @@ export function CampaignDetailsList({ campaign, ...props }) {
           <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t("author")} />
           <AuthorInfoBoxLine author_gb_id={campaign.author_gb_id} author_gb_name={campaign.author_gb_name} />
         </InfoBox>
-        <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faExternalLink} />} text={t("links")} />
-          <InfoBoxIconTextLine
-            text={<StyledExternalLink href={campaign.url}>{campaign.url}</StyledExternalLink>}
-            isSecondary
-          />
-          <InfoBoxIconTextLine />
-          <InfoBoxIconTextLine
-            text={
-              <StyledLink to={"/campaign/" + campaign.id + "/top-golden-list"}>
-                {t("campaign_tgl")}
-              </StyledLink>
-            }
-            isSecondary
-          />
-        </InfoBox>
+        <MapCampaignUrlInfoBox campaign={campaign} />
       </Grid>
     </Grid>
   );
