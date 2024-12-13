@@ -6,7 +6,7 @@ class Campaign extends DbObject
   public static string $table_name = 'campaign';
 
   public string $name;
-  public string $url;
+  public ?string $url = null;
   public ?JsonDateTime $date_added = null;
   public ?string $icon_url = null;
   public ?string $sort_major_name = null;
@@ -48,8 +48,10 @@ class Campaign extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
-    $this->url = $arr[$prefix . 'url'];
     $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
+
+    if (isset($arr[$prefix . 'url']))
+      $this->url = $arr[$prefix . 'url'];
 
     if (isset($arr[$prefix . 'icon_url']))
       $this->icon_url = $arr[$prefix . 'icon_url'];
