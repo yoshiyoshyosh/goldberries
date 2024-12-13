@@ -370,6 +370,8 @@ export const COLLECTIBLES = [
       { value: "10", name: "Anarchy Strawberry", icon: "/icons/strawberry-anarchy.png" },
       { value: "11", name: "Trans Strawberry", icon: "/icons/strawberry-trans.png" },
       { value: "12", name: "Moonstone Strawberry", icon: "/icons/strawberry-moonstone.png" },
+      { value: "13", name: "Nutty Noon Strawberry", icon: "/icons/strawberry-nutty.png" },
+      { value: "14", name: "Nutty Noon Core Strawberry", icon: "/icons/strawberry-nutty-core.png" },
     ],
   },
   {
@@ -419,6 +421,24 @@ export const COLLECTIBLES = [
       { value: "4", name: "SCA Green Berry", displayName: "Green Berry", icon: "/icons/sca-greenberry.png" },
       { value: "5", name: "SCA Blue Berry", displayName: "Blue Berry", icon: "/icons/sca-blueberry.png" },
       { value: "6", name: "Moonstone Gem Berry", displayName: "Gem Berry", icon: "/icons/gem-berry.png" },
+      {
+        value: "7",
+        name: "Nutty Noon Dream Berry",
+        displayName: "Dream Berry",
+        icon: "/icons/nutty-dream-berry.png",
+      },
+      {
+        value: "8",
+        name: "Nutty Noon Rust Berry",
+        displayName: "Rust Berry",
+        icon: "/icons/nutty-rust-berry.png",
+      },
+      {
+        value: "9",
+        name: "Nutty Noon Water Berry",
+        displayName: "Water Berry",
+        icon: "/icons/nutty-water-berry.png",
+      },
     ],
   },
   {
