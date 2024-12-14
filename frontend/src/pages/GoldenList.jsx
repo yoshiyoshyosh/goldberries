@@ -331,6 +331,7 @@ const MemoDynamicRenderCampaignList = memo(DynamicRenderCampaignList, (prevProps
 });
 
 function CampaignEntry({ campaign, type }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
   const [selectedMapIndex, setSelectedMapIndex] = useState(0);
 
@@ -355,15 +356,21 @@ function CampaignEntry({ campaign, type }) {
               >
                 <Typography variant="h6">{campaign.name}</Typography>
               </Link>
-              <Link
-                to={"/search/" + campaign.author_gb_name}
-                style={{ color: "inherit", textDecoration: "none", whiteSpace: "nowrap" }}
-              >
-                <Typography variant="body2">by {campaign.author_gb_name}</Typography>
-              </Link>
-              <StyledExternalLink href={campaign.url}>
-                <FontAwesomeIcon icon={faLemon} fontSize="1em" />
-              </StyledExternalLink>
+              {campaign.author_gb_name ? (
+                <Link
+                  to={"/search/" + campaign.author_gb_name}
+                  style={{ color: "inherit", textDecoration: "none", whiteSpace: "nowrap" }}
+                >
+                  <Typography variant="body2">by {campaign.author_gb_name}</Typography>
+                </Link>
+              ) : (
+                <Typography variant="body2">by {t_g("unknown_author")}</Typography>
+              )}
+              {campaign.url && (
+                <StyledExternalLink href={campaign.url}>
+                  <FontAwesomeIcon icon={faLemon} fontSize="1em" />
+                </StyledExternalLink>
+              )}
               {(campaign.maps.length > 1 || campaign.name !== campaign.maps[0].name) && (
                 <MapSelectAlt
                   campaign={campaign}
