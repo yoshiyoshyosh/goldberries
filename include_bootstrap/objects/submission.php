@@ -194,8 +194,11 @@ class Submission extends DbObject
     if (count($where) > 0) {
       $query .= " WHERE " . implode(" AND ", $where);
     }
-    if ($verified === null || $player !== null) {
+
+    if ($player !== null) {
       $query .= " ORDER BY submission_date_achieved DESC NULLS LAST";
+    } else if ($verified === null) {
+      $query .= " ORDER BY submission_date_created DESC NULLS LAST";
     } else {
       $query .= " ORDER BY submission_date_verified DESC NULLS LAST";
     }
