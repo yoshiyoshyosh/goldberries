@@ -35,6 +35,7 @@ import {
   PlayerNotesIcon,
   SubmissionFcIcon,
   VerifierNotesIcon,
+  getPlatformIcon,
 } from "../components/GoldberriesComponents";
 import {
   getChallengeCampaign,
@@ -565,7 +566,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
       )}
       <TableCell width={1} align="center" sx={{ pl: 0.75, pr: 0.25 }}>
         <StyledLink to={submission.proof_url} target="_blank">
-          <FontAwesomeIcon icon={faExternalLinkAlt} />
+          <FontAwesomeIcon icon={getPlatformIcon(submission.proof_url)} />
         </StyledLink>
       </TableCell>
       {compact ? null : (

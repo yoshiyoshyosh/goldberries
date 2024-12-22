@@ -36,6 +36,7 @@ import {
   faChildCombatant,
   faCircleExclamation,
   faComment,
+  faExternalLinkAlt,
   faGamepad,
   faHammer,
   faHourglass,
@@ -784,7 +785,7 @@ const LINK_ICONS = {
   instagram: { icon: faInstagram, color: "#ff2083", identifier: ["instagram.com/"] },
   speedrun: { icon: faTrophy, color: "#ffcf33", identifier: ["speedrun.com/"] },
   reddit: { icon: faReddit, color: "#ff4500", identifier: ["reddit.com/"] },
-  reddit: { icon: faBilibili, color: "#00a2d7", identifier: ["bilibili.com/"] },
+  bilibili: { icon: faBilibili, color: "#00a2d7", identifier: ["bilibili.com/", "b23.tv/"] },
   steam: {
     icon: faSteam,
     color: "#1e3050",
@@ -826,6 +827,17 @@ export function LinkIcon({ url }) {
       </StyledExternalLink>
     </Tooltip>
   );
+}
+export function getPlatformIcon(url) {
+  if (url === null) return faQuestionCircle;
+  let icon = faExternalLinkAlt;
+  for (const [key, value] of Object.entries(LINK_ICONS)) {
+    if (value.identifier.some((i) => url.includes(i))) {
+      icon = value.icon;
+      break;
+    }
+  }
+  return icon;
 }
 
 export function ChallengeFcIcon({
