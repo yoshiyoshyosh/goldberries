@@ -493,6 +493,7 @@ export function MultiUserSubmission() {
         return;
       }
       const mapData = mapDataList[index];
+      const timeTakenFormatted = durationToSeconds(mapData.time_taken);
       submitRun({
         challenge_id: mapData.challenge.id,
         player_id: selectedPlayer.id,
@@ -502,6 +503,7 @@ export function MultiUserSubmission() {
         suggested_difficulty_id: mapData.suggested_difficulty_id,
         proof_url: mapData.proof_url !== "" ? mapData.proof_url : data.proof_url,
         date_achieved: mapData.date_achieved,
+        time_taken: timeTakenFormatted,
       })
         .then(() => {
           toast.update(toastId, {
@@ -574,6 +576,7 @@ export function MultiUserSubmission() {
           proof_url: "",
           suggested_difficulty_id: null,
           date_achieved: new Date().toISOString(),
+          time_taken: "",
         });
       });
     }
@@ -1074,6 +1077,8 @@ export function MultiUserSubmissionMapRow({
   const hasRawSession = mapData.raw_session_url !== "" && mapData.raw_session_url !== null;
   const bgColor = needsRawSession && !hasRawSession ? (darkmode ? "#4a0000" : "#ffe7e7") : "inherit";
 
+  const validTimeTaken = mapData.time_taken === "" || durationToSeconds(mapData.time_taken) !== null;
+
   return (
     <>
       <TableRow sx={{ borderLeft: border, bgcolor: bgColor }}>
@@ -1194,12 +1199,29 @@ export function MultiUserSubmissionMapRow({
                   }}
                 >
                   <TableCell colSpan={99}>
-                    <DateAchievedTimePicker
-                      value={mapData.date_achieved}
-                      onChange={(value) => {
-                        updateMapDataRow(index, { ...mapData, date_achieved: value });
-                      }}
-                    />
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <DateAchievedTimePicker
+                          value={mapData.date_achieved}
+                          onChange={(value) => {
+                            updateMapDataRow(index, { ...mapData, date_achieved: value });
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          value={mapData.time_taken}
+                          onChange={(e) =>
+                            updateMapDataRow(index, { ...mapData, time_taken: e.target.value })
+                          }
+                          label={t_fs("time_taken")}
+                          fullWidth
+                          InputLabelProps={{ shrink: true }}
+                          placeholder="(hh:)mm:ss"
+                          error={!validTimeTaken}
+                        />
+                      </Grid>
+                    </Grid>
                   </TableCell>
                 </TableRow>
                 {mapData.challenge && mapData.challenge.difficulty.id <= 13 && (
@@ -1240,6 +1262,7 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
     prevProps.mapData.raw_session_url === newProps.mapData.raw_session_url &&
     prevProps.mapData.proof_url === newProps.mapData.proof_url &&
     prevProps.mapData.date_achieved === newProps.mapData.date_achieved &&
+    prevProps.mapData.time_taken === newProps.mapData.time_taken &&
     prevProps.multiVideo === newProps.multiVideo &&
     prevProps.index === newProps.index;
 
