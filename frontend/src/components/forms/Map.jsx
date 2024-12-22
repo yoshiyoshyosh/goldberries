@@ -448,6 +448,11 @@ export const COLLECTIBLES = [
     variants: [
       { value: "1", name: "Key", displayName: "Key", icon: "/icons/key.png" },
       { value: "2", name: "A Jitio", displayName: "A Jitio", icon: "/icons/jitio.png" },
+      {
+        value: "3",
+        name: "Summit Gem",
+        icon: "/icons/orb-zescent-2.png",
+      },
     ],
   },
 ];
