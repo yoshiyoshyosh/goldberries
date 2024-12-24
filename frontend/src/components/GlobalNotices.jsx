@@ -8,6 +8,8 @@ import {
   faExclamationTriangle,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import Markdown from "react-markdown";
+import { StyledExternalLink } from "./BasicComponents";
 
 export function GlobalNoticesIcon({}) {
   const query = useGetServerSettings();
@@ -37,6 +39,7 @@ export function GlobalNoticesIcon({}) {
         </Stack>
       }
       arrow
+      leaveDelay={200}
       slotProps={{
         tooltip: {
           sx: {
@@ -73,7 +76,20 @@ function GlobalNoticeRow({ notice }) {
       <div style={{ backgroundColor: severityInfo.color, minWidth: "5px", alignSelf: "stretch" }} />
       <FontAwesomeIcon icon={severityInfo.icon} color={severityInfo.color} fontSize="1.5em" />
       <Typography variant="body1" fontSize="1.3em" color={theme.palette.text.primary}>
-        {message}
+        <Markdown
+          components={{
+            a: ({ href, children, ...props }) => (
+              <StyledExternalLink href={href}>{children}</StyledExternalLink>
+            ),
+            p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
+            img: ({ src, alt }) => (
+              <img src={src} alt={alt} style={{ maxWidth: "20px", transform: "translateY(4px)" }} />
+            ),
+            ul: ({ children }) => <ul style={{ margin: 0, paddingLeft: "16px" }}>{children}</ul>,
+          }}
+        >
+          {message}
+        </Markdown>
       </Typography>
     </Stack>
   );
