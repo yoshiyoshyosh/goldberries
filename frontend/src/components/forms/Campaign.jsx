@@ -140,6 +140,10 @@ export function FormCampaign({ campaign, onSave, ...props }) {
 
   const { mutate: getModInfo } = useGetModInfo(
     (response) => {
+      if (response.name === null) {
+        setModFetchState(3);
+        return;
+      }
       setModFetchState(2);
       console.log("Mod info", response);
       //Set the form values
