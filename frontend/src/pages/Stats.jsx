@@ -47,7 +47,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DIFFICULTY_COLORS } from "../util/constants";
+import { DIFFICULTY_COLORS, DIFF_CONSTS } from "../util/constants";
 import { useTheme } from "@emotion/react";
 import { Trans, useTranslation } from "react-i18next";
 import { getCampaignName, getDifficultyName, getMapName } from "../util/data_util";
@@ -275,9 +275,7 @@ function TabMonthlyTierClears() {
     return <ErrorDisplay error={error} />;
   }
 
-  const rawDiffs = getQueryData(queryDiff);
-
-  let difficulties = rawDiffs.filter((d) => d.id !== 13);
+  const difficulties = getQueryData(queryDiff);
 
   return (
     <Stack direction="column" gap={1}>
@@ -318,7 +316,7 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
   const getChartDifficultyColor = (id) => {
     if (id === "total") {
       return theme.palette.text.primary;
-    } else if (id === 18) {
+    } else if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
       return theme.palette.text.primary;
     } else {
       return DIFFICULTY_COLORS[id].color;
@@ -335,7 +333,7 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
       id === "total"
         ? Object.keys(entry)
             .filter((key) => !isNaN(key))
-            .reduce((acc, key) => (key === "18" ? acc : acc + entry[key]), 0)
+            .reduce((acc, key) => (key === "18" || key === "22" || key === "23" ? acc : acc + entry[key]), 0)
         : entry[id] || 0;
     data.push({
       [id]: value,
@@ -584,7 +582,7 @@ function TabMisc({}) {
   ];
 
   const distinctPlayerFilteredKeys = Object.keys(distinct_players).filter(
-    (key) => parseInt(key) !== 13 && parseInt(key) !== 19
+    (key) => parseInt(key) !== DIFF_CONSTS.UNDETERMINED_ID
   );
 
   //Chart 2: % of players that have cleared each difficulty

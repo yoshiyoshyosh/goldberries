@@ -31,6 +31,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { DIFF_CONSTS } from "../util/constants";
+import { DifficultySelectControlled } from "./GoldberriesComponents";
 
 /*
   filter structure:
@@ -38,6 +40,7 @@ import dayjs from "dayjs";
     hide_objectives: [id, id, id], //IDs of all objectives to hide
     archived: bool, //true if archived maps should be shown
     arbitrary: bool, //true if arbitrary objectives/challenges should be shown
+    min_diff_id: int, //ID of the difficulty, below which challenges will be culled from the result
     clear_state: int, //0 for all, 1 for Only C, 2 for Only FC, 3 for Only FC or C/FC, 4 for Only C or C/FC
     sub_count: int, //count of submissions to filter for
     sub_count_is_min: bool, //true if sub_count is a minimum, false if it is a maximum (both inclusive)
@@ -175,6 +178,16 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 label={t("show_arbitrary")}
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
+
+              <DifficultySelectControlled
+                difficultyId={localFilter.min_diff_id ?? DIFF_CONSTS.TIER_7_ID}
+                setDifficultyId={(id) => changedFilter("min_diff_id", id)}
+                minSort={DIFF_CONSTS.STANDARD_SORT_START}
+                fullWidth
+                label="Minimum Tier"
+                sx={{ my: 0.5 }}
+              />
+
               <TextField
                 select
                 label={t("clear_state.label")}
@@ -296,6 +309,7 @@ export function getDefaultFilter() {
     hide_objectives: [],
     archived: true,
     arbitrary: true,
+    min_diff_id: DIFF_CONSTS.TIER_7_ID,
     clear_state: 0,
     sub_count: null,
     sub_count_is_min: false,

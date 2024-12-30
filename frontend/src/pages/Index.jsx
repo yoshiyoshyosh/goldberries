@@ -23,7 +23,7 @@ import {
   faScroll,
 } from "@fortawesome/free-solid-svg-icons";
 import { RecentSubmissions } from "../components/RecentSubmissions";
-import { DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
+import { DIFF_CONSTS, DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { Trans, useTranslation } from "react-i18next";
 
 export function PageIndex() {
@@ -349,16 +349,20 @@ export function TiersCountDisplay({ stats, differences, hideEmpty = false, equal
   return (
     <Grid container rowSpacing={1} columnSpacing={2}>
       {difficulties.map((diff) => {
-        if (diff.id === 13) return null; //Skip "tier 3 (guard)"
-        if (diff.id === 20) return null; //Skip "trivial"
+        if (diff.id === DIFF_CONSTS.TRIVIAL_ID) return null; //Skip "trivial"
         const count = stats[diff.id] || 0;
         const difference = differences ? differences[diff.id] : null;
         const isEmpty = count === 0;
         let width = 12;
-        if (diff.id === 18 || diff.id === 19) {
-          width = 6;
-        } else if (diff.id === 14 || diff.id === 15 || diff.id === 16 || diff.id === 17) {
+        if (diff.id === DIFF_CONSTS.UNDETERMINED_ID) {
+          width = 12;
+        } else if (diff.sort > DIFF_CONSTS.STANDARD_SORT_END && diff.sort < DIFF_CONSTS.LOW_TIER_3_SORT) {
           width = 3;
+        } else if (
+          diff.sort >= DIFF_CONSTS.STANDARD_SORT_START &&
+          diff.sort <= DIFF_CONSTS.STANDARD_SORT_END
+        ) {
+          width = 4;
         } else {
           const shares = getDifficultySubtierShares(diff.id, true);
           width = 12 / shares;

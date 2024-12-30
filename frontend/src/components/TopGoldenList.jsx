@@ -85,15 +85,20 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     id +
     filter.archived +
     filter.arbitrary +
+    filter.min_diff_id +
     filter.hide_objectives.join(",") +
     filter.sub_count +
     filter.sub_count_is_min +
     filter.clear_state +
     filter.start_date +
     filter.end_date +
-    settings.visual.topGoldenList.showCampaignIcons +
     settings.visual.topGoldenList.darkenTierColors +
-    settings.visual.topGoldenList.useTextFcIcons;
+    settings.visual.topGoldenList.showCampaignIcons +
+    settings.visual.topGoldenList.useTextFcIcons +
+    settings.visual.topGoldenList.switchMapAndChallenge +
+    settings.visual.topGoldenList.hideEmptyTiers +
+    settings.visual.topGoldenList.hideTimeTakenColumn +
+    settings.visual.topGoldenList.showFractionalTiers;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
 
   const query = useGetTopGoldenList(type, id, filter);
@@ -110,15 +115,20 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     id,
     filter.archived,
     filter.arbitrary,
+    filter.min_diff_id,
     filter.hide_objectives,
     filter.sub_count,
     filter.sub_count_is_min,
     filter.clear_state,
     filter.start_date,
     filter.end_date,
-    settings.visual.topGoldenList.showCampaignIcons,
     settings.visual.topGoldenList.darkenTierColors,
+    settings.visual.topGoldenList.showCampaignIcons,
     settings.visual.topGoldenList.useTextFcIcons,
+    settings.visual.topGoldenList.switchMapAndChallenge,
+    settings.visual.topGoldenList.hideEmptyTiers,
+    settings.visual.topGoldenList.hideTimeTakenColumn,
+    settings.visual.topGoldenList.showFractionalTiers,
   ]);
 
   // Set horizontal overflow only for this page
@@ -301,6 +311,7 @@ function TopGoldenListGroup({
   }
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
+  const showFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
 
   const cellStyle = {
     borderBottom: "1px solid " + theme.palette.tableDivider,
@@ -394,12 +405,16 @@ function TopGoldenListGroup({
                   </TableRow>
                 )}
                 {tier.map((subtier, index) => {
-                  const tierChallenges = challenges.filter(
+                  let tierChallenges = challenges.filter(
                     (challenge) =>
                       (useSuggested
                         ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
                         : challenge.difficulty.id) === subtier.id
                   );
+                  //For experimenting, filter out all challenges without frac
+                  // if (showFractionalTiers) {
+                  //   tierChallenges = tierChallenges.filter((challenge) => challenge.data.frac);
+                  // }
 
                   let hadEntriesBefore = false;
                   if (index > 0) {
@@ -467,8 +482,10 @@ function TopGoldenListSubtier({
   hadEntriesBefore,
   isHidingObjective1,
 }) {
+  const { settings } = useAppSettings();
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
-  sortChallengesForTGL(challenges, maps, campaigns);
+  const sortByFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
+  sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers);
 
   return (
     <>
@@ -497,8 +514,17 @@ function TopGoldenListSubtier({
     </>
   );
 }
-export function sortChallengesForTGL(challenges, maps, campaigns) {
+export function sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers) {
   challenges.sort((a, b) => {
+    //If fraction is available, use that for sorting first. if no frac is available, treat it as 0.5
+    if (sortByFractionalTiers) {
+      const fracA = a.data.frac ? a.data.frac : 0.5;
+      const fracB = b.data.frac ? b.data.frac : 0.5;
+      if (fracA !== fracB) {
+        return fracB - fracA;
+      }
+    }
+
     const mapA = maps[a.map_id];
     const mapB = maps[b.map_id];
     const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
@@ -546,6 +572,12 @@ function TopGoldenListRow({
 
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
+  //TODO - Prepend tier fraction if the setting is enabled
+  if (settings.visual.topGoldenList.showFractionalTiers) {
+    let frac = challenge.data.frac ? challenge.data.frac : 0.5;
+    frac += challenge.difficulty.sort;
+    name = `${frac.toFixed(2)} - ${name}`;
+  }
   if (nameSuffix !== "") {
     if (!tpgSettings.switchMapAndChallenge) {
       nameSuffix = ` [${nameSuffix}]`;

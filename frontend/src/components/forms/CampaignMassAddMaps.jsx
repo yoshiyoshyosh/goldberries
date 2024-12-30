@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePostChallenge, usePostMap } from "../../hooks/useApi";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { DIFF_CONSTS } from "../../util/constants";
 
 export function FormCampaignMassAddMaps({ onSave }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.campaign_mass_add_maps" });
@@ -49,14 +50,14 @@ export function FormCampaignMassAddMaps({ onSave }) {
             addChallengeAsync({
               map_id: newMapId,
               objective_id: map.challenge_objective_id,
-              difficulty_id: 19,
+              difficulty_id: DIFF_CONSTS.UNDETERMINED_ID,
               requires_fc: true,
               has_fc: false,
             }),
             addChallengeAsync({
               map_id: newMapId,
               objective_id: map.challenge_objective_id,
-              difficulty_id: 19,
+              difficulty_id: DIFF_CONSTS.UNDETERMINED_ID,
               requires_fc: false,
               has_fc: false,
             })
@@ -66,7 +67,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
             addChallengeAsync({
               map_id: newMapId,
               objective_id: map.challenge_objective_id,
-              difficulty_id: 19,
+              difficulty_id: DIFF_CONSTS.UNDETERMINED_ID,
               has_fc: map.generate_challenges === "c_fc",
             })
           );

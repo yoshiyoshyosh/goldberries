@@ -23,7 +23,7 @@ import {
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { Autocomplete, Chip, Divider, Grid, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
-import { API_BASE_URL, getNewDifficultyColors, isTempVerifier } from "../util/constants";
+import { API_BASE_URL, DIFF_CONSTS, getNewDifficultyColors, isTempVerifier } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -230,8 +230,9 @@ export function SuggestedDifficultySelect({ defaultValue, ...props }) {
     },
   });
   let difficulties = query.data?.data ?? [];
-  //filter out id 13 (fwg) and 19 (undetermined)
-  difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13 && d.id !== 20);
+  difficulties = difficulties.filter(
+    (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
+  );
 
   return (
     <TextField
@@ -324,7 +325,7 @@ export function DifficultyChip({
   const text = getDifficultyName(difficulty);
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
-  const isTrivial = difficulty.id === 20;
+  const isTrivial = difficulty.id === DIFF_CONSTS.TRIVIAL_ID;
 
   const chip = (
     <Chip
@@ -419,7 +420,6 @@ export function DifficultySelectControlled({
   isSuggestion = false,
   minSort = null,
   maxSort = null,
-  noGuard = false,
   ...props
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
@@ -438,12 +438,10 @@ export function DifficultySelectControlled({
   };
 
   let difficulties = query.data?.data ?? [];
-  //filter out id 13 (fwg) and 19 (undetermined)
   if (isSuggestion) {
-    difficulties = difficulties.filter((d) => d.id !== 19 && d.id !== 13 && d.id !== 20);
-  }
-  if (noGuard) {
-    difficulties = difficulties.filter((d) => d.id !== 13);
+    difficulties = difficulties.filter(
+      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
+    );
   }
   if (minSort !== null) {
     difficulties = difficulties.filter((d) => d.sort >= minSort);

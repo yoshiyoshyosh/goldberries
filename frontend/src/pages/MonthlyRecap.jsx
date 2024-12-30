@@ -45,6 +45,7 @@ import { DifficultyMoveDisplay } from "./Suggestions";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { DIFF_CONSTS } from "../util/constants";
 
 export function PageMonthlyRecap() {
   const { t } = useTranslation(undefined, { keyPrefix: "monthly_recap.settings" });
@@ -131,8 +132,8 @@ function MonthlyRecap({ month }) {
           fullWidth
           difficultyId={allClearsDifficulty?.id ?? 3}
           setDifficulty={setAllClearsDifficulty}
-          minSort={8}
-          maxSort={19}
+          minSort={DIFF_CONSTS.LOW_TIER_3_SORT}
+          maxSort={DIFF_CONSTS.MAX_SORT}
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -141,8 +142,8 @@ function MonthlyRecap({ month }) {
           fullWidth
           difficultyId={firstClearsDifficulty?.id ?? 12}
           setDifficulty={setFirstClearsDifficulty}
-          minSort={2}
-          maxSort={19}
+          minSort={DIFF_CONSTS.STANDARD_SORT_START}
+          maxSort={DIFF_CONSTS.MAX_SORT}
           noGuard
         />
       </Grid>
@@ -360,7 +361,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
   const nameIsSame = map?.name === campaign.name;
-  const isBold = isFirstClear && challenge.difficulty.sort > 16;
+  const isBold = isFirstClear && challenge.difficulty.sort > DIFF_CONSTS.LOW_TIER_0_SORT;
   return (
     <Stack
       direction="row"

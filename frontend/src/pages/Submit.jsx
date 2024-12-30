@@ -29,7 +29,7 @@ import { durationToSeconds, getChallengeIsArbitrary, getMapLobbyInfo } from "../
 import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
-import { FormOptions } from "../util/constants";
+import { DIFF_CONSTS, FormOptions, difficultyToSort } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -180,7 +180,8 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
   const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
-  const needsRawSession = challenge !== null && challenge.difficulty.id <= 13;
+  const needsRawSession =
+    challenge !== null && challenge.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
 
   const onCampaignSelect = (campaign) => {
     setCampaign(campaign);
@@ -618,7 +619,11 @@ export function MultiUserSubmission() {
     campaign !== null && mapDataList.length > 0 && (form.watch("proof_url") !== "" || hasAllIndividualVideos);
   let rawSessionsGood = true;
   mapDataList.forEach((mapData) => {
-    if (mapData.challenge && mapData.challenge.difficulty.id <= 13 && mapData.raw_session_url === "") {
+    if (
+      mapData.challenge &&
+      mapData.challenge.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT &&
+      mapData.raw_session_url === ""
+    ) {
       rawSessionsGood = false;
     }
     if (mapData.challenge === null) {
@@ -840,7 +845,9 @@ export function NewChallengeUserSubmission({}) {
   const suggested_difficulty_id = form.watch("suggested_difficulty_id");
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
-  const needsRawSession = suggested_difficulty_id !== null && suggested_difficulty_id < 13;
+  const needsRawSession =
+    suggested_difficulty_id !== null &&
+    difficultyToSort(suggested_difficulty_id) >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
   const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
 
   return (
@@ -1062,7 +1069,7 @@ export function MultiUserSubmissionMapRow({
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const [expanded, setExpanded] = useState(
-    mapData.challenge?.difficulty.id <= 13 ? true : false || multiVideo
+    mapData.challenge?.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT ? true : false || multiVideo
   );
 
   useEffect(() => {
@@ -1073,7 +1080,8 @@ export function MultiUserSubmissionMapRow({
   const color = lobbyInfo?.major ? lobbyInfo?.major?.color : lobbyInfo?.minor?.color ?? "inherit";
   const border = lobbyInfo?.major || lobbyInfo?.minor ? "20px solid " + color : "none";
 
-  const needsRawSession = mapData.challenge && mapData.challenge.difficulty.id <= 13;
+  const needsRawSession =
+    mapData.challenge && mapData.challenge.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
   const hasRawSession = mapData.raw_session_url !== "" && mapData.raw_session_url !== null;
   const bgColor = needsRawSession && !hasRawSession ? (darkmode ? "#4a0000" : "#ffe7e7") : "inherit";
 
@@ -1224,26 +1232,27 @@ export function MultiUserSubmissionMapRow({
                     </Grid>
                   </TableCell>
                 </TableRow>
-                {mapData.challenge && mapData.challenge.difficulty.id <= 13 && (
-                  <TableRow
-                    sx={{
-                      "& > *": {
-                        borderBottom: "unset",
-                      },
-                    }}
-                  >
-                    <TableCell colSpan={7}>
-                      <TextField
-                        label={t_fs("raw_session_url") + " *"}
-                        value={mapData.raw_session_url}
-                        onChange={(e) =>
-                          updateMapDataRow(index, { ...mapData, raw_session_url: e.target.value })
-                        }
-                        fullWidth
-                      />
-                    </TableCell>
-                  </TableRow>
-                )}
+                {mapData.challenge &&
+                  mapData.challenge.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT && (
+                    <TableRow
+                      sx={{
+                        "& > *": {
+                          borderBottom: "unset",
+                        },
+                      }}
+                    >
+                      <TableCell colSpan={7}>
+                        <TextField
+                          label={t_fs("raw_session_url") + " *"}
+                          value={mapData.raw_session_url}
+                          onChange={(e) =>
+                            updateMapDataRow(index, { ...mapData, raw_session_url: e.target.value })
+                          }
+                          fullWidth
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
               </TableBody>
             </Table>
           </Collapse>

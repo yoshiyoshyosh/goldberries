@@ -20,6 +20,7 @@ export function AppSettingsProvider({ children }) {
           switchMapAndChallenge: false,
           hideEmptyTiers: false,
           hideTimeTakenColumn: false,
+          showFractionalTiers: false,
         },
         background: {
           dark: "", //Indicates default, solid color background. Otherwise this is the image name
@@ -46,7 +47,6 @@ export function AppSettingsProvider({ children }) {
           10: "",
           11: "",
           12: "",
-          13: "",
           14: "",
           15: "",
           16: "",

@@ -573,6 +573,21 @@ function AppSettingsTopGoldenListForm() {
         />
       </SettingsEntry>
 
+      <SettingsEntry note={t("show_fractional_tiers.note")}>
+        <Controller
+          name="topGoldenList.showFractionalTiers"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("show_fractional_tiers.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
+
       <Footnote />
     </form>
   );
@@ -620,7 +635,6 @@ function AppSettingsDifficultyColorsForm() {
         10: "",
         11: "",
         12: "",
-        13: "",
         14: "",
         15: "",
         16: "",
@@ -643,7 +657,6 @@ function AppSettingsDifficultyColorsForm() {
         10: "#064e29",
         11: "#45a471",
         12: "#85ddad",
-        13: "",
         14: "",
         15: "#232255",
         16: "",

@@ -833,6 +833,10 @@
         "hide_time_taken_column": {
           "label": "Hide Time Taken Column",
           "note": "Hides the 'Time Taken' column in the personal Top Golden List of players"
+        },
+        "show_fractional_tiers": {
+          "label": "Show Fractional Tiers",
+          "note": "Shows fractional tier values and sorts the Top Golden List accordingly"
         }
       },
       "difficulty_colors": {

@@ -18,6 +18,7 @@ import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DIFF_CONSTS } from "../../util/constants";
 
 export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -43,7 +44,7 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
         has_fc: false,
         is_arbitrary: false,
         sort: null,
-        difficulty_id: defaultDifficultyId ?? 19, //Undetermined
+        difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNDETERMINED_ID,
       }
     );
   }, [data]);

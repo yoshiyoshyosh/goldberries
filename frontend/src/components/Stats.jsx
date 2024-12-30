@@ -40,7 +40,7 @@ export function SuggestedDifficultyChart({ challenge, scale = 1 }) {
     };
   });
   //Sort by difficulty.sort DESC
-  data.sort((a, b) => b.id - a.id);
+  data.sort((a, b) => b.sort - a.sort);
 
   const startSpin = () => {
     if (spin) return;

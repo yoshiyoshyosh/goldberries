@@ -21,7 +21,7 @@ import {
   usePostMap,
   useSearch,
 } from "../../hooks/useApi";
-import { FormOptions } from "../../util/constants";
+import { DIFF_CONSTS, FormOptions } from "../../util/constants";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faDownload, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -58,7 +58,7 @@ export function FormCreateFullChallengeWrapper({
       has_fc: false,
       is_arbitrary: false,
       sort: 1,
-      difficulty_id: defaultDifficultyId ?? 19, //Undetermined
+      difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNDETERMINED_ID,
     };
   }, []);
 

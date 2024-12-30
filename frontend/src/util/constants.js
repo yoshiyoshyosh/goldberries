@@ -117,7 +117,6 @@ export const DIFFICULTY_COLORS = {
   10: { color: "#ffec87", group_color: "#ffec87", contrast_color: "#000000" },
   11: { color: "#ffebb0", group_color: "#ffec87", contrast_color: "#000000" },
   12: { color: "#fbf3cf", group_color: "#ffec87", contrast_color: "#000000" },
-  13: { color: "#fff9e1", group_color: "#ffec87", contrast_color: "#000000" },
 
   //Tier 4
   14: { color: "#b0ff78", group_color: "#b0ff78", contrast_color: "#000000" },
@@ -139,6 +138,11 @@ export const DIFFICULTY_COLORS = {
 
   //Trivial
   20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000" },
+
+  //Low Standard
+  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+  //High Standard
+  23: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
 };
 
 function darkenDiffColor(color, amount) {
@@ -170,6 +174,8 @@ const DIFFICULTY_BASE_COLORS = {
   18: "#ffffff",
   19: "#aaaaaa",
   20: "#c6c6c6",
+  22: "#ffffff",
+  23: "#ffffff",
 };
 function getSettingsDifficultyColor(settings, id) {
   const groupId = getGroupId(id);
@@ -200,7 +206,6 @@ const GROUP_ID_MAPPINGS = {
   10: 11,
   11: 11,
   12: 11,
-  13: 11,
   14: 14,
   15: 15,
   16: 16,
@@ -208,6 +213,8 @@ const GROUP_ID_MAPPINGS = {
   18: 18,
   19: 19,
   20: 20,
+  22: 22,
+  23: 23,
 };
 export function getGroupId(id) {
   return GROUP_ID_MAPPINGS[id];
@@ -217,7 +224,6 @@ const COLOR_MODIFY_FUNCTIONS = {
   high: (color) => color.saturationv(color.saturationv() + 13),
   mid: (color) => color,
   low: (color) => color.saturationv(color.saturationv() - 13),
-  guard: (color) => color.saturationv(color.saturationv() - 20),
   none: (color) => color,
 };
 const DIFFICULTY_ID_SUBTIERS = {
@@ -233,7 +239,6 @@ const DIFFICULTY_ID_SUBTIERS = {
   10: "high",
   11: "mid",
   12: "low",
-  13: "guard",
   14: "none",
   15: "none",
   16: "none",
@@ -241,6 +246,8 @@ const DIFFICULTY_ID_SUBTIERS = {
   18: "none",
   19: "none",
   20: "none",
+  22: "none",
+  23: "none",
 };
 function getDifficultySubtier(id) {
   return DIFFICULTY_ID_SUBTIERS[id];
@@ -265,7 +272,6 @@ const DIFFICULTY_ID_SUBTIER_SHARES = {
   10: 4,
   11: 4,
   12: 4,
-  13: 4,
   14: 1,
   15: 1,
   16: 1,
@@ -273,6 +279,8 @@ const DIFFICULTY_ID_SUBTIER_SHARES = {
   18: 1,
   19: 1,
   20: 1,
+  22: 1,
+  23: 1,
 };
 export function getDifficultySubtierShares(id, ignoreGuard = false) {
   let shares = DIFFICULTY_ID_SUBTIER_SHARES[id];
@@ -306,4 +314,58 @@ const TEMP_VERIFIERS = {
 };
 export function isTempVerifier(id) {
   return TEMP_VERIFIERS[id] !== undefined;
+}
+
+//Some difficulty details being used in the frontend
+const DIFF_CONSTS_ = {
+  //Difficulty ID constants
+  TRIVIAL_ID: 20,
+  UNDETERMINED_ID: 19,
+  STANDARD_IDS: [23, 18, 22], //high, mid, low
+  TIER_7_ID: 17,
+
+  //Difficulty sorting constants
+  LOW_TIER_0_SORT: 18,
+  LOW_TIER_3_SORT: 9,
+  STANDARD_SORT_START: 2,
+  STANDARD_SORT_END: 4,
+  TIERED_SORT_START: 5,
+  MAX_SORT: 20,
+
+  //References, added here for intellisense
+  RAW_SESSION_REQUIRED_SORT: -1,
+  RECAP_CLEAR_MIN_SORT: -1,
+  RECAP_FIRST_CLEAR_MIN_SORT: -1,
+};
+DIFF_CONSTS_.RAW_SESSION_REQUIRED_SORT = DIFF_CONSTS_.LOW_TIER_3_SORT;
+DIFF_CONSTS_.RECAP_CLEAR_MIN_SORT = DIFF_CONSTS_.RAW_SESSION_REQUIRED_SORT;
+DIFF_CONSTS_.RECAP_FIRST_CLEAR_MIN_SORT = DIFF_CONSTS_.STANDARD_SORT_START;
+export const DIFF_CONSTS = DIFF_CONSTS_;
+//=================================================
+
+const DIFFICULTY_SORTS = {
+  1: 20,
+  2: 19,
+  3: 18,
+  4: 17,
+  5: 16,
+  6: 15,
+  7: 14,
+  8: 13,
+  9: 12,
+  10: 11,
+  11: 10,
+  12: 9,
+  14: 8,
+  15: 7,
+  16: 6,
+  17: 5,
+  23: 4,
+  18: 3,
+  22: 2,
+  20: 1,
+  19: 0,
+};
+export function difficultyToSort(id) {
+  return DIFFICULTY_SORTS[id];
 }

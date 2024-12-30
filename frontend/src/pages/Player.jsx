@@ -37,7 +37,7 @@ import {
   VerifierIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS, getGroupId, isTempVerifier } from "../util/constants";
+import { DIFFICULTY_COLORS, DIFF_CONSTS, getGroupId, isTempVerifier } from "../util/constants";
 import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
@@ -303,9 +303,14 @@ export function DifficultyCountChart({ difficulty_counts }) {
   }
 
   const rawDiffs = getQueryData(query);
-  let difficulties = rawDiffs.filter((d) => d.id !== 13);
+  let difficulties = [...rawDiffs];
   if (!showStandard) {
-    difficulties = difficulties.filter((d) => d.id !== 18 && d.id !== 19 && d.id !== 20);
+    difficulties = difficulties.filter(
+      (d) =>
+        d.id !== DIFF_CONSTS.TRIVIAL_ID &&
+        d.id !== DIFF_CONSTS.UNDETERMINED_ID &&
+        d.sort > DIFF_CONSTS.STANDARD_SORT_END
+    );
   }
 
   //Loop through all difficulties and do the following:
@@ -330,7 +335,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
     return difficulty ? difficulty.name : "";
   };
   const getChartDifficultyColor = (id) => {
-    if (id === 18) {
+    if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
       return theme.palette.text.primary;
     } else {
       return DIFFICULTY_COLORS[id].color;
@@ -341,7 +346,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
   difficulties.forEach((difficulty) => {
     data.push({
       id: difficulty.id,
-      name: difficulty.id === 19 ? "Undet." : getDifficultyName(difficulty.id),
+      name: difficulty.id === DIFF_CONSTS.UNDETERMINED_ID ? "Undet." : getDifficultyName(difficulty.id),
       count: difficulty_counts_grouped[getGroupId(difficulty.id)] || 0,
     });
   });
