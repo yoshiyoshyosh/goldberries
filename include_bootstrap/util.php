@@ -186,10 +186,14 @@ function get_tier_index($difficulty)
       return 6;
     case "Tier 7":
       return 7;
-    case "Undetermined":
+    case "High Standard":
       return 8;
     case "Standard":
       return 9;
+    case "Low Standard":
+      return 10;
+    case "Undetermined":
+      return 11;
   }
 }
 

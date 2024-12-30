@@ -14,6 +14,7 @@ $sub_count = isset($_GET['sub_count']) ? intval($_GET['sub_count']) : null;
 $sub_count_is_min = isset($_GET['sub_count_is_min']) ? $_GET['sub_count_is_min'] === 'true' : true;
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
+$min_diff_sort = isset($_GET['min_diff_sort']) ? intval($_GET['min_diff_sort']) : $TIERED_SORT_START; //What the user requests to see via the filter options
 //Clear states: 0 = all, 1 = Only C, 2 = Only FC, 3 = Only FC or C/FC (No C), 4 = Only C or C/FC (No FC)
 $clear_state = isset($_GET['clear_state']) ? intval($_GET['clear_state']) : 0;
 
@@ -26,21 +27,18 @@ $where[] = "(map_is_rejected = FALSE OR map_is_rejected IS NULL)";
 
 $is_player = isset($_GET['player']);
 $is_campaign = isset($_GET['campaign']);
-$show_standard = false;
 if ($is_player) {
   $where[] = "player_id = " . intval($_GET['player']);
-  $show_standard = true;
+  $min_diff_sort = 0; //Show all
 } else {
   $where[] = "(player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
 if ($is_campaign) {
   $where[] = "campaign_id = " . intval($_GET['campaign']);
-  $show_standard = true;
+  $min_diff_sort = 0;
 }
-if (!$show_standard) {
-  $where[] = "challenge_difficulty_id != 20";
-  $where[] = "challenge_difficulty_id != 18";
-}
+
+$where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)"; //Always include undetermined challenges
 
 
 if (isset($_GET['map'])) {
@@ -99,10 +97,7 @@ if (!$result) {
 }
 
 
-$difficulty_filter = "difficulty.id != 13";
-if (!$show_standard) {
-  $difficulty_filter .= " AND difficulty.id != 20 AND difficulty.id != 18";
-}
+$difficulty_filter = "difficulty.sort >= $min_diff_sort OR difficulty.id = $UNDETERMINED_ID"; //Always include undetermined challenges
 
 $queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
 $resultDifficulties = pg_query($DB, $queryDifficulties);
@@ -200,6 +195,7 @@ foreach ($response['challenges'] as $challenge_id => $challenge) {
 
   if (!$is_player) {
     $response['challenges'][$challenge_id]->data["is_stable"] = is_challenge_stable($challenge);
+    $response['challenges'][$challenge_id]->data["frac"] = challenge_fractional_placement($challenge);
   }
 
   if (!$all_submissions) {
@@ -214,10 +210,12 @@ api_write($response);
 
 function is_challenge_stable($challenge)
 {
+  global $TRIVIAL_ID, $UNDETERMINED_ID;
+
   $min_suggestions = 5;
   $min_overlap = 0.8;
 
-  if ($challenge->difficulty_id === 20 || $challenge->difficulty_id === 19) {
+  if ($challenge->difficulty_id === $TRIVIAL_ID || $challenge->difficulty_id === $UNDETERMINED_ID) { //Exclude trivial and undetermined
     return false;
   }
 
@@ -241,4 +239,33 @@ function is_challenge_stable($challenge)
 
   $overlap = $count_for / $count_suggestions;
   return $overlap >= $min_overlap;
+}
+
+function challenge_fractional_placement($challenge)
+{
+  global $TRIVIAL_ID, $UNDETERMINED_ID;
+
+  $min_suggestions = 0;
+
+  // if ($challenge->difficulty_id === $TRIVIAL_ID || $challenge->difficulty_id === $UNDETERMINED_ID) { //Exclude trivial and undetermined
+  //   return false;
+  // }
+
+  $count_suggestions = 0;
+  $sum_sorts = 0;
+  foreach ($challenge->submissions as $submission) {
+    if ($submission->suggested_difficulty_id !== null && $submission->is_personal === false) {
+      $count_suggestions++;
+      $sum_sorts += $submission->suggested_difficulty->sort;
+    }
+  }
+
+  if ($count_suggestions < $min_suggestions || $count_suggestions === 0) {
+    return false;
+  }
+
+  $fraction = $sum_sorts / $count_suggestions;
+  $fraction -= $challenge->difficulty->sort;
+  $fraction += 0.5; //So that the values are between 1 and 0 for a challenge that is in its correct tier
+  return $fraction;
 }

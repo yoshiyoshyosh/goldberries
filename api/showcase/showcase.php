@@ -68,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(404, "Submission with id {$submission_id} does not exist");
     }
 
+    if ($submission->is_verified !== true) {
+      die_json(403, "Submission with id {$submission_id} isn't verified");
+    }
+
     if ($submission->player_id !== $account->player_id && !is_verifier($account)) {
       die_json(403, "Submission with id {$submission_id} does not belong to you");
     }

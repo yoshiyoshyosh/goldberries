@@ -162,8 +162,7 @@ function send_webhook_suggestion_verified($suggestion)
 
 function send_webhook_suggestion_notification($suggestion)
 {
-  global $DB;
-  global $webhooks_enabled;
+  global $DB, $webhooks_enabled, $UNDETERMINED_ID;
   if (!$webhooks_enabled) {
     return;
   }
@@ -191,7 +190,7 @@ function send_webhook_suggestion_notification($suggestion)
     $from_sort = $suggestion->current_difficulty->sort;
     $from_id = $suggestion->current_difficulty_id;
     $to_sort = $suggestion->suggested_difficulty->sort;
-    if ($from_id === 19) {
+    if ($from_id === $UNDETERMINED_ID) {
       $emote = "<:chart_with_midwards_trend:1224106596901060768>";
     } else if ($from_sort > $to_sort) {
       $emote = ":chart_with_downwards_trend:";
@@ -381,8 +380,7 @@ function send_webhook_challenge_marked_personal($challenge)
 
 function send_webhook_challenge_moved($challenge, $new_difficulty_id)
 {
-  global $DB;
-  global $webhooks_enabled;
+  global $DB, $webhooks_enabled, $UNDETERMINED_ID;
   if (!$webhooks_enabled) { //Disable webhooks for now
     return;
   }
@@ -412,7 +410,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $ping_addition = count($ping_list) > 0 ? "\n" . implode(" ", $ping_list) : "";
 
   $emote = ":memo:";
-  if ($old_id === 19) {
+  if ($old_id === $UNDETERMINED_ID) {
     $emote = "<:chart_with_midwards_trend:1224106596901060768>";
   } else if ($old_sort > $new_sort) {
     $emote = ":chart_with_downwards_trend:";

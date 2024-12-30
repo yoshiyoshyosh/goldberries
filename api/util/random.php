@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -15,9 +15,7 @@ if (!in_array($type, ['challenge', 'map', 'campaign', 'difficulty', 'player', 's
 }
 
 $count = isset($_REQUEST["count"]) ? intval($_REQUEST["count"]) : 1;
-if ($count < 1 || $count > 100) {
-  die_json(400, "Invalid 'count' parameter");
-}
+$count = max(1, min(100, $count));
 
 $query = "SELECT * FROM {$type} ORDER BY RANDOM() LIMIT {$count}";
 $result = pg_query($DB, $query);

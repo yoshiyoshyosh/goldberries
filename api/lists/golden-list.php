@@ -22,11 +22,11 @@ if (isset($_GET['campaign'])) {
 }
 
 if (isset($_GET['hard'])) {
-  $where .= " AND challenge_difficulty_id < 18"; //18 is Standard, id < 18 is everything tiered
+  $where .= " AND difficulty_sort >= $TIERED_SORT_START";
 } else if (isset($_GET['standard'])) {
-  $where .= " AND challenge_difficulty_id = 18";
+  $where .= " AND difficulty_sort >= $STANDARD_SORT_START AND difficulty_sort <= $STANDARD_SORT_END"; //Standard, Low Standard, High Standard
 } else if (isset($_GET['undetermined'])) {
-  $where .= " AND challenge_difficulty_id = 19";
+  $where .= " AND challenge_difficulty_id = $UNDETERMINED_ID";
 }
 
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {

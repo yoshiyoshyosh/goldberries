@@ -9,6 +9,20 @@ DEFINE("NOTIFICATIONS_WEBHOOK_URL", getenv("NOTIFICATIONS_WEBHOOK_URL"));
 DEFINE("PYTHON_COMMAND", getenv("PYTHON_COMMAND"));
 DEFINE("WKHTMLTOIMAGE_PATH", getenv("WKHTMLTOIMAGE_PATH")); //false if not set
 
+//Some difficulty details being used in the backend
+$TRIVIAL_ID = 20;
+$UNDETERMINED_ID = 19;
+
+$LOW_TIER_0_SORT = 18;
+$LOW_TIER_3_SORT = 9;
+$STANDARD_SORT_START = 2;
+$STANDARD_SORT_END = 4;
+$TIERED_SORT_START = 5;
+$MAX_SORT = 20;
+$RAW_SESSION_REQUIRED_SORT = $LOW_TIER_3_SORT;
+//=================================================
+
+
 if (getenv('DEBUG') === 'true') {
   DEFINE("BASE_URL", "http://localhost:3000");
   DEFINE("BASE_URL_API", "http://localhost/api");

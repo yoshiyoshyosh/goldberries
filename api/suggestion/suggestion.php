@@ -87,14 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($difficulty === false) {
           die_json(400, "Difficulty with id {$data['suggested_difficulty_id']} does not exist");
         }
-        if ($difficulty->id === 13) {
-          die_json(400, "Tier 3 (guard) difficulty is not allowed for suggestions");
-        } else if ($difficulty->id === 20) {
+        if ($difficulty->id === $TRIVIAL_ID) {
           die_json(400, "Trivial difficulty is not allowed for suggestions");
         }
 
         //Placement suggestions are not allowed for trivial challenges
-        if ($challenge->difficulty_id === 20) {
+        if ($challenge->difficulty_id === $TRIVIAL_ID) {
           die_json(400, "Placement suggestions cannot be made for trivial challenges");
         }
 

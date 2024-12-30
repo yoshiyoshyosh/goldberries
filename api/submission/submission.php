@@ -124,9 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
         if ($difficulty === false) {
           die_json(400, "Difficulty with id {$submission->suggested_difficulty_id} does not exist");
-        } else if ($difficulty->id === 13) {
-          die_json(400, "Cannot suggest 'Guard Tier 3' as difficulty");
-        } else if ($difficulty->id === 19) {
+        } else if ($difficulty->id === $UNDETERMINED_ID) {
           die_json(400, "Cannot suggest 'Undetermined' as difficulty");
         }
       }
@@ -179,11 +177,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $difficulty = Difficulty::get_by_id($DB, $submission->suggested_difficulty_id);
         if ($difficulty === false) {
           die_json(400, "Difficulty with id {$submission->suggested_difficulty_id} does not exist");
-        } else if ($difficulty->id === 13) {
-          die_json(400, "Cannot suggest 'Guard Tier 3' as difficulty");
-        } else if ($difficulty->id === 19) {
+        } else if ($difficulty->id === $UNDETERMINED_ID) {
           die_json(400, "Cannot suggest 'Undetermined' as difficulty");
-        } else if ($difficulty->id === 20) {
+        } else if ($difficulty->id === $TRIVIAL_ID) {
           die_json(400, "Cannot suggest 'Trivial' as difficulty");
         }
       }
@@ -230,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
       }
-      if ($challenge->difficulty_id <= 12) {
+      if ($challenge->difficulty->sort >= $RAW_SESSION_REQUIRED_SORT) {
         check_url($submission->raw_session_url, 'raw_session_url');
       }
       if ($challenge->requires_fc) {

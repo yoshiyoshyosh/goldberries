@@ -12,17 +12,17 @@ if ($month === null || !preg_match('/^\d{4}-\d{2}$/', $month)) {
 }
 //$month is a string in the format 'YYYY-MM'
 
-$all_clears_tier_sort = isset($_REQUEST['all_clears_tier_sort']) ? intval($_REQUEST['all_clears_tier_sort']) : 17;
-$first_clears_tier_sort = isset($_REQUEST['first_clears_tier_sort']) ? intval($_REQUEST['first_clears_tier_sort']) : 7;
+$all_clears_tier_sort = isset($_REQUEST['all_clears_tier_sort']) ? intval($_REQUEST['all_clears_tier_sort']) : $LOW_TIER_0_SORT;
+$first_clears_tier_sort = isset($_REQUEST['first_clears_tier_sort']) ? intval($_REQUEST['first_clears_tier_sort']) : $LOW_TIER_3_SORT;
 
-if ($all_clears_tier_sort < 7) {
+if ($all_clears_tier_sort < $RAW_SESSION_REQUIRED_SORT) {
   die_json(400, 'all_clears_tier_sort has to be at least Low Tier 3');
-} else if ($all_clears_tier_sort > 19) {
+} else if ($all_clears_tier_sort > $MAX_SORT) {
   die_json(400, 'all_clears_tier_sort has to be at most High Tier 0');
 }
-if ($first_clears_tier_sort < 2) {
+if ($first_clears_tier_sort < $STANDARD_SORT_START) {
   die_json(400, 'first_clears_tier_sort has to be at least Standard');
-} else if ($first_clears_tier_sort > 19) {
+} else if ($first_clears_tier_sort > $MAX_SORT) {
   die_json(400, 'first_clears_tier_sort has to be at most High Tier 0');
 }
 

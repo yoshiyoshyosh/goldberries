@@ -6,6 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Invalid request method');
 }
 
+//TODO - Rework this entire endpoint when subtiers are removed
+
 $query = "SELECT
     player.id,
     player.name,
@@ -20,7 +22,9 @@ $query = "SELECT
     COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 5') AS t5,
     COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 6') AS t6,
     COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 7') AS t7,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Standard') AS standard,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'High Standard') AS high_standard,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Mid Standard') AS mid_standard,
+    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Low Standard') AS low_standard,
     COUNT(submission.id) AS total
   FROM player
   LEFT JOIN submission ON submission.player_id = player.id
@@ -56,7 +60,9 @@ while ($row = pg_fetch_assoc($result)) {
   $row_data['clears']['15'] = intval($row['t5']);
   $row_data['clears']['16'] = intval($row['t6']);
   $row_data['clears']['17'] = intval($row['t7']);
-  $row_data['clears']['18'] = intval($row['standard']);
+  $row_data['clears']['22'] = intval($row['high_standard']);
+  $row_data['clears']['18'] = intval($row['mid_standard']);
+  $row_data['clears']['23'] = intval($row['low_standard']);
 
   $data[] = $row_data;
 }
