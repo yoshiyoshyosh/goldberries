@@ -17,6 +17,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import {
   BasicContainerBox,
+  CustomIconButton,
   ErrorDisplay,
   HeadTitle,
   InfoBox,
@@ -51,6 +52,7 @@ import {
   faArrowRight,
   faBasketShopping,
   faBook,
+  faCheck,
   faCheckCircle,
   faCircleExclamation,
   faClock,
@@ -69,7 +71,13 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { useAuth } from "../hooks/AuthProvider";
 import { FormChallengeWrapper } from "../components/forms/Challenge";
-import { getQueryData, useGetChallenge, usePostMap, usePostSubmission } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetChallenge,
+  usePostChallenge,
+  usePostMap,
+  usePostSubmission,
+} from "../hooks/useApi";
 import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -176,7 +184,18 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const auth = useAuth();
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
+
+  const { mutate: postChallenge } = usePostChallenge((data) => {
+    toast.success("Set challenge to be placed");
+  });
+  const placeChallenge = () => {
+    postChallenge({
+      ...challenge,
+      is_placed: true,
+    });
+  };
 
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
@@ -244,7 +263,26 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
           <>
             <InfoBox>
               <InfoBoxIconTextLine text={t_g("difficulty", { count: 1 })} />
-              <InfoBoxIconTextLine text={<DifficultyChip difficulty={challenge.difficulty} />} isSecondary />
+              <InfoBoxIconTextLine
+                text={
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    <DifficultyChip difficulty={challenge.difficulty} />
+                    {challenge.is_placed === false && (
+                      <TooltipLineBreaks title="Standard Split: This challenge has not been placed yet.">
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                      </TooltipLineBreaks>
+                    )}
+                    {challenge.is_placed === false && auth.hasVerifierPriv && (
+                      <CustomIconButton sx={{ marginLeft: "auto" }} onClick={placeChallenge}>
+                        <TooltipLineBreaks title="Accept placement for this challenge">
+                          <FontAwesomeIcon icon={faCheck} />
+                        </TooltipLineBreaks>
+                      </CustomIconButton>
+                    )}
+                  </Stack>
+                }
+                isSecondary
+              />
             </InfoBox>
           </>
         )}
