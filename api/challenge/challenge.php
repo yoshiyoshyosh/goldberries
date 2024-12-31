@@ -69,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_challenge->sort = $challenge->sort;
     $new_challenge->requires_fc = true;
 
+    $new_challenge->is_placed = $challenge->is_placed;
+
     if (!$new_challenge->insert($DB)) {
       die_json(500, "Failed to create challenge");
     }
@@ -209,6 +211,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $skip_webhook = isset($data['skip_webhook']) && $data['skip_webhook'] === 't';
     // Update
     $old_challenge = Challenge::get_by_id($DB, $data['id']);
+
+    //Temporary: if a challenge is unplaced, and is moved to a different difficulty, it will become placed
+    if ($old_challenge->is_placed === false && $old_challenge->difficulty_id !== $challenge->difficulty_id) {
+      $challenge->is_placed = true;
+    }
+
     if ($challenge->update($DB)) {
       Challenge::generate_changelog($DB, $old_challenge, $challenge);
       log_info("'{$account->player->name}' updated {$challenge}", "Challenge");

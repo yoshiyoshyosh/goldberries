@@ -192,6 +192,7 @@ CREATE TABLE challenge
  is_arbitrary  boolean NULL,
  sort          integer NULL,
  icon_url      text NULL,
+ is_placed     boolean NOT NULL DEFAULT false,
  CONSTRAINT challenge_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT challenge_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT challenge_difficulty_id_fkey FOREIGN KEY ( difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -409,6 +410,7 @@ CREATE VIEW "view_submissions" AS SELECT
   challenge.is_arbitrary AS challenge_is_arbitrary,
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
+  challenge.is_placed AS challenge_is_placed,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -557,6 +559,7 @@ CREATE VIEW "view_challenges" AS SELECT
   challenge.is_arbitrary AS challenge_is_arbitrary,
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
+  challenge.is_placed AS challenge_is_placed,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -652,6 +655,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   challenge.is_arbitrary AS challenge_is_arbitrary,
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
+  challenge.is_placed AS challenge_is_placed,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,

@@ -36,12 +36,12 @@ function db_fetch_id_many($DB, string $table_noesc, array $ids)
 }
 
 // Same as above, but with a where clause instead of an id
-function db_fetch_where($DB, string $table_noesc, string $where, $params = array())
+function db_fetch_where($DB, string $table_noesc, string $where, $params = array(), $order_by = "ORDER BY id")
 {
   $table = pg_escape_identifier(strtolower($table_noesc));
   $result = pg_query_params(
     $DB,
-    "SELECT * FROM {$table} WHERE {$where};",
+    "SELECT * FROM {$table} WHERE {$where} {$order_by};",
     $params
   );
   if ($result === false)
@@ -51,9 +51,9 @@ function db_fetch_where($DB, string $table_noesc, string $where, $params = array
 }
 
 // Finds one or multiple objects. Does not override $object_skel's values
-function find_in_db($DB, string $table_noesc, string $where, $params = array(), $object_skel)
+function find_in_db($DB, string $table_noesc, string $where, $params = array(), $object_skel, $order_by = "ORDER BY id")
 {
-  $result = db_fetch_where($DB, $table_noesc, $where, $params);
+  $result = db_fetch_where($DB, $table_noesc, $where, $params, $order_by);
   if ($result === false)
     return false;
 

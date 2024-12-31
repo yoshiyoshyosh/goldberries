@@ -31,6 +31,10 @@ class Challenge extends DbObject
   // Other
   public $data = null; // Used for any arbitrary data, based on context
 
+  // Temporary property. All standard challenges will have this property set to false after the initial standard split.
+  // Once all standard challenges are examined, this property will be removed.
+  public bool $is_placed = false;
+
 
   // === Abstract Functions ===
   function get_field_set()
@@ -47,7 +51,8 @@ class Challenge extends DbObject
       'objective_id' => $this->objective_id,
       'difficulty_id' => $this->difficulty_id,
       'sort' => $this->sort,
-      'icon_url' => $this->icon_url
+      'icon_url' => $this->icon_url,
+      'is_placed' => $this->is_placed
     );
   }
 
@@ -58,6 +63,8 @@ class Challenge extends DbObject
     $this->difficulty_id = intval($arr[$prefix . 'difficulty_id']);
     $this->requires_fc = $arr[$prefix . 'requires_fc'] === 't';
     $this->has_fc = $arr[$prefix . 'has_fc'] === 't';
+
+    $this->is_placed = $arr[$prefix . 'is_placed'] === 't';
 
     if (isset($arr[$prefix . 'date_created']))
       $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
