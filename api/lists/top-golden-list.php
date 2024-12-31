@@ -29,13 +29,13 @@ $is_player = isset($_GET['player']);
 $is_campaign = isset($_GET['campaign']);
 if ($is_player) {
   $where[] = "player_id = " . intval($_GET['player']);
-  $min_diff_sort = 0; //Show all
+  $min_diff_sort = $MIN_SORT; //Show all
 } else {
   $where[] = "(player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
 if ($is_campaign) {
   $where[] = "campaign_id = " . intval($_GET['campaign']);
-  $min_diff_sort = 0;
+  $min_diff_sort = $MIN_SORT;
 }
 
 $where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)"; //Always include undetermined challenges

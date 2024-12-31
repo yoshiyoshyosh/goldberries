@@ -378,7 +378,7 @@ function send_webhook_challenge_marked_personal($challenge)
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
-function send_webhook_challenge_moved($challenge, $new_difficulty_id)
+function send_webhook_challenge_moved($challenge, $new_difficulty_id, $skip_webhook)
 {
   global $DB, $webhooks_enabled, $UNDETERMINED_ID;
   if (!$webhooks_enabled) { //Disable webhooks for now
@@ -400,11 +400,13 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
 
   $ping_list = [];
   $allowed_mentions = ["users" => []];
-  foreach ($challenge->submissions as $submission) {
-    $account = $submission->player->get_account($DB);
-    if ($account !== null && $account->discord_id !== null && $account->n_chall_moved) {
-      $ping_list[] = "<@{$account->discord_id}>";
-      $allowed_mentions["users"][] = $account->discord_id;
+  if (!$skip_webhook) {
+    foreach ($challenge->submissions as $submission) {
+      $account = $submission->player->get_account($DB);
+      if ($account !== null && $account->discord_id !== null && $account->n_chall_moved) {
+        $ping_list[] = "<@{$account->discord_id}>";
+        $allowed_mentions["users"][] = $account->discord_id;
+      }
     }
   }
   $ping_addition = count($ping_list) > 0 ? "\n" . implode(" ", $ping_list) : "";

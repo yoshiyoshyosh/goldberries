@@ -188,7 +188,7 @@ function get_tier_index($difficulty)
       return 7;
     case "High Standard":
       return 8;
-    case "Standard":
+    case "Mid Standard":
       return 9;
     case "Low Standard":
       return 10;

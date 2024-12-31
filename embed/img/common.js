@@ -60,13 +60,19 @@ const DIFFICULTIES = {
   17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000", name: "Tier 7" },
 
   //Standard
-  18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "Standard" },
+  18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "Mid Standard" },
 
   //Undetermined
   19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000", name: "Undetermined" },
 
   //Standard
   20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000", name: "Trivial" },
+
+  //Low Standard
+  21: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "Low Standard" },
+
+  //High Standard
+  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "High Standard" },
 };
 
 function decodeBase64(base64) {
