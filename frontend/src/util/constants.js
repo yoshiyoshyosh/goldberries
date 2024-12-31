@@ -140,9 +140,9 @@ export const DIFFICULTY_COLORS = {
   20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000" },
 
   //Low Standard
-  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+  21: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
   //High Standard
-  23: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
 };
 
 function darkenDiffColor(color, amount) {
@@ -174,8 +174,8 @@ const DIFFICULTY_BASE_COLORS = {
   18: "#ffffff",
   19: "#aaaaaa",
   20: "#c6c6c6",
+  21: "#ffffff",
   22: "#ffffff",
-  23: "#ffffff",
 };
 function getSettingsDifficultyColor(settings, id) {
   const groupId = getGroupId(id);
@@ -213,8 +213,8 @@ const GROUP_ID_MAPPINGS = {
   18: 18,
   19: 19,
   20: 20,
+  21: 21,
   22: 22,
-  23: 23,
 };
 export function getGroupId(id) {
   return GROUP_ID_MAPPINGS[id];
@@ -246,8 +246,8 @@ const DIFFICULTY_ID_SUBTIERS = {
   18: "none",
   19: "none",
   20: "none",
+  21: "none",
   22: "none",
-  23: "none",
 };
 function getDifficultySubtier(id) {
   return DIFFICULTY_ID_SUBTIERS[id];
@@ -279,8 +279,8 @@ const DIFFICULTY_ID_SUBTIER_SHARES = {
   18: 1,
   19: 1,
   20: 1,
+  21: 1,
   22: 1,
-  23: 1,
 };
 export function getDifficultySubtierShares(id, ignoreGuard = false) {
   let shares = DIFFICULTY_ID_SUBTIER_SHARES[id];
@@ -321,16 +321,16 @@ const DIFF_CONSTS_ = {
   //Difficulty ID constants
   TRIVIAL_ID: 20,
   UNDETERMINED_ID: 19,
-  STANDARD_IDS: [23, 18, 22], //high, mid, low
+  STANDARD_IDS: [22, 18, 21], //high, mid, low
   TIER_7_ID: 17,
 
   //Difficulty sorting constants
-  LOW_TIER_0_SORT: 18,
-  LOW_TIER_3_SORT: 9,
-  STANDARD_SORT_START: 2,
-  STANDARD_SORT_END: 4,
-  TIERED_SORT_START: 5,
-  MAX_SORT: 20,
+  LOW_TIER_0_SORT: 17,
+  LOW_TIER_3_SORT: 8,
+  STANDARD_SORT_START: 1,
+  STANDARD_SORT_END: 3,
+  TIERED_SORT_START: 4,
+  MAX_SORT: 19,
 
   //References, added here for intellisense
   RAW_SESSION_REQUIRED_SORT: -1,
@@ -344,27 +344,27 @@ export const DIFF_CONSTS = DIFF_CONSTS_;
 //=================================================
 
 const DIFFICULTY_SORTS = {
-  1: 20,
-  2: 19,
-  3: 18,
-  4: 17,
-  5: 16,
-  6: 15,
-  7: 14,
-  8: 13,
-  9: 12,
-  10: 11,
-  11: 10,
-  12: 9,
-  14: 8,
-  15: 7,
-  16: 6,
-  17: 5,
-  23: 4,
-  18: 3,
-  22: 2,
-  20: 1,
-  19: 0,
+  1: 19,
+  2: 18,
+  3: 17,
+  4: 16,
+  5: 15,
+  6: 14,
+  7: 13,
+  8: 12,
+  9: 11,
+  10: 10,
+  11: 9,
+  12: 8,
+  14: 7,
+  15: 6,
+  16: 5,
+  17: 4,
+  22: 3,
+  18: 2,
+  21: 1,
+  20: 0,
+  19: -1,
 };
 export function difficultyToSort(id) {
   return DIFFICULTY_SORTS[id];

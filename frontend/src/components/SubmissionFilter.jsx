@@ -184,7 +184,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 setDifficultyId={(id) => changedFilter("min_diff_id", id)}
                 minSort={DIFF_CONSTS.STANDARD_SORT_START}
                 fullWidth
-                label="Minimum Tier"
+                label={t("minimum_tier")}
                 sx={{ my: 0.5 }}
               />
 

@@ -163,6 +163,7 @@
       "additional_filters": "Additional Filters",
       "show_archived": "Show Archived Maps",
       "show_arbitrary": "Show Arbitrary Challenges",
+      "minimum_tier": "Minimum Tier",
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden",
       "all": "All",
