@@ -1,5 +1,5 @@
 {
-  "hello_world": "Bonjour, monde&thinsp;!",
+  "hello_world": "Bonjour, monde !",
   "general": {
     "campaign_one": "Campagne",
     "campaign_other": "Campagnes",
@@ -17,7 +17,7 @@
     "objective_other": "Objectifs",
     "account_one": "Compte",
     "account_other": "Comptes",
-    "table_rows_per_page": "Colonnes par page&nbsp;:",
+    "table_rows_per_page": "Colonnes par page :",
     "modals": {
       "buttons": {
         "delete": "Supprimer",
@@ -60,24 +60,24 @@
         "rejected": "Entrées rejetées"
       },
       "status_prefix": {
-        "verified": "Statut&nbsp;: vérifiée",
-        "pending": "Statut&nbsp;: en attente",
-        "rejected": "Statut&nbsp;: rejetée"
+        "verified": "Statut : vérifiée",
+        "pending": "Statut : en attente",
+        "rejected": "Statut : rejetée"
       },
       "claim_prefix": {
-        "verified": "Réclamation&nbsp;: vérifiée",
-        "pending": "Réclamation&nbsp;: en attente",
-        "rejected": "Réclamation&nbsp;: refusée"
+        "verified": "Réclamation : vérifiée",
+        "pending": "Réclamation : en attente",
+        "rejected": "Réclamation : refusée"
       }
     },
     "full_challenge_select": {
-      "full_game_label": "Sélectionne une map OU un challenge Full Game"
+      "full_game_label": "Sélectionne une map OU un challenge full game"
     },
     "verifier_icon": "Membre de la Modded Golden Team",
     "admin_icon": "Admin du site",
     "temp_verifier_icon": "Peut temporairement vérifier des entrées",
     "suspended_icon": {
-      "with_reason": "Cette personne est suspendue&nbsp;: {{reason}}",
+      "with_reason": "Cette personne est suspendue : {{reason}}",
       "no_reason": "Cette personne est suspendue"
     },
     "input_methods": {
@@ -96,31 +96,31 @@
     "loading": "Chargement",
     "error": "Erreur",
     "video_embed": {
-      "error": "L’intégration de la vidéo a échoué&nbsp;:"
+      "error": "L’intégration de la vidéo a échoué :"
     },
     "external_link": {
-      "warning": "Tu t’apprêtes à ouvrir un lien externe. Clique ici pour continuer&nbsp;:"
+      "warning": "Tu t’apprêtes à ouvrir un lien externe. Clique ici pour continuer :"
     },
     "share_button": {
       "copy_link": "Copier le lien",
-      "copied": "Copié&thinsp;!"
+      "copied": "Copié !"
     },
     "recent_submissions": {
       "title": "Entrées récentes",
-      "show": "Afficher&nbsp;:",
+      "show": "Afficher :",
       "no_pending": "Aucune entrée en attente trouvée",
       "no_verified": "Aucune entrée vérifiée trouvée",
       "no_rejected": "Aucune entrée rejetée trouvée",
-      "new_challenge": "Nouveau challenge&nbsp;:",
-      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données&thinsp;!",
-      "submissions_per_page": "Entrées par page&nbsp;:"
+      "new_challenge": "Nouveau challenge :",
+      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données !",
+      "submissions_per_page": "Entrées par page :"
     },
     "changelog": {
       "name": "Changelog",
       "no_changes_yet": "Pas de changements pour le moment",
       "entry_deleted": "Entrée supprimée",
-      "entry_delete_confirm": "Veux-tu vraiment supprimer cette entrée&thinsp;?",
-      "entry_delete_modal_title": "Supprimer l’entrée&thinsp;?",
+      "entry_delete_confirm": "Veux-tu vraiment supprimer cette entrée ?",
+      "entry_delete_modal_title": "Supprimer l’entrée ?",
       "moved_from": "Déplacé de"
     },
     "stats": {
@@ -129,17 +129,17 @@
     "top_golden_list": {
       "use_suggested": "Utiliser les difficultés ressenties pour le classement",
       "toggle_edit_mode": "Activer le mode de modification des entrées",
-      "empty": "C’est un peu vide ici. Obtiens des goldens de la Top Golden List afin de peupler ta propre liste&thinsp;!",
+      "empty": "C’est un peu vide ici. Obtiens des goldens de la Top Golden List afin de peupler ta propre liste !",
       "note_number_people": "Ce tier contient {{challenges}} challenges pour {{submissions}} entrées",
       "note_suggested_difficulties": "Les difficultés ressenties de cette personne",
       "note_video_link": "Ces liens mènent à la vidéo du premier clear d’un challenge",
       "note_time_taken": "Temps qu’a pris ce challenge",
       "obsolete_notice": "Cette entrée est marquée comme étant obsolète",
       "stable_explanation": "Ce challenge a un positionnement stable.",
-      "placement_difficulty": "Positionnement de cette difficulté&nbsp;:",
+      "placement_difficulty": "Positionnement de cette difficulté :",
       "export": {
         "feedback": {
-          "copied": "Copié dans le presse-papier&thinsp;!",
+          "copied": "Copié dans le presse-papier !",
           "error": "Erreur lors de la copie"
         },
         "submission_count": "Nombre d’entrées",
@@ -190,7 +190,7 @@
       }
     },
     "chars_count_label": {
-      "label": "({{count}}&thinsp;/&thinsp;{{max}} caractères)"
+      "label": "({{count}} / {{max}} caractères)"
     },
     "country_select": {
       "label": "Pays",
@@ -211,7 +211,7 @@
       "unlink_discord": "Se déconnecter de Discord",
       "user_links": "Liens",
       "about_me": "À propos de moi",
-      "about_me_placeholder": "«&nbsp;À propos de moi&nbsp;» de cette personne",
+      "about_me_placeholder": "« À propos de moi » de cette personne",
       "last_player_rename": "Dernier changement de nom",
       "suspended": "Suspendu·e",
       "suspension_reason": "Raison de suspension",
@@ -220,7 +220,7 @@
       "logout_user": "Déconnecter ce compte",
       "delete": {
         "title": "Supprimer ce compte",
-        "description": "Veux-tu vraiment supprimer ce compte&thinsp;? Tu ne pourras pas faire demi-tour.",
+        "description": "Veux-tu vraiment supprimer ce compte ? Tu ne pourras pas faire demi-tour.",
         "confirm": "Confirmer",
         "button": "Supprimer ce compte"
       }
@@ -233,7 +233,7 @@
       },
       "name_feedback": {
         "generic_error": "Erreur lors de la recherche de nom de campagne",
-        "duplicate": "Ce nom de campagne est déjà pris&thinsp;!",
+        "duplicate": "Ce nom de campagne est déjà pris !",
         "unique": "Ce nom de campagne est unique"
       },
       "icon_url": "Lien de l’icône",
@@ -260,8 +260,8 @@
         "order": "Ordre",
         "delete_map": "Supprimer cette map",
         "undo_delete": "Annuler la suppression",
-        "confirm_delete_one": "Veux-tu vraiment supprimer 1 map&thinsp;? Tu ne pourras pas revenir en arrière&thinsp;!",
-        "confirm_delete_other": "Veux-tu vraiment supprimer {{count}} maps&thinsp;? Tu ne pourras pas revenir en arrière&thinsp;!",
+        "confirm_delete_one": "Veux-tu vraiment supprimer 1 map ? Tu ne pourras pas revenir en arrière !",
+        "confirm_delete_other": "Veux-tu vraiment supprimer {{count}} maps ? Tu ne pourras pas revenir en arrière !",
         "confirm_delete_label_one": "Oui, supprimer 1 map ainsi que tous les challenges & les entrées qui y sont liés.",
         "confirm_delete_label_other": "Oui, supprimer {{count}} maps ainsi que tous les challenges & les entrées qui y sont liés.",
         "save_maps": "Sauvegarder ces maps"
@@ -273,7 +273,7 @@
         "adding_other": "Ajout de plusieurs maps ({{current}}/{{count}})"
       },
       "title": "Ajout de masse de maps",
-      "step": "Étape {{current}}&thinsp;/&thinsp;{{total}}",
+      "step": "Étape {{current}} / {{total}}",
       "next": "Suivant",
       "back": "Retour",
       "step_1": {
@@ -311,7 +311,7 @@
         "map": "Map créée",
         "challenge": "Challenge créé"
       },
-      "title": "Créer un challenge Full Game",
+      "title": "Créer un challenge full game",
       "campaign": {
         "name": "Nom de la campagne",
         "url": "Lien de la campagne",
@@ -331,7 +331,7 @@
       "collectibles": {
         "label": "Collectibles",
         "variant": "Variante",
-        "count": "Nombre (par défaut&nbsp;: 1)",
+        "count": "Nombre (par défaut : 1)",
         "note": "Note (optionnelle)"
       },
       "rejection_reason": "Raison de rejet",
@@ -359,7 +359,7 @@
       "raw_session_url": "Lien de la session complète",
       "player_notes": "Notes personnelles",
       "is_personal": "Est personnelle",
-      "personal_note": "Les difficultés ressenties sont indiquées comme étant «&nbsp;personnelles&nbsp;» lorsqu’elles ne doivent pas être utilisées pour le classement d’un challenge",
+      "personal_note": "Les difficultés ressenties sont indiquées comme étant « personnelles » lorsqu’elles ne doivent pas être utilisées pour le classement d’un challenge",
       "time_taken": "Temps pris",
       "date_submitted": "Date de soumission",
       "date_achieved": "Date de complétion",
@@ -399,11 +399,11 @@
       "submission_url": {
         "required": "Le lien de l’entrée ne peut pas être vide",
         "invalid": "Lien invalide",
-        "disallowed": "Ce type de lien n’est pas autorisé pour les entrées. (<CustomLink to=\"/rules#submissions-all\">Entrées → Règle nº&thinsp;1</CustomLink>)",
-        "disallowed_variant": "Ce site est autorisé pour les vidéos mais utilise plutôt un lien direct vers la vidéo&thinsp;!"
+        "disallowed": "Ce type de lien n’est pas autorisé pour les entrées. (<CustomLink to=\"/rules#submissions-all\">Entrées → Règle nº 1</CustomLink>)",
+        "disallowed_variant": "Ce site est autorisé pour les vidéos mais utilise plutôt un lien direct vers la vidéo !"
       },
       "time_taken": {
-        "invalid": "La durée doit correspondre au format «&nbsp;(hh:)mm:ss&nbsp;»"
+        "invalid": "La durée doit correspondre au format « (hh:)mm:ss »"
       }
     }
   },
@@ -490,7 +490,7 @@
           "feedback": {
             "deleted": "Joueur·euse supprimée"
           },
-          "note": "Supprimer un·e joueur·euse est une action irréversible et entraînera la suppression des entrées qui lui sont liées&thinsp;!",
+          "note": "Supprimer un·e joueur·euse est une action irréversible et entraînera la suppression des entrées qui lui sont liées !",
           "confirm": "Je comprends que cette action est irréversible",
           "button": "Supprimer le compte de {{name}}"
         }
@@ -499,7 +499,7 @@
     "challenges": {
       "title": "Gérer les challenges",
       "search": "Recherche",
-      "num_sub": "#&thinsp;Ent.",
+      "num_sub": "# Ent.",
       "buttons": {
         "campaign": {
           "edit": "Modifier",
@@ -521,19 +521,19 @@
       "modals": {
         "delete_campaign": {
           "title": "Supprimer la campagne",
-          "description": "Veux-tu vraiment supprimer la campagne <strong>«&nbsp;{{name}}&nbsp;»</strong> ainsi que <strong>toutes les maps, challenges et entrées qui y sont liés</strong>&thinsp;?"
+          "description": "Veux-tu vraiment supprimer la campagne <strong>« {{name}} »</strong> ainsi que <strong>toutes les maps, challenges et entrées qui y sont liés</strong> ?"
         },
         "delete_map": {
           "title": "Supprimer la map",
-          "description": "Veux-tu vraiment supprimer la map <strong>«&nbsp;{{name}}&nbsp;»</strong> ainsi que <strong>tous les challenges et entrées qui y sont liés</strong>&thinsp;?"
+          "description": "Veux-tu vraiment supprimer la map <strong>« {{name}} »</strong> ainsi que <strong>tous les challenges et entrées qui y sont liés</strong> ?"
         },
         "delete_challenge": {
           "title": "Supprimer le challenge",
-          "description": "Veux-tu vraiment supprimer le challenge <strong>«&nbsp;{{name}}&nbsp;»</strong> de la map <strong>«&nbsp;{{map}}&nbsp;»</strong> ainsi que <strong>toutes les entrées qui y sont liées</strong>&thinsp;?"
+          "description": "Veux-tu vraiment supprimer le challenge <strong>« {{name}} »</strong> de la map <strong>« {{map}} »</strong> ainsi que <strong>toutes les entrées qui y sont liées</strong> ?"
         },
         "mark_personal": {
           "title": "Indiquer une difficultée ressentie comme étant personnelle",
-          "description": "Indiquer toutes les difficultés ressenties de <strong>«&nbsp;{{name}}&nbsp;»</strong> comme étant personnelles&thinsp;?",
+          "description": "Indiquer toutes les difficultés ressenties de <strong>« {{name}} »</strong> comme étant personnelles ?",
           "impacted_one": "Pas plus de <strong>1</strong> entrée sera affectée.",
           "impacted_other": "Pas plus de <strong>{{count}}</strong> entrées seront affectées.",
           "button": "Indiquer comme étant personnelles",
@@ -544,7 +544,7 @@
             "split": "Challenge séparé",
             "merge": "Challenges fusionnés"
           },
-          "title": "Séprarer&thinsp;/&thinsp;Fusionner des challenges",
+          "title": "Séprarer / Fusionner des challenges",
           "challenge_num": "Challenge {{num}}",
           "split_note": "Ce challenge sera séparé en deux challenges C et FC. Toutes les entrées en FC seront automatiquement redirigées vers le challenge FC.",
           "merge_note": "Les entrées du second challenge seront fusionnées avec celles du premier. Le premier challenge sera modifié en conséquence et le second sera supprimé après que toutes ses entrées aient été déplacées.",
@@ -552,7 +552,7 @@
           "buttons": {
             "split": "Séparer ce challenge en deux",
             "merge": "Fusionner ces challenges",
-            "neither": "Séparer&thinsp;/&thinsp;Fusionner"
+            "neither": "Séparer / Fusionner"
           }
         }
       },
@@ -561,7 +561,7 @@
         "new_campaign": "Nouvelle campagne",
         "new_map": "Nouvelle map",
         "new_challenge": "Nouveau challenge",
-        "create_full_challenge": "Créer un challenge Full Game",
+        "create_full_challenge": "Créer un challenge full game",
         "mass_add_maps": "Ajout de masse de maps à une campagne"
       }
     },
@@ -585,9 +585,9 @@
       "queue_empty": "Aucune entrée dans la file d’attente",
       "selected": "{{count}} sélectionnées",
       "total": "Entrées ({{count}} au total)",
-      "note_placeholder": "Note de vérification&thinsp;/&thinsp;Raison de rejet",
-      "filter_placeholder": "Joueur·euse&thinsp;/&thinsp;Map&thinsp;/&thinsp;Campagne",
-      "new_challenge": "Nouveau challenge&nbsp;:",
+      "note_placeholder": "Note de vérification / Raison de rejet",
+      "filter_placeholder": "Joueur·euse / Map / Campagne",
+      "new_challenge": "Nouveau challenge :",
       "or": "OU",
       "buttons": {
         "verify": "Vérifier {{count}}",
@@ -617,14 +617,14 @@
   "server_costs": {
     "server_costs": {
       "title": "Coûts du serveur",
-      "description": "Salut, c’est viddie. Sans grande surprise, faire tourner des serveurs n’est pas gratuit, et bien que je sois prêt à passer mes journées à gérer ce projet, quelqu’un doit bien payer le serveur. Ce site n’a pas (et n’aura jamais) de pubs. Si besoin, je suis capable de couvrir les frais de ma propre poche, mais si un ou plusieurs membres de la communauté souhaitent participer, ce serait avec grand plaisir&thinsp;!",
+      "description": "Salut, c’est viddie. Sans grande surprise, faire tourner des serveurs n’est pas gratuit, et bien que je sois prêt à passer mes journées à gérer ce projet, quelqu’un doit bien payer le serveur. Ce site n’a pas (et n’aura jamais) de pubs. Si besoin, je suis capable de couvrir les frais de ma propre poche, mais si un ou plusieurs membres de la communauté souhaitent participer, ce serait avec grand plaisir !",
       "table": {
         "item": "Item",
         "cost": "Prix",
         "VPS": "VPS",
         "domain": "Domaine",
         "total": "Total",
-        "value": "{{value}}&thinsp;€&thinsp;/&thinsp;mois"
+        "value": "{{value}} € / mois"
       }
     },
     "costs_so_far": {
@@ -639,23 +639,23 @@
     },
     "stocked_up": {
       "title": "Réserves",
-      "description": "Le serveur peut encore tourner <strong>{{months}} mois</strong> juste grâce aux dons&thinsp;!",
-      "additional_months_one": "+&thinsp;{{count}} mois supplémentaire&thinsp;!!!",
-      "additional_months_other": "+&thinsp;{{count}} mois supplémentaires&thinsp;!!!"
+      "description": "Le serveur peut encore tourner <strong>{{months}} mois</strong> juste grâce aux dons !",
+      "additional_months_one": "+ {{count}} mois supplémentaire !!!",
+      "additional_months_other": "+ {{count}} mois supplémentaires !!!"
     },
     "you_can_help": {
       "title": "Tu peux aider",
-      "description": "Si tu souhaites participer à l’entretien du serveur, tu peux faire un don via une des méthodes suivantes&nbsp;:",
+      "description": "Si tu souhaites participer à l’entretien du serveur, tu peux faire un don via une des méthodes suivantes :",
       "table": {
         "paypal_donation": "PayPal (Don, les frais de PayPal s’appliquent)",
         "paypal_direct": "PayPal (Directement à moi, aucun frais)",
         "paypal_website": "Site de PayPal",
-        "note": "*&nbsp;Les dons ne se mettent pas à jour automatiquement, ils peuvent prendre un peu de temps avant d’apparaître ici."
+        "note": "* Les dons ne se mettent pas à jour automatiquement, ils peuvent prendre un peu de temps avant d’apparaître ici."
       }
     },
     "thank_you": {
       "title": "Merci",
-      "description": "Si tu fais un don et souhaites apparaître sur cette page, laisse ton nom sur le message de don&thinsp;!",
+      "description": "Si tu fais un don et souhaites apparaître sur cette page, laisse ton nom sur le message de don !",
       "table": {
         "date": "Date",
         "amount": "Montant",
@@ -663,21 +663,21 @@
         "no_donations": "Pas de don pour le moment"
       },
       "post_donation": {
-        "text": "Merci beaucoup&thinsp;! Tu remarqueras que ton nom n’apparaît pas directement sur la page des remerciements. Elle ne se met pas à jour automatiquement, donc les dons peuvent prendre un peu de temps avant d’être affichés.",
+        "text": "Merci beaucoup ! Tu remarqueras que ton nom n’apparaît pas directement sur la page des remerciements. Elle ne se met pas à jour automatiquement, donc les dons peuvent prendre un peu de temps avant d’être affichés.",
         "back": "Revenir à la page précédente"
       }
     }
   },
   "account": {
     "title": "Mon compte",
-    "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment. Dirige-toi <CustomLink>ici</CustomLink> pour en créer ou en réclamer un&thinsp;!",
+    "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment. Dirige-toi <CustomLink>ici</CustomLink> pour en créer ou en réclamer un !",
     "tabs": {
       "login_methods": {
         "label": "Modes de connexion",
         "feedback": {
           "updated": "Compte mis à jour"
         },
-        "note": "Note&nbsp;: au moins un des modes de connexion doit être actif&thinsp;!",
+        "note": "Note : au moins un des modes de connexion doit être actif !",
         "email": "Email",
         "password": "Mot de passe",
         "confirm_password": "Confirmer le mot de passe",
@@ -692,16 +692,16 @@
       "notifications": {
         "label": "Notifications",
         "feedback": {
-          "updated": "Paramètres de notifications mis à jour&thinsp;!"
+          "updated": "Paramètres de notifications mis à jour !"
         },
-        "note": "Note&nbsp;: pour le moment, ces notifications se font sous forme de pings dans le serveur Discord «&nbsp;Modded Goldens&nbsp;». Pour recevoir une notification, tu devras rejoindre ce serveur (<CustomLink1>invitation</CustomLink1>) ET connecter ton compte Discord à ton compte goldberries.net <CustomLink2>juste ici</CustomLink2>&thinsp;!",
+        "note": "Note : pour le moment, ces notifications se font sous forme de pings dans le serveur Discord « Modded Goldens ». Pour recevoir une notification, tu devras rejoindre ce serveur (<CustomLink1>invitation</CustomLink1>) ET connecter ton compte Discord à ton compte goldberries.net <CustomLink2>juste ici</CustomLink2> !",
         "sub_verified": {
           "label": "Entrée vérifiée",
           "description": "Se faire notifier lorsqu’une de tes entrées se fait vérifier ou rejeter"
         },
         "marked_personal": {
           "label": "Difficultée ressentie changée comme étant personnelle",
-          "description": "Se faire notifier lorsqu’une stratégie majeure est découverte, rendant une de tes difficultés ressenties «&nbsp;personnelle&nbsp;»"
+          "description": "Se faire notifier lorsqu’une stratégie majeure est découverte, rendant une de tes difficultés ressenties « personnelle »"
         },
         "challenge_moved": {
           "label": "Challenge déplacé",
@@ -719,7 +719,7 @@
         },
         "name_color": {
           "label": "Couleur du nom",
-          "preview": "Aperçu&nbsp;:",
+          "preview": "Aperçu :",
           "name_placeholder": "Ton nom",
           "use_gradient": "Dégradé",
           "start_color": "Couleur de gauche",
@@ -729,7 +729,7 @@
         },
         "about_me": {
           "label": "À propos de moi",
-          "placeholder": "Parle-nous un peu de toi&thinsp;!"
+          "placeholder": "Parle-nous un peu de toi !"
         },
         "custom_links": {
           "label": "Liens custom",
@@ -742,9 +742,9 @@
         "feedback": {
           "updated": "Vitrine mise à jour"
         },
-        "no_player_claimed": "Tu dois avoir réclamé un nom pour avoir accès à cette fonctionnalité&thinsp;!",
-        "note_1": "Choisis jusqu’à 9 entrées qui seront affichées sur ton profil&thinsp;!",
-        "note_2": "Note&nbsp;: si aucune entrée n’est sélectionnée, les 9 entrées les plus difficiles seront affichées sur ton profil.",
+        "no_player_claimed": "Tu dois avoir réclamé un nom pour avoir accès à cette fonctionnalité !",
+        "note_1": "Choisis jusqu’à 9 entrées qui seront affichées sur ton profil !",
+        "note_2": "Note : si aucune entrée n’est sélectionnée, les 9 entrées les plus difficiles seront affichées sur ton profil.",
         "buttons": {
           "save": "Mettre à jour sa vitrine",
           "add_submission": "Ajouter une entrée",
@@ -755,11 +755,11 @@
         "label": "Changement de nom",
         "title": "Se renommer",
         "feedback": {
-          "renamed": "Nom changé avec succès&thinsp;!"
+          "renamed": "Nom changé avec succès !"
         },
-        "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment&thinsp;!",
+        "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment !",
         "description": "Donne-toi un nouveau nom. Cette action peut être effectuée toutes les 24 heures.",
-        "can_rename": "Tu peux te renommer&thinsp;!",
+        "can_rename": "Tu peux te renommer !",
         "cannot_rename": "Tu pourras rechanger de nom dans {{time}}.",
         "new_name": "Nouveau nom",
         "log_change": "Faire part de ce changement de nom dans mon changelog",
@@ -768,7 +768,7 @@
       "danger_zone": {
         "label": "Zone de danger",
         "description": "Supprimer ton compte à jamais.",
-        "note": "Note que cette action ne supprimera pas le nom associé à ton compte&thinsp;! Aucune entrée ne sera affectée, et ton nom pourra à nouveau être réclamé. Si tu ne veux pas que ton nom apparaisse sur ce site, ou souhaites supprimer toutes tes entrées, contacte un membre de l’équipe&thinsp;!",
+        "note": "Note que cette action ne supprimera pas le nom associé à ton compte ! Aucune entrée ne sera affectée, et ton nom pourra à nouveau être réclamé. Si tu ne veux pas que ton nom apparaisse sur ce site, ou souhaites supprimer toutes tes entrées, contacte un membre de l’équipe !",
         "confirm": "Écris “DELETE” pour confirmer",
         "button": "Supprimer ce compte"
       }
@@ -814,8 +814,8 @@
         "label": "Top Golden List",
         "darken_colors": {
           "label": "Assombrir les couleurs des tiers",
-          "tooltip": "En mode sombre, rend plus sombres les couleurs des tiers. 0&thinsp;% correspond aux couleurs par défaut, 100&thinsp;% met tout en noir.",
-          "note": "Ceci ne s’applique qu’en mode sombre&thinsp;!"
+          "tooltip": "En mode sombre, rend plus sombres les couleurs des tiers. 0 % correspond aux couleurs par défaut, 100 % met tout en noir.",
+          "note": "Ceci ne s’applique qu’en mode sombre !"
         },
         "campaign_icons": {
           "label": "Afficher les icônes des campagnes",
@@ -827,25 +827,25 @@
         },
         "switch_order": {
           "label": "Échanger map et challenge",
-          "note": "Change le format «&nbsp;Nom de la map [Nom du segment]&nbsp;» en format «&nbsp;Nom du segment [Nom de la map]&nbsp;»"
+          "note": "Change le format « Nom de la map [Nom du segment] » en format « Nom du segment [Nom de la map] »"
         },
         "hide_empty_tiers": "Cacher les tiers vides",
         "hide_time_taken_column": {
-          "label": "Cacher la colonne «&nbsp;Temps pris&nbsp;»",
-          "note": "Cache la colonne «&nbsp;Temps pris&nbsp;» dans les Top Golden List personnelles"
+          "label": "Cacher la colonne « Temps pris »",
+          "note": "Cache la colonne « Temps pris » dans les Top Golden List personnelles"
         }
       },
       "difficulty_colors": {
         "label": "Couleurs des difficultés",
-        "description": "Les couleurs des subtiers High et Low sont calculées par rapport à la couleur du Mid. Tu peux aussi choisir explicitement une couleur pour ces deux (deux&thinsp;???) subtiers.",
+        "description": "Les couleurs des subtiers High et Low sont calculées par rapport à la couleur du Mid. Tu peux aussi choisir explicitement une couleur pour ces deux (deux ???) subtiers.",
         "high": "High",
         "mid": "Mid",
         "low": "Low",
         "t4+": "Tier 4 et + (pas de subtiers)",
         "presets": {
-          "label": "Préréglages&nbsp;:",
+          "label": "Préréglages :",
           "default": "Défaut",
-          "colorblind": "Couleurs adaptées au daltonisme&nbsp;:",
+          "colorblind": "Couleurs adaptées au daltonisme :",
           "protanopia": "Protanopie",
           "deuteranopia": "Deutéranopie",
           "tritanopia": "Tritanopie"
@@ -859,7 +859,7 @@
       "edit": "Modifier le challenge"
     },
     "difficulty_suggestions": "Suggestions de difficulté",
-    "is_full_game": "Full Game&thinsp;?",
+    "is_full_game": "full game ?",
     "lobby_info": "Infos du Lobby",
     "description": "Description du challenge",
     "submission_table": {
@@ -870,8 +870,8 @@
   "claim_player": {
     "title": "Réclamer un nom",
     "link_success": {
-      "title": "Nom réclamé&thinsp;!",
-      "info": "Nom réclamé avec succès. Tu peux maintenant ajouter tes runs&thinsp;!"
+      "title": "Nom réclamé !",
+      "info": "Nom réclamé avec succès. Tu peux maintenant ajouter tes runs !"
     },
     "make_claim": {
       "title": "Réclamer un nom",
@@ -889,26 +889,26 @@
           "name_missing": "Entre un nom",
           "name_short": "Ton nom doit faire plus de 3 caractères"
         },
-        "info": "Entre ici le nom que tu souhaites avoir sur la liste. Si tu possèdes déjà des entrées sur l’ancien tableur, reviens en arrière et sélectionne «&nbsp;Choisir un nom déjà existant&nbsp;».",
+        "info": "Entre ici le nom que tu souhaites avoir sur la liste. Si tu possèdes déjà des entrées sur l’ancien tableur, reviens en arrière et sélectionne « Choisir un nom déjà existant ».",
         "player_name": "Nom",
         "button": "Créer ce nom"
       },
       "link": {
         "title": "Réclamer un nom",
         "info_1": "Si tu possèdes déjà des entrées sur l’ancien tableur, tu peux les réclamer ici.",
-        "info_2": "Suite à une réclamation, tu devras contacter directement un membre de l’équipe afin de vérifier que tu es bien qui tu prétends être&thinsp;!",
-        "this_u": "C toi&thinsp;?",
+        "info_2": "Suite à une réclamation, tu devras contacter directement un membre de l’équipe afin de vérifier que tu es bien qui tu prétends être !",
+        "this_u": "C toi ?",
         "confirm": "Je confirme être la personne jouant dans cette vidéo",
         "button": "Réclamer ce nom"
       }
     },
     "claim_made": {
-      "title": "Réclamation enregistrée&thinsp;!",
-      "info": "Ta réclamation a bien été prise en compte&thinsp;! Afin de la vérifier, contacte (en anglais&thinsp;!) un membre de l’équipe via Discord (ou autre). Un @ dans le Discord de la <CustomLink>Modded Golden Team</CustomLink> devrait suffir dans la plupart des cas&thinsp;!",
+      "title": "Réclamation enregistrée !",
+      "info": "Ta réclamation a bien été prise en compte ! Afin de la vérifier, contacte (en anglais !) un membre de l’équipe via Discord (ou autre). Un @ dans le Discord de la <CustomLink>Modded Golden Team</CustomLink> devrait suffir dans la plupart des cas !",
       "your_data": {
         "title": "Tes données",
-        "account_id": "ID&nbsp;:",
-        "claimed_player": "Nom réclamé&nbsp;:",
+        "account_id": "ID :",
+        "claimed_player": "Nom réclamé :",
         "verifiers": "Membres de l’équipe"
       }
     }
@@ -919,8 +919,8 @@
       "description": "Tu n’es pas en droit d’accéder à cette page."
     },
     "no_player_claimed": {
-      "title": "Ton compte n’est pas entièrement configuré&thinsp;!",
-      "description": "Rends-toi sur <CustomLink>cette page</CustomLink> afin de créer ton nom, ou bien d’en réclamer un&thinsp;!"
+      "title": "Ton compte n’est pas entièrement configuré !",
+      "description": "Rends-toi sur <CustomLink>cette page</CustomLink> afin de créer ton nom, ou bien d’en réclamer un !"
     },
     "404": "La page demandée n’existe pas"
   },
@@ -950,25 +950,25 @@
       "or": "OU",
       "buttons": {
         "sign_in": "Se connecter",
-        "forgot_password": "Mot de passe oublié&thinsp;?",
+        "forgot_password": "Mot de passe oublié ?",
         "sign_up": "S’inscrire",
         "discord": "Se connecter via Discord"
       }
     },
     "register": {
       "title": "Inscription",
-      "success": "Check ta boîte de réception (et tes spams&thinsp;!) pour l’email d’activation",
+      "success": "Check ta boîte de réception (et tes spams !) pour l’email d’activation",
       "info": "S’inscrire par email demandera une vérification. Inscris-toi via Discord pour éviter ça.",
       "confirm_password": "Confirmer le mot de passe",
       "buttons": {
         "register": "S’inscrire",
-        "sign_in": "Tu as déjà un compte&thinsp;? Connecte-toi&thinsp;!",
+        "sign_in": "Tu as déjà un compte ? Connecte-toi !",
         "discord": "S’inscrire via Discord"
       }
     },
     "verify_email": {
       "title": "Vérification de l’email",
-      "success": "Ton email a été vérifié&thinsp;! Tu peux à présent te connecter à ton compte.",
+      "success": "Ton email a été vérifié ! Tu peux à présent te connecter à ton compte.",
       "to_login": "Se connecter",
       "info": "Clique sur le bouton ci-dessous pour vérifier ton adresse email.",
       "button": "Vérifier son email"
@@ -976,12 +976,12 @@
     "forgot_password": {
       "request": {
         "title": "Mot de passe oublié",
-        "info": "Si un compte correspondant à cet email existe, tu recevras un email avec les instructions te permettant de réinitialiser ton mot de passe. N’oublie pas de checker tes spams&thinsp;!",
+        "info": "Si un compte correspondant à cet email existe, tu recevras un email avec les instructions te permettant de réinitialiser ton mot de passe. N’oublie pas de checker tes spams !",
         "button": "Envoyer le mail de récupération"
       },
       "verify": {
         "title": "Réinitialiser son mot de passe",
-        "success": "Ton mot de passe a été réinitialisé&thinsp;! Tu peux maintenant te connecter avec ton nouveau mot de passe.",
+        "success": "Ton mot de passe a été réinitialisé ! Tu peux maintenant te connecter avec ton nouveau mot de passe.",
         "info": "Entre ton nouveau mot de passe ci-dessous",
         "new_password": "Nouveau mot de passe",
         "button": "Changer de mot de passe"
@@ -1017,17 +1017,17 @@
   "rejected_maps": {
     "title": "Maps rejetées",
     "info_1": "Cette page contient toutes les maps qui n’apparaissent pas sur la liste, ainsi que la raison pour laquelle ce choix a été fait.",
-    "info_2": "Si une map ou un map pack enfreint la règle nº&thinsp;4 (contenu inapproprié), elle ne sera pas listée ici.",
+    "info_2": "Si une map ou un map pack enfreint la règle nº 4 (contenu inapproprié), elle ne sera pas listée ici.",
     "reason": "Raison"
   },
   "search": {
-    "title_content": "Recherche de  «&nbsp;{{content}}&nbsp;»",
+    "title_content": "Recherche de  « {{content}} »",
     "title_no_content": "Recherche",
     "feedback": {
       "min_length": "Mode de correspondance exacte activé. Entre {{count}} caractères ou plus pour une recherche plus vaste."
     },
     "header": "Chercher dans la base de données du site",
-    "info": "Cherche des joueur·euses, des maps ou encore des campagnes&thinsp;!",
+    "info": "Cherche des joueur·euses, des maps ou encore des campagnes !",
     "search_label": "Recherche",
     "no_campaigns": "Aucune campagne trouvée",
     "no_maps": "Aucune map trouvée",
@@ -1055,7 +1055,7 @@
     }
   },
   "submission": {
-    "title": "{{challenge}} par «&nbsp;{{player}}&nbsp;»",
+    "title": "{{challenge}} par « {{player}} »",
     "feedback": {
       "deleted": "Entrée supprimée"
     },
@@ -1071,7 +1071,7 @@
     },
     "delete_modal": {
       "title": "Supprimer une entrée",
-      "description": "Veux-tu vraiment supprimer cette entrée&thinsp;?"
+      "description": "Veux-tu vraiment supprimer cette entrée ?"
     },
     "buttons": {
       "modify": "Modifier",
@@ -1099,7 +1099,7 @@
         },
         "proof_note": "La preuve vidéo doit être disponible à tout moment, comme par exemple sur YouTube, Bilibili, ou un temps fort Twitch.",
         "raw_session_note": "Une vidéo de la session complète est nécessaire pour les goldens classées tier 3 ou plus difficiles.",
-        "raw_session_same_url_info": "Veux-tu vraiment utiliser le même lien pour la session complète&thinsp;?",
+        "raw_session_same_url_info": "Veux-tu vraiment utiliser le même lien pour la session complète ?",
         "is_fc": "La run est un full clear",
         "date_created": "[Vérificateur·rice seulement] Date de création",
         "date_achieved": "Date de complétion",
@@ -1132,10 +1132,10 @@
         "label": "Nouveau challenge",
         "header": "Ajouter un nouveau challenge ",
         "challenge_data": "Infos du challenge",
-        "info": "Tu peux ici demander à ajouter à la liste un challenge qui n’y est pas déjà. Ça peut prendre un certain temps à être accepté&thinsp;!",
+        "info": "Tu peux ici demander à ajouter à la liste un challenge qui n’y est pas déjà. Ça peut prendre un certain temps à être accepté !",
         "gamebanana_url": "Lien GameBanana",
         "challenge_description": {
-          "label": "Description du challenge (en anglais&thinsp;!)",
+          "label": "Description du challenge (en anglais !)",
           "placeholder": "Description en anglais du challenge, s’il diffère d’une run deathless standard"
         },
         "golden_changes": {
@@ -1146,7 +1146,7 @@
       }
     },
     "notifications": {
-      "your_settings": "Tes paramètres de notifications&nbsp;:",
+      "your_settings": "Tes paramètres de notifications :",
       "enabled": "Se faire notifier à la vérification",
       "disabled": "Pas de notification à la vérification"
     }
@@ -1155,13 +1155,13 @@
     "title": "Suggestions",
     "header": "Boîte à suggestions",
     "intro": "Dans la boîte à suggestions, tu peux demander à déplacer ou à modifier un challenge, ou même faire des remarques d’ordre général sur le site. Cette page existe dans le but de partager facilement les opinions de la communauté. Cependant, ce <strong>n’est pas</strong> un lieu de discussion, rôle que garde la serveur Discord de la Modded Golden Team.",
-    "language_info": "Les messages et descriptions doivent être écrits en anglais&thinsp;!",
+    "language_info": "Les messages et descriptions doivent être écrits en anglais !",
     "filter_by_type": "Filtrer par type",
     "active": "Suggestions actives",
     "undecided": "Suggestions non décidées",
     "expired": "Suggestions expirées",
-    "showing_one": "{{from}}&thinsp;–&thinsp;{{to}} affichée pour un total de {{count}} suggestions",
-    "showing_other": "{{from}}&thinsp;–&thinsp;{{to}} affichées pour un total de {{count}} suggestions",
+    "showing_one": "{{from}} – {{to}} affichée pour un total de {{count}} suggestions",
+    "showing_other": "{{from}} – {{to}} affichées pour un total de {{count}} suggestions",
     "buttons": {
       "create": "Créer"
     },
@@ -1185,7 +1185,7 @@
       "indifferent": "Indifférent",
       "count_one": "{{count}} vote",
       "count_other": "{{count}} votes",
-      "related_challenge": "A effectué un challenge apparenté&nbsp;: {{challenge}}"
+      "related_challenge": "A effectué un challenge apparenté : {{challenge}}"
     },
     "icon": {
       "undecided": "Non décidée",
@@ -1197,9 +1197,9 @@
         "feedback": {
           "updated": "Suggestion mise à jour"
         },
-        "claim_player": "Réclame un nom pour pouvoir voter sur une suggestion&thinsp;!",
-        "your_comment": "Commentaire (en anglais&thinsp;!)",
-        "comment_required": "Merci d’écrire un commentaire pour compléter le vote&thinsp;!",
+        "claim_player": "Réclame un nom pour pouvoir voter sur une suggestion !",
+        "your_comment": "Commentaire (en anglais !)",
+        "comment_required": "Merci d’écrire un commentaire pour compléter le vote !",
         "comment_note": "Pour modifier un commentaire après avoir voté, supprime ton vote et vote à nouveau.",
         "stats": "Stats",
         "totals": "Totaux",
@@ -1229,15 +1229,15 @@
         "challenge_details": "Détails du challenge",
         "totals": "Total pour chaque tier",
         "comment": {
-          "label": "Commentaire (en anglais&thinsp;!)",
-          "placeholder": "Explique pourquoi tu penses qu’un changement est nécessaire (en anglais&thinsp;!)",
+          "label": "Commentaire (en anglais !)",
+          "placeholder": "Explique pourquoi tu penses qu’un changement est nécessaire (en anglais !)",
           "required": "Un commentaire est requis."
         },
         "button": "Créer cette suggestion"
       },
       "delete": {
-        "title": "Supprimer cette suggestion&thinsp;?",
-        "info": "Veux-tu vraiment supprimer cette suggestion ainsi que tous les votes qui y sont liés&thinsp;?"
+        "title": "Supprimer cette suggestion ?",
+        "info": "Veux-tu vraiment supprimer cette suggestion ainsi que tous les votes qui y sont liés ?"
       }
     },
     "filter": {
@@ -1265,10 +1265,10 @@
       "map_count": "Count",
       "maps_one": "{{count}} Map",
       "maps_other": "{{count}} Maps",
-      "maps_archived_one": "{{count}} Map (+&thinsp;{{archived}} archivées)",
-      "maps_archived_other": "{{count}} Maps (+&thinsp;{{archived}} archivées)",
-      "maps_rejected_one": "+&thinsp;{{count}} map rejetée",
-      "maps_rejected_other": "+&thinsp;{{count}} maps rejetées",
+      "maps_archived_one": "{{count}} Map (+ {{archived}} archivées)",
+      "maps_archived_other": "{{count}} Maps (+ {{archived}} archivées)",
+      "maps_rejected_one": "+ {{count}} map rejetée",
+      "maps_rejected_other": "+ {{count}} maps rejetées",
       "links": "Liens",
       "campaign_tgl": "Top Golden List de la campagne",
       "no_download": "Cette campagne n’est plus publiquement disponible."
@@ -1277,8 +1277,8 @@
       "players": {
         "progress": "Progrès",
         "no_players": "Personne pour l’instant.",
-        "more_players_one": "+&thinsp;{{count}} autre",
-        "more_players_other": "+&thinsp;{{count}} autres",
+        "more_players_one": "+ {{count}} autre",
+        "more_players_other": "+ {{count}} autres",
         "you": "Toi",
         "show_all": "Tout afficher"
       }
@@ -1287,7 +1287,7 @@
   "rules": {
     "title": "Règles",
     "toc": "Sommaire",
-    "description": "Cette page existe dans le but de formaliser les règles et leurs cas limites. Il y est dit à peu près ce à quoi on peut s’attendre de règles&nbsp;: ne triche pas, n’utilise pas de mods qui modifient trop le gameplay, garde un enregistrement de la session complète de jeu pour les challenges de <i>tier 3</i> ou plus difficiles, et montre bien la run du début à l’écran de fin. Cette page existe dans le but de résoudre des conflits et couvrir toutes sortes de cas limites, mais elle n’est pas exhaustive. Ce serait impossible, les mappeuses et mappeurs inventeront toujours de nouvelles manières de nous surprendre et on s’y perdrait à tout vouloir prévoir. Si tu te retrouves face à un cas spécifique qui n’est pas mentionné dans cette liste, ou si tu as généralement des questions par rapport à celle-ci, n’hésite pas à nous le faire savoir&thinsp;! C’est toujours mieux de demander avant de soumettre une complétion qui risquerait de résulter en des débats sans fins qui pourraient finir par l’invalidation de ton entrée. Merci.",
+    "description": "Cette page existe dans le but de formaliser les règles et leurs cas limites. Il y est dit à peu près ce à quoi on peut s’attendre de règles : ne triche pas, n’utilise pas de mods qui modifient trop le gameplay, garde un enregistrement de la session complète de jeu pour les challenges de <i>tier 3</i> ou plus difficiles, et montre bien la run du début à la fin. Cette page existe dans le but de résoudre des conflits et couvrir toutes sortes de cas limites, mais elle n’est pas exhaustive. Ce serait impossible, les mappeuses et mappeurs inventeront toujours de nouvelles manières de nous surprendre et on s’y perdrait à tout vouloir prévoir. Si tu te retrouves face à un cas spécifique qui n’est pas mentionné dans cette liste, ou si tu as généralement des questions par rapport à celle-ci, n’hésite pas à nous le faire savoir ! C’est toujours mieux de demander avant de soumettre une complétion qui risquerait de résulter en des débats sans fins qui pourraient finir par l’invalidation de ton entrée. Merci.",
     "maps": {
       "header": "Règles pour les maps et les challenges",
       "rules": {
@@ -1298,7 +1298,7 @@
           },
           {
             "heading": "Non-trivialité",
-            "text": "La map ou le <i>map pack</i> <strong>ne doit pas</strong> être de difficulté triviale, même s’il se trouve être très facile. Les maps qui contiennent peu de danger ou quasiment aucun moyen de mourir seront refusées. Un exemple de map qui, bien que difficile, ne satisfait pas cette condition est <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. Sous certaines conditions, par exemple lorsqu’une map fait partie d’une campagne ou d’un lobby, des exceptions peuvent être faites, comme le montre le cas de la <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">silver de Summit Down-Side</CustomExternalLink>. Ces maps-ci sont indiquées par la note «&nbsp;Trivial&nbsp;»."
+            "text": "La map ou le <i>map pack</i> <strong>ne doit pas</strong> être de difficulté triviale, même s’il se trouve être très facile. Les maps qui contiennent peu de danger ou quasiment aucun moyen de mourir seront refusées. Un exemple de map qui, bien que difficile, ne satisfait pas cette condition est <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. Sous certaines conditions, par exemple lorsqu’une map fait partie d’une campagne ou d’un lobby, des exceptions peuvent être faites, comme le montre le cas de la <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">silver de Summit Down-Side</CustomExternalLink>. Ces maps-ci sont indiquées par la note “Trivial”."
           },
           {
             "heading": "Unicité",
@@ -1330,7 +1330,7 @@
           },
           {
             "heading": "Écran de fin",
-            "text": "Les entrées <strong>doivent</strong> montrer l’écran de fin de la map à la fin du challenge. Dans le cas où il n’y en aurait pas, le journal doit être montré immédiatement après la sortie de la map. <strong>IMPORTANT&nbsp;: pour les maps se trouvant dans des collabs, il te faudra activer l’option </strong>Collab Utils 2 → Afficher l’Écran de Fin pour les maps</code> <strong>ET activer le chronomètre pour que l’écran de fin s’affiche bien</strong>. Si tu préfères ne pas avoir de chronomètre à l’écran, Speedrun Tool possède une option permettant de n’afficher le chronomètre qu’à la fin de la map&nbsp;: <code>Speedrun Tool → More Options → Enable Timer on Area Complete</code>."
+            "text": "Les entrées <strong>doivent</strong> montrer l’écran de fin de la map à la fin du challenge. Dans le cas où il n’y en aurait pas, le journal doit être montré immédiatement après la sortie de la map. <strong>IMPORTANT : pour les maps se trouvant dans des collabs, il te faudra activer l’option </strong>Collab Utils 2 → Afficher l’Écran de Fin pour les maps</code> <strong>ET activer le chronomètre pour que l’écran de fin s’affiche bien</strong>. Si tu préfères ne pas avoir de chronomètre à l’écran, Speedrun Tool possède une option permettant de n’afficher le chronomètre qu’à la fin de la map : <code>Speedrun Tool → More Options → Enable Timer on Area Complete</code>."
           },
           {
             "heading": "Session",
@@ -1353,7 +1353,7 @@
             "text": "Les entrées <strong>ne doivent pas</strong> abuser du bouton de pause au point de trivialiser un challenge. Un exemple extrême d’abus est ce qu’on appelle le <i>pause buffering</i>, qui consiste à “buffer” le bouton de pause entre les pauses afin de faire avancer le jeu frame par frame. Simplifier des sections en utilisant le bouton pause est <strong>toujours</strong> interdit, même s’il ne s’agit pas de <i>pause buffering</i>. S’il n’y a pas de danger de mort présent, il est toléré d’utiliser le menu pause pour réaliser des <i>setups</i> difficiles ou répétitifs. De plus, utiliser le bouton pause peut être utilisé dans un scénario inattendu afin de laisser le temps de réfléchir. Attention, même dans un tel cas, il n’est pas autorisé de pauser plusieurs fois pour s’aligner et réaliser une séquence difficile. On notera que, comme pour le cas de la variante étendue <i>No Freeze Frames</i> (Désactiver les “freeze frames”), quelques anciennes entrées violant cette règle existent toujours, mais seraient aujourd’hui rejetées."
           },
           {
-            "heading": "Spinner Freeze&thinsp;/&thinsp;Stun",
+            "heading": "Spinner Freeze / Stun",
             "text": "Les entrées ne <strong>doivent pas</strong> faire usage de <i>spinner freezing</i> (sauf dans le cas où c’est demandé par la map), technique qui consiste à attendre près de 118 heures dans le jeu pour empêcher certaines boules de cristal (ou <i>spinners</i>) de charger. Les entrées <strong>peuvent</strong> faire usage de la technique appelée <i>spinner stunning</i>, de par sa difficulté. Pour plus d’informations sur ces techniques, regarde <CustomExternalLink href=\"https://youtu.be/UGQ5rXStKXg?t=64\">cette vidéo d’EuniverseCat</CustomExternalLink>."
           },
           {
@@ -1362,7 +1362,7 @@
           },
           {
             "heading": "Deathless Berryless",
-            "text": "Pour les goldens (ou les fraises similaires), il n’est pas <strong>requis</strong> de collecter la fraise, tant que la run suit les mêmes règles qu’en la prenant (c’est-à-dire une run <i>deathless</i> mais sans récupérer la fraise). Si jamais prendre une golden change fondamentalement le challenge, comme avec une golden room, de telles entrées ne seront <strong>probablement pas</strong> acceptées. Bien que cette pratique ne soit pas encouragée, il est compréhensible que ces choses-là arrivent sans faire exprès, et une telle complétion reste tout de même légitime. Une note sera donnée à de telles runs."
+            "text": "Pour les goldens (ou les fraises similaires), il n’est pas <strong>requis</strong> de collecter la fraise, tant que la run suit les mêmes règles qu’en la prenant (c’est-à-dire une run <i>deathless</i> mais sans récupérer la fraise). Si jamais prendre une golden change fondamentalement le challenge, comme avec une <i>golden room</i>, de telles entrées ne seront <strong>probablement pas</strong> acceptées. Bien que cette pratique ne soit pas encouragée, il est compréhensible que ces choses-là arrivent sans faire exprès, et une telle complétion reste tout de même légitime. Une note sera donnée à de telles runs."
           },
           {
             "heading": "Absence de trigger de collection",
@@ -1374,17 +1374,17 @@
           },
           {
             "heading": "Progression",
-            "text": "Les entrées <strong>doivent</strong> suivre la progression existant dans la map. Si un challenge comporte des flags globaux ou autres fonctionnalités existant en dehors du challenge en lui-même, il peut être supposé que ceux-ci soient déjà débloqués. Dans le cas où ceux-ci modifient le challenge de manière conséquente, plusieurs challenges peuvent être présents séparément sur le site."
+            "text": "Les entrées <strong>doivent</strong> suivre la progression existant dans la map. Si un challenge comporte des <i>flags</i> globaux ou autres fonctionnalités existant en dehors du challenge en lui-même, il peut être supposé que ceux-ci soient déjà débloqués. Dans le cas où ceux-ci modifient le challenge de manière conséquente, plusieurs challenges peuvent être présents séparément sur le site."
           },
           {
             "heading": "Overlay",
-            "text": "Les preuves vidéo <strong>ne doivent pas</strong> contenir d’<i>overlay</i> cachant une grande partie ou une partie essentielle de l’écran. Les parties devant apparaître sont le chronomètre (ou «&nbsp;compteur de speedrun&nbsp;»), le compteur de fraises en haut à gauche, le <i>tracker</i> de fraises en bas du menu pause, et l’icône de sauvegarde en bas à droite."
+            "text": "Les preuves vidéo <strong>ne doivent pas</strong> contenir d’<i>overlay</i> cachant une grande partie ou une partie essentielle de l’écran. Les parties devant apparaître sont le chronomètre (ou « compteur de speedrun »), le compteur de fraises en haut à gauche, le <i>tracker</i> de fraises en bas du menu pause, et l’icône de sauvegarde en bas à droite."
           }
         ]
       },
       "full_game_additional": {
-        "header": "Règles supplémentaires pour les challenges Full Game",
-        "explanation": "Il existe deux types de challenges “full game”&nbsp;: ceux qui complètent sans mourir un sous-ensemble pertinent de maps d’un map pack (qu’on appellera des <i>challenges full game partiels</i>), comme par exemple faire toutes les faces C ou un lobby sans mourir, et les challenges plus complets, comme par exemple faire toutes les maps sans mourir, ou même un 100&thinsp;% <i>deathless</i> (qu’on appellera des <i>challenges full game complets</i>). Les règles s’appliquant seulement sur une de ces deux catégories le mentionneront.",
+        "header": "Règles supplémentaires pour les challenges full game",
+        "explanation": "Il existe deux types de challenges “full game” : ceux qui complètent sans mourir un sous-ensemble pertinent de maps d’un map pack (qu’on appellera des <i>challenges full game partiels</i>), comme par exemple faire toutes les faces C ou un lobby sans mourir, et les challenges plus complets, comme par exemple faire toutes les maps sans mourir, ou même un 100 % <i>deathless</i> (qu’on appellera des <i>challenges full game complets</i>). Les règles s’appliquant seulement sur une de ces deux catégories le mentionneront.",
         "entries": [
           {
             "heading": "Vidéo complète",
@@ -1392,23 +1392,23 @@
           },
           {
             "heading": "Progression",
-            "text": "Pour rappel, la règle nº&thinsp;15 explique comment la progression des challenges, dont les challenges full game, doit être gérée. En général, les entrées de challenges full game complets <strong>doivent</strong> commencer à ce qui correspond à un nouveau fichier de sauvegarde, alors que le début de runs de challenges partiels peut varier. Par exemple, prenons l’exemple du jeu de base. Si on était amené à faire toutes les faces A sans mourir, celles-ci devraient être finies dans l’ordre, puisque 1A débloque 2A, 2A débloque 3A, etc. Si on était amené à faire toutes les faces B sans mourir, celles-ci pourraient être complétées dans n’importe quel ordre, puisque débloquer une face B ne dépend pas du progrès dans les autres. Un challenge comme un 100&thinsp;% sans mourir doit être effectué à partir d’un nouveau fichier de sauvegarde."
+            "text": "Pour rappel, la règle nº 14 explique comment la progression des challenges, dont les challenges full game, doit être gérée. En général, les entrées de challenges full game complets <strong>doivent</strong> commencer à ce qui correspond à un nouveau fichier de sauvegarde, alors que le début de runs de challenges partiels peut varier. Par exemple, prenons l’exemple du jeu de base. Si on était amené à faire toutes les faces A sans mourir, celles-ci devraient être finies dans l’ordre, puisque 1A débloque 2A, 2A débloque 3A, etc. Si on était amené à faire toutes les faces B sans mourir, celles-ci pourraient être complétées dans n’importe quel ordre, puisque débloquer une face B ne dépend pas du progrès dans les autres. Un challenge comme un 100 % sans mourir doit être effectué à partir d’un nouveau fichier de sauvegarde."
           },
           {
             "heading": "Pas de Retour à la carte",
-            "text": "Les entrées de challenges full game <strong>ne doivent pas</strong> utiliser de «&nbsp;Retour à la carte&nbsp;» (<i>Return to Map</i>) ou quelconque option similaire permettant de réinitialiser l’état d’une salle. L’état d’une salle comprend la position de Madeline, les cristaux à usage unique, les blocs qui tombent, les positions des Kevins, les pièces, etc."
+            "text": "Les entrées de challenges full game <strong>ne doivent pas</strong> utiliser de « Retour à la carte » (<i>Return to Map</i>) ou quelconque option similaire permettant de réinitialiser l’état d’une salle. L’état d’une salle comprend la position de Madeline, les cristaux à usage unique, les blocs qui tombent, les positions des Kevins, les pièces, etc."
           },
           {
             "heading": "Sauvegarde unique",
-            "text": "Uniquement un seul fichier de sauvegarde <strong>doit</strong> être utilisé."
+            "text": "Uniquement <strong>un seul fichier</strong> de sauvegarde <strong>doit</strong> être utilisé."
           },
           {
             "heading": "Morts forcées",
-            "text": "Si un challenge contient des morts forcées ou inévitables (comme dans le style de la <i>moon berry</i> de <i>Farewell</i>), les runs sont autorisées à mourir, mais <strong>pas plus de fois que le minimum requis</i> pour finir la map. Un tel cas diffère de si la map individuelle était faite sans mourir, comme le décrit le règle nº&thinsp;12."
+            "text": "Si un challenge contient des morts forcées ou inévitables (comme dans le style de la <i>moon berry</i> de <i>Farewell</i>), les runs sont autorisées à mourir, mais <strong>pas plus de fois que le minimum requis</strong> pour finir la map. Un tel cas diffère de si la map individuelle était faite sans mourir, comme le décrit le règle nº 13."
           },
           {
             "heading": "Chronomètre",
-            "text": "Le «&nbsp;compteur de speedrun&nbsp;» (chronomètre) <strong>doit</strong> être activé en mode <i>file</i>, <strong>et non</strong> en mode <i>chapitre</i> pour les entrées de challenges full game."
+            "text": "Le « compteur de speedrun » (chronomètre) <strong>doit</strong> être activé en mode <i>file</i>, <strong>et non</strong> en mode <i>chapitre</i> pour les entrées de challenges full game."
           },
           {
             "heading": "Pauses prolongées",
@@ -1430,7 +1430,7 @@
             "text": "Activer un des chronomètres proposés par le jeu de base renforce la crédibilité d’une entrée, mais n’est obligatoire que pour les maps individuelles. Le chronomètre de fichier est cependant <strong>nécessaire</strong> aux entrées de challenges full game."
           },
           {
-            "text": "Utiliser un programme permettant de rendre compte des boutons appuyés comme <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> pour Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> pour Linux (X11), ou <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> pour tout système d’exploitation, est généralement apprécié. Dans le cas de l’utilisation de manette, les logiciels tels que <CustomExternalLink href=\"https://gamepadviewer.com\">GamePad Viewer</CustomExternalLink> ou <CustomExternalLink href=\"https://github.com/CelestinaDragoni/open-joystick-displayOpen\">Joystick Display</CustomExternalLink> peuvent être utilisés. Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> peut également être utilisé dans ce but, tant que les fonctionnalités permettant d’afficher l’historique des boutons pressés et le nombre de frames sont désactivées."
+            "text": "Utiliser un programme permettant de rendre compte des boutons appuyés comme <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> pour Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> pour Linux (X11), ou <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> pour tout système d’exploitation, est généralement apprécié. Dans le cas de l’utilisation de manette, les logiciels tels que <CustomExternalLink href=\"https://gamepadviewer.com\">GamePad Viewer</CustomExternalLink> ou <CustomExternalLink href=\"https://www.ballini.uk/openjoystick.htm\">Joystick Display</CustomExternalLink> peuvent être utilisés. Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> peut également être utilisé dans ce but, tant que les fonctionnalités permettant d’afficher l’historique des boutons pressés et le nombre de frames sont désactivées."
           },
           {
             "text": "Essaie de garder un ou deux enregistrements de sessions de jeu complètes sous la main, surtout pour les goldens haut placées, au cas où plus de preuves sont demandées."
@@ -1447,10 +1447,10 @@
             "text": "Les mods <CustomExternalLink href=\"https://gamebanana.com/mods/421816\">Deadzone Config</CustomExternalLink> et <CustomExternalLink href=\"https://gamebanana.com/tools/13384\">viddie’s Toolbox</CustomExternalLink> permettent de configurer la “deadzone” des joysticks, afin de rendre plus simples les chutes rapides (<i>fastfall</i>) et certains mouvements diagonaux."
           },
           {
-            "text": "Pour les runs de challenges Full Game, le mod <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">Hardcore Mode</CustomExternalLink> peut permettre à relancer des runs plus rapidement, mais n’est pas nécessaire. Il permet aussi de faire apparaître les goldens sans utiliser le Cheat Mode, ce qui signifie que de telles runs peuvent également être ajoutées en tant que goldens des maps individuelles sans problème. <strong>Cependant, récupérer une golden là où elle ne serait normalement pas débloquée peut mener à un rejet de la run, dans le rare cas où des changements liés à la golden rendraient le challenge plus facile.</strong>"
+            "text": "Pour les runs de challenges full game, le mod <CustomExternalLink href=\"https://gamebanana.com/mods/53679\">Hardcore Mode</CustomExternalLink> peut permettre à relancer des runs plus rapidement, mais n’est pas nécessaire. Il permet aussi de faire apparaître les goldens sans utiliser le Cheat Mode, ce qui signifie que de telles runs peuvent également être ajoutées en tant que goldens des maps individuelles sans problème. <strong>Cependant, récupérer une golden là où elle ne serait normalement pas débloquée peut mener à un rejet de la run, dans le rare cas où des changements liés à la golden rendraient le challenge plus facile.</strong>"
           },
           {
-            "text": "Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> est autorisé pour toutes les entrées. Ce mod ajoute plusieurs fonctionnalités utiles à la complétion de challenges, comme par exemple rendre les fraises transparentes, placer de manière permanente une golden sans avoir à modifier la map, ou encore se téléporter dans la salle dans laquelle on vient de mourir en golden. Le mod <CustomExternalLink href=\"https://gamebanana.com/tools/6924\">Strawberry Tool</CustomExternalLink> propose une option permettant de rendre transparents certaines entités, et est aussi autorisé pour toutes les entrées."
+            "text": "Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/363600\">Golden QOL</CustomExternalLink> est autorisé pour toutes les entrées. Ce mod ajoute plusieurs fonctionnalités utiles à la complétion de challenges, comme par exemple rendre les fraises transparentes, placer de manière permanente une golden sans avoir à modifier la map, ou encore se téléporter dans la salle dans laquelle on vient de mourir en golden. Le mod <CustomExternalLink href=\"https://gamebanana.com/tools/6924\">Strawberry Tool</CustomExternalLink> propose une option permettant de rendre transparentes certaines entités, et est aussi autorisé pour toutes les entrées."
           },
           {
             "text": "Les mods <CustomExternalLink href=\"https://gamebanana.com/tools/6597\">Speedrun Tool</CustomExternalLink> et <CustomExternalLink href=\"https://gamebanana.com/tools/6715\">CelesteTAS</CustomExternalLink> peuvent aider à trouver des stratégies et des <i>setups</i>. Les fonctionnalités de ces mods ayant un impact sur le gameplay ou fournissant quelconque information supplémentaire, ne sont pas autorisées."
@@ -1472,47 +1472,47 @@
     "title": "FAQ",
     "entries": [
       {
-        "question": "Est-ce que je peux demander à ajouter des maps qui ne sont pas encore sur la liste&thinsp;?",
+        "question": "Est-ce que je peux demander à ajouter des maps qui ne sont pas encore sur la liste ?",
         "answer": "Oui, tu peux ajouter une golden qui ne se trouve pas déjà sur la liste. Il te suffit de fournir un lien vers la map, en t’assurant que la map en question respecte bien toutes les règles. Mais même si c’est le cas, il se peut que la map ne soit pas ajoutée pour une raison qui sera spécifiée sur la page des maps rejetées."
       },
       {
-        "question": "Est-ce que les boutons de demodash ou plusieurs touches de sauts sont autorisés&thinsp;?",
-        "answer": "Les boutons de demodash et utiliser plusieurs touches de saut sont autorisés. Il va de même pour toutes les combinaisons d’actions que le jeu autorise à associer à une touche, mais les macros externes qui activent plusieurs touches automatiquement sur différentes frames sont interdites."
+        "question": "Est-ce que les boutons de demodash ou plusieurs touches de sauts sont autorisés ?",
+        "answer": "Avoir un bouton de demodash (ou dash accroupi) et utiliser plusieurs touches de saut sont autorisés. Il va de même pour toutes les combinaisons d’actions que le jeu autorise à associer à une touche, mais les macros externes qui activent plusieurs touches automatiquement sur différentes frames sont interdites."
       },
       {
-        "question": "Qu’est-ce qui est considéré comme un full clear&thinsp;?",
-        "answer": "Ce qui est considéré comme un full clear peut beaucoup varier d’une map à une autre. La forme la plus simple d’un full clear est de collecter tous les collectibles qui ne changent pas fondamentalement la nature du challenge. Par exemple, une map peut avoir des fraises, une cassette, un cœur de cristal et une <i>dashless golden berry</i>. Un full clear d’une telle map demanderait de collecter les fraises, la cassette, ainsi que le cœur de cristal. La <i>dashless golden berry</i> représente un challenge suffisamment différent —&nbsp;finir la map sans dasher&nbsp;—, et n’est donc pas requise à un full clear. S’il était impossible de récupérer tous les collectibles sans dasher, le challenge <i>dashless</i> ne comporterait pas d’option full clear. Sinon, le challenge standard ainsi que le challenge <i>dashless</i> comporteraient tous deux une option full clear."
+        "question": "Qu’est-ce qui est considéré comme un full clear ?",
+        "answer": "Ce qui est considéré comme un full clear peut beaucoup varier d’une map à une autre. La forme la plus simple d’un full clear est de collecter tous les collectibles qui ne changent pas fondamentalement la nature du challenge. Par exemple, une map peut avoir des fraises, une cassette, un cœur de cristal et une <i>dashless golden berry</i>. Un full clear d’une telle map demanderait de collecter les fraises, la cassette, ainsi que le cœur de cristal. La <i>dashless golden berry</i> représente un challenge suffisamment différent — finir la map sans dasher —, et n’est donc pas requise à un full clear. S’il était impossible de récupérer tous les collectibles sans dasher, le challenge <i>dashless</i> ne comporterait pas d’option full clear. Sinon, le challenge standard ainsi que le challenge <i>dashless</i> comporteraient tous deux une option full clear."
       },
       {
-        "question": "Pourquoi est-ce que certaines maps n’ont pas de full clear&thinsp;?",
+        "question": "Pourquoi est-ce que certaines maps n’ont pas de full clear ?",
         "answer": "Des maps peuvent comporter des collectibles qui ne sont pas optionnels, comme les fraises de Hell Gym ."
       },
       {
-        "question": "Au fait, c’est quoi la Top Golden List&thinsp;?",
-        "answer": "Il existe trois catégories de difficulté recensées ici&nbsp;: Trivial, Standard, et Hard. La Top Golden List est une liste des challenges de la catégorie “Hard” ayant été complétés. La golden d’une map figure sur la liste si elle est considérée comme étant plus difficile que le <i>Hell Trio</i>, les goldens des faces B des chapitres 6, 7 et 8 du jeu de base. Les goldens sont ensuite placées sur la liste en fonction de comment elles se comparent aux autres déjà présentes. Les placements ne sont jamais 100&thinsp;% justes, puisque de nouvelles techniques peuvent être trouvées, et juger de la difficulté d’un challenge reste bien sûr entièrement subjectif. On compare principalement les goldens en fonction de quelques facteurs, comme par exemple le temps de jeu total qu’elles ont pris, l’expérience sur le jeu au moment de la collection, le temps pris sur les maps avant d’essayer la golden, et une analyse plus subjective de la longueur des maps, de la distribution de leur difficulté, de la <i>consistency</i> de leur gameplay…"
+        "question": "Au fait, c’est quoi la Top Golden List ?",
+        "answer": "Il existe trois catégories de difficulté recensées ici : Trivial, Standard, et Hard. La Top Golden List est une liste des challenges de la catégorie “Hard” ayant été complétés. La golden d’une map figure sur la liste si elle est considérée comme étant plus difficile que le <i>Hell Trio</i>, les goldens des faces B des chapitres 6, 7 et 8 du jeu de base. Les goldens sont ensuite placées sur la liste en fonction de comment elles se comparent aux autres déjà présentes. Les placements ne sont jamais 100 % justes, puisque de nouvelles techniques peuvent être trouvées, et juger de la difficulté d’un challenge reste bien sûr entièrement subjectif. On compare principalement les goldens en fonction de quelques facteurs, comme par exemple le temps de jeu total qu’elles ont pris, l’expérience sur le jeu au moment de la collection, le temps pris sur les maps avant d’essayer la golden, et une analyse plus subjective de la longueur des maps, de la distribution de leur difficulté, de la <i>consistency</i> de leur gameplay…"
       },
       {
-        "question": "Cette map est beaucoup plus dure que ce qui est indiqué sur la liste&thinsp;! Pourquoi donc&thinsp;?",
-        "answer": "Un challenge est placé en fonction des stratégies existantes les plus simples permettant de le compléter. Si une map comprend un skip majeur, la route comprenant le skip sera utilisée pour la placer sur la liste. De plus, encore une fois, les placements sont subjectifs et dépendent entièrement des personnes les ayant effectués. Un changement de difficulté pour n’importe quel challenge peut être demandé si voulu."
+        "question": "Cette map est beaucoup plus dure que ce qui est indiqué sur la liste ! Pourquoi donc ?",
+        "answer": "Un challenge est placé en fonction des stratégies existantes les plus simples permettant de le compléter. Si une map comprend un <i>skip</i> majeur, la route comprenant le <i>skip</i> sera utilisée pour la placer sur la liste. De plus, encore une fois, les placements sont subjectifs et dépendent entièrement des personnes les ayant effectués. Un changement de difficulté pour n’importe quel challenge peut être demandé si voulu."
       },
       {
-        "question": "À quoi sert la difficulté “Trivial”&thinsp;?",
+        "question": "À quoi sert la difficulté “Trivial” ?",
         "answer": "Cette difficulté est réservée aux challenges, eh bien, triviaux à compléter. Sont inclues les maps d’une seule salle, où un clear standard ne diffère pas de la golden, ainsi que les maps où il n’est pas possible de mourir."
       },
       {
-        "question": "Est-ce que les maps multijoueurs sont autorisées&thinsp;? Est-ce que les maps contenant X sont autorisées&thinsp;?",
+        "question": "Est-ce que les maps multijoueurs sont autorisées ? Est-ce que les maps contenant X sont autorisées ?",
         "answer": "Si une map suit toutes les règles établies pour les maps, elle est autorisée sur la liste. Dans le cas des maps multijoueurs, la difficulté des challenges se basera sur le nombre de joueurs initialement prévu pour la map. "
       }
     ],
     "vanilla_references": {
-      "question": "Pourquoi est-ce que les challenges du jeu de base ne sont-ils pas sur cette liste&thinsp;?",
-      "answer": "Les challenges du jeu de base ne sont pas recensées sur cette liste, puisque non seulement ils sortent du cadre du moddé, mais possèdent également trop de complétions pour pouvoir raisonnablement tenir le compte du nombre de personnes qui les ont complétés. Cependant, leur difficulté peut tout de même être estimée. Tu trouveras ci-dessous une liste de référence de comment seraient placés les challenges du jeu de base sur la Top Golden List. Tout golden non listée ici est considérée comme étant de difficulté Standard, avec le “Hell Trio” (faces B des chapitres 6, 7, et 8) se trouvant au pic de la difficulté Standard.<br/><br/><i>Note&nbsp;: dans le passé, la golden de </i>Farewell<i> (Adieu) sans DTS était considérée comme la référence pour les challenges de difficulté </i>Low Tier 3<i> sur la Top Golden List. Ce n’est plus le cas, et la golden fait maintenant simplement partie du </i>tier<i>.</i>"
+      "question": "Pourquoi est-ce que les challenges du jeu de base ne sont-ils pas sur cette liste ?",
+      "answer": "Les challenges du jeu de base ne sont pas recensées sur cette liste, puisque non seulement ils sortent du cadre du moddé, mais possèdent également trop de complétions pour pouvoir raisonnablement tenir le compte du nombre de personnes qui les ont complétés. Cependant, leur difficulté peut tout de même être estimée. Tu trouveras ci-dessous une liste de référence de comment seraient placés les challenges du jeu de base sur la Top Golden List. Tout golden non listée ici est considérée comme étant de difficulté Standard, avec le “Hell Trio” (faces B des chapitres 6, 7, et 8) se trouvant au pic de la difficulté Standard.<br/><br/><i>Note : dans le passé, la golden de </i>Farewell<i> (Adieu) sans DTS était considérée comme la référence pour les challenges de difficulté </i>Low Tier 3<i> sur la Top Golden List. Ce n’est plus le cas, et la golden fait maintenant simplement partie du </i>tier<i>.</i>"
     }
   },
   "index": {
-    "title": "Bienvenue&thinsp;!",
+    "title": "Bienvenue !",
     "welcome": {
-      "header": "Celeste moddé, mais sans mourir&thinsp;!",
+      "header": "Celeste moddé, mais sans mourir !",
       "text": "Le but premier de ce site est de répertorier toutes les maps ou les campagnes ayant été complétées sans mourir, mais il sert aussi à motiver les personnes voulant se lancer dans de tels challenges et à rendre plus active la scène deathless moddée de Celeste. Ce site contient toutes les maps ayant été complétées sans mourir, ainsi que le nom de toutes les personnes ayant collecté ces goldens.",
       "info": "Si tu as des questions ou des suggestions, n’hésite pas à rejoindre le serveur Discord de la Modded Golden Team, ou à contacter un membre de l’équipe.",
       "team_members": "Membres de l’équipe"
@@ -1541,10 +1541,10 @@
     "global_stats": {
       "header": "Stats globales",
       "totals": {
-        "header": "Il y a actuellement&nbsp;:",
+        "header": "Il y a actuellement :",
         "campaigns": "<strong>{{campaigns}}</strong> campagnes (dont {{standalone}} stand-alone)",
         "maps": "<strong>{{maps}}</strong> maps (with <strong>{{challenges}}</strong> total challenges)",
-        "submissions": "et <strong>{{submissions}}</strong> entrées de <strong>{{players}}</strong> joueuses et joueurs&thinsp;!"
+        "submissions": "et <strong>{{submissions}}</strong> entrées de <strong>{{players}}</strong> joueuses et joueurs !"
       },
       "difficulty_stats": {
         "header": "Stats par difficulté",
@@ -1553,15 +1553,15 @@
     },
     "getting_started": {
       "header": "Pour bien démarrer",
-      "preface": "Afin d’ajouter une de tes runs sur ce site, tu vas devoir&nbsp;:",
+      "preface": "Afin d’ajouter une de tes runs sur ce site, tu vas devoir :",
       "video": "Avoir une preuve vidéo de ta run, disponible à tout moment (par exemple sur YouTube, bilibili, …).",
       "account": "<strong><RegisterLink>Créer</RegisterLink> un compte et t’y <LoginLink>connecter</LoginLink></strong>. Tu peux te connecter via Discord ou avec une adresse email et un mot de passe.",
-      "player": "<strong><CustomLink>Apparaître sur la liste</CustomLink></strong>. Si tu possèdes déjà des entrées sur l’ancien tableur, ton «&nbsp;nom&nbsp;» existe déjà, et tu peux le réclamer. Si c’est ta première fois, tu peux créer un nouveau nom.",
-      "submit": "Lis bien les <RulesLink>règles</RulesLink>, rends-toi sur <CustomLink>cette page</CustomLink> et rajoute ta run&thinsp;!"
+      "player": "<strong><CustomLink>Apparaître sur la liste</CustomLink></strong>. Si tu possèdes déjà des entrées sur l’ancien tableur, ton « nom » existe déjà, et tu peux le réclamer. Si c’est ta première fois, tu peux créer un nouveau nom.",
+      "submit": "Lis bien les <RulesLink>règles</RulesLink>, rends-toi sur <CustomLink>cette page</CustomLink> et rajoute ta run !"
     },
     "newly_released": {
-      "header": "Un site tout beau tout neuf&thinsp;!",
-      "text": "Ce site vient juste d’être rendu public&thinsp;! De par la nature chaotique du tableur, il n’est pas rare que certaines données soient fausses ou irrégulières. Si tu en trouves, signale-nous ça sur le serveur Discord de la Modded Golden Team&thinsp;!",
+      "header": "Un site tout beau tout neuf !",
+      "text": "Ce site vient juste d’être rendu public ! De par la nature chaotique du tableur, il n’est pas rare que certaines données soient fausses ou irrégulières. Si tu en trouves, signale-nous ça sur le serveur Discord de la Modded Golden Team !",
       "migration": "Faire migrer toutes les données, ainsi que toute la communauté sur ce site va prendre un petit moment, donc pour l’instant, tu peux toujours rajouter des entrées comme au bon vieux temps, en taggant la modded golden team sur le serveur Discord de Celeste, ou sur le serveur Discord de la Modded Golden Team."
     }
   },

@@ -1041,7 +1041,7 @@ export function NewChallengeUserSubmission({}) {
             />
           </Grid>
           <Grid item xs="auto" display="flex" alignItems="center" justifyContent="center">
-            <TooltipInfoButton title={t("date_achieved_note")} />
+            <TooltipInfoButton title={t_ts("date_achieved_note")} />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Button variant="contained" fullWidth onClick={onSubmit}>

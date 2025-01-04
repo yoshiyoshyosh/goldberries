@@ -330,7 +330,9 @@ const DIFF_CONSTS_ = {
   STANDARD_SORT_START: 1,
   STANDARD_SORT_END: 3,
   TIERED_SORT_START: 4,
+  TRIVIAL_SORT: 0,
   MAX_SORT: 19,
+  MIN_SORT: -1,
 
   //References, added here for intellisense
   RAW_SESSION_REQUIRED_SORT: -1,

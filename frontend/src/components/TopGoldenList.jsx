@@ -311,7 +311,6 @@ function TopGoldenListGroup({
   }
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
-  const showFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
 
   const cellStyle = {
     borderBottom: "1px solid " + theme.palette.tableDivider,
@@ -411,10 +410,6 @@ function TopGoldenListGroup({
                         ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
                         : challenge.difficulty.id) === subtier.id
                   );
-                  //For experimenting, filter out all challenges without frac
-                  // if (showFractionalTiers) {
-                  //   tierChallenges = tierChallenges.filter((challenge) => challenge.data.frac);
-                  // }
 
                   let hadEntriesBefore = false;
                   if (index > 0) {
@@ -518,8 +513,8 @@ export function sortChallengesForTGL(challenges, maps, campaigns, sortByFraction
   challenges.sort((a, b) => {
     //If fraction is available, use that for sorting first. if no frac is available, treat it as 0.5
     if (sortByFractionalTiers) {
-      const fracA = a.data.frac ? a.data.frac : 0.5;
-      const fracB = b.data.frac ? b.data.frac : 0.5;
+      const fracA = a.data.frac !== false && a.data.frac !== undefined ? a.data.frac : 0.5;
+      const fracB = b.data.frac !== false && b.data.frac !== undefined ? b.data.frac : 0.5;
       if (fracA !== fracB) {
         return fracB - fracA;
       }
@@ -555,7 +550,6 @@ function TopGoldenListRow({
   const tpgSettings = settings.visual.topGoldenList;
   const darkmode = settings.visual.darkmode;
   const colors = getNewDifficultyColors(settings, subtier.id, true);
-  // const challengeRef = getChallengeReference(challenge.id);
   const isReference = challenge.data.is_stable;
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
@@ -573,8 +567,8 @@ function TopGoldenListRow({
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
   //TODO - Prepend tier fraction if the setting is enabled
-  if (settings.visual.topGoldenList.showFractionalTiers) {
-    let frac = challenge.data.frac ? challenge.data.frac : 0.5;
+  if (settings.visual.topGoldenList.showFractionalTiers && !isPlayer) {
+    let frac = challenge.data.frac !== false && challenge.data.frac !== undefined ? challenge.data.frac : 0.5;
     frac += challenge.difficulty.sort;
     name = `${frac.toFixed(2)} - ${name}`;
   }
@@ -649,6 +643,13 @@ function TopGoldenListRow({
   const onEditSuggestion = () => {
     openEditSubmission(firstSubmission.id);
   };
+
+  const isUnplaced = challenge.is_placed === false;
+  const unplacedIconColor = challenge.data.sugg_count > 0 ? "#77dd77" : "#dd7777";
+  const unplacedTooltip =
+    challenge.data.sugg_count > 0
+      ? "This challenge is unplaced and has at least 1 suggestion"
+      : "This challenge is unpalced and has no suggestions";
 
   return (
     <TableRow style={rowStyle}>
@@ -751,13 +752,18 @@ function TopGoldenListRow({
               </Tooltip>
             )}
           {isPlayer && firstSubmission.is_obsolete === true && (
-            <Tooltip title={t("obsolete_notice")} arrow placement="top">
+            <TooltipLineBreaks title={t("obsolete_notice")}>
               <FontAwesomeIcon icon={faExclamationTriangle} color="lightgrey" />
-            </Tooltip>
+            </TooltipLineBreaks>
           )}
           {isPlayer && firstSubmission.player_notes && (
             <TooltipLineBreaks title={firstSubmission.player_notes}>
               <FontAwesomeIcon icon={faComment} />
+            </TooltipLineBreaks>
+          )}
+          {!isPlayer && isUnplaced && (
+            <TooltipLineBreaks title={unplacedTooltip}>
+              <FontAwesomeIcon icon={faInfoCircle} color={unplacedIconColor} />
             </TooltipLineBreaks>
           )}
         </Stack>

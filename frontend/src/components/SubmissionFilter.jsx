@@ -182,7 +182,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
               <DifficultySelectControlled
                 difficultyId={localFilter.min_diff_id ?? DIFF_CONSTS.TIER_7_ID}
                 setDifficultyId={(id) => changedFilter("min_diff_id", id)}
-                minSort={DIFF_CONSTS.STANDARD_SORT_START}
+                minSort={DIFF_CONSTS.TRIVIAL_SORT}
                 fullWidth
                 label={t("minimum_tier")}
                 sx={{ my: 0.5 }}

@@ -1397,7 +1397,7 @@
           },
           {
             "heading": "Progression",
-            "text": "As a reminder, or if one is only looking at this section of the rules, rule #15 in the list for all submissions explains how one should treat progression for challenges, which includes full game challenges. In general, full game submissions <strong>must</strong> start from what is effectively a new save file, while partial full game submissions can vary. For an example, consider the vanilla game. If one were to do all A-Sides deathless, they must be done in order, as 1a unlocks 2a, 2a unlocks 3a, etc. If one were to do all B-Sides deathless, they can be done in any order, as unlocking them is irrespective of progression within the B-Sides themselves. If one were to do 100% deathless, it must be done from a new file."
+            "text": "As a reminder, or if one is only looking at this section of the rules, rule #14 in the list for all submissions explains how one should treat progression for challenges, which includes full game challenges. In general, full game submissions <strong>must</strong> start from what is effectively a new save file, while partial full game submissions can vary. For an example, consider the vanilla game. If one were to do all A-Sides deathless, they must be done in order, as 1a unlocks 2a, 2a unlocks 3a, etc. If one were to do all B-Sides deathless, they can be done in any order, as unlocking them is irrespective of progression within the B-Sides themselves. If one were to do 100% deathless, it must be done from a new file."
           },
           {
             "heading": "No Return to Map",
@@ -1409,7 +1409,7 @@
           },
           {
             "heading": "Forced Deaths",
-            "text": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Do note that this is different than if one was doing the map alone deathless, as described in rule #12."
+            "text": "If the run has forced deaths (e.g. a Farewell-esque moon berry), runs <strong>are allowed</strong> to die in such instances, but <strong>no more than the minimum required</strong> to pass the section. Do note that this is different than if one was doing the map alone deathless, as described in rule #13."
           },
           {
             "heading": "File Timer",
@@ -1435,7 +1435,7 @@
             "text": "Using the chapter or file timer will help credibility, but it is not required for single-map submissions. Recall that file timer <strong>is</strong> required for full game submissions."
           },
           {
-            "text": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility. Individuals using a controller may also use input displays such as <CustomExternalLink href=\"https://gamepadviewer.com\">GamePad Viewer</CustomExternalLink> or <CustomExternalLink href=\"https://github.com/CelestinaDragoni/open-joystick-displayOpen\">Joystick Display</CustomExternalLink>. One may also use the <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> mod as an input display provided that the settings for showing frame counts and input history are disabled."
+            "text": "Using an external input display, such as <CustomExternalLink href=\"https://github.com/ThoNohT/NohBoard\">NohBoard</CustomExternalLink> for Windows, <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/kbdisplay\">kbdisplay</CustomExternalLink> for Linux (X11), or <CustomExternalLink href=\"https://github.com/RoanH/KeysPerSecond\">KeysPerSecond</CustomExternalLink> for cross-platform, will help credibility. Individuals using a controller may also use input displays such as <CustomExternalLink href=\"https://gamepadviewer.com\">GamePad Viewer</CustomExternalLink> or <CustomExternalLink href=\"https://www.ballini.uk/openjoystick.htm\">Joystick Display</CustomExternalLink>. One may also use the <CustomExternalLink href=\"https://gamebanana.com/mods/34273\">Input History</CustomExternalLink> mod as an input display provided that the settings for showing frame counts and input history are disabled."
           },
           {
             "text": "Keep a few full session runs on hand, especially for high tier goldens, in the event that a verifier requests more proof than what is required."
