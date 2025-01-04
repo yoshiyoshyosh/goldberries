@@ -232,6 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
     // Insert
     $challenge->date_created = new JsonDateTime();
+    $challenge->is_placed = true;
     if ($challenge->insert($DB)) {
       log_info("'{$account->player->name}' created {$challenge}", "Challenge");
       $challenge->expand_foreign_keys($DB, 5);

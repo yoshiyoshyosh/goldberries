@@ -196,6 +196,7 @@ foreach ($response['challenges'] as $challenge_id => $challenge) {
   if (!$is_player) {
     $response['challenges'][$challenge_id]->data["is_stable"] = is_challenge_stable($challenge);
     $response['challenges'][$challenge_id]->data["frac"] = challenge_fractional_placement($challenge);
+    $response['challenges'][$challenge_id]->data["sugg_count"] = get_suggestion_count($challenge);
   }
 
   if (!$all_submissions) {
@@ -268,4 +269,15 @@ function challenge_fractional_placement($challenge)
   $fraction -= $challenge->difficulty->sort;
   $fraction += 0.5; //So that the values are between 1 and 0 for a challenge that is in its correct tier
   return $fraction;
+}
+
+function get_suggestion_count($challenge)
+{
+  $suggestion_count = 0;
+  foreach ($challenge->submissions as $submission) {
+    if ($submission->suggested_difficulty_id !== null && $submission->is_personal === false) {
+      $suggestion_count++;
+    }
+  }
+  return $suggestion_count;
 }
