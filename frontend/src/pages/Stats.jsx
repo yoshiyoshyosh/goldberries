@@ -587,9 +587,13 @@ function TabMisc({}) {
 
   //Chart 2: % of players that have cleared each difficulty
   const dataDifficulties = distinctPlayerFilteredKeys.map((diff_id) => ({
+    difficulty: difficulties.find((d) => d.id === parseInt(diff_id)),
     name: getDifficultyName(difficulties.find((d) => d.id === parseInt(diff_id))),
     value: parseFloat(((distinct_players[diff_id] / total) * 100).toFixed(2)),
   }));
+
+  //Sort dataDifficulties by entry.difficulty.sort DESC
+  dataDifficulties.sort((a, b) => b.difficulty.sort - a.difficulty.sort);
 
   return (
     <Stack direction="column" gap={1}>

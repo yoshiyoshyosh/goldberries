@@ -137,6 +137,8 @@
       "obsolete_notice": "This submission is marked as obsolete",
       "stable_explanation": "This challenge has a stable difficulty placement",
       "placement_difficulty": "Placement Difficulty:",
+      "export_button_tooltip": "Export Top Golden List",
+      "stats_button_tooltip": "View Time Taken Distribution",
       "export": {
         "feedback": {
           "copied": "Copied to clipboard",
@@ -196,6 +198,13 @@
     "country_select": {
       "label": "Country",
       "not_specified": "Not Specified"
+    },
+    "time_taken_graph": {
+      "title": "Time Taken Distribution",
+      "description": "This graph shows the range of how long this player took to complete challenges for each tier. The same submission filters apply.",
+      "x_axis": "Hours",
+      "show_scatter": "Show as scatter plot",
+      "scatter_description": "The same data as a scatter plot."
     }
   },
   "forms": {

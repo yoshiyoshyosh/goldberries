@@ -1,13 +1,4 @@
-import {
-  Box,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, IconButton, Stack, Typography } from "@mui/material";
 import {
   BasicBox,
   BasicContainerBox,
@@ -16,6 +7,7 @@ import {
   LanguageFlag,
   LoadingSpinner,
   StyledLink,
+  TooltipLineBreaks,
   getErrorFromMultiple,
 } from "../components/BasicComponents";
 import {
@@ -38,32 +30,22 @@ import {
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
 import { DIFFICULTY_COLORS, DIFF_CONSTS, getGroupId, isTempVerifier } from "../util/constants";
-import { getDifficultyName, getPlayerNameColorStyle } from "../util/data_util";
+import { getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useAuth } from "../hooks/AuthProvider";
 import { useTranslation } from "react-i18next";
 import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
-import {
-  BarChart,
-  Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-import { useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Cell } from "recharts";
 import { useTheme } from "@emotion/react";
 import { ExportTopGoldenListModal } from "./TopGoldenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileExport } from "@fortawesome/free-solid-svg-icons";
+import { faChartBar, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { useModal } from "../hooks/useModal";
 import Grid from "@mui/material/Unstable_Grid2";
+import { TimeTakenTiersGraphModal } from "../components/TimeTakenTiersGraph";
+import { useRef } from "react";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -246,10 +228,13 @@ function PlayerRecentSubmissions({ id }) {
 export function PagePlayerTopGoldenList({ id }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player" });
   const { t: t_gl } = useTranslation(undefined, { keyPrefix: "golden_list" });
+  const { t: t_tgl } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const query = useGetPlayer(id);
   const theme = useTheme();
 
   const exportModal = useModal();
+  const statsModal = useModal();
+  const useSuggestedRef = useRef();
   const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", getDefaultFilter());
 
   if (query.isLoading) {
@@ -279,13 +264,31 @@ export function PagePlayerTopGoldenList({ id }) {
         </Typography>
         <Stack direction="row" gap={1}>
           <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
-          <IconButton onClick={exportModal.open}>
-            <FontAwesomeIcon color={theme.palette.text.secondary} icon={faFileExport} fixedWidth size="2xs" />
-          </IconButton>
+          <TooltipLineBreaks title={t_tgl("export_button_tooltip")}>
+            <IconButton onClick={exportModal.open}>
+              <FontAwesomeIcon
+                color={theme.palette.text.secondary}
+                icon={faFileExport}
+                fixedWidth
+                size="2xs"
+              />
+            </IconButton>
+          </TooltipLineBreaks>
+          <TooltipLineBreaks title={t_tgl("stats_button_tooltip")}>
+            <IconButton onClick={statsModal.open}>
+              <FontAwesomeIcon color={theme.palette.text.secondary} icon={faChartBar} fixedWidth size="2xs" />
+            </IconButton>
+          </TooltipLineBreaks>
         </Stack>
       </BasicBox>
-      <TopGoldenList type="player" id={id} filter={filter} />
+      <TopGoldenList type="player" id={id} filter={filter} useSuggestedRef={useSuggestedRef} />
       <ExportTopGoldenListModal modalHook={exportModal} type="player" id={id} filter={filter} />
+      <TimeTakenTiersGraphModal
+        modalHook={statsModal}
+        id={id}
+        filter={filter}
+        useSuggested={useSuggestedRef.current}
+      />
     </Box>
   );
 }

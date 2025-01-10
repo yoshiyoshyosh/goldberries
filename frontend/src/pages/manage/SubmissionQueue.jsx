@@ -188,7 +188,7 @@ function SubmissionQueueTable({ queue, notices, selectedSubmissionId, setSubmiss
   const [selected, setSelected] = useState([]);
   const [note, setNote] = useState("");
   const [switchSort, setSwitchSort] = useState(false);
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useLocalStorage("submission_queue_filter_text", "");
   const { mutateAsync: massVerifySubmissions } = useMassVerifySubmissions();
   const auth = useAuth();
 

@@ -67,6 +67,24 @@ export function PageSearch({ isDirectSearch = false }) {
           {t("feedback.min_length", { count: 3 })}
         </Typography>
       )}
+      {search && search.toLocaleLowerCase() === "cc" && (
+        <Typography variant="body1" color="gray" sx={{ my: 1.5 }}>
+          Did you mean crumbling castle, cave-in cavern, chaos complex, cornerboost collab, ceiling pop
+          contest, candy cliffs, cheesecake country, circular platform clutter, collapsing canyon, curious
+          crater, cpop city, corroded city, coresaken city, citrus coast, celestial cabinet, construction
+          conundrum, cycles contest, cupid's comit, cloud chamber, cherry city, comb connections city,
+          cloudfrost cave, cyclic cliffside, carlos collab, cc-sides, cloudy cliffs, catfish collab, chilly
+          caves, crossover collab, comb room collab, chromatic complex, cerulean couloir, cancel culture,
+          chilled cliff, crystalline cove, cat canopy, caper cavortion, cantaloupe county, celeste castle,
+          chrozone c-side, cozy cavern, cannon canyon, cartesian co, crystal cave, crystal caverns, crystal
+          core, core c-side, capybara civilization, cassette cliffs, catacylysmic cavern, celestial cavern,
+          chocolate cavern, city challenge, clementine clouds, cliffside climb, cobalt coastland, collapsing
+          cathedral, color catalyst, connected candy, constructed caverns, cosmic concrete, crumbling caverns,
+          crumbling cliffside or crystal comet?
+          <br />
+          Next time, be more clear with your abbreviations
+        </Typography>
+      )}
       {search && search.length >= 1 && <SearchDisplay search={search} />}
     </BasicContainerBox>
   );

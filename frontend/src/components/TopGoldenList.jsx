@@ -62,14 +62,20 @@ import Color from "color";
 import { useTranslation } from "react-i18next";
 import { FormSubmissionWrapper } from "./forms/Submission";
 
-export function TopGoldenList({ type, id, filter, isOverallList = false }) {
+export function TopGoldenList({ type, id, filter, isOverallList = false, useSuggestedRef = null }) {
   return (
     <Stack direction="column" gap={1}>
-      <TopGoldenListComponent type={type} id={id} filter={filter} isOverallList={isOverallList} />
+      <TopGoldenListComponent
+        type={type}
+        id={id}
+        filter={filter}
+        isOverallList={isOverallList}
+        useSuggestedRef={useSuggestedRef}
+      />
     </Stack>
   );
 }
-function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
+function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSuggestedRef }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const auth = useAuth();
   const { settings } = useAppSettings();
@@ -77,6 +83,11 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false }) {
     "top_golden_list_useSuggestedDifficulties",
     false
   );
+
+  if (useSuggestedRef !== null) {
+    useSuggestedRef.current = useSuggestedDifficulties;
+  }
+
   const [editSuggestions, setEditSuggestions] = useState(false);
 
   const currentKey =
@@ -649,7 +660,7 @@ function TopGoldenListRow({
   const unplacedTooltip =
     challenge.data.sugg_count > 0
       ? "This challenge is unplaced and has at least 1 suggestion"
-      : "This challenge is unpalced and has no suggestions";
+      : "This challenge is unplaced and has no suggestions";
 
   return (
     <TableRow style={rowStyle}>

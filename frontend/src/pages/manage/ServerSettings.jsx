@@ -65,7 +65,7 @@ function ServerSettingsForm({ serverSettings }) {
     toast.success(t("feedback.updated"));
   });
 
-  console.log(serverSettings);
+  // console.log(serverSettings);
 
   return (
     <Grid container>
