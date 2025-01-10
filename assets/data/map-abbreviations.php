@@ -27,6 +27,10 @@ $MAP_ABBREVIATIONS = [
   ],
   [
     "abbreviation" => ["4d"],
+    "id" => 3936,
+  ],
+  [
+    "abbreviation" => ["4d", "o4d"],
     "id" => 1755,
   ],
   [
@@ -35,6 +39,10 @@ $MAP_ABBREVIATIONS = [
   ],
   [
     "abbreviation" => ["5d"],
+    "id" => 3938,
+  ],
+  [
+    "abbreviation" => ["5d", "o5d"],
     "id" => 1756,
   ],
   [
