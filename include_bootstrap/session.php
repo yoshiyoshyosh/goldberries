@@ -16,6 +16,16 @@ if (getenv('DEBUG') === 'true') {
   DEFINE('REDIRECT_POST_LINK_ACCOUNT', 'https://goldberries.net/my-account');
 }
 
+//Role Management
+$USER = 0;
+$EX_HELPER = 10;
+$EX_VERIFIER = 11;
+$EX_ADMIN = 12;
+$HELPER = 20;
+$VERIFIER = 30;
+$ADMIN = 40;
+//===============
+
 session_start();
 
 function get_discord_url()
@@ -151,22 +161,117 @@ function valid_email($email)
   return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
-function is_verifier($account = null)
+function is_helper($account = null)
 {
+  global $HELPER;
   $account = $account ?? get_user_data();
   if ($account == null) {
     return false;
   }
-  return $account->is_verifier === true || $account->is_admin === true;
+  return $account->role >= $HELPER;
+}
+
+function is_verifier($account = null)
+{
+  global $VERIFIER;
+  $account = $account ?? get_user_data();
+  if ($account == null) {
+    return false;
+  }
+  return $account->role >= $VERIFIER;
 }
 
 function is_admin($account = null)
 {
+  global $ADMIN;
   $account = $account ?? get_user_data();
   if ($account == null) {
     return false;
   }
-  return $account->is_admin === true;
+  return $account->role === $ADMIN;
+}
+
+function can_modify_account($account, $target)
+{
+  global $VERIFIER, $ADMIN;
+
+  if ($account === null || $target === null) {
+    return false;
+  }
+
+  //Anything below VERIFIER can't modify anything
+  if ($account->role < $VERIFIER) {
+    return false;
+  }
+
+  //VERIFIERs can only modify lower roles
+  if ($account->role === $VERIFIER && $account->role > $target->role) {
+    return true;
+  }
+
+  //Admins can modify anyone
+  if ($account->role === $ADMIN) {
+    return true;
+  }
+
+  //Just in case something goes wrong and someone somehow gets a higher role number than $ADMIN
+  return false;
+}
+
+function can_assign_role($account, $role)
+{
+  global $USER, $EX_HELPER, $HELPER, $VERIFIER, $ADMIN;
+
+  if ($account === null) {
+    return false;
+  }
+
+  //Anything below VERIFIER can't modify anything
+  if ($account->role < $VERIFIER) {
+    return false;
+  }
+
+  //VERIFIERs can only assign user, ex-helper and helper
+  if ($account->role === $VERIFIER && array_search($role, [$USER, $EX_HELPER, $HELPER]) !== false) {
+    return true;
+  }
+
+  //Admins can assign any role
+  if ($account->role === $ADMIN) {
+    return true;
+  }
+
+  return false;
+}
+
+function get_role_name($role)
+{
+  global $USER, $EX_HELPER, $EX_VERIFIER, $EX_ADMIN, $HELPER, $VERIFIER, $ADMIN;
+
+  switch ($role) {
+    case $USER:
+      return "User";
+    case $EX_HELPER:
+      return "Ex-Helper";
+    case $EX_VERIFIER:
+      return "Ex-Verifier";
+    case $EX_ADMIN:
+      return "Ex-Admin";
+    case $HELPER:
+      return "Helper";
+    case $VERIFIER:
+      return "Verifier";
+    case $ADMIN:
+      return "Admin";
+    default:
+      return "Unknown";
+  }
+}
+
+function helper_can_delete($date_time)
+{
+  //Can only delete objects that are less than 24 hours old
+  return $date_time->getTimestamp() > time() - 86400;
 }
 
 function is_suspended($account = null)
@@ -183,7 +288,7 @@ function check_access($account, $needs_player = true, $reject_suspended = true)
   if ($account === null) {
     die_json(401, "Not logged in");
   }
-  if ($reject_suspended && $account->is_suspended) {
+  if ($reject_suspended && is_suspended($account)) {
     die_json(403, "Account is suspended");
   }
   if ($needs_player && $account->player === null) {

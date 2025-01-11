@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Suggestion with id {$suggestion->id} does not exist");
     }
 
-    if (!is_verifier($account)) {
+    if (!is_helper($account)) {
       die_json(403, "Not authorized");
     }
 

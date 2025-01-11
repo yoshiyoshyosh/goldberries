@@ -39,14 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       die_json(400, "Invalid id");
     }
     $id = intval($request['id']);
-    //Verifiers are allowed to change all properties, except is_verifier, is_admin, for all accounts except other verifiers and admins
     $target = Account::get_by_id($DB, $id);
     if ($target === false) {
       die_json(400, "Invalid id");
     }
 
-    if ($account->id !== $target->id && is_verifier($target) && !is_admin($account)) {
-      die_json(403, "You cannot change other verifiers' accounts");
+    if ($account->id !== $target->id && !can_modify_account($account, $target)) {
+      die_json(403, "You cannot modify this account");
     }
 
     $accountReq = new Account();
@@ -105,9 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       $target->password = password_hash($accountReq->password, PASSWORD_DEFAULT);
     }
 
-    if (is_admin($account)) {
-      $target->is_verifier = $accountReq->is_verifier;
-      $target->is_admin = $accountReq->is_admin;
+    //Assigning roles
+    if ($accountReq->role !== $target->role) {
+      if (can_assign_role($account, $accountReq->role)) {
+        $target->role = $accountReq->role;
+        $role_name = get_role_name($target->role);
+        log_warn("'{$account->player->name}' assigned role '{$role_name}' to {$target}", "Account");
+      } else {
+        die_json(403, "You cannot assign this role");
+      }
     }
 
     if ($target->update($DB) === false) {
@@ -281,8 +286,8 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
       die_json(400, "Invalid id");
     }
 
-    if ($account->id !== $target->id && is_verifier($target) && !is_admin($account)) {
-      die_json(403, "You cannot delete other verifiers' accounts");
+    if ($account->id !== $target->id && !can_modify_account($account, $target)) {
+      die_json(403, "You cannot delete this account");
     }
 
     if ($target->delete($DB) === false) {

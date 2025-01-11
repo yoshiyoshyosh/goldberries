@@ -10,8 +10,7 @@ class Account extends DbObject
   public ?string $password = null;
   public ?string $discord_id = null;
   public ?JsonDateTime $date_created;
-  public bool $is_verifier = false;
-  public bool $is_admin = false;
+  public int $role = 0;
   public bool $is_suspended = false;
   public ?string $suspension_reason = null;
   public bool $email_verified = false;
@@ -46,8 +45,7 @@ class Account extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
-    $this->is_verifier = $arr[$prefix . 'is_verifier'] === 't';
-    $this->is_admin = $arr[$prefix . 'is_admin'] === 't';
+    $this->role = intval($arr[$prefix . 'role']);
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
     $this->n_sub_verified = $arr[$prefix . 'n_sub_verified'] === 't';
     $this->n_chall_personal = $arr[$prefix . 'n_chall_personal'] === 't';
@@ -133,8 +131,7 @@ class Account extends DbObject
       'suspension_reason' => $this->suspension_reason,
       'email_verified' => $this->email_verified,
       'email_verify_code' => $this->email_verify_code,
-      'is_verifier' => $this->is_verifier,
-      'is_admin' => $this->is_admin,
+      'role' => $this->role,
       'is_suspended' => $this->is_suspended,
       'links' => $this->links !== null && count($this->links) > 0 ? implode("\t", $this->links) : null,
       'input_method' => $this->input_method,

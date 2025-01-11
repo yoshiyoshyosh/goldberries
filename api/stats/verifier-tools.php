@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $account = get_user_data();
 if ($account === null) {
   die_json(401, "Not logged in");
-} else if (!is_verifier($account)) {
-  die_json(403, "Not authorized");
+} else if (!is_helper($account)) {
+  die_json(403, "Forbidden");
 }
 
 $query = "

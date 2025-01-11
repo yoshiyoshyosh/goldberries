@@ -1,13 +1,13 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 
 // ===== GET Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  if ($account === null || (!is_verifier($account) && !is_admin($account))) {
-    die_json(403, "Not authorized");
+  if ($account === null || !is_verifier($account)) {
+    die_json(403, "Forbidden");
   }
 
   if (isset($_REQUEST['page'])) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // ===== DELETE Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($account === null || (!is_admin($account))) {
-    die_json(403, "Not authorized");
+    die_json(403, "Forbidden");
   }
 
   $id = $_REQUEST['id'] ?? null;

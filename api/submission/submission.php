@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!$submission->has_fields_set(['player_id', 'proof_url'])) {
     die_json(400, "player_id or proof_url is missing");
   }
-  if ($submission->player_id !== $account->player->id && !is_verifier($account)) {
+  if ($submission->player_id !== $account->player->id && !is_helper($account)) {
     die_json(403, "You are not allowed to make submissions for other players");
   }
   check_url($submission->proof_url, 'proof_url');
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Submission with id {$submission->id} does not exist");
     }
 
-    if (is_verifier($account)) {
+    if (is_helper($account)) {
       if ($old_submission->challenge_id !== $submission->challenge_id) {
         $challenge = Challenge::get_by_id($DB, $submission->challenge_id);
         if ($challenge === false) {
@@ -284,12 +284,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     die_json(404, "Submission with id {$id} does not exist");
   }
 
-  if ($submission->player_id !== $account->player->id && !is_verifier($account)) {
-    die_json(403, "You are not allowed to delete submissions for other players");
+  //Trying to delete submission for another player
+  if ($submission->player_id !== $account->player->id) {
+    if (!is_helper($account)) {
+      die_json(403, "You are not allowed to delete submissions for other players");
+    }
+    //If the account is a helper, they can only delete objects that were created within the last 24 hours
+    if ($account->role === $HELPER && !helper_can_delete($submission->date_created)) {
+      die_json(403, "You can only delete submissions that were created within the last 24 hours");
+    }
   }
+
   if ($submission->id === 46033) { //The golden challenge
     die_json(403, "This submission cannot be deleted (we use this as example in the rules)");
   }
+
 
   if ($submission->delete($DB)) {
     log_info("'{$account->player->name}' deleted {$submission}", "Submission");

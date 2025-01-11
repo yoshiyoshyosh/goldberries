@@ -8,7 +8,7 @@ class Player extends DbObject
 
 
   // === Player Bonus Objects ===
-  public array $account = array(); //is_verifier, is_admin, is_suspended
+  public array $account = array(); //role, is_suspended
 
   // === Abstract Functions ===
   function get_field_set()
@@ -23,14 +23,10 @@ class Player extends DbObject
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
 
-    if (isset($arr[$prefix . 'account_is_verifier']))
-      $this->account['is_verifier'] = $arr[$prefix . 'account_is_verifier'] === 't';
+    if (isset($arr[$prefix . 'account_role']))
+      $this->account['role'] = $arr[$prefix . 'account_role'] === 't';
     else
-      $this->account['is_verifier'] = false;
-    if (isset($arr[$prefix . 'account_is_admin']))
-      $this->account['is_admin'] = $arr[$prefix . 'account_is_admin'] === 't';
-    else
-      $this->account['is_admin'] = false;
+      $this->account['role'] = 0;
     if (isset($arr[$prefix . 'account_is_suspended']))
       $this->account['is_suspended'] = $arr[$prefix . 'account_is_suspended'] === 't';
     else
@@ -63,8 +59,7 @@ class Player extends DbObject
       return;
     }
     $account = $accounts[0];
-    $this->account['is_verifier'] = $account->is_verifier;
-    $this->account['is_admin'] = $account->is_admin;
+    $this->account['role'] = $account->role;
     $this->account['is_suspended'] = $account->is_suspended;
     $this->account['suspension_reason'] = $account->suspension_reason;
 
@@ -84,13 +79,17 @@ class Player extends DbObject
   // === Find Functions ===
   static function find_by_group($DB, string $group)
   {
+    global $HELPER, $VERIFIER, $ADMIN;
+
     $where = "";
     if ($group === "user") {
-      $where = "account.id IS NULL OR (account.is_verifier = false AND account.is_admin = false AND account.is_suspended = false)";
+      $where = "account.id IS NULL OR (account.role < $HELPER AND account.is_suspended = false)";
+    } else if ($group === "helper") {
+      $where = "role >= $HELPER";
     } else if ($group === "verifier") {
-      $where = "is_verifier = true";
+      $where = "role >= $VERIFIER";
     } else if ($group === "admin") {
-      $where = "is_admin = true";
+      $where = "role >= $ADMIN";
     } else if ($group === "suspended") {
       $where = "is_suspended = true";
     } else if ($group === "unclaimed") {

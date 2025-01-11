@@ -122,10 +122,10 @@ class Suggestion extends DbObject
       $where[] = "(suggestion.is_verified = true OR suggestion.is_verified IS NULL)";
     }
 
-    if ($account === null || (!is_verifier($account) && $account->player_id === null)) {
+    if ($account === null || (!is_helper($account) && $account->player_id === null)) {
       $where[] = "suggestion.is_verified = true";
     } else {
-      if (is_verifier($account)) {
+      if (is_helper($account)) {
         //$where[] = "is_verified IS NOT NULL";
       } else {
         $where[] = "(suggestion.is_verified = true OR suggestion.author_id = " . $account->player_id . ")";

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $account = get_user_data();
 check_access($account, false);
-if (!$account->is_admin) {
+if (!is_admin($account)) {
   die_json(403, "Not authorized");
 }
 

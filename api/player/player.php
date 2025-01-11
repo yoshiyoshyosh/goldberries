@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $customization = isset($_REQUEST['customization']) && $_REQUEST['customization'] === 'true';
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   //Create request
-  if ($account->player_id !== null && !is_verifier($account)) {
+  if ($account->player_id !== null && !is_helper($account)) {
     die_json(400, "Account already has a player");
   }
   if (!isset($request['name'])) {

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $account = get_user_data();
 check_access($account, true);
 
-if (!is_verifier($account)) {
+if (!is_helper($account)) {
   die_json(403, 'Not Authorized');
 }
 

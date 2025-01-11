@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 $account = get_user_data();
 
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   check_access($account, true);
 
-  if (!is_verifier($account)) {
+  if (!is_helper($account)) {
     die_json(403, 'Not Authorized');
   }
 
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   check_access($account, true);
 
-  if (!is_verifier($account)) {
+  if (!is_helper($account)) {
     die_json(403, 'Not Authorized');
   }
 
