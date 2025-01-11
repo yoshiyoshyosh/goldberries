@@ -88,7 +88,10 @@ function FAQEntryVanillaReferences({}) {
   const difficulties = getQueryData(query);
 
   const vanilla_references = [
-    { name: "The Summit A-Side [FC]", difficulty_id: 17 },
+    { name: "1-8C, 1A, 2A, 1B, 2B, 4A", difficulty_id: 21 },
+    { name: "3A, 5A, 6A, 8A, 3B, 4B, 5B", difficulty_id: 18 },
+    { name: "7A, 6B, 7B, 8B", difficulty_id: 22 },
+    { name: "7A Full Clear", difficulty_id: 17 },
     { name: "Farewell [C/FC]", difficulty_id: 14 },
     { name: "Farewell [No DTS] [C/FC]", difficulty_id: 12 },
     { name: "Any%", difficulty_id: 14, note: "Forsaken City through The Summit" },

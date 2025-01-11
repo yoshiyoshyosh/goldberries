@@ -107,7 +107,7 @@ export function SubmissionDisplay({ id, onDelete }) {
 
   const submission = getQueryData(query);
   const isOwnSubmission = auth.hasPlayerClaimed && submission && submission.player_id === auth.user.player.id;
-  const isVerifier = auth.hasVerifierPriv;
+  const isHelper = auth.hasHelperPriv;
 
   const challenge = submission.challenge;
   const map = challenge?.map;
@@ -144,7 +144,7 @@ export function SubmissionDisplay({ id, onDelete }) {
         </Grid>
         <Grid item xs={12} sm="auto">
           <Stack direction="row" gap={1}>
-            {isVerifier || isOwnSubmission ? (
+            {isHelper || isOwnSubmission ? (
               <CustomizedMenu title={t("buttons.modify")}>
                 <MenuItem disableRipple onClick={() => editModal.open(submission)}>
                   <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />

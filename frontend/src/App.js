@@ -164,7 +164,7 @@ const router = createBrowserRouter([
           {
             path: "submission-queue/:submission?",
             element: (
-              <ProtectedRoute needsVerifier redirect="manage/submission-queue">
+              <ProtectedRoute needsHelper redirect="manage/submission-queue">
                 <PageSubmissionQueue />
               </ProtectedRoute>
             ),
@@ -172,7 +172,7 @@ const router = createBrowserRouter([
           {
             path: "challenges",
             element: (
-              <ProtectedRoute needsVerifier redirect="manage/challenges">
+              <ProtectedRoute needsHelper redirect="manage/challenges">
                 <PageManageChallenges />
               </ProtectedRoute>
             ),
@@ -416,7 +416,7 @@ export function DateLibraryWrapper({ children }) {
   );
 }
 
-function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirect, children }) {
+function ProtectedRoute({ needsPlayerClaimed, needsHelper, needsVerifier, needsAdmin, redirect, children }) {
   const auth = useAuth();
   if (auth.user === null) {
     return <Navigate to={"/login/" + encodeURIComponent(redirect)} replace />;
@@ -424,10 +424,13 @@ function ProtectedRoute({ needsPlayerClaimed, needsVerifier, needsAdmin, redirec
   if (needsPlayerClaimed && auth.user.player === null) {
     return <PageNoPlayerClaimed />;
   }
-  if (needsVerifier && !auth.isVerifier && !auth.isAdmin) {
+  if (needsVerifier && !auth.hasHelperPriv) {
+    return <Page403 message="Only helpers can access this page!" />;
+  }
+  if (needsVerifier && !auth.hasVerifierPriv) {
     return <Page403 message="Only verifiers can access this page!" />;
   }
-  if (needsAdmin && !auth.isAdmin) {
+  if (needsAdmin && !auth.hasAdminPriv) {
     return <Page403 message="Only admins can access this page!" />;
   }
   return children;
@@ -586,10 +589,9 @@ export function Layout() {
       path: "/login",
       icon: <FontAwesomeIcon icon={faSignIn} />,
     },
-    verifier: {
+    helper: {
       name: t("internal_menu.name"),
       items: [
-        { name: t("internal_menu.logs"), path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
         {
           name: t("internal_menu.submission_queue"),
           path: "/manage/submission-queue",
@@ -600,6 +602,12 @@ export function Layout() {
           path: "/manage/challenges",
           icon: <FontAwesomeIcon icon={faEdit} />,
         },
+      ],
+    },
+    verifier: {
+      name: t("internal_menu.name"),
+      items: [
+        { name: t("internal_menu.logs"), path: "/manage/logs", icon: <FontAwesomeIcon icon={faInbox} /> },
         {
           name: t("internal_menu.manage_accounts"),
           path: "/manage/accounts",
@@ -669,13 +677,17 @@ export function Layout() {
 
   const leftMenu = [menus.lists, menus.campaigns, menus.other];
   const rightMenu = [];
-  if (auth.isVerifier) {
-    const verifierMenu = menus.verifier;
-    if (auth.isAdmin) {
-      verifierMenu.items.push({ divider: true });
-      menus.admin.items.forEach((item) => verifierMenu.items.push(item));
+  if (auth.hasHelperPriv) {
+    const helperMenu = menus.helper;
+    if (auth.hasVerifierPriv) {
+      helperMenu.items.push({ divider: true });
+      menus.verifier.items.forEach((item) => helperMenu.items.push(item));
     }
-    leftMenu.push(verifierMenu);
+    if (auth.hasAdminPriv) {
+      helperMenu.items.push({ divider: true });
+      menus.admin.items.forEach((item) => helperMenu.items.push(item));
+    }
+    leftMenu.push(helperMenu);
   }
   rightMenu.push(menus.submit);
   rightMenu.push(menus.search);
@@ -1064,7 +1076,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
         <Grid item sm={5} sx={{ pt: "0 !important" }}>
           <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
             <GlobalNoticesIcon />
-            {auth.hasVerifierPriv && <VerifierStatsNavDesktop />}
+            {auth.hasHelperPriv && <VerifierStatsNavDesktop />}
             {rightMenu.map((entry, index) => {
               if (entry.items) {
                 return <DesktopSubMenu key={index} name={entry.name} icon={entry.icon} items={entry.items} />;
@@ -1211,6 +1223,9 @@ function VerifierStatsNavDesktop() {
     open_player_claims: null,
   };
 
+  const auth = useAuth();
+  const isVerifier = auth.hasVerifierPriv; //If not, then it's a helper
+
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       <Tooltip title={t("widgets.submission_queue")}>
@@ -1219,12 +1234,14 @@ function VerifierStatsNavDesktop() {
           {query.isError ? "X" : data.submissions_in_queue ?? "..."}
         </Link>
       </Tooltip>
-      <Tooltip title={t("widgets.player_claims")}>
-        <Link to="/manage/accounts/player-claims" style={{ color: "inherit", textDecoration: "none" }}>
-          <FontAwesomeIcon icon={faUserNinja} style={{ marginRight: "5px" }} />
-          {query.isError ? "X" : data.open_player_claims ?? "..."}
-        </Link>
-      </Tooltip>
+      {isVerifier && (
+        <Tooltip title={t("widgets.player_claims")}>
+          <Link to="/manage/accounts/player-claims" style={{ color: "inherit", textDecoration: "none" }}>
+            <FontAwesomeIcon icon={faUserNinja} style={{ marginRight: "5px" }} />
+            {query.isError ? "X" : data.open_player_claims ?? "..."}
+          </Link>
+        </Tooltip>
+      )}
       <Tooltip title={t("widgets.pending_suggestions")}>
         <Link to="/suggestions" style={{ color: "inherit", textDecoration: "none" }}>
           <FontAwesomeIcon icon={faChartBar} style={{ marginRight: "5px" }} />

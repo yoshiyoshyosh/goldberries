@@ -88,7 +88,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
       <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 1.5 }}>
         <GamebananaEmbed campaign={campaign} size="large" />
       </Stack>
-      {auth.hasVerifierPriv && (
+      {auth.hasHelperPriv && (
         <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
             onClick={editMapModal.open}

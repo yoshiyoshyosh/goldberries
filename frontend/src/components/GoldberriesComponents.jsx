@@ -23,7 +23,7 @@ import {
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { Autocomplete, Chip, Divider, Grid, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
-import { API_BASE_URL, DIFF_CONSTS, getNewDifficultyColors, isTempVerifier } from "../util/constants";
+import { API_BASE_URL, DIFF_CONSTS, getNewDifficultyColors } from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,6 +39,8 @@ import {
   faExternalLinkAlt,
   faGamepad,
   faHammer,
+  faHand,
+  faHeartPulse,
   faHourglass,
   faInfoCircle,
   faKeyboard,
@@ -46,6 +48,7 @@ import {
   faPersonDrowning,
   faQuestionCircle,
   faShield,
+  faShieldHeart,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -66,6 +69,7 @@ import { StyledExternalLink, StyledLink, TooltipLineBreaks } from "./BasicCompon
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
+import { isAdmin, isHelper, isVerifier } from "../hooks/AuthProvider";
 
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const { t } = useTranslation();
@@ -638,9 +642,6 @@ export function PlayerChip({ player, trimLongNames = false, ...props }) {
   }
 
   const style = getPlayerNameColorStyle(player, settings);
-  const isTemp = player.account.is_verifier && isTempVerifier(player.id);
-  const hasOneIcon = player.account.is_verifier || player.account.is_suspended || isTemp;
-
   if (trimLongNames) {
     style.overflow = "hidden";
     style.maxWidth = "130px";
@@ -652,12 +653,10 @@ export function PlayerChip({ player, trimLongNames = false, ...props }) {
         label={
           <Stack direction="row" alignItems="center" gap={1}>
             <span style={style}>{player.name}</span>
-            {hasOneIcon && (
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                {player.account.is_verifier && <VerifierIcon />}
-                {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
-                {isTemp && <TempVerifierIcon />}
-              </Stack>
+            {player.account.is_suspended ? (
+              <SuspendedIcon reason={player.account.suspension_reason} />
+            ) : (
+              <AccountRoleIcon account={player.account} />
             )}
           </Stack>
         }
@@ -685,18 +684,24 @@ export function SubmissionIcon({ submission }) {
   );
 }
 
-export function TempVerifierIcon() {
+export function AccountRoleIcon({ account }) {
+  if (isHelper(account)) return <HelperIcon />;
+  if (isVerifier(account)) return <VerifierIcon />;
+  if (isAdmin(account)) return <AdminIcon />;
+  return null;
+}
+export function HelperIcon() {
   const { t } = useTranslation();
   return (
-    <Tooltip title={t("components.temp_verifier_icon")} arrow placement="top">
-      <FontAwesomeIcon icon={faHourglass} color="grey" />
+    <Tooltip title={t("components.roles.helper")} arrow placement="top">
+      <FontAwesomeIcon icon={faHand} color="grey" />
     </Tooltip>
   );
 }
 export function VerifierIcon() {
   const { t } = useTranslation();
   return (
-    <Tooltip title={t("components.verifier_icon")} arrow placement="top">
+    <Tooltip title={t("components.roles.verifier")} arrow placement="top">
       <FontAwesomeIcon icon={faShield} color="grey" />
     </Tooltip>
   );
@@ -704,7 +709,7 @@ export function VerifierIcon() {
 export function AdminIcon() {
   const { t } = useTranslation();
   return (
-    <Tooltip title={t("components.admin_icon")} arrow placement="top">
+    <Tooltip title={t("components.roles.admin")} arrow placement="top">
       <FontAwesomeIcon icon={faHammer} color="grey" />
     </Tooltip>
   );

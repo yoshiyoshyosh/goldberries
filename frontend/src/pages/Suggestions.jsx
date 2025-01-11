@@ -223,7 +223,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
   };
 
   const canDelete =
-    auth.hasVerifierPriv ||
+    auth.hasHelperPriv ||
     (suggestion.author_id !== null &&
       auth.user?.player_id === suggestion.author_id &&
       suggestion.is_verified !== true);
@@ -622,7 +622,7 @@ function ViewSuggestionModal({ id }) {
   const requiresComment = !selfHasDoneChallenge && isPlacementSuggestion;
   const voteButtonsDisabled =
     (!auth.hasPlayerClaimed ||
-      (isExpired && !auth.hasVerifierPriv) ||
+      (isExpired && !auth.hasHelperPriv) ||
       (requiresComment && userText.trim().length < 10)) &&
     !hasVoted;
 
@@ -691,7 +691,7 @@ function ViewSuggestionModal({ id }) {
         <Grid item xs={12} sm>
           <SuggestionName suggestion={suggestion} expired={isExpired} />
         </Grid>
-        {auth.hasVerifierPriv && (
+        {auth.hasHelperPriv && (
           <Grid item xs={12} sm="auto">
             <ButtonGroup>
               <Tooltip title={t(isUnverified ? "buttons.verify" : "buttons.accept")} arrow>

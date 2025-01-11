@@ -169,7 +169,6 @@ function TimeTakenTiersGraph({ tgl, useSuggested }) {
                 dataKey="time_taken"
                 fill={theme.palette.text.primary}
                 label={(props) => {
-                  console.log(props);
                   return (
                     <text
                       x={props.x + props.width}

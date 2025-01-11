@@ -141,7 +141,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
     setChallenge(challenge);
   };
 
-  const isVerifier = auth.hasVerifierPriv;
+  const isHelper = auth.hasHelperPriv;
   const submitDisabled = player === null || (challenge === null && !submission.new_challenge_id);
 
   const new_challenge_id = form.watch("new_challenge_id");
@@ -149,7 +149,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
   const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
 
-  if (!isVerifier && submission.player.id !== auth.user.player.id) {
+  if (!isHelper && submission.player.id !== auth.user.player.id) {
     return (
       <>
         <Typography variant="h6" gutterBottom>
@@ -171,7 +171,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           <VerificationStatusChip isVerified={submission.is_verified} i18keySuffix="status_prefix" />
         </Stack>
 
-        {isVerifier ? (
+        {isHelper ? (
           <FullChallengeSelect challenge={challenge} setChallenge={setChallenge} />
         ) : (
           new_challenge_id === null && <FullChallengeDisplay challenge={challenge} />
@@ -182,7 +182,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
             <Divider flexItem />
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="h6">{t("new_challenge_title")}</Typography>
-              {isVerifier && (
+              {isHelper && (
                 <Stack direction="row" gap={2}>
                   <CreateAnyButton
                     defaultCampaignName={submission.new_challenge?.name}
@@ -198,13 +198,13 @@ export function FormSubmission({ submission, onSave, ...props }) {
             </Stack>
             <TextField
               label={t_g("url")}
-              disabled={!isVerifier}
+              disabled={!isHelper}
               fullWidth
               {...form.register("new_challenge.url", FormOptions.UrlRequired(t_ff))}
             />
             <TextField
               label={t_g("name")}
-              disabled={!isVerifier}
+              disabled={!isHelper}
               fullWidth
               {...form.register("new_challenge.name", FormOptions.Name128Required(t_ff))}
             />
@@ -212,7 +212,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               label={t_g("description")}
               multiline
               minRows={2}
-              disabled={!isVerifier}
+              disabled={!isHelper}
               fullWidth
               {...form.register("new_challenge.description")}
             />
@@ -220,7 +220,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               label={t("golden_changes")}
               multiline
               minRows={2}
-              disabled={!isVerifier}
+              disabled={!isHelper}
               fullWidth
               {...form.register("new_challenge.golden_changes")}
             />
@@ -230,7 +230,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
         <Divider sx={{ my: 2 }} />
 
-        {isVerifier ? (
+        {isHelper ? (
           <PlayerSelect type="all" value={player} onChange={(e, v) => setPlayer(v)} sx={{ mt: 2, mb: 1 }} />
         ) : (
           <Stack direction="row" gap={2} sx={{ mt: 2, mb: 1 }}>
@@ -249,12 +249,12 @@ export function FormSubmission({ submission, onSave, ...props }) {
                 onChange={field.onChange}
                 label={t("is_fc")}
                 checked={field.value}
-                disabled={!isVerifier}
+                disabled={!isHelper}
                 control={<Checkbox />}
               />
             )}
           />
-          {isVerifier && submission.is_verified !== null && (
+          {isHelper && submission.is_verified !== null && (
             <>
               <Controller
                 control={form.control}
@@ -302,20 +302,20 @@ export function FormSubmission({ submission, onSave, ...props }) {
         <TextField
           {...form.register("proof_url")}
           label={t("proof_url") + " *"}
-          disabled={!isVerifier}
+          disabled={!isHelper}
           fullWidth
           sx={{ my: 2 }}
           InputLabelProps={{ shrink: true }}
         />
         {proofUrlDebounced && <ProofEmbed url={proofUrlDebounced} />}
 
-        {(submission.raw_session_url || isVerifier) && (
+        {(submission.raw_session_url || isHelper) && (
           <TextField
             {...form.register("raw_session_url")}
             label={t("raw_session_url")}
             fullWidth
             sx={{ mt: 2 }}
-            disabled={!isVerifier}
+            disabled={!isHelper}
             InputLabelProps={{ shrink: true }}
           />
         )}
@@ -384,7 +384,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           render={({ field }) => (
             <DateAchievedTimePicker
               value={field.value}
-              disabled={!isVerifier}
+              disabled={!isHelper}
               onChange={(value) => {
                 field.onChange(value);
               }}
@@ -431,7 +431,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
           ) : null}
         </List>
 
-        {isVerifier ? (
+        {isHelper ? (
           <TextField
             {...form.register("verifier_notes")}
             label={t("verifier_notes")}
@@ -445,7 +445,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
         <Divider sx={{ my: 2 }} />
 
-        {isVerifier && submission.is_verified === null && (
+        {isHelper && submission.is_verified === null && (
           <>
             <Stack direction="row" gap={2}>
               <Button

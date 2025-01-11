@@ -1,5 +1,3 @@
-import { useQuery } from "react-query";
-import { fetchTopGoldenList } from "../util/api";
 import {
   BasicBox,
   CustomIconButton,
@@ -26,8 +24,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getChallengeReference, getNewDifficultyColors } from "../util/constants";
-import { Link } from "react-router-dom";
+import { getNewDifficultyColors } from "../util/constants";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -41,13 +38,12 @@ import {
   faInfoCircle,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
-import { ChallengeDisplay, ChallengeSubmissionTable } from "../pages/Challenge";
+import { ChallengeDisplay } from "../pages/Challenge";
 import { getChallengeSuffix, getMapName, secondsToDuration } from "../util/data_util";
 import {
   CampaignIcon,
   ChallengeFcIcon,
   DifficultyChip,
-  OtherIcon,
   SubmissionFcIcon,
 } from "../components/GoldberriesComponents";
 import { useAuth } from "../hooks/AuthProvider";
@@ -212,7 +208,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
               }
               label={t("use_suggested")}
             />
-            {(ownPlayer || auth.hasVerifierPriv) && (
+            {(ownPlayer || auth.hasHelperPriv) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -830,7 +826,7 @@ function TopGoldenListRow({
               )}
             </StyledLink>
           )}
-          {isPlayer && (isOwnPlayer || auth.hasVerifierPriv) && editSuggestions && (
+          {isPlayer && (isOwnPlayer || auth.hasHelperPriv) && editSuggestions && (
             <CustomIconButton onClick={onEditSuggestion} sx={{ py: 3 / 8 }}>
               <FontAwesomeIcon icon={faEdit} size="sm" />
             </CustomIconButton>

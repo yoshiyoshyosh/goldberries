@@ -139,7 +139,7 @@ export function ChallengeDisplay({ id }) {
               {t("buttons.submit")}
             </Button>
           </Link>
-          {auth.hasVerifierPriv && (
+          {auth.hasHelperPriv && (
             <Button
               onClick={editChallengeModal.open}
               variant="outlined"
@@ -272,7 +272,7 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
                         <FontAwesomeIcon icon={faInfoCircle} />
                       </TooltipLineBreaks>
                     )}
-                    {challenge.is_placed === false && auth.hasVerifierPriv && (
+                    {challenge.is_placed === false && auth.hasHelperPriv && (
                       <CustomIconButton sx={{ marginLeft: "auto" }} onClick={placeChallenge}>
                         <TooltipLineBreaks title="Accept placement for this challenge">
                           <FontAwesomeIcon icon={faCheck} />
@@ -452,7 +452,7 @@ function MapGoldenChangesBox({ map }) {
           isMultiline
         />
       )}
-      {auth.hasVerifierPriv && map.golden_changes === "Unknown" && (
+      {auth.hasHelperPriv && map.golden_changes === "Unknown" && (
         <InfoBoxIconTextLine
           text={
             <Button variant="outlined" color="warning" size="small" onClick={setNoChanges}>
@@ -484,7 +484,7 @@ export function ChallengeSubmissionTable({
           <TableRow>
             <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
             <TableCell width={compact ? 1 : undefined}>{t_g("player", { count: 1 })}</TableCell>
-            {!compact && auth.hasVerifierPriv && (
+            {!compact && auth.hasHelperPriv && (
               <TableCell width={1} sx={{ ...displayNoneOnMobile, px: 0 }}></TableCell>
             )}
             {!compact && (
@@ -577,7 +577,7 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
           <SubmissionFcIcon submission={submission} height="1.3em" />
         </Stack>
       </TableCell>
-      {!compact && auth.hasVerifierPriv && (
+      {!compact && auth.hasHelperPriv && (
         <TableCell width={1} align="center" sx={{ ...displayNoneOnMobile, px: 0 }}>
           <ToggleSubmissionFcButton submission={submission} />
         </TableCell>

@@ -266,7 +266,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            {auth.hasVerifierPriv ? (
+            {auth.hasHelperPriv ? (
               <PlayerSelect
                 type="all"
                 label={t("verifier.player_select")}
@@ -277,7 +277,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               <PlayerChip player={selectedPlayer} />
             )}
           </Grid>
-          {auth.hasVerifierPriv && (
+          {auth.hasHelperPriv && (
             <Grid item xs={12} sm={6}>
               <Stack direction="row" gap={1} alignItems="center" sx={{ height: "100%" }}>
                 {isAddingPlayer && (
@@ -745,7 +745,7 @@ export function MultiUserSubmission() {
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            {auth.hasVerifierPriv ? (
+            {auth.hasHelperPriv ? (
               <PlayerSelect
                 type="all"
                 label={t_ts("verifier.player_select")}
@@ -922,7 +922,7 @@ export function NewChallengeUserSubmission({}) {
         <h4>{t_ts("your_run")}</h4>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            {auth.hasVerifierPriv ? (
+            {auth.hasHelperPriv ? (
               <PlayerSelect
                 type="all"
                 label={t_ts("verifier.player_select")}

@@ -1,10 +1,14 @@
-import { useAuth } from "../../hooks/AuthProvider";
+import { ROLES, useAuth } from "../../hooks/AuthProvider";
 import {
   Button,
   Checkbox,
   Divider,
+  FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -13,7 +17,13 @@ import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
 import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { PlayerSelect } from "../GoldberriesComponents";
-import { useDeleteAccount, useGetAccount, useGetAllPlayers, usePostAccount } from "../../hooks/useApi";
+import {
+  getQueryData,
+  useDeleteAccount,
+  useGetAccount,
+  useGetAllPlayers,
+  usePostAccount,
+} from "../../hooks/useApi";
 import { getAccountName } from "../../util/data_util";
 import { FormOptions } from "../../util/constants";
 import { toast } from "react-toastify";
@@ -52,14 +62,10 @@ export function FormAccountWrapper({ account, id, onSave, ...props }) {
     );
   }
 
-  return (
-    <FormAccount
-      account={query.data?.data ?? query.data ?? account}
-      allPlayers={playersQuery.data.data}
-      onSave={onSave}
-      {...props}
-    />
-  );
+  const data = getQueryData(query);
+  const players = getQueryData(playersQuery);
+
+  return <FormAccount account={data ?? account} allPlayers={players} onSave={onSave} {...props} />;
 }
 
 //This account form is used by team members, not users themselves
@@ -110,6 +116,7 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
   }, [account]);
 
   const formAccount = form.watch();
+  console.log(formAccount.role);
 
   return (
     <form {...props}>
@@ -234,70 +241,61 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
 
       <Divider sx={{ my: 2 }} />
 
-      <Controller
-        control={form.control}
-        name="is_suspended"
-        render={({ field }) => (
-          <FormControlLabel
-            onChange={field.onChange}
-            label={t("suspended")}
-            checked={field.value}
-            control={<Checkbox />}
-          />
-        )}
-      />
+      <Stack direction="column" alignItems="flex-start">
+        <FormControl sx={{ minWidth: "200px", mb: 2 }}>
+          <InputLabel>{t("role")}</InputLabel>
+          <Select
+            label={t("role")}
+            value={formAccount.role}
+            onChange={(e) => form.setValue("role", e.target.value)}
+            MenuProps={{ disableScrollLock: true }}
+          >
+            {getRoleOptions(auth).map((role) => (
+              <MenuItem key={role.value} value={role.value} disabled={role.disabled}>
+                {role.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-      {auth.isAdmin && (
-        <>
-          <Controller
-            control={form.control}
-            name="is_verifier"
-            render={({ field }) => (
-              <FormControlLabel
-                onChange={field.onChange}
-                label={t("is_verifier")}
-                checked={field.value}
-                control={<Checkbox />}
-              />
-            )}
-          />
-          <Controller
-            control={form.control}
-            name="is_admin"
-            render={({ field }) => (
-              <FormControlLabel
-                onChange={field.onChange}
-                label={t("is_admin")}
-                checked={field.value}
-                control={<Checkbox />}
-              />
-            )}
-          />
-        </>
-      )}
-
-      {formAccount.is_suspended && (
-        <TextField
-          label={t("suspension_reason")}
-          {...form.register("suspension_reason", { required: true })}
-          fullWidth
-          error={!!errors.suspended_reason}
-          helperText={errors.suspended_reason?.message}
+        <Controller
+          control={form.control}
+          name="is_suspended"
+          render={({ field }) => (
+            <FormControlLabel
+              onChange={field.onChange}
+              label={t("suspended")}
+              checked={field.value}
+              control={<Checkbox />}
+            />
+          )}
         />
-      )}
 
-      <Controller
-        control={form.control}
-        name="reset_session"
-        render={({ field }) => (
-          <FormControlLabel
-            onChange={field.onChange}
-            label={t("logout_user")}
-            checked={field.value}
-            control={<Checkbox />}
+        {formAccount.is_suspended && (
+          <TextField
+            label={t("suspension_reason")}
+            {...form.register("suspension_reason", { required: true })}
+            fullWidth
+            error={!!errors.suspended_reason}
+            helperText={errors.suspended_reason?.message}
           />
         )}
-      />
+
+        <Controller
+          control={form.control}
+          name="reset_session"
+          render={({ field }) => (
+            <FormControlLabel
+              onChange={field.onChange}
+              label={t("logout_user")}
+              checked={field.value}
+              control={<Checkbox />}
+            />
+          )}
+        />
+      </Stack>
+
+      <Divider sx={{ my: 2 }} />
 
       <Button variant="contained" color="primary" fullWidth onClick={onSubmit}>
         {t("button_update")}
@@ -326,4 +324,22 @@ export function FormAccount({ account, allPlayers, onSave, ...props }) {
       </Stack>
     </form>
   );
+}
+
+function getRoleOptions(auth) {
+  //Returns the the roles that the current user can assign as MenuOptions, or as disabled MenuOptions if they cannot assign them
+
+  const isAdmin = auth.hasAdminPriv;
+
+  const roleOptions = [
+    { value: ROLES.USER, label: "User", disabled: false },
+    { value: ROLES.EX_HELPER, label: "Ex-Helper", disabled: false },
+    { value: ROLES.EX_VERIFIER, label: "Ex-Verifier", disabled: !isAdmin },
+    { value: ROLES.EX_ADMIN, label: "Ex-Admin", disabled: !isAdmin },
+    { value: ROLES.HELPER, label: "Helper", disabled: false },
+    { value: ROLES.VERIFIER, label: "Verifier", disabled: !isAdmin },
+    { value: ROLES.ADMIN, label: "Admin", disabled: !isAdmin },
+  ];
+
+  return roleOptions;
 }

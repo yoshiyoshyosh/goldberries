@@ -147,7 +147,7 @@ export function CampaignDisplay({ id, tab, setTab = () => {} }) {
         <GamebananaEmbed campaign={campaign} size="large" />
       </Stack>
 
-      {auth.hasVerifierPriv && (
+      {auth.hasHelperPriv && (
         <Stack direction="row" alignItems="center" justifyContent="flex-end">
           <Button
             onClick={editCampaignModal.open}
@@ -600,7 +600,7 @@ function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
         <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
       </TableCell>
       <TableCell width={1} align="right" sx={{ pr: 0 }}>
-        {hasAnySubmission && auth.hasVerifierPriv && <ToggleSubmissionFcButton submission={submission} />}
+        {hasAnySubmission && auth.hasHelperPriv && <ToggleSubmissionFcButton submission={submission} />}
       </TableCell>
       <TableCell width={1} align="right" sx={{ px: 2, borderRight }}>
         <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-end">

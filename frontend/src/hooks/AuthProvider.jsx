@@ -8,6 +8,25 @@ import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 const AuthContext = createContext();
+export const ROLES = {
+  USER: 0,
+  EX_HELPER: 10,
+  EX_VERIFIER: 11,
+  EX_ADMIN: 12,
+  HELPER: 20,
+  VERIFIER: 30,
+  ADMIN: 40,
+};
+
+export function isHelper(account) {
+  return account.role === ROLES.HELPER;
+}
+export function isVerifier(account) {
+  return account.role === ROLES.VERIFIER;
+}
+export function isAdmin(account) {
+  return account.role === ROLES.ADMIN;
+}
 
 export function AuthProvider({ children }) {
   const { t } = useTranslation(undefined, { keyPrefix: "hooks.auth" });
@@ -79,9 +98,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   const isLoggedIn = user !== null;
-  const isVerifier = user !== null && user.is_verifier === true;
-  const isAdmin = user !== null && user.is_admin === true;
+
+  const isHelper = user !== null && user.role === ROLES.HELPER;
+  const isVerifier = user !== null && user.role === ROLES.VERIFIER;
+  const isAdmin = user !== null && user.role === ROLES.ADMIN;
+
+  const hasHelperPriv = isHelper || isVerifier || isAdmin;
   const hasVerifierPriv = isVerifier || isAdmin;
+  const hasAdminPriv = isAdmin;
+
   const hasPlayerClaimed = user !== null && user.player_id !== null;
   const isPlayerWithId = (id) => hasPlayerClaimed && user.player_id === id;
 
@@ -90,9 +115,12 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isLoggedIn,
+        isHelper,
         isVerifier,
         isAdmin,
+        hasHelperPriv,
         hasVerifierPriv,
+        hasAdminPriv,
         hasPlayerClaimed,
         loginWithEmail,
         loginWithDiscord,

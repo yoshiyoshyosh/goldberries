@@ -290,32 +290,6 @@ export function getDifficultySubtierShares(id, ignoreGuard = false) {
   return shares;
 }
 
-const REFERENCE_CHALLENGES = {
-  2070: [1],
-  2093: [1],
-  1834: [1],
-  1920: [1],
-};
-export const getChallengeReference = (id) => {
-  if (REFERENCE_CHALLENGES[id] === undefined) {
-    return null;
-  }
-  return REFERENCE_CHALLENGES[id];
-};
-
-const TEMP_VERIFIERS = {
-  239: true,
-  32: true,
-  20: true,
-  664: true,
-  712: true,
-  232: true,
-  462: true,
-};
-export function isTempVerifier(id) {
-  return TEMP_VERIFIERS[id] !== undefined;
-}
-
 //Some difficulty details being used in the frontend
 const DIFF_CONSTS_ = {
   //Difficulty ID constants

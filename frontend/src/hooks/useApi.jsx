@@ -235,8 +235,8 @@ export function useGetPlayerSubmissions(id, archived = false, arbitrary = false)
 
 export function useGetVerifierList() {
   return useQuery({
-    queryKey: ["player_list", "verifier"],
-    queryFn: () => fetchPlayerList("verifier"),
+    queryKey: ["player_list", "helper"],
+    queryFn: () => fetchPlayerList("helper"),
     onError: errorToast,
   });
 }

@@ -25,16 +25,17 @@ import {
   LinkIcon,
   SubmissionEmbed,
   SuspendedIcon,
-  TempVerifierIcon,
+  HelperIcon,
   VerifierIcon,
+  AccountRoleIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS, DIFF_CONSTS, getGroupId, isTempVerifier } from "../util/constants";
+import { DIFFICULTY_COLORS, DIFF_CONSTS, getGroupId } from "../util/constants";
 import { getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { useAuth } from "../hooks/AuthProvider";
+import { ROLES, isAdmin, isHelper, isVerifier, useAuth } from "../hooks/AuthProvider";
 import { useTranslation } from "react-i18next";
 import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Cell } from "recharts";
@@ -80,8 +81,6 @@ export function PlayerDisplay({ id }) {
   const suspended = player.account.is_suspended;
   const stats = getQueryData(statsQuery);
 
-  const isTemp = player.account.is_verifier && isTempVerifier(player.id);
-
   const nameStyle = getPlayerNameColorStyle(player, settings);
   const aboutMeSplit = player.account.about_me?.split("\n") || [];
 
@@ -103,10 +102,9 @@ export function PlayerDisplay({ id }) {
             {player.name}
           </Typography>
           {player.account.is_suspended && <SuspendedIcon reason={player.account.suspension_reason} />}
-          {player.account.is_verifier && <VerifierIcon />}
-          {player.account.is_admin && <AdminIcon />}
+          <AccountRoleIcon account={player.account} />
           {player.account.country && <LanguageFlag code={player.account.country} showTooltip height="24px" />}
-          {isTemp && <TempVerifierIcon />}
+          <ExRoleLabel account={player.account} />
           <Box flexGrow={1} />
           <StyledLink to={`/player/${id}/top-golden-list`}>{t("personal_tgl")}</StyledLink>
         </Stack>
@@ -207,7 +205,7 @@ function SubmissionShowcase({ id }) {
 function PlayerRecentSubmissions({ id }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.recent_submissions" });
   const auth = useAuth();
-  const canSeeRejected = auth.hasVerifierPriv || auth.isPlayerWithId(id);
+  const canSeeRejected = auth.hasHelperPriv || auth.isPlayerWithId(id);
   return (
     <>
       <Typography variant="h5" gutterBottom>
@@ -385,6 +383,47 @@ export function DifficultyCountChart({ difficulty_counts }) {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+    </Stack>
+  );
+}
+
+function ExRoleLabel({ account }) {
+  //A small, fancy label for ex-roles
+  const { t } = useTranslation(undefined, { keyPrefix: "components.roles" });
+  const theme = useTheme();
+
+  if (![ROLES.EX_HELPER, ROLES.EX_VERIFIER, ROLES.EX_ADMIN].includes(account.role)) {
+    return null;
+  }
+
+  const style = {
+    borderRadius: "15px",
+    padding: "2px 10px",
+    fontSize: "1em",
+    fontWeight: "bold",
+    color: theme.palette.mode === "dark" ? "#ff6333" : "#ff4800",
+    backgroundColor: theme.palette.mode === "dark" ? "#6a6a6a" : "#d2d2d2",
+  };
+
+  let icon = null;
+  let text = null;
+  if (account.role === ROLES.EX_HELPER) {
+    icon = <HelperIcon />;
+    text = t("ex_helper");
+  } else if (account.role === ROLES.EX_VERIFIER) {
+    icon = <VerifierIcon />;
+    text = t("ex_verifier");
+  } else if (account.role === ROLES.EX_ADMIN) {
+    icon = <AdminIcon />;
+    text = t("ex_admin");
+  }
+
+  return (
+    <Stack direction="row" gap={1} alignItems="center">
+      {/* {icon} */}
+      <Typography variant="body1" sx={style}>
+        {text}
+      </Typography>
     </Stack>
   );
 }

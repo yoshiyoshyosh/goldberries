@@ -73,9 +73,14 @@
     "full_challenge_select": {
       "full_game_label": "Select Map OR Full Game Challenge"
     },
-    "verifier_icon": "Part of the Modded Golden Team",
-    "admin_icon": "Website Admin",
-    "temp_verifier_icon": "Temporary Verifier",
+    "roles": {
+      "ex_helper": "Ex Helper",
+      "ex_verifier": "Ex Verifier",
+      "ex_admin": "Ex Website Admin",
+      "helper": "Helper",
+      "verifier": "Verifier",
+      "admin": "Website Admin"
+    },
     "suspended_icon": {
       "with_reason": "This user is suspended: {{reason}}",
       "no_reason": "This user is suspended"
@@ -228,6 +233,7 @@
       "is_verifier": "Is Verifier",
       "is_admin": "Is Admin",
       "logout_user": "Logout User",
+      "role": "Role",
       "delete": {
         "title": "Delete Account",
         "description": "Are you sure you want to delete this account? This action is irreversible.",
@@ -1511,7 +1517,7 @@
       },
       {
         "question": "What is the trivial difficulty for?",
-        "answer": "The trivial difficulty is reserved for challenges that are, well, trivial to complete compared to a clear. These include one-room maps where a normal clear clear is the exact same as the golden as well as campaign maps where it is impossible to die."
+        "answer": "The trivial difficulty is reserved for challenges that are, well, trivial to complete compared to a clear. These include one-room maps where a normal clear is the exact same as the golden as well as campaign maps where it is impossible to die."
       },
       {
         "question": "Are co-op maps allowed? Are maps involving X allowed?",
@@ -1520,7 +1526,7 @@
     ],
     "vanilla_references": {
       "question": "Why are vanilla challenges not on this list?",
-      "answer": "Vanilla challenges are not tracked due to them being outside the scope of a modded list, as well as having too many clears to reasonably track. However, many of their difficulties are commonly agreed upon. Below is a reference list of where vanilla challenges would place on the Top Golden List. Any golden not listed is considered Standard difficulty, with the hell trio (Reflection B-Side, The Summit B-Side, Core B-Side) being near the peak of Standard.<br/><br/><i>Note: In the past, Farewell [No DTS] was considered the baseline for Low Tier 3 on the Top Golden List. This is no longer the case, and the golden is now simply within the tier.</i>"
+      "answer": "Vanilla challenges are not tracked due to them being outside the scope of a modded list, as well as having too many clears to reasonably track. However, many of their difficulties are commonly agreed upon. Below is a reference list of where vanilla challenges would roughly place on the Top Golden List.<br/><br/><i>Note: In the past, Farewell [No DTS] was considered the baseline for Low Tier 3 on the Top Golden List. This is no longer the case, and the golden is now simply within the tier.</i>"
     }
   },
   "index": {
