@@ -24,7 +24,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getNewDifficultyColors } from "../util/constants";
+import { getNewDifficultyColors, getOldDifficultyName } from "../util/constants";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -286,7 +286,6 @@ function TopGoldenListGroup({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const theme = useTheme();
-  const name = tier[0].name;
   const { settings } = useAppSettings();
   const colors = getNewDifficultyColors(settings, tier[0].id, true);
   const [collapsed, setCollapsed] = useState(false);
@@ -298,6 +297,7 @@ function TopGoldenListGroup({
 
   if (!render) return null;
 
+  const name = tier[0].name;
   const tierMap = tier.map((subtier) => subtier.id);
   const challengesInTier = challenges.filter((challenge) =>
     tierMap.includes(
@@ -318,6 +318,7 @@ function TopGoldenListGroup({
   }
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
+  const showOldTierNames = settings.general.showOldTierNames;
 
   const cellStyle = {
     borderBottom: "1px solid " + theme.palette.tableDivider,
@@ -338,9 +339,16 @@ function TopGoldenListGroup({
                   }}
                 ></TableCell>
                 <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1 }}>
-                  <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
-                    {name}
-                  </Typography>
+                  <Stack direction="row" gap={1} alignItems="center">
+                    <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
+                      {name}
+                    </Typography>
+                    {showOldTierNames && (
+                      <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: "nowrap" }}>
+                        ({getOldDifficultyName(tier[0].id)})
+                      </Typography>
+                    )}
+                  </Stack>
                 </TableCell>
                 <TableCell
                   sx={{

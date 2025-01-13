@@ -38,7 +38,8 @@
     "time": "Time",
     "by": "by",
     "unknown_author": "Unknown Author",
-    "unknown_date": "Unknown Date"
+    "unknown_date": "Unknown Date",
+    "loading": "Loading..."
   },
   "components": {
     "difficulty_select": {
@@ -800,6 +801,11 @@
         "golden_changes": {
           "label": "Always Show Golden Changes",
           "note": "Turn this on to remove the anti-spoiler button on the map page for golden rooms or other golden exclusive map changes."
+        },
+        "old_tier_names": {
+          "label": "Show Old Tier Names",
+          "note": "Turn this on to make all difficulty chips show the old tier names in addition to the current names.",
+          "tooltip": "Not all places will show the old tier names!"
         }
       },
       "visual": {

@@ -10,6 +10,7 @@ export function AppSettingsProvider({ children }) {
       general: {
         //language: "en",
         alwaysShowGoldenChanges: false,
+        showOldTierNames: false,
       },
       visual: {
         darkmode: prefersDarkMode ?? true,

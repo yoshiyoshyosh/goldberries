@@ -23,7 +23,13 @@ import {
   getPlayerNameColorStyle,
 } from "../util/data_util";
 import { Autocomplete, Chip, Divider, Grid, MenuItem, Stack, TextField, Tooltip } from "@mui/material";
-import { API_BASE_URL, DIFF_CONSTS, getNewDifficultyColors } from "../util/constants";
+import {
+  API_BASE_URL,
+  DIFF_CONSTS,
+  getNewDifficultyColors,
+  getOldDifficultyLabelColor,
+  getOldDifficultyName,
+} from "../util/constants";
 import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -64,7 +70,15 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { useTheme } from "@emotion/react";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { getQueryData, useGetPlayerSubmissions } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetAllCampaigns,
+  useGetAllChallengesInCampaign,
+  useGetAllChallengesInMap,
+  useGetAllDifficulties,
+  useGetAllMapsInCampaign,
+  useGetPlayerSubmissions,
+} from "../hooks/useApi";
 import { StyledExternalLink, StyledLink, TooltipLineBreaks } from "./BasicComponents";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
@@ -74,21 +88,17 @@ import { isAdmin, isHelper, isVerifier } from "../hooks/AuthProvider";
 export function CampaignSelect({ selected, setSelected, filter = null, disabled = false }) {
   const { t } = useTranslation();
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const query = useQuery({
-    queryKey: ["all_campaigns"],
-    queryFn: () => fetchAllCampaigns(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const query = useGetAllCampaigns();
 
-  let campaigns = query.data?.data ?? [];
+  let rawCampaigns = getQueryData(query);
+  let campaigns = rawCampaigns ?? [];
   if (filter !== null) {
     campaigns = campaigns.filter(filter);
   }
   campaigns.sort((a, b) => a.name.localeCompare(b.name));
 
   const getOptionLabel = (campaign) => {
+    if (rawCampaigns === null) return t("general.loading");
     return getCampaignName(campaign, t_g);
   };
 
@@ -98,7 +108,8 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
       disabled={disabled}
       getOptionKey={(campaign) => campaign.id}
       getOptionLabel={getOptionLabel}
-      options={campaigns}
+      getOptionDisabled={(campaign) => rawCampaigns === null}
+      options={campaigns.length === 0 ? [{ name: "test" }] : campaigns}
       value={selected}
       onChange={(event, newValue) => {
         setSelected(newValue);
@@ -110,14 +121,7 @@ export function CampaignSelect({ selected, setSelected, filter = null, disabled 
 
 export function MapSelect({ campaign, selected, setSelected, disabled, ...props }) {
   const { t } = useTranslation();
-  const query = useQuery({
-    queryKey: ["all_maps", campaign?.id],
-    queryFn: () => fetchAllMapsInCampaign(campaign?.id),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    enabled: campaign !== null,
-  });
+  const query = useGetAllMapsInCampaign(campaign?.id);
 
   const maps = campaign ? getQueryData(query)?.maps ?? [] : [];
 
@@ -145,14 +149,8 @@ export function MapSelect({ campaign, selected, setSelected, disabled, ...props 
 
 export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabel = false }) {
   const { t } = useTranslation();
-  const query = useQuery({
-    queryKey: ["all_challenges", map.id],
-    queryFn: () => fetchAllChallengesInMap(map.id),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  const challenges = query.data?.data?.challenges ?? [];
+  const query = useGetAllChallengesInMap(map?.id);
+  const challenges = getQueryData(query)?.challenges ?? [];
 
   const getOptionLabel = (challenge) => {
     return getChallengeName(challenge);
@@ -185,14 +183,8 @@ export function ChallengeSelect({ map, selected, setSelected, disabled, hideLabe
 }
 export function CampaignChallengeSelect({ campaign, selected, setSelected, disabled, hideLabel = false }) {
   const { t } = useTranslation();
-  const query = useQuery({
-    queryKey: ["all_challenges_campaign", campaign.id],
-    queryFn: () => fetchAllChallengesInCampaign(campaign.id),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  const challenges = query.data?.data?.challenges ?? [];
+  const query = useGetAllChallengesInCampaign(campaign?.id);
+  const challenges = getQueryData(query)?.challenges ?? [];
 
   const getOptionLabel = (challenge) => {
     return getChallengeName(challenge);
@@ -221,43 +213,6 @@ export function CampaignChallengeSelect({ campaign, selected, setSelected, disab
         );
       }}
     />
-  );
-}
-
-export function SuggestedDifficultySelect({ defaultValue, ...props }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
-  const query = useQuery({
-    queryKey: ["all_difficulties"],
-    queryFn: () => fetchAllDifficulties(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-  let difficulties = query.data?.data ?? [];
-  difficulties = difficulties.filter(
-    (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
-  );
-
-  return (
-    <TextField
-      {...props}
-      label={t("label")}
-      select
-      defaultValue={defaultValue}
-      SelectProps={{
-        ...props.SelectProps,
-        MenuProps: { disableScrollLock: true },
-      }}
-    >
-      <MenuItem value="">
-        <em>{t("no_suggestion")}</em>
-      </MenuItem>
-      {difficulties.map((difficulty) => (
-        <MenuItem key={difficulty.id} value={difficulty.id}>
-          {getDifficultyName(difficulty)}
-        </MenuItem>
-      ))}
-    </TextField>
   );
 }
 
@@ -324,35 +279,53 @@ export function DifficultyChip({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_chip" });
   const { settings } = useAppSettings();
+  const theme = useTheme();
   if (difficulty === null) return null;
 
   const text = getDifficultyName(difficulty);
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
+  const showOld = settings.general.showOldTierNames; //Replace with actual setting
   const isTrivial = difficulty.id === DIFF_CONSTS.TRIVIAL_ID;
+
+  const bgColor = useSubtierColors ? colors.color : colors.group_color;
+  const opacity = isPersonal && !highlightPersonal ? 0.25 : 1;
+  const boxShadow =
+    isPersonal && highlightPersonal
+      ? "0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red"
+      : "none";
 
   const chip = (
     <Chip
       label={
-        <Stack direction="row" gap={1} alignItems="center">
-          <span>{prefix + text + suffix}</span>
-          {isTrivial && (
-            <Tooltip title={t("trivial_explanation")} arrow>
-              <FontAwesomeIcon icon={faInfoCircle} />
-            </Tooltip>
+        <Stack direction="column" gap={0} sx={{ lineHeight: "11px" }} alignItems="center">
+          <Stack direction="row" gap={1} alignItems="center">
+            <span>{prefix + text + suffix}</span>
+            {isTrivial && (
+              <Tooltip title={t("trivial_explanation")} arrow>
+                <FontAwesomeIcon icon={faInfoCircle} />
+              </Tooltip>
+            )}
+          </Stack>
+          {showOld && (
+            <span
+              style={{
+                color: getOldDifficultyLabelColor(difficulty.id),
+                fontSize: "0.8em",
+              }}
+            >
+              ({getOldDifficultyName(difficulty.id)})
+            </span>
           )}
         </Stack>
       }
       size="small"
       {...props}
       sx={{
-        bgcolor: useSubtierColors ? colors.color : colors.group_color,
+        bgcolor: bgColor,
         color: colors.contrast_color,
-        opacity: isPersonal && !highlightPersonal ? 0.25 : 1,
-        boxShadow:
-          isPersonal && highlightPersonal
-            ? "0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red, 0px 0px 3px red"
-            : "none",
+        opacity: opacity,
+        boxShadow: boxShadow,
         ...sx,
       }}
     />
@@ -427,13 +400,17 @@ export function DifficultySelectControlled({
   ...props
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
-  const query = useQuery({
-    queryKey: ["all_difficulties"],
-    queryFn: () => fetchAllDifficulties(),
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { settings } = useAppSettings();
+
+  const query = useGetAllDifficulties();
+
+  const showOldTierNames = settings.general.showOldTierNames;
+  const getOldName = (id) => {
+    if (showOldTierNames) {
+      return " (" + getOldDifficultyName(id) + ")";
+    }
+    return "";
+  };
 
   const onChangeDifficulty = (id) => {
     const difficulty = query.data?.data.find((d) => d.id === id);
@@ -441,7 +418,7 @@ export function DifficultySelectControlled({
     if (setDifficultyId) setDifficultyId(id);
   };
 
-  let difficulties = query.data?.data ?? [];
+  let difficulties = getQueryData(query) ?? [];
   if (isSuggestion) {
     difficulties = difficulties.filter(
       (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
@@ -465,14 +442,24 @@ export function DifficultySelectControlled({
         MenuProps: { disableScrollLock: true },
       }}
     >
-      <MenuItem value="">
-        <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
-      </MenuItem>
+      {difficulties.length !== 0 && (
+        <MenuItem value="">
+          <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
+        </MenuItem>
+      )}
       {difficulties.map((difficulty) => (
         <MenuItem key={difficulty.id} value={difficulty.id}>
-          {getDifficultyName(difficulty)}
+          <Stack direction="row" gap={1} alignItems="center">
+            <span>{getDifficultyName(difficulty)}</span>
+            <span style={{ fontSize: "0.7em" }}>{getOldName(difficulty.id)}</span>
+          </Stack>
         </MenuItem>
       ))}
+      {difficulties.length === 0 && (
+        <MenuItem disabled>
+          <em>Loading...</em>
+        </MenuItem>
+      )}
     </TextField>
   );
 }

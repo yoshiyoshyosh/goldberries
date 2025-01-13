@@ -70,6 +70,9 @@ import {
   fetchTopGoldenList,
   fetchServerSettings,
   postServerSettings,
+  fetchAllCampaigns,
+  fetchAllMapsInCampaign,
+  fetchAllChallengesInCampaign,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -92,6 +95,38 @@ export function useGetGoldenList(type, id = null, include_archived = false, incl
     queryFn: () =>
       fetchGoldenList(type, id, { include_arbitrary: include_arbitrary, include_archived: include_archived }),
     onError: errorToast,
+  });
+}
+
+export function useGetAllCampaigns() {
+  return useQuery({
+    queryKey: ["all_campaigns"],
+    queryFn: () => fetchAllCampaigns(),
+    onError: errorToast,
+  });
+}
+export function useGetAllMapsInCampaign(campaignId) {
+  return useQuery({
+    queryKey: ["all_maps", campaignId],
+    queryFn: () => fetchAllMapsInCampaign(campaignId),
+    onError: errorToast,
+    enabled: !!campaignId,
+  });
+}
+export function useGetAllChallengesInMap(mapId) {
+  return useQuery({
+    queryKey: ["all_challenges", mapId],
+    queryFn: () => fetchAllChallengesInMap(mapId),
+    onError: errorToast,
+    enabled: !!mapId,
+  });
+}
+export function useGetAllChallengesInCampaign(campaignId) {
+  return useQuery({
+    queryKey: ["all_challenges_campaign", campaignId],
+    queryFn: () => fetchAllChallengesInCampaign(campaignId),
+    onError: errorToast,
+    enabled: !!campaignId,
   });
 }
 

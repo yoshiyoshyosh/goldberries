@@ -345,3 +345,58 @@ const DIFFICULTY_SORTS = {
 export function difficultyToSort(id) {
   return DIFFICULTY_SORTS[id];
 }
+
+const OLD_DIFFICULTY_NAMES = {
+  1: "High Tier 0",
+  2: "Mid Tier 0",
+  3: "Low Tier 0",
+  4: "High Tier 1",
+  5: "Mid Tier 1",
+  6: "Low Tier 1",
+  7: "High Tier 2",
+  8: "Mid Tier 2",
+  9: "Low Tier 2",
+  10: "High Tier 3",
+  11: "Mid Tier 3",
+  12: "Low Tier 3",
+  14: "Tier 4",
+  15: "Tier 5",
+  16: "Tier 6",
+  17: "Tier 7",
+  22: "High Standard",
+  18: "Mid Standard",
+  21: "Low Standard",
+  20: "Trivial",
+  19: "Undetermined",
+};
+export function getOldDifficultyName(id) {
+  return OLD_DIFFICULTY_NAMES[id];
+}
+
+//A color that is used to show a subtle label on the difficulty chip. Use a subtle grey for all difficulty where that would be visible.
+const OLD_DIFFICULTY_LABEL_COLORS = {
+  1: "#ffffff",
+  2: "#ffffff",
+  3: "#ffffff",
+  4: "#ffffff",
+  5: "#ffffff",
+  6: "#ffffff",
+  7: "#777777",
+  8: "#777777",
+  9: "#777777",
+  10: "#777777",
+  11: "#777777",
+  12: "#777777",
+  14: "#777777",
+  15: "#777777",
+  16: "#ffffff",
+  17: "#ffffff",
+  22: "#6f6f6f",
+  18: "#6f6f6f",
+  21: "#6f6f6f",
+  20: "#6f6f6f",
+  19: "#6f6f6f",
+};
+export function getOldDifficultyLabelColor(id) {
+  return OLD_DIFFICULTY_LABEL_COLORS[id];
+}

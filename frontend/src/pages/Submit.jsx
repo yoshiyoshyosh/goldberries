@@ -46,11 +46,11 @@ import {
   CampaignSelect,
   MapSelect,
   ChallengeSelect,
-  SuggestedDifficultySelect,
   PlayerSelect,
   PlayerChip,
   CampaignChallengeSelect,
   DateAchievedTimePicker,
+  DifficultySelectControlled,
 } from "../components/GoldberriesComponents";
 import { usePostPlayer, usePostSubmission } from "../hooks/useApi";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
@@ -140,6 +140,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
   const { t: t_ff } = useTranslation(undefined, { keyPrefix: "forms.feedback" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_a } = useTranslation(undefined);
   const auth = useAuth();
   const navigate = useNavigate();
   const [campaign, setCampaign] = useState(defaultCampaign ?? null);
@@ -372,9 +373,18 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
             />
           </Grid>
           <Grid item xs={12} sm>
-            <SuggestedDifficultySelect
-              fullWidth
-              SelectProps={{ ...form.register("suggested_difficulty_id") }}
+            <Controller
+              control={form.control}
+              name="suggested_difficulty_id"
+              render={({ field }) => (
+                <DifficultySelectControlled
+                  label={t_a("components.difficulty_select.label")}
+                  difficultyId={field.value}
+                  setDifficultyId={field.onChange}
+                  isSuggestion
+                  fullWidth
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
@@ -448,6 +458,7 @@ export function MultiUserSubmission() {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
   const { t: t_ts } = useTranslation(undefined, { keyPrefix: "submit.tabs.single" });
+  const { t: t_a } = useTranslation(undefined);
   const auth = useAuth();
 
   const [campaign, setCampaign] = useState(null);
@@ -990,9 +1001,18 @@ export function NewChallengeUserSubmission({}) {
             <FormControlLabel control={<Checkbox />} {...form.register("is_fc")} label={t_ts("is_fc")} />
           </Grid>
           <Grid item xs={12} sm>
-            <SuggestedDifficultySelect
-              fullWidth
-              SelectProps={{ ...form.register("suggested_difficulty_id") }}
+            <Controller
+              control={form.control}
+              name="suggested_difficulty_id"
+              render={({ field }) => (
+                <DifficultySelectControlled
+                  label={t_a("components.difficulty_select.label")}
+                  difficultyId={field.value}
+                  setDifficultyId={field.onChange}
+                  isSuggestion
+                  fullWidth
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm="auto" display="flex" alignItems="center" justifyContent="center">
@@ -1066,6 +1086,7 @@ export function MultiUserSubmissionMapRow({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "submit.tabs.multi" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const { t: t_a } = useTranslation(undefined);
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const [expanded, setExpanded] = useState(
@@ -1176,12 +1197,14 @@ export function MultiUserSubmissionMapRow({
                     />
                   </TableCell>
                   <TableCell>
-                    <SuggestedDifficultySelect
-                      fullWidth
-                      value={mapData.suggested_difficulty_id}
-                      onChange={(e) =>
-                        updateMapDataRow(index, { ...mapData, suggested_difficulty_id: e.target.value })
+                    <DifficultySelectControlled
+                      label={t_a("components.difficulty_select.label")}
+                      difficultyId={mapData.suggested_difficulty_id}
+                      setDifficultyId={(id) =>
+                        updateMapDataRow(index, { ...mapData, suggested_difficulty_id: id })
                       }
+                      isSuggestion
+                      fullWidth
                     />
                   </TableCell>
                   <TableCell width={1}>
