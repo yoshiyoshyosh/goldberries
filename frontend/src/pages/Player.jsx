@@ -401,8 +401,10 @@ function ExRoleLabel({ account }) {
     padding: "2px 10px",
     fontSize: "1em",
     fontWeight: "bold",
-    color: theme.palette.mode === "dark" ? "#ff6333" : "#ff4800",
-    backgroundColor: theme.palette.mode === "dark" ? "#6a6a6a" : "#d2d2d2",
+    color: theme.palette.mode === "dark" ? "white" : "black",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: theme.palette.mode === "dark" ? "white" : "#575757",
   };
 
   let icon = null;

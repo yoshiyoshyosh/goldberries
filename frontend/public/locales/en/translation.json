@@ -76,10 +76,10 @@
     "roles": {
       "ex_helper": "Ex Helper",
       "ex_verifier": "Ex Verifier",
-      "ex_admin": "Ex Website Admin",
+      "ex_admin": "Ex Admin",
       "helper": "Helper",
       "verifier": "Verifier",
-      "admin": "Website Admin"
+      "admin": "Admin"
     },
     "suspended_icon": {
       "with_reason": "This user is suspended: {{reason}}",
