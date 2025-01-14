@@ -66,6 +66,7 @@ import {
   faMailBulk,
   faMoon,
   faPlayCircle,
+  faQuestion,
   faSearch,
   faServer,
   faSignIn,
@@ -123,6 +124,7 @@ import "dayjs/locale/en-gb";
 import { PageCredits } from "./pages/Credits";
 import { GlobalNoticesIcon } from "./components/GlobalNotices";
 import { PageManageServerSettings } from "./pages/manage/ServerSettings";
+import { PageTest } from "./pages/Test";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -252,6 +254,8 @@ const router = createBrowserRouter([
       { path: "api-docs", element: <ApiDocPage /> },
       { path: "legal-notice", element: <LegalNoticePage /> },
       { path: "credits", element: <PageCredits /> },
+
+      { path: "test", element: <PageTest /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -601,6 +605,11 @@ export function Layout() {
           name: t("internal_menu.manage_challenges"),
           path: "/manage/challenges",
           icon: <FontAwesomeIcon icon={faEdit} />,
+        },
+        {
+          name: t("internal_menu.test"),
+          path: "/test",
+          icon: <FontAwesomeIcon icon={faQuestion} />,
         },
       ],
     },

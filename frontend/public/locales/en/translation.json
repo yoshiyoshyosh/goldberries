@@ -450,7 +450,8 @@
       "logs": "Logs",
       "submission_queue": "Submission Queue",
       "manage_challenges": "Manage Challenges",
-      "manage_accounts": "Manage Accounts"
+      "manage_accounts": "Manage Accounts",
+      "test": "Test Page"
     },
     "widgets": {
       "submission_queue": "Submissions in queue",
