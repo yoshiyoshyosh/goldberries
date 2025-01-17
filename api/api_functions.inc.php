@@ -73,11 +73,15 @@ function api_unified_output($DB, string $table_noesc, $object_skel)
   $output = api_unified_get($DB, $table_noesc, $object_skel);
   api_write($output);
 }
-function api_write($output)
+function api_write($output, $check_numbers = false)
 {
+  $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+  if ($check_numbers) {
+    $flags |= JSON_NUMERIC_CHECK;
+  }
   echo json_encode(
     $output,
-    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    $flags
   );
 }
 
