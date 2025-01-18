@@ -32,52 +32,112 @@ if ($end_date !== null) {
 $where_str = count($where) > 0 ? "WHERE " . implode(" AND ", $where) : "";
 $where_cond = count($where) > 0 ? "AND " . implode(" AND ", $where) : "";
 
+$interval = isset($_GET['interval']) ? $_GET['interval'] : "all";
+//Acceptable values: minute, hour, day, month, all (no interval)
+if (!in_array($interval, ['minute', 'hour', 'day', 'month', 'all'])) {
+  die_json(400, "Invalid interval value");
+}
+$select_interval_str = $interval === "all" ? "" : "date_trunc('$interval', \"date\" AT TIME ZONE 'UTC') as interval_date, ";
+$group_by_interval_str = $interval === "all" ? "" : "GROUP BY interval_date";
+$group_by_interval_pre = $interval === "all" ? "" : "interval_date, ";
+$order_by_interval_str = $interval === "all" ? "" : "ORDER BY interval_date DESC";
+$order_by_interval_pre = $interval === "all" ? "" : "interval_date DESC, ";
+
 
 //Queries to implement:
 //1. Count of user agents
 //2. mobile vs. desktop usage
 //3. Count of referrers
-//4. List of most requested pages (top 100)
-//5. Avg. serve time
+//4. Simple fields (avg. serve time, total requests, ...)
 
 $response = [];
 
 //===== 1. USER AGENTS =====
-$query = "SELECT user_agent, COUNT(*) as count FROM traffic $where_str GROUP BY user_agent ORDER BY count DESC";
+$query = "SELECT $select_interval_str user_agent, COUNT(*) as count FROM traffic $where_str GROUP BY $group_by_interval_pre user_agent ORDER BY $order_by_interval_pre count DESC";
 $result = pg_query_params_or_die($DB, $query, []);
-$response['user_agents'] = pg_fetch_all($result);
+$response['user_agents'] = unpack_all_interval_response($interval, $result, false, "user_agent", "count");
 
 //===== 2. MOBILE VS. DESKTOP =====
 $query = "SELECT
-	(SELECT COUNT(*) FROM traffic WHERE user_agent ILIKE '%_mobile' AND user_agent NOT ILIKE 'bot_%' $where_cond) AS mobile,
-	(SELECT COUNT(*) FROM traffic WHERE user_agent NOT ILIKE '%_mobile' AND user_agent IS NOT NULL AND user_agent NOT ILIKE 'bot_%' $where_cond) AS desktop,
-	(SELECT COUNT(*) FROM traffic WHERE user_agent ILIKE 'bot_%' $where_cond) AS user_bots,
-	(SELECT COUNT(*) FROM traffic WHERE user_agent IS NULL $where_cond) AS unknown
+	$select_interval_str
+	COUNT(*) filter (WHERE user_agent ILIKE '%_mobile' AND user_agent NOT ILIKE 'bot_%') AS mobile,
+	COUNT(*) filter (WHERE user_agent NOT ILIKE '%_mobile' AND user_agent IS NOT NULL AND user_agent NOT ILIKE 'bot_%') AS desktop,
+	COUNT(*) filter (WHERE user_agent ILIKE 'bot_%') AS user_bots,
+	COUNT(*) filter (WHERE user_agent IS NULL) AS unknown
+FROM traffic
+$where_str
+$group_by_interval_str
+$order_by_interval_str
 ";
 $result = pg_query_params_or_die($DB, $query, []);
-$response['device_usage'] = pg_fetch_assoc($result);
+$response["device_usage"] = unpack_all_interval_response($interval, $result, true);
 
 //===== 3. REFERRERS =====
 $query = "SELECT
+  $select_interval_str
 	referrer,
-   COUNT(*) AS count
+  COUNT(*) AS count
 FROM traffic
   WHERE (referrer NOT ILIKE '/%' OR referrer IS NULL) $where_cond
-GROUP BY  traffic.referrer
-ORDER BY count DESC
+GROUP BY $group_by_interval_pre referrer
+ORDER BY $order_by_interval_pre count DESC
 ";
 $result = pg_query_params_or_die($DB, $query, []);
-$response['referrers'] = pg_fetch_all($result);
+$response['referrers'] = unpack_all_interval_response($interval, $result, false, "referrer", "count");
 
-//===== 4. MOST REQUESTED PAGES =====
-$query = "SELECT page, COUNT(*) AS count FROM traffic $where_str GROUP BY traffic.page ORDER BY count DESC LIMIT 100";
+//===== 4. SIMPLE FIELDS =====
+$query = "SELECT
+	$select_interval_str
+	ROUND(AVG(serve_time)) AS avg_serve_time,
+	COUNT(*) AS total_requests,
+	COUNT(*) filter (WHERE referrer IS NULL) AS total_new_requests
+FROM traffic
+$where_str
+$group_by_interval_str
+$order_by_interval_str
+";
 $result = pg_query_params_or_die($DB, $query, []);
-$response['most_requested_pages'] = pg_fetch_all($result);
-
-//===== 5. AVG. SERVE TIME =====
-$query = "SELECT ROUND(AVG(serve_time)) AS avg_serve_time FROM traffic $where_str";
-$result = pg_query_params_or_die($DB, $query, []);
-$response['avg_serve_time'] = pg_fetch_assoc($result);
+$response["basic"] = unpack_all_interval_response($interval, $result, true);
 
 
 api_write($response, true);
+
+function unpack_all_interval_response($interval, $result, $assoc = false, $key_key = null, $value_key = null)
+{
+  if ($interval === "all") {
+    if ($assoc) {
+      return pg_fetch_assoc($result);
+    }
+    return pg_fetch_all($result);
+  }
+
+  $ret = [];
+  while ($row = pg_fetch_assoc($result)) {
+    $interval_date = $row['interval_date'];
+    unset($row['interval_date']);
+
+    //Problem: if 2 group-by fields are used, the data has to be inserted into the previous row, unless the date changes
+    //If only 1 group-by field is used, the data can just be inserted as a new row
+
+    if ($assoc) {
+      //1 group by
+      $row['date'] = $interval_date;
+      $ret[] = $row;
+    } else {
+      //2 group by's
+      //Last row
+      $size = count($ret);
+      $key = $row[$key_key] ?? "null";
+      $value = $row[$value_key];
+      if ($size > 0 && $ret[$size - 1]['date'] === $interval_date) {
+        $ret[$size - 1][$key] = $value;
+      } else {
+        $ret[] = [
+          "date" => $interval_date,
+          $key => $value
+        ];
+      }
+    }
+  }
+  return $ret;
+}
