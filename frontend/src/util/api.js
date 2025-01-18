@@ -574,3 +574,24 @@ export function formatDataForApi(data) {
   return data;
 }
 //#endregion
+
+//#region TRAFFIC STATS
+export function fetchTrafficStatsGlobal(startDate, endDate, interval = "all") {
+  const params = {};
+  if (startDate) params.start_date = startDate;
+  if (endDate) params.end_date = endDate;
+  if (interval && interval !== "all") params.interval = interval;
+  return axios.get("/traffic/global", {
+    params: params,
+  });
+}
+
+export function fetchTrafficStatsGlobalRequests(startDate, endDate) {
+  const params = {};
+  if (startDate) params.start_date = startDate;
+  if (endDate) params.end_date = endDate;
+  return axios.get("/traffic/list_requests", {
+    params: params,
+  });
+}
+//#endregion

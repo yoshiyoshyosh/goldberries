@@ -56,6 +56,7 @@ import {
   faCircleQuestion,
   faCog,
   faCogs,
+  faDatabase,
   faEdit,
   faExclamationCircle,
   faExclamationTriangle,
@@ -125,6 +126,7 @@ import { PageCredits } from "./pages/Credits";
 import { GlobalNoticesIcon } from "./components/GlobalNotices";
 import { PageManageServerSettings } from "./pages/manage/ServerSettings";
 import { PageTest } from "./pages/Test";
+import { PageTrafficAnalytics } from "./pages/manage/TrafficAnalytics";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -195,6 +197,14 @@ const router = createBrowserRouter([
               </ProtectedRoute>
             ),
           },
+          {
+            path: "traffic/:tab?",
+            element: (
+              <ProtectedRoute needsAdmin redirect="manage/traffic">
+                <PageTrafficAnalytics />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
 
@@ -255,7 +265,7 @@ const router = createBrowserRouter([
       { path: "legal-notice", element: <LegalNoticePage /> },
       { path: "credits", element: <PageCredits /> },
 
-      { path: "test", element: <PageTest /> },
+      { path: "test/:tab?", element: <PageTest /> },
 
       //Catch all
       { path: "*", element: <Page404 /> },
@@ -632,6 +642,11 @@ export function Layout() {
           name: "Server Settings",
           path: "/manage/server-settings",
           icon: <FontAwesomeIcon icon={faServer} />,
+        },
+        {
+          name: "Traffic Analytics",
+          path: "/manage/traffic",
+          icon: <FontAwesomeIcon icon={faDatabase} />,
         },
       ],
     },

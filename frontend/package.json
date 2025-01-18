@@ -12,7 +12,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.16.7",
-    "@mui/x-charts": "^6.19.5",
+    "@mui/x-charts": "^7.24.0",
     "@mui/x-data-grid": "^7.9.0",
     "@mui/x-date-pickers": "^7.11.1",
     "@testing-library/jest-dom": "^5.17.0",

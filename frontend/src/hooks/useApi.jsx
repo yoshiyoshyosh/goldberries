@@ -73,6 +73,8 @@ import {
   fetchAllCampaigns,
   fetchAllMapsInCampaign,
   fetchAllChallengesInCampaign,
+  fetchTrafficStatsGlobal,
+  fetchTrafficStatsGlobalRequests,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -431,6 +433,7 @@ export function useGetServerSettings() {
     refetchInterval: 1000 * 60 * 5, // 5 minutes
   });
 }
+
 //#endregion
 
 //#region == POST ==
@@ -885,6 +888,24 @@ export function useDeleteVerificationNotice(onSuccess) {
       if (onSuccess) onSuccess(response);
       else toast.success("Notice removed");
     },
+    onError: errorToast,
+  });
+}
+//#endregion
+
+//#region TRAFFIC STATS
+export function useGetTrafficStatsGlobal(startDate, endDate, interval = "all") {
+  return useQuery({
+    queryKey: ["traffic_global", startDate, endDate, interval],
+    queryFn: () => fetchTrafficStatsGlobal(startDate, endDate, interval),
+    onError: errorToast,
+  });
+}
+
+export function useGetTrafficStatsGlobalRequests(startDate, endDate) {
+  return useQuery({
+    queryKey: ["traffic_global", startDate, endDate],
+    queryFn: () => fetchTrafficStatsGlobalRequests(startDate, endDate),
     onError: errorToast,
   });
 }

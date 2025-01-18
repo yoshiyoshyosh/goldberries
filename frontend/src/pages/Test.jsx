@@ -1,10 +1,22 @@
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
-import { Grid, Slider, Stack, Tab, Tabs, Typography, darken } from "@mui/material";
-import { BasicContainerBox } from "../components/BasicComponents";
+import {
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Slider,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+  darken,
+} from "@mui/material";
+import { BasicContainerBox, HeadTitle } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import Color from "color";
+import { getNewDifficultyColors } from "../util/constants";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 const tabs = [{ name: "new-colors", label: "New Tier Colors", icon: faPalette, component: <NewColorsTab /> }];
 
@@ -26,6 +38,7 @@ export function PageTest({}) {
 
   return (
     <BasicContainerBox maxWidth="lg">
+      <HeadTitle title="Test Page" />
       <Tabs
         value={selectedTab}
         onChange={(e, tab) => setTab(tab)}
@@ -50,18 +63,21 @@ export function PageTest({}) {
 }
 
 function NewColorsTab({}) {
+  const { settings } = useAppSettings();
   const difficulties = Array.from({ length: 26 }, (_, i) => i - 1);
   const [darkenBy, setDarkenBy] = useState(0.55);
-  const [hueStart, setHueStart] = useState(240);
-  const [huePerStep, setHuePerStep] = useState(-14);
-  const [lightStart, setLightStart] = useState(41);
-  const [lightPerStep, setLightPerStep] = useState(1);
+  const [hueStart, setHueStart] = useState(250);
+  const [huePerStep, setHuePerStep] = useState(-15);
+  const [lightStart, setLightStart] = useState(70);
+  const [lightPerStep, setLightPerStep] = useState(-0.25);
+  const [saturation, setSaturation] = useState(100);
+  const [gap, setGap] = useState(false);
 
   console.log(difficulties);
   const getColor = (difficulty) => {
     const color = new Color({
       h: getDifficultyHue(difficulty, hueStart, huePerStep),
-      s: 100,
+      s: saturation,
       l: getDifficultyLightness(difficulty, lightStart, lightPerStep),
     });
     return color;
@@ -122,65 +138,116 @@ function NewColorsTab({}) {
           </Stack>
         </Grid>
         <Grid item xs={6} alignItems="center" justifyContent="space-around" display="flex">
-          <Stack direction="row" gap={3} alignItems="center">
-            <Slider
-              value={darkenBy}
-              onChange={(_, value) => setDarkenBy(value)}
-              min={0}
-              max={1}
-              step={0.01}
-              style={{ width: "300px" }}
-            />
-            <Typography variant="body2">With Darkening ({(darkenBy * 100).toFixed(0)}%)</Typography>
+          <Stack direction="column" gap={1} sx={{ width: "100%" }}>
+            <Stack direction="row" gap={3} alignItems="center">
+              <FormControlLabel
+                control={<Checkbox />}
+                checked={gap}
+                onChange={(_, value) => setGap(value)}
+                label="Show Gap"
+              />
+            </Stack>
+            <Stack direction="row" gap={3} alignItems="center">
+              <Slider
+                value={saturation}
+                onChange={(_, value) => setSaturation(value)}
+                min={0}
+                max={100}
+                step={1}
+                style={{ width: "300px" }}
+              />
+              <Typography variant="body2">Saturation ({saturation.toFixed(0)}%)</Typography>
+            </Stack>
+            <Stack direction="row" gap={3} alignItems="center">
+              <Slider
+                value={darkenBy}
+                onChange={(_, value) => setDarkenBy(value)}
+                min={0}
+                max={1}
+                step={0.01}
+                style={{ width: "300px" }}
+              />
+              <Typography variant="body2">With Darkening ({(darkenBy * 100).toFixed(0)}%)</Typography>
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
-      {difficulties.map((sort) => {
-        const color = getColor(sort);
-        const contrast =
-          color.contrast(new Color("#000000")) > color.contrast(new Color("#ffffff")) ? "#000000" : "#ffffff";
-        const darkened = new Color(darken(color.hex(), darkenBy));
-        const darkenedContrast =
-          darkened.contrast(new Color("#000000")) > darkened.contrast(new Color("#ffffff"))
-            ? "#000000"
+      <Stack direction="column" gap={gap ? 0.5 : 0}>
+        {difficulties.map((sort) => {
+          const color = getColor(sort);
+          const contrast =
+            color.contrast(new Color("#000000")) > color.contrast(new Color("#ffffff"))
+              ? "#000000"
+              : "#ffffff";
+          const darkened = new Color(darken(color.hex(), darkenBy));
+          const darkenedContrast =
+            darkened.contrast(new Color("#000000")) > darkened.contrast(new Color("#ffffff"))
+              ? "#000000"
+              : "#ffffff";
+
+          let hasOld = getDifficultyId(sort) !== undefined;
+          const oldColor = hasOld
+            ? getNewDifficultyColors(settings, getDifficultyId(sort), false).color
+            : "#ffffff00";
+          const oldContrast = hasOld
+            ? getNewDifficultyColors(settings, getDifficultyId(sort), false).contrast_color
             : "#ffffff";
-        return (
-          <Grid container key={sort} spacing={2}>
-            <Grid item xs={6}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                  backgroundColor: color.string(),
-                  width: "100%",
-                  height: "25px",
-                }}
-              >
-                <Typography variant="body2" color={contrast}>
-                  {getName(sort)} ({sort}) -&gt; {color.string(2)}
-                </Typography>
-              </div>
+          return (
+            <Grid container key={sort} spacing={1}>
+              <Grid item xs={4}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    backgroundColor: oldColor,
+                    width: "100%",
+                    height: "25px",
+                  }}
+                >
+                  {hasOld && (
+                    <Typography variant="body2" color={oldContrast}>
+                      {getName(sort)} ({sort}) -&gt; {oldColor}
+                    </Typography>
+                  )}
+                </div>
+              </Grid>
+              <Grid item xs={4}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    backgroundColor: color.string(),
+                    width: "100%",
+                    height: "25px",
+                  }}
+                >
+                  <Typography variant="body2" color={contrast}>
+                    {getName(sort)} ({sort}) -&gt; {color.string(2)}
+                  </Typography>
+                </div>
+              </Grid>
+              <Grid item xs={4}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    backgroundColor: darkened.string(),
+                    width: "100%",
+                    height: "25px",
+                  }}
+                >
+                  <Typography variant="body2" color={darkenedContrast}>
+                    {sort} -&gt; {darkened.hex()}
+                  </Typography>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                  backgroundColor: darkened.string(),
-                  width: "100%",
-                  height: "25px",
-                }}
-              >
-                <Typography variant="body2" color={darkenedContrast}>
-                  {sort} -&gt; {darkened.hex()}
-                </Typography>
-              </div>
-            </Grid>
-          </Grid>
-        );
-      })}
+          );
+        })}
+      </Stack>
     </>
   );
 }
@@ -257,4 +324,32 @@ const SORT_TO_NAME = {
 
 function getName(sort) {
   return SORT_TO_NAME[sort];
+}
+
+const SORT_TO_ID = {
+  "-1": 19,
+  0: 20,
+  1: 21,
+  2: 18,
+  3: 22,
+  4: 17,
+  5: 16,
+  6: 15,
+  7: 14,
+  8: 12,
+  9: 11,
+  10: 10,
+  11: 9,
+  12: 8,
+  13: 7,
+  14: 6,
+  15: 5,
+  16: 4,
+  17: 3,
+  18: 2,
+  19: 1,
+};
+
+function getDifficultyId(sort) {
+  return SORT_TO_ID[sort];
 }
