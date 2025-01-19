@@ -161,6 +161,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             sx={{
               mt: 2,
             }}
+            hideIfEmpty
           />
           <Changelog type="challenge" id={selectedChallenge.id} sx={{ mt: 2 }} />
         </>

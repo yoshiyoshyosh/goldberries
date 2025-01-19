@@ -883,6 +883,7 @@ function ViewSuggestionModal({ id }) {
                 challenge={suggestion.challenge}
                 direction="column"
                 useSubtierColors
+                stackGrid
               />
             </Grid>
             <Grid item xs={12}>
@@ -1114,7 +1115,7 @@ function CreateSuggestionModal({ onSuccess }) {
             <Typography variant="body1" gutterBottom>
               {t("totals")}
             </Typography>
-            <SuggestedDifficultyTierCounts challenge={fetchedChallenge} direction="row" />
+            <SuggestedDifficultyTierCounts challenge={fetchedChallenge} direction="row" hideIfEmpty />
           </Grid>
         </>
       )}

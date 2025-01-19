@@ -168,6 +168,7 @@ export function ChallengeDisplay({ id }) {
         sx={{
           mt: 2,
         }}
+        hideIfEmpty
       />
 
       <Divider sx={{ my: 2 }} />
