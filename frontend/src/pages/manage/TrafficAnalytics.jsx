@@ -34,6 +34,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useTheme } from "@emotion/react";
 
+//#region Page
 const defaultTab = "global";
 export function PageTrafficAnalytics({}) {
   const theme = useTheme();
@@ -44,9 +45,9 @@ export function PageTrafficAnalytics({}) {
 
   const [now, setNow] = useState(getLast15MinuteStep());
   const [next, setNext] = useState(getNext15MinuteStep());
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [timeInterval, setTimeInterval] = useState("all");
+  const [startDate, setStartDate] = useLocalStorage("traffic_analytics_start_date", null);
+  const [endDate, setEndDate] = useLocalStorage("traffic_analytics_end_date", null);
+  const [timeInterval, setTimeInterval] = useLocalStorage("traffic_analytics_time_interval", "all");
 
   const setTab = (tab) => {
     setSelectedTab(tab);
@@ -222,7 +223,9 @@ function TrafficFilterSelector({
     </Stack>
   );
 }
+//#endregion
 
+//#region Global Data Tab
 function GlobalDataTab({ now, startDate, endDate, timeInterval }) {
   const [initialNow, setInitialNow] = useState(now);
   const query = useGetTrafficStatsGlobal(startDate, endDate, timeInterval);
@@ -242,17 +245,25 @@ function GlobalDataTab({ now, startDate, endDate, timeInterval }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <BasicGlobalStats data={data?.basic} isLoading={query.isLoading} interval={timeInterval} />
+        <BasicGlobalStatsSection data={data?.basic} isLoading={query.isLoading} interval={timeInterval} />
         <Divider sx={{ my: 2 }} />
-        <UserAgentStats data={data?.user_agents} isLoading={query.isLoading} interval={timeInterval} />
+        <UserAgentSection data={data?.user_agents} isLoading={query.isLoading} interval={timeInterval} />
         <Divider sx={{ my: 2 }} />
-        <MostRecentRequestsTable data={requestsData?.last_requests} isLoading={requestsQuery.isLoading} />
+        <MostCommonReferrersSection
+          data={data?.referrers}
+          isLoading={query.isLoading}
+          interval={timeInterval}
+        />
+        <Divider sx={{ my: 2 }} />
+        <MostRequestedPagesSection data={requestsData?.most_requested} isLoading={requestsQuery.isLoading} />
+        <Divider sx={{ my: 2 }} />
+        <RecentRequestsSection data={requestsData?.last_requests} isLoading={requestsQuery.isLoading} />
       </Grid>
     </Grid>
   );
 }
 
-function BasicGlobalStats({ data, isLoading, interval }) {
+function BasicGlobalStatsSection({ data, isLoading, interval }) {
   const types = {
     avg_serve_time: {
       label: "Average Serve Time",
@@ -345,7 +356,6 @@ function BasicGlobalStats({ data, isLoading, interval }) {
           },
         ]}
         // grid={{ vertical: true, horizontal: true }}
-        slotProps={{}}
         sx={{
           [`& .${axisClasses.left} .${axisClasses.label}`]: {
             transform: "translateX(-12px)",
@@ -357,7 +367,7 @@ function BasicGlobalStats({ data, isLoading, interval }) {
   );
 }
 
-function UserAgentStats({ data, isLoading, interval }) {
+function UserAgentSection({ data, isLoading, interval }) {
   const userAgents = {
     chrome: { label: "Chrome", color: "#4285f4" },
     chrome_mobile: { label: "Chrome Mobile", color: "#85b1fb" },
@@ -492,35 +502,162 @@ function UserAgentStats({ data, isLoading, interval }) {
   );
 }
 
-function SimpleNumberDisplay({ label, value, unit = null }) {
-  return (
-    <Paper elevation={4} sx={{ p: 2 }}>
-      <Stack spacing={1} direction="column">
-        <Typography variant="subtitle2" sx={{ color: "grey" }}>
-          {label}
-        </Typography>
-        <Stack direction="row" alignItems="flex-end" spacing={0.25}>
-          <Typography variant="h5">{value}</Typography>
-          {unit && (
-            <Typography variant="subtitle2" sx={{ "&&": { mb: 0.25 } }}>
-              {unit}
-            </Typography>
-          )}
-        </Stack>
+function MostCommonReferrersSection({ data, isLoading, interval }) {
+  const theme = useTheme();
+  const [showAll, setShowAll] = useState(false);
+
+  if (isLoading) {
+    return (
+      <Stack direction="column" gap={2}>
+        <Typography variant="h5">Most Common Referrers</Typography>
+        <LoadingSpinner />
       </Stack>
-    </Paper>
+    );
+  }
+
+  const chartData = data.map((entry) => {
+    let cleanedUrl = null;
+    try {
+      cleanedUrl = entry.referrer ? new URL(entry.referrer).hostname : null;
+    } catch (e) {
+      cleanedUrl = entry.referrer?.replace("http://", "").replace("https://", "");
+    }
+    return { value: entry.count, label: cleanedUrl ?? "Direct/Unknown", referrer: entry.referrer };
+  });
+
+  const nonNullData = chartData.filter((entry) => entry.referrer !== null);
+
+  const total = chartData.reduce((acc, cur) => acc + cur.value, 0);
+  const totalNonNull = nonNullData.reduce((acc, cur) => acc + cur.value, 0);
+
+  return (
+    <Stack direction="column" gap={2}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Stack direction="column" gap={2}>
+            <Typography variant="h5">All Referrers</Typography>
+            <PieChart
+              series={[
+                {
+                  arcLabel: (item) => item.label,
+                  arcLabelMinAngle: 45,
+                  data: chartData,
+                  highlightScope: { faded: "global", highlighted: "item" },
+                  faded: {
+                    additionalRadius: -10,
+                    color: "gray",
+                  },
+                },
+              ]}
+              slotProps={{
+                legend: {
+                  hidden: true,
+                },
+              }}
+              margin={{ right: 0 }}
+              height={400}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Stack direction="column" gap={2}>
+            <Typography variant="h5">No Direct/Unknown</Typography>
+            <PieChart
+              series={[
+                {
+                  arcLabel: (item) => item.label,
+                  arcLabelMinAngle: 45,
+                  data: nonNullData,
+                  highlightScope: { faded: "global", highlighted: "item" },
+                  faded: {
+                    additionalRadius: -10,
+                    color: "gray",
+                  },
+                },
+              ]}
+              slotProps={{
+                legend: {
+                  hidden: true,
+                },
+              }}
+              margin={{ right: 0 }}
+              height={400}
+            />
+          </Stack>
+        </Grid>
+      </Grid>
+      <Table size="small" sx={{ maxWidth: "500px", alignSelf: "center" }}>
+        <TableHead>
+          <TableRow>
+            <TableCell size="1">Referrer</TableCell>
+            <TableCell align="center">%</TableCell>
+            <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+              % non-direct
+            </TableCell>
+            <TableCell align="right">Count</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {chartData.slice(0, showAll ? chartData.length : 10).map((row) => (
+            <TableRow
+              key={row.label}
+              sx={{
+                "&:nth-of-type(odd)": {
+                  backgroundColor: theme.palette.background.lightSubtle,
+                },
+                "&:last-child td, &:last-child th": { border: 0 },
+              }}
+            >
+              <TableCell component="th" scope="row">
+                <Stack direction="row" alignItems="center">
+                  <TooltipLineBreaks title={row.referrer ?? row.label}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        maxWidth: "300px",
+                      }}
+                    >
+                      {row.referrer ?? row.label}
+                    </span>
+                  </TooltipLineBreaks>
+                </Stack>
+              </TableCell>
+              <TableCell align="center">{((row.value / total) * 100).toFixed(2)}%</TableCell>
+              <TableCell align="center">
+                {row.referrer === null ? "-" : ((row.value / totalNonNull) * 100).toFixed(2)}%
+              </TableCell>
+              <TableCell align="right">{row.value.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
+          {chartData.length > 10 && (
+            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell colSpan={99} align="center">
+                <Button fullWidth variant="outlined" onClick={() => setShowAll(!showAll)}>
+                  {!showAll && <>Show '{chartData.length - 10}' More</>}
+                  {showAll && <>Show Less</>}
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </Stack>
   );
 }
 
-function MostRecentRequestsTable({ data, isLoading }) {
+function RecentRequestsSection({ data, isLoading }) {
   return (
     <Stack direction="column" gap={2}>
-      <Typography variant="h5">Most Recent Requests</Typography>
+      <Typography variant="h5">Recent Requests</Typography>
       {isLoading ? <LoadingSpinner /> : <SimpleRequestsTable entries={data} />}
     </Stack>
   );
 }
 function SimpleRequestsTable({ entries, showMax = 10 }) {
+  const theme = useTheme();
   const [showAll, setShowAll] = useState(false);
   //Fields: date, method, page, query, status, referrer, user_agent, serve_time
   return (
@@ -550,7 +687,15 @@ function SimpleRequestsTable({ entries, showMax = 10 }) {
         </TableHead>
         <TableBody>
           {entries.slice(0, showAll ? entries.length : showMax).map((row) => (
-            <TableRow key={row.date}>
+            <TableRow
+              key={row.date}
+              sx={{
+                "&:nth-of-type(odd)": {
+                  backgroundColor: theme.palette.background.lightSubtle,
+                },
+                "&:last-child td, &:last-child th": { border: 0 },
+              }}
+            >
               <TableCell sx={{ fontFamily: "monospace" }}>
                 {new Date(row.date).toLocaleTimeString()}
               </TableCell>
@@ -584,7 +729,7 @@ function SimpleRequestsTable({ entries, showMax = 10 }) {
           ))}
 
           {entries.length > showMax && (
-            <TableRow>
+            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell colSpan={99} align="center">
                 <Button fullWidth variant="outlined" onClick={() => setShowAll(!showAll)}>
                   {!showAll && <>Show '{entries.length - showMax}' More</>}
@@ -598,12 +743,101 @@ function SimpleRequestsTable({ entries, showMax = 10 }) {
     </TableContainer>
   );
 }
+
+function MostRequestedPagesSection({ data, isLoading }) {
+  return (
+    <Stack direction="column" gap={2}>
+      <Typography variant="h5">Most Requested Pages</Typography>
+      {isLoading ? <LoadingSpinner /> : <MostRequestedPagesTable entries={data} />}
+    </Stack>
+  );
+}
+function MostRequestedPagesTable({ entries }) {
+  const theme = useTheme();
+  const [showAll, setShowAll] = useState(false);
+  //Fields to display: page, count, avg_serve_time
+  const headerStyle = { px: 1 };
+  const cellStyle = { px: 1, fontFamily: "monospace" };
+
+  return (
+    <TableContainer>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={headerStyle}>Page</TableCell>
+            <TableCell sx={headerStyle} align="center">
+              Count
+            </TableCell>
+            <TableCell sx={headerStyle} align="center">
+              Avg. Serve Time
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {entries.slice(0, showAll ? entries.length : 10).map((row) => (
+            <TableRow
+              key={row.page}
+              sx={{
+                "&:nth-of-type(odd)": {
+                  backgroundColor: theme.palette.background.lightSubtle,
+                },
+                "&:last-child td, &:last-child th": { border: 0 },
+              }}
+            >
+              <TableCell sx={cellStyle}>{row.page}</TableCell>
+              <TableCell sx={cellStyle} align="center">
+                {row.count.toLocaleString()}
+              </TableCell>
+              <TableCell sx={cellStyle} align="center">
+                {row.avg_serve_time} ms
+              </TableCell>
+            </TableRow>
+          ))}
+
+          {entries.length > 10 && (
+            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableCell colSpan={99} align="center">
+                <Button fullWidth variant="outlined" onClick={() => setShowAll(!showAll)}>
+                  {!showAll && <>Show '{entries.length - 10}' More</>}
+                  {showAll && <>Show Less</>}
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+//#endregion
+
+//#region Components
+function SimpleNumberDisplay({ label, value, unit = null }) {
+  return (
+    <Paper elevation={4} sx={{ p: 2 }}>
+      <Stack spacing={1} direction="column">
+        <Typography variant="subtitle2" sx={{ color: "grey" }}>
+          {label}
+        </Typography>
+        <Stack direction="row" alignItems="flex-end" spacing={0.25}>
+          <Typography variant="h5">{value}</Typography>
+          {unit && (
+            <Typography variant="subtitle2" sx={{ "&&": { mb: 0.25 } }}>
+              {unit}
+            </Typography>
+          )}
+        </Stack>
+      </Stack>
+    </Paper>
+  );
+}
+
 function MethodDisplay({ method }) {
   const methods = {
-    GET: { color: "green" },
-    POST: { color: "blue" },
-    PUT: { color: "orange" },
-    DELETE: { color: "red" },
+    GET: { color: "hsl(120, 60%, 45%)" },
+    POST: { color: "hsl(230, 60%, 45%)" },
+    PUT: { color: "hsl(290, 60%, 45%)" },
+    DELETE: { color: "hsl(0, 60%, 45%)" },
   };
 
   return (
@@ -615,6 +849,7 @@ function MethodDisplay({ method }) {
         textAlign: "center",
         borderRadius: "4px",
         fontFamily: "monospace",
+        fontWeight: "bold",
       }}
     >
       {method}
@@ -623,10 +858,10 @@ function MethodDisplay({ method }) {
 }
 function StatusDisplay({ status }) {
   const statuses = {
-    200: { color: "green", foreground: "white" },
-    300: { color: "yellow", foreground: "black" },
-    400: { color: "orange", foreground: "white" },
-    500: { color: "red", foreground: "white" },
+    200: { color: "hsl(120, 60%, 45%)", foreground: "white" },
+    300: { color: "hsl(50, 80%, 45%)", foreground: "black" },
+    400: { color: "hsl(20, 80%, 45%)", foreground: "white" },
+    500: { color: "hsl(0, 80%, 45%)", foreground: "white" },
   };
 
   const statusCategory = Math.floor(status / 100) * 100;
@@ -640,14 +875,16 @@ function StatusDisplay({ status }) {
         textAlign: "center",
         borderRadius: "4px",
         fontFamily: "monospace",
+        fontWeight: "bold",
       }}
     >
       {status}
     </Typography>
   );
 }
+//#endregion
 
-// Helper functions
+//#region Helper Functions
 function getLast15MinuteStep() {
   const now = new Date(); // Get the current date and time
 
@@ -693,3 +930,4 @@ function dateToLabel(date, interval) {
   }
   return date;
 }
+//#endregion
