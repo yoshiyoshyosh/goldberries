@@ -15,7 +15,7 @@ if (!is_admin($account)) {
 //Set content type to plain text
 header('Content-Type: text/plain');
 
-$query = "SELECT * FROM view_submissions WHERE challenge_difficulty_id = 18 AND submission_is_personal = FALSE AND submission_suggested_difficulty_id IS NOT NULL";
+$query = "SELECT * FROM view_submissions WHERE challenge_difficulty_id IN (17, 22, 3, 4) AND submission_is_personal = FALSE AND submission_suggested_difficulty_id IS NOT NULL";
 $result = pg_query($DB, $query);
 
 if (!$result) {

@@ -31,6 +31,9 @@ const DIFFICULTIES = {
   2: { color: "#ff97d8", group_color: "#f874c6", contrast_color: "#000000", name: "Mid Tier 0" },
   3: { color: "#fcb5e0", group_color: "#f874c6", contrast_color: "#000000", name: "Low Tier 0" },
 
+  //Tier 0.5
+  23: { color: "#ff99b2", group_color: "#ff99b2", contrast_color: "#000000", name: "Tier 0.5" },
+
   //Tier 1
   4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000", name: "High Tier 1" },
   5: { color: "#ff9989", group_color: "#ff7b67", contrast_color: "#000000", name: "Mid Tier 1" },
@@ -59,20 +62,23 @@ const DIFFICULTIES = {
   //Tier 7
   17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000", name: "Tier 7" },
 
-  //Standard
+  //Tier 7.5
+  24: { color: "#bcc7ff", group_color: "#bcc7ff", contrast_color: "#000000", name: "Tier 7.5" },
+
+  //High Standard
+  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "High Standard" },
+
+  //Mid Standard
   18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "Mid Standard" },
-
-  //Undetermined
-  19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000", name: "Undetermined" },
-
-  //Standard
-  20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000", name: "Trivial" },
 
   //Low Standard
   21: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "Low Standard" },
 
-  //High Standard
-  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000", name: "High Standard" },
+  //Undetermined
+  19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000", name: "Undetermined" },
+
+  //Trivial
+  20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000", name: "Trivial" },
 };
 
 function decodeBase64(base64) {
