@@ -74,16 +74,15 @@ $response["device_usage"] = unpack_all_interval_response($interval, $result, tru
 
 //===== 3. REFERRERS =====
 $query = "SELECT
-  $select_interval_str
 	referrer,
   COUNT(*) AS count
 FROM traffic
   WHERE (referrer NOT ILIKE '/%' OR referrer IS NULL) $where_cond
-GROUP BY $group_by_interval_pre referrer
-ORDER BY $order_by_interval_pre count DESC
+GROUP BY referrer
+ORDER BY count DESC
 ";
 $result = pg_query_params_or_die($DB, $query, []);
-$response['referrers'] = unpack_all_interval_response($interval, $result, false, "referrer", "count");
+$response['referrers'] = unpack_all_interval_response("all", $result, false, "referrer", "count");
 
 //===== 4. SIMPLE FIELDS =====
 $query = "SELECT

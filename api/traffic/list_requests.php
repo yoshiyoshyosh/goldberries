@@ -40,7 +40,7 @@ $result = pg_query_params_or_die($DB, $query, []);
 $response['last_requests'] = pg_fetch_all($result);
 
 
-$query = "SELECT page, COUNT(*) as count FROM traffic $where_str GROUP BY page ORDER BY count DESC LIMIT 100";
+$query = "SELECT page, COUNT(*) AS count, ROUND(AVG(serve_time)) AS avg_serve_time FROM traffic $where_str GROUP BY page ORDER BY count DESC LIMIT 100";
 $result = pg_query_params_or_die($DB, $query, []);
 $response['most_requested'] = pg_fetch_all($result);
 
