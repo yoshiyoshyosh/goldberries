@@ -353,20 +353,8 @@ export function TiersCountDisplay({ stats, differences, hideEmpty = false, equal
         const count = stats[diff.id] || 0;
         const difference = differences ? differences[diff.id] : null;
         const isEmpty = count === 0;
-        let width = 12;
-        if (diff.id === DIFF_CONSTS.UNDETERMINED_ID) {
-          width = 12;
-        } else if (diff.sort > DIFF_CONSTS.STANDARD_SORT_END && diff.sort < DIFF_CONSTS.LOW_TIER_3_SORT) {
-          width = 3;
-        } else if (
-          diff.sort >= DIFF_CONSTS.STANDARD_SORT_START &&
-          diff.sort <= DIFF_CONSTS.STANDARD_SORT_END
-        ) {
-          width = 4;
-        } else {
-          const shares = getDifficultySubtierShares(diff.id, true);
-          width = 12 / shares;
-        }
+
+        let width = getDifficultySubtierShares(diff.id);
         return (
           <Grid item key={diff.id} xs={12} md={width}>
             <DifficultyValueChip
