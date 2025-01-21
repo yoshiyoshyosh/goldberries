@@ -207,9 +207,28 @@ foreach ($lines as $line) {
     $referer = null;
   }
   if ($referer !== null) {
+    //Remove trailing slashes
+    $referer = rtrim($referer, '/');
+    //if theres still 3 or more slashes, remove everything after the third slash (including the third slash)
+    $slashes = substr_count($referer, '/');
+    if ($slashes >= 3) {
+      $referer = substr($referer, 0, strpos($referer, '/', strpos($referer, '/', strpos($referer, '/') + 1) + 1));
+    } else if ($slashes === 0) {
+      //If there are no slashes in the referrer, prepend "https://" to it
+      $referer = "https://" . $referer;
+    }
+
+    //If the referrer is coming from localhost 'http://127.0.0.1', ignore the request
+    if (strpos($referer, 'http://127.0.0.1') === 0) {
+      echo_if_debug("Skipping localhost request #$i: $referer\n");
+      continue;
+    }
+
     //Replace the leading https://goldberries.net with an empty string
     $referer = str_replace('https://goldberries.net', '', $referer);
+    $referer = str_replace('https://www.goldberries.net', '', $referer);
     $referer = str_replace('http://goldberries.net', '', $referer);
+    $referer = str_replace('http://www.goldberries.net', '', $referer);
     if ($referer === '') {
       $referer = "/"; //If after removing the domain the referer is empty, set it to '/'
     }
@@ -263,6 +282,13 @@ foreach ($lines as $line) {
   $combined_agent = null;
   if ($user_agent_parsed !== null) {
     $combined_agent = $user_agent_parsed . ($user_agent_mobile ? '_mobile' : '');
+  }
+
+  //===== REFERRER PT.2 =====
+  //If the user agent is a node bot and the referrer is NULL at this point,
+  //set the referrer to "node" as to not include the bot requests with human requests
+  if ($combined_agent === 'bot_node' && $referer === null) {
+    $referer = "node";
   }
 
 

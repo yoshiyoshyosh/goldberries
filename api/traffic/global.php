@@ -73,11 +73,13 @@ $result = pg_query_params_or_die($DB, $query, []);
 $response["device_usage"] = unpack_all_interval_response($interval, $result, true);
 
 //===== 3. REFERRERS =====
+//In this query, ignore post-oauth and discord_auth.php pages, as they
+//are necessary referrers for the OAuth flow, nothing to do with the website
 $query = "SELECT
 	referrer,
   COUNT(*) AS count
 FROM traffic
-  WHERE (referrer NOT ILIKE '/%' OR referrer IS NULL) $where_cond
+  WHERE (referrer IS NULL OR (referrer NOT ILIKE '/%' AND referrer <> 'node' AND page NOT ILIKE '/post-oauth%' AND page <>'/api/auth/discord_auth.php')) $where_cond
 GROUP BY referrer
 ORDER BY count DESC
 ";
