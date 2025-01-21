@@ -47,13 +47,23 @@ class SuggestionVote extends DbObject
     if ($depth <= 1)
       return;
 
-    if ($expand_structure) {
-      if ($this->suggestion_id !== null) {
+    $isFromSqlResult = is_array($DB);
+
+    if ($expand_structure && $this->suggestion_id !== null) {
+      if ($isFromSqlResult) {
+        //Not implemented
+        $this->suggestion = null;
+      } else {
         $this->suggestion = Suggestion::get_by_id($DB, $this->suggestion_id, $depth - 1, $expand_structure);
       }
     }
     if ($this->player_id !== null) {
-      $this->player = Player::get_by_id($DB, $this->player_id, 3, false);
+      if ($isFromSqlResult) {
+        $this->player = new Player();
+        $this->player->apply_db_data($DB, 'suggestion_player_');
+      } else {
+        $this->player = Player::get_by_id($DB, $this->player_id, 3, false);
+      }
     }
   }
 
@@ -77,14 +87,26 @@ class SuggestionVote extends DbObject
     if ($suggestion->challenge_id === null)
       return;
 
-    $query = "SELECT * FROM submission WHERE player_id = $1 AND challenge_id = $2 AND is_verified = true";
-    $result = pg_query_params($DB, $query, array($this->player_id, $suggestion->challenge_id));
-    if (pg_num_rows($result) === 0)
-      return;
+    $isFromSqlResult = is_array($DB);
 
-    $row = pg_fetch_assoc($result);
-    $this->submission = new Submission();
-    $this->submission->apply_db_data($row);
-    $this->submission->expand_foreign_keys($DB, 2, false);
+    if ($isFromSqlResult) {
+      if (isset($DB['submission_id'])) {
+        $this->submission = new Submission();
+        $this->submission->apply_db_data($DB, 'submission_');
+        $this->submission->expand_foreign_keys($DB, 2, false);
+      } else {
+        $this->submission = null;
+      }
+    } else {
+      $query = "SELECT * FROM submission WHERE player_id = $1 AND challenge_id = $2 AND is_verified = true";
+      $result = pg_query_params($DB, $query, array($this->player_id, $suggestion->challenge_id));
+      if (pg_num_rows($result) === 0)
+        return;
+
+      $row = pg_fetch_assoc($result);
+      $this->submission = new Submission();
+      $this->submission->apply_db_data($row);
+      $this->submission->expand_foreign_keys($DB, 2, false);
+    }
   }
 }

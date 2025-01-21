@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -17,4 +17,3 @@ $type = isset($_REQUEST['type']) ? $_REQUEST['type'] : "all";
 $suggestions = Suggestion::get_paginated($DB, $page, $per_page, $challenge, $expired, $account, $type);
 
 api_write($suggestions);
-exit();

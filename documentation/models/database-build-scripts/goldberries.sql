@@ -4,6 +4,9 @@
 DROP VIEW view_challenge_changes;
 DROP VIEW view_challenges;
 DROP VIEW view_submissions;
+DROP VIEW view_challenge_submissions;
+DROP VIEW view_suggestion_votes;
+
 
 DROP TABLE fwg_data;
 DROP TABLE showcase;
@@ -710,3 +713,140 @@ JOIN objective  ON challenge.objective_id = objective.id
 LEFT JOIN player p ON change.author_id = p.id
 LEFT JOIN account pa ON p.id = pa.player_id
 ORDER BY change.date DESC ;
+
+
+
+
+CREATE VIEW "view_challenge_submissions" AS SELECT
+  submission.id AS submission_id,
+  submission.challenge_id AS submission_challenge_id,
+  submission.player_id AS submission_player_id,
+  submission.date_created AS submission_date_created,
+  submission.is_fc AS submission_is_fc,
+  submission.proof_url AS submission_proof_url,
+  submission.raw_session_url AS submission_raw_session_url,
+  submission.player_notes AS submission_player_notes,
+  submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
+  submission.is_personal AS submission_is_personal,
+  submission.is_verified AS submission_is_verified,
+  submission.date_verified AS submission_date_verified,
+  submission.verifier_notes AS submission_verifier_notes,
+  submission.verifier_id AS submission_verifier_id,
+  submission.new_challenge_id AS submission_new_challenge_id,
+  submission.is_obsolete AS submission_is_obsolete,
+  submission.time_taken AS submission_time_taken,
+  submission.date_achieved AS submission_date_achieved,
+
+  p.id AS player_id,
+  p.name AS player_name,
+  pa.role AS player_account_role,
+  pa.is_suspended AS player_account_is_suspended,
+  pa.suspension_reason AS player_account_suspension_reason,
+  pa.name_color_start AS player_account_name_color_start,
+  pa.name_color_end AS player_account_name_color_end,
+
+  v.id AS verifier_id,
+  v.name AS verifier_name,
+  va.role AS verifier_account_role,
+  va.is_suspended AS verifier_account_is_suspended,
+  va.suspension_reason AS verifier_account_suspension_reason,
+  va.name_color_start AS verifier_account_name_color_start,
+  va.name_color_end AS verifier_account_name_color_end,
+
+  pd.id AS suggested_difficulty_id,
+  pd.name AS suggested_difficulty_name,
+  pd.subtier AS suggested_difficulty_subtier,
+  pd.sort AS suggested_difficulty_sort,
+  
+  new_challenge.id AS new_challenge_id,
+  new_challenge.url AS new_challenge_url,
+  new_challenge.name AS new_challenge_name,
+  new_challenge.description AS new_challenge_description
+  
+FROM submission
+JOIN player p ON p.id = submission.player_id
+LEFT JOIN player v ON v.id = submission.verifier_id
+LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
+LEFT JOIN account pa ON p.id = pa.player_id
+LEFT JOIN account va ON v.id = va.player_id
+LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
+
+ORDER BY submission.date_achieved, submission.date_created, submission.id ;
+
+
+
+
+CREATE VIEW "view_suggestion_votes" AS SELECT
+  suggestion_vote.id AS suggestion_vote_id,
+  suggestion_vote.suggestion_id AS suggestion_vote_suggestion_id,
+  suggestion_vote.player_id AS suggestion_vote_player_id,
+  suggestion_vote.vote AS suggestion_vote_vote,
+  suggestion_vote.comment AS suggestion_vote_comment,
+
+  sp.id AS suggestion_player_id,
+  sp.name AS suggestion_player_name,
+  spa.role AS suggestion_player_account_role,
+  spa.is_suspended AS suggestion_player_account_is_suspended,
+  spa.suspension_reason AS suggestion_player_account_suspension_reason,
+  spa.name_color_start AS suggestion_player_account_name_color_start,
+  spa.name_color_end AS suggestion_player_account_name_color_end,
+
+  submission.id AS submission_id,
+  submission.challenge_id AS submission_challenge_id,
+  submission.player_id AS submission_player_id,
+  submission.date_created AS submission_date_created,
+  submission.is_fc AS submission_is_fc,
+  submission.proof_url AS submission_proof_url,
+  submission.raw_session_url AS submission_raw_session_url,
+  submission.player_notes AS submission_player_notes,
+  submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
+  submission.is_personal AS submission_is_personal,
+  submission.is_verified AS submission_is_verified,
+  submission.date_verified AS submission_date_verified,
+  submission.verifier_notes AS submission_verifier_notes,
+  submission.verifier_id AS submission_verifier_id,
+  submission.new_challenge_id AS submission_new_challenge_id,
+  submission.is_obsolete AS submission_is_obsolete,
+  submission.time_taken AS submission_time_taken,
+  submission.date_achieved AS submission_date_achieved,
+
+  p.id AS player_id,
+  p.name AS player_name,
+  pa.role AS player_account_role,
+  pa.is_suspended AS player_account_is_suspended,
+  pa.suspension_reason AS player_account_suspension_reason,
+  pa.name_color_start AS player_account_name_color_start,
+  pa.name_color_end AS player_account_name_color_end,
+
+  v.id AS verifier_id,
+  v.name AS verifier_name,
+  va.role AS verifier_account_role,
+  va.is_suspended AS verifier_account_is_suspended,
+  va.suspension_reason AS verifier_account_suspension_reason,
+  va.name_color_start AS verifier_account_name_color_start,
+  va.name_color_end AS verifier_account_name_color_end,
+
+  pd.id AS suggested_difficulty_id,
+  pd.name AS suggested_difficulty_name,
+  pd.subtier AS suggested_difficulty_subtier,
+  pd.sort AS suggested_difficulty_sort,
+  
+  new_challenge.id AS new_challenge_id,
+  new_challenge.url AS new_challenge_url,
+  new_challenge.name AS new_challenge_name,
+  new_challenge.description AS new_challenge_description
+  
+
+FROM suggestion_vote
+JOIN suggestion ON suggestion_vote.suggestion_id = suggestion.id
+LEFT JOIN submission ON suggestion_vote.player_id = submission.player_id AND suggestion.challenge_id = submission.challenge_id
+LEFT JOIN player sp ON sp.id = suggestion_vote.player_id
+LEFT JOIN player p ON p.id = submission.player_id
+LEFT JOIN player v ON v.id = submission.verifier_id
+LEFT JOIN difficulty pd ON submission.suggested_difficulty_id = pd.id
+LEFT JOIN account spa ON sp.id = spa.player_id
+LEFT JOIN account pa ON p.id = pa.player_id
+LEFT JOIN account va ON v.id = va.player_id
+LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
+
+ORDER BY suggestion_vote.id ;

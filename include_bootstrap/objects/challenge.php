@@ -126,20 +126,27 @@ class Challenge extends DbObject
   // === Find Functions ===
   function fetch_submissions($DB, $filter_suspended = false): bool
   {
-    $submissions = $this->fetch_list($DB, 'challenge_id', Submission::class, "is_verified = true", "ORDER BY date_achieved ASC, id ASC");
-    if ($submissions === false)
-      return false;
-    $this->submissions = $submissions;
-    foreach ($this->submissions as $submission) {
-      $submission->expand_foreign_keys($DB, 2, false);
-    }
+    $where = ["submission_challenge_id = $1", "submission_is_verified = true"];
     if ($filter_suspended) {
-      $this->submissions = array_filter($this->submissions, function ($submission) {
-        $account = $submission->player->account;
-        return $account === null || $account['is_suspended'] === false || $account['is_suspended'] === null;
-      });
-      $this->submissions = array_values($this->submissions);
+      $where[] = "(player_account_is_suspended = false OR player_account_is_suspended IS NULL)";
     }
+
+    $where_str = implode(" AND ", $where);
+
+    $query = "SELECT * FROM view_challenge_submissions WHERE $where_str";
+    $result = pg_query_params($DB, $query, [$this->id]);
+
+    if ($result === false)
+      return false;
+
+    $submissions = [];
+    while ($row = pg_fetch_assoc($result)) {
+      $submission = new Submission();
+      $submission->apply_db_data($row, "submission_");
+      $submission->expand_foreign_keys($row, 2, false);
+      $submissions[] = $submission;
+    }
+    $this->submissions = $submissions;
     return true;
   }
 

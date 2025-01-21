@@ -73,16 +73,26 @@ function api_unified_output($DB, string $table_noesc, $object_skel)
   $output = api_unified_get($DB, $table_noesc, $object_skel);
   api_write($output);
 }
-function api_write($output, $check_numbers = false)
+function api_write($output, $check_numbers = false, $run_profiler = false)
 {
   $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
   if ($check_numbers) {
     $flags |= JSON_NUMERIC_CHECK;
   }
-  echo json_encode(
-    $output,
-    $flags
-  );
+  if ($run_profiler) {
+    api_write_for_profiler($output, $flags);
+    return;
+  }
+  echo json_encode($output, $flags);
+}
+
+function api_write_for_profiler($output, $flags)
+{
+  $json = json_encode($output, $flags);
+  //Parse json again
+  $obj = json_decode($json, true);
+  $obj['profiler'] = profiler_get_data();
+  echo json_encode($obj, $flags);
 }
 
 function api_unified_get($DB, string $table_noesc, $object_skel)

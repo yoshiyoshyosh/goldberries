@@ -88,15 +88,20 @@ class Suggestion extends DbObject
   // === Find Functions ===
   function fetch_votes($DB): bool
   {
-    $votes = $this->fetch_list($DB, 'suggestion_id', SuggestionVote::class);
-    if ($votes === false) {
-      $votes = array();
+    $query = "SELECT * FROM view_suggestion_votes WHERE suggestion_vote_suggestion_id = $1";
+    $result = pg_query_params($DB, $query, [$this->id]);
+
+    $this->votes = [];
+    if (!$result) {
       return false;
     }
-    $this->votes = $votes;
-    foreach ($this->votes as $vote) {
-      $vote->expand_foreign_keys($DB, 2, false);
-      $vote->find_submission($DB, $this);
+
+    while ($row = pg_fetch_assoc($result)) {
+      $vote = new SuggestionVote();
+      $vote->apply_db_data($row, "suggestion_vote_");
+      $vote->expand_foreign_keys($row, 2, false);
+      $vote->find_submission($row, $this);
+      $this->votes[] = $vote;
     }
     return true;
   }
