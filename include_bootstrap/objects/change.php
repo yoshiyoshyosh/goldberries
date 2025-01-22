@@ -85,7 +85,7 @@ class Change extends DbObject
     if ($this->author_id !== null) {
       if ($isFromSqlResult) {
         $this->author = new Player();
-        $this->author->apply_db_data($DB, "author_");
+        $this->author->apply_db_data($DB, "author_", false);
       } else {
         $this->author = Player::get_by_id($DB, $this->author_id, 2, false);
         $this->author->expand_foreign_keys($DB, $depth - 1, false);

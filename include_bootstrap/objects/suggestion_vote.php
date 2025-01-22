@@ -60,7 +60,7 @@ class SuggestionVote extends DbObject
     if ($this->player_id !== null) {
       if ($isFromSqlResult) {
         $this->player = new Player();
-        $this->player->apply_db_data($DB, 'suggestion_player_');
+        $this->player->apply_db_data($DB, 'suggestion_player_', false);
       } else {
         $this->player = Player::get_by_id($DB, $this->player_id, 3, false);
       }

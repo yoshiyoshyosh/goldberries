@@ -113,8 +113,7 @@ class Submission extends DbObject
     if (isset($this->player_id)) {
       if ($isFromSqlResult) {
         $this->player = new Player();
-        $this->player->apply_db_data($DB, "player_");
-        // $this->player->expand_foreign_keys($DB, $depth - 1);
+        $this->player->apply_db_data($DB, "player_", false);
       } else {
         $this->player = Player::get_by_id($DB, $this->player_id, 2, $expand_structure);
       }
@@ -122,8 +121,7 @@ class Submission extends DbObject
     if (isset($this->verifier_id)) {
       if ($isFromSqlResult) {
         $this->verifier = new Player();
-        $this->verifier->apply_db_data($DB, "verifier_");
-        // $this->verifier->expand_foreign_keys($DB, $depth - 1);
+        $this->verifier->apply_db_data($DB, "verifier_", false);
       } else {
         $this->verifier = Player::get_by_id($DB, $this->verifier_id);
       }

@@ -18,7 +18,7 @@ class Player extends DbObject
     );
   }
 
-  function apply_db_data($arr, $prefix = '')
+  function apply_db_data($arr, $prefix = '', $customization = true)
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
@@ -38,14 +38,18 @@ class Player extends DbObject
       $this->account['name_color_start'] = $arr[$prefix . 'account_name_color_start'];
     if (isset($arr[$prefix . 'account_name_color_end']))
       $this->account['name_color_end'] = $arr[$prefix . 'account_name_color_end'];
-    if (isset($arr[$prefix . 'account_links']))
-      $this->account['links'] = $arr[$prefix . 'account_links'];
-    if (isset($arr[$prefix . 'account_input_method']))
-      $this->account['input_method'] = $arr[$prefix . 'account_input_method'];
-    if (isset($arr[$prefix . 'account_about_me']))
-      $this->account['about_me'] = $arr[$prefix . 'account_about_me'];
-    if (isset($arr[$prefix . 'account_country']))
-      $this->account['country'] = $arr[$prefix . 'account_country'];
+
+    if ($customization) {
+      //Controls if the customization should be set on this object from where ever the data originates
+      if (isset($arr[$prefix . 'account_links']))
+        $this->account['links'] = $arr[$prefix . 'account_links'];
+      if (isset($arr[$prefix . 'account_input_method']))
+        $this->account['input_method'] = $arr[$prefix . 'account_input_method'];
+      if (isset($arr[$prefix . 'account_about_me']))
+        $this->account['about_me'] = $arr[$prefix . 'account_about_me'];
+      if (isset($arr[$prefix . 'account_country']))
+        $this->account['country'] = $arr[$prefix . 'account_country'];
+    }
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
@@ -77,70 +81,38 @@ class Player extends DbObject
   }
 
   // === Find Functions ===
-  static function find_by_group($DB, string $group)
+  static function find_by_group($DB, string $group, $customization = false)
   {
     global $HELPER, $VERIFIER, $ADMIN;
 
-    $where = "";
+    $where = [];
     if ($group === "user") {
-      $where = "account.id IS NULL OR (account.role < $HELPER AND account.is_suspended = false)";
+      $where[] = "(player_account_id IS NULL OR (player_account_role < $HELPER AND player_account_is_suspended = false))";
     } else if ($group === "helper") {
-      $where = "role >= $HELPER";
+      $where[] = "player_role >= $HELPER";
     } else if ($group === "verifier") {
-      $where = "role >= $VERIFIER";
+      $where[] = "player_role >= $VERIFIER";
     } else if ($group === "admin") {
-      $where = "role >= $ADMIN";
+      $where[] = "player_role >= $ADMIN";
     } else if ($group === "suspended") {
-      $where = "is_suspended = true";
+      $where[] = "player_is_suspended = true";
     } else if ($group === "unclaimed") {
-      $where = "account.id IS NULL";
+      $where[] = "player_account_id IS NULL";
+    } else if ($group === "all") {
+      $where[] = "1 = 1";
     } else {
       die_json(400, "invalid group");
     }
 
-    $join = "account ON account.player_id = player.id";
-    if ($group === "unclaimed") {
-      $join = "account ON account.claimed_player_id = player.id";
-    }
+    $where_str = implode(" AND ", $where);
 
-    $query = "SELECT 
-      player.* 
-    FROM player 
-    LEFT JOIN {$join}
-    WHERE {$where} ORDER BY player.id
-    ";
-    $result = pg_query($DB, $query);
-    if ($result === false) {
-      return false;
-    }
+    $query = "SELECT * FROM view_players WHERE $where_str";
+    $result = pg_query_params_or_die($DB, $query, []);
 
     $players = array();
     while ($row = pg_fetch_assoc($result)) {
       $player = new Player();
-      $player->apply_db_data($row);
-      $player->expand_foreign_keys($DB, 2, false);
-      $players[] = $player;
-    }
-    return $players;
-  }
-
-  static function find_unclaimed_players($DB)
-  {
-    $query = "SELECT 
-      player.* 
-    FROM player 
-    LEFT JOIN account a ON a.player_id = player.id
-    WHERE a.id IS NULL ORDER BY player.id
-    ";
-    $result = pg_query($DB, $query);
-    if ($result === false) {
-      return false;
-    }
-
-    $players = array();
-    while ($row = pg_fetch_assoc($result)) {
-      $player = new Player();
-      $player->apply_db_data($row);
+      $player->apply_db_data($row, "player_", $customization);
       $players[] = $player;
     }
     return $players;
@@ -149,22 +121,19 @@ class Player extends DbObject
   static function name_exists($DB, string $name, int $ignore_id = 0): bool
   {
     $query = "SELECT id FROM player WHERE LOWER(name) = LOWER($1) AND id != $2";
-    $result = pg_query_params($DB, $query, array($name, $ignore_id)) or die('Query failed: ' . pg_last_error());
+    $result = pg_query_params_or_die($DB, $query, array($name, $ignore_id));
     return pg_num_rows($result) > 0;
   }
 
   static function search_by_name($DB, string $search, string $raw_search)
   {
-    $query = "SELECT * FROM player WHERE player.name ILIKE '" . $search . "' ORDER BY name";
-    $result = pg_query($DB, $query);
-    if (!$result) {
-      die_json(500, "Could not query database");
-    }
+    $query = "SELECT * FROM view_players WHERE player_name ILIKE '" . $search . "' ORDER BY name";
+    $result = pg_query_params_or_die($DB, $query, []);
+
     $players = array();
     while ($row = pg_fetch_assoc($result)) {
       $player = new Player();
-      $player->apply_db_data($row);
-      $player->expand_foreign_keys($DB, 2, false);
+      $player->apply_db_data($row, 'player_', false);
       $players[] = $player;
     }
 

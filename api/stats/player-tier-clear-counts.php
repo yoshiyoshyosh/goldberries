@@ -45,7 +45,7 @@ if (!$result) {
 $data = array();
 while ($row = pg_fetch_assoc($result)) {
   $player = new Player();
-  $player->apply_db_data($row);
+  $player->apply_db_data($row, '', false);
   // $player->expand_foreign_keys($row, 5);
   $row_data = array();
 
