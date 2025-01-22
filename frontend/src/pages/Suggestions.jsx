@@ -892,7 +892,11 @@ function ViewSuggestionModal({ id }) {
               </Divider>
             </Grid>
             <Grid item xs={12}>
-              <ChallengeSubmissionTable challenge={suggestion.challenge} hideSubmissionIcon />
+              <ChallengeSubmissionTable
+                challenge={suggestion.challenge}
+                hideSubmissionIcon
+                onlyShowFirstFew
+              />
             </Grid>
             {suggestion.challenge.map_id !== null && suggestion.challenge.map.challenges.length > 0 && (
               <>
@@ -907,7 +911,7 @@ function ViewSuggestionModal({ id }) {
                       <Typography variant="body1">
                         {getChallengeNameShort(challenge)} {getChallengeSuffix(challenge)}
                       </Typography>
-                      <ChallengeSubmissionTable challenge={challenge} hideSubmissionIcon />
+                      <ChallengeSubmissionTable challenge={challenge} hideSubmissionIcon onlyShowFirstFew />
                     </Grid>
                   </>
                 ))}

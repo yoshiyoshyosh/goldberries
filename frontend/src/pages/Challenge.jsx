@@ -472,12 +472,22 @@ export function ChallengeSubmissionTable({
   challenge,
   compact = false,
   hideSubmissionIcon = false,
+  onlyShowFirstFew = false,
   ...props
 }) {
-  const auth = useAuth();
   const { t } = useTranslation(undefined, { keyPrefix: "challenge.submission_table" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+  const auth = useAuth();
+
+  const [showAll, setShowAll] = useState(false);
+
+  const allSubmissionsLength = challenge.submissions.length;
+  const submissions =
+    allSubmissionsLength > 15 && !showAll && onlyShowFirstFew
+      ? challenge.submissions.slice(0, 15)
+      : challenge.submissions;
+
   return (
     <TableContainer component={Paper} {...props}>
       <Table size="small" stickyHeader>
@@ -527,7 +537,7 @@ export function ChallengeSubmissionTable({
           </TableRow>
         </TableHead>
         <TableBody>
-          {challenge.submissions.map((submission, index) => (
+          {submissions.map((submission, index) => (
             <MemoChallengeSubmissionRow
               key={submission.id}
               submission={submission}
@@ -536,7 +546,16 @@ export function ChallengeSubmissionTable({
               hideSubmissionIcon={hideSubmissionIcon}
             />
           ))}
-          {challenge.submissions.length === 0 && (
+          {allSubmissionsLength > 20 && onlyShowFirstFew && (
+            <TableRow>
+              <TableCell colSpan={99}>
+                <Button variant="outlined" fullWidth onClick={() => setShowAll(!showAll)}>
+                  {showAll ? t("show_less") : t("show_all", { count: allSubmissionsLength })}
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
+          {allSubmissionsLength.length === 0 && (
             <TableRow>
               <TableCell colSpan={99}>{t("empty")}</TableCell>
             </TableRow>

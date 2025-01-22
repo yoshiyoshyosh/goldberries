@@ -26,13 +26,14 @@ import {
 } from "../../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { getQueryData, useGetTrafficStatsGlobal, useGetTrafficStatsGlobalRequests } from "../../hooks/useApi";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
 
 //#region Page
 const defaultTab = "global";
@@ -326,9 +327,7 @@ function BasicGlobalStatsSection({ data, isLoading, interval }) {
           { dataKey: "total_requests", label: "Requests", color: "#ffa700" },
           { dataKey: "total_new_requests", label: "New Requests", color: "#dfff00" },
         ]}
-        slotProps={{
-          legend: {},
-        }}
+        grid={{ vertical: true, horizontal: true }}
         sx={{
           [`& .${axisClasses.left} .${axisClasses.label}`]: {
             transform: "translateX(-12px)",
@@ -355,7 +354,7 @@ function BasicGlobalStatsSection({ data, isLoading, interval }) {
             valueFormatter: (v) => v + " ms",
           },
         ]}
-        // grid={{ vertical: true, horizontal: true }}
+        grid={{ vertical: true, horizontal: true }}
         sx={{
           [`& .${axisClasses.left} .${axisClasses.label}`]: {
             transform: "translateX(-12px)",
@@ -378,6 +377,7 @@ function UserAgentSection({ data, isLoading, interval }) {
     chromium: { label: "Chromium", color: "#4245f4" },
     opera_old: { label: "Opera (Old)", color: "#f4192c" },
     opera: { label: "Opera", color: "#f4192c" },
+    opera_mobile: { label: "Opera Mobile", color: "#f45e19" },
     seamonkey: { label: "SeaMonkey", color: "#ff39f3" },
     bot_node: { label: "Node.js Bot", color: "#ff39f3" },
     null: { label: "Unknown", color: "#ffffff" },
@@ -491,6 +491,7 @@ function UserAgentSection({ data, isLoading, interval }) {
             hidden: true,
           },
         }}
+        grid={{ vertical: true, horizontal: true }}
         sx={{
           [`& .${axisClasses.left} .${axisClasses.label}`]: {
             transform: "translateX(-12px)",
@@ -586,64 +587,66 @@ function MostCommonReferrersSection({ data, isLoading, interval }) {
           </Stack>
         </Grid>
       </Grid>
-      <Table size="small" sx={{ maxWidth: "500px", alignSelf: "center" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell size="1">Referrer</TableCell>
-            <TableCell align="center">%</TableCell>
-            <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-              % non-direct
-            </TableCell>
-            <TableCell align="right">Count</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {chartData.slice(0, showAll ? chartData.length : 10).map((row) => (
-            <TableRow
-              key={row.label}
-              sx={{
-                "&:nth-of-type(odd)": {
-                  backgroundColor: theme.palette.background.lightSubtle,
-                },
-                "&:last-child td, &:last-child th": { border: 0 },
-              }}
-            >
-              <TableCell component="th" scope="row">
-                <Stack direction="row" alignItems="center">
-                  <TooltipLineBreaks title={row.referrer ?? row.label}>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        maxWidth: "300px",
-                      }}
-                    >
-                      {row.referrer ?? row.label}
-                    </span>
-                  </TooltipLineBreaks>
-                </Stack>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell size="1">Referrer</TableCell>
+              <TableCell align="center">%</TableCell>
+              <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
+                % non-direct
               </TableCell>
-              <TableCell align="center">{((row.value / total) * 100).toFixed(2)}%</TableCell>
-              <TableCell align="center">
-                {row.referrer === null ? "-" : ((row.value / totalNonNull) * 100).toFixed(2)}%
-              </TableCell>
-              <TableCell align="right">{row.value.toLocaleString()}</TableCell>
+              <TableCell align="right">Count</TableCell>
             </TableRow>
-          ))}
-          {chartData.length > 10 && (
-            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell colSpan={99} align="center">
-                <Button fullWidth variant="outlined" onClick={() => setShowAll(!showAll)}>
-                  {!showAll && <>Show '{chartData.length - 10}' More</>}
-                  {showAll && <>Show Less</>}
-                </Button>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {chartData.slice(0, showAll ? chartData.length : 10).map((row) => (
+              <TableRow
+                key={row.label}
+                sx={{
+                  "&:nth-of-type(odd)": {
+                    backgroundColor: theme.palette.background.lightSubtle,
+                  },
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  <Stack direction="row" alignItems="center">
+                    <TooltipLineBreaks title={row.referrer ?? row.label}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          maxWidth: "300px",
+                        }}
+                      >
+                        {row.referrer ?? row.label}
+                      </span>
+                    </TooltipLineBreaks>
+                  </Stack>
+                </TableCell>
+                <TableCell align="center">{((row.value / total) * 100).toFixed(2)}%</TableCell>
+                <TableCell align="center">
+                  {row.referrer === null ? "-" : ((row.value / totalNonNull) * 100).toFixed(2)}%
+                </TableCell>
+                <TableCell align="right">{row.value.toLocaleString()}</TableCell>
+              </TableRow>
+            ))}
+            {chartData.length > 10 && (
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell colSpan={99} align="center">
+                  <Button fullWidth variant="outlined" onClick={() => setShowAll(!showAll)}>
+                    {!showAll && <>Show '{chartData.length - 10}' More</>}
+                    {showAll && <>Show Less</>}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 }
