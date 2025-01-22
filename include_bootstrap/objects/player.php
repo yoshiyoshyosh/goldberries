@@ -89,13 +89,13 @@ class Player extends DbObject
     if ($group === "user") {
       $where[] = "(player_account_id IS NULL OR (player_account_role < $HELPER AND player_account_is_suspended = false))";
     } else if ($group === "helper") {
-      $where[] = "player_role >= $HELPER";
+      $where[] = "player_account_role >= $HELPER";
     } else if ($group === "verifier") {
-      $where[] = "player_role >= $VERIFIER";
+      $where[] = "player_account_role >= $VERIFIER";
     } else if ($group === "admin") {
-      $where[] = "player_role >= $ADMIN";
+      $where[] = "player_account_role >= $ADMIN";
     } else if ($group === "suspended") {
-      $where[] = "player_is_suspended = true";
+      $where[] = "player_account_is_suspended = true";
     } else if ($group === "unclaimed") {
       $where[] = "player_account_id IS NULL";
     } else if ($group === "all") {
