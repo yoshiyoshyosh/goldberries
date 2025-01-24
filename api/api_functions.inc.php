@@ -227,3 +227,65 @@ function parse_campaigns($result): array
 
   return $campaigns;
 }
+
+function parse_campaigns_no_submissions($result): array
+{
+  $campaigns = array(); //dictionary id -> campaign
+
+  //loop through result rows
+  while ($row = pg_fetch_assoc($result)) {
+    $campaign_id = intval($row['campaign_id']);
+    if (!array_key_exists($campaign_id, $campaigns)) {
+      $campaign = new Campaign();
+      $campaign->apply_db_data($row, "campaign_");
+      $campaign->maps = array();
+      $campaign->challenges = array();
+      $campaigns[$campaign_id] = $campaign;
+    }
+    $campaign = $campaigns[$campaign_id];
+
+    $map = null;
+    if (isset($row['map_id'])) {
+      $map_id = intval($row['map_id']);
+      if (!array_key_exists($map_id, $campaign->maps)) {
+        $map = new Map();
+        $map->apply_db_data($row, "map_");
+        $map->challenges = array();
+        $campaign->maps[$map_id] = $map;
+      }
+      $map = $campaign->maps[$map_id];
+    }
+
+    $challenge_id = intval($row['challenge_id']);
+    $challenge = null;
+    if (($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
+      $challenge = new Challenge();
+      $challenge->apply_db_data($row, "challenge_");
+      $challenge->submissions = null;
+      $challenge->data['count_submissions'] = intval($row['count_submissions']);
+      $challenge->expand_foreign_keys($row, 1, false);
+      if ($challenge->map_id === null) {
+        $campaign->challenges[$challenge_id] = $challenge;
+      } else {
+        $map->challenges[$challenge_id] = $challenge;
+      }
+    } else {
+      if ($map !== null) {
+        $challenge = $map->challenges[$challenge_id];
+      } else {
+        $challenge = $campaign->challenges[$challenge_id];
+      }
+    }
+  }
+
+  foreach ($campaigns as $campaign) {
+    foreach ($campaign->maps as $map) {
+      $map->challenges = array_values($map->challenges);
+    }
+    $campaign->maps = array_values($campaign->maps);
+    $campaign->challenges = array_values($campaign->challenges);
+  }
+  $campaigns = array_values($campaigns);
+
+  return $campaigns;
+}

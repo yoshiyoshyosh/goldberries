@@ -10,7 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
   $gb_id = isset($_REQUEST['gamebanana_id']) ? $_REQUEST['gamebanana_id'] : null;
 
-  if ($id !== null) {
+  if ($id === "all" && $submissions === false) {
+    //Special handling for this case
+    $query = "SELECT * FROM view_challenges";
+    $result = pg_query_params_or_die($DB, $query);
+    $campaigns = parse_campaigns_no_submissions($result);
+    api_write($campaigns);
+
+  } else if ($id !== null) {
     $campaigns = Campaign::get_request($DB, $id);
     if ($maps) {
       if (is_array($campaigns)) {
@@ -30,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $campaigns->fetch_challenges($DB, $submissions);
       }
     }
-
     api_write($campaigns);
 
   } else if ($gb_id !== null) {
@@ -45,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($challenges) {
       $campaign->fetch_challenges($DB, $submissions);
     }
-
     api_write($campaign);
+
   } else {
     die_json(400, "Missing id or gamebanana_id");
   }
