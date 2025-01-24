@@ -6,6 +6,7 @@ DROP VIEW view_challenges;
 DROP VIEW view_submissions;
 DROP VIEW view_challenge_submissions;
 DROP VIEW view_suggestion_votes;
+DROP VIEW view_players;
 
 
 DROP TABLE fwg_data;
@@ -850,3 +851,37 @@ LEFT JOIN account va ON v.id = va.player_id
 LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
 
 ORDER BY suggestion_vote.id ;
+
+
+
+CREATE VIEW "view_players" AS SELECT 
+  player.id AS player_id,
+  player.name AS player_name,
+
+  linked.id AS player_account_id,
+  linked.role AS player_account_role,
+  linked.is_suspended AS player_account_is_suspended,
+  linked.suspension_reason AS player_account_suspension_reason,
+  linked.name_color_start AS player_account_name_color_start,
+  linked.name_color_end AS player_account_name_color_end,
+  linked.links AS player_account_links,
+  linked.input_method AS player_account_input_method,
+  linked.about_me AS player_account_about_me,
+  linked.country AS player_account_country,
+
+  claimed.id AS claimed_account_id,
+  claimed.role AS claimed_account_role,
+  claimed.is_suspended AS claimed_account_is_suspended,
+  claimed.suspension_reason AS claimed_account_suspension_reason,
+  claimed.name_color_start AS claimed_account_name_color_start,
+  claimed.name_color_end AS claimed_account_name_color_end,
+  claimed.links AS claimed_account_links,
+  claimed.input_method AS claimed_account_input_method,
+  claimed.about_me AS claimed_account_about_me,
+  claimed.country AS claimed_account_country
+
+FROM player
+LEFT JOIN account linked ON linked.player_id = player.id
+LEFT JOIN account claimed ON claimed.claimed_player_id = player.id
+
+ORDER BY player.name, player.id;

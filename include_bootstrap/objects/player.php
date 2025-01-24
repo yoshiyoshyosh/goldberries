@@ -24,7 +24,7 @@ class Player extends DbObject
     $this->name = $arr[$prefix . 'name'];
 
     if (isset($arr[$prefix . 'account_role']))
-      $this->account['role'] = $arr[$prefix . 'account_role'] === 't';
+      $this->account['role'] = intval($arr[$prefix . 'account_role']);
     else
       $this->account['role'] = 0;
     if (isset($arr[$prefix . 'account_is_suspended']))
@@ -127,7 +127,7 @@ class Player extends DbObject
 
   static function search_by_name($DB, string $search, string $raw_search)
   {
-    $query = "SELECT * FROM view_players WHERE player_name ILIKE '" . $search . "' ORDER BY name";
+    $query = "SELECT * FROM view_players WHERE player_name ILIKE '" . $search . "' ORDER BY player_name";
     $result = pg_query_params_or_die($DB, $query, []);
 
     $players = array();
