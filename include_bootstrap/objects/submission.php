@@ -148,20 +148,14 @@ class Submission extends DbObject
   static function get_submission_queue($DB)
   {
     //Actually use date_created here, so that the oldest submissions are shown first, independent of when they were achieved
-    $result = pg_query($DB, "SELECT * FROM submission WHERE is_verified IS NULL ORDER BY date_created ASC, id ASC;");
-    if ($result === false)
-      die_json(500, "Failed to query database");
+    $query = "SELECT * FROM view_submissions WHERE submission_is_verified IS NULL ORDER BY submission_date_created ASC, submission_id ASC;";
+    $result = pg_query_params_or_die($DB, $query);
 
     $submissions = array();
     while ($row = pg_fetch_assoc($result)) {
       $submission = new Submission();
-      $submission->apply_db_data($row);
-      $submission->expand_foreign_keys($DB, 4);
-      if ($submission->challenge->map_id !== null) {
-        $submission->challenge->map->campaign->fetch_challenges($DB);
-      } else if ($submission->challenge->campaign_id !== null) {
-        $submission->challenge->campaign->fetch_challenges($DB);
-      }
+      $submission->apply_db_data($row, "submission_");
+      $submission->expand_foreign_keys($row, 4);
       $submissions[] = $submission;
     }
     return $submissions;
