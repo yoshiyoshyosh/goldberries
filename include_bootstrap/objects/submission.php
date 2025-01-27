@@ -206,10 +206,7 @@ class Submission extends DbObject
       $query .= " LIMIT " . $per_page . " OFFSET " . ($page - 1) * $per_page;
     }
 
-    $result = pg_query($DB, $query);
-    if (!$result) {
-      die_json(500, "Failed to query database");
-    }
+    $result = pg_query_params_or_die($DB, $query);
 
     $maxCount = 0;
     $submissions = array();
@@ -224,13 +221,13 @@ class Submission extends DbObject
       }
     }
 
-    return array(
+    return [
       'submissions' => $submissions,
       'max_count' => $maxCount,
       'max_page' => ceil($maxCount / $per_page),
       'page' => $page,
       'per_page' => $per_page,
-    );
+    ];
   }
 
   // === Utility Functions ===

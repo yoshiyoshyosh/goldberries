@@ -12,7 +12,7 @@ function profiler_start()
     'steps' => []
   ];
 }
-function profiler_step($name = null, $depth = 0)
+function profiler_step($name = null, $depth = 0, $data = null)
 {
   global $PROFILER_DATA, $PROFILER_TIMER;
   if (!isset($PROFILER_DATA['start'])) {
@@ -57,10 +57,14 @@ function profiler_step($name = null, $depth = 0)
   //Insert the step into the currently selected level
   $num_steps = count($level);
   $value = $name ?? "Step $num_steps";
-  $level[] = [
+  $entry = [
     'name' => $value,
     'time' => $diff
   ];
+  if ($data !== null) {
+    $entry['data'] = $data;
+  }
+  $level[] = $entry;
 
   // $num_steps = count($PROFILER_DATA['steps']);
   // $diff = get_current_time_ms() - $start_time;

@@ -247,10 +247,12 @@ function send_webhook_submission_verified($submission)
   $emote = $is_rejected ? ":x:" : ":white_check_mark:";
   $verified_str = $is_rejected ? "rejected" : "verified";
 
+  $tier_name = $submission->challenge->difficulty->to_tier_name();
+
   if ($submission->verifier_notes !== null) {
-    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str with a note! :notepad_spiral: `{$submission->verifier_notes}`";
+    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} ($tier_name) was $verified_str with a note! :notepad_spiral: `{$submission->verifier_notes}`";
   } else {
-    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} was $verified_str!";
+    $message = "$emote $player_name → Your [submission](<{$submission_url}>) for {$challenge_name} ($tier_name) was $verified_str!";
   }
 
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);

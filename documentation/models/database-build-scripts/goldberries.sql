@@ -840,7 +840,7 @@ CREATE VIEW "view_suggestion_votes" AS SELECT
 
 FROM suggestion_vote
 JOIN suggestion ON suggestion_vote.suggestion_id = suggestion.id
-LEFT JOIN submission ON suggestion_vote.player_id = submission.player_id AND suggestion.challenge_id = submission.challenge_id
+LEFT JOIN submission ON suggestion_vote.player_id = submission.player_id AND suggestion.challenge_id = submission.challenge_id AND submission.is_verified = true
 LEFT JOIN player sp ON sp.id = suggestion_vote.player_id
 LEFT JOIN player p ON p.id = submission.player_id
 LEFT JOIN player v ON v.id = submission.verifier_id
