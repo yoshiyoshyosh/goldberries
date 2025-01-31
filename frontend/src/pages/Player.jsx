@@ -30,12 +30,12 @@ import {
   AccountRoleIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTY_COLORS, DIFF_CONSTS, getGroupId } from "../util/constants";
-import { getPlayerNameColorStyle } from "../util/data_util";
+import { DIFFICULTIES, DIFF_CONSTS } from "../util/constants";
+import { getDifficultyNameShort, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { ROLES, isAdmin, isHelper, isVerifier, useAuth } from "../hooks/AuthProvider";
+import { ROLES, useAuth } from "../hooks/AuthProvider";
 import { useTranslation } from "react-i18next";
 import { SubmissionFilter, getDefaultFilter } from "../components/SubmissionFilter";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Cell } from "recharts";
@@ -280,7 +280,7 @@ export function PagePlayerTopGoldenList({ id }) {
         </Stack>
       </BasicBox>
       <TopGoldenList type="player" id={id} filter={filter} useSuggestedRef={useSuggestedRef} />
-      <ExportTopGoldenListModal modalHook={exportModal} type="player" id={id} filter={filter} />
+      <ExportTopGoldenListModal modalHook={exportModal} type="player" id={id} filter={filter} isPersonal />
       <TimeTakenTiersGraphModal
         modalHook={statsModal}
         id={id}
@@ -315,12 +315,12 @@ export function DifficultyCountChart({ difficulty_counts }) {
   }
 
   //Loop through all difficulties and do the following:
-  // 1. Get the difficulties group id by getGroupId(id)
+  // 1. ~~Get the difficulties group id by getGroupId(id)~~ -> Rework: just use the id
   // 2. If the group id is different from the id of the difficulty, add the difficulty_counts of the difficulty to the difficulty_counts of the group
   // 3. Then, remove the difficulty from the list of difficulties
   const difficulty_counts_grouped = {};
   difficulties.forEach((difficulty) => {
-    const group_id = getGroupId(difficulty.id);
+    const group_id = difficulty.id;
     const count = difficulty_counts[difficulty.id] || 0;
     if (!(group_id in difficulty_counts_grouped)) {
       difficulty_counts_grouped[group_id] = 0;
@@ -333,22 +333,22 @@ export function DifficultyCountChart({ difficulty_counts }) {
 
   const getDifficultyName = (id) => {
     const difficulty = difficulties.find((d) => d.id === id);
-    return difficulty ? difficulty.name : "";
+    return difficulty ? getDifficultyNameShort(difficulty) : "";
   };
   const getChartDifficultyColor = (id) => {
-    if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
-      return theme.palette.text.primary;
-    } else {
-      return DIFFICULTY_COLORS[id].color;
-    }
+    // if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
+    //   return theme.palette.text.primary;
+    // } else {
+    return DIFFICULTIES[id].color;
+    // }
   };
 
   const data = [];
   difficulties.forEach((difficulty) => {
     data.push({
       id: difficulty.id,
-      name: difficulty.id === DIFF_CONSTS.UNDETERMINED_ID ? "Undet." : getDifficultyName(difficulty.id),
-      count: difficulty_counts_grouped[getGroupId(difficulty.id)] || 0,
+      name: getDifficultyName(difficulty.id),
+      count: difficulty_counts_grouped[difficulty.id] || 0,
     });
   });
 

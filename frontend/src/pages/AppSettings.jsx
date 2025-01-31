@@ -143,22 +143,20 @@ export function AppSettingsGeneralForm() {
       </SettingsEntry>
 
       {/* Not yet released */}
-      {false && (
-        <SettingsEntry note={t("old_tier_names.note")}>
-          <Controller
-            name="showOldTierNames"
-            control={form.control}
-            render={({ field }) => (
-              <FormControlLabel
-                checked={field.value}
-                onChange={(e) => field.onChange(e.target.checked)}
-                control={<Checkbox />}
-                label={t("old_tier_names.label")}
-              />
-            )}
-          />
-        </SettingsEntry>
-      )}
+      <SettingsEntry note={t("old_tier_names.note")}>
+        <Controller
+          name="showOldTierNames"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("old_tier_names.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
 
       {isAprilFools && (
         <Button
@@ -601,6 +599,21 @@ function AppSettingsTopGoldenListForm() {
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
               label={t("show_fractional_tiers.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <SettingsEntry note={t("unstack_tiers.note")}>
+        <Controller
+          name="topGoldenList.unstackTiers"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("unstack_tiers.label")}
             />
           )}
         />

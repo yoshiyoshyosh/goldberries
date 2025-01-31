@@ -1,14 +1,5 @@
 import { useQuery } from "react-query";
-import {
-  fetchAllCampaigns,
-  fetchAllChallengesInCampaign,
-  fetchAllChallengesInMap,
-  fetchAllDifficulties,
-  fetchAllMapsInCampaign,
-  fetchAllObjectives,
-  fetchAllPlayers,
-  fetchPlayerList,
-} from "../util/api";
+import { fetchAllObjectives, fetchAllPlayers, fetchPlayerList } from "../util/api";
 import { toast } from "react-toastify";
 import {
   getCampaignName,
@@ -270,7 +261,6 @@ export function DifficultyChip({
   difficulty,
   prefix = "",
   suffix = "",
-  useSubtierColors = false,
   useDarkening = false,
   isPersonal = false,
   highlightPersonal = false,
@@ -285,10 +275,13 @@ export function DifficultyChip({
   const text = getDifficultyName(difficulty);
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
-  const showOld = settings.general.showOldTierNames; //Replace with actual setting
+  const showOld =
+    settings.general.showOldTierNames &&
+    difficulty.id !== DIFF_CONSTS.TRIVIAL_ID &&
+    difficulty.id !== DIFF_CONSTS.UNDETERMINED_ID;
   const isTrivial = difficulty.id === DIFF_CONSTS.TRIVIAL_ID;
 
-  const bgColor = useSubtierColors ? colors.color : colors.group_color;
+  const bgColor = colors.color;
   const opacity = isPersonal && !highlightPersonal ? 0.25 : 1;
   const boxShadow =
     isPersonal && highlightPersonal
@@ -346,7 +339,6 @@ export function DifficultyValueChip({
   value,
   prefix = "",
   suffix = "",
-  useSubtierColors = false,
   useDarkening = false,
   sx = {},
   ...props
@@ -366,7 +358,7 @@ export function DifficultyValueChip({
           sx={{
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
-            bgcolor: useSubtierColors ? colors.color : colors.group_color,
+            bgcolor: colors.color,
             color: colors.contrast_color,
             ...sx,
           }}
@@ -380,7 +372,7 @@ export function DifficultyValueChip({
           sx={{
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
-            bgcolor: useSubtierColors ? colors.color : colors.group_color,
+            bgcolor: colors.color,
             color: colors.contrast_color,
             ...sx,
           }}

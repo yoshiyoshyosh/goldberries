@@ -24,7 +24,7 @@ import {
   Typography,
   darken,
 } from "@mui/material";
-import { getNewDifficultyColors, getOldDifficultyName } from "../util/constants";
+import { DIFFICULTY_STACKS, getNewDifficultyColors, getOldDifficultyName } from "../util/constants";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -105,7 +105,8 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     settings.visual.topGoldenList.switchMapAndChallenge +
     settings.visual.topGoldenList.hideEmptyTiers +
     settings.visual.topGoldenList.hideTimeTakenColumn +
-    settings.visual.topGoldenList.showFractionalTiers;
+    settings.visual.topGoldenList.showFractionalTiers +
+    settings.visual.topGoldenList.unstackTiers;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
 
   const query = useGetTopGoldenList(type, id, filter);
@@ -136,6 +137,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     settings.visual.topGoldenList.hideEmptyTiers,
     settings.visual.topGoldenList.hideTimeTakenColumn,
     settings.visual.topGoldenList.showFractionalTiers,
+    settings.visual.topGoldenList.unstackTiers,
   ]);
 
   // Set horizontal overflow only for this page
@@ -194,6 +196,27 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
   const isPlayer = type === "player";
   const ownPlayer = isPlayer && auth.hasPlayerClaimed && auth.user.player_id + "" === id;
 
+  //topGoldenList.tiers is an array of difficulties, sorted so that hardest = first
+  //format these difficulties into groups, based on DIFFICULTY_STACKS array, which looks like:
+  //[ [2, 3, 24], [4, 5, 6], ... ] <- each inner array is a group of difficulties that are supposed to be stacked on top of each other
+
+  const unstack = settings.visual.topGoldenList.unstackTiers;
+  let tierStacks = null;
+
+  if (unstack) {
+    //Just put all tiers in the array
+    tierStacks = topGoldenList.tiers.map((tier) => [tier]);
+  } else {
+    tierStacks = DIFFICULTY_STACKS.map((stack) => {
+      return stack.map((id) => {
+        return topGoldenList.tiers.find((diff) => diff.id === id);
+      });
+    });
+
+    //Filter out any undefined stacks that end up being undefined
+    tierStacks = tierStacks.filter((stack) => stack[0] !== undefined);
+  }
+
   return (
     <Stack direction="column" gap={1}>
       {isPlayer && (
@@ -236,13 +259,13 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
         }}
         gap={1}
       >
-        {topGoldenList.tiers.map((tier, index) => {
+        {tierStacks.map((tierStack, index) => {
           if (currentKey !== renderUpTo.key) return null;
           return (
             <MemoTopGoldenListGroup
               key={currentKey + index}
               index={index}
-              tier={tier}
+              tierStack={tierStack}
               campaigns={topGoldenList.campaigns}
               maps={topGoldenList.maps}
               challenges={topGoldenList.challenges}
@@ -268,7 +291,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
 
 function TopGoldenListGroup({
   index,
-  tier,
+  tierStack,
   campaigns,
   maps,
   challenges,
@@ -284,12 +307,7 @@ function TopGoldenListGroup({
   isOverallList,
   isHidingObjective1,
 }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
-  const theme = useTheme();
   const { settings } = useAppSettings();
-  const colors = getNewDifficultyColors(settings, tier[0].id, true);
-  const [collapsed, setCollapsed] = useState(false);
-  const glowColor = darken(colors.group_color, 0.5);
 
   useEffect(() => {
     if (render) onFinishRendering(index);
@@ -297,174 +315,40 @@ function TopGoldenListGroup({
 
   if (!render) return null;
 
-  const name = tier[0].name;
-  const tierMap = tier.map((subtier) => subtier.id);
-  const challengesInTier = challenges.filter((challenge) =>
-    tierMap.includes(
-      useSuggested
-        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-        : challenge.difficulty.id
-    )
-  );
-  const challengeCount = challengesInTier.length;
-  const isEmptyTier = challengeCount === 0;
-  const submissionCount = challengesInTier.reduce(
-    (acc, challenge) => acc + challenge.data.submission_count,
-    0
-  );
-
-  if (settings.visual.topGoldenList.hideEmptyTiers && isEmptyTier) {
-    return null;
-  }
-
-  const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
-  const showOldTierNames = settings.general.showOldTierNames;
-
-  const cellStyle = {
-    borderBottom: "1px solid " + theme.palette.tableDivider,
-  };
+  const countChallengesInStack = tierStack.reduce((acc, tier) => {
+    const count = challenges.filter(
+      (challenge) =>
+        (useSuggested ? challenge.submissions[0].suggested_difficulty?.id : challenge.difficulty.id) ===
+        tier.id
+    ).length;
+    return acc + count;
+  }, 0);
+  if (countChallengesInStack === 0 && settings.visual.topGoldenList.hideEmptyTiers) return null;
 
   return (
-    <>
-      <Stack direction="column" gap={1}>
-        <TableContainer component={Paper} elevation={2}>
-          <Table size="small">
-            <TableHead onClick={() => setCollapsed(!collapsed)}>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    ...cellStyle,
-                    p: 0,
-                    pl: 1,
-                  }}
-                ></TableCell>
-                <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1 }}>
-                  <Stack direction="row" gap={1} alignItems="center">
-                    <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
-                      {name}
-                    </Typography>
-                    {showOldTierNames && (
-                      <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: "nowrap" }}>
-                        ({getOldDifficultyName(tier[0].id)})
-                      </Typography>
-                    )}
-                  </Stack>
-                </TableCell>
-                <TableCell
-                  sx={{
-                    ...cellStyle,
-                    borderLeft: "1px solid " + theme.palette.tableDivider,
-                    display: useSuggested ? "none" : "table-cell",
-                  }}
-                  align="center"
-                >
-                  <Typography fontWeight="bold" textAlign="center">
-                    {isPlayer ? (
-                      <Tooltip title={t("note_suggested_difficulties")} arrow placement="top">
-                        {useSuggested ? "Actual" : "Sug."}
-                      </Tooltip>
-                    ) : (
-                      <Tooltip
-                        title={t("note_number_people", {
-                          challenges: challengeCount,
-                          submissions: submissionCount,
-                        })}
-                        arrow
-                        placement="top"
-                      >
-                        <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
-                      </Tooltip>
-                    )}
-                  </Typography>
-                </TableCell>
-                <TableCell
-                  sx={{
-                    ...cellStyle,
-                    borderLeft: "1px solid " + theme.palette.tableDivider,
-                  }}
-                  align="center"
-                >
-                  <Typography fontWeight="bold">
-                    <Tooltip title={t("note_video_link")} arrow placement="top">
-                      <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
-                    </Tooltip>
-                  </Typography>
-                </TableCell>
-                {showTimeTakenColumn && (
-                  <TableCell
-                    sx={{
-                      ...cellStyle,
-                      borderLeft: "1px solid " + theme.palette.tableDivider,
-                    }}
-                    align="center"
-                  >
-                    <Typography fontWeight="bold">
-                      <Tooltip title={t("note_time_taken")} arrow placement="top">
-                        <FontAwesomeIcon icon={faClock} fontSize=".8em" />
-                      </Tooltip>
-                    </Typography>
-                  </TableCell>
-                )}
-              </TableRow>
-            </TableHead>
-            {collapsed || !render ? null : (
-              <TableBody>
-                {isEmptyTier && (
-                  <TableRow>
-                    <TableCell colSpan={99} align="center" style={{ padding: "2px 8px" }}>
-                      <Typography variant="body2" color="textSecondary">
-                        -
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                )}
-                {tier.map((subtier, index) => {
-                  let tierChallenges = challenges.filter(
-                    (challenge) =>
-                      (useSuggested
-                        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-                        : challenge.difficulty.id) === subtier.id
-                  );
-
-                  let hadEntriesBefore = false;
-                  if (index > 0) {
-                    // Check if the previous subtier had entries
-                    const previousSubtier = tier[index - 1];
-                    const previousTierChallenges = challenges.filter(
-                      (challenge) =>
-                        (useSuggested
-                          ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-                          : challenge.difficulty.id) === previousSubtier.id
-                    );
-                    hadEntriesBefore = previousTierChallenges.length > 0;
-                  }
-
-                  return (
-                    <TopGoldenListSubtier
-                      key={subtier.id}
-                      subtier={subtier}
-                      challenges={tierChallenges}
-                      maps={maps}
-                      campaigns={campaigns}
-                      isPlayer={isPlayer}
-                      isOwnPlayer={isOwnPlayer}
-                      useSuggested={useSuggested}
-                      editSuggestions={editSuggestions}
-                      openEditChallenge={openEditChallenge}
-                      openEditSubmission={openEditSubmission}
-                      showMap={showMap}
-                      isOverallList={isOverallList}
-                      hadEntriesBefore={hadEntriesBefore}
-                      isHidingObjective1={isHidingObjective1}
-                    />
-                  );
-                })}
-              </TableBody>
-            )}
-          </Table>
-        </TableContainer>
-      </Stack>
-    </>
+    <Stack direction="column" gap={1}>
+      {tierStack.map((tier, index) => {
+        return (
+          <TopGoldenListTier
+            render={render}
+            key={tier.id}
+            tier={tier}
+            challenges={challenges}
+            maps={maps}
+            campaigns={campaigns}
+            isPlayer={isPlayer}
+            isOwnPlayer={isOwnPlayer}
+            useSuggested={useSuggested}
+            editSuggestions={editSuggestions}
+            openEditChallenge={openEditChallenge}
+            openEditSubmission={openEditSubmission}
+            showMap={showMap}
+            isOverallList={isOverallList}
+            isHidingObjective1={isHidingObjective1}
+          />
+        );
+      })}
+    </Stack>
   );
 }
 const MemoTopGoldenListGroup = memo(TopGoldenListGroup, (prevProps, newProps) => {
@@ -476,8 +360,9 @@ const MemoTopGoldenListGroup = memo(TopGoldenListGroup, (prevProps, newProps) =>
   );
 });
 
-function TopGoldenListSubtier({
-  subtier,
+function TopGoldenListTier({
+  render,
+  tier,
   challenges,
   maps,
   campaigns,
@@ -489,39 +374,176 @@ function TopGoldenListSubtier({
   openEditSubmission,
   showMap,
   isOverallList,
-  hadEntriesBefore,
   isHidingObjective1,
 }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const { settings } = useAppSettings();
+  const theme = useTheme();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const challengesInTier = challenges.filter(
+    (challenge) =>
+      (useSuggested
+        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+        : challenge.difficulty.id) === tier.id
+  );
+
+  const challengeCount = challengesInTier.length;
+  const isEmptyTier = challengeCount === 0;
+  const submissionCount = challengesInTier.reduce(
+    (acc, challenge) => acc + challenge.data.submission_count,
+    0
+  );
+
+  if (settings.visual.topGoldenList.hideEmptyTiers && isEmptyTier) {
+    return null;
+  }
+
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
   const sortByFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
   sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers);
 
-  return (
-    <>
-      {challenges.map((challenge, index) => {
-        const map = maps[challenge.map_id];
-        const campaign = map === undefined ? campaigns[challenge.campaign_id] : campaigns[map.campaign_id];
+  const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
+  const showOldTierNames = settings.general.showOldTierNames;
 
-        return (
-          <TopGoldenListRow
-            key={challenge.id}
-            subtier={subtier}
-            challenge={challenge}
-            campaign={campaign}
-            map={map}
-            isPlayer={isPlayer}
-            isOwnPlayer={isOwnPlayer}
-            useSuggested={useSuggested}
-            editSuggestions={editSuggestions}
-            openEditChallenge={openEditChallenge}
-            openEditSubmission={openEditSubmission}
-            showMap={showMap}
-            showDivider={index === 0 && hadEntriesBefore}
-          />
-        );
-      })}
-    </>
+  const cellStyle = {
+    borderBottom: "1px solid " + theme.palette.tableDivider,
+  };
+
+  return (
+    <TableContainer component={Paper} elevation={2}>
+      <Table size="small">
+        <TableHead onClick={() => setCollapsed(!collapsed)}>
+          <TableRow>
+            <TableCell
+              sx={{
+                ...cellStyle,
+                p: 0,
+                // pl: 1,
+              }}
+            >
+              <Stack
+                direction="row"
+                gap={1}
+                alignItems="center"
+                justifyContent="center"
+                sx={{ minWidth: "18px" }}
+              ></Stack>
+            </TableCell>
+            <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1, width: "300px" }}>
+              <Stack direction="row" gap={1} alignItems="center">
+                <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
+                  {tier.name}
+                </Typography>
+                {showOldTierNames && (
+                  <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: "nowrap" }}>
+                    ({getOldDifficultyName(tier.id)})
+                  </Typography>
+                )}
+              </Stack>
+            </TableCell>
+            <TableCell
+              sx={{
+                ...cellStyle,
+                borderLeft: "1px solid " + theme.palette.tableDivider,
+                display: useSuggested ? "none" : "table-cell",
+              }}
+              align="center"
+            >
+              <Typography fontWeight="bold" textAlign="center">
+                {isPlayer ? (
+                  <Tooltip title={t("note_suggested_difficulties")} arrow placement="top">
+                    <span>{useSuggested ? "Actual" : "Sug."}</span>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    title={t("note_number_people", {
+                      challenges: challengeCount,
+                      submissions: submissionCount,
+                    })}
+                    arrow
+                    placement="top"
+                  >
+                    <FontAwesomeIcon icon={faHashtag} fontSize=".8em" />
+                  </Tooltip>
+                )}
+              </Typography>
+            </TableCell>
+            <TableCell
+              sx={{
+                ...cellStyle,
+                borderLeft: "1px solid " + theme.palette.tableDivider,
+              }}
+              align="center"
+            >
+              <Typography fontWeight="bold">
+                <Tooltip title={t("note_video_link")} arrow placement="top">
+                  <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
+                </Tooltip>
+              </Typography>
+            </TableCell>
+            {showTimeTakenColumn && (
+              <TableCell
+                sx={{
+                  ...cellStyle,
+                  borderLeft: "1px solid " + theme.palette.tableDivider,
+                }}
+                align="center"
+              >
+                <Typography fontWeight="bold">
+                  <Tooltip title={t("note_time_taken")} arrow placement="top">
+                    <FontAwesomeIcon icon={faClock} fontSize=".8em" />
+                  </Tooltip>
+                </Typography>
+              </TableCell>
+            )}
+          </TableRow>
+        </TableHead>
+        {collapsed || !render ? null : (
+          <TableBody>
+            {isEmptyTier && (
+              <TableRow>
+                <TableCell colSpan={99} align="center" style={{ padding: "2px 8px" }}>
+                  <Typography variant="body2" color="textSecondary">
+                    -
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {challengesInTier.map((challenge, index) => {
+              const map = maps[challenge.map_id];
+              const campaign =
+                map === undefined ? campaigns[challenge.campaign_id] : campaigns[map.campaign_id];
+
+              return (
+                <TopGoldenListRow
+                  key={challenge.id}
+                  tier={tier}
+                  challenge={challenge}
+                  campaign={campaign}
+                  map={map}
+                  isPlayer={isPlayer}
+                  isOwnPlayer={isOwnPlayer}
+                  useSuggested={useSuggested}
+                  editSuggestions={editSuggestions}
+                  openEditChallenge={openEditChallenge}
+                  openEditSubmission={openEditSubmission}
+                  showMap={showMap}
+                />
+              );
+            })}
+            {/* {tier.map((subtier, index) => {
+                  let tierChallenges = challenges.filter(
+                    (challenge) =>
+                      (useSuggested
+                        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+                        : challenge.difficulty.id) === subtier.id
+                  );
+                })} */}
+          </TableBody>
+        )}
+      </Table>
+    </TableContainer>
   );
 }
 export function sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers) {
@@ -545,7 +567,7 @@ export function sortChallengesForTGL(challenges, maps, campaigns, sortByFraction
 }
 
 function TopGoldenListRow({
-  subtier,
+  tier,
   challenge,
   campaign,
   map,
@@ -556,7 +578,6 @@ function TopGoldenListRow({
   openEditChallenge,
   openEditSubmission,
   showMap,
-  showDivider = false,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list" });
   const auth = useAuth();
@@ -564,7 +585,7 @@ function TopGoldenListRow({
   const { settings } = useAppSettings();
   const tpgSettings = settings.visual.topGoldenList;
   const darkmode = settings.visual.darkmode;
-  const colors = getNewDifficultyColors(settings, subtier.id, true);
+  const colors = getNewDifficultyColors(settings, tier.id, true);
   const isReference = challenge.data.is_stable;
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
@@ -577,7 +598,6 @@ function TopGoldenListRow({
     padding: "2px 8px",
     borderBottom: "1px solid " + theme.palette.tableDivider,
   };
-  if (showDivider) cellStyle.borderTop = "3px solid " + theme.palette.tableDividerStrong;
 
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
@@ -677,7 +697,7 @@ function TopGoldenListRow({
         }}
         align="center"
       >
-        <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+        <Stack direction="row" gap={1} alignItems="center" justifyContent="center" sx={{ minWidth: "18px" }}>
           <ChallengeFcIcon challenge={challenge} height="1.3em" isTopGoldenList />
         </Stack>
       </TableCell>
@@ -686,6 +706,8 @@ function TopGoldenListRow({
           ...rowStyle,
           ...cellStyle,
           textAlign: "left",
+          width: "250px",
+          minWidth: "250px",
           pl: 1,
         }}
       >
@@ -710,7 +732,7 @@ function TopGoldenListRow({
                 "&:hover": {
                   backgroundColor: darkmode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)",
                 },
-                maxWidth: "250px",
+                maxWidth: "230px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}

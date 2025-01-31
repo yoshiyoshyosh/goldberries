@@ -97,212 +97,224 @@ export const FormOptions = {
   }),
 };
 
-export const DIFFICULTY_COLORS = {
+export const DIFFICULTIES = {
   //Tier 0
-  1: { color: "#f874c6", group_color: "#f874c6", contrast_color: "#000000" },
-  2: { color: "#ff97d8", group_color: "#f874c6", contrast_color: "#000000" },
-  3: { color: "#fcb5e0", group_color: "#f874c6", contrast_color: "#000000" },
+  2: {
+    color: "#ff68d9",
+    name: "Tier 19",
+    sort: 19,
+    old_name: "Mid Tier 0",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
+  3: {
+    color: "#ff6daa",
+    name: "Tier 18",
+    sort: 18,
+    old_name: "Low Tier 0",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
 
   //Tier 0.5
-  23: { color: "#ff99b2", group_color: "#ff99b2", contrast_color: "#000000" },
+  23: {
+    color: "#ff6d79",
+    name: "Tier 17",
+    sort: 17,
+    old_name: "Tier 0.5",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
 
   //Tier 1
-  4: { color: "#ff7b67", group_color: "#ff7b67", contrast_color: "#000000" },
-  5: { color: "#ff9989", group_color: "#ff7b67", contrast_color: "#000000" },
-  6: { color: "#fcb6ab", group_color: "#ff7b67", contrast_color: "#000000" },
+  4: {
+    color: "#ff7c70",
+    name: "Tier 16",
+    sort: 16,
+    old_name: "High Tier 1",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
+  5: {
+    color: "#ff9572",
+    name: "Tier 15",
+    sort: 15,
+    old_name: "Mid Tier 1",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
+  6: {
+    color: "#ffae75",
+    name: "Tier 14",
+    sort: 14,
+    old_name: "Low Tier 1",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
 
   //Tier 2
-  7: { color: "#ffc874", group_color: "#ffc874", contrast_color: "#000000" },
-  8: { color: "#ffd595", group_color: "#ffc874", contrast_color: "#000000" },
-  9: { color: "#f8dcb2", group_color: "#ffc874", contrast_color: "#000000" },
+  7: {
+    color: "#ffc677",
+    name: "Tier 13",
+    sort: 13,
+    old_name: "High Tier 2",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
+  8: {
+    color: "#ffdd7a",
+    name: "Tier 12",
+    sort: 12,
+    old_name: "Mid Tier 2",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
+  9: {
+    color: "#fff47c",
+    name: "Tier 11",
+    sort: 11,
+    old_name: "Low Tier 2",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Tier 3
-  10: { color: "#ffec87", group_color: "#ffec87", contrast_color: "#000000" },
-  11: { color: "#ffebb0", group_color: "#ffec87", contrast_color: "#000000" },
-  12: { color: "#fbf3cf", group_color: "#ffec87", contrast_color: "#000000" },
+  10: {
+    color: "#f4ff7f",
+    name: "Tier 10",
+    sort: 10,
+    old_name: "High Tier 3",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
+  11: {
+    color: "#d5ff82",
+    name: "Tier 9",
+    sort: 9,
+    old_name: "Mid Tier 3",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
+  12: {
+    color: "#b7ff84",
+    name: "Tier 8",
+    sort: 8,
+    old_name: "Low Tier 3",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Tier 4
-  14: { color: "#b0ff78", group_color: "#b0ff78", contrast_color: "#000000" },
+  14: {
+    color: "#9bff87",
+    name: "Tier 7",
+    sort: 7,
+    old_name: "Tier 4",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Tier 5
-  15: { color: "#85e191", group_color: "#85e191", contrast_color: "#000000" },
+  15: {
+    color: "#89ffb0",
+    name: "Tier 6",
+    sort: 6,
+    old_name: "Tier 5",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Tier 6
-  16: { color: "#8fdeff", group_color: "#8fdeff", contrast_color: "#000000" },
+  16: {
+    color: "#8cffe2",
+    name: "Tier 5",
+    sort: 5,
+    old_name: "Tier 6",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Tier 7
-  17: { color: "#96a6ff", group_color: "#96a6ff", contrast_color: "#000000" },
-
-  //Tier 7.5
-  24: { color: "#bcc7ff", group_color: "#bcc7ff", contrast_color: "#000000" },
+  17: {
+    color: "#8eecff",
+    name: "Tier 4",
+    sort: 4,
+    old_name: "Tier 7",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //High Standard
-  22: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+  22: {
+    color: "#91c8ff",
+    name: "Tier 3",
+    sort: 3,
+    old_name: "High Standard",
+    old_name_label_color: "#777777",
+    shares: 4,
+  },
 
   //Mid Standard
-  18: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
+  18: {
+    color: "#93aeff",
+    name: "Tier 2",
+    sort: 2,
+    old_name: "Mid Standard",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
 
   //Low Standard
-  21: { color: "#ffffff", group_color: "#ffffff", contrast_color: "#000000" },
-
-  //Undetermined
-  19: { color: "#aaaaaa", group_color: "#ffffff", contrast_color: "#000000" },
+  21: {
+    color: "#9696ff",
+    name: "Tier 1",
+    sort: 1,
+    old_name: "Low Standard",
+    old_name_label_color: "#ffffff",
+    shares: 6,
+  },
 
   //Trivial
-  20: { color: "#c6c6c6", group_color: "#c6c6c6", contrast_color: "#000000" },
+  20: {
+    color: "#ffffff",
+    name: "Trivial",
+    sort: 0,
+    old_name: "Trivial",
+    old_name_label_color: "#6f6f6f",
+    shares: 12,
+  },
+
+  //Undetermined
+  19: {
+    color: "#aaaaaa",
+    name: "Undetermined",
+    sort: -1,
+    old_name: "Undetermined",
+    old_name_label_color: "#6f6f6f",
+    shares: 6,
+  },
 };
 
-function darkenDiffColor(color, amount) {
+export function getNewDifficultyColors(settings, id, useDarkening = false) {
+  let color = settings.visual.difficultyColors[id];
+  if (color === "" || color === undefined) {
+    color = DIFFICULTIES[id].color;
+  }
+
+  if (useDarkening && settings.visual.darkmode) {
+    const darkened = darken(color, settings.visual.topGoldenList.darkenTierColors / 100);
+    color = new Color(darkened).hex();
+  }
+
+  const contrastColor = lightTheme.palette.getContrastText(color);
   return {
-    color: new Color(darken(color.color, amount)).hex(),
-    group_color: new Color(darken(color.group_color, amount)).hex(),
-    contrast_color: new Color(lightTheme.palette.getContrastText(darken(color.color, amount))).hex(),
+    color: color,
+    contrast_color: contrastColor,
   };
 }
 
-export function getNewDifficultyColors(settings, id, useDarkening = false) {
-  const colors = getSettingsDifficultyColor(settings, id);
-  if (useDarkening && settings.visual.darkmode) {
-    return darkenDiffColor(colors, settings.visual.topGoldenList.darkenTierColors / 100);
-  } else {
-    return darkenDiffColor(colors, 0);
-  }
-}
-
-const DIFFICULTY_BASE_COLORS = {
-  2: "#ff97d8",
-  23: "#ff99b2",
-  5: "#ff9989",
-  8: "#ffd595",
-  11: "#ffebb0",
-  14: "#b0ff78",
-  15: "#85e191",
-  16: "#8fdeff",
-  17: "#96a6ff",
-  24: "#bcc7ff",
-  22: "#ffffff",
-  18: "#ffffff",
-  21: "#ffffff",
-  19: "#aaaaaa",
-  20: "#c6c6c6",
-};
-function getSettingsDifficultyColor(settings, id) {
-  const groupId = getGroupId(id);
-
-  let groupColor = settings.visual.difficultyColors[groupId];
-  if (groupColor === "" || groupColor === undefined) {
-    groupColor = DIFFICULTY_BASE_COLORS[groupId];
-  }
-
-  let color = settings.visual.difficultyColors[id];
-  if (color === "" || color === undefined) {
-    color = modifyBaseColor(groupColor, id);
-  }
-
-  return { color: color, group_color: groupColor };
-}
-
-const GROUP_ID_MAPPINGS = {
-  1: 2,
-  2: 2,
-  3: 2,
-  23: 23,
-  4: 5,
-  5: 5,
-  6: 5,
-  7: 8,
-  8: 8,
-  9: 8,
-  10: 11,
-  11: 11,
-  12: 11,
-  14: 14,
-  15: 15,
-  16: 16,
-  17: 17,
-  24: 24,
-  22: 22,
-  18: 18,
-  21: 21,
-  20: 20,
-  19: 19,
-};
-export function getGroupId(id) {
-  return GROUP_ID_MAPPINGS[id];
-}
-
-const COLOR_MODIFY_FUNCTIONS = {
-  high: (color) => color.saturationv(color.saturationv() + 13),
-  mid: (color) => color,
-  low: (color) => color.saturationv(color.saturationv() - 13),
-  none: (color) => color,
-};
-const DIFFICULTY_ID_SUBTIERS = {
-  1: "high",
-  2: "mid",
-  3: "low",
-  23: "none",
-  4: "high",
-  5: "mid",
-  6: "low",
-  7: "high",
-  8: "mid",
-  9: "low",
-  10: "high",
-  11: "mid",
-  12: "low",
-  14: "none",
-  15: "none",
-  16: "none",
-  17: "none",
-  24: "none",
-  22: "none",
-  18: "none",
-  21: "none",
-  20: "none",
-  19: "none",
-};
-function getDifficultySubtier(id) {
-  return DIFFICULTY_ID_SUBTIERS[id];
-}
-function modifyBaseColor(color, id) {
-  const subTier = getDifficultySubtier(id);
-  let newColor = new Color(color);
-  newColor = COLOR_MODIFY_FUNCTIONS[subTier](newColor);
-  return newColor.hex();
-}
-
-const DIFFICULTY_ID_SUBTIER_SHARES = {
-  1: 3,
-  2: 3,
-  3: 3,
-  23: 3,
-  4: 4,
-  5: 4,
-  6: 4,
-  7: 4,
-  8: 4,
-  9: 4,
-  10: 4,
-  11: 4,
-  12: 4,
-  14: 4,
-  15: 4,
-  16: 4,
-  17: 6,
-  24: 6,
-  22: 4,
-  18: 4,
-  21: 4,
-  20: 12,
-  19: 12,
-};
-export function getDifficultySubtierShares(id, ignoreGuard = false) {
-  let shares = DIFFICULTY_ID_SUBTIER_SHARES[id];
-  if (ignoreGuard && shares === 4) {
-    shares = 3;
-  }
-  return shares;
+export function getDifficultySubtierShares(id) {
+  return DIFFICULTIES[id].shares;
 }
 
 //Some difficulty details being used in the frontend
@@ -314,13 +326,13 @@ const DIFF_CONSTS_ = {
   TIER_7_ID: 24,
 
   //Difficulty sorting constants
-  LOW_TIER_0_SORT: 18,
-  LOW_TIER_3_SORT: 9,
+  LOW_TIER_0_SORT: 17,
+  LOW_TIER_3_SORT: 8,
   STANDARD_SORT_START: 1,
   STANDARD_SORT_END: 3,
   TIERED_SORT_START: 4,
   TRIVIAL_SORT: 0,
-  MAX_SORT: 21,
+  MAX_SORT: 19,
   MIN_SORT: -1,
 
   //References, added here for intellisense
@@ -334,90 +346,35 @@ DIFF_CONSTS_.RECAP_FIRST_CLEAR_MIN_SORT = DIFF_CONSTS_.STANDARD_SORT_START;
 export const DIFF_CONSTS = DIFF_CONSTS_;
 //=================================================
 
-const DIFFICULTY_SORTS = {
-  1: 21,
-  2: 20,
-  3: 19,
-  23: 18,
-  4: 17,
-  5: 16,
-  6: 15,
-  7: 14,
-  8: 13,
-  9: 12,
-  10: 11,
-  11: 10,
-  12: 9,
-  14: 8,
-  15: 7,
-  16: 6,
-  17: 5,
-  24: 4,
-  22: 3,
-  18: 2,
-  21: 1,
-  20: 0,
-  19: -1,
-};
 export function difficultyToSort(id) {
-  return DIFFICULTY_SORTS[id];
+  return DIFFICULTIES[id].sort;
 }
 
-const OLD_DIFFICULTY_NAMES = {
-  1: "High Tier 0",
-  2: "Mid Tier 0",
-  3: "Low Tier 0",
-  23: "Tier 0.5",
-  4: "High Tier 1",
-  5: "Mid Tier 1",
-  6: "Low Tier 1",
-  7: "High Tier 2",
-  8: "Mid Tier 2",
-  9: "Low Tier 2",
-  10: "High Tier 3",
-  11: "Mid Tier 3",
-  12: "Low Tier 3",
-  14: "Tier 4",
-  15: "Tier 5",
-  16: "Tier 6",
-  17: "Tier 7",
-  24: "Tier 7.5",
-  22: "High Standard",
-  18: "Mid Standard",
-  21: "Low Standard",
-  20: "Trivial",
-  19: "Undetermined",
-};
 export function getOldDifficultyName(id) {
-  return OLD_DIFFICULTY_NAMES[id];
+  return DIFFICULTIES[id].old_name;
 }
 
-//A color that is used to show a subtle label on the difficulty chip. Use a subtle grey for all difficulty where that would be visible.
-const OLD_DIFFICULTY_LABEL_COLORS = {
-  1: "#ffffff",
-  2: "#ffffff",
-  3: "#ffffff",
-  23: "#ffffff",
-  4: "#ffffff",
-  5: "#ffffff",
-  6: "#ffffff",
-  7: "#777777",
-  8: "#777777",
-  9: "#777777",
-  10: "#777777",
-  11: "#777777",
-  12: "#777777",
-  14: "#777777",
-  15: "#777777",
-  16: "#ffffff",
-  17: "#ffffff",
-  24: "#ffffff",
-  22: "#6f6f6f",
-  18: "#6f6f6f",
-  21: "#6f6f6f",
-  20: "#6f6f6f",
-  19: "#6f6f6f",
-};
 export function getOldDifficultyLabelColor(id) {
-  return OLD_DIFFICULTY_LABEL_COLORS[id];
+  return DIFFICULTIES[id].old_name_label_color;
 }
+
+export function getDifficultiesSorted() {
+  //Return an array of DIFFICULTIES sorted by sort value descending
+  return Object.values(DIFFICULTIES).sort((a, b) => b.sort - a.sort);
+}
+
+export const DIFFICULTY_STACKS = [
+  [2, 3, 23],
+  [4, 5, 6],
+  [7, 8, 9],
+  [10, 11, 12],
+  [14],
+  [15],
+  [16],
+  [17],
+  [22],
+  [18],
+  [21],
+  [20],
+  [19],
+];

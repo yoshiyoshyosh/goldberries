@@ -74,6 +74,7 @@ import {
   faInfoCircle,
   faPlus,
   faQuestionCircle,
+  faSpinner,
   faThumbsDown,
   faThumbsUp,
   faTrash,
@@ -289,7 +290,7 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
                 return (
                   <>
                     {index > 0 && " / "}
-                    <DifficultyChip difficulty={d.difficulty} useSubtierColors />
+                    <DifficultyChip difficulty={d.difficulty} />
                   </>
                 );
               })}
@@ -358,9 +359,9 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 export function DifficultyMoveDisplay({ from, to, ...props }) {
   return (
     <Stack direction="row" gap={1} alignItems="center" {...props}>
-      {from && <DifficultyChip difficulty={from} useSubtierColors />}
+      {from && <DifficultyChip difficulty={from} />}
       <FontAwesomeIcon icon={faArrowRight} />
-      {to && <DifficultyChip difficulty={to} useSubtierColors />}
+      {to && <DifficultyChip difficulty={to} />}
     </Stack>
   );
 }
@@ -577,7 +578,7 @@ function ViewSuggestionModal({ id }) {
   const { mutateAsync: postVote } = usePostSuggestionVote(() => {
     query.refetch();
   });
-  const { mutate: postSuggestion } = usePostSuggestion(() => {
+  const { mutate: postSuggestion, isLoading: postSuggestionLoading } = usePostSuggestion(() => {
     query.refetch();
     toast.success(t("feedback.updated"));
   });
@@ -695,16 +696,34 @@ function ViewSuggestionModal({ id }) {
           <Grid item xs={12} sm="auto">
             <ButtonGroup>
               <Tooltip title={t(isUnverified ? "buttons.verify" : "buttons.accept")} arrow>
-                <Button variant={acceptVariant} color="success" onClick={() => updateSuggestion(true)}>
-                  <FontAwesomeIcon icon={faCheck} style={{ height: "1.5em" }} />
+                <Button
+                  variant={acceptVariant}
+                  color="success"
+                  onClick={() => updateSuggestion(true)}
+                  disabled={postSuggestionLoading}
+                >
+                  <FontAwesomeIcon
+                    icon={postSuggestionLoading ? faSpinner : faCheck}
+                    spin={postSuggestionLoading}
+                    style={{ height: "1.5em" }}
+                  />
                 </Button>
               </Tooltip>
               <Tooltip
                 title={t(isUnverified ? "buttons.reject_verification" : "buttons.reject_change")}
                 arrow
               >
-                <Button variant={rejectVariant} color="error" onClick={() => updateSuggestion(false)}>
-                  <FontAwesomeIcon icon={faXmark} style={{ height: "1.5em" }} />
+                <Button
+                  variant={rejectVariant}
+                  color="error"
+                  onClick={() => updateSuggestion(false)}
+                  disabled={postSuggestionLoading}
+                >
+                  <FontAwesomeIcon
+                    icon={postSuggestionLoading ? faSpinner : faXmark}
+                    spin={postSuggestionLoading}
+                    style={{ height: "1.5em" }}
+                  />
                 </Button>
               </Tooltip>
             </ButtonGroup>
@@ -879,12 +898,7 @@ function ViewSuggestionModal({ id }) {
               <Typography variant="body1" gutterBottom>
                 {t("totals")}
               </Typography>
-              <SuggestedDifficultyTierCounts
-                challenge={suggestion.challenge}
-                direction="column"
-                useSubtierColors
-                stackGrid
-              />
+              <SuggestedDifficultyTierCounts challenge={suggestion.challenge} direction="column" stackGrid />
             </Grid>
             <Grid item xs={12}>
               <Divider>
@@ -979,7 +993,7 @@ function CreateSuggestionModal({ onSuccess }) {
   const { t } = useTranslation(undefined, { keyPrefix: "suggestions.modals.create" });
   const { t: t_a } = useTranslation();
   const theme = useTheme();
-  const { mutate: postSuggestion } = usePostSuggestion(() => {
+  const { mutate: postSuggestion, isLoading: postSuggestionLoading } = usePostSuggestion(() => {
     toast.success(t("feedback.created"));
     if (onSuccess) onSuccess();
   });
@@ -1144,7 +1158,12 @@ function CreateSuggestionModal({ onSuccess }) {
         )}
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={onSubmit} disabled={isDisabled}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onSubmit}
+          disabled={isDisabled || postSuggestionLoading}
+        >
           {t("button")}
         </Button>
       </Grid>

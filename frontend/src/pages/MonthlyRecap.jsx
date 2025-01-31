@@ -130,7 +130,7 @@ function MonthlyRecap({ month }) {
         <DifficultySelectControlled
           label={t_s("normal_clears")}
           fullWidth
-          difficultyId={allClearsDifficulty?.id ?? 3}
+          difficultyId={allClearsDifficulty?.id ?? 23}
           setDifficulty={setAllClearsDifficulty}
           minSort={DIFF_CONSTS.LOW_TIER_3_SORT}
           maxSort={DIFF_CONSTS.MAX_SORT}

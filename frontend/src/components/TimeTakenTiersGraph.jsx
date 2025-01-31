@@ -56,14 +56,10 @@ function TimeTakenTiersGraph({ tgl, useSuggested }) {
   const dataScatter = [];
 
   //Step 1: flatten difficulties to ignore subtiers
-  //tgl data format: { tiers: [[{ id: 1, name: "High Tier 0"}, {...}, {...}], [{...}, {...}, {...}], [{...}]] }
+  //tgl data format: { tiers: [{ id: 1, name: "High Tier 0"}, {...}, {...}, {...}, {...}, {...}, {...}, ...] }
   //Flatten difficulties to ignore subtiers
-  const difficulties = [];
-  tgl.tiers.forEach((tier) => {
-    tier.forEach((subtier) => {
-      difficulties.push(subtier);
-    });
-  });
+  //Rework: no longer necessary
+  const difficulties = tgl.tiers;
 
   //Step 2: extract the time taken for each difficulty
   let diffFunction = (challenge) => challenge.difficulty_id;

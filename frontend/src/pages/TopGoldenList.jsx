@@ -93,7 +93,7 @@ export function PageTopGoldenList({}) {
   );
 }
 
-export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
+export function ExportTopGoldenListModal({ modalHook, type, id, filter, isPersonal = false }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.top_golden_list.export" });
   const query = useGetTopGoldenList(type, id, filter);
   const topGoldenList = getQueryData(query);
@@ -102,82 +102,89 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
   const [includeHeader, setIncludeHeader] = useLocalStorage("export_tgl_include_header", true);
   const [includeCount, setIncludeCount] = useLocalStorage("export_tgl_include_count", true);
   const [includeLink, setIncludeLink] = useLocalStorage("export_tgl_include_link", false);
+  const [includeTimeTaken, setIncludeTimeTaken] = useLocalStorage("export_tgl_include_time_taken", false);
 
   const copyToClipboard = () => {
     let text = "";
 
     const { tiers, challenges, maps, campaigns } = topGoldenList;
 
-    for (const tier of tiers) {
-      let hadContent = false;
+    let hadContent = false;
 
-      for (let index = 0; index < tier.length; index++) {
-        const difficulty = tier[index];
-        //Looping through subtiers
-        const diff_id = difficulty.id;
-        const filteredChallenges = challenges.filter((c) => c.difficulty_id === diff_id);
+    for (let index = 0; index < tiers.length; index++) {
+      const difficulty = tiers[index];
+      //Looping through subtiers
+      const diff_id = difficulty.id;
+      const filteredChallenges = challenges.filter((c) => c.difficulty_id === diff_id);
 
-        if (filteredChallenges.length === 0) continue;
+      if (filteredChallenges.length === 0) continue;
 
-        sortChallengesForTGL(filteredChallenges, maps, campaigns);
+      sortChallengesForTGL(filteredChallenges, maps, campaigns);
 
-        if (includeHeader) {
-          if (index > 0 && hadContent) {
-            text += "\n";
-          }
-
-          text += `${getDifficultyName(difficulty)}`;
-          if (includeCount) {
-            text += `\t${t("submission_count")}`;
-          }
-          if (includeLink) {
-            text += `\t${t("first_clear_url")}`;
-          }
+      if (includeHeader) {
+        if (index > 0 && hadContent) {
           text += "\n";
         }
 
-        hadContent = true;
-
-        for (const challenge of filteredChallenges) {
-          const map = maps[challenge.map_id];
-          const campaign = map ? campaigns[map.campaign_id] : campaigns[challenge.campaign_id];
-
-          let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
-          let name = getMapName(map, campaign);
-          let combinedName = "";
-          if (!tpgSettings.switchMapAndChallenge) {
-            if (nameSuffix !== "") {
-              combinedName = `${name} [${nameSuffix}]`;
-            } else {
-              combinedName = `${name}`;
-            }
-          } else {
-            if (name !== "") {
-              combinedName = `${nameSuffix}`;
-            } else {
-              combinedName = `${name} [${nameSuffix}]`;
-            }
-          }
-
-          if (challenge.requires_fc || challenge.has_fc) {
-            combinedName += " " + getChallengeFcShort(challenge, true);
-          }
-
-          text += `${combinedName}`;
-          if (includeCount) {
-            text += `\t${challenge.data.submission_count}`;
-          }
-          if (includeLink) {
-            text += `\t${challenge.submissions[0].proof_url}`;
-          }
-          text += "\n";
+        text += `${getDifficultyName(difficulty)}\n`;
+        text += t("challenge_name");
+        if (includeCount) {
+          text += `\t${t("submission_count")}`;
         }
+        if (includeLink) {
+          text += `\t${t("first_clear_url")}`;
+        }
+        if (includeTimeTaken && isPersonal) {
+          text += `\t${t("time_taken")}`;
+        }
+        text += "\n";
       }
 
-      if (hadContent) {
+      hadContent = true;
+
+      for (const challenge of filteredChallenges) {
+        const map = maps[challenge.map_id];
+        const campaign = map ? campaigns[map.campaign_id] : campaigns[challenge.campaign_id];
+
+        let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
+        let name = getMapName(map, campaign);
+        let combinedName = "";
+        if (!tpgSettings.switchMapAndChallenge) {
+          if (nameSuffix !== "") {
+            combinedName = `${name} [${nameSuffix}]`;
+          } else {
+            combinedName = `${name}`;
+          }
+        } else {
+          if (name !== "") {
+            combinedName = `${nameSuffix}`;
+          } else {
+            combinedName = `${name} [${nameSuffix}]`;
+          }
+        }
+
+        if (challenge.requires_fc || challenge.has_fc) {
+          combinedName += " " + getChallengeFcShort(challenge, true);
+        }
+
+        text += `${combinedName}`;
+        if (includeCount) {
+          text += `\t${challenge.data.submission_count}`;
+        }
+        if (includeLink) {
+          text += `\t${challenge.submissions[0].proof_url}`;
+        }
+        if (includeTimeTaken && isPersonal) {
+          text += `\t${challenge.submissions[0].time_taken ?? ""}`;
+        }
         text += "\n";
       }
     }
+
+    if (hadContent) {
+      text += "\n";
+    }
+
     //Remove last newline
     text = text.slice(0, -1);
 
@@ -190,6 +197,7 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
         toast.error(t("feedback.error"));
       });
   };
+
   return (
     <CustomModal modalHook={modalHook} actions={[ModalButtons.close]} options={{ title: t("header") }}>
       {query.isLoading && <LoadingSpinner />}
@@ -218,6 +226,14 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter }) {
               onChange={(e) => setIncludeLink(e.target.checked)}
               control={<Checkbox />}
             />
+            {isPersonal && (
+              <FormControlLabel
+                label={t("include_time_taken")}
+                checked={includeTimeTaken}
+                onChange={(e) => setIncludeTimeTaken(e.target.checked)}
+                control={<Checkbox />}
+              />
+            )}
           </Stack>
           <Button
             variant="contained"

@@ -553,7 +553,7 @@ function DifficultyBar({ difficulty, count, total }) {
           alignItems: "center",
           justifyContent: "center",
           width: width + "%",
-          backgroundColor: colors.group_color,
+          backgroundColor: colors.color,
           color: colors.contrast_color,
         }}
       >

@@ -72,6 +72,11 @@ export function getChallengeIsArbitrary(challenge) {
   return challenge.is_arbitrary === null ? challenge.objective.is_arbitrary : challenge.is_arbitrary;
 }
 
+export function getDifficultyNameShort(difficulty) {
+  if (difficulty.id === 20) return "Unt";
+  if (difficulty.id === 19) return "Und";
+  return "T" + difficulty.sort;
+}
 export function getDifficultyName(difficulty) {
   let subtierPrefix = difficulty.subtier === null ? "" : difficulty.subtier + " ";
   //capitalize first letter

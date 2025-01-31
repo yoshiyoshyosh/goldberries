@@ -44,13 +44,13 @@ export function PageIndex() {
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
+              <ReworkNotice />
+            </BorderedBox>
+            <BorderedBox>
               <GettingStarted />
             </BorderedBox>
             <BorderedBox>
               <GlobalStatsComponent />
-            </BorderedBox>
-            <BorderedBox>
-              <ReleaseNotice />
             </BorderedBox>
             {/* <BorderedBox>
               <PublicTestNotice />
@@ -245,6 +245,20 @@ function ReleaseNotice() {
     </>
   );
 }
+function ReworkNotice() {
+  const { t } = useTranslation(undefined, { keyPrefix: "index.rework" });
+  return (
+    <>
+      <Typography variant="h5">{t("header")}</Typography>
+      <Typography variant="body1" gutterBottom>
+        {t("text")}
+      </Typography>
+      {/* <Typography variant="body1" gutterBottom>
+        {t("migration")}
+      </Typography> */}
+    </>
+  );
+}
 
 function PublicTestNotice() {
   return (
@@ -360,7 +374,6 @@ export function TiersCountDisplay({ stats, differences, hideEmpty = false, equal
             <DifficultyValueChip
               difficulty={diff}
               value={count + (difference ? ` (+${difference})` : "")}
-              useSubtierColors
               useDarkening
               sx={{ width: 1, fontSize: "1em", opacity: isEmpty && hideEmpty ? 0.15 : 1 }}
             />

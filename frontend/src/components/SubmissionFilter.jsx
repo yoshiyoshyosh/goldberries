@@ -114,7 +114,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "middle",
+          vertical: "center",
           horizontal: "right",
         }}
         disableScrollLock={isMdScreen ? false : true}
@@ -138,6 +138,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                   const submissionCount = objectiveSubmissionCount[objective.id] || 0;
                   return (
                     <FormControlLabel
+                      key={objective.id}
                       checked={!localFilter.hide_objectives.includes(objective.id)}
                       onChange={(e) => changedObjectiveFilter(objective.id, e.target.checked)}
                       control={<Checkbox />}

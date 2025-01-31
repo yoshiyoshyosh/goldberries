@@ -47,7 +47,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DIFFICULTY_COLORS, DIFF_CONSTS } from "../util/constants";
+import { DIFFICULTIES, DIFF_CONSTS } from "../util/constants";
 import { useTheme } from "@emotion/react";
 import { Trans, useTranslation } from "react-i18next";
 import { getCampaignName, getDifficultyName, getMapName } from "../util/data_util";
@@ -319,7 +319,7 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
     } else if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
       return theme.palette.text.primary;
     } else {
-      return DIFFICULTY_COLORS[id].color;
+      return DIFFICULTIES[id].color;
     }
   };
 

@@ -150,13 +150,16 @@
           "copied": "Copied to clipboard",
           "error": "Error copying to clipboard"
         },
+        "challenge_name": "Challenge Name",
         "submission_count": "Submission Count",
         "first_clear_url": "First Clear URL",
+        "time_taken": "Time Taken",
         "header": "Export Top Golden List",
         "text": "Use the button below to copy all visible challenges to your clipboard.",
         "include_header": "Include data header",
         "include_submission_count": "Include submission count",
         "include_first_clear_url": "Include first clear URL",
+        "include_time_taken": "Include Time Taken",
         "button": "Copy to Clipboard"
       }
     },
@@ -860,6 +863,10 @@
         "show_fractional_tiers": {
           "label": "Show Fractional Tiers",
           "note": "Shows fractional tier values and sorts the Top Golden List accordingly"
+        },
+        "unstack_tiers": {
+          "label": "Unstack Tiers",
+          "note": "This will put every tier in it's own column, instead of stacking them vertically."
         }
       },
       "difficulty_colors": {
@@ -1592,6 +1599,10 @@
       "header": "Newly Released!",
       "text": "This website has just recently been released! Given the chaotic state of data on the spreadsheet, it's to be expected that there will be wrong or inconsistent data somewhere. When you spot some, please report it in the Modded Golden Team Discord server!",
       "migration": "Migrating all of the data, as well as the entire community over to this website will take a while, so for the time being you can still make your submissions the old-fashioned way, by tagging the modded golden team in the Celeste Discord server, or the Modded Golden Team Discord server."
+    },
+    "rework": {
+      "header": "Tier Rework!",
+      "text": "As of February 2025, the tier rework has launched! We can put some explanation text, or a bullet point list or smth here."
     }
   },
   "credits": {

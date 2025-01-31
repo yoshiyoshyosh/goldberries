@@ -34,7 +34,6 @@ export function SuggestedDifficultyChart({ challenge }) {
 
   const dataTransformed = datasets.map((dataset) => {
     return Object.entries(dataset.data).map(([id, data]) => {
-      console.log("id", id, "count", data);
       const { difficulty, count } = data;
       return {
         id: difficulty.id,
@@ -43,7 +42,7 @@ export function SuggestedDifficultyChart({ challenge }) {
         arcLabel: difficulty.subtier
           ? difficulty.subtier.charAt(0).toUpperCase() + difficulty.subtier.slice(1)
           : "",
-        color: getNewDifficultyColors(settings, difficulty.id).group_color,
+        color: getNewDifficultyColors(settings, difficulty.id).color,
       };
     });
   });
@@ -123,7 +122,6 @@ export function SuggestedDifficultyTierCounts({
   sx,
   direction = "row",
   nowrap = true,
-  useSubtierColors = false,
   hideIfEmpty = false,
   stackGrid = false,
 }) {
@@ -182,7 +180,7 @@ export function SuggestedDifficultyTierCounts({
               {data.map((diff) => (
                 <Stack key={diff.difficulty.id} direction="row" spacing={1}>
                   <Typography variant="body1">{diff.value}x</Typography>
-                  <DifficultyChip difficulty={diff.difficulty} useSubtierColors={useSubtierColors} />
+                  <DifficultyChip difficulty={diff.difficulty} />
                 </Stack>
               ))}
             </Stack>
