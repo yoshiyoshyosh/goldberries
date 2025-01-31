@@ -58,6 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($challenge === false) {
           die_json(400, "Challenge with id {$submission->challenge_id} does not exist");
         }
+        if ($challenge->requires_fc && !$submission->is_fc) {
+          die_json(400, "Submission cannot be moved to this challenge, as it requires FC");
+        }
+        if (!$challenge->requires_fc && !$challenge->has_fc && $submission->is_fc) {
+          die_json(400, "Submission cannot be moved to this challenge, as it requires non-FC");
+        }
         $old_submission->challenge_id = $submission->challenge_id;
       }
       if ($submission->player_id !== $old_submission->player_id) {

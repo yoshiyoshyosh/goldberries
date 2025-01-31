@@ -91,42 +91,31 @@ $where_string = implode(" AND ", $where);
 $query = $query . " WHERE " . $where_string;
 $query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, submission_date_achieved ASC, submission_id ASC";
 
-$result = pg_query($DB, $query);
-if (!$result) {
-  die_json(500, "Failed to query database. Query: $query");
-}
-
+$result = pg_query_params_or_die($DB, $query);
 
 $difficulty_filter = "difficulty.sort >= $min_diff_sort OR difficulty.id = $UNDETERMINED_ID"; //Always include undetermined challenges
-
 $queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
-$resultDifficulties = pg_query($DB, $queryDifficulties);
-if (!$resultDifficulties) {
-  die_json(500, "Failed to query database");
-}
+$resultDifficulties = pg_query_params_or_die($DB, $queryDifficulties);
 
-$response = array(
-  "tiers" => array(),
-  "challenges" => array(),
-  "campaigns" => array(),
-  "maps" => array(),
-);
+$response = [
+  "tiers" => [],
+  "challenges" => [],
+  "campaigns" => [],
+  "maps" => [],
+];
 
-$difficulties = array();
+$difficulties = [];
 //Loop through difficulties
 while ($row = pg_fetch_assoc($resultDifficulties)) {
   $difficulty = new Difficulty();
   $difficulty->apply_db_data($row);
 
   $tierIndex = get_tier_index($difficulty);
-  $subtierIndex = get_subtier_index($difficulty);
 
   if (!isset($response['tiers'][$tierIndex]))
     $response['tiers'][$tierIndex] = array();
-  if (!isset($response['tiers'][$tierIndex][$subtierIndex]))
-    $response['tiers'][$tierIndex][$subtierIndex] = array();
 
-  $response['tiers'][$tierIndex][$subtierIndex] = $difficulty;
+  $response['tiers'][$tierIndex] = $difficulty;
   $difficulties[$difficulty->id] = $difficulty;
 }
 
@@ -247,10 +236,6 @@ function challenge_fractional_placement($challenge)
   global $TRIVIAL_ID, $UNDETERMINED_ID;
 
   $min_suggestions = 0;
-
-  // if ($challenge->difficulty_id === $TRIVIAL_ID || $challenge->difficulty_id === $UNDETERMINED_ID) { //Exclude trivial and undetermined
-  //   return false;
-  // }
 
   $count_suggestions = 0;
   $sum_sorts = 0;

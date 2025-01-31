@@ -91,6 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           die_json(400, "Trivial difficulty is not allowed for suggestions");
         }
 
+        //Reject if the difficulty is the same as the current one
+        if ($difficulty->id === $challenge->difficulty_id) {
+          die_json(400, "Suggested difficulty is the same as the current one");
+        }
+
         //Placement suggestions are not allowed for trivial challenges
         if ($challenge->difficulty_id === $TRIVIAL_ID) {
           die_json(400, "Placement suggestions cannot be made for trivial challenges");
