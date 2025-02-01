@@ -19,12 +19,12 @@ import { BasicContainerBox, HeadTitle, LanguageFlag, LoadingSpinner } from "../c
 import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { COLOR_PRESETS, useAppSettings } from "../hooks/AppSettingsProvider";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { MuiColorInput } from "mui-color-input";
-import { getNewDifficultyColors } from "../util/constants";
+import { DIFFICULTIES, getDifficultiesSorted, getNewDifficultyColors } from "../util/constants";
 import i18n, { LANGUAGES } from "../i18n/config";
 import { useTranslation } from "react-i18next";
 
@@ -628,6 +628,7 @@ function AppSettingsDifficultyColorsForm() {
   const { t } = useTranslation(undefined, { keyPrefix: "app_settings.tabs.difficulty_colors" });
   const { settings, setSettings } = useAppSettings();
   const [render, setRender] = useState(false);
+  const [hasExported, setHasExported] = useState(false);
 
   const form = useForm({
     defaultValues: settings.visual,
@@ -650,113 +651,89 @@ function AppSettingsDifficultyColorsForm() {
     setTimeout(() => setRender(true), 300);
   }, []);
 
-  const restorePreset = (preset) => {
-    if (preset === 0) {
-      //Default values
-      form.setValue("difficultyColors", {
-        1: "",
-        2: "",
-        3: "",
-        4: "",
-        5: "",
-        6: "",
-        7: "",
-        8: "",
-        9: "",
-        10: "",
-        11: "",
-        12: "",
-        14: "",
-        15: "",
-        16: "",
-        17: "",
-        18: "",
-        19: "",
-      });
-    } else if (preset === 1) {
-      //Protanopia
-      form.setValue("difficultyColors", {
-        1: "",
-        2: "#f67dc9",
-        3: "",
-        4: "#a71802",
-        5: "#d44d38",
-        6: "#f28e7d",
-        7: "#4c6603",
-        8: "#abcf44",
-        9: "#dbef9f",
-        10: "#064e29",
-        11: "#45a471",
-        12: "#85ddad",
-        14: "",
-        15: "#232255",
-        16: "",
-        17: "",
-        18: "",
-        19: "",
-      });
-    }
+  const restorePreset = (index) => {
+    const preset = COLOR_PRESETS[index];
+    form.setValue("difficultyColors", preset.colors);
   };
 
-  const diffIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+  const exportToClipboard = () => {
+    const copy = JSON.stringify(settings.visual.difficultyColors);
+    navigator.clipboard.writeText(copy);
+    setHasExported(true);
+    setTimeout(() => setHasExported(false), 3000);
+  };
+  const importFromClipboard = () => {
+    navigator.clipboard.readText().then((text) => {
+      console.log("Read from clipboard:", text);
+      try {
+        const data = JSON.parse(text);
+        form.setValue("difficultyColors", data);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  };
 
   if (!render) return <LoadingSpinner />;
 
   return (
     <form>
-      <Typography variant="body2" color={(t) => t.palette.text.secondary}>
-        {t("description")}
-      </Typography>
-      <Grid container rowSpacing={1} columnSpacing={2}>
-        <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">{t("high")}</Typography>
-        </Grid>
-        <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">{t("mid")}</Typography>
-        </Grid>
-        <Grid item xs={12} md={4} textAlign="center">
-          <Typography variant="h6">{t("low")}</Typography>
-        </Grid>
-      </Grid>
-      <Grid container rowSpacing={1} columnSpacing={2}>
-        {diffIds.map((id) => {
-          if (id === 13) {
-            return (
-              <Grid item xs={12} md={12} key={id}>
-                <Typography variant="h6">{t("t4+")}</Typography>
-              </Grid>
-            );
-          }
-          const width = id > 13 ? 6 : 4;
-          return (
-            <Grid item xs={12} md={width} key={id}>
+      {getDifficultiesSorted().map((diff) => {
+        let name = diff.name;
+        return (
+          <Grid container rowSpacing={1} columnSpacing={2} key={diff.id} sx={{ mt: 0 }}>
+            <Grid item xs={12} md={2} display="flex" alignItems="center" justifyContent="space-around">
+              <Stack direction="column" alignItems="center" justifyContent="center" gap={0}>
+                <Typography variant="body1">{name}</Typography>
+                {settings.general.showOldTierNames && (
+                  <Typography
+                    variant="body2"
+                    color={(t) => t.palette.text.secondary}
+                    sx={{ fontSize: ".7em" }}
+                  >
+                    ({diff.old_name})
+                  </Typography>
+                )}
+              </Stack>
+            </Grid>
+            <Grid item xs={12} md={10}>
               <Controller
-                name={`difficultyColors.${id}`}
+                name={`difficultyColors.${diff.id}`}
                 control={form.control}
                 render={({ field }) => (
-                  <SettingsColorPicker id={id} value={field.value} onChange={field.onChange} />
+                  <SettingsColorPicker id={diff.id} value={field.value} onChange={field.onChange} />
                 )}
               />
             </Grid>
-          );
-        })}
-      </Grid>
+          </Grid>
+        );
+      })}
       <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
         <Typography variant="body1">{t("presets.label")}</Typography>
-        <Button variant="outlined" onClick={() => restorePreset(0)}>
-          {t("presets.default")}
-        </Button>
+        {COLOR_PRESETS.map((preset, index) => (
+          <Button
+            key={index}
+            variant="outlined"
+            onClick={() => restorePreset(index)}
+            disabled={preset.disabled}
+          >
+            {preset.name}
+          </Button>
+        ))}
       </Stack>
+      <Divider sx={{ my: 2 }} />
       <Stack direction="row" gap={2} alignItems="center" sx={{ mt: 2 }}>
-        <Typography variant="body1">{t("presets.colorblind")}</Typography>
-        <Button variant="outlined" onClick={() => restorePreset(1)}>
-          {t("presets.protanopia")}
+        <Typography variant="body1">{t("export.label")}</Typography>
+        <Button
+          variant="outlined"
+          onClick={exportToClipboard}
+          color={hasExported ? "success" : "primary"}
+          startIcon={hasExported ? <FontAwesomeIcon icon={faCheck} size="sm" /> : undefined}
+        >
+          {t(hasExported ? "export.export_success" : "export.export")}
         </Button>
-        <Button variant="outlined" onClick={() => {}} disabled>
-          {t("presets.deuteranopia")}
-        </Button>
-        <Button variant="outlined" onClick={() => {}} disabled>
-          {t("presets.tritanopia")}
+        <Button variant="outlined" onClick={importFromClipboard}>
+          {t("export.import")}
         </Button>
       </Stack>
     </form>

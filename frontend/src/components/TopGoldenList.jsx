@@ -215,6 +215,8 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
 
     //Filter out any undefined stacks that end up being undefined
     tierStacks = tierStacks.filter((stack) => stack[0] !== undefined);
+    //Filter out any undefined difficulties IN each stack too
+    tierStacks = tierStacks.map((stack) => stack.filter((diff) => diff !== undefined));
   }
 
   return (
@@ -318,8 +320,9 @@ function TopGoldenListGroup({
   const countChallengesInStack = tierStack.reduce((acc, tier) => {
     const count = challenges.filter(
       (challenge) =>
-        (useSuggested ? challenge.submissions[0].suggested_difficulty?.id : challenge.difficulty.id) ===
-        tier.id
+        (useSuggested
+          ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
+          : challenge.difficulty.id) === tier.id
     ).length;
     return acc + count;
   }, 0);
@@ -532,14 +535,6 @@ function TopGoldenListTier({
                 />
               );
             })}
-            {/* {tier.map((subtier, index) => {
-                  let tierChallenges = challenges.filter(
-                    (challenge) =>
-                      (useSuggested
-                        ? challenge.submissions[0].suggested_difficulty?.id ?? challenge.difficulty.id
-                        : challenge.difficulty.id) === subtier.id
-                  );
-                })} */}
           </TableBody>
         )}
       </Table>

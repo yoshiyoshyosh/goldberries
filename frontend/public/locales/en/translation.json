@@ -49,7 +49,7 @@
     },
     "difficulty_chip": {
       "personal_tooltip": "This difficulty suggestion is personal and should not be used for difficulty placements",
-      "trivial_explanation": "Trivial challenges contain no risk of death, or are no different from a regular clear of the map"
+      "trivial_explanation": "Untiered challenges contain no risk of death, or are no different from a regular clear of the map"
     },
     "verification_status_chip": {
       "verified": "Verified",
@@ -178,6 +178,7 @@
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden",
       "all": "All",
+      "none": "None",
       "apply": "Apply Filters",
       "clear_state": {
         "label": "Clear State",
@@ -866,7 +867,7 @@
         },
         "unstack_tiers": {
           "label": "Unstack Tiers",
-          "note": "This will put every tier in it's own column, instead of stacking them vertically."
+          "note": "This will put every tier in its own column, instead of stacking them vertically."
         }
       },
       "difficulty_colors": {
@@ -883,6 +884,12 @@
           "protanopia": "Protanopia",
           "deuteranopia": "Deuteranopia",
           "tritanopia": "Tritanopia"
+        },
+        "export": {
+          "label": "Export/Import Colors",
+          "export": "Export To Clipboard",
+          "export_success": "Copied To Clipboard",
+          "import": "Import From Clipboard"
         }
       }
     }
@@ -1046,7 +1053,7 @@
     "stats": "Player Stats",
     "showcase_hardest": "Hardest Submissions",
     "chart": {
-      "show_standard": "Show Standard & Undetermined",
+      "show_standard": "Show Untiered & Undetermined",
       "x_axis": "Count of Goldens per Tier"
     }
   },
@@ -1134,7 +1141,7 @@
           }
         },
         "proof_note": "Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight",
-        "raw_session_note": "Raw session recording of the winning run is required for Tier 3+ goldens.",
+        "raw_session_note": "Raw session recording of the winning run is required for Tier 8+ goldens.",
         "raw_session_same_url_info": "Are you sure you want to use the same URL for the raw session?",
         "is_fc": "Run is Full Clear",
         "date_created": "[Verifier Only] Date Created",
@@ -1323,7 +1330,7 @@
   "rules": {
     "title": "Rules",
     "toc": "Table of Contents",
-    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The most basic form of requied submission rules is \"don't cheat, don't use gameplay-altering mods, have a full session recording for challenges harder than tier 3, and make sure to show the end screen\". However, this formalization exists to cover potential confusion for certain edge cases and all the like. This list isn't exhaustive. It can't be. Mappers come up with ways to subvert our expectations all the time, and if we tried to formalize the minefield that it is, we would get nowhere. If you have an edge case not covered by this list, or general questions about it, please ask us! Ask us before you make a submission that results in days of debate that may or may not result in it getting rejected. Thank you.",
+    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The most basic form of requied submission rules is \"don't cheat, don't use gameplay-altering mods, have a full session recording for Tier 8+ challenges, and make sure to show the end screen\". However, this formalization exists to cover potential confusion for certain edge cases and all the like. This list isn't exhaustive. It can't be. Mappers come up with ways to subvert our expectations all the time, and if we tried to formalize the minefield that it is, we would get nowhere. If you have an edge case not covered by this list, or general questions about it, please ask us! Ask us before you make a submission that results in days of debate that may or may not result in it getting rejected. Thank you.",
     "maps": {
       "header": "Rules for Maps and Challenges",
       "rules": {
@@ -1334,7 +1341,7 @@
           },
           {
             "heading": "Non-Trivial",
-            "text": "The map or map pack <strong>must</strong> contain a challenge that poses a non-trivial amount of danger, even if that danger may be small. Maps where all challenges contain little to no danger will be rejected. An example of a map that, while difficult, does not meet the danger requirement is <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. In rare circumstances, usually when a map is part of a more complete campaign or lobby, exceptions will be made, such as for <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">Summit Down-Side Silver</CustomExternalLink>. Maps with this property will be labeled as \"Trivial\"."
+            "text": "The map or map pack <strong>must</strong> contain a challenge that poses a non-trivial amount of danger, even if that danger may be small. Maps where all challenges contain little to no danger will be rejected. An example of a map that, while difficult, does not meet the danger requirement is <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. In rare circumstances, usually when a map is part of a more complete campaign or lobby, exceptions will be made, such as for <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">Summit Down-Side Silver</CustomExternalLink>. Maps with this property will be labeled as \"Untiered\"."
           },
           {
             "heading": "Non-Duplicate",
@@ -1378,7 +1385,7 @@
           },
           {
             "heading": "Raw Footage",
-            "text": "Submissions for challenges as or more difficult than <strong>Tier 3</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked."
+            "text": "Submissions for challenges as or more difficult than <strong>Tier 8</strong> <strong>must</strong> have a recording of a full session. In the event that the submission was done near the beginning of the session, a request for a previous session recording may be asked."
           },
           {
             "heading": "Info Mods",
@@ -1524,16 +1531,12 @@
         "answer": "Some maps have collectibles which are not optional, such as the strawberries in Hell Gym."
       },
       {
-        "question": "What is the Top Golden List Rankings?",
-        "answer": "There are three categories of difficulty tracked here: Trivial, Standard, and Hard. The top golden list rankings is a ranking of the difficulty of challenges in the \"Hard\" category. At minimum, to get on the hard list, a challenge must be <i>loosely</i> more difficult than what is considered \"Hell Trio\" in the vanilla game, that being 6B, 7B, and 8B, on average. From then, a map is roughly placed where it fits in relation to other maps in the similar difficulty tier. Placements are never set and stone and 100% accurate, as easier strats may be found later and difficulty is endlessly subjective. Aspects taken into account for placement include, but are not limited to, the map length, the distribution of difficulty, input density, and gameplay consistency."
-      },
-      {
         "question": "This map is way harder than what it says on the list! What gives?",
         "answer": "A challenge is ranked by the easiest strategies possible to complete it. If a map contains major cheese, the route with the major cheese will be what is used to rank the map. Additionally, again, rankings are subjective and based on those who have completed the challenge. One can suggest a difficulty change for any challenge if they so wish."
       },
       {
-        "question": "What is the trivial difficulty for?",
-        "answer": "The trivial difficulty is reserved for challenges that are, well, trivial to complete compared to a clear. These include one-room maps where a normal clear is the exact same as the golden as well as campaign maps where it is impossible to die."
+        "question": "What is the Untiered difficulty for?",
+        "answer": "The Untiered difficulty is reserved for challenges that are trivial to complete compared to a clear. These include one-room maps where a normal clear is the exact same as the golden as well as campaign maps where it is impossible to die."
       },
       {
         "question": "Are co-op maps allowed? Are maps involving X allowed?",
@@ -1542,7 +1545,7 @@
     ],
     "vanilla_references": {
       "question": "Why are vanilla challenges not on this list?",
-      "answer": "Vanilla challenges are not tracked due to them being outside the scope of a modded list, as well as having too many clears to reasonably track. However, many of their difficulties are commonly agreed upon. Below is a reference list of where vanilla challenges would roughly place on the Top Golden List.<br/><br/><i>Note: In the past, Farewell [No DTS] was considered the baseline for Low Tier 3 on the Top Golden List. This is no longer the case, and the golden is now simply within the tier.</i>"
+      "answer": "Vanilla challenges are not tracked due to them being outside the scope of a modded list, as well as having too many clears to reasonably track. However, many of their difficulties are commonly agreed upon. Below is a reference list of where vanilla challenges would roughly place on the Top Golden List.<br/><br/><i>Note: In the past, Farewell [No DTS] was considered the baseline for Tier 8 on the Top Golden List. This is no longer the case, and the golden is now simply within the tier. Additionally, the hell trio goldens (6B, 7B, 8B) no longer represent a strict baseline for Tier 4.</i>"
     }
   },
   "index": {
@@ -1602,7 +1605,14 @@
     },
     "rework": {
       "header": "Tier Rework!",
-      "text": "As of February 2025, the tier rework has launched! We can put some explanation text, or a bullet point list or smth here."
+      "text": "As of February 2025, the tier rework has launched! These changes were made for many reasons, including making high tier changes easier in the future, facilitating a better process for adding new highest tiers, and normalizing the tiers into a simple ascending number system.",
+      "bullet_points": [
+        "Tier names are now changed to start at Tier 1 for the easiest difficulty and ascend as difficulty increases.",
+        "The \"Standard\" difficulty is now represented by the 3 lowest tiers. These tiers are hidden by default on the Top Golden List due to increased load times, but they can be shown by adjusting the \"Minimum Tier\" in submission filters.",
+        "Every subtier is now represented by its own tier.",
+        "A new tier has been added between the old High Tier 1 and Low Tier 0, bringing the total number of tiers to 19."
+      ],
+      "more_text": "To help with adjusting to the reworked tiers, a temporary option has been added to display the old tier names alongside the new ones. Additionally, an option has been added to stack the highest tiers vertically (enabled by default) to make the Top Golden List more compact."
     }
   },
   "credits": {

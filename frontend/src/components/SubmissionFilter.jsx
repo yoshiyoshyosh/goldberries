@@ -33,6 +33,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { DIFF_CONSTS } from "../util/constants";
 import { DifficultySelectControlled } from "./GoldberriesComponents";
+import { use } from "react";
 
 /*
   filter structure:
@@ -83,6 +84,14 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
       return { ...prev, hide_objectives };
     });
   };
+
+  //useEffect to check if the current minimum difficulty is still valid (i.e. not referencing id 24 or id 1)
+  //if it is, unset it
+  // useEffect(() => {
+  //   if (localFilter.min_diff_id === 1 || localFilter.min_diff_id === 24) {
+  //     setLocalFilter((prev) => ({ ...prev, min_diff_id: DIFF_CONSTS.TIER_7_ID }));
+  //   }
+  // }, [localFilter.min_diff_id]);
 
   const queryObjectives = useGetObjectives();
   const objectives = getQueryData(queryObjectives);
@@ -158,7 +167,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                     startIcon={<FontAwesomeIcon icon={faSquare} />}
                     onClick={() => changedAllObjectives(false)}
                   >
-                    {t("all")}
+                    {t("none")}
                   </Button>
                 </ButtonGroup>
               </Stack>

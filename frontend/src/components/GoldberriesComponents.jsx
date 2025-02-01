@@ -303,7 +303,8 @@ export function DifficultyChip({
           {showOld && (
             <span
               style={{
-                color: getOldDifficultyLabelColor(difficulty.id),
+                // color: getOldDifficultyLabelColor(difficulty.id),
+                color: colors.muted_contrast_color,
                 fontSize: "0.8em",
               }}
             >

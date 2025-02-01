@@ -277,7 +277,7 @@ export const DIFFICULTIES = {
   //Trivial
   20: {
     color: "#ffffff",
-    name: "Trivial",
+    name: "Untiered",
     sort: 0,
     old_name: "Trivial",
     old_name_label_color: "#6f6f6f",
@@ -307,9 +307,11 @@ export function getNewDifficultyColors(settings, id, useDarkening = false) {
   }
 
   const contrastColor = lightTheme.palette.getContrastText(color);
+  const mutedContrastColor = new Color(contrastColor).fade(0.3).rgb().string();
   return {
     color: color,
     contrast_color: contrastColor,
+    muted_contrast_color: mutedContrastColor,
   };
 }
 
@@ -323,7 +325,7 @@ const DIFF_CONSTS_ = {
   TRIVIAL_ID: 20,
   UNDETERMINED_ID: 19,
   STANDARD_IDS: [22, 18, 21], //high, mid, low
-  TIER_7_ID: 24,
+  TIER_7_ID: 17,
 
   //Difficulty sorting constants
   LOW_TIER_0_SORT: 17,
@@ -347,6 +349,9 @@ export const DIFF_CONSTS = DIFF_CONSTS_;
 //=================================================
 
 export function difficultyToSort(id) {
+  if (DIFFICULTIES[id] === undefined) {
+    return DIFF_CONSTS.TIERED_SORT_START;
+  }
   return DIFFICULTIES[id].sort;
 }
 
@@ -360,7 +365,14 @@ export function getOldDifficultyLabelColor(id) {
 
 export function getDifficultiesSorted() {
   //Return an array of DIFFICULTIES sorted by sort value descending
-  return Object.values(DIFFICULTIES).sort((a, b) => b.sort - a.sort);
+  //Also put the ID into each difficulty object
+  const difficulties = Object.keys(DIFFICULTIES).map((id) => {
+    return {
+      id: id,
+      ...DIFFICULTIES[id],
+    };
+  });
+  return difficulties.sort((a, b) => b.sort - a.sort);
 }
 
 export const DIFFICULTY_STACKS = [

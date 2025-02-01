@@ -30,7 +30,7 @@ import {
   AccountRoleIcon,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTIES, DIFF_CONSTS } from "../util/constants";
+import { DIFFICULTIES, DIFF_CONSTS, getNewDifficultyColors } from "../util/constants";
 import { getDifficultyNameShort, getPlayerNameColorStyle } from "../util/data_util";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
@@ -293,9 +293,10 @@ export function PagePlayerTopGoldenList({ id }) {
 
 export function DifficultyCountChart({ difficulty_counts }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player.chart" });
+  const { settings } = useAppSettings();
   const theme = useTheme();
   const query = useGetAllDifficulties();
-  const [showStandard, setShowStandard] = useLocalStorage("player_chart_show_standard", true);
+  const [showUntiered, setShowUntiered] = useLocalStorage("player_chart_show_untiered", true);
 
   if (query.isLoading) {
     return <LoadingSpinner />;
@@ -305,12 +306,9 @@ export function DifficultyCountChart({ difficulty_counts }) {
 
   const rawDiffs = getQueryData(query);
   let difficulties = [...rawDiffs];
-  if (!showStandard) {
+  if (!showUntiered) {
     difficulties = difficulties.filter(
-      (d) =>
-        d.id !== DIFF_CONSTS.TRIVIAL_ID &&
-        d.id !== DIFF_CONSTS.UNDETERMINED_ID &&
-        d.sort > DIFF_CONSTS.STANDARD_SORT_END
+      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
     );
   }
 
@@ -336,11 +334,8 @@ export function DifficultyCountChart({ difficulty_counts }) {
     return difficulty ? getDifficultyNameShort(difficulty) : "";
   };
   const getChartDifficultyColor = (id) => {
-    // if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
-    //   return theme.palette.text.primary;
-    // } else {
-    return DIFFICULTIES[id].color;
-    // }
+    // return DIFFICULTIES[id].color;
+    return getNewDifficultyColors(settings, id).color;
   };
 
   const data = [];
@@ -355,8 +350,8 @@ export function DifficultyCountChart({ difficulty_counts }) {
   return (
     <Stack direction="column" gap={1}>
       <FormControlLabel
-        checked={showStandard}
-        onChange={() => setShowStandard(!showStandard)}
+        checked={showUntiered}
+        onChange={() => setShowUntiered(!showUntiered)}
         control={<Checkbox />}
         label={t("show_standard")}
       />
