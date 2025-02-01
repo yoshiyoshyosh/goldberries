@@ -158,6 +158,14 @@ $query = "UPDATE submission SET suggested_difficulty_id = NULL, is_personal = 'f
 $result = pg_query_params_or_die($DB, $query, [$tier['id']]);
 echo "Done unsetting difficulty suggestions\n\n";
 
+//Step 3.5: Check if there are any challenges still placed in t7.5
+$query = "SELECT * FROM challenge WHERE difficulty_id = $1";
+$result = pg_query_params_or_die($DB, $query, [$tier['id']]);
+if (pg_num_rows($result) > 0) {
+  echo "There are still challenges placed in tier 7.5\n";
+  die();
+}
+
 //Step 4: Delete tier 7.5
 echo "Deleting tier 7.5...\n";
 $query = "DELETE FROM difficulty WHERE id = $1";

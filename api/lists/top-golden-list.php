@@ -29,7 +29,7 @@ $is_player = isset($_GET['player']);
 $is_campaign = isset($_GET['campaign']);
 if ($is_player) {
   $where[] = "player_id = " . intval($_GET['player']);
-  $min_diff_sort = $MIN_SORT; //Show all
+  // $min_diff_sort = $MIN_SORT; //Show all
 } else {
   $where[] = "(player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
