@@ -8,23 +8,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 //TODO - Rework this entire endpoint when subtiers are removed
 
+//Fetch all difficulties first
+$query = "SELECT * FROM difficulty WHERE id NOT IN ($TRIVIAL_ID, $UNDETERMINED_ID) ORDER BY sort DESC";
+$result = pg_query_params_or_die($DB, $query);
+
+
+$difficulties = [];
+while ($row = pg_fetch_assoc($result)) {
+  $difficulty = new Difficulty();
+  $difficulty->apply_db_data($row, '');
+  $difficulties[] = $difficulty;
+}
+
+$selects = [];
+foreach ($difficulties as $difficulty) {
+  $selects[] = "COUNT(submission.id) FILTER (WHERE difficulty.name = '$difficulty->name') AS t$difficulty->sort";
+}
+$selects_str = implode(', ', $selects);
+
+
 $query = "SELECT
     player.id,
     player.name,
+    account.role AS account_role,
     account.name_color_start AS account_name_color_start,
     account.name_color_end AS account_name_color_end,
     account.input_method AS account_input_method,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 0') AS t0,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 1') AS t1,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 2') AS t2,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 3') AS t3,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 4') AS t4,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 5') AS t5,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 6') AS t6,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Tier 7') AS t7,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'High Standard') AS high_standard,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Mid Standard') AS mid_standard,
-    COUNT(submission.id) FILTER (WHERE difficulty.name = 'Low Standard') AS low_standard,
+    $selects_str,
     COUNT(submission.id) AS total
   FROM player
   LEFT JOIN submission ON submission.player_id = player.id
@@ -46,23 +56,14 @@ $data = array();
 while ($row = pg_fetch_assoc($result)) {
   $player = new Player();
   $player->apply_db_data($row, '', false);
-  // $player->expand_foreign_keys($row, 5);
-  $row_data = array();
 
+  $row_data = [];
   $row_data['player'] = $player;
-  $row_data['clears'] = array();
+  $row_data['clears'] = [];
+  foreach ($difficulties as $difficulty) {
+    $row_data['clears'][$difficulty->id] = intval($row["t$difficulty->sort"]);
+  }
   $row_data['total'] = intval($row['total']);
-  $row_data['clears']['2'] = intval($row['t0']);
-  $row_data['clears']['5'] = intval($row['t1']);
-  $row_data['clears']['8'] = intval($row['t2']);
-  $row_data['clears']['11'] = intval($row['t3']);
-  $row_data['clears']['14'] = intval($row['t4']);
-  $row_data['clears']['15'] = intval($row['t5']);
-  $row_data['clears']['16'] = intval($row['t6']);
-  $row_data['clears']['17'] = intval($row['t7']);
-  $row_data['clears']['22'] = intval($row['high_standard']);
-  $row_data['clears']['18'] = intval($row['mid_standard']);
-  $row_data['clears']['23'] = intval($row['low_standard']);
 
   $data[] = $row_data;
 }
