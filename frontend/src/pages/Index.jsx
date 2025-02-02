@@ -25,6 +25,7 @@ import {
 import { RecentSubmissions } from "../components/RecentSubmissions";
 import { DIFF_CONSTS, DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { Trans, useTranslation } from "react-i18next";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 export function PageIndex() {
   const { t } = useTranslation(undefined, { keyPrefix: "index" });
@@ -44,7 +45,9 @@ export function PageIndex() {
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
-              <ReworkNotice />
+              <ErrorBoundary>
+                <ReworkNotice />
+              </ErrorBoundary>
             </BorderedBox>
             <BorderedBox>
               <GettingStarted />

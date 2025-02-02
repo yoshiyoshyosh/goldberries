@@ -57,17 +57,20 @@ import { MapDisplay } from "../pages/Map";
 import Color from "color";
 import { useTranslation } from "react-i18next";
 import { FormSubmissionWrapper } from "./forms/Submission";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 export function TopGoldenList({ type, id, filter, isOverallList = false, useSuggestedRef = null }) {
   return (
     <Stack direction="column" gap={1}>
-      <TopGoldenListComponent
-        type={type}
-        id={id}
-        filter={filter}
-        isOverallList={isOverallList}
-        useSuggestedRef={useSuggestedRef}
-      />
+      <ErrorBoundary>
+        <TopGoldenListComponent
+          type={type}
+          id={id}
+          filter={filter}
+          isOverallList={isOverallList}
+          useSuggestedRef={useSuggestedRef}
+        />
+      </ErrorBoundary>
     </Stack>
   );
 }
@@ -433,7 +436,7 @@ function TopGoldenListTier({
                 sx={{ minWidth: "18px" }}
               ></Stack>
             </TableCell>
-            <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1, width: "300px" }}>
+            <TableCell colSpan={1} sx={{ ...cellStyle, pl: 1 }}>
               <Stack direction="row" gap={1} alignItems="center">
                 <Typography fontWeight="bold" sx={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
                   {tier.name}
@@ -701,8 +704,8 @@ function TopGoldenListRow({
           ...rowStyle,
           ...cellStyle,
           textAlign: "left",
-          width: "250px",
-          minWidth: "250px",
+          // width: "250px",
+          // minWidth: "250px",
           pl: 1,
         }}
       >
@@ -727,7 +730,7 @@ function TopGoldenListRow({
                 "&:hover": {
                   backgroundColor: darkmode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)",
                 },
-                maxWidth: "230px",
+                maxWidth: "250px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}

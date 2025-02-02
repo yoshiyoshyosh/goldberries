@@ -39,7 +39,11 @@
     "by": "by",
     "unknown_author": "Unknown Author",
     "unknown_date": "Unknown Date",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "error_handling": {
+      "header": "Something went wrong!",
+      "default": "Try refreshing your browser's cache (Ctrl + F5) or ask in #gb-report if the problem persists."
+    }
   },
   "components": {
     "difficulty_select": {
