@@ -52,10 +52,6 @@ if (isset($_GET['map'])) {
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
   $where[] = "(map_is_archived = FALSE OR map_is_archived IS NULL)";
 }
-// if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
-//   $where[] = "objective_is_arbitrary = false";
-//   $where[] = "(challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
-// }
 
 //Filters
 if (isset($_GET["hide_objectives"])) {
