@@ -19,6 +19,7 @@ import { useTheme } from "@emotion/react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCalendarXmark,
   faCheck,
   faCheckSquare,
   faEyeSlash,
@@ -26,6 +27,7 @@ import {
   faGreaterThanEqual,
   faLessThanEqual,
   faQuestionCircle,
+  faRemove,
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
@@ -70,6 +72,9 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
   const changedFilter = (key, newValue) => {
     setLocalFilter((prev) => ({ ...prev, [key]: newValue }));
   };
+  const resetDates = () => {
+    setLocalFilter((prev) => ({ ...prev, start_date: null, end_date: null }));
+  };
   const changedObjectiveFilter = (id, newValue) => {
     setLocalFilter((prev) => {
       const hide_objectives = prev.hide_objectives.includes(id)
@@ -84,14 +89,6 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
       return { ...prev, hide_objectives };
     });
   };
-
-  //useEffect to check if the current minimum difficulty is still valid (i.e. not referencing id 24 or id 1)
-  //if it is, unset it
-  // useEffect(() => {
-  //   if (localFilter.min_diff_id === 1 || localFilter.min_diff_id === 24) {
-  //     setLocalFilter((prev) => ({ ...prev, min_diff_id: DIFF_CONSTS.TIER_7_ID }));
-  //   }
-  // }, [localFilter.min_diff_id]);
 
   const queryObjectives = useGetObjectives();
   const objectives = getQueryData(queryObjectives);
@@ -182,10 +179,10 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
               <FormControlLabel
-                checked={localFilter.arbitrary}
-                onChange={(e) => changedFilter("arbitrary", e.target.checked)}
+                checked={localFilter.undetermined}
+                onChange={(e) => changedFilter("undetermined", e.target.checked)}
                 control={<Checkbox />}
-                label={t("show_arbitrary")}
+                label={t("show_undetermined")}
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
 
@@ -287,6 +284,16 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 sx={{ mt: 1 }}
               />
               <Button
+                variant="text"
+                fullWidth
+                onClick={resetDates}
+                sx={{ mt: 1 }}
+                size="small"
+                startIcon={<FontAwesomeIcon icon={faCalendarXmark} size="xs" />}
+              >
+                {t("date_range.clear_dates")}
+              </Button>
+              <Button
                 variant="contained"
                 fullWidth
                 onClick={handleClose}
@@ -320,6 +327,7 @@ export function getDefaultFilter() {
     archived: true,
     arbitrary: true,
     min_diff_id: DIFF_CONSTS.TIER_7_ID,
+    undetermined: true,
     clear_state: 0,
     sub_count: null,
     sub_count_is_min: false,

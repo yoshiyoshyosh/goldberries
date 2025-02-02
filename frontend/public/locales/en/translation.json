@@ -178,6 +178,7 @@
       "additional_filters": "Additional Filters",
       "show_archived": "Show Archived Maps",
       "show_arbitrary": "Show Arbitrary Challenges",
+      "show_undetermined": "Show Undetermined Tier",
       "minimum_tier": "Minimum Tier",
       "categories_hidden_one": "{{count}} Category Hidden",
       "categories_hidden_other": "{{count}} Categories Hidden",
@@ -203,7 +204,8 @@
         "label": "Date Range",
         "explanation": "Only considers submissions that were made during this date range.\nIf used with the submission count filter it requires the specified amount of submissions to be made within the date range.",
         "start_date": "Start Date",
-        "end_date": "End Date"
+        "end_date": "End Date",
+        "clear_dates": "Clear Dates"
       }
     },
     "chars_count_label": {

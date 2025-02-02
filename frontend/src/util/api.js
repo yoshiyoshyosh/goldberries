@@ -34,7 +34,7 @@ export function fetchGoldenList(
 export function fetchTopGoldenList(type, id = null, filter) {
   const data = {
     archived: filter.archived,
-    arbitrary: filter.arbitrary,
+    undetermined: filter.undetermined,
     min_diff_sort: difficultyToSort(filter.min_diff_id),
     hide_objectives: filter.hide_objectives,
     sub_count_is_min: filter.sub_count_is_min ?? false,

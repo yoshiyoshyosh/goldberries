@@ -94,7 +94,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     type +
     id +
     filter.archived +
-    filter.arbitrary +
+    filter.undetermined +
     filter.min_diff_id +
     filter.hide_objectives.join(",") +
     filter.sub_count +
@@ -125,7 +125,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     type,
     id,
     filter.archived,
-    filter.arbitrary,
+    filter.undetermined,
     filter.min_diff_id,
     filter.hide_objectives,
     filter.sub_count,
@@ -421,13 +421,7 @@ function TopGoldenListTier({
       <Table size="small">
         <TableHead onClick={() => setCollapsed(!collapsed)}>
           <TableRow>
-            <TableCell
-              sx={{
-                ...cellStyle,
-                p: 0,
-                // pl: 1,
-              }}
-            >
+            <TableCell sx={{ ...cellStyle, p: 0 }}>
               <Stack
                 direction="row"
                 gap={1}
@@ -529,6 +523,7 @@ function TopGoldenListTier({
                   campaign={campaign}
                   map={map}
                   isPlayer={isPlayer}
+                  isOverallList={isOverallList}
                   isOwnPlayer={isOwnPlayer}
                   useSuggested={useSuggested}
                   editSuggestions={editSuggestions}
@@ -570,6 +565,7 @@ function TopGoldenListRow({
   campaign,
   map,
   isPlayer,
+  isOverallList,
   isOwnPlayer,
   useSuggested,
   editSuggestions,
@@ -704,8 +700,8 @@ function TopGoldenListRow({
           ...rowStyle,
           ...cellStyle,
           textAlign: "left",
-          // width: "250px",
-          // minWidth: "250px",
+          width: isOverallList ? "250px" : undefined,
+          minWidth: isOverallList ? "250px" : undefined,
           pl: 1,
         }}
       >
@@ -730,7 +726,7 @@ function TopGoldenListRow({
                 "&:hover": {
                   backgroundColor: darkmode ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.12)",
                 },
-                maxWidth: "250px",
+                maxWidth: isOverallList ? "230px" : "250px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
