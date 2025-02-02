@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $all_submissions = isset($_GET['all_submissions']) && $_GET['all_submissions'] === "true";
 $limit_challenges = isset($_GET['limit_challenges']) ? intval($_GET['limit_challenges']) : null;
 
+$show_undetermined = isset($_GET['undetermined']) ? $_GET['undetermined'] === 'true' : true;
+
 //Advanced filters
 $sub_count = isset($_GET['sub_count']) ? intval($_GET['sub_count']) : null;
 $sub_count_is_min = isset($_GET['sub_count_is_min']) ? $_GET['sub_count_is_min'] === 'true' : true;
@@ -29,16 +31,18 @@ $is_player = isset($_GET['player']);
 $is_campaign = isset($_GET['campaign']);
 if ($is_player) {
   $where[] = "player_id = " . intval($_GET['player']);
-  // $min_diff_sort = $MIN_SORT; //Show all
 } else {
   $where[] = "(player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
 }
 if ($is_campaign) {
   $where[] = "campaign_id = " . intval($_GET['campaign']);
-  $min_diff_sort = $MIN_SORT;
 }
 
-$where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)"; //Always include undetermined challenges
+if ($show_undetermined) {
+  $where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)"; //Always include undetermined challenges
+} else {
+  $where[] = "difficulty_sort >= $min_diff_sort";
+}
 
 
 if (isset($_GET['map'])) {
@@ -48,10 +52,10 @@ if (isset($_GET['map'])) {
 if (!isset($_GET['archived']) || $_GET['archived'] === "false") {
   $where[] = "(map_is_archived = FALSE OR map_is_archived IS NULL)";
 }
-if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
-  $where[] = "objective_is_arbitrary = false";
-  $where[] = "(challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
-}
+// if (!isset($_GET['arbitrary']) || $_GET['arbitrary'] === "false") {
+//   $where[] = "objective_is_arbitrary = false";
+//   $where[] = "(challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)";
+// }
 
 //Filters
 if (isset($_GET["hide_objectives"])) {
@@ -94,6 +98,9 @@ $query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, su
 $result = pg_query_params_or_die($DB, $query);
 
 $difficulty_filter = "difficulty.sort >= $min_diff_sort OR difficulty.id = $UNDETERMINED_ID"; //Always include undetermined challenges
+if (!$show_undetermined) {
+  $difficulty_filter = "difficulty.sort >= $min_diff_sort";
+}
 $queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
 $resultDifficulties = pg_query_params_or_die($DB, $queryDifficulties);
 
