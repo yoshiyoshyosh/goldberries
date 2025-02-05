@@ -6,13 +6,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $maps = isset($_REQUEST['maps']) && $_REQUEST['maps'] === 'true';
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
+  $empty = isset($_REQUEST['empty']) && $_REQUEST['empty'] === 'true';
 
   $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
   $gb_id = isset($_REQUEST['gamebanana_id']) ? $_REQUEST['gamebanana_id'] : null;
 
   if ($id === "all" && $submissions === false) {
     //Special handling for this case
-    $query = "SELECT * FROM view_challenges";
+    $empty_where = $empty ? "" : "WHERE challenge_id IS NOT NULL";
+    $query = "SELECT * FROM view_campaigns $empty_where";
     $result = pg_query_params_or_die($DB, $query);
     $campaigns = parse_campaigns_no_submissions($result);
     api_write($campaigns);

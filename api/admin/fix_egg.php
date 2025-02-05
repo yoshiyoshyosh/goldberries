@@ -15,13 +15,13 @@ if (!is_admin($account)) {
 //Set content type to plain text
 header('Content-Type: text/plain');
 
-//Go through all suggestions that have a challenge_id set but dont have a current_difficulty_id set
+//Go through all submissions of egg that are in either tier 1, 2 or 3
 $query = "SELECT 
 	submission.id
 FROM submission 
 JOIN challenge ON submission.challenge_id = challenge.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-WHERE player_id = 20 AND difficulty.sort <= 5 AND submission.is_personal = true AND submission.suggested_difficulty_id IS NOT NULL
+WHERE submission.player_id = 20 AND difficulty.id IN (22, 18, 21)
 ORDER BY submission.id";
 $result = pg_query_params_or_die($DB, $query);
 
@@ -30,7 +30,11 @@ while ($row = pg_fetch_assoc($result)) {
   $i++;
   $submission_id = $row['id'];
   $submission = Submission::get_by_id($DB, $submission_id);
+
+  //Clear the difficulty suggestion
   $submission->is_personal = false;
+  $submission->suggested_difficulty_id = null;
+
   if ($submission->update($DB)) {
     echo "Updated submission #{$i}: $submission_id\n";
   } else {

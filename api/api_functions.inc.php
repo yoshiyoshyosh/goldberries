@@ -97,7 +97,7 @@ function api_write_for_profiler($output, $flags)
 
 function api_unified_get($DB, string $table_noesc, $object_skel)
 {
-  $json_arr = array();
+  $json_arr = [];
   $table = pg_escape_identifier(strtolower($table_noesc));
 
   if (isset($_GET['all'])) {
@@ -161,7 +161,7 @@ function format_assoc_array_bools($arr)
 
 function parse_campaigns($result): array
 {
-  $campaigns = array(); //dictionary id -> campaign
+  $campaigns = []; //dictionary id -> campaign
 
   //loop through result rows
   while ($row = pg_fetch_assoc($result)) {
@@ -169,8 +169,8 @@ function parse_campaigns($result): array
     if (!array_key_exists($campaign_id, $campaigns)) {
       $campaign = new Campaign();
       $campaign->apply_db_data($row, "campaign_");
-      $campaign->maps = array();
-      $campaign->challenges = array();
+      $campaign->maps = [];
+      $campaign->challenges = [];
       $campaigns[$campaign_id] = $campaign;
     }
     $campaign = $campaigns[$campaign_id];
@@ -181,7 +181,7 @@ function parse_campaigns($result): array
       if (!array_key_exists($map_id, $campaign->maps)) {
         $map = new Map();
         $map->apply_db_data($row, "map_");
-        $map->challenges = array();
+        $map->challenges = [];
         $campaign->maps[$map_id] = $map;
       }
       $map = $campaign->maps[$map_id];
@@ -192,7 +192,7 @@ function parse_campaigns($result): array
     if (($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
       $challenge = new Challenge();
       $challenge->apply_db_data($row, "challenge_");
-      $challenge->submissions = array();
+      $challenge->submissions = [];
       $challenge->expand_foreign_keys($row, 1, false);
       if ($challenge->map_id === null) {
         $campaign->challenges[$challenge_id] = $challenge;
@@ -230,7 +230,7 @@ function parse_campaigns($result): array
 
 function parse_campaigns_no_submissions($result): array
 {
-  $campaigns = array(); //dictionary id -> campaign
+  $campaigns = []; //dictionary id -> campaign
 
   //loop through result rows
   while ($row = pg_fetch_assoc($result)) {
@@ -238,8 +238,8 @@ function parse_campaigns_no_submissions($result): array
     if (!array_key_exists($campaign_id, $campaigns)) {
       $campaign = new Campaign();
       $campaign->apply_db_data($row, "campaign_");
-      $campaign->maps = array();
-      $campaign->challenges = array();
+      $campaign->maps = [];
+      $campaign->challenges = [];
       $campaigns[$campaign_id] = $campaign;
     }
     $campaign = $campaigns[$campaign_id];
@@ -250,7 +250,7 @@ function parse_campaigns_no_submissions($result): array
       if (!array_key_exists($map_id, $campaign->maps)) {
         $map = new Map();
         $map->apply_db_data($row, "map_");
-        $map->challenges = array();
+        $map->challenges = [];
         $campaign->maps[$map_id] = $map;
       }
       $map = $campaign->maps[$map_id];
@@ -258,11 +258,12 @@ function parse_campaigns_no_submissions($result): array
 
     $challenge_id = intval($row['challenge_id']);
     $challenge = null;
-    if (($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
+    if ($challenge_id !== 0 && ($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
       $challenge = new Challenge();
       $challenge->apply_db_data($row, "challenge_");
       $challenge->submissions = null;
-      $challenge->data['count_submissions'] = intval($row['count_submissions']);
+      //When using view_campaigns, count_submissions is no longer available.
+      // $challenge->data['count_submissions'] = intval($row['count_submissions']);
       $challenge->expand_foreign_keys($row, 1, false);
       if ($challenge->map_id === null) {
         $campaign->challenges[$challenge_id] = $challenge;
@@ -286,6 +287,52 @@ function parse_campaigns_no_submissions($result): array
     $campaign->challenges = array_values($campaign->challenges);
   }
   $campaigns = array_values($campaigns);
+
+  return $campaigns;
+}
+
+//This function parses the view_campaigns response into a flat array of campaigns, instead of
+//reconstructing the normal hierarchy. This is useful for paginated results.
+function parse_campaigns_flat($result): array
+{
+  $campaigns = []; //dictionary array of campaigns (can contain duplicate campaigns)
+
+  //loop through result rows
+  while ($row = pg_fetch_assoc($result)) {
+    $campaign_id = intval($row['campaign_id']);
+    $campaign = new Campaign();
+    $campaign->apply_db_data($row, "campaign_");
+    $campaign->maps = [];
+    $campaign->challenges = [];
+    $campaigns[] = $campaign;
+
+    $map = null;
+    if (isset($row['map_id'])) {
+      $map_id = intval($row['map_id']);
+      if (!array_key_exists($map_id, $campaign->maps)) {
+        $map = new Map();
+        $map->apply_db_data($row, "map_");
+        $map->challenges = [];
+        $campaign->maps[] = $map;
+      }
+    }
+
+    $challenge_id = intval($row['challenge_id']);
+    $challenge = null;
+    if ($challenge_id !== 0 && ($map === null || !array_key_exists($challenge_id, $map->challenges)) && !array_key_exists($challenge_id, $campaign->challenges)) {
+      $challenge = new Challenge();
+      $challenge->apply_db_data($row, "challenge_");
+      $challenge->submissions = null;
+      //When using view_campaigns, count_submissions is no longer available.
+      // $challenge->data['count_submissions'] = intval($row['count_submissions']);
+      $challenge->expand_foreign_keys($row, 1, false);
+      if ($challenge->map_id === null) {
+        $campaign->challenges[] = $challenge;
+      } else {
+        $map->challenges[] = $challenge;
+      }
+    }
+  }
 
   return $campaigns;
 }
