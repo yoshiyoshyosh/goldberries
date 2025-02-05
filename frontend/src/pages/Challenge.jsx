@@ -88,6 +88,7 @@ import { memo, useState } from "react";
 import { jsonDateToJsDate } from "../util/util";
 import { ToggleSubmissionFcButton } from "../components/ToggleSubmissionFc";
 import { COLLECTIBLES, getCollectibleIcon, getCollectibleName } from "../components/forms/Map";
+import { useTheme } from "@emotion/react";
 
 const displayNoneOnMobile = {
   display: {
@@ -494,26 +495,28 @@ export function ChallengeSubmissionTable({
         <TableHead>
           <TableRow>
             <TableCell width={1} sx={displayNoneOnMobile}></TableCell>
-            <TableCell width={compact ? 1 : undefined}>{t_g("player", { count: 1 })}</TableCell>
+            <TableCell width={compact ? 1 : undefined} sx={{ pl: 1.5, pr: 0.5 }}>
+              {t_g("player", { count: 1 })}
+            </TableCell>
             {!compact && auth.hasHelperPriv && (
               <TableCell width={1} sx={{ ...displayNoneOnMobile, px: 0 }}></TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={{ px: 0.75 }}>
+              <TableCell width={1} align="center" sx={{ pl: 1.5, pr: 0.5 }}>
                 <Tooltip arrow placement="top" title={t_fs("verifier_notes")}>
                   <FontAwesomeIcon icon={faCircleExclamation} />
                 </Tooltip>
               </TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={{ px: 0.75 }}>
+              <TableCell width={1} align="center" sx={{ pl: 1.5, pr: 0.5 }}>
                 <Tooltip arrow placement="top" title={t_fs("player_notes")}>
                   <FontAwesomeIcon icon={faComment} />
                 </Tooltip>
               </TableCell>
             )}
             {!compact && (
-              <TableCell width={1} align="center" sx={{ px: 0.75, ...displayNoneOnMobile }}>
+              <TableCell width={1} align="center" sx={{ pl: 1.5, pr: 0.5, ...displayNoneOnMobile }}>
                 <FontAwesomeIcon icon={faClock} />
               </TableCell>
             )}
@@ -529,6 +532,8 @@ export function ChallengeSubmissionTable({
                     xs: "normal",
                     sm: "nowrap",
                   },
+                  pl: 1.5,
+                  pr: 1,
                 }}
               >
                 {t("suggestion")}
@@ -569,57 +574,80 @@ export function ChallengeSubmissionTable({
 export function ChallengeSubmissionRow({ submission, index, compact, hideSubmissionIcon }) {
   const auth = useAuth();
   const { settings } = useAppSettings();
+  const theme = useTheme();
   const nameStyle = getPlayerNameColorStyle(submission.player, settings);
+  const linkStyle = {
+    display: "block",
+    textDecoration: "none",
+    color: "inherit",
+    padding: "5px 4px 5px 12px",
+  };
 
   return (
-    <TableRow>
-      <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile }}>
-        #{index + 1}
+    <TableRow
+      sx={{
+        "&:hover": { backgroundColor: theme.palette.background.lightShade, cursor: "pointer" },
+        transition: "0.1s background",
+      }}
+    >
+      <TableCell width={1} sx={{ pr: 0, ...displayNoneOnMobile, p: 0 }}>
+        <Link to={"/submission/" + submission.id} style={linkStyle}>
+          #{index + 1}
+        </Link>
       </TableCell>
-      <TableCell width={compact ? 1 : undefined}>
-        <Stack direction="row" gap={1} alignItems="center">
-          {!hideSubmissionIcon && (
-            <StyledLink to={"/submission/" + submission.id}>
-              <FontAwesomeIcon icon={faBook} />
+      <TableCell width={compact ? 1 : undefined} sx={{ p: 0 }}>
+        <Link to={"/submission/" + submission.id} style={linkStyle}>
+          <Stack direction="row" gap={1} alignItems="center">
+            <StyledLink
+              to={"/player/" + submission.player.id}
+              style={{
+                whiteSpace: "nowrap",
+                maxWidth: "150px",
+                overflow: "hidden",
+                ...nameStyle,
+              }}
+            >
+              {submission.player.name}
             </StyledLink>
-          )}
-          <StyledLink
-            to={"/player/" + submission.player.id}
-            style={{
-              whiteSpace: "nowrap",
-              maxWidth: "150px",
-              overflow: "hidden",
-              ...nameStyle,
-            }}
-          >
-            {submission.player.name}
-          </StyledLink>
-          <SubmissionFcIcon submission={submission} height="1.3em" />
-        </Stack>
+            <SubmissionFcIcon submission={submission} height="1.3em" />
+          </Stack>
+        </Link>
       </TableCell>
       {!compact && auth.hasHelperPriv && (
-        <TableCell width={1} align="center" sx={{ ...displayNoneOnMobile, px: 0 }}>
+        <TableCell width={1} align="center" sx={{ ...displayNoneOnMobile, p: 0 }}>
           <ToggleSubmissionFcButton submission={submission} />
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={{ px: 0.75 }}>
-          {submission.verifier_notes && <VerifierNotesIcon notes={submission.verifier_notes} />}
+        <TableCell width={1} align="center" sx={{ p: 0 }}>
+          <Link
+            to={"/submission/" + submission.id}
+            style={{ ...linkStyle, height: "34px", display: "flex", alignItems: "center" }}
+          >
+            {submission.verifier_notes && <VerifierNotesIcon notes={submission.verifier_notes} />}
+          </Link>
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={{ px: 0.75 }}>
-          {submission.player_notes && <PlayerNotesIcon notes={submission.player_notes} />}
+        <TableCell width={1} align="center" sx={{ p: 0 }}>
+          <Link
+            to={"/submission/" + submission.id}
+            style={{ ...linkStyle, height: "34px", display: "flex", alignItems: "center" }}
+          >
+            {submission.player_notes && <PlayerNotesIcon notes={submission.player_notes} />}
+          </Link>
         </TableCell>
       )}
       {!compact && (
-        <TableCell width={1} align="center" sx={{ px: 0.75, ...displayNoneOnMobile }}>
-          {submission.date_achieved &&
-            jsonDateToJsDate(submission.date_achieved).toLocaleDateString(navigator.language, {
-              year: "2-digit",
-              month: "2-digit",
-              day: "2-digit",
-            })}
+        <TableCell width={1} align="center" sx={{ p: 0, ...displayNoneOnMobile }}>
+          <Link to={"/submission/" + submission.id} style={linkStyle}>
+            {submission.date_achieved &&
+              jsonDateToJsDate(submission.date_achieved).toLocaleDateString(navigator.language, {
+                year: "2-digit",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+          </Link>
         </TableCell>
       )}
       <TableCell width={1} align="center" sx={{ pl: 0.75, pr: 0.25 }}>
@@ -628,8 +656,13 @@ export function ChallengeSubmissionRow({ submission, index, compact, hideSubmiss
         </StyledLink>
       </TableCell>
       {compact ? null : (
-        <TableCell width={1} align="center">
-          <DifficultyChip difficulty={submission.suggested_difficulty} isPersonal={submission.is_personal} />
+        <TableCell width={1} align="center" sx={{ p: 0 }}>
+          <Link to={"/submission/" + submission.id} style={linkStyle}>
+            <DifficultyChip
+              difficulty={submission.suggested_difficulty}
+              isPersonal={submission.is_personal}
+            />
+          </Link>
         </TableCell>
       )}
     </TableRow>

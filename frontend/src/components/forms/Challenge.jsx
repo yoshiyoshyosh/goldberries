@@ -129,7 +129,12 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         {t_g("challenge", { count: 1 })} ({newChallenge ? t_g("new") : challenge.id})
       </Typography>
 
-      <CampaignSelect selected={campaign} setSelected={(campaign) => setCampaign(campaign)} sx={{ mt: 2 }} />
+      <CampaignSelect
+        selected={campaign}
+        setSelected={(campaign) => setCampaign(campaign)}
+        empty
+        sx={{ mt: 2 }}
+      />
       {campaign && (
         <MapSelect campaign={campaign} selected={map} setSelected={(map) => setMap(map)} sx={{ mt: 2 }} />
       )}

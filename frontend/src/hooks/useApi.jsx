@@ -75,6 +75,7 @@ import {
   fetchAllChallengesInCampaign,
   fetchTrafficStatsGlobal,
   fetchTrafficStatsGlobalRequests,
+  fetchChallenges,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -100,10 +101,10 @@ export function useGetGoldenList(type, id = null, include_archived = false, incl
   });
 }
 
-export function useGetAllCampaigns() {
+export function useGetAllCampaigns(empty) {
   return useQuery({
-    queryKey: ["all_campaigns"],
-    queryFn: () => fetchAllCampaigns(),
+    queryKey: ["all_campaigns", empty],
+    queryFn: () => fetchAllCampaigns(empty),
     onError: errorToast,
   });
 }
@@ -129,6 +130,12 @@ export function useGetAllChallengesInCampaign(campaignId) {
     queryFn: () => fetchAllChallengesInCampaign(campaignId),
     onError: errorToast,
     enabled: !!campaignId,
+  });
+}
+export function useGetManageChallenges(page, perPage, search) {
+  return useQuery({
+    queryKey: ["manage_challenges", page, perPage, search],
+    queryFn: () => fetchChallenges(page, perPage, search),
   });
 }
 

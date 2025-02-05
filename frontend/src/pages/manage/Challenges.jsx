@@ -49,10 +49,12 @@ import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 import { FormChallengeWrapper } from "../../components/forms/Challenge";
 import { FormMapWrapper } from "../../components/forms/Map";
 import {
+  getQueryData,
   useChallengeMarkPersonal,
   useDeleteCampaign,
   useDeleteChallenge,
   useDeleteMap,
+  useGetManageChallenges,
   useMergeChallenges,
   useSplitChallenge,
 } from "../../hooks/useApi";
@@ -149,10 +151,7 @@ function ManageChallengesSearchField({ search, setSearch }) {
 function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, modalRefs }) {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.challenges" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const query = useQuery({
-    queryKey: ["manage_challenges", page, perPage, search],
-    queryFn: () => fetchChallenges(page, perPage, search),
-  });
+  const query = useGetManageChallenges(page, perPage, search);
 
   const openModal = (ref, data) => {
     ref.current.open(data);
@@ -205,7 +204,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
             setPage(1);
           }}
           labelRowsPerPage={t_g("table_rows_per_page")}
-          rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: t_g("all") }]}
+          rowsPerPageOptions={[10, 25, 50, 100]}
           slotProps={{
             select: {
               MenuProps: {
@@ -220,7 +219,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
     return <ErrorDisplay error={query.error} />;
   }
 
-  const { challenges, max_page: maxPage, max_count: maxCount } = query.data.data;
+  const { campaigns, max_page: maxPage, max_count: maxCount } = getQueryData(query);
 
   return (
     <>
@@ -237,12 +236,15 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
             </TableRow>
           </TableHead>
           <TableBody>
-            {challenges.map((challenge) => {
-              const map = challenge.map;
-              const campaign = getChallengeCampaign(challenge);
+            {campaigns.map((campaign, index) => {
+              const map = campaign.maps[0];
+              const challenge = map ? map.challenges[0] : campaign.challenges[0];
+
+              //Both map and challenge can be undefined here
+              const key = campaign.id + (map ? map.id : "") + (challenge ? challenge.id : "");
 
               return (
-                <TableRow key={challenge.id}>
+                <TableRow key={key}>
                   <TableCell align="left" width="35%">
                     <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
                       <Typography variant="body2">{getCampaignName(campaign, t_g)}</Typography>
@@ -282,7 +284,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                   <TableCell align="left" width="35%">
                     {map && (
                       <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
-                        <Typography variant="body2">{getMapName(challenge.map, campaign)}</Typography>
+                        <Typography variant="body2">{getMapName(map, campaign)}</Typography>
                         <CustomizedMenu
                           button={
                             <IconButton
@@ -316,56 +318,58 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                     )}
                   </TableCell>
                   <TableCell align="left" width="30%">
-                    <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
-                      <Typography variant="body2">{getChallengeName(challenge)}</Typography>
-                      <CustomizedMenu
-                        button={
-                          <IconButton size="small" color="primary" aria-label="edit">
-                            <FontAwesomeIcon size="xs" icon={faEdit} />
-                          </IconButton>
-                        }
-                      >
-                        <MenuItem
-                          disableRipple
-                          onClick={() => openModal(modalRefs.challenge.edit, challenge)}
+                    {challenge && (
+                      <Stack direction="row" gap={1} alignItems="center" justifyContent="flex-start">
+                        <Typography variant="body2">{getChallengeName(challenge)}</Typography>
+                        <CustomizedMenu
+                          button={
+                            <IconButton size="small" color="primary" aria-label="edit">
+                              <FontAwesomeIcon size="xs" icon={faEdit} />
+                            </IconButton>
+                          }
                         >
-                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
-                          {t("buttons.challenge.edit")}
-                        </MenuItem>
-                        <MenuItem
-                          disableRipple
-                          onClick={() => openModal(modalRefs.challenge.merge, challenge)}
-                        >
-                          <FontAwesomeIcon
-                            style={{ marginRight: "5px" }}
-                            icon={challenge.has_fc ? faArrowsSplitUpAndLeft : faArrowsToDot}
-                          />
-                          {t(challenge.has_fc ? "buttons.challenge.split" : "buttons.challenge.merge")}
-                        </MenuItem>
-                        <MenuItem
-                          disableRipple
-                          onClick={() => openModal(modalRefs.challenge.markPersonal, challenge)}
-                        >
-                          <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faMarker} />
-                          {t("buttons.challenge.mark_personal")}
-                        </MenuItem>
-                        <Divider sx={{ my: 0.5 }} />
-                        <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
-                          <Button
-                            onClick={() => openModal(modalRefs.challenge.delete, challenge)}
-                            color="error"
+                          <MenuItem
                             disableRipple
-                            sx={{ px: "16px" }}
+                            onClick={() => openModal(modalRefs.challenge.edit, challenge)}
                           >
-                            <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
-                            {t("buttons.challenge.delete")}
-                          </Button>
-                        </MenuItem>
-                      </CustomizedMenu>
-                    </Stack>
+                            <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faEdit} />
+                            {t("buttons.challenge.edit")}
+                          </MenuItem>
+                          <MenuItem
+                            disableRipple
+                            onClick={() => openModal(modalRefs.challenge.merge, challenge)}
+                          >
+                            <FontAwesomeIcon
+                              style={{ marginRight: "5px" }}
+                              icon={challenge.has_fc ? faArrowsSplitUpAndLeft : faArrowsToDot}
+                            />
+                            {t(challenge.has_fc ? "buttons.challenge.split" : "buttons.challenge.merge")}
+                          </MenuItem>
+                          <MenuItem
+                            disableRipple
+                            onClick={() => openModal(modalRefs.challenge.markPersonal, challenge)}
+                          >
+                            <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faMarker} />
+                            {t("buttons.challenge.mark_personal")}
+                          </MenuItem>
+                          <Divider sx={{ my: 0.5 }} />
+                          <MenuItem disableRipple disableGutters sx={{ py: 0 }}>
+                            <Button
+                              onClick={() => openModal(modalRefs.challenge.delete, challenge)}
+                              color="error"
+                              disableRipple
+                              sx={{ px: "16px" }}
+                            >
+                              <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
+                              {t("buttons.challenge.delete")}
+                            </Button>
+                          </MenuItem>
+                        </CustomizedMenu>
+                      </Stack>
+                    )}
                   </TableCell>
                   <TableCell align="center" width={1}>
-                    {challenge.data.count_submissions}
+                    {challenge && <>{challenge.data.count_submissions}</>}
                   </TableCell>
                 </TableRow>
               );

@@ -148,6 +148,7 @@ export function FormMap({ map, onSave, ...props }) {
           <CampaignSelect
             selected={field.value}
             setSelected={(campaign) => field.onChange(campaign)}
+            empty
             sx={{ mt: 2 }}
           />
         )}
