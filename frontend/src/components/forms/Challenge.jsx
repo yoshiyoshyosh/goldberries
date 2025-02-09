@@ -8,7 +8,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   DifficultySelectControlled,
   ObjectiveSelect,
-  FullMapSelect,
   CampaignSelect,
   MapSelect,
 } from "../GoldberriesComponents";

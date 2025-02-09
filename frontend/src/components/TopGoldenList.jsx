@@ -407,7 +407,7 @@ function TopGoldenListTier({
 
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
   const sortByFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
-  sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers);
+  sortChallengesForTGL(challengesInTier, maps, campaigns, sortByFractionalTiers);
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
   const showOldTierNames = settings.general.showOldTierNames;
@@ -540,7 +540,7 @@ function TopGoldenListTier({
   );
 }
 export function sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers) {
-  challenges.sort((a, b) => {
+  const sortChallenges = (a, b) => {
     //If fraction is available, use that for sorting first. if no frac is available, treat it as 0.5
     if (sortByFractionalTiers) {
       const fracA = a.data.frac !== false && a.data.frac !== undefined ? a.data.frac : 0.5;
@@ -554,8 +554,11 @@ export function sortChallengesForTGL(challenges, maps, campaigns, sortByFraction
     const mapB = maps[b.map_id];
     const campaignA = mapA === undefined ? campaigns[a.campaign_id] : campaigns[mapA.campaign_id];
     const campaignB = mapB === undefined ? campaigns[b.campaign_id] : campaigns[mapB.campaign_id];
-    return getMapName(mapA, campaignA, true, false).localeCompare(getMapName(mapB, campaignB, true, false));
-  });
+    const mapNameA = getMapName(mapA, campaignA, true, false);
+    const mapNameB = getMapName(mapB, campaignB, true, false);
+    return mapNameA.localeCompare(mapNameB);
+  };
+  challenges.sort(sortChallenges);
   return challenges;
 }
 

@@ -92,7 +92,7 @@ function FAQEntryVanillaReferences({}) {
     { name: "3A [C], 4A [FC], 5A [C], 6A [C/FC], 8A [C/FC], 3B, 4B, 5B", difficulty_id: 18 },
     { name: "3A [FC], 5A [FC], 7A [C], 6B, 7B, 8B", difficulty_id: 22 },
     { name: "7A [FC]", difficulty_id: 17 },
-    { name: "1A Winged Golden", difficulty_id: 21 },
+    { name: "1A Double Golden", difficulty_id: 21 },
     { name: "Farewell [C/FC]", difficulty_id: 14 },
     { name: "Farewell [No DTS] [C/FC]", difficulty_id: 12 },
     { name: "Any%", difficulty_id: 14, note: "Forsaken City through The Summit" },

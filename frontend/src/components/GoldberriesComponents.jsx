@@ -558,32 +558,6 @@ export function FullChallengeSelect({ challenge, setChallenge, disabled }) {
   );
 }
 
-export function FullMapSelect({ map, setMap, disabled }) {
-  const [campaign, setCampaign] = useState(map?.campaign ?? null);
-
-  const onCampaignSelect = (campaign) => {
-    setCampaign(campaign);
-    if (campaign !== null && campaign.maps.length === 1) {
-      setMap(campaign.maps[0]);
-    } else {
-      setMap(null);
-    }
-  };
-
-  useEffect(() => {
-    if (map && map.campaign) {
-      setCampaign(map.campaign);
-    }
-  }, [map]);
-
-  return (
-    <Stack direction="column" gap={2}>
-      <CampaignSelect selected={campaign} setSelected={onCampaignSelect} disabled={disabled} />
-      {campaign && <MapSelect campaign={campaign} selected={map} setSelected={setMap} disabled={disabled} />}
-    </Stack>
-  );
-}
-
 // ===== Player Components =====
 export function PlayerSelect({ type, value, onChange, label, ...props }) {
   const { t } = useTranslation();
