@@ -63,10 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       // Insert
       $map->date_added = new JsonDateTime();
-      if (!$map->insert($DB)) {
-        die_json(500, "Failed to create map ($map->id)");
-      } else {
+      if ($map->insert($DB)) {
+        $map->generate_create_changelog($DB);
         log_info("'{$account->player->name}' created {$map}", "Map");
+      } else {
+        die_json(500, "Failed to create map ($map->id)");
       }
     }
   }

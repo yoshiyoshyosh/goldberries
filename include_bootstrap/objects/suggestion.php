@@ -255,9 +255,9 @@ class Suggestion extends DbObject
   function fetch_associated_content($DB)
   {
     if ($this->challenge_id !== null) {
-      $this->challenge->fetch_submissions($DB);
+      $this->challenge->fetch_submissions($DB, true);
       if ($this->challenge->map_id !== null) {
-        $this->challenge->map->fetch_challenges($DB, true, false);
+        $this->challenge->map->fetch_challenges($DB, true, false, true);
         //Remove the $this->challenge from the map's challenges
         $this->challenge->map->challenges = array_values(array_filter($this->challenge->map->challenges, function ($c) {
           return $c->id !== $this->challenge->id;

@@ -214,6 +214,12 @@ class Challenge extends DbObject
     return "(Challenge, id:{$this->id}, suffix:'{$this->get_suffix()}')";
   }
 
+  function generate_create_changelog($DB, $from_split = false)
+  {
+    $addition = $from_split ? " via split" : "";
+    Change::create_change($DB, 'challenge', $this->id, "Created challenge" . $addition);
+  }
+
   static function generate_changelog($DB, $old, $new)
   {
     if ($old->id !== $new->id)

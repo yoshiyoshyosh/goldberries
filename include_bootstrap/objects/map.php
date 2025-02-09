@@ -290,6 +290,11 @@ class Map extends DbObject
     return "(Map, id:{$this->id}, name:'{$this->name}')";
   }
 
+  function generate_create_changelog($DB)
+  {
+    Change::create_change($DB, 'map', $this->id, "Created map");
+  }
+
   static function generate_changelog($DB, $old, $new)
   {
     if ($old->id !== $new->id)

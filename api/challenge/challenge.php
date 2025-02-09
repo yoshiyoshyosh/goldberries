@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$new_challenge->insert($DB)) {
       die_json(500, "Failed to create challenge");
     }
+    $new_challenge->generate_create_changelog($DB, true);
     log_info("'{$account->player->name}' created {$new_challenge} via challenge splitting", "Challenge");
 
     //Step 2: Update original challenge to be non-FC
@@ -234,6 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $challenge->date_created = new JsonDateTime();
     $challenge->is_placed = true;
     if ($challenge->insert($DB)) {
+      $challenge->generate_create_changelog($DB);
       log_info("'{$account->player->name}' created {$challenge}", "Challenge");
       $challenge->expand_foreign_keys($DB, 5);
       api_write($challenge);

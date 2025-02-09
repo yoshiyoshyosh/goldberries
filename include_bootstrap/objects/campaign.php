@@ -254,6 +254,11 @@ class Campaign extends DbObject
     return "(Campaign, id:{$this->id}, name:'{$this->get_name()}')";
   }
 
+  function generate_create_changelog($DB)
+  {
+    Change::create_change($DB, 'campaign', $this->id, "Created campaign");
+  }
+
   static function generate_changelog($DB, $old, $new)
   {
     if ($old->id !== $new->id)
