@@ -171,7 +171,7 @@ export function SuggestedDifficultyTierCounts({
           )}
           <Grid item key={i} xs={12} md={width}>
             <Stack direction={direction} flexWrap="wrap" gap={2} sx={sx} alignItems="center">
-              {showLabel && <Chip label={datasets[i].label} size="small" />}
+              {showLabel && datasets[i].label && <Chip label={datasets[i].label} size="small" />}
               {data.length === 0 && !hideIfEmpty && (
                 <Typography variant="body2" whiteSpace={nowrap ? "nowrap" : "initial"}>
                   {t("no_suggestions_yet")}

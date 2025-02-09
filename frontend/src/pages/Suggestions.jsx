@@ -906,11 +906,7 @@ function ViewSuggestionModal({ id }) {
               </Divider>
             </Grid>
             <Grid item xs={12}>
-              <ChallengeSubmissionTable
-                challenge={suggestion.challenge}
-                hideSubmissionIcon
-                onlyShowFirstFew
-              />
+              <ChallengeSubmissionTable challenge={suggestion.challenge} onlyShowFirstFew />
             </Grid>
             {suggestion.challenge.map_id !== null && suggestion.challenge.map.challenges.length > 0 && (
               <>
@@ -925,7 +921,7 @@ function ViewSuggestionModal({ id }) {
                       <Typography variant="body1">
                         {getChallengeNameShort(challenge)} {getChallengeSuffix(challenge)}
                       </Typography>
-                      <ChallengeSubmissionTable challenge={challenge} hideSubmissionIcon onlyShowFirstFew />
+                      <ChallengeSubmissionTable challenge={challenge} onlyShowFirstFew />
                     </Grid>
                   </>
                 ))}
@@ -1119,7 +1115,7 @@ function CreateSuggestionModal({ onSuccess }) {
             <DifficultyChip difficulty={fetchedChallenge.difficulty} />
           </Grid>
           <Grid item xs={12}>
-            <ChallengeSubmissionTable challenge={fetchedChallenge} hideSubmissionIcon />
+            <ChallengeSubmissionTable challenge={fetchedChallenge} onlyShowFirstFew />
           </Grid>
           <Grid item xs={12}>
             <Divider />
@@ -1133,7 +1129,12 @@ function CreateSuggestionModal({ onSuccess }) {
             <Typography variant="body1" gutterBottom>
               {t("totals")}
             </Typography>
-            <SuggestedDifficultyTierCounts challenge={fetchedChallenge} direction="row" hideIfEmpty />
+            <SuggestedDifficultyTierCounts
+              challenge={fetchedChallenge}
+              direction="column"
+              hideIfEmpty
+              stackGrid
+            />
           </Grid>
         </>
       )}

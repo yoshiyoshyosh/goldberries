@@ -47,13 +47,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DIFFICULTIES, DIFF_CONSTS } from "../util/constants";
+import { DIFFICULTIES, DIFF_CONSTS, getNewDifficultyColors } from "../util/constants";
 import { useTheme } from "@emotion/react";
 import { Trans, useTranslation } from "react-i18next";
 import { getCampaignName, getDifficultyName, getMapName } from "../util/data_util";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { PieArc } from "@mui/x-charts/PieChart";
+import { useAppSettings } from "../hooks/AppSettingsProvider";
 
 const STATS_TABS = [
   {
@@ -286,9 +287,10 @@ function TabMonthlyTierClears() {
         {t("text")}
       </Typography>
       <Stack direction="column" gap={1}>
-        <Typography variant="h5">{t("total_tiered")}</Typography>
+        <Typography variant="h5">{t("total_submissions")}</Typography>
         <TabMonthlyTierClearsSingleChart difficulty={null} />
       </Stack>
+      <Divider sx={{ my: 2 }} />
       {difficulties.map((difficulty) => (
         <Stack key={difficulty.id} direction="column" gap={1}>
           <Typography variant="h5">{getDifficultyName(difficulty)}</Typography>
@@ -301,6 +303,7 @@ function TabMonthlyTierClears() {
 
 function TabMonthlyTierClearsSingleChart({ difficulty }) {
   const { t } = useTranslation(undefined, { keyPrefix: "stats.tabs.historical_clears" });
+  const { settings } = useAppSettings();
   const theme = useTheme();
   const queryData = useGetStatsMonthlyTierClears();
 
@@ -316,10 +319,9 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
   const getChartDifficultyColor = (id) => {
     if (id === "total") {
       return theme.palette.text.primary;
-    } else if (DIFF_CONSTS.STANDARD_IDS.find((item) => id === item) !== undefined) {
-      return theme.palette.text.primary;
     } else {
-      return DIFFICULTIES[id].color;
+      const color = getNewDifficultyColors(settings, id).color;
+      return !settings.visual.darkmode && color === "#ffffff" ? "#222222" : color;
     }
   };
 
@@ -333,7 +335,7 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
       id === "total"
         ? Object.keys(entry)
             .filter((key) => !isNaN(key))
-            .reduce((acc, key) => (key === "18" || key === "22" || key === "23" ? acc : acc + entry[key]), 0)
+            .reduce((acc, key) => acc + entry[key], 0)
         : entry[id] || 0;
     data.push({
       [id]: value,
@@ -364,7 +366,7 @@ function TabMonthlyTierClearsSingleChart({ difficulty }) {
             dataKey={difficulty?.id || "total"}
             stroke={getChartDifficultyColor(difficulty?.id || "total")}
             strokeWidth={3}
-            name={difficulty ? getDifficultyName(difficulty) : t("total_tiered")}
+            name={difficulty ? getDifficultyName(difficulty) : t("total_submissions")}
           />
         </LineChart>
       </ResponsiveContainer>

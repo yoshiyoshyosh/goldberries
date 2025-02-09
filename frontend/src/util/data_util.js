@@ -94,6 +94,18 @@ export function getChallengeFlags(challenge) {
   return flags;
 }
 
+export function getChallengeInvertHierarchy(campaign, map, challenge) {
+  const campaignCopy = { ...campaign, challenges: null, maps: null };
+  const challengeCopy = { ...challenge };
+  if (map) {
+    const mapCopy = { ...map, challenges: null, campaign: campaignCopy };
+    challengeCopy.map = mapCopy;
+  } else {
+    challengeCopy.campaign = campaignCopy;
+  }
+  return challengeCopy;
+}
+
 export function displayDate(dateObj, t) {
   if (dateObj === null || dateObj === undefined) return "<" + t("unknown_date") + ">";
   return jsonDateToJsDate(dateObj).toLocaleDateString(navigator.language);

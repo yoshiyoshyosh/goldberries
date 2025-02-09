@@ -23,6 +23,7 @@ import { useRef, useState } from "react";
 import {
   getCampaignName,
   getChallengeCampaign,
+  getChallengeInvertHierarchy,
   getChallengeName,
   getChallengeNameShort,
   getMapName,
@@ -240,6 +241,13 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
               const map = campaign.maps[0];
               const challenge = map ? map.challenges[0] : campaign.challenges[0];
 
+              //Get fixed structure for split/merge modals. They need the hierarchy challenge->map->campaign to be IN the challenge,
+              //but the API doesnt return it like that, and just setting the foreign key objects creates a cyclical structure which
+              //breaks the Autofill component
+              let challengeForSplitMerge = challenge
+                ? getChallengeInvertHierarchy(campaign, map, challenge)
+                : null;
+
               //Both map and challenge can be undefined here
               const key = campaign.id + (map ? map.id : "") + (challenge ? challenge.id : "");
 
@@ -337,7 +345,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                           </MenuItem>
                           <MenuItem
                             disableRipple
-                            onClick={() => openModal(modalRefs.challenge.merge, challenge)}
+                            onClick={() => openModal(modalRefs.challenge.merge, challengeForSplitMerge)}
                           >
                             <FontAwesomeIcon
                               style={{ marginRight: "5px" }}

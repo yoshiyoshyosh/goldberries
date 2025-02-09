@@ -237,7 +237,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
         helperText={errors.map_name ? errors.map_name.message : ""}
       />
       <TextField
-        label={t_fm("golden_changes.label")}
+        label={t_fm("golden_changes")}
         fullWidth
         multiline
         minRows={2}

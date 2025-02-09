@@ -1642,7 +1642,7 @@
         "label": "Historical Clears",
         "header": "Monthly Tier Clears",
         "text": "These charts show the number of clears for each tier for every month since the beginning of the list.",
-        "total_tiered": "Total Tiered"
+        "total_submissions": "Total Submissions"
       },
       "most_goldened": {
         "label": "Most Goldened",

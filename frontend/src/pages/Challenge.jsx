@@ -469,13 +469,7 @@ function MapGoldenChangesBox({ map }) {
   );
 }
 
-export function ChallengeSubmissionTable({
-  challenge,
-  compact = false,
-  hideSubmissionIcon = false,
-  onlyShowFirstFew = false,
-  ...props
-}) {
+export function ChallengeSubmissionTable({ challenge, compact = false, onlyShowFirstFew = false, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge.submission_table" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const { t: t_fs } = useTranslation(undefined, { keyPrefix: "forms.submission" });
@@ -484,10 +478,9 @@ export function ChallengeSubmissionTable({
   const [showAll, setShowAll] = useState(false);
 
   const allSubmissionsLength = challenge.submissions.length;
+  const showsTooMany = allSubmissionsLength > 20;
   const submissions =
-    allSubmissionsLength > 15 && !showAll && onlyShowFirstFew
-      ? challenge.submissions.slice(0, 15)
-      : challenge.submissions;
+    showsTooMany && !showAll && onlyShowFirstFew ? challenge.submissions.slice(0, 15) : challenge.submissions;
 
   return (
     <TableContainer component={Paper} {...props}>
@@ -548,10 +541,9 @@ export function ChallengeSubmissionTable({
               submission={submission}
               index={index}
               compact={compact}
-              hideSubmissionIcon={hideSubmissionIcon}
             />
           ))}
-          {allSubmissionsLength > 20 && onlyShowFirstFew && (
+          {showsTooMany && onlyShowFirstFew && (
             <TableRow>
               <TableCell colSpan={99}>
                 <Button variant="outlined" fullWidth onClick={() => setShowAll(!showAll)}>
@@ -571,7 +563,7 @@ export function ChallengeSubmissionTable({
   );
 }
 
-export function ChallengeSubmissionRow({ submission, index, compact, hideSubmissionIcon }) {
+export function ChallengeSubmissionRow({ submission, index, compact }) {
   const auth = useAuth();
   const { settings } = useAppSettings();
   const theme = useTheme();
