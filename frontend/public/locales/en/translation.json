@@ -1668,6 +1668,18 @@
           "text": "For each tier, the percentage of players who have done at least one golden in that tier.",
           "axis_label": "% of players"
         }
+      },
+      "verifier_stats": {
+        "label": "Verifier Stats",
+        "header": "Verifier Stats",
+        "most_verified": {
+          "header": "Most Verified",
+          "text": "These verifiers verified the most amount of submissions."
+        },
+        "most_created": {
+          "header": "Most Created",
+          "text": "These verifiers created the most amount of campaigns/maps/challenges."
+        }
       }
     }
   }

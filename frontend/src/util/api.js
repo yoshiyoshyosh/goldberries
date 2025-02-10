@@ -265,6 +265,9 @@ export function fetchChallenges(page, perPage, search) {
 export function fetchStatsVerifierTools() {
   return axios.get("/stats/verifier-tools");
 }
+export function fetchVerifierStats() {
+  return axios.get("/stats/verifier-stats");
+}
 
 export function fetchPlayerStats(id) {
   return axios.get("/player/stats", {

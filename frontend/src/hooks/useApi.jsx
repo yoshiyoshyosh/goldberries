@@ -76,6 +76,7 @@ import {
   fetchTrafficStatsGlobal,
   fetchTrafficStatsGlobalRequests,
   fetchChallenges,
+  fetchVerifierStats,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -176,6 +177,14 @@ export function useGetStatsVerifierTools(verifier = false) {
   return useQuery({
     queryKey: ["overall_stats", verifier ? "verifier" : "overall"],
     queryFn: () => fetchStatsVerifierTools(verifier),
+    onError: errorToast,
+  });
+}
+
+export function useGetVerifierStats() {
+  return useQuery({
+    queryKey: ["verifier_stats"],
+    queryFn: () => fetchVerifierStats(),
     onError: errorToast,
   });
 }
