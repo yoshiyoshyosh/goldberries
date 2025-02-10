@@ -98,7 +98,7 @@ class Change extends DbObject
   {
     $where = "{$type}_id = $1";
     $arr = array($id);
-    $logs = find_in_db($DB, Change::$table_name, $where, $arr, new Change());
+    $logs = find_in_db($DB, Change::$table_name, $where, $arr, new Change(), "ORDER BY date");
     if ($logs === false)
       return false;
 
