@@ -22,7 +22,7 @@ export function AppSettingsProvider({ children }) {
           hideEmptyTiers: false,
           hideTimeTakenColumn: false,
           showFractionalTiers: false,
-          unstackTiers: false,
+          unstackTiers: true,
         },
         background: {
           dark: "", //Indicates default, solid color background. Otherwise this is the image name

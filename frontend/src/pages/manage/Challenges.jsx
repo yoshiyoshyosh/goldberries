@@ -28,7 +28,7 @@ import {
   getChallengeNameShort,
   getMapName,
 } from "../../util/data_util";
-import { fetchChallenges } from "../../util/api";
+import { fetchCampaignsPaginated } from "../../util/api";
 import { useQuery } from "react-query";
 import {
   CustomizedMenu,

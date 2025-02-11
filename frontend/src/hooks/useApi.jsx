@@ -75,7 +75,7 @@ import {
   fetchAllChallengesInCampaign,
   fetchTrafficStatsGlobal,
   fetchTrafficStatsGlobalRequests,
-  fetchChallenges,
+  fetchCampaignsPaginated,
   fetchVerifierStats,
 } from "../util/api";
 import { errorToast } from "../util/util";
@@ -135,8 +135,8 @@ export function useGetAllChallengesInCampaign(campaignId) {
 }
 export function useGetManageChallenges(page, perPage, search) {
   return useQuery({
-    queryKey: ["manage_challenges", page, perPage, search],
-    queryFn: () => fetchChallenges(page, perPage, search),
+    queryKey: ["manage_campaigns", page, perPage, search],
+    queryFn: () => fetchCampaignsPaginated(page, perPage, search),
   });
 }
 

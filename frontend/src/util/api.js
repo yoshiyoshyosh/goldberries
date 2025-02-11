@@ -252,8 +252,8 @@ export function fetchShowcaseSubmissions(playerId) {
   });
 }
 
-export function fetchChallenges(page, perPage, search) {
-  return axios.get("/challenge/paginated", {
+export function fetchCampaignsPaginated(page, perPage, search) {
+  return axios.get("/campaign/paginated", {
     params: {
       page: page,
       per_page: perPage,

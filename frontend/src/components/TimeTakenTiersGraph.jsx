@@ -48,6 +48,8 @@ function TimeTakenTiersGraph({ tgl, useSuggested }) {
   const { settings } = useAppSettings();
   const [scatter, setScatter] = useLocalStorage("tgl_stats_scatter", false);
 
+  const hideEmpty = settings.visual.topGoldenList.hideEmptyTiers;
+
   //Goal: A horizontal bar chart. X-axis is the time taken for a challenge. Each bar on the y-axis represents a tier of difficulty.
   //The length of the bar represents the time span from the minimum time taken to the maximum time taken for that tier.
   //data: [{name: string, color: string, time_taken: [int, int]}]
@@ -93,13 +95,13 @@ function TimeTakenTiersGraph({ tgl, useSuggested }) {
     });
 
     //If there are no challenges for this difficulty, skip it
-    if (time_taken.length === 0) {
+    if (time_taken.length === 0 && hideEmpty) {
       return;
     }
 
     //Step 3: calculate the min and max time taken
-    let min_time_taken = Math.min(...time_taken);
-    const max_time_taken = Math.max(...time_taken);
+    let min_time_taken = time_taken.length === 0 ? 0 : Math.min(...time_taken);
+    const max_time_taken = time_taken.length === 0 ? 0 : Math.max(...time_taken);
 
     //If min === max, decreate min by 1% to make the bar visible
     let is_same = false;
@@ -176,7 +178,11 @@ function TimeTakenTiersGraph({ tgl, useSuggested }) {
                       textAnchor="start"
                     >
                       {dataBar[props.index].is_same ? (
-                        <>{dataBar[props.index].time_taken[1]}</>
+                        dataBar[props.index].time_taken[0] === 0 ? (
+                          <></>
+                        ) : (
+                          <>{dataBar[props.index].time_taken[0]}</>
+                        )
                       ) : (
                         <>
                           {dataBar[props.index].time_taken[0]} ~ {dataBar[props.index].time_taken[1]}
