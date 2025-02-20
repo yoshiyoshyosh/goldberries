@@ -104,7 +104,14 @@ export function TeamMemberList() {
   }
 
   const verifiers = getQueryData(query);
-  const verfiersSorted = verifiers.sort((a, b) => a.name.localeCompare(b.name));
+  const verfiersSorted = verifiers.sort((a, b) => {
+    //Sort first by player.account.role, then by player.name
+    if (a.account.role === b.account.role) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.account.role - a.account.role;
+    }
+  });
 
   return (
     <Stack direction="row" gap={1} flexWrap="wrap">
