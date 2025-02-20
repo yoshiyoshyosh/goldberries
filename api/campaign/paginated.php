@@ -6,9 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
 }
 
-$page = intval($_REQUEST['page']) ?? 1;
-$per_page = intval($_REQUEST['per_page']) ?? 50;
-$per_page = max(1, min(100, $per_page));
+$page = intval($_REQUEST['page']) === 0 ? 1 : intval($_REQUEST['page']);
+$page = max(1, $page);
+$per_page = intval($_REQUEST['per_page']) === 0 ? 50 : intval($_REQUEST['per_page']);
+$per_page = max(1, min(1000, $per_page));
 $search = isset($_REQUEST['search']) ? $_REQUEST['search'] : null;
 $sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : null;
 $sort_dir = isset($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : null;
