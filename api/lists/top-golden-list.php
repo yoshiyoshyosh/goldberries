@@ -17,6 +17,7 @@ $sub_count_is_min = isset($_GET['sub_count_is_min']) ? $_GET['sub_count_is_min']
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
 $min_diff_sort = isset($_GET['min_diff_sort']) ? intval($_GET['min_diff_sort']) : $TIERED_SORT_START; //What the user requests to see via the filter options
+$max_diff_sort = isset($_GET['max_diff_sort']) ? intval($_GET['max_diff_sort']) : $MAX_SORT;
 //Clear states: 0 = all, 1 = Only C, 2 = Only FC, 3 = Only FC or C/FC (No C), 4 = Only C or C/FC (No FC)
 $clear_state = isset($_GET['clear_state']) ? intval($_GET['clear_state']) : 0;
 
@@ -39,9 +40,11 @@ if ($is_campaign) {
 }
 
 if ($show_undetermined) {
-  $where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)"; //Always include undetermined challenges
+  $where[] = "(difficulty_sort >= $min_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)";
+  $where[] = "(difficulty_sort <= $max_diff_sort OR challenge_difficulty_id = $UNDETERMINED_ID)";
 } else {
   $where[] = "difficulty_sort >= $min_diff_sort";
+  $where[] = "difficulty_sort <= $max_diff_sort";
 }
 
 
@@ -93,9 +96,9 @@ $query .= " ORDER BY difficulty_sort DESC, challenge_sort DESC, map_name ASC, su
 
 $result = pg_query_params_or_die($DB, $query);
 
-$difficulty_filter = "difficulty.sort >= $min_diff_sort OR difficulty.id = $UNDETERMINED_ID"; //Always include undetermined challenges
+$difficulty_filter = "(difficulty.sort >= $min_diff_sort AND difficulty.sort <= $max_diff_sort) OR difficulty.id = $UNDETERMINED_ID"; //Always include undetermined challenges
 if (!$show_undetermined) {
-  $difficulty_filter = "difficulty.sort >= $min_diff_sort";
+  $difficulty_filter = "difficulty.sort >= $min_diff_sort AND difficulty.sort <= $max_diff_sort";
 }
 $queryDifficulties = "SELECT * FROM difficulty WHERE $difficulty_filter ORDER BY sort DESC";
 $resultDifficulties = pg_query_params_or_die($DB, $queryDifficulties);
