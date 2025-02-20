@@ -352,6 +352,7 @@ export const COLLECTIBLES = [
       { value: "9", name: "Startside Moonberry", icon: "/icons/moonberry-startside.png" },
       { value: "10", name: "DMR Moonberry", icon: "/icons/moonberry-dmr.png" },
       { value: "11", name: "Vivid Abyss Moonberry", icon: "/icons/moonberry-vabyss.png" },
+      { value: "12", name: "Strawberry (hidden Moonberry)", icon: "/icons/strawberry-8x.png" },
     ],
   },
   {
@@ -373,6 +374,7 @@ export const COLLECTIBLES = [
       { value: "12", name: "Moonstone Strawberry", icon: "/icons/strawberry-moonstone.png" },
       { value: "13", name: "Nutty Noon Strawberry", icon: "/icons/strawberry-nutty.png" },
       { value: "14", name: "Nutty Noon Core Strawberry", icon: "/icons/strawberry-nutty-core.png" },
+      { value: "15", name: "Frozen Waterfall Blueberry", icon: "/icons/strawberry-blueberry-frozen.png" },
     ],
   },
   {
