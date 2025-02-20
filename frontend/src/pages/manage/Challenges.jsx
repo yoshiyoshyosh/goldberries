@@ -355,7 +355,9 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                           </MenuItem>
                           <MenuItem
                             disableRipple
-                            onClick={() => openModal(modalRefs.challenge.markPersonal, challenge)}
+                            onClick={() =>
+                              openModal(modalRefs.challenge.markPersonal, challengeForSplitMerge)
+                            }
                           >
                             <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faMarker} />
                             {t("buttons.challenge.mark_personal")}
