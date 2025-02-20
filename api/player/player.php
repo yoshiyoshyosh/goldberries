@@ -105,6 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $old_name = $target->name;
 
+      if ($old_name === $new_name) {
+        die_json(400, "New name is the same as the old name");
+      }
       if ($old_name !== $new_name && $log_change) {
         Change::create_change($DB, "player", $target->id, "Renamed from '{$old_name}' to '{$new_name}'");
       }
