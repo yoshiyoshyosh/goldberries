@@ -43,13 +43,14 @@ export function SuggestedDifficultyChart({ challenge }) {
           ? difficulty.subtier.charAt(0).toUpperCase() + difficulty.subtier.slice(1)
           : "",
         color: getNewDifficultyColors(settings, difficulty.id).color,
+        difficulty: difficulty,
       };
     });
   });
 
   dataTransformed.forEach((data) => {
     //Sort by difficulty.sort DESC
-    data.sort((a, b) => b.id - a.id);
+    data.sort((a, b) => a.difficulty.sort - b.difficulty.sort);
   });
 
   const width = dataTransformed.length === 1 ? 12 : 6;
@@ -154,7 +155,7 @@ export function SuggestedDifficultyTierCounts({
   });
 
   dataTransformed.forEach((data) => {
-    data.sort((a, b) => b.value - a.value);
+    data.sort((a, b) => a.difficulty.sort - b.difficulty.sort);
   });
 
   const width = dataTransformed.length === 1 || stackGrid ? 12 : 6;
