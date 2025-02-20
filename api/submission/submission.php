@@ -52,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Submission with id {$submission->id} does not exist");
     }
 
+    $log_message = null;
+
     if (is_helper($account)) {
       if ($old_submission->challenge_id !== $submission->challenge_id) {
         $challenge = Challenge::get_by_id($DB, $submission->challenge_id);
@@ -72,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           die_json(400, "Player with id {$submission->player_id} does not exist");
         }
         $old_submission->player_id = $submission->player_id;
+        $log_message = "'{$account->player->name}' assigned {$old_submission} to different player '{$new_player->name}'";
       }
       if ($old_submission->is_fc !== $submission->is_fc) {
         if ($old_submission->challenge_id !== null) {
@@ -105,6 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($old_submission->is_verified !== $submission->is_verified) {
         if ($old_submission->challenge_id === null && $submission->is_verified) {
           die_json(400, "Cannot verify a submission without a challenge");
+        }
+        if ($old_submission->player_id === $account->player->id) {
+          die_json(400, "Cannot change verification of your own submission");
         }
         $toLog = $submission->is_verified ? "verified" : "rejected";
         log_info("{$old_submission} was {$toLog} by '{$account->player->name}'", "Submission");
@@ -156,7 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($old_submission->update($DB)) {
         submission_embed_change($old_submission->id, "submission");
         if (!$was_verified) {
-          log_info("'{$account->player->name}' updated {$old_submission}", "Submission");
+          if ($log_message !== null) {
+            log_info($log_message, "Submission");
+          } else {
+            log_info("'{$account->player->name}' updated {$old_submission}", "Submission");
+          }
         } else {
           VerificationNotice::delete_for_submission_id($DB, $old_submission->id);
         }

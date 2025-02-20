@@ -39,7 +39,7 @@ if (isset($data['verifier_notes'])) {
 
 $submissions = [];
 
-//Loop through the submission IDs and get the submission objects
+//Get submissions and pre-process
 foreach ($ids as $id) {
   $submission = Submission::get_by_id($DB, $id);
   if ($submission === false) {
@@ -48,7 +48,14 @@ foreach ($ids as $id) {
   if ($submission->is_verified !== null) {
     die_json(400, "Submission (id:{$id}) has already been verified");
   }
+  if ($submission->player_id === $account->player->id) {
+    die_json(400, "You can't verify your own submissions");
+  }
+  $submissions[] = $submission;
+}
 
+//Update if all submissions are valid
+foreach ($submissions as $submission) {
   $submission->is_verified = $is_verified;
   $submission->verifier_notes = $verifier_notes;
   $submission->date_verified = new JsonDateTime();
@@ -58,7 +65,6 @@ foreach ($ids as $id) {
     submission_embed_change($submission->id, "submission");
     VerificationNotice::delete_for_submission_id($DB, $submission->id);
     $submission->expand_foreign_keys($DB, 5);
-    $submissions[] = $submission;
 
     if ($is_verified) {
       $challenge = Challenge::get_by_id($DB, $submission->challenge_id);
