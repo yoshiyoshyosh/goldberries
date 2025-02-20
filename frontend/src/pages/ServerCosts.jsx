@@ -52,6 +52,7 @@ export function PageServerCosts({}) {
     { amount: 9.78, date: "2024-07-12", name: "Shiggy" },
     { amount: 12.82, date: "2024-08-02", name: "anonymous" },
     { amount: 8.78, date: "2024-08-03", name: "CoffeeCat" },
+    { amount: 61.48, date: "2025-02-11", name: "RisingSunLight" },
   ];
   const donationsSoFar = donations.reduce((acc, donation) => acc + donation.amount, 0);
 
