@@ -233,7 +233,7 @@ export function PagePlayerTopGoldenList({ id }) {
   const exportModal = useModal();
   const statsModal = useModal();
   const useSuggestedRef = useRef();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", getDefaultFilter());
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", getDefaultFilter(false));
 
   if (query.isLoading) {
     return (

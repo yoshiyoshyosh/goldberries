@@ -26,13 +26,12 @@ import {
   getMapName,
 } from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
-import { useState } from "react";
 
 export function PageTopGoldenList({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "top_golden_list" });
   const { type, id } = useParams();
   const theme = useTheme();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter());
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter(true));
 
   const exportModal = useModal();
 

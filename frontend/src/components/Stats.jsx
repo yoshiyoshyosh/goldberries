@@ -155,7 +155,7 @@ export function SuggestedDifficultyTierCounts({
   });
 
   dataTransformed.forEach((data) => {
-    data.sort((a, b) => a.difficulty.sort - b.difficulty.sort);
+    data.sort((a, b) => b.difficulty.sort - a.difficulty.sort);
   });
 
   const width = dataTransformed.length === 1 || stackGrid ? 12 : 6;

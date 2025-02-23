@@ -241,20 +241,6 @@ function GettingStarted() {
     </>
   );
 }
-function ReleaseNotice() {
-  const { t } = useTranslation(undefined, { keyPrefix: "index.newly_released" });
-  return (
-    <>
-      <Typography variant="h5">{t("header")}</Typography>
-      <Typography variant="body1" gutterBottom>
-        {t("text")}
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        {t("migration")}
-      </Typography>
-    </>
-  );
-}
 function ReworkNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: "index.rework" });
   const bulletPoints = t("bullet_points", { returnObjects: true });
@@ -275,40 +261,6 @@ function ReworkNotice() {
       {/* <Typography variant="body1" gutterBottom>
         {t("migration")}
       </Typography> */}
-    </>
-  );
-}
-
-function PublicTestNotice() {
-  return (
-    <>
-      <Typography variant="h5">Public Test</Typography>
-      <Typography variant="body1" gutterBottom>
-        The public test for this website has started! If you want to help test the website, please do so!
-        Create an account, claim your player (from the data migrated from the spreadsheet) and just look
-        around and checkout all the features. Other than for the player-claiming process feel free to make
-        meme submissions/suggestions, as the data currently in the system will be wiped for the actual release
-        anyways.
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Things you can test:
-      </Typography>
-      <ul>
-        <li>Create an account</li>
-        <li>Claim your player, or create a new one (pls no meme with this)</li>
-        <li>Top Golden List</li>
-        <li>Campaign List</li>
-        <li>Create Submissions</li>
-        <li>Change your account settings</li>
-        <li>Change app settings</li>
-        <li>Create Suggestions and vote on them</li>
-        <li>Search for stuff</li>
-        <li>... and a lot more</li>
-      </ul>
-      <Typography variant="body1" gutterBottom>
-        Please note that the current data is outdated by ~6 months and the accuracy distorted through many
-        tests.
-      </Typography>
     </>
   );
 }

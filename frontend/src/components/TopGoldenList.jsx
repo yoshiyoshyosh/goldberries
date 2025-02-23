@@ -453,7 +453,7 @@ function TopGoldenListTier({
               <Typography fontWeight="bold" textAlign="center">
                 {isPlayer ? (
                   <Tooltip title={t("note_suggested_difficulties")} arrow placement="top">
-                    <span>{useSuggested ? "Actual" : "Sug."}</span>
+                    <span>{t("suggestion_abbreviated")}</span>
                   </Tooltip>
                 ) : (
                   <Tooltip
@@ -477,7 +477,11 @@ function TopGoldenListTier({
               align="center"
             >
               <Typography fontWeight="bold">
-                <Tooltip title={t("note_video_link")} arrow placement="top">
+                <Tooltip
+                  title={t(isPlayer ? "note_video_link_personal" : "note_video_link_other")}
+                  arrow
+                  placement="top"
+                >
                   <FontAwesomeIcon icon={faExternalLink} fontSize=".8em" />
                 </Tooltip>
               </Typography>
@@ -676,13 +680,6 @@ function TopGoldenListRow({
     openEditSubmission(firstSubmission.id);
   };
 
-  const isUnplaced = challenge.is_placed === false;
-  const unplacedIconColor = challenge.data.sugg_count > 0 ? "#77dd77" : "#dd7777";
-  const unplacedTooltip =
-    challenge.data.sugg_count > 0
-      ? "This challenge is unplaced and has at least 1 suggestion"
-      : "This challenge is unplaced and has no suggestions";
-
   return (
     <TableRow style={rowStyle}>
       <TableCell
@@ -793,11 +790,6 @@ function TopGoldenListRow({
           {isPlayer && firstSubmission.player_notes && (
             <TooltipLineBreaks title={firstSubmission.player_notes}>
               <FontAwesomeIcon icon={faComment} />
-            </TooltipLineBreaks>
-          )}
-          {!isPlayer && isUnplaced && (
-            <TooltipLineBreaks title={unplacedTooltip}>
-              <FontAwesomeIcon icon={faInfoCircle} color={unplacedIconColor} />
             </TooltipLineBreaks>
           )}
         </Stack>

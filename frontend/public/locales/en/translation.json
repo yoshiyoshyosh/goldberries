@@ -47,12 +47,12 @@
   },
   "components": {
     "difficulty_select": {
-      "label": "Suggested Difficulty",
-      "no_suggestion": "No Suggestion",
+      "label": "Difficulty Opinion",
+      "no_suggestion": "No Opinion",
       "no_selection": "No Selection"
     },
     "difficulty_chip": {
-      "personal_tooltip": "This difficulty suggestion is personal and should not be used for difficulty placements",
+      "personal_tooltip": "This difficulty opinion is personal and should not be used for difficulty placements",
       "trivial_explanation": "Untiered challenges contain no risk of death, or are no different from a regular clear of the map"
     },
     "verification_status_chip": {
@@ -134,15 +134,17 @@
       "moved_from": "Moved from"
     },
     "stats": {
-      "no_suggestions_yet": "No difficulty suggestions yet"
+      "no_suggestions_yet": "No difficulty opinions yet"
     },
     "top_golden_list": {
-      "use_suggested": "Use Suggested Difficulties for ranking",
+      "use_suggested": "Use Difficulty Opinions for Ranking",
       "toggle_edit_mode": "Toggle Edit Submissions Mode",
       "empty": "Looks pretty empty. Get some goldens from the Top Golden List to populate your own list!",
       "note_number_people": "This tier has {{challenges}} challenges with {{submissions}} submissions",
-      "note_suggested_difficulties": "Suggested difficulties of this player",
-      "note_video_link": "These links lead to the video of the first clear of a challenge",
+      "note_suggested_difficulties": "Difficulty opinions of this player",
+      "suggestion_abbreviated": "Opn.",
+      "note_video_link_personal": "These links lead to the video of the player for each challenge",
+      "note_video_link_other": "These links lead to the video of the first clear of a challenge",
       "note_time_taken": "User provided time taken for the challenge",
       "obsolete_notice": "This submission is marked as obsolete",
       "stable_explanation": "This challenge has a stable difficulty placement",
@@ -386,7 +388,7 @@
       "raw_session_url": "Raw Session URL",
       "player_notes": "Player Notes",
       "is_personal": "Is Personal",
-      "personal_note": "'Personal' difficulty suggestions indicate that this suggestion should not be used for difficulty placements",
+      "personal_note": "'Personal' difficulty opinions indicate that this opinion should not be used for difficulty placements",
       "time_taken": "Time Taken",
       "date_submitted": "Date Submitted",
       "date_achieved": "Date Achieved",
@@ -561,7 +563,7 @@
         },
         "mark_personal": {
           "title": "Mark As Personal",
-          "description": "Mark all difficulty suggestions for <strong>'{{name}}'</strong> as personal?",
+          "description": "Mark all difficulty opinions for <strong>'{{name}}'</strong> as personal?",
           "impacted_one": "At most <strong>1</strong> submission will be impacted.",
           "impacted_other": "At most <strong>{{count}}</strong> submissions will be impacted.",
           "button": "Mark As Personal",
@@ -728,8 +730,8 @@
           "description": "To get notified when your submission gets verified or rejected"
         },
         "marked_personal": {
-          "label": "Difficulty Suggestion Marked Personal",
-          "description": "To get notified when a difficulty suggestion from you gets marked as 'personal', due to new major strats being discovered"
+          "label": "Difficulty Opinions Marked Personal",
+          "description": "To get notified when a difficulty opinion from you gets marked as 'personal', due to new major strats being discovered"
         },
         "challenge_moved": {
           "label": "Challenge Moved",
@@ -905,12 +907,12 @@
       "submit": "Submit a Run",
       "edit": "Edit Challenge"
     },
-    "difficulty_suggestions": "Difficulty Suggestions",
+    "difficulty_suggestions": "Difficulty Opinions",
     "is_full_game": "Full Game?",
     "lobby_info": "Lobby Info",
     "description": "Challenge Description",
     "submission_table": {
-      "suggestion": "Suggestion",
+      "suggestion": "Opinions",
       "empty": "No submissions",
       "show_all": "Show All {{count}} Submissions",
       "show_less": "Show Less"
@@ -1208,7 +1210,7 @@
     "filter_by_type": "Filter by type",
     "active": "Active Suggestions",
     "undecided": "Undecided Suggestions",
-    "expired": "Expired Suggestions",
+    "expired": "Decided Suggestions",
     "showing_one": "Showing {{from}}-{{to}} of {{count}} total suggestion",
     "showing_other": "Showing {{from}}-{{to}} of {{count}} total suggestions",
     "buttons": {

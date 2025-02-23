@@ -186,18 +186,7 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const auth = useAuth();
   const campaign = challenge === null ? map.campaign : getChallengeCampaign(challenge);
-
-  const { mutate: postChallenge } = usePostChallenge((data) => {
-    toast.success("Set challenge to be placed");
-  });
-  const placeChallenge = () => {
-    postChallenge({
-      ...challenge,
-      is_placed: true,
-    });
-  };
 
   const lobbyInfo = getMapLobbyInfo(map);
   const hasLobbyInfo = lobbyInfo !== null && (lobbyInfo.major !== undefined || lobbyInfo.minor !== undefined);
@@ -269,18 +258,6 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
                 text={
                   <Stack direction="row" alignItems="center" gap={1}>
                     <DifficultyChip difficulty={challenge.difficulty} />
-                    {challenge.is_placed === false && (
-                      <TooltipLineBreaks title="Standard Split: This challenge has not been placed yet.">
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                      </TooltipLineBreaks>
-                    )}
-                    {challenge.is_placed === false && auth.hasHelperPriv && (
-                      <CustomIconButton sx={{ marginLeft: "auto" }} onClick={placeChallenge}>
-                        <TooltipLineBreaks title="Accept placement for this challenge">
-                          <FontAwesomeIcon icon={faCheck} />
-                        </TooltipLineBreaks>
-                      </CustomIconButton>
-                    )}
                   </Stack>
                 }
                 isSecondary

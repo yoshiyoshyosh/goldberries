@@ -189,7 +189,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
               <DifficultySelectControlled
                 difficultyId={localFilter.min_diff_id ?? DIFF_CONSTS.TIER_7_ID}
                 setDifficultyId={(id) => changedFilter("min_diff_id", id)}
-                minSort={DIFF_CONSTS.TRIVIAL_SORT}
+                minSort={DIFF_CONSTS.UNTIERED_SORT}
                 fullWidth
                 label={t("minimum_tier")}
                 sx={{ my: 0.5 }}
@@ -321,12 +321,12 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
   );
 }
 
-export function getDefaultFilter() {
+export function getDefaultFilter(isOverall) {
   return {
     hide_objectives: [],
     archived: true,
     arbitrary: true,
-    min_diff_id: DIFF_CONSTS.TIER_7_ID,
+    min_diff_id: isOverall ? DIFF_CONSTS.TIER_7_ID : DIFF_CONSTS.UNTIERED_SORT,
     undetermined: true,
     clear_state: 0,
     sub_count: null,
