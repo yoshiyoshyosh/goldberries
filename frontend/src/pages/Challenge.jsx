@@ -35,6 +35,7 @@ import {
   OtherIcon,
   PlayerNotesIcon,
   SubmissionFcIcon,
+  VerificationStatusChip,
   VerifierNotesIcon,
   getPlatformIcon,
 } from "../components/GoldberriesComponents";
@@ -153,7 +154,7 @@ export function ChallengeDisplay({ id }) {
         </Stack>
       )}
       <ChallengeDetailsList map={challenge.map} challenge={challenge} sx={{ mb: 1, mt: 0.5 }} />
-      {challenge.description && (
+      {challenge.description && challenge.is_rejected === false && (
         <NoteDisclaimer title={t("description")} note={challenge.description} sx={{ mb: 2 }} />
       )}
       <ChallengeSubmissionTable challenge={challenge} />
@@ -270,6 +271,20 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
           <InfoBox>
             <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faUser} />} text={t_cib("author")} />
             <AuthorInfoBoxLine author_gb_id={map.author_gb_id} author_gb_name={map.author_gb_name} />
+          </InfoBox>
+        )}
+        {challenge !== null && challenge.is_rejected && (
+          <InfoBox>
+            <InfoBoxIconTextLine text={t("status")} />
+            <InfoBoxIconTextLine
+              text={
+                <Stack direction="row" alignItems="center" gap={1}>
+                  <VerificationStatusChip isVerified={false} size="small" />
+                  {challenge.description}
+                </Stack>
+              }
+              isSecondary
+            />
           </InfoBox>
         )}
         {map !== null && challenge === null && <MapGoldenChangesBox map={map} />}

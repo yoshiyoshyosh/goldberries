@@ -58,7 +58,7 @@ export function FormCreateFullChallengeWrapper({
       has_fc: false,
       is_arbitrary: false,
       sort: 1,
-      difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNDETERMINED_ID,
+      difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNTIERED_ID,
     };
   }, []);
 

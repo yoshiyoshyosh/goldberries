@@ -11,7 +11,13 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChallengeDetailsList, ChallengeSubmissionTable, NoteDisclaimer } from "./Challenge";
-import { faArrowRightToBracket, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRightToBracket,
+  faEdit,
+  faExclamationTriangle,
+  faInfoCircle,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCampaignName, getChallengeFcShort, getChallengeNameShort, getMapName } from "../util/data_util";
 import {
@@ -20,6 +26,7 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import {
@@ -27,6 +34,7 @@ import {
   DifficultyChip,
   GamebananaEmbed,
   ObjectiveIcon,
+  VerificationStatusChip,
 } from "../components/GoldberriesComponents";
 import { CustomModal, useModal } from "../hooks/useModal";
 import { FormMapWrapper } from "../components/forms/Map";
@@ -116,7 +124,7 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
               map={map}
             />
           </Box>
-          {selectedChallenge.description && (
+          {selectedChallenge.description && !selectedChallenge.is_rejected && (
             <NoteDisclaimer
               note={selectedChallenge.description}
               title={t_c("description")}
@@ -132,17 +140,27 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
             <span>{getChallengeFcShort(selectedChallenge)}</span>
             <DifficultyChip difficulty={selectedChallenge.difficulty} />
-            <StyledLink
-              to={"/submit/single-challenge/" + selectedChallenge.id}
-              style={{ marginLeft: "auto", display: isMdScreen ? "block" : "none" }}
-            >
-              <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faPlus} />}>
-                {t("buttons.submit")}
-              </Button>
-            </StyledLink>
+            {!selectedChallenge.is_rejected && (
+              <StyledLink
+                to={"/submit/single-challenge/" + selectedChallenge.id}
+                style={{ marginLeft: "auto", display: isMdScreen ? "block" : "none" }}
+              >
+                <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faPlus} />}>
+                  {t("buttons.submit")}
+                </Button>
+              </StyledLink>
+            )}
+            {selectedChallenge.is_rejected && (
+              <>
+                <VerificationStatusChip isVerified={false} size="small" />
+                <TooltipLineBreaks title={selectedChallenge.description}>
+                  <FontAwesomeIcon color={theme.palette.error.main} icon={faExclamationTriangle} />
+                </TooltipLineBreaks>
+              </>
+            )}
             <StyledLink
               to={"/challenge/" + selectedChallenge.id}
-              style={{ marginLeft: isMdScreen ? "0" : "auto" }}
+              style={{ marginLeft: isMdScreen && !selectedChallenge.is_rejected ? "0" : "auto" }}
             >
               <Button variant="text" startIcon={<FontAwesomeIcon icon={faArrowRightToBracket} />}>
                 {t("buttons.view_challenge")}
@@ -203,9 +221,9 @@ function MapChallengeTabs({ selected, setSelected, map }) {
           key={challenge.id}
           onClick={() => setSelected(challenge.id)}
           variant={selected === challenge.id ? "contained" : "outlined"}
-          sx={{ whiteSpace: "nowrap" }}
+          sx={{ whiteSpace: "nowrap", textDecoration: challenge.is_rejected ? "line-through" : undefined }}
         >
-          {getChallengeNameShort(challenge, true)}
+          {getChallengeNameShort(challenge, true, true, false)}
         </Button>
       ))}
     </Stack>

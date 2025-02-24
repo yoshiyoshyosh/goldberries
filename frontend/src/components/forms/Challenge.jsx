@@ -43,7 +43,7 @@ export function FormChallengeWrapper({ id, onSave, defaultDifficultyId, ...props
         has_fc: false,
         is_arbitrary: false,
         sort: null,
-        difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNDETERMINED_ID,
+        difficulty_id: defaultDifficultyId ?? DIFF_CONSTS.UNTIERED_ID,
       }
     );
   }, [data]);
@@ -108,6 +108,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
 
   const objective_id = form.watch("objective_id");
   const requires_fc = form.watch("requires_fc");
+  const is_rejected = form.watch("is_rejected");
   const has_fc = form.watch("has_fc");
   const label = form.watch("label");
   const labelDebounced = useDebounce(label, 200);
@@ -156,7 +157,13 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       <TextField label={t_g("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
 
       <TextField label={t_g("label")} sx={{ mt: 2 }} fullWidth {...form.register("label")} />
-      <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />
+      <TextField
+        label={t_g("description")}
+        sx={{ mt: 2 }}
+        fullWidth
+        {...form.register("description", { required: is_rejected ? true : undefined })}
+        error={is_rejected && form.formState.errors.description !== undefined}
+      />
 
       <Controller
         control={form.control}
@@ -192,6 +199,19 @@ export function FormChallenge({ challenge, onSave, ...props }) {
           <FormControlLabel
             onChange={field.onChange}
             label={t("is_arbitrary")}
+            checked={field.value}
+            control={<Checkbox />}
+          />
+        )}
+      />
+      <Controller
+        control={form.control}
+        name="is_rejected"
+        defaultValue={challenge.is_rejected}
+        render={({ field }) => (
+          <FormControlLabel
+            onChange={field.onChange}
+            label={t("is_rejected")}
             checked={field.value}
             control={<Checkbox />}
           />

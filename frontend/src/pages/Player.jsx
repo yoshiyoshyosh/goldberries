@@ -308,7 +308,7 @@ export function DifficultyCountChart({ difficulty_counts }) {
   let difficulties = [...rawDiffs];
   if (!showUntiered) {
     difficulties = difficulties.filter(
-      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
+      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNTIERED_ID
     );
   }
 

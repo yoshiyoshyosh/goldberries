@@ -26,15 +26,11 @@ export function getChallengeObjectiveSuffix(challenge) {
 }
 
 export function getChallengeName(challenge, includeFc = true) {
-  const isOld = challenge.map?.is_archived ?? false;
-  const oldPrefix = isOld ? "[Old] " : "";
+  const rejectedPrefix = challenge.is_rejected ? "[Rejected] " : "";
   const challengeFc = includeFc ? getChallengeFcLong(challenge) + ": " : "";
   const challengeSuffix =
     getChallengeSuffix(challenge) === null ? "" : " [" + getChallengeSuffix(challenge) + "]";
-  return (
-    // oldPrefix +
-    challengeFc + challenge.objective.name + challengeSuffix
-  );
+  return rejectedPrefix + challengeFc + challenge.objective.name + challengeSuffix;
 }
 
 export function getChallengeSuffix(challenge, checkDifferent = false) {
@@ -54,18 +50,19 @@ export function getChallengeIcon(challenge) {
   return challenge.objective.icon_url;
 }
 
-export function getChallengeNameShort(challenge, withSuffix = false, includeFc = true) {
-  const isOld = challenge.map?.is_archived ?? false;
-  const oldPrefix = isOld ? "[Old] " : "";
+export function getChallengeNameShort(
+  challenge,
+  withSuffix = false,
+  includeFc = true,
+  includeRejected = true
+) {
+  const rejectedPrefix = challenge.is_rejected && includeRejected ? "[Rejected] " : "";
   const challengeSuffix =
     withSuffix && getChallengeSuffix(challenge, true) !== null
       ? " [" + getChallengeSuffix(challenge, true) + "]"
       : "";
   const cfcSuffix = includeFc ? " " + getChallengeFcShort(challenge) : "";
-  return (
-    // oldPrefix +
-    challenge.objective.name + cfcSuffix + challengeSuffix
-  );
+  return rejectedPrefix + challenge.objective.name + cfcSuffix + challengeSuffix;
 }
 
 export function getChallengeIsArbitrary(challenge) {
@@ -169,7 +166,13 @@ export function getMapLobbyInfo(map, campaign = null) {
   return lobbyInfo;
 }
 
-export function getMapName(map, campaign, includeMapWithSide = true, includeOld = true) {
+export function getMapName(
+  map,
+  campaign,
+  includeMapWithSide = true,
+  includeOld = true,
+  includeRejected = true
+) {
   campaign = campaign || map.campaign;
 
   if (map === null || map === undefined) {
@@ -185,7 +188,7 @@ export function getMapName(map, campaign, includeMapWithSide = true, includeOld 
 
   const isOld = map.is_archived ?? false;
   const oldPrefix = isOld && includeOld ? "[Old] " : "";
-  const rejectedPrefix = map.is_rejected ? "[Rejected] " : "";
+  const rejectedPrefix = map.is_rejected && includeRejected ? "[Rejected] " : "";
 
   return rejectedPrefix + oldPrefix + mapName;
 }

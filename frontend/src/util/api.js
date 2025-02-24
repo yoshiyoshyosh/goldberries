@@ -166,18 +166,22 @@ export function fetchCampaignViewPlayer(id, playerId) {
   });
 }
 
-export function fetchMap(id, challenges = true, submission = true) {
+export function fetchMap(id, challenges = true, submission = true, rejected = true) {
   return axios.get("/map", {
     params: {
       id: id,
       challenges: challenges,
       submissions: submission,
+      rejected: rejected,
     },
   });
 }
 
 export function fetchRejectedMapList() {
   return axios.get("/map/rejected");
+}
+export function fetchRejectedChallenges() {
+  return axios.get("/challenge/rejected");
 }
 
 export function fetchChallenge(id, submissions = true) {

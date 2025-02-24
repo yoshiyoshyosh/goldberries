@@ -29,7 +29,7 @@ import { durationToSeconds, getChallengeIsArbitrary, getMapLobbyInfo } from "../
 import { memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
-import { DIFF_CONSTS, FormOptions, difficultyToSort } from "../util/constants";
+import { DIFF_CONSTS, FormOptions, difficultyIdToSort } from "../util/constants";
 import { useAuth } from "../hooks/AuthProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -858,7 +858,7 @@ export function NewChallengeUserSubmission({}) {
   const raw_session_url = form.watch("raw_session_url");
   const needsRawSession =
     suggested_difficulty_id !== null &&
-    difficultyToSort(suggested_difficulty_id) >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
+    difficultyIdToSort(suggested_difficulty_id) >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
   const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
 
   return (

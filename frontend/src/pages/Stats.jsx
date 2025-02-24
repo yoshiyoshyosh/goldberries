@@ -594,7 +594,7 @@ function TabMisc({}) {
   ];
 
   const distinctPlayerFilteredKeys = Object.keys(distinct_players).filter(
-    (key) => parseInt(key) !== DIFF_CONSTS.UNDETERMINED_ID
+    (key) => parseInt(key) !== DIFF_CONSTS.UNTIERED_ID
   );
 
   //Chart 2: % of players that have cleared each difficulty

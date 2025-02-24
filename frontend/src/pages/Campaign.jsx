@@ -746,9 +746,9 @@ function CampaignChallengeList({ campaign, ...props }) {
   );
 }
 function CampaignChallengeEntry({ challenge, campaign, sx = {}, ...props }) {
-  const theme = useTheme();
+  const backgroundColor = challenge.is_rejected ? "rgba(255,0,0,15%)" : "undefined";
   return (
-    <BorderedBox sx={{ p: 1, borderRadius: 1, ...sx }} {...props}>
+    <BorderedBox sx={{ p: 1, borderRadius: 1, ...sx, backgroundColor: backgroundColor }} {...props}>
       <Stack direction="column" gap={0.25}>
         <Stack direction="row" gap={1} alignItems="center">
           <StyledLink to={"/challenge/" + challenge.id}>

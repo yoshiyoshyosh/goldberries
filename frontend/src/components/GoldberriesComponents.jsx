@@ -278,7 +278,7 @@ export function DifficultyChip({
   const showOld =
     settings.general.showOldTierNames &&
     difficulty.id !== DIFF_CONSTS.TRIVIAL_ID &&
-    difficulty.id !== DIFF_CONSTS.UNDETERMINED_ID;
+    difficulty.id !== DIFF_CONSTS.UNTIERED_ID;
   const isTrivial = difficulty.id === DIFF_CONSTS.TRIVIAL_ID;
 
   const bgColor = colors.color;
@@ -414,7 +414,7 @@ export function DifficultySelectControlled({
   let difficulties = getQueryData(query) ?? [];
   if (isSuggestion) {
     difficulties = difficulties.filter(
-      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNDETERMINED_ID
+      (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNTIERED_ID
     );
   }
   if (minSort !== null) {

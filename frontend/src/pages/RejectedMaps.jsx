@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
@@ -14,79 +15,143 @@ import {
   HeadTitle,
   LoadingSpinner,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
-import { getQueryData, useGetRejectedMapList } from "../hooks/useApi";
-import { getCampaignName } from "../util/data_util";
+import { getQueryData, useGetRejectedChallenges, useGetRejectedMapList } from "../hooks/useApi";
+import { getCampaignName, getChallengeCampaign, getChallengeNameShort, getMapName } from "../util/data_util";
 import { Trans, useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function PageRejectedMaps() {
   const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
-  const query = useGetRejectedMapList();
-
-  if (query.isLoading || query.isFetching) {
-    return (
-      <BasicContainerBox maxWidth="md">
-        <Typography variant="h6">{t("title")}</Typography>
-        <LoadingSpinner />
-      </BasicContainerBox>
-    );
-  } else if (query.isError) {
-    return (
-      <BasicContainerBox maxWidth="md">
-        <Typography variant="h6">{t("title")}</Typography>
-        <ErrorDisplay error={query.error} />
-      </BasicContainerBox>
-    );
-  }
-
-  const maps = getQueryData(query);
 
   return (
     <BasicContainerBox maxWidth="md">
       <HeadTitle title={t("title")} />
-      <RejectedMapsTable maps={maps} />
-    </BasicContainerBox>
-  );
-}
-
-function RejectedMapsTable({ maps }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
-  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  return (
-    <>
-      <Typography variant="h6">{t("title")}</Typography>
+      <Typography variant="h5">{t("title")}</Typography>
       <Typography variant="body2" gutterBottom>
         {t("info_1")}
       </Typography>
       <Typography variant="body2" gutterBottom color="error.main">
         <Trans t={t} i18nKey="info_2" components={{ CustomLink: <StyledLink to="/rules#maps" /> }} />
       </Typography>
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>{t_g("campaign", { count: 1 })}</TableCell>
-              <TableCell>{t_g("map", { count: 1 })}</TableCell>
-              <TableCell>{t("reason")}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {maps.map((map) => (
-              <TableRow key={map.id}>
-                <TableCell>
-                  <StyledLink to={"/campaign/" + map.campaign.id}>
-                    {getCampaignName(map.campaign, t_g)}
-                  </StyledLink>
-                </TableCell>
-                <TableCell>
-                  <StyledLink to={"/map/" + map.id}>{map.name}</StyledLink>
-                </TableCell>
-                <TableCell>{map.rejection_reason}</TableCell>
+      <RejectedMapsTable />
+      <RejectedChallengesTable />
+    </BasicContainerBox>
+  );
+}
+
+function RejectedMapsTable({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const query = useGetRejectedMapList();
+  const maps = getQueryData(query);
+
+  return (
+    <>
+      {(query.isLoading || query.isFetching) && <LoadingSpinner />}
+      {query.isError && <ErrorDisplay error={query.error} />}
+      {(!maps || maps.length === 0) && <Typography variant="body2">{t("no_rejected_maps")}</Typography>}
+      {maps && maps.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>{t_g("campaign", { count: 1 })}</TableCell>
+                <TableCell>{t_g("map", { count: 1 })}</TableCell>
+                <TableCell>{t("reason")}</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {maps.map((map) => (
+                <TableRow key={map.id}>
+                  <TableCell>
+                    <StyledLink to={"/campaign/" + map.campaign.id}>
+                      {getCampaignName(map.campaign, t_g)}
+                    </StyledLink>
+                  </TableCell>
+                  <TableCell>
+                    <StyledLink to={"/map/" + map.id}>
+                      {getMapName(map, map.campaign, true, true, false)}
+                    </StyledLink>
+                  </TableCell>
+                  <TableCell>{map.rejection_reason}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </>
+  );
+}
+
+function RejectedChallengesTable() {
+  const { t } = useTranslation(undefined, { keyPrefix: "rejected_challenges" });
+  const { t: t_m } = useTranslation(undefined, { keyPrefix: "rejected_maps" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  const query = useGetRejectedChallenges();
+  const challenges = getQueryData(query);
+
+  return (
+    <>
+      <Typography variant="h5" sx={{ mt: 2 }}>
+        {t("title")}
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        {t("info")}
+      </Typography>
+      {(query.isLoading || query.isFetching) && <LoadingSpinner />}
+      {query.isError && <ErrorDisplay error={query.error} />}
+      {(!challenges || challenges.length === 0) && (
+        <Typography variant="body2">{t("no_rejected_challenges")}</Typography>
+      )}
+      {challenges && challenges.length > 0 && (
+        <TableContainer component={Paper}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>{t_g("campaign", { count: 1 })}</TableCell>
+                <TableCell>{t_g("map", { count: 1 })}</TableCell>
+                <TableCell>{t_g("challenge", { count: 1 })}</TableCell>
+                <TableCell>{t_m("reason")}</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {challenges.map((challenge) => (
+                <TableRow key={challenge.id}>
+                  <TableCell>
+                    <StyledLink to={"/campaign/" + getChallengeCampaign(challenge).id}>
+                      {getCampaignName(getChallengeCampaign(challenge), t_g)}
+                    </StyledLink>
+                  </TableCell>
+                  <TableCell align="center">
+                    {challenge.map ? (
+                      <StyledLink to={"/map/" + challenge.map.id}>
+                        {getMapName(challenge.map, getChallengeCampaign(challenge), true, true, false)}
+                      </StyledLink>
+                    ) : (
+                      <Typography>
+                        <TooltipLineBreaks title={t("fullgame_notice")}>
+                          <FontAwesomeIcon icon={faXmark} />
+                        </TooltipLineBreaks>
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <StyledLink to={"/challenge/" + challenge.id}>
+                      {getChallengeNameShort(challenge, true, true, false)}
+                    </StyledLink>
+                  </TableCell>
+                  <TableCell>{challenge.description}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 }

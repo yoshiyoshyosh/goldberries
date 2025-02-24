@@ -77,6 +77,7 @@ import {
   fetchTrafficStatsGlobalRequests,
   fetchCampaignsPaginated,
   fetchVerifierStats,
+  fetchRejectedChallenges,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -232,6 +233,13 @@ export function useGetRejectedMapList() {
   return useQuery({
     queryKey: ["rejected_map_list"],
     queryFn: () => fetchRejectedMapList(),
+    onError: errorToast,
+  });
+}
+export function useGetRejectedChallenges() {
+  return useQuery({
+    queryKey: ["rejected_challenges"],
+    queryFn: () => fetchRejectedChallenges(),
     onError: errorToast,
   });
 }
