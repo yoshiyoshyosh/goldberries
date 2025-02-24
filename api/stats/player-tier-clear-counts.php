@@ -44,7 +44,7 @@ $query = "SELECT
   LEFT JOIN difficulty ON challenge.difficulty_id = difficulty.id
   LEFT JOIN map ON challenge.map_id = map.id
   WHERE submission.id IS NULL OR 
-    (submission.is_verified = TRUE AND (map.is_rejected = FALSE OR map.id IS NULL) AND submission.is_obsolete = FALSE)
+    (submission.is_verified = TRUE AND (map.is_rejected = FALSE OR map.id IS NULL) AND challenge.is_rejected = FALSE AND submission.is_obsolete = FALSE)
   GROUP BY player.id, account.id
   ORDER BY total DESC";
 $result = pg_query($DB, $query);

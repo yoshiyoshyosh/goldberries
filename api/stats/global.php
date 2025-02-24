@@ -52,7 +52,7 @@ FROM submission
 JOIN challenge ON submission.challenge_id = challenge.id
 LEFT JOIN map ON challenge.map_id = map.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-WHERE $time_filter AND (map.is_rejected = FALSE OR map.is_rejected IS NULL) AND submission.is_verified = TRUE
+WHERE $time_filter AND (map.is_rejected = FALSE OR map.is_rejected IS NULL) AND challenge.is_rejected = FALSE AND submission.is_verified = TRUE
 GROUP BY difficulty.id
 ORDER BY difficulty.id";
 $result = pg_query($DB, $query);

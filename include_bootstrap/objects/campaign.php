@@ -114,24 +114,26 @@ class Campaign extends DbObject
   }
 
   // === Find Functions ===
-  function fetch_maps($DB, $with_challenges = false, $with_submissions = false, $include_archived = true, $include_arbitrary = true): bool
+  function fetch_maps($DB, $with_challenges = false, $with_submissions = false, $include_archived = true, $include_arbitrary = true, $hide_rejected = false): bool
   {
     $whereAddition = $include_archived ? null : "is_archived = false";
+    $whereAddition = $hide_rejected ? ($whereAddition ? "$whereAddition AND " : "") . "is_rejected = false" : $whereAddition;
     $maps = $this->fetch_list($DB, 'campaign_id', Map::class, $whereAddition, "ORDER BY sort_major, sort_minor, sort_order, name");
     if ($maps === false)
       return false;
     $this->maps = $maps;
     foreach ($this->maps as $map) {
       if ($with_challenges)
-        $map->fetch_challenges($DB, $with_submissions, $include_arbitrary);
+        $map->fetch_challenges($DB, $with_submissions, $include_arbitrary, false, $hide_rejected);
       $map->expand_foreign_keys($DB, 2, false);
     }
     return true;
   }
 
-  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true): bool
+  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true, $hide_rejected = false): bool
   {
     $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
+    $whereAddition = $hide_rejected ? ($whereAddition ? "$whereAddition AND " : "") . "is_rejected = false" : $whereAddition;
     $challenges = $this->fetch_list($DB, 'campaign_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, id ASC");
     if ($challenges === false)
       return false;

@@ -184,6 +184,21 @@ class Challenge extends DbObject
     return $submission;
   }
 
+  static function get_all_rejected($DB)
+  {
+    $query = "SELECT * FROM view_challenges WHERE challenge_is_rejected = TRUE";
+    $result = pg_query_params_or_die($DB, $query);
+
+    $challenges = array();
+    while ($row = pg_fetch_assoc($result)) {
+      $challenge = new Challenge();
+      $challenge->apply_db_data($row, "challenge_");
+      $challenge->expand_foreign_keys($row, 5);
+      $challenges[] = $challenge;
+    }
+    return $challenges;
+  }
+
   // === Utility Functions ===
   function is_challenge_arbitrary(): bool
   {
@@ -249,6 +264,10 @@ class Challenge extends DbObject
     }
     if ($old->has_fc !== $new->has_fc) {
       $stateNow = $new->has_fc ? "Has FC" : "Doesn't have FC";
+      Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
+    }
+    if ($old->is_rejected !== $new->is_rejected) {
+      $stateNow = $new->is_rejected ? "Rejected" : "Not Rejected";
       Change::create_change($DB, 'challenge', $new->id, "Marked challenge as '{$stateNow}'");
     }
     if ($old->is_arbitrary !== $new->is_arbitrary) {

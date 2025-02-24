@@ -66,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$challenge->requires_fc && !$challenge->has_fc && $submission->is_fc) {
           die_json(400, "Submission cannot be moved to this challenge, as it requires non-FC");
         }
+        // if ($challenge->is_rejected) {
+        //   die_json(400, "Challenge with id {$submission->challenge_id} is rejected and does not accept submissions.");
+        // }
         $old_submission->challenge_id = $submission->challenge_id;
       }
       if ($submission->player_id !== $old_submission->player_id) {
@@ -241,6 +244,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $challenge = Challenge::get_by_id($DB, $data['challenge_id']);
       if ($challenge === false) {
         die_json(400, "Challenge with id {$data['challenge_id']} does not exist");
+      }
+      if ($challenge->is_rejected) {
+        die_json(400, "This challenge is rejected and does not accept submissions.");
       }
       if ($challenge->difficulty->sort >= $RAW_SESSION_REQUIRED_SORT) {
         check_url($submission->raw_session_url, 'raw_session_url');

@@ -169,9 +169,10 @@ class Map extends DbObject
   }
 
   // === Find Functions ===
-  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true, $filter_suspended = false): bool
+  function fetch_challenges($DB, $with_submissions = false, $include_arbitrary = true, $filter_suspended = false, $hide_rejected = false): bool
   {
     $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
+    $whereAddition = $hide_rejected ? ($whereAddition === null ? "is_rejected = false" : "$whereAddition AND is_rejected = false") : $whereAddition;
     $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, id ASC");
     if ($challenges === false)
       return false;

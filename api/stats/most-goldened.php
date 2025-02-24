@@ -65,6 +65,7 @@ $query = "SELECT
 FROM view_submissions
 WHERE ((challenge_is_arbitrary IS NULL AND objective_is_arbitrary = false) OR challenge_is_arbitrary = false)
   AND (map_is_rejected = FALSE OR map_is_rejected IS NULL)
+  AND challenge_is_rejected = FALSE
   AND map_id IS NOT NULL
   AND submission_is_verified = TRUE
   AND $time_filter

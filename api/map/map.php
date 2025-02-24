@@ -5,6 +5,7 @@ require_once('../api_bootstrap.inc.php');
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
+  $rejected = isset($_REQUEST['rejected']) && $_REQUEST['rejected'] === 'true';
 
   $id = $_REQUEST['id'];
   $maps = Map::get_request($DB, $id);
@@ -12,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (is_array($maps)) {
       foreach ($maps as $map) {
         $map->expand_foreign_keys($DB, 2, false);
-        $map->fetch_challenges($DB, $submissions, true, true);
+        $map->fetch_challenges($DB, $submissions, true, true, !$rejected);
       }
     } else {
       $maps->expand_foreign_keys($DB, 2, false);
-      $maps->fetch_challenges($DB, $submissions, true, true);
+      $maps->fetch_challenges($DB, $submissions, true, true, !$rejected);
     }
   }
 

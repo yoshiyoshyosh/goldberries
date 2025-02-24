@@ -7,14 +7,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
   $empty = isset($_REQUEST['empty']) && $_REQUEST['empty'] === 'true';
+  $rejected = isset($_REQUEST['rejected']) && $_REQUEST['rejected'] === 'true';
 
   $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : null;
   $gb_id = isset($_REQUEST['gamebanana_id']) ? $_REQUEST['gamebanana_id'] : null;
 
   if ($id === "all" && $submissions === false) {
     //Special handling for this case
-    $empty_where = $empty ? "" : "WHERE challenge_id IS NOT NULL";
-    $query = "SELECT * FROM view_campaigns $empty_where";
+    $where = [];
+    if ($rejected === false) {
+      $where[] = "challenge_is_rejected = false";
+    }
+    if ($empty === false) {
+      $where[] = "challenge_id IS NOT NULL";
+    }
+    $where_str = count($where) > 0 ? "WHERE " . implode(" AND ", $where) : "";
+    $query = "SELECT * FROM view_campaigns $where_str";
     $result = pg_query_params_or_die($DB, $query);
     $campaigns = parse_campaigns_no_submissions($result);
     api_write($campaigns);
@@ -24,19 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($maps) {
       if (is_array($campaigns)) {
         foreach ($campaigns as $campaign) {
-          $campaign->fetch_maps($DB, $challenges, $submissions);
+          $campaign->fetch_maps($DB, $challenges, $submissions, true, true, !$rejected);
         }
       } else {
-        $campaigns->fetch_maps($DB, $challenges, $submissions);
+        $campaigns->fetch_maps($DB, $challenges, $submissions, true, true, !$rejected);
       }
     }
     if ($challenges) {
       if (is_array($campaigns)) {
         foreach ($campaigns as $campaign) {
-          $campaign->fetch_challenges($DB, $submissions);
+          $campaign->fetch_challenges($DB, $submissions, true, !$rejected);
         }
       } else {
-        $campaigns->fetch_challenges($DB, $submissions);
+        $campaigns->fetch_challenges($DB, $submissions, true, !$rejected);
       }
     }
     api_write($campaigns);
