@@ -7,6 +7,7 @@ import {
   Grid,
   MenuItem,
   Popover,
+  Slider,
   Stack,
   TextField,
   Tooltip,
@@ -33,7 +34,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { DIFF_CONSTS } from "../util/constants";
+import { DIFFICULTIES, DIFF_CONSTS, sortToDifficulty, sortToDifficultyId } from "../util/constants";
 import { DifficultySelectControlled } from "./GoldberriesComponents";
 import { use } from "react";
 
@@ -109,6 +110,25 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
     if (localFilter.hide_objectives.includes(objective.id)) disabledFilters.push(objective.name);
   });
 
+  const changedTierSlider = (newSort) => {
+    const diffMax = sortToDifficultyId(decodeDiffSort(newSort[0]));
+    const diffMin = sortToDifficultyId(decodeDiffSort(newSort[1]));
+    setLocalFilter({ ...localFilter, min_diff_id: diffMin, max_diff_id: diffMax });
+  };
+  const encodeDiffSort = (sort) => {
+    //Sliders only work with ascending values, but we want the highest sort value to be on the left. Fix:
+    //subtract the sort value from the max sort value and fix it via the label to visually show the correct value
+    return DIFF_CONSTS.MAX_SORT - sort;
+  };
+  const decodeDiffSort = (sort) => {
+    return DIFF_CONSTS.MAX_SORT - sort;
+  };
+
+  const minMaxTierSorts = [
+    encodeDiffSort(DIFFICULTIES[localFilter.max_diff_id]?.sort ?? DIFF_CONSTS.MAX_SORT),
+    encodeDiffSort(DIFFICULTIES[localFilter.min_diff_id]?.sort ?? DIFF_CONSTS.MIN_SORT),
+  ];
+
   return (
     <Stack direction="row" gap={1} alignItems="center">
       <Button aria-describedby={elemId} variant="contained" onClick={handleClick}>
@@ -129,6 +149,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
             sx: {
               width: "500px",
               maxWidth: "92%",
+              overflow: "visible",
             },
           },
         }}
@@ -186,14 +207,35 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
 
-              <DifficultySelectControlled
+              {/* <DifficultySelectControlled
                 difficultyId={localFilter.min_diff_id ?? DIFF_CONSTS.TIER_7_ID}
                 setDifficultyId={(id) => changedFilter("min_diff_id", id)}
                 minSort={DIFF_CONSTS.UNTIERED_SORT}
                 fullWidth
                 label={t("minimum_tier")}
                 sx={{ my: 0.5 }}
-              />
+              /> */}
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                {t("tier_slider")}
+                {/* <Tooltip arrow placement="top" title={t("tier_slider.explanation")}>
+                  <FontAwesomeIcon icon={faQuestionCircle} />
+                </Tooltip> */}
+              </Typography>
+              <Stack direction="row" gap={1} alignItems="center" justifyContent="space-around">
+                <Slider
+                  value={minMaxTierSorts}
+                  onChange={(e, newValue) => {
+                    changedTierSlider(newValue);
+                  }}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => sortToDifficulty(decodeDiffSort(value)).name}
+                  min={DIFF_CONSTS.UNTIERED_SORT}
+                  max={DIFF_CONSTS.MAX_SORT}
+                  step={1}
+                  marks
+                  sx={{ width: "92%" }}
+                />
+              </Stack>
 
               <TextField
                 select
@@ -326,7 +368,8 @@ export function getDefaultFilter(isOverall) {
     hide_objectives: [],
     archived: true,
     arbitrary: true,
-    min_diff_id: isOverall ? DIFF_CONSTS.TIER_7_ID : DIFF_CONSTS.UNTIERED_SORT,
+    min_diff_id: isOverall ? DIFF_CONSTS.TIER_7_ID : DIFF_CONSTS.UNTIERED_ID,
+    max_diff_id: DIFF_CONSTS.HIGHEST_TIER_ID,
     undetermined: true,
     clear_state: 0,
     sub_count: null,

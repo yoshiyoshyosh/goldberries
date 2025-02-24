@@ -322,8 +322,9 @@ export function getDifficultySubtierShares(id) {
 //Some difficulty details being used in the frontend
 const DIFF_CONSTS_ = {
   //Difficulty ID constants
+  HIGHEST_TIER_ID: 2,
   TRIVIAL_ID: 20,
-  UNDETERMINED_ID: 19,
+  UNTIERED_ID: 19,
   STANDARD_IDS: [22, 18, 21], //high, mid, low
   TIER_7_ID: 17,
 
@@ -348,11 +349,27 @@ DIFF_CONSTS_.RECAP_FIRST_CLEAR_MIN_SORT = DIFF_CONSTS_.STANDARD_SORT_START;
 export const DIFF_CONSTS = DIFF_CONSTS_;
 //=================================================
 
-export function difficultyToSort(id) {
+export function difficultyIdToSort(id) {
   if (DIFFICULTIES[id] === undefined) {
     return DIFF_CONSTS.TIERED_SORT_START;
   }
   return DIFFICULTIES[id].sort;
+}
+export function sortToDifficulty(sort) {
+  for (const id in DIFFICULTIES) {
+    if (DIFFICULTIES[id].sort === sort) {
+      return DIFFICULTIES[id];
+    }
+  }
+  return DIFFICULTIES[DIFF_CONSTS.UNTIERED_ID];
+}
+export function sortToDifficultyId(sort) {
+  for (const id in DIFFICULTIES) {
+    if (DIFFICULTIES[id].sort === sort) {
+      return id;
+    }
+  }
+  return DIFF_CONSTS.UNTIERED_ID;
 }
 
 export function getOldDifficultyName(id) {

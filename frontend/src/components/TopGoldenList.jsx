@@ -96,6 +96,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     filter.archived +
     filter.undetermined +
     filter.min_diff_id +
+    filter.max_diff_id +
     filter.hide_objectives.join(",") +
     filter.sub_count +
     filter.sub_count_is_min +
@@ -127,6 +128,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     filter.archived,
     filter.undetermined,
     filter.min_diff_id,
+    filter.max_diff_id,
     filter.hide_objectives,
     filter.sub_count,
     filter.sub_count_is_min,

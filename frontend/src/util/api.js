@@ -1,5 +1,5 @@
 import axios from "axios";
-import { difficultyToSort } from "./constants";
+import { DIFF_CONSTS, difficultyIdToSort } from "./constants";
 
 //#region == GET ==
 
@@ -35,7 +35,8 @@ export function fetchTopGoldenList(type, id = null, filter) {
   const data = {
     archived: filter.archived,
     undetermined: filter.undetermined,
-    min_diff_sort: difficultyToSort(filter.min_diff_id),
+    min_diff_sort: difficultyIdToSort(filter.min_diff_id),
+    max_diff_sort: difficultyIdToSort(filter.max_diff_id ?? DIFF_CONSTS.HIGHEST_TIER_ID),
     hide_objectives: filter.hide_objectives,
     sub_count_is_min: filter.sub_count_is_min ?? false,
     clear_state: filter.clear_state ?? 0,
