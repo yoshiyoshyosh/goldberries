@@ -62,6 +62,7 @@ import { CharsCountLabel } from "./Suggestions";
 import { useTheme } from "@emotion/react";
 import { getCollectibleOptions, getCollectibleVariantOptions } from "../components/forms/Map";
 import { StringListEditor } from "../components/StringListEditor";
+import { NOTIFICATIONS, hasNotificationFlag } from "./Account";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -1305,15 +1306,11 @@ const MemoMultiUserSubmissionMapRow = memo(MultiUserSubmissionMapRow, (prevProps
 function NotificationNotice({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "submit.notifications" });
   const auth = useAuth();
-  const notifsEnabled = auth.user?.n_sub_verified && auth.user?.discord_id !== null;
+  const hasDiscord = auth.user?.discord_id !== null;
+  const notifsEnabled =
+    hasDiscord && hasNotificationFlag(auth.user.notifications, NOTIFICATIONS.sub_verified.flag);
   return (
     <>
-      {/* <Grid item xs={12} sm={12}>
-        <Typography variant="caption" color="error">
-          * Note: Any submissions made to the website prior to release will be removed on release! Read{" "}
-          <StyledLink to="/">Public Test notice</StyledLink> for more info.
-        </Typography>
-      </Grid> */}
       {(notifsEnabled || true) && (
         <Grid item xs={12} sm={12}>
           <Typography variant="caption" color="textSecondary">

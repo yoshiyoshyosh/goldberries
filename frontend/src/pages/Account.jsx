@@ -72,6 +72,20 @@ import { SettingsEntry } from "./AppSettings";
 import { Trans, useTranslation } from "react-i18next";
 import { CharsCountLabel } from "./Suggestions";
 
+export const NOTIFICATIONS = {
+  sub_verified: { key: "sub_verified", flag: 1 },
+  chall_personal: { key: "marked_personal", flag: 2 },
+  suggestion_verified: { key: "suggestion_created", flag: 4 },
+  chall_moved: { key: "challenge_moved", flag: 8 },
+  suggestion_accepted: { key: "suggestion_accepted", flag: 16 },
+};
+export function hasNotificationFlag(notifications, flag) {
+  return (notifications & flag) === flag;
+}
+export function setNotificationFlag(notifications, flag, value) {
+  return value ? notifications | flag : notifications & ~flag;
+}
+
 export function PageAccount() {
   const { t } = useTranslation(undefined, { keyPrefix: "account" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -351,6 +365,14 @@ export function UserAccountNotificationsForm() {
     });
   });
 
+  const notifications = form.watch("notifications"); //Integer for bitwise flags for all notifications
+  const updateNotification = (flag, value) => {
+    form.setValue("notifications", setNotificationFlag(notifications, flag, value));
+  };
+
+  //Sort NOTIFICATIONS by flag value
+  const availableNotifications = Object.values(NOTIFICATIONS).sort((a, b) => a.flag - b.flag);
+
   return (
     <form>
       <FormHelperText>
@@ -365,62 +387,19 @@ export function UserAccountNotificationsForm() {
 
       <Divider sx={{ my: 2 }} />
 
-      <SettingsEntry note={t("sub_verified.description")} title={t("sub_verified.label")} shiftNote>
-        <Controller
-          name="n_sub_verified"
-          control={form.control}
-          render={({ field }) => (
-            <FormControlLabel
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-              control={<Switch />}
-            />
-          )}
-        />
-      </SettingsEntry>
-      <SettingsEntry note={t("marked_personal.description")} title={t("marked_personal.label")} shiftNote>
-        <Controller
-          name="n_chall_personal"
-          control={form.control}
-          render={({ field }) => (
-            <FormControlLabel
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-              control={<Switch />}
-            />
-          )}
-        />
-      </SettingsEntry>
-      <SettingsEntry note={t("challenge_moved.description")} title={t("challenge_moved.label")} shiftNote>
-        <Controller
-          name="n_chall_moved"
-          control={form.control}
-          render={({ field }) => (
-            <FormControlLabel
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-              control={<Switch />}
-            />
-          )}
-        />
-      </SettingsEntry>
-      <SettingsEntry
-        note={t("suggestion_created.description")}
-        title={t("suggestion_created.label")}
-        shiftNote
-      >
-        <Controller
-          name="n_suggestion"
-          control={form.control}
-          render={({ field }) => (
-            <FormControlLabel
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-              control={<Switch />}
-            />
-          )}
-        />
-      </SettingsEntry>
+      {availableNotifications.map((notification) => (
+        <SettingsEntry
+          note={t(notification.key + ".description")}
+          title={t(notification.key + ".label")}
+          shiftNote
+        >
+          <FormControlLabel
+            checked={hasNotificationFlag(notifications, notification.flag)}
+            onChange={(e) => updateNotification(notification.flag, e.target.checked)}
+            control={<Switch />}
+          />
+        </SettingsEntry>
+      ))}
 
       <Divider sx={{ my: 2 }} />
 

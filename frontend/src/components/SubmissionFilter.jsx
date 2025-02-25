@@ -12,12 +12,12 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 import { getQueryData, useGetObjectiveSubmissionCount, useGetObjectives } from "../hooks/useApi";
 import { ErrorDisplay, LoadingSpinner, TooltipLineBreaks, getErrorFromMultiple } from "./BasicComponents";
 import { useTheme } from "@emotion/react";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarXmark,
@@ -149,7 +149,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
             sx: {
               width: "500px",
               maxWidth: "92%",
-              overflow: "visible",
+              overflow: isMdScreen ? "visible" : undefined,
             },
           },
         }}

@@ -742,6 +742,10 @@
         "suggestion_created": {
           "label": "Suggestion Created",
           "description": "To get notified when a suggestion for a challenge you have completed is created"
+        },
+        "suggestion_accepted": {
+          "label": "Own Suggestion State",
+          "description": "To get notified when the state (accepted/rejected) on one of your suggestions is changed"
         }
       },
       "profile": {
