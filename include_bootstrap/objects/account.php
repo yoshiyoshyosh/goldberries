@@ -6,6 +6,12 @@ class Account extends DbObject
 {
   public static string $table_name = 'account';
 
+  public static int $NOTIF_SUB_VERIFIED = 1;
+  public static int $NOTIF_CHALL_PERSONAL = 2;
+  public static int $NOTIF_SUGGESTION_VERIFIED = 4;
+  public static int $NOTIF_CHALL_MOVED = 8;
+  public static int $NOTIF_SUGGESTION_ACCEPTED = 16;
+
   public ?string $email = null;
   public ?string $password = null;
   public ?string $discord_id = null;
@@ -26,10 +32,7 @@ class Account extends DbObject
 
   // Other
   public ?JsonDateTime $last_player_rename = null;
-  public bool $n_sub_verified = true;
-  public bool $n_chall_personal = true;
-  public bool $n_suggestion = false;
-  public bool $n_chall_moved = false;
+  public int $notifications = 3; //Default notifications: Account::$NOTIF_SUB_VERIFIED | Account::$NOTIF_CHALL_PERSONAL
 
   // Foreign Keys
   public ?int $player_id = null;
@@ -47,10 +50,7 @@ class Account extends DbObject
     $this->date_created = new JsonDateTime($arr[$prefix . 'date_created']);
     $this->role = intval($arr[$prefix . 'role']);
     $this->is_suspended = $arr[$prefix . 'is_suspended'] === 't';
-    $this->n_sub_verified = $arr[$prefix . 'n_sub_verified'] === 't';
-    $this->n_chall_personal = $arr[$prefix . 'n_chall_personal'] === 't';
-    $this->n_suggestion = $arr[$prefix . 'n_suggestion'] === 't';
-    $this->n_chall_moved = $arr[$prefix . 'n_chall_moved'] === 't';
+    $this->notifications = intval($arr[$prefix . 'notifications']);
 
     if (isset($arr[$prefix . 'player_id']))
       $this->player_id = intval($arr[$prefix . 'player_id']);
@@ -140,10 +140,7 @@ class Account extends DbObject
       'name_color_end' => $this->name_color_end,
       'country' => $this->country,
       'last_player_rename' => $this->last_player_rename,
-      'n_sub_verified' => $this->n_sub_verified,
-      'n_chall_personal' => $this->n_chall_personal,
-      'n_suggestion' => $this->n_suggestion,
-      'n_chall_moved' => $this->n_chall_moved
+      'notifications' => $this->notifications
     );
   }
 
@@ -215,5 +212,10 @@ class Account extends DbObject
       return true;
     }
     return array_key_exists($country, $COUNTRY_CODES);
+  }
+
+  function has_notification_flag(int $flag): bool
+  {
+    return ($this->notifications & $flag) === $flag;
   }
 }

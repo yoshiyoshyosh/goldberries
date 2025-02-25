@@ -243,21 +243,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     //Notification settings
-    if (array_key_exists("n_sub_verified", $request) && ($request['n_sub_verified'] === 't') !== $account->n_sub_verified) {
-      $account->n_sub_verified = $request['n_sub_verified'] === 't';
-      $changes .= "n_sub_verified ({$account->n_sub_verified}), ";
-    }
-    if (array_key_exists("n_chall_personal", $request) && ($request['n_chall_personal'] === 't') !== $account->n_chall_personal) {
-      $account->n_chall_personal = $request['n_chall_personal'] === 't';
-      $changes .= "n_chall_personal ({$account->n_chall_personal}), ";
-    }
-    if (array_key_exists("n_suggestion", $request) && ($request['n_suggestion'] === 't') !== $account->n_suggestion) {
-      $account->n_suggestion = $request['n_suggestion'] === 't';
-      $changes .= "n_suggestion ({$account->n_suggestion}), ";
-    }
-    if (array_key_exists("n_chall_moved", $request) && ($request['n_chall_moved'] === 't') !== $account->n_chall_moved) {
-      $account->n_chall_moved = $request['n_chall_moved'] === 't';
-      $changes .= "n_chall_moved ({$account->n_chall_moved}), ";
+    if (array_key_exists("notifications", $request) && $request['notifications'] !== $account->notifications) {
+      $account->notifications = intval($request['notifications']);
+      $changes .= "notifications ({$account->notifications}), ";
     }
 
     if ($account->update($DB) === false) {

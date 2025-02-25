@@ -178,7 +178,7 @@ function send_webhook_suggestion_notification($suggestion)
   $allowed_mentions = ["users" => []];
   foreach ($challenge->submissions as $submission) {
     $account = $submission->player->get_account($DB);
-    if ($account !== null && $account->discord_id !== null && $account->n_suggestion) {
+    if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_SUGGESTION_VERIFIED)) {
       $ping_list[] = "<@{$account->discord_id}>";
       $allowed_mentions["users"][] = $account->discord_id;
     }
@@ -214,12 +214,18 @@ function send_webhook_suggestion_accepted($suggestion)
   $suggestion->expand_foreign_keys($DB, 5);
   $webhook_url = constant('SUGGESTION_BOX_WEBHOOK_URL');
 
+  $player = $suggestion->author;
+  $account = $player->get_account($DB);
+  $should_notify = $account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_SUGGESTION_ACCEPTED);
+  $notify_addition = $should_notify ? " <@{$account->discord_id}>" : "";
+  $allowed_mentions = $should_notify ? ["users" => [$account->discord_id]] : ["users" => []];
+
   $icon = $suggestion->is_accepted === true ? ":white_check_mark:" : ($suggestion->is_accepted === null ? ":question:" : ":x:");
   $url = $suggestion->get_url();
   $state = $suggestion->is_accepted === true ? "accepted" : ($suggestion->is_accepted === null ? "set to be undecided again" : "rejected");
 
-  $message = "{$icon} The suggestion {$url} was {$state}";
-  send_simple_webhook_message($webhook_url, $message);
+  $message = "{$icon} The suggestion {$url} was {$state}{$notify_addition}";
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 
@@ -236,7 +242,7 @@ function send_webhook_submission_verified($submission)
   $webhook_url = constant('NOTIFICATIONS_WEBHOOK_URL');
   $allowed_mentions = ["users" => []];
 
-  if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
+  if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_SUB_VERIFIED)) {
     $player_name = "<@{$account->discord_id}>";
     $allowed_mentions["users"][] = $account->discord_id;
   }
@@ -270,7 +276,7 @@ function send_webhook_multi_submission_verified($submissions)
   $webhook_url = constant('NOTIFICATIONS_WEBHOOK_URL');
   $allowed_mentions = ["users" => []];
 
-  if ($account !== null && $account->discord_id !== null && $account->n_sub_verified) {
+  if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_SUB_VERIFIED)) {
     $player_name = "<@{$account->discord_id}>";
     $allowed_mentions["users"][] = $account->discord_id;
   }
@@ -362,7 +368,7 @@ function send_webhook_challenge_marked_personal($challenge)
       $submission_url = $submission->get_url();
       $name = "[{$submission->player->name}]({$submission_url})";
       $account = $submission->player->get_account($DB);
-      if ($account !== null && $account->discord_id !== null && $account->n_chall_personal) {
+      if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_CHALL_PERSONAL)) {
         $name .= " (<@{$account->discord_id}>)";
         $allowed_mentions["users"][] = $account->discord_id;
       }
@@ -404,7 +410,7 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   $allowed_mentions = ["users" => []];
   foreach ($challenge->submissions as $submission) {
     $account = $submission->player->get_account($DB);
-    if ($account !== null && $account->discord_id !== null && $account->n_chall_moved) {
+    if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_CHALL_MOVED)) {
       $ping_list[] = "<@{$account->discord_id}>";
       $allowed_mentions["users"][] = $account->discord_id;
     }
