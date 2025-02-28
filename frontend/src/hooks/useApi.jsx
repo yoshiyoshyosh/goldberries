@@ -103,10 +103,10 @@ export function useGetGoldenList(type, id = null, include_archived = false, incl
   });
 }
 
-export function useGetAllCampaigns(empty) {
+export function useGetAllCampaigns(empty, rejected) {
   return useQuery({
-    queryKey: ["all_campaigns", empty],
-    queryFn: () => fetchAllCampaigns(empty),
+    queryKey: ["all_campaigns", empty, rejected],
+    queryFn: () => fetchAllCampaigns(empty, rejected),
     onError: errorToast,
   });
 }

@@ -104,7 +104,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
   return (
     <>
       <Typography variant="h6">{t("title")}</Typography>
-      <CampaignSelect selected={campaign} setSelected={(c) => form.setValue("campaign", c)} empty />
+      <CampaignSelect selected={campaign} setSelected={(c) => form.setValue("campaign", c)} empty rejected />
       <Divider sx={{ my: 2 }}>
         <Chip label={t("step", { current: formState + 1, total: 2 })} size="small" />
       </Divider>

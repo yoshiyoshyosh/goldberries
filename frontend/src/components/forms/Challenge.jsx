@@ -133,6 +133,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
         selected={campaign}
         setSelected={(campaign) => setCampaign(campaign)}
         empty
+        rejected
         sx={{ mt: 2 }}
       />
       {campaign && (

@@ -72,12 +72,13 @@ export function fetchAllChallenges(isFullGame = false) {
   });
 }
 
-export function fetchAllCampaigns(empty) {
+export function fetchAllCampaigns(empty, rejected) {
   const params = {
     id: "all",
     maps: true,
     challenges: true,
     empty: empty,
+    rejected: rejected,
   };
   return axios.get("/campaign", { params: params });
 }

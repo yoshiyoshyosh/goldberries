@@ -149,6 +149,7 @@ export function FormMap({ map, onSave, ...props }) {
             selected={field.value}
             setSelected={(campaign) => field.onChange(campaign)}
             empty
+            rejected
             sx={{ mt: 2 }}
           />
         )}

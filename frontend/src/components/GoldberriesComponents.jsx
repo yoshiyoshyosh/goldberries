@@ -76,10 +76,17 @@ import dayjs from "dayjs";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import { isAdmin, isHelper, isVerifier } from "../hooks/AuthProvider";
 
-export function CampaignSelect({ selected, setSelected, filter = null, disabled = false, empty = false }) {
+export function CampaignSelect({
+  selected,
+  setSelected,
+  filter = null,
+  disabled = false,
+  empty = false,
+  rejected = false,
+}) {
   const { t } = useTranslation();
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
-  const query = useGetAllCampaigns(empty);
+  const query = useGetAllCampaigns(empty, rejected);
 
   let rawCampaigns = getQueryData(query);
   let campaigns = rawCampaigns ?? [];
