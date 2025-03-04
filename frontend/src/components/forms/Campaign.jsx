@@ -16,7 +16,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, StyledLink } from "../BasicComponents";
 import { Controller, set, useForm } from "react-hook-form";
 import { useEffect, useMemo, useState } from "react";
 import { FormOptions } from "../../util/constants";
@@ -175,7 +175,8 @@ export function FormCampaign({ campaign, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        {t_g("campaign", { count: 1 })} ({newCampaign ? t_g("new") : campaign.id})
+        {t_g("campaign", { count: 1 })} (
+        {newCampaign ? t_g("new") : <StyledLink to={"/campaign/" + campaign.id}>{campaign.id}</StyledLink>})
       </Typography>
 
       <Controller

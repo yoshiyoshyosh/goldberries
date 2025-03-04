@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, StyledLink } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
@@ -138,7 +138,8 @@ export function FormMap({ map, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        {t_g("map", { count: 1 })} ({newMap ? t_g("new") : map.id})
+        {t_g("map", { count: 1 })} (
+        {newMap ? t_g("new") : <StyledLink to={"/map/" + map.id}>{map.id}</StyledLink>})
       </Typography>
 
       <Controller
@@ -376,6 +377,9 @@ export const COLLECTIBLES = [
       { value: "13", name: "Nutty Noon Strawberry", icon: "/icons/strawberry-nutty.png" },
       { value: "14", name: "Nutty Noon Core Strawberry", icon: "/icons/strawberry-nutty-core.png" },
       { value: "15", name: "Frozen Waterfall Blueberry", icon: "/icons/strawberry-blueberry-frozen.png" },
+      { value: "17", name: "Celestecraft Strawberry", icon: "/icons/strawberry-celestecraft.png" },
+      { value: "18", name: "Nyanwave Strawberry", icon: "/icons/strawberry-nyanwave.png" },
+      { value: "19", name: "Crystallized Sanctuary Strawberry", icon: "/icons/strawberry-sanctuary.png" },
     ],
   },
   {
@@ -443,6 +447,7 @@ export const COLLECTIBLES = [
         displayName: "Water Berry",
         icon: "/icons/nutty-water-berry.png",
       },
+      { value: "10", name: "FLP Frogberry", displayName: "Frogberry", icon: "/icons/frogberry.png" },
     ],
   },
   {

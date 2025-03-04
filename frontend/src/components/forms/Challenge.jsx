@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchChallenge, postChallenge } from "../../util/api";
 import { Button, Checkbox, Divider, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
-import { ErrorDisplay, LoadingSpinner } from "../BasicComponents";
+import { ErrorDisplay, LoadingSpinner, StyledLink } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
@@ -126,7 +126,13 @@ export function FormChallenge({ challenge, onSave, ...props }) {
   return (
     <form {...props}>
       <Typography variant="h6" gutterBottom>
-        {t_g("challenge", { count: 1 })} ({newChallenge ? t_g("new") : challenge.id})
+        {t_g("challenge", { count: 1 })} (
+        {newChallenge ? (
+          t_g("new")
+        ) : (
+          <StyledLink to={"/challenge/" + challenge.id}>{challenge.id}</StyledLink>
+        )}
+        )
       </Typography>
 
       <CampaignSelect
