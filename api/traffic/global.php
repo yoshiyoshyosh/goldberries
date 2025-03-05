@@ -69,8 +69,9 @@ $where_str
 $group_by_interval_str
 $order_by_interval_str
 ";
-$result = pg_query_params_or_die($DB, $query, []);
-$response["device_usage"] = unpack_all_interval_response($interval, $result, true);
+//Commented out, because currently not in use and it's a very expensive query (2 seconds with 2M rows)
+// $result = pg_query_params_or_die($DB, $query, []);
+// $response["device_usage"] = unpack_all_interval_response($interval, $result, true);
 
 //===== 3. REFERRERS =====
 //In this query, ignore post-oauth and discord_auth.php pages, as they

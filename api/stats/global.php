@@ -11,24 +11,31 @@ if ($month !== null && !preg_match('/^\d{4}-\d{2}$/', $month)) {
   die_json(400, 'Invalid month');
 }
 
-$time_filter = $month === null ? "" : "WHERE date_trunc('month', map.date_added, 'UTC') < '$month-01' ";
-$time_filter_added = $month === null ? "" : "WHERE date_trunc('month', date_added, 'UTC') < '$month-01' ";
-$time_filter_created = $month === null ? "" : "WHERE date_trunc('month', date_created, 'UTC') < '$month-01' ";
-$time_filter_achieved = $month === null ? "" : "WHERE date_trunc('month', date_achieved, 'UTC') < '$month-01' ";
+$where_campaign = "";
+$where_map = "WHERE map.is_rejected = FALSE";
+$where_challenge = "WHERE challenge.is_rejected = FALSE";
+$where_submission = "WHERE submission.is_verified = TRUE";
+
+if ($month !== null) {
+  $where_campaign = "WHERE date_trunc('month', campaign.date_added, 'UTC') < '$month-01'";
+  $where_map .= " AND date_trunc('month', map.date_added, 'UTC') < '$month-01'";
+  $where_challenge .= " AND date_trunc('month', challenge.date_created, 'UTC') < '$month-01'";
+  $where_submission .= " AND date_trunc('month', submission.date_achieved, 'UTC') < '$month-01'";
+}
 
 $query = "
 SELECT
-(SELECT COUNT(*) FROM campaign $time_filter_added) AS count_campaigns,
-(SELECT COUNT(*) FROM map $time_filter_added) AS count_maps,
-(SELECT COUNT(*) FROM challenge $time_filter_created) AS count_challenge,
-(SELECT COUNT(*) FROM submission $time_filter_achieved) AS count_submission,
+(SELECT COUNT(*) FROM campaign $where_campaign) AS count_campaigns,
+(SELECT COUNT(*) FROM map $where_map) AS count_maps,
+(SELECT COUNT(*) FROM challenge $where_challenge) AS count_challenge,
+(SELECT COUNT(*) FROM submission $where_submission) AS count_submission,
 (SELECT COUNT(*) FROM player) AS count_players,
 (SELECT COUNT(*) AS real_campaign_count
 FROM (SELECT
 COUNT(*) AS map_count
 FROM map
 JOIN campaign ON map.campaign_id = campaign.id
-$time_filter
+$where_map
 GROUP BY campaign.id
 HAVING COUNT(*) > 1) AS real_campaigns) AS real_campaign_count
 ";
