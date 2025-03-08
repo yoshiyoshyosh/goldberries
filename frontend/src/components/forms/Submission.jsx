@@ -294,8 +294,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               <span style={{ flexGrow: 1 }} />
               <Tooltip arrow placement="top" title={t("map_information")}>
                 <CustomIconButton
-                  onClick={() => mapCollectiblesModal.open(submission.challenge?.map)}
-                  // onClick={() => mapCollectiblesModal.open(mapForCollectibles)}
+                  onClick={() => mapCollectiblesModal.open(mapForCollectibles)}
                   sx={{ alignSelf: "stretch" }}
                 >
                   <FontAwesomeIcon icon={faBasketShopping} />
