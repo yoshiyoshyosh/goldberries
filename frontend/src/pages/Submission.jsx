@@ -27,6 +27,7 @@ import {
   faExternalLink,
   faFlagCheckered,
   faBook,
+  faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../hooks/AuthProvider";
 import {
@@ -43,6 +44,7 @@ import {
   getChallengeNameShort,
   getMapName,
   getSubmissionVerifier,
+  secondsToDuration,
 } from "../util/data_util";
 import { GoldberriesBreadcrumbs } from "../components/Breadcrumb";
 import {
@@ -56,6 +58,7 @@ import {
   ShareButton,
   InfoBox,
   InfoBoxIconTextLine,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import { FormSubmissionWrapper } from "../components/forms/Submission";
 import { CustomModal, ModalButtons, useModal } from "../hooks/useModal";
@@ -264,8 +267,29 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
           <InfoBoxIconTextLine text={<PlayerChip player={submission.player} size="small" />} isSecondary />
         </InfoBox>
         <InfoBox>
-          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("achieved")} />
-          <InfoBoxIconTextLine text={displayDate(submission.date_achieved, t_g)} isSecondary />
+          <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faCalendar} />} text={t("achieved")} />
+          <InfoBoxIconTextLine
+            text={
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                flexWrap="wrap"
+                columnGap={1}
+              >
+                <span>{displayDate(submission.date_achieved, t_g)}</span>
+                {submission.time_taken && (
+                  <Stack direction="row" alignItems="center" gap={0.5}>
+                    <span>{secondsToDuration(submission.time_taken)}</span>
+                    <TooltipLineBreaks title={t("time_taken_explanation")}>
+                      <FontAwesomeIcon icon={faClock} size="sm" />
+                    </TooltipLineBreaks>
+                  </Stack>
+                )}
+              </Stack>
+            }
+            isSecondary
+          />
         </InfoBox>
         <InfoBox>
           <InfoBoxIconTextLine
@@ -332,7 +356,7 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               />
             </InfoBox>
             <InfoBox>
-              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faClock} />} text={t("submitted")} />
+              <InfoBoxIconTextLine icon={<FontAwesomeIcon icon={faCalendar} />} text={t("submitted")} />
               <InfoBoxIconTextLine text={displayDate(submission.date_created, t_g)} isSecondary />
             </InfoBox>
             <InfoBox>
