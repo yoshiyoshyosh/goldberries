@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { CodeBlock } from "../pages/Rules";
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -9,14 +10,13 @@ export class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // logErrorToService(error, errorInfo);
-    console.log("Caught error: ", error, errorInfo);
-    this.setState({ hasError: true });
+    console.log("Caught error:", error);
+    this.setState({ hasError: true, message: error.toString() });
   }
 
   render() {
     if (this.state.hasError) {
-      return <ErrorComponent message={this.props.message} />;
+      return <ErrorComponent message={this.state.message} />;
     }
     return this.props.children;
   }
@@ -24,20 +24,20 @@ export class ErrorBoundary extends React.Component {
 
 function ErrorComponent({ message }) {
   const { t } = useTranslation(undefined, { keyPrefix: "general" });
-  const header = "Something went wrong!";
-  // const header = t("error_handling.header");
-  const displayMessage =
-    message ??
-    "Try refreshing your browser's cache (Ctrl + F5) or ask in #gb-report if the problem persists.";
-  // const displayMessage = message ?? t("error_handling.default");
   return (
     <>
       <Typography variant="h6" color="error">
         Something went wrong!
       </Typography>
       <Typography variant="body1" color="error">
-        {displayMessage}
+        Try refreshing your browser's cache (Ctrl + F5 in Firefox, Shift + F5 in Chrome) or ask in #gb-report
+        if the problem persists.
       </Typography>
+      {message && (
+        <Typography variant="body1" color="error">
+          Error that occurred: <CodeBlock>{message}</CodeBlock>
+        </Typography>
+      )}
     </>
   );
 }

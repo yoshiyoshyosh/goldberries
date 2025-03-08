@@ -127,6 +127,7 @@ import { GlobalNoticesIcon } from "./components/GlobalNotices";
 import { PageManageServerSettings } from "./pages/manage/ServerSettings";
 import { PageTest } from "./pages/Test";
 import { PageTrafficAnalytics } from "./pages/manage/TrafficAnalytics";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -851,7 +852,9 @@ export function Layout() {
             flexGrow: 1,
           }}
         >
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </Box>
       </Box>
       <ModalContainer searchOpenRef={searchOpenRef} settingsOpenRef={settingsOpenRef} />

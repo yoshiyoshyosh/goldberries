@@ -1055,6 +1055,7 @@
     "no_challenges": "There are currently no challenges for this map.",
     "info_boxes": {
       "collectibles": "Map Collectibles",
+      "no_collectibles": "Unknown",
       "golden_changes": {
         "label": "Golden Changes",
         "no_changes": "No golden changes",
@@ -1127,6 +1128,7 @@
       "new_challenge": "New Challenge",
       "submitted": "Submitted",
       "achieved": "Achieved",
+      "time_taken_explanation": "User-provided time taken to complete this challenge, in the format: (hh:)mm:ss",
       "verification": "Verification",
       "status": "Status",
       "links": "Links",
@@ -1161,6 +1163,8 @@
             "add_player": "Add Player"
           }
         },
+        "test_embed": "Test Embed",
+        "hide_embed": "Hide Embed",
         "proof_note": "Upload your proof video to a permanent place, such as YouTube, Bilibili, Twitch Highlight",
         "raw_session_note": "Raw session recording of the winning run is required for Tier 8+ goldens.",
         "raw_session_same_url_info": "Are you sure you want to use the same URL for the raw session?",

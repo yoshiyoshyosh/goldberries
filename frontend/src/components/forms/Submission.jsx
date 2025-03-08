@@ -148,6 +148,11 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const new_challenge = form.watch("new_challenge");
 
   const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
+  let mapForCollectibles = submission.challenge?.map;
+  if (mapForCollectibles) {
+    mapForCollectibles = JSON.parse(JSON.stringify(mapForCollectibles)); //Make copy to avoid modifying original
+    mapForCollectibles.challenges = [submission.challenge];
+  }
 
   if (!isHelper && submission.player.id !== auth.user.player.id) {
     return (
@@ -290,6 +295,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               <Tooltip arrow placement="top" title={t("map_information")}>
                 <CustomIconButton
                   onClick={() => mapCollectiblesModal.open(submission.challenge?.map)}
+                  // onClick={() => mapCollectiblesModal.open(mapForCollectibles)}
                   sx={{ alignSelf: "stretch" }}
                 >
                   <FontAwesomeIcon icon={faBasketShopping} />

@@ -61,7 +61,7 @@ export function SuggestedDifficultyChart({ challenge }) {
         <Grid item key={i} xs={12} md={width}>
           {data.length === 0 ? (
             <Stack direction="column" gap={1} alignItems="center">
-              <Chip label={datasets[i].label} size="small" />
+              {datasets[i].label && <Chip label={datasets[i].label} size="small" />}
               <Typography variant="body2" key={i + "-label"}>
                 {t("no_suggestions_yet")}
               </Typography>
