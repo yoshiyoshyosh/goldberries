@@ -37,11 +37,18 @@ import {
   ErrorDisplay,
   HeadTitle,
   LoadingSpinner,
+  ProofEmbed,
   StyledLink,
   TooltipInfoButton,
 } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronLeft, faInfoCircle, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronLeft,
+  faInfoCircle,
+  faTents,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   CampaignSelect,
   MapSelect,
@@ -150,6 +157,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
   const [isAddingPlayer, setIsAddingPlayer] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [showEmbed, setShowEmbed] = useState(false);
 
   const { mutateAsync: postPlayer } = usePostPlayer();
 
@@ -305,7 +313,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               </Stack>
             </Grid>
           )}
-          <Grid item xs={12}>
+          <Grid item xs>
             <TextField
               label={t_fs("proof_url") + " *"}
               fullWidth
@@ -321,8 +329,27 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
                 ) : null
               }
             />
+          </Grid>
+          <Grid item xs="auto" display="flex">
+            <Button
+              variant="outlined"
+              onClick={() => setShowEmbed(!showEmbed)}
+              sx={{ alignSelf: "stretch" }}
+              disabled={proof_url === ""}
+              color={showEmbed ? "success" : "primary"}
+              fullWidth
+            >
+              {t(showEmbed ? "hide_embed" : "test_embed")}
+            </Button>
+          </Grid>
+          <Grid item xs={12} sx={{ "&&": { pt: 0 } }}>
             <FormHelperText>{t("proof_note")}</FormHelperText>
           </Grid>
+          {showEmbed && (
+            <Grid item xs={12} sx={{ "&&": { pt: 1 } }}>
+              <ProofEmbed url={form.watch("proof_url")} />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               label={t_fs("raw_session_url") + (needsRawSession ? " *" : " (Optional)")}
@@ -469,6 +496,7 @@ export function MultiUserSubmission() {
   const [multiVideo, setMultiVideo] = useState(false);
   const [mapDataList, setMapDataList] = useState([]); // [{map: map, challenge: challenge, is_fc: false, player_notes: "", suggested_difficulty_id: null}]
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
+  const [showEmbed, setShowEmbed] = useState(false);
 
   const { mutateAsync: submitRun } = usePostSubmission();
 
@@ -533,6 +561,7 @@ export function MultiUserSubmission() {
     addRunRecursive(0);
   });
   const errors = form.formState.errors;
+  const proof_url = form.watch("proof_url");
 
   const onCampaignSelect = (campaign) => {
     //Sort campaign.maps by sort_major, sort_minor, sort_order then name
@@ -768,7 +797,8 @@ export function MultiUserSubmission() {
               <PlayerChip player={selectedPlayer} />
             )}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs>
             <TextField
               label={t_fs("proof_url") + (hasAllIndividualVideos ? "" : " *")}
               fullWidth
@@ -785,8 +815,27 @@ export function MultiUserSubmission() {
                 ) : null
               }
             />
+          </Grid>
+          <Grid item xs="auto" display="flex">
+            <Button
+              variant="outlined"
+              onClick={() => setShowEmbed(!showEmbed)}
+              sx={{ alignSelf: "stretch" }}
+              disabled={proof_url === ""}
+              color={showEmbed ? "success" : "primary"}
+              fullWidth
+            >
+              {t_ts(showEmbed ? "hide_embed" : "test_embed")}
+            </Button>
+          </Grid>
+          <Grid item xs={12} sx={{ "&&": { pt: 0 } }}>
             <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
+          {showEmbed && (
+            <Grid item xs={12} sx={{ "&&": { pt: 1 } }}>
+              <ProofEmbed url={form.watch("proof_url")} />
+            </Grid>
+          )}
           <Grid item xs={12} sm={12}>
             <Button
               variant="contained"
@@ -821,6 +870,7 @@ export function NewChallengeUserSubmission({}) {
   const auth = useAuth();
   const navigate = useNavigate();
   const [selectedPlayer, setSelectedPlayer] = useState(auth.user?.player ?? null);
+  const [showEmbed, setShowEmbed] = useState(false);
 
   const { mutate: submitRun } = usePostSubmission((submission) => {
     navigate("/submission/" + submission.id);
@@ -945,7 +995,8 @@ export function NewChallengeUserSubmission({}) {
               <PlayerChip player={selectedPlayer} />
             )}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs>
             <TextField
               label={t_fs("proof_url") + " *"}
               fullWidth
@@ -961,8 +1012,27 @@ export function NewChallengeUserSubmission({}) {
                 ) : null
               }
             />
+          </Grid>
+          <Grid item xs="auto" display="flex">
+            <Button
+              variant="outlined"
+              onClick={() => setShowEmbed(!showEmbed)}
+              sx={{ alignSelf: "stretch" }}
+              disabled={proof_url === ""}
+              color={showEmbed ? "success" : "primary"}
+              fullWidth
+            >
+              {t_ts(showEmbed ? "hide_embed" : "test_embed")}
+            </Button>
+          </Grid>
+          <Grid item xs={12} sx={{ "&&": { pt: 0 } }}>
             <FormHelperText>{t_ts("proof_note")}</FormHelperText>
           </Grid>
+          {showEmbed && (
+            <Grid item xs={12} sx={{ "&&": { pt: 1 } }}>
+              <ProofEmbed url={form.watch("proof_url")} />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               label={t_fs("raw_session_url") + (needsRawSession ? " *" : " (Optional)")}
