@@ -212,9 +212,7 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
                 <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
               </InfoBox>
             )}
-            {map.collectibles !== null && challenge === null && (
-              <CollectiblesInfoBox collectibles={map.collectibles} />
-            )}
+            {challenge === null && <CollectiblesInfoBox map={map} collectibles={map.collectibles} />}
           </>
         ) : (
           <InfoBox>
@@ -375,42 +373,79 @@ function LobbyInfoSpan({ lobbyInfo }) {
     </Stack>
   );
 }
-export function CollectiblesInfoBox({ collectibles }) {
+export function CollectiblesInfoBox({ map, collectibles }) {
   const { t } = useTranslation(undefined, { keyPrefix: "map.info_boxes" });
+  const auth = useAuth();
+  const { mutate: postMap } = usePostMap();
+
+  const objectiveToCollectible = { 1: 0, 2: 1, 9: 5 };
+  const objectiveId = map.challenges.length > 0 ? map.challenges[0].objective_id : null;
+  const collectible = objectiveToCollectible[objectiveId];
+  const addDefaultCollectible = () => {
+    postMap({
+      ...map,
+      collectibles: [[collectible + "", "", "", ""]],
+    });
+  };
+
   return (
     <InfoBox>
       <InfoBoxIconTextLine text={t("collectibles")} icon={<FontAwesomeIcon icon={faBasketShopping} />} />
-      {collectibles.map((item, index) => {
-        const collectible = COLLECTIBLES.find((c) => c.value === item[0]);
-        if (!collectible) return null;
-        return (
-          <InfoBoxIconTextLine
-            key={collectibles.value}
-            text={
-              <Stack direction="row" gap={1} alignItems="center">
-                <Stack
-                  direction="row"
-                  gap={1}
-                  alignItems="center"
-                  justifyContent="space-around"
-                  sx={{ minWidth: "30px" }}
+      {collectibles === null && <InfoBoxIconTextLine text={t("no_collectibles")} isSecondary />}
+      {collectibles === null && auth.hasHelperPriv && (
+        <InfoBoxIconTextLine
+          text={
+            <InfoBoxIconTextLine
+              text={
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  size="small"
+                  onClick={addDefaultCollectible}
+                  disabled={collectible === undefined}
                 >
-                  <OtherIcon url={getCollectibleIcon(item[0], item[1])} />
+                  Add default collectible
+                </Button>
+              }
+              isSecondary
+              isMultiline
+            />
+          }
+          isSecondary
+        />
+      )}
+      {collectibles &&
+        collectibles.map((item, index) => {
+          const collectible = COLLECTIBLES.find((c) => c.value === item[0]);
+          if (!collectible) return null;
+          return (
+            <InfoBoxIconTextLine
+              key={collectibles.value}
+              text={
+                <Stack direction="row" gap={1} alignItems="center">
+                  <Stack
+                    direction="row"
+                    gap={1}
+                    alignItems="center"
+                    justifyContent="space-around"
+                    sx={{ minWidth: "30px" }}
+                  >
+                    <OtherIcon url={getCollectibleIcon(item[0], item[1])} />
+                  </Stack>
+                  <Typography variant="body1">
+                    {getCollectibleName(item[0], item[1]) + " x" + (item[2] ? item[2] : "1")}
+                  </Typography>
+                  {item[3] && (
+                    <TooltipLineBreaks title={item[3]}>
+                      <FontAwesomeIcon icon={faInfoCircle} />
+                    </TooltipLineBreaks>
+                  )}
                 </Stack>
-                <Typography variant="body1">
-                  {getCollectibleName(item[0], item[1]) + " x" + (item[2] ? item[2] : "1")}
-                </Typography>
-                {item[3] && (
-                  <TooltipLineBreaks title={item[3]}>
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                  </TooltipLineBreaks>
-                )}
-              </Stack>
-            }
-            isSecondary
-          />
-        );
-      })}
+              }
+              isSecondary
+            />
+          );
+        })}
     </InfoBox>
   );
 }
