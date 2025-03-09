@@ -236,7 +236,7 @@ export function ProofEmbed({ url, ...props }) {
     </div>
   );
 }
-function parseBilibiliUrl(link) {
+export function parseBilibiliUrl(link) {
   let id;
 
   // If it starts with 'av', it is an aid
@@ -258,7 +258,7 @@ function parseBilibiliUrl(link) {
     page: page,
   };
 }
-function parseTwitchUrl(url) {
+export function parseTwitchUrl(url) {
   //URLs look like: https://www.twitch.tv/videos/2222820930
   const urlRegex = /^(https?:\/\/)?((www|m)\.)?(twitch\.tv)\/videos\/([^#&?]*).*/;
   const match = url.match(urlRegex);
@@ -270,7 +270,7 @@ function parseTwitchUrl(url) {
     id: id || null,
   };
 }
-function parseYouTubeUrl(url) {
+export function parseYouTubeUrl(url) {
   const urlRegex =
     /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^#&?]*)(?:[?&][^#&?=]+=[^#&?]*)*/;
   const match = url.match(urlRegex);

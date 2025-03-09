@@ -1,4 +1,15 @@
-import { Box, Checkbox, Divider, FormControlLabel, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  IconButton,
+  Slider,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import {
   BasicBox,
   BasicContainerBox,
@@ -6,9 +17,11 @@ import {
   HeadTitle,
   LanguageFlag,
   LoadingSpinner,
+  StyledExternalLink,
   StyledLink,
   TooltipLineBreaks,
   getErrorFromMultiple,
+  parseYouTubeUrl,
 } from "../components/BasicComponents";
 import {
   getQueryData,
@@ -16,8 +29,9 @@ import {
   useGetPlayer,
   useGetPlayerStats,
   useGetShowcaseSubmissions,
+  useGetTopGoldenList,
 } from "../hooks/useApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TopGoldenList } from "../components/TopGoldenList";
 import {
   AdminIcon,
@@ -28,11 +42,27 @@ import {
   HelperIcon,
   VerifierIcon,
   AccountRoleIcon,
+  ChallengeFcIcon,
+  DifficultyChip,
+  AnyImage,
 } from "../components/GoldberriesComponents";
 import { RecentSubmissionsHeadless } from "../components/RecentSubmissions";
-import { DIFFICULTIES, DIFF_CONSTS, getNewDifficultyColors } from "../util/constants";
-import { getDifficultyNameShort, getPlayerNameColorStyle } from "../util/data_util";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import {
+  API_BASE_URL,
+  DIFFICULTIES,
+  DIFF_CONSTS,
+  getNewDifficultyColors,
+  sortToDifficulty,
+} from "../util/constants";
+import {
+  getCampaignName,
+  getChallengeCampaign,
+  getChallengeSuffix,
+  getDifficultyNameShort,
+  getMapName,
+  getPlayerNameColorStyle,
+} from "../util/data_util";
+import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { ROLES, useAuth } from "../hooks/AuthProvider";
@@ -46,29 +76,45 @@ import { faChartBar, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { useModal } from "../hooks/useModal";
 import Grid from "@mui/material/Unstable_Grid2";
 import { TimeTakenTiersGraphModal } from "../components/TimeTakenTiersGraph";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import TimelineOppositeContent, { timelineOppositeContentClasses } from "@mui/lab/TimelineOppositeContent";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineConnector from "@mui/lab/TimelineConnector";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
+  const [selectedTab, setSelectedTab] = useState(tab || "info");
+  useEffect(() => {
+    if (tab && tab !== selectedTab) {
+      setSelectedTab(tab);
+    } else if (tab === undefined) {
+      setSelectedTab("info");
+    }
+  }, [tab]);
 
-  if (tab === "top-golden-list") {
+  if (selectedTab === "top-golden-list") {
     return <PagePlayerTopGoldenList id={id} />;
   }
 
   return (
     <BasicContainerBox maxWidth="md">
-      <PlayerDisplay id={parseInt(id)} tab={tab} />
+      <PlayerDisplay id={parseInt(id)} tab={selectedTab} setTab={setSelectedTab} />
     </BasicContainerBox>
   );
 }
 
-export function PlayerDisplay({ id }) {
+export function PlayerDisplay({ id, tab, setTab }) {
   const { t } = useTranslation(undefined, { keyPrefix: "player" });
   const { t: t_a } = useTranslation();
   const { t: t_ap } = useTranslation(undefined, { keyPrefix: "account.tabs.profile" });
   const { settings } = useAppSettings();
   const query = useGetPlayer(id);
   const statsQuery = useGetPlayerStats(id);
+  const navigate = useNavigate();
 
   if (query.isLoading || statsQuery.isLoading) {
     return <LoadingSpinner />;
@@ -76,6 +122,15 @@ export function PlayerDisplay({ id }) {
     const error = getErrorFromMultiple(query, statsQuery);
     return <ErrorDisplay error={error} />;
   }
+
+  const navigateToTab = (newTab) => {
+    setTab(newTab);
+    if (newTab === "info") {
+      navigate(`/player/${id}`, { replace: true });
+    } else {
+      navigate(`/player/${id}/${newTab}`, { replace: true });
+    }
+  };
 
   const player = getQueryData(query);
   const suspended = player.account.is_suspended;
@@ -136,14 +191,37 @@ export function PlayerDisplay({ id }) {
         )}
       </Stack>
 
-      <Divider sx={{ my: 2 }} />
+      <Tabs
+        variant="fullWidth"
+        value={tab}
+        onChange={(event, newTab) => navigateToTab(newTab)}
+        sx={{ mt: 0.5 }}
+      >
+        <Tab label={t("tabs.info.label")} value="info" />
+        <Tab label={t("tabs.timeline.label")} value="timeline" />
+      </Tabs>
+
+      <Divider sx={{ mt: 0, mb: 1 }} />
+
+      {tab === "info" && <PlayerInfo id={id} stats={stats} />}
+      {tab === "timeline" && <PlayerTimeline id={id} />}
+
+      {/* <Divider sx={{ my: 2 }} />
+      <PlayerInfo id={id} stats={stats} /> */}
+    </>
+  );
+}
+
+function PlayerInfo({ id, stats }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "player.tabs.info" });
+  return (
+    <>
       <SubmissionShowcase id={id} />
       <Divider sx={{ my: 2 }} />
       <PlayerRecentSubmissions id={id} />
       <Divider sx={{ my: 2 }} />
       <Typography variant="h5">{t("stats")}</Typography>
       <DifficultyCountChart difficulty_counts={stats.count_by_difficulty} />
-      {/* <ExampleChart /> */}
       <Divider sx={{ my: 2 }} />
       <Changelog type="player" id={id} />
     </>
@@ -151,7 +229,7 @@ export function PlayerDisplay({ id }) {
 }
 
 function SubmissionShowcase({ id }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "player" });
+  const { t } = useTranslation(undefined, { keyPrefix: "player.tabs.info" });
   const { t: t_as } = useTranslation(undefined, { keyPrefix: "account.tabs.showcase" });
   const query = useGetShowcaseSubmissions(id);
   const data = getQueryData(query);
@@ -292,7 +370,7 @@ export function PagePlayerTopGoldenList({ id }) {
 }
 
 export function DifficultyCountChart({ difficulty_counts }) {
-  const { t } = useTranslation(undefined, { keyPrefix: "player.chart" });
+  const { t } = useTranslation(undefined, { keyPrefix: "player.tabs.info.chart" });
   const { settings } = useAppSettings();
   const theme = useTheme();
   const query = useGetAllDifficulties();
@@ -424,3 +502,329 @@ function ExRoleLabel({ account }) {
     </Stack>
   );
 }
+
+//#region TIMELINE
+function PlayerTimeline({ id }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "player.tabs.timeline" });
+  const [filter, setFilter] = useLocalStorage("player_timeline_filter", getDefaultFilter(false));
+  const query = useGetTopGoldenList("player", id, filter);
+  const groupCampaigns = false; //I thought this might be cool, but it kinda sucked so w/e
+  const [ratio, setRatio] = useLocalStorage("player_timeline_show_difficulty_ratio", 0.05);
+
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+
+  const data = getQueryData(query);
+  //Invert data structure
+  const submissions = [];
+  data.challenges.forEach((challenge) => {
+    const submission = challenge.submissions[0];
+    submission.challenge = challenge;
+    if (challenge.map_id !== null) {
+      challenge.map = data.maps[challenge.map_id];
+      challenge.map.campaign = data.campaigns[challenge.map.campaign_id];
+    }
+    if (challenge.campaign_id !== null) challenge.campaign = data.campaigns[challenge.campaign_id];
+    submissions.push(submission);
+  });
+  const showDifficulty = calculateShowPreviewImageDifficulty(submissions, ratio);
+
+  //Sort submissions by submission.date_achieved DESC. Date is in ISO format
+  submissions.sort((a, b) => {
+    return new Date(b.date_achieved) - new Date(a.date_achieved);
+  });
+
+  //Group submissions by day
+  const groupedByDay = [];
+  submissions.forEach((submission) => {
+    const date = submission.date_achieved.split("T")[0];
+    const group = groupedByDay.find((g) => g.date === date);
+    if (group) {
+      group.submissions.push(submission);
+    } else {
+      groupedByDay.push({
+        date: date,
+        submissions: [submission],
+      });
+    }
+  });
+
+  //Group again by year, so that we can have clean year separators
+  const groupedByYear = [];
+  groupedByDay.forEach((group) => {
+    const year = group.date.split("-")[0];
+    const yearGroup = groupedByYear.find((g) => g.year === year);
+    if (yearGroup) {
+      yearGroup.days.push(group);
+    } else {
+      groupedByYear.push({
+        year: year,
+        days: [group],
+      });
+    }
+  });
+
+  return (
+    <Stack direction="column" gap={1}>
+      <Grid container spacing={2}>
+        <Grid item xs>
+          <Typography variant="h5">{t("label")}</Typography>
+        </Grid>
+        <Grid item xs="auto">
+          <SubmissionFilter
+            type="player"
+            id={id}
+            filter={filter}
+            setFilter={setFilter}
+            variant="outlined"
+            anchorOrigin={{ vertical: "top", horizontal: "left" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          />
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body1">
+            {t("show_difficulty_ratio")}: {(ratio * 100).toFixed(0) + "%"}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TimelineRatioSlider ratio={ratio} setRatio={setRatio} />
+        </Grid>
+      </Grid>
+
+      <Timeline
+        sx={{
+          px: 0,
+          [`& .${timelineOppositeContentClasses.root}`]: {
+            flex: 0.12,
+            minWidth: "100px",
+          },
+        }}
+      >
+        <BigTimelineLabel label={"Now"} isNow />
+        {groupedByYear.length === 0 && <BigTimelineLabel label={"No submissions :("} isLast />}
+        {groupedByYear.map((yearGroup, yearIndex) => (
+          <>
+            {yearGroup.days.map((dayGroup, dayIndex) => (
+              <TimelineDay
+                key={dayGroup.date}
+                date={dayGroup.date}
+                submissions={dayGroup.submissions}
+                isLast={dayIndex >= dayGroup.length - 1}
+                groupCampaigns={groupCampaigns}
+                showDifficulty={showDifficulty}
+              />
+            ))}
+            <BigTimelineLabel
+              key={yearGroup.year}
+              label={yearGroup.year}
+              isLast={yearIndex >= groupedByYear.length - 1}
+            />
+          </>
+        ))}
+      </Timeline>
+    </Stack>
+  );
+}
+
+function TimelineRatioSlider({ ratio, setRatio }) {
+  const [localRatio, setLocalRatio] = useState(ratio);
+  const ratioDebounced = useDebounce(localRatio, 500);
+  useEffect(() => {
+    setRatio(ratioDebounced);
+  }, [ratioDebounced]);
+
+  return (
+    <Slider
+      value={localRatio}
+      onChange={(_, value) => setLocalRatio(value)}
+      valueLabelFormat={(value) => (value * 100).toFixed(0) + "%"}
+      valueLabelDisplay="auto"
+      step={0.01}
+      min={0}
+      max={1}
+    />
+  );
+}
+
+function BigTimelineLabel({ label, isLast = false, isNow = false }) {
+  const theme = useTheme();
+  const isDarkmode = theme.palette.mode === "dark";
+  const lineColor = isDarkmode ? "#bdbdbd" : "#bdbdbd";
+  return (
+    <TimelineItem>
+      <TimelineOppositeContent>
+        <Typography variant="h4">{label}</Typography>
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineDot />
+        {!isLast && <TimelineConnector />}
+      </TimelineSeparator>
+      <TimelineContent>
+        {!isNow && <Divider sx={{ borderColor: lineColor, borderWidth: 2, borderRadius: 10, mt: 1.125 }} />}
+      </TimelineContent>
+    </TimelineItem>
+  );
+}
+
+function TimelineDay({ key, date, submissions, isLast, groupCampaigns, showDifficulty }) {
+  const dateStr = new Date(date).toLocaleDateString(navigator.language, { month: "short", day: "numeric" });
+
+  const groupedByCampaign = [];
+  submissions.forEach((submission) => {
+    const campaign = getChallengeCampaign(submission.challenge);
+    const group = groupedByCampaign.find((g) => g.campaign.id === campaign.id);
+    if (group) {
+      group.submissions.push(submission);
+    } else {
+      groupedByCampaign.push({
+        campaign: campaign,
+        submissions: [submission],
+      });
+    }
+  });
+
+  return (
+    <TimelineItem key={key}>
+      <TimelineOppositeContent>
+        <Typography variant="body1">{dateStr}</Typography>
+      </TimelineOppositeContent>
+      <TimelineSeparator>
+        <TimelineDot />
+        {!isLast && <TimelineConnector />}
+      </TimelineSeparator>
+      <TimelineContent>
+        <Stack direction="column" gap={1}>
+          {groupedByCampaign.map((group) => {
+            if (groupCampaigns && group.submissions.length > 1) {
+              return (
+                <TimelineCampaignMultiSubmissions
+                  key={group.campaign.id}
+                  campaign={group.campaign}
+                  submissions={group.submissions}
+                />
+              );
+            }
+            return (
+              <>
+                {group.submissions.map((submission, index) => (
+                  <TimelineSubmissionSingle submission={submission} showDifficulty={showDifficulty} />
+                ))}
+              </>
+            );
+          })}
+        </Stack>
+      </TimelineContent>
+    </TimelineItem>
+  );
+}
+
+function TimelineSubmissionSingle({ submission, showDifficulty }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  const challenge = submission.challenge;
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+  const nameIsSame = map?.name === campaign.name;
+
+  const showCampaignImage = showDifficulty ? challenge.difficulty.sort >= showDifficulty.sort : false;
+
+  return (
+    <Stack direction="column" gap={1} alignItems="flex-start" justifyContent="space-between">
+      <Stack
+        direction="row"
+        columnGap={1}
+        alignItems="center"
+        sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}
+      >
+        <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
+        <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
+          <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
+          {!nameIsSame && map && (
+            <>
+              {"/"}
+              <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
+            </>
+          )}
+          {getChallengeSuffix(challenge) !== null && (
+            <Typography variant="body2" color="textSecondary">
+              [{getChallengeSuffix(challenge)}]
+            </Typography>
+          )}
+          <StyledLink to={"/submission/" + submission.id} style={{ lineHeight: "1" }}>
+            <ChallengeFcIcon challenge={challenge} height="1.3em" />
+          </StyledLink>
+        </Stack>
+      </Stack>
+      {showCampaignImage && <TimelineSubmissionPreviewImage submission={submission} />}
+    </Stack>
+  );
+}
+
+function TimelineCampaignMultiSubmissions({ campaign, submissions }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const minDifficultySort = Math.min(...submissions.map((s) => s.challenge.difficulty.sort));
+  const maxDifficultySort = Math.max(...submissions.map((s) => s.challenge.difficulty.sort));
+  //Find the first difficulty object matching the given min/max sorts
+  const minDifficulty = submissions.find((s) => s.challenge.difficulty.sort === minDifficultySort).challenge
+    .difficulty;
+  const maxDifficulty = submissions.find((s) => s.challenge.difficulty.sort === maxDifficultySort).challenge
+    .difficulty;
+  const isDifferent = minDifficultySort !== maxDifficultySort;
+  const count = submissions.length;
+
+  return (
+    <Stack direction="row" columnGap={1} alignItems="center" sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
+      <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
+        <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
+        <Typography variant="body2" color="textSecondary">
+          {count}x submissions
+        </Typography>
+      </Stack>
+      <DifficultyChip difficulty={minDifficulty} sx={{ mt: "1px" }} />
+      {isDifferent && (
+        <>
+          {" ~ "}
+          <DifficultyChip difficulty={maxDifficulty} sx={{ mt: "1px" }} />
+        </>
+      )}
+    </Stack>
+  );
+}
+
+function TimelineSubmissionPreviewImage({ submission }) {
+  const challenge = submission.challenge;
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+
+  let url = null;
+
+  const youtubeData = parseYouTubeUrl(submission.proof_url);
+  if (youtubeData !== null) {
+    url = "https://img.youtube.com/vi/" + youtubeData.videoId + "/mqdefault.jpg";
+  }
+
+  if (url === null) {
+    url = API_BASE_URL + "/embed/img/campaign_image.php?id=" + campaign.id;
+  }
+
+  return (
+    <StyledExternalLink href={submission.proof_url}>
+      <img src={url} alt={campaign.name} style={{ maxWidth: "200px", borderRadius: "5px" }} />
+    </StyledExternalLink>
+  );
+}
+
+function calculateShowPreviewImageDifficulty(submissions, ratio) {
+  if (ratio === 0) return null;
+  const sortedSubmissions = submissions.sort(
+    (a, b) => b.challenge.difficulty.sort - a.challenge.difficulty.sort
+  );
+  const index = Math.floor(Math.min(submissions.length * ratio, submissions.length - 1));
+  return sortedSubmissions[index].challenge.difficulty;
+}
+//#endregion

@@ -379,7 +379,7 @@ export function CollectiblesInfoBox({ map, collectibles }) {
   const { mutate: postMap } = usePostMap();
 
   const objectiveToCollectible = { 1: 0, 2: 1, 9: 5 };
-  const objectiveId = map.challenges.length > 0 ? map.challenges[0].objective_id : null;
+  const objectiveId = map?.challenges.length > 0 ? map?.challenges[0].objective_id : null;
   const collectible = objectiveToCollectible[objectiveId];
   const addDefaultCollectible = () => {
     postMap({
@@ -392,7 +392,7 @@ export function CollectiblesInfoBox({ map, collectibles }) {
     <InfoBox>
       <InfoBoxIconTextLine text={t("collectibles")} icon={<FontAwesomeIcon icon={faBasketShopping} />} />
       {collectibles === null && <InfoBoxIconTextLine text={t("no_collectibles")} isSecondary />}
-      {collectibles === null && auth.hasHelperPriv && (
+      {map && collectibles === null && auth.hasHelperPriv && (
         <InfoBoxIconTextLine
           text={
             <InfoBoxIconTextLine

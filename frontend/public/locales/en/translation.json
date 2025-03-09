@@ -1066,11 +1066,22 @@
   "player": {
     "title": "Profile",
     "personal_tgl": "Personal Top Golden List",
-    "stats": "Player Stats",
-    "showcase_hardest": "Hardest Submissions",
-    "chart": {
-      "show_standard": "Show Untiered & Undetermined",
-      "x_axis": "Count of Goldens per Tier"
+    "tabs": {
+      "info": {
+        "label": "Player Info",
+        "stats": "Player Stats",
+        "showcase_hardest": "Hardest Submissions",
+        "chart": {
+          "show_standard": "Show Untiered & Undetermined",
+          "x_axis": "Count of Goldens per Tier"
+        }
+      },
+      "timeline": {
+        "label": "Timeline",
+        "description": "Here is a timeline of everything this player has done!",
+        "group_campaigns": "Group submissions from the same campaign",
+        "show_difficulty_ratio": "Show thumbnails for this % of visible submissions"
+      }
     }
   },
   "rejected_maps": {

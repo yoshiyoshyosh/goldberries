@@ -52,7 +52,15 @@ import { use } from "react";
     end_date: string, //end date for date range
   }
 */
-export function SubmissionFilter({ type, id, filter, setFilter }) {
+export function SubmissionFilter({
+  type,
+  id,
+  variant = "contained",
+  filter,
+  setFilter,
+  anchorOrigin,
+  transformOrigin,
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.submission_filter" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const theme = useTheme();
@@ -131,7 +139,7 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
 
   return (
     <Stack direction="row" gap={1} alignItems="center">
-      <Button aria-describedby={elemId} variant="contained" onClick={handleClick}>
+      <Button aria-describedby={elemId} variant={variant} onClick={handleClick}>
         {t("label")}
       </Button>
       <Popover
@@ -139,10 +147,13 @@ export function SubmissionFilter({ type, id, filter, setFilter }) {
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "right",
-        }}
+        anchorOrigin={
+          anchorOrigin ?? {
+            vertical: "center",
+            horizontal: "right",
+          }
+        }
+        transformOrigin={transformOrigin}
         disableScrollLock={isMdScreen ? false : true}
         slotProps={{
           paper: {
