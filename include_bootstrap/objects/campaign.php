@@ -147,14 +147,15 @@ class Campaign extends DbObject
   }
 
 
-  static function search_by_name($DB, $search, $raw_search)
+  static function search_by_name($DB, string $search, string $raw_search, bool $is_exact_search)
   {
     global $CAMPAIGN_ABBREVIATIONS;
 
     $campaigns = array();
     $raw_search_lower = strtolower($raw_search);
+    $similar = $is_exact_search ? "" : " OR SIMILARITY(campaign.name, '$raw_search_lower') > 0.3";
 
-    $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '" . $search . "' ORDER BY name";
+    $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '$search' $similar ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
       die_json(500, "Could not query database");

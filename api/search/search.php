@@ -18,6 +18,7 @@ if ($search == "") {
 }
 
 $search = pg_escape_string($search);
+$is_exact_search = true;
 $unmodified_search = $search;
 //Replace % with \% and _ with \_
 $search = str_replace("%", "\%", $search);
@@ -26,6 +27,7 @@ $search = str_replace("_", "\_", $search);
 if (strlen($search) >= 3) {
   //When the search string is too short, we will only search for exact matches
   $search = "%" . $search . "%";
+  $is_exact_search = false;
 }
 
 //query parameter 'in' is optional and is an arraya of what data to search in
@@ -48,17 +50,17 @@ $response['q'] = $unmodified_search;
 $response['in'] = $in;
 
 if (in_array("players", $in)) {
-  $players = Player::search_by_name($DB, $search, $unmodified_search);
+  $players = Player::search_by_name($DB, $search, $unmodified_search, $is_exact_search);
   $response['players'] = $players;
 }
 
 if (in_array("campaigns", $in)) {
-  $campaigns = Campaign::search_by_name($DB, $search, $unmodified_search);
+  $campaigns = Campaign::search_by_name($DB, $search, $unmodified_search, $is_exact_search);
   $response['campaigns'] = $campaigns;
 }
 
 if (in_array("maps", $in)) {
-  $maps = Map::search_by_name($DB, $search, $unmodified_search);
+  $maps = Map::search_by_name($DB, $search, $unmodified_search, $is_exact_search);
   $response['maps'] = $maps;
 }
 
@@ -66,7 +68,8 @@ if (in_array("authors", $in)) {
   //Authors are searched for in campaigns and maps
   //Fields: campaign.author_gb_name and map.author_gb_name
 
-  $query = "SELECT DISTINCT author_gb_name FROM campaign WHERE campaign.author_gb_name ILIKE '" . $search . "'";
+  $similar = $is_exact_search ? "" : " OR SIMILARITY(campaign.author_gb_name, '$unmodified_search') > 0.3";
+  $query = "SELECT DISTINCT author_gb_name FROM campaign WHERE campaign.author_gb_name ILIKE '$search' $similar";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Could not query database");
@@ -77,7 +80,8 @@ if (in_array("authors", $in)) {
     $response['authors'][$name] = array();
   }
 
-  $query = "SELECT DISTINCT author_gb_name FROM map WHERE map.author_gb_name ILIKE '" . $search . "'";
+  $similar = $is_exact_search ? "" : " OR SIMILARITY(map.author_gb_name, '$unmodified_search') > 0.3";
+  $query = "SELECT DISTINCT author_gb_name FROM map WHERE map.author_gb_name ILIKE '$search' $similar";
   $result = pg_query($DB, $query);
   if (!$result) {
     die_json(500, "Could not query database");

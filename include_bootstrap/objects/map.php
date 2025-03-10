@@ -185,12 +185,13 @@ class Map extends DbObject
     return true;
   }
 
-  static function search_by_name($DB, $search, $raw_search)
+  static function search_by_name($DB, string $search, string $raw_search, bool $is_exact_search)
   {
     global $MAP_ABBREVIATIONS;
     $raw_search_lower = strtolower($raw_search);
+    $similar = $is_exact_search ? "" : " OR SIMILARITY(map.name, '$raw_search_lower') > 0.3";
 
-    $query = "SELECT * FROM map WHERE map.name ILIKE '" . $search . "' ORDER BY name";
+    $query = "SELECT * FROM map WHERE map.name ILIKE '$search' $similar ORDER BY name";
     $result = pg_query($DB, $query);
     if (!$result) {
       die_json(500, "Could not query database");
@@ -245,6 +246,18 @@ class Map extends DbObject
       }
     }
     if (count($abbreviation_matches) > 0) {
+      //First, check to see if the abbreviation match result is already in the regular result set $maps, and if yes, remove it from $maps
+      //A simple in_array check is not enough. Compare the map IDs
+      $maps = array_filter($maps, function ($map) use ($abbreviation_matches) {
+        foreach ($abbreviation_matches as $abbreviation_match) {
+          if ($map->id === $abbreviation_match->id) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      //Then, add the abbreviation match result to the front of the list      
       $maps = array_merge($abbreviation_matches, $maps);
     }
 
