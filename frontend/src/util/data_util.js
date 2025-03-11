@@ -34,7 +34,9 @@ export function getChallengeName(challenge, includeFc = true) {
 }
 
 export function getChallengeSuffix(challenge, checkDifferent = false) {
-  if (challenge.label !== null) return challenge.label;
+  // if (challenge.label !== null)
+  if (challenge.label !== null && (!checkDifferent || challenge.label !== challenge.objective.name))
+    return challenge.label;
   else if (
     challenge.objective.display_name_suffix !== null &&
     (!checkDifferent || challenge.objective.name !== challenge.objective.display_name_suffix)
@@ -191,6 +193,10 @@ export function getMapName(
   const rejectedPrefix = map.is_rejected && includeRejected ? "[Rejected] " : "";
 
   return rejectedPrefix + oldPrefix + mapName;
+}
+
+export function isMapSameNameAsCampaign(map, campaign, includeOld = true, includeRejected = true) {
+  return getMapName(map, campaign, false, includeOld, includeRejected) === campaign.name;
 }
 
 export function getSubmissionVerifier(submission) {

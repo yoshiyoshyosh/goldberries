@@ -28,6 +28,7 @@ import {
   getChallengeCampaign,
   getChallengeSuffix,
   getMapName,
+  isMapSameNameAsCampaign,
 } from "../util/data_util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faBook } from "@fortawesome/free-solid-svg-icons";
@@ -360,7 +361,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
-  const nameIsSame = map?.name === campaign.name;
+  const nameIsSame = isMapSameNameAsCampaign(map, campaign);
   const isBold = isFirstClear && challenge.difficulty.sort > DIFF_CONSTS.LOW_TIER_0_SORT;
   return (
     <Stack
@@ -378,7 +379,7 @@ function TimelineSubmission({ submission, challenge, isFirstClear }) {
         {!nameIsSame && map && (
           <>
             {"/"}
-            <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
+            <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign, false)}</StyledLink>
           </>
         )}
         {getChallengeSuffix(challenge) !== null && (

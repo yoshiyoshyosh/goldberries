@@ -61,6 +61,7 @@ import {
   getDifficultyNameShort,
   getMapName,
   getPlayerNameColorStyle,
+  isMapSameNameAsCampaign,
 } from "../util/data_util";
 import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { Changelog } from "../components/Changelog";
@@ -517,7 +518,7 @@ function PlayerTimeline({ id }) {
     return <ErrorDisplay error={query.error} />;
   }
 
-  const data = getQueryData(query);
+  const data = JSON.parse(JSON.stringify(getQueryData(query))); //Don't modify the original data
   //Invert data structure
   const submissions = [];
   data.challenges.forEach((challenge) => {
@@ -528,6 +529,7 @@ function PlayerTimeline({ id }) {
       challenge.map.campaign = data.campaigns[challenge.map.campaign_id];
     }
     if (challenge.campaign_id !== null) challenge.campaign = data.campaigns[challenge.campaign_id];
+    challenge.submissions = null; //Unset to remove cyclic references
     submissions.push(submission);
   });
   const showDifficulty = calculateShowPreviewImageDifficulty(submissions, ratio);
@@ -566,6 +568,22 @@ function PlayerTimeline({ id }) {
       });
     }
   });
+
+  //Currently the groupedByYear array looks like: [{year: "2024", days: []}, {year: "2022", days: []}]
+  //Insert all missing years between the first year (the very end of the array) and the current year (possibly present in the array, possibly absent)
+  if (groupedByYear.length > 0) {
+    const currentYear = new Date().getFullYear();
+    const firstYear = parseInt(groupedByYear[groupedByYear.length - 1].year);
+
+    for (let year = firstYear; year <= currentYear; year++) {
+      if (!groupedByYear.some((g) => g.year === year.toString())) {
+        groupedByYear.push({ year: year.toString(), days: [] });
+      }
+    }
+
+    // Sort the years in descending order to maintain order consistency
+    groupedByYear.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+  }
 
   return (
     <Stack direction="column" gap={1}>
@@ -606,7 +624,7 @@ function PlayerTimeline({ id }) {
         }}
       >
         <BigTimelineLabel label={"Now"} isNow />
-        {groupedByYear.length === 0 && <BigTimelineLabel label={"No submissions :("} isLast />}
+        {groupedByYear.length === 0 && <BigTimelineLabel label={new Date().getFullYear()} isLast />}
         {groupedByYear.map((yearGroup, yearIndex) => (
           <>
             {yearGroup.days.map((dayGroup, dayIndex) => (
@@ -698,7 +716,7 @@ function TimelineDay({ key, date, submissions, isLast, groupCampaigns, showDiffi
         {!isLast && <TimelineConnector />}
       </TimelineSeparator>
       <TimelineContent>
-        <Stack direction="column" gap={1}>
+        <Stack direction="column" gap={0.5}>
           {groupedByCampaign.map((group) => {
             if (groupCampaigns && group.submissions.length > 1) {
               return (
@@ -729,8 +747,7 @@ function TimelineSubmissionSingle({ submission, showDifficulty }) {
   const challenge = submission.challenge;
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
-  const nameIsSame = map?.name === campaign.name;
-
+  const nameIsSame = isMapSameNameAsCampaign(map, campaign);
   const showCampaignImage = showDifficulty ? challenge.difficulty.sort >= showDifficulty.sort : false;
 
   return (
@@ -747,7 +764,7 @@ function TimelineSubmissionSingle({ submission, showDifficulty }) {
           {!nameIsSame && map && (
             <>
               {"/"}
-              <StyledLink to={"/map/" + map.id}>{getMapName(map)}</StyledLink>
+              <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign, false)}</StyledLink>
             </>
           )}
           {getChallengeSuffix(challenge) !== null && (
@@ -821,6 +838,7 @@ function TimelineSubmissionPreviewImage({ submission }) {
 
 function calculateShowPreviewImageDifficulty(submissions, ratio) {
   if (ratio === 0) return null;
+  if (submissions.length === 0) return null;
   const sortedSubmissions = submissions.sort(
     (a, b) => b.challenge.difficulty.sort - a.challenge.difficulty.sort
   );
