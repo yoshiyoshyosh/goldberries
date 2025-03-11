@@ -60,6 +60,7 @@ import {
   faEdit,
   faExclamationCircle,
   faExclamationTriangle,
+  faFileUpload,
   faHammer,
   faHome,
   faInbox,
@@ -128,6 +129,7 @@ import { PageManageServerSettings } from "./pages/manage/ServerSettings";
 import { PageTest } from "./pages/Test";
 import { PageTrafficAnalytics } from "./pages/manage/TrafficAnalytics";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { PageFileUpload } from "./pages/manage/FileUpload";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -203,6 +205,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute needsAdmin redirect="manage/traffic">
                 <PageTrafficAnalytics />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "file-upload",
+            element: (
+              <ProtectedRoute needsVerifier redirect="manage/file-upload">
+                <PageFileUpload />
               </ProtectedRoute>
             ),
           },
@@ -634,6 +644,11 @@ export function Layout() {
           name: t("internal_menu.manage_accounts"),
           path: "/manage/accounts",
           icon: <FontAwesomeIcon icon={faUserEdit} />,
+        },
+        {
+          name: t("internal_menu.file_upload"),
+          path: "/manage/file-upload",
+          icon: <FontAwesomeIcon icon={faFileUpload} />,
         },
       ],
     },

@@ -27,6 +27,7 @@
     "i18next-http-backend": "^2.5.2",
     "material-ui-popup-state": "^5.0.10",
     "mui-color-input": "^2.0.1",
+    "mui-file-input": "^6.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
     "react-helmet": "^6.1.0",

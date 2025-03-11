@@ -610,3 +610,17 @@ export function fetchTrafficStatsGlobalRequests(startDate, endDate) {
   });
 }
 //#endregion
+
+//#region MISC ENDPOINTS
+export function postUploadFile(destination, file_name, file) {
+  const data = new FormData();
+  data.append("file", file);
+  data.append("destination", destination);
+  data.append("file_name", file_name);
+  return axios.post("/admin/upload_file", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+//#endregion

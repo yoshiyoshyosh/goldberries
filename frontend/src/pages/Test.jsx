@@ -17,6 +17,7 @@ import { useState } from "react";
 import Color from "color";
 import { getNewDifficultyColors } from "../util/constants";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const tabs = [{ name: "new-colors", label: "New Tier Colors", icon: faPalette, component: <NewColorsTab /> }];
 
@@ -57,7 +58,7 @@ export function PageTest({}) {
           />
         ))}
       </Tabs>
-      {selectedComponent}
+      <ErrorBoundary>{selectedComponent}</ErrorBoundary>
     </BasicContainerBox>
   );
 }

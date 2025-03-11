@@ -78,6 +78,7 @@ import {
   fetchCampaignsPaginated,
   fetchVerifierStats,
   fetchRejectedChallenges,
+  postUploadFile,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -930,6 +931,18 @@ export function useGetTrafficStatsGlobalRequests(startDate, endDate) {
   return useQuery({
     queryKey: ["traffic_global", startDate, endDate],
     queryFn: () => fetchTrafficStatsGlobalRequests(startDate, endDate),
+    onError: errorToast,
+  });
+}
+//#endregion
+
+//#region MISC ENDPOINTS
+export function usePostUploadFile(onSuccess) {
+  return useMutation({
+    mutationFn: ({ destination, file_name, file }) => postUploadFile(destination, file_name, file),
+    onSuccess: (response, parameters) => {
+      if (onSuccess) onSuccess(response.data);
+    },
     onError: errorToast,
   });
 }

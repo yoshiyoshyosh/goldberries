@@ -465,6 +465,7 @@
       "submission_queue": "Submission Queue",
       "manage_challenges": "Manage Challenges",
       "manage_accounts": "Manage Accounts",
+      "file_upload": "File Upload",
       "test": "Test Page"
     },
     "widgets": {
@@ -1711,6 +1712,22 @@
           "text": "These verifiers created the most amount of campaigns/maps/challenges."
         }
       }
+    }
+  },
+  "file_upload": {
+    "title": "File Upload",
+    "file_input_description": "Drop file here or click to select",
+    "file_input": "Insert File / Click To Select",
+    "image_preview": "Image Preview",
+    "file_name": "New File Name",
+    "file_path": "File Path",
+    "destination": {
+      "icon": "Icon",
+      "campaign_icon": "Campaign Icon"
+    },
+    "feedback": {
+      "success": "File uploaded successfully",
+      "copy_success": "Path copied to clipboard"
     }
   }
 }
