@@ -87,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($difficulty === false) {
           die_json(400, "Difficulty with id {$data['suggested_difficulty_id']} does not exist");
         }
-        if ($difficulty->id === $TRIVIAL_ID) {
-          die_json(400, "Trivial difficulty is not allowed for suggestions");
+        if ($difficulty->id === $TRIVIAL_ID || $difficulty->id === $UNDETERMINED_ID) {
+          die_json(400, "Invalid difficulty suggestion");
         }
 
         //Reject if the difficulty is the same as the current one
@@ -121,6 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $suggestion->author_id = $account->player_id;
     $suggestion->date_created = new JsonDateTime();
+    $suggestion->is_verified = null;
+    $suggestion->is_accepted = null;
+    $suggestion->date_accepted = null;
 
     //Skip verification process
     //$suggestion->is_verified = true;

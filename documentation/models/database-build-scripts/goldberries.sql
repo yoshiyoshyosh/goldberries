@@ -1,5 +1,9 @@
 -- Combined Build Script
 
+-- Extensions required for the backend
+-- CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
+-- CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- =========== Drop Statements ===========
 DROP VIEW view_challenge_changes;
 DROP VIEW view_challenges;

@@ -60,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Change::create_change($DB, "player", $target->id, "Renamed from '{$old_name}' to '{$new_name}'");
       }
 
-
       if ($target->update($DB) === false) {
         log_error("Failed to update {$target} in database", "Player");
         die_json(500, "Failed to update account in database");
@@ -68,9 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         log_info("'{$account->player->name}' renamed '{$old_name}' to '{$new_name}'", "Player");
         submission_embed_change($target->id, "player");
         api_write($target);
-        exit();
       }
-
     } else {
       //Dont need to check $id, as self modifying requests only modify the own $account
       if (!isset($request['self']) || $request['self'] !== 't') {
@@ -125,46 +122,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       log_info("Renamed self from '{$old_name}' to '{$new_name}'", "Player");
       submission_embed_change($target->id, "player");
       api_write($target);
-      exit();
     }
-  }
-
-  //Create request
-  if ($account->player_id !== null && !is_helper($account)) {
-    die_json(400, "Account already has a player");
-  }
-  if (!isset($request['name'])) {
-    die_json(400, "Missing parameter 'name'");
-  }
-  $player->name = trim($player->name);
-  if (Player::name_exists($DB, $player->name)) {
-    die_json(400, "Player name is already taken");
-  }
-  if (!is_valid_name($player->name)) {
-    die_json(400, "Invalid name");
-  }
-
-  if ($player->insert($DB) === false) {
-    die_json(500, "Failed to insert player into database");
-  }
-
-
-  if ($account->player_id !== null) {
-    //Verifier is adding a new player without an account
-    log_info("'{$account->player->name}' created {$player}", "Player");
-    api_write($player);
-
   } else {
-    //Account is claiming a new player
-    log_info("Created {$player} for {$account}", "Account");
-    $account->player_id = $player->id;
-    $account->claimed_player_id = null;
-    if ($account->update($DB) === false) {
-      log_error("Failed to update {$account} in database after creating {$player}", "Account");
-      die_json(500, "Failed to update account in database");
+    //Create request
+    if ($account->player_id !== null && !is_helper($account)) {
+      die_json(400, "Account already has a player");
+    }
+    if (!isset($request['name'])) {
+      die_json(400, "Missing parameter 'name'");
+    }
+    $player->name = trim($player->name);
+    if (Player::name_exists($DB, $player->name)) {
+      die_json(400, "Player name is already taken");
+    }
+    if (!is_valid_name($player->name)) {
+      die_json(400, "Invalid name");
     }
 
-    http_response_code(200);
+    if ($player->insert($DB) === false) {
+      die_json(500, "Failed to insert player into database");
+    }
+
+
+    if ($account->player_id !== null) {
+      //Verifier is adding a new player without an account
+      log_info("'{$account->player->name}' created {$player}", "Player");
+      api_write($player);
+
+    } else {
+      //Account is claiming a new player
+      log_info("Created {$player} for {$account}", "Account");
+      $account->player_id = $player->id;
+      $account->claimed_player_id = null;
+      if ($account->update($DB) === false) {
+        log_error("Failed to update {$account} in database after creating {$player}", "Account");
+        die_json(500, "Failed to update account in database");
+      }
+
+      http_response_code(200);
+    }
   }
 }
 

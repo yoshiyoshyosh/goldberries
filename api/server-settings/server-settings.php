@@ -5,7 +5,6 @@ require_once('../api_bootstrap.inc.php');
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $settings = ServerSettings::get_settings($DB);
   api_write($settings);
-  exit();
 }
 
 $account = get_user_data();
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   check_access($account, true);
 
   if (!is_admin($account)) {
-    die_json(403, 'Not Authorized');
+    die_json(403, 'Forbidden');
   }
 
   $data = format_assoc_array_bools(parse_post_body_as_json());

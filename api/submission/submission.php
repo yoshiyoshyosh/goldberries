@@ -51,6 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($old_submission === false) {
       die_json(400, "Submission with id {$submission->id} does not exist");
     }
+    if ($old_submission->player_id !== $account->player->id && !is_helper($account)) {
+      die_json(403, "You are not allowed to edit submissions for other players");
+    }
 
     $log_message = null;
 
@@ -226,10 +229,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   } else {
     //Create a new submission
+
+    //Check if submissions are enabled
     $settings = ServerSettings::get_settings($DB);
     if (!$settings->submissions_enabled) {
       die_json(400, "Submissions are currently disabled");
     }
+
+    //Create blank submission and only carry over fields that the player is allowed to set
+    $new_submission = new Submission();
+    $new_submission->challenge_id = $submission->challenge_id;
+    $new_submission->player_id = $submission->player_id;
+    $new_submission->is_fc = $submission->is_fc;
+    $new_submission->proof_url = $submission->proof_url;
+    $new_submission->raw_session_url = $submission->raw_session_url;
+    $new_submission->player_notes = $submission->player_notes;
+    $new_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+    $new_submission->is_personal = $submission->is_personal;
+    $new_submission->time_taken = $submission->time_taken;
+    $new_submission->date_achieved = $submission->date_achieved;
 
     //new challenge stuff
     if (isset($data['new_challenge'])) {
@@ -238,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (!$new_challenge->insert($DB)) {
         die_json(400, "New Challenge could not be inserted");
       }
-      $submission->new_challenge_id = $new_challenge->id;
+      $new_submission->new_challenge_id = $new_challenge->id;
 
     } else if (isset($data['challenge_id'])) {
       $challenge = Challenge::get_by_id($DB, $data['challenge_id']);
@@ -249,13 +267,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die_json(400, "This challenge is rejected and does not accept submissions.");
       }
       if ($challenge->difficulty->sort >= $RAW_SESSION_REQUIRED_SORT) {
-        check_url($submission->raw_session_url, 'raw_session_url');
+        check_url($new_submission->raw_session_url, 'raw_session_url');
       }
       if ($challenge->requires_fc) {
-        $submission->is_fc = true;
+        $new_submission->is_fc = true;
       }
       if (!$challenge->requires_fc && !$challenge->has_fc) {
-        $submission->is_fc = false;
+        $new_submission->is_fc = false;
       }
       if ($challenge->map_id !== null) {
         $map = Map::get_by_id($DB, $challenge->map_id);
@@ -275,21 +293,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       die_json(400, "Notes can't be longer than 5000 characters");
     }
 
-    if ($submission->time_taken !== null) {
-      if ($submission->time_taken < 0) {
+    if ($new_submission->suggested_difficulty_id !== null) {
+      $difficulty = Difficulty::get_by_id($DB, $new_submission->suggested_difficulty_id);
+      if ($difficulty === false) {
+        die_json(400, "Difficulty with id {$new_submission->suggested_difficulty_id} does not exist");
+      } else if ($difficulty->id === $UNDETERMINED_ID) {
+        die_json(400, "Cannot suggest 'Undetermined' as difficulty");
+      } else if ($difficulty->id === $TRIVIAL_ID) {
+        die_json(400, "Cannot suggest 'Trivial' as difficulty");
+      }
+    }
+    if ($new_submission->time_taken !== null) {
+      if ($new_submission->time_taken < 0) {
         die_json(400, "Time taken can't be negative");
-      } else if ($submission->time_taken > 60 * 60 * 99999) {
+      } else if ($new_submission->time_taken > 60 * 60 * 99999) {
         die_json(400, "Time taken can't be this high");
       }
     }
 
-    $submission->date_created = new JsonDateTime();
-    if ($submission->date_achieved === null) {
-      $submission->date_achieved = $submission->date_created;
+    $new_submission->date_created = new JsonDateTime();
+    if ($new_submission->date_achieved === null) {
+      $new_submission->date_achieved = $submission->date_created;
     }
-    $submission->insert($DB);
-    $submission->expand_foreign_keys($DB, 5);
-    api_write($submission);
+    $new_submission->insert($DB);
+    $new_submission->expand_foreign_keys($DB, 5);
+    api_write($new_submission);
   }
 }
 
