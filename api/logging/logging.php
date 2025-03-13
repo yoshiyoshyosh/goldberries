@@ -10,20 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     die_json(403, "Forbidden");
   }
 
-  if (isset($_REQUEST['page'])) {
-    $page = intval($_REQUEST['page']) ?? 1;
-    $per_page = intval($_REQUEST['per_page']) ?? 50;
-    $level = $_REQUEST['level'] ?? null;
-    $topic = $_REQUEST['topic'] ?? null;
-    $search = $_REQUEST['search'] ?? null;
-    $start_date = $_REQUEST['start_date'] ?? null;
-    $end_date = $_REQUEST['end_date'] ?? null;
-
-    $logs = Logging::get_paginated($DB, $page, $per_page, $level, $topic, $search, $start_date, $end_date);
-
-    api_write($logs);
-    exit();
+  if (!isset($_REQUEST['page'])) {
+    die_json(400, "Missing parameter: page");
   }
+
+  $page = intval($_REQUEST['page']) ?? 1;
+  $page = max($page, 1);
+  $per_page = intval($_REQUEST['per_page']) ?? 50;
+  $per_page = max($per_page, 1);
+  $level = $_REQUEST['level'] ?? null;
+  $topic = $_REQUEST['topic'] ?? null;
+  $search = $_REQUEST['search'] ?? null;
+  $start_date = $_REQUEST['start_date'] ?? null;
+  $end_date = $_REQUEST['end_date'] ?? null;
+
+  $logs = Logging::get_paginated($DB, $page, $per_page, $level, $topic, $search, $start_date, $end_date);
+
+  api_write($logs);
 }
 
 // ===== DELETE Request =====

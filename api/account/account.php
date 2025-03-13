@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       if (count($accounts) > 0) {
         die_json(401, "Email is already registered");
       }
-      $changes .= "email ({$account->email} -> {$request['email']}), ";
+      $changes .= "email (<new email>), ";
       $account->email = $request['email'];
       $account->email_verified = true; //Skip email verification if it's been added later
     }

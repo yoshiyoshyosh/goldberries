@@ -4,7 +4,8 @@ require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
-  $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 3;
+  // $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 3;
+  $depth = 3; //Doesnt work without max depth
 
   if (!isset($_REQUEST['id'])) {
     die_json(400, "Missing id");

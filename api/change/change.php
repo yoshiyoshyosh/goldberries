@@ -1,12 +1,12 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $type = $_REQUEST['type'] ?? null;
   if ($type === null) {
     die_json(400, "Missing parameter 'type'");
-  } else if ($type !== "campaign" && $type !== "map" && $type !== "challenge" && $type !== "player") {
+  } else if (!in_array($type, ["campaign", "map", "challenge", "player"])) {
     die_json(400, "Parameter 'type' must be one of (campaign, map, challenge, player)");
   }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
 
   if (!is_verifier($account)) {
     if ($target->player_id === null || $target->player_id !== $account->player_id) {
-      die_json(403, "Not authorized");
+      die_json(403, "You cannot delete this change");
     }
   }
 

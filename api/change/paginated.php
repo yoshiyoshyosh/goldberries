@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -9,12 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $type = $_REQUEST['type'] ?? null;
 if ($type === null) {
   die_json(400, "Missing parameter 'type'");
-} else if ($type !== "campaign" && $type !== "map" && $type !== "challenge" && $type !== "player" && $type !== "all") {
+} else if (!in_array($type, ["campaign", "map", "challenge", "player", "all"])) {
   die_json(400, "Parameter 'type' must be one of (campaign, map, challenge, player, all)");
 }
 
 $page = intval($_REQUEST['page']) === 0 ? 1 : intval($_REQUEST['page']);
 $per_page = intval($_REQUEST['per_page']) === 0 ? 50 : intval($_REQUEST['per_page']);
+$per_page = max(1, min(100, $per_page));
 
 $logs = Change::get_paginated($DB, $page, $per_page, $type);
 

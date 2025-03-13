@@ -5,7 +5,8 @@ require_once('../api_bootstrap.inc.php');
 // ===== GET Request =====
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $id = $_REQUEST['id'];
-  $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 4;
+  // $depth = isset($_REQUEST['depth']) ? intval($_REQUEST['depth']) : 4;
+  $depth = 4; //Doesnt work when not set to the maximum
 
   $submissions = Submission::get_request($DB, $id);
   if (is_array($submissions)) {

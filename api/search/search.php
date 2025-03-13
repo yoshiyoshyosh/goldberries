@@ -24,7 +24,7 @@ $unmodified_search = $search;
 $search = str_replace("%", "\%", $search);
 $search = str_replace("_", "\_", $search);
 
-if (strlen($search) >= 3) {
+if (mb_strlen($search) >= 3) {
   //When the search string is too short, we will only search for exact matches
   $search = "%" . $search . "%";
   $is_exact_search = false;
@@ -114,5 +114,7 @@ if (in_array("authors", $in)) {
     return strcasecmp($a['name'], $b['name']);
   });
 }
+
+$response["str_len"] = strlen($unmodified_search);
 
 api_write($response);

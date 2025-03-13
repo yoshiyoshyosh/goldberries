@@ -286,6 +286,11 @@ function parse_campaigns_no_submissions($result): array
     $campaign->maps = array_values($campaign->maps);
     $campaign->challenges = array_values($campaign->challenges);
   }
+  //TODO: Removing maps/challenges saves ~87% of the data size
+  // foreach ($campaigns as $campaign) {
+  //   $campaign->maps = null;
+  //   $campaign->challenges = null;
+  // }
   $campaigns = array_values($campaigns);
 
   return $campaigns;

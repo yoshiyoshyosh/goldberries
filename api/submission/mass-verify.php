@@ -81,7 +81,7 @@ foreach ($submissions as $submission) {
 
 //Log message which contains all IDs that were just verified/rejected
 $ids_str = implode(", ", $ids);
-$note = "Submission(s) {$ids_str} were " . ($is_verified ? "verified" : "rejected") . " by {$account->player->name}";
+$note = "Submission(s) [{$ids_str}] were " . ($is_verified ? "verified" : "rejected") . " by {$account->player->name}";
 log_info($note, "Submission");
 
 // Next, for the submission webhook notification we want to group all notifications by:
