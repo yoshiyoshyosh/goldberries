@@ -97,6 +97,7 @@ function FAQEntryVanillaReferences({}) {
     { name: "Farewell [No DTS] [C/FC]", difficulty_id: 12 },
     { name: "Any%", difficulty_id: 14, note: "Forsaken City through The Summit" },
     { name: "All Full Clears", difficulty_id: 10, note: "Forsaken City [FC] through Core [FC]" },
+    { name: "True Ending", difficulty_id: 10, note: "Forsaken City through Farewell" },
     { name: "All B-Sides", difficulty_id: 10 },
     { name: "All C-Sides", difficulty_id: 17 },
     {

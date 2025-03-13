@@ -605,7 +605,7 @@ export function fetchTrafficStatsGlobalRequests(startDate, endDate) {
   const params = {};
   if (startDate) params.start_date = startDate;
   if (endDate) params.end_date = endDate;
-  return axios.get("/traffic/list_requests", {
+  return axios.get("/traffic/list-requests", {
     params: params,
   });
 }
@@ -617,7 +617,7 @@ export function postUploadFile(destination, file_name, file) {
   data.append("file", file);
   data.append("destination", destination);
   data.append("file_name", file_name);
-  return axios.post("/admin/upload_file", data, {
+  return axios.post("/admin/upload-file", data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

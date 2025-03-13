@@ -148,18 +148,10 @@ export function ExportTopGoldenListModal({ modalHook, type, id, filter, isPerson
         let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
         let name = getMapName(map, campaign);
         let combinedName = "";
-        if (!tpgSettings.switchMapAndChallenge) {
-          if (nameSuffix !== "") {
-            combinedName = `${name} [${nameSuffix}]`;
-          } else {
-            combinedName = `${name}`;
-          }
+        if (nameSuffix !== "") {
+          combinedName = `${name} [${nameSuffix}]`;
         } else {
-          if (name !== "") {
-            combinedName = `${nameSuffix}`;
-          } else {
-            combinedName = `${name} [${nameSuffix}]`;
-          }
+          combinedName = `${name}`;
         }
 
         if (challenge.requires_fc || challenge.has_fc) {

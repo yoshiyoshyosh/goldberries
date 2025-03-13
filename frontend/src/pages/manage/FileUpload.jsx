@@ -30,6 +30,7 @@ export function PageFileUpload() {
     setApiResponse(data);
   });
   const handleUpload = () => {
+    setApiResponse(null);
     if (file) {
       uploadFile({ file, destination, file_name: fileName });
     }
@@ -76,15 +77,15 @@ export function PageFileUpload() {
             onChange={(e) => setFileName(e.target.value)}
           />
         </Grid>
-        <Grid item xs="auto" display="flex" alignItems="center">
-          {fileExtension && (
+        {fileExtension && (
+          <Grid item xs="auto" display="flex" alignItems="center">
             <TextField
               value={"." + fileExtension}
               disabled
               sx={{ width: "80px", "&& input": { textAlign: "center" } }}
             />
-          )}
-        </Grid>
+          </Grid>
+        )}
         {isImageFile && (
           <Grid item xs={12}>
             <Stack direction="column" gap={1}>
@@ -114,7 +115,9 @@ export function PageFileUpload() {
               <Divider />
             </Grid>
             <Grid item xs={12}>
-              <Alert severity="success">{t("feedback.success")}</Alert>
+              <Alert severity="success" variant="filled">
+                {t("feedback.success")}
+              </Alert>
             </Grid>
             <Grid item xs>
               <TextField

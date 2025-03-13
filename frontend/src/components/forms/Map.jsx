@@ -448,6 +448,7 @@ export const COLLECTIBLES = [
         icon: "/icons/nutty-water-berry.png",
       },
       { value: "10", name: "FLP Frogberry", displayName: "Frogberry", icon: "/icons/frogberry.png" },
+      { value: "11", name: "Rotten Berry", displayName: "Rotten Berry", icon: "/icons/rottenberry.png" },
     ],
   },
   {

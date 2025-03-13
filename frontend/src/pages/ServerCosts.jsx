@@ -53,8 +53,10 @@ export function PageServerCosts({}) {
     { amount: 12.82, date: "2024-08-02", name: "anonymous" },
     { amount: 8.78, date: "2024-08-03", name: "CoffeeCat" },
     { amount: 61.48, date: "2025-02-11", name: "RisingSunLight" },
+    { amount: 13.15, date: "2025-03-12", name: "orion" },
   ];
-  const donationsSoFar = donations.reduce((acc, donation) => acc + donation.amount, 0);
+  const donationsSoFar =
+    Math.round(donations.reduce((acc, donation) => acc + donation.amount, 0) * 100) / 100;
 
   const totalCostSoFar = totalCost * months;
   const totalDifference = donationsSoFar - totalCostSoFar;
