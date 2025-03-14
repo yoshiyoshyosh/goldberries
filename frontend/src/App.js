@@ -67,7 +67,10 @@ import {
   faInfoCircle,
   faMailBulk,
   faMoon,
+  faNewspaper,
+  faNoteSticky,
   faPlayCircle,
+  faPooStorm,
   faQuestion,
   faSearch,
   faServer,
@@ -130,6 +133,7 @@ import { PageTest } from "./pages/Test";
 import { PageTrafficAnalytics } from "./pages/manage/TrafficAnalytics";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PageFileUpload } from "./pages/manage/FileUpload";
+import { PagePostList } from "./pages/Post";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -216,6 +220,14 @@ const router = createBrowserRouter([
               </ProtectedRoute>
             ),
           },
+          {
+            path: "posts",
+            element: (
+              <ProtectedRoute needsHelper redirect="manage/posts">
+                <PageFileUpload />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
 
@@ -278,6 +290,9 @@ const router = createBrowserRouter([
 
       { path: "test/:tab?", element: <PageTest /> },
 
+      { path: "news/:id?", element: <PagePostList type="news" /> },
+      { path: "changelog/:id?", element: <PagePostList type="changelog" /> },
+
       //Catch all
       { path: "*", element: <Page404 /> },
     ],
@@ -317,6 +332,10 @@ export const lightTheme = createTheme({
     },
     globalNotices: {
       background: "#eeeeee",
+    },
+    code: {
+      background: "#e8e8e8",
+      border: "#c8c8c8",
     },
   },
   components: {
@@ -372,6 +391,10 @@ const darkTheme = createTheme({
     },
     globalNotices: {
       background: "#333333",
+    },
+    code: {
+      background: "#1f1f1f",
+      border: "#333",
     },
   },
   components: {
@@ -469,7 +492,6 @@ export function Layout() {
   const { settings } = useAppSettings();
   const darkmode = settings.visual.darkmode;
   const auth = useAuth();
-  const location = useLocation();
 
   const searchOpenRef = createRef();
   const settingsOpenRef = createRef();
@@ -634,6 +656,11 @@ export function Layout() {
           path: "/test",
           icon: <FontAwesomeIcon icon={faQuestion} />,
         },
+        {
+          name: t("internal_menu.posts"),
+          path: "/posts",
+          icon: <FontAwesomeIcon icon={faNewspaper} />,
+        },
       ],
     },
     verifier: {
@@ -704,6 +731,16 @@ export function Layout() {
           name: t("other_menu.stats"),
           path: "/stats",
           icon: <FontAwesomeIcon icon={faTable} />,
+        },
+        {
+          name: t("other_menu.news"),
+          path: "/news",
+          icon: <FontAwesomeIcon icon={faNewspaper} />,
+        },
+        {
+          name: t("other_menu.changelog"),
+          path: "/changelog",
+          icon: <FontAwesomeIcon icon={faNoteSticky} />,
         },
       ],
     },

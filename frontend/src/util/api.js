@@ -624,3 +624,27 @@ export function postUploadFile(destination, file_name, file) {
   });
 }
 //#endregion
+
+//#region /post
+export function fetchPost(id) {
+  return axios.get("/post", { params: { id: id } });
+}
+export function fetchPostPaginated(type, page, perPage, search = null, authorId = null) {
+  const data = {
+    type: type,
+    page: page,
+    per_page: perPage,
+  };
+
+  if (search) data.search = search;
+  if (authorId) data.author_id = authorId;
+
+  return axios.get("/post/paginated", { params: data });
+}
+export function postPost(data) {
+  return axios.post("/post", formatDataForApi(data));
+}
+export function deletePost(id) {
+  return axios.delete("/post", { params: { id: id } });
+}
+//#endregion

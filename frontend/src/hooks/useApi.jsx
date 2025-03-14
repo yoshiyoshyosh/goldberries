@@ -79,6 +79,10 @@ import {
   fetchVerifierStats,
   fetchRejectedChallenges,
   postUploadFile,
+  fetchPost,
+  postPost,
+  fetchPostPaginated,
+  deletePost,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -942,6 +946,47 @@ export function usePostUploadFile(onSuccess) {
     mutationFn: ({ destination, file_name, file }) => postUploadFile(destination, file_name, file),
     onSuccess: (response, parameters) => {
       if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+//#endregion
+
+//#region /post
+export function useGetPost(id) {
+  return useQuery({
+    queryKey: ["post", id],
+    queryFn: () => fetchPost(id),
+    onError: errorToast,
+  });
+}
+export function useGetPostPaginated(type, page, perPage, search = null, authorId = null) {
+  return useQuery({
+    queryKey: ["posts_paginated", type, page, perPage, search, authorId],
+    queryFn: () => fetchPostPaginated(type, page, perPage, search, authorId),
+  });
+}
+export function usePostPost(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (post) => postPost(post),
+    onSuccess: (response, post) => {
+      queryClient.invalidateQueries(["post", response.data.id]);
+      queryClient.invalidateQueries(["posts_paginated", response.data.type]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+export function useDeletePost(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deletePost(id),
+    onSuccess: (response, id) => {
+      queryClient.invalidateQueries(["post", id]);
+      queryClient.invalidateQueries(["posts_paginated"]);
+      if (onSuccess) onSuccess(response, id);
+      else toast.success("Post deleted");
     },
     onError: errorToast,
   });

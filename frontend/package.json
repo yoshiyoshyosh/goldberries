@@ -40,7 +40,9 @@
     "react-toastify": "^10.0.3",
     "react-window": "^1.8.10",
     "recharts": "^2.12.7",
+    "remark-gfm": "^4.0.1",
     "swagger-ui-react": "^5.17.14",
+    "unist-util-visit": "^5.0.0",
     "use-debounce": "^10.0.0",
     "web-vitals": "^2.1.4"
   },

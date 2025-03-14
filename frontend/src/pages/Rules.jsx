@@ -222,7 +222,7 @@ function RulesSubSection({ sectionKey, subSectionKey, subsection }) {
   );
 }
 
-export function CodeBlock({ children }) {
+export function CodeBlock({ children, ...props }) {
   const theme = useTheme();
   const isDarkmode = theme.palette.mode === "dark";
   const codeStyle = {
@@ -237,5 +237,9 @@ export function CodeBlock({ children }) {
     codeStyle.background = "rgba(0,0,0,.07)";
     codeStyle.border = "1px solid black";
   }
-  return <code style={codeStyle}>{children}</code>;
+  return (
+    <code {...props} style={codeStyle}>
+      {children}
+    </code>
+  );
 }

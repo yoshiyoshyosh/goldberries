@@ -457,7 +457,9 @@
       "monthly_recap": "Monthly Recap",
       "stats": "Stats",
       "rules": "Rules",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "news": "News",
+      "changelog": "Changelog"
     },
     "internal_menu": {
       "name": "Internal",
@@ -466,7 +468,8 @@
       "manage_challenges": "Manage Challenges",
       "manage_accounts": "Manage Accounts",
       "file_upload": "File Upload",
-      "test": "Test Page"
+      "test": "Test Page",
+      "posts": "Posts"
     },
     "widgets": {
       "submission_queue": "Submissions in queue",
