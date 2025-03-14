@@ -25,6 +25,7 @@ $requireObjects = array(
   "showcase",
   "verification_notice",
   "server_settings",
+  "post",
 );
 
 foreach ($requireObjects as $obj) {
