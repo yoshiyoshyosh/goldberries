@@ -17,6 +17,10 @@
     "objective_other": "Objectives",
     "account_one": "Account",
     "account_other": "Accounts",
+    "post_one": "Post",
+    "post_other": "Posts",
+    "news": "News",
+    "changelog": "Changelog",
     "table_rows_per_page": "Rows per page:",
     "modals": {
       "buttons": {
@@ -436,6 +440,25 @@
       "time_taken": {
         "invalid": "Duration string has to have the pattern '(hh:)mm:ss'"
       }
+    },
+    "post": {
+      "feedback": {
+        "created": "Post created",
+        "updated": "Post updated"
+      },
+      "title": "Title",
+      "content": "Content",
+      "type": "Post Type",
+      "types": {
+        "news": "News",
+        "changelog": "Changelog"
+      },
+      "image_url": "Image URL",
+      "buttons": {
+        "create": "Create Post",
+        "update": "Update Post",
+        "goto": "Go to Post"
+      }
     }
   },
   "hooks": {
@@ -469,7 +492,7 @@
       "manage_accounts": "Manage Accounts",
       "file_upload": "File Upload",
       "test": "Test Page",
-      "posts": "Posts"
+      "posts": "New Post"
     },
     "widgets": {
       "submission_queue": "Submissions in queue",

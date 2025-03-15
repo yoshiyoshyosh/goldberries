@@ -629,6 +629,9 @@ export function postUploadFile(destination, file_name, file) {
 export function fetchPost(id) {
   return axios.get("/post", { params: { id: id } });
 }
+export function fetchAdjacentPosts(id) {
+  return axios.get("/post/adjacent", { params: { id: id } });
+}
 export function fetchPostPaginated(type, page, perPage, search = null, authorId = null) {
   const data = {
     type: type,

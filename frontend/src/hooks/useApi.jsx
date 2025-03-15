@@ -83,6 +83,7 @@ import {
   postPost,
   fetchPostPaginated,
   deletePost,
+  fetchAdjacentPosts,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -960,6 +961,13 @@ export function useGetPost(id) {
     onError: errorToast,
   });
 }
+export function useGetAdjacentPosts(id) {
+  return useQuery({
+    queryKey: ["adjacent_posts", id],
+    queryFn: () => fetchAdjacentPosts(id),
+    onError: errorToast,
+  });
+}
 export function useGetPostPaginated(type, page, perPage, search = null, authorId = null) {
   return useQuery({
     queryKey: ["posts_paginated", type, page, perPage, search, authorId],
@@ -971,7 +979,8 @@ export function usePostPost(onSuccess) {
   return useMutation({
     mutationFn: (post) => postPost(post),
     onSuccess: (response, post) => {
-      queryClient.invalidateQueries(["post", response.data.id]);
+      queryClient.invalidateQueries(["post", response.data.id + ""]);
+      queryClient.invalidateQueries(["adjacent_posts"]);
       queryClient.invalidateQueries(["posts_paginated", response.data.type]);
       if (onSuccess) onSuccess(response.data);
     },

@@ -362,6 +362,7 @@ const SafeExternalDomains = [
   "https://docs.google.com",
   "https://www.google.com",
   "https://goldberries.net", //lmao
+  "/", //lmao again
 ];
 export function StyledExternalLink({
   href,

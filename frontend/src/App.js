@@ -134,6 +134,7 @@ import { PageTrafficAnalytics } from "./pages/manage/TrafficAnalytics";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PageFileUpload } from "./pages/manage/FileUpload";
 import { PagePostList } from "./pages/Post";
+import { PageManagePosts } from "./pages/manage/Posts";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -221,10 +222,10 @@ const router = createBrowserRouter([
             ),
           },
           {
-            path: "posts",
+            path: "posts/:id?",
             element: (
               <ProtectedRoute needsHelper redirect="manage/posts">
-                <PageFileUpload />
+                <PageManagePosts />
               </ProtectedRoute>
             ),
           },
@@ -658,7 +659,7 @@ export function Layout() {
         },
         {
           name: t("internal_menu.posts"),
-          path: "/posts",
+          path: "/manage/posts/new",
           icon: <FontAwesomeIcon icon={faNewspaper} />,
         },
       ],
