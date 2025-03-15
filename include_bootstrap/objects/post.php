@@ -119,9 +119,8 @@ class Post extends DbObject
   // === Utility Functions ===
   function __toString()
   {
-    $dateStr = date_to_long_string($this->date_created);
     $authorStr = $this->author_id !== null ? $this->author_id : "<unknown>";
-    return "(Post, id:{$this->id}, author:{$authorStr}, date_created:{$dateStr})";
+    return "(Post, id:{$this->id}, author:{$authorStr}, title:'{$this->title}')";
   }
 
   //This function assumes a fully expanded structure
