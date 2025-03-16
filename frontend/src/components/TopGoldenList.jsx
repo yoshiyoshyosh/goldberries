@@ -408,8 +408,8 @@ function TopGoldenListTier({
   }
 
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
-  const sortByFractionalTiers = !isPlayer && settings.visual.topGoldenList.showFractionalTiers;
-  sortChallengesForTGL(challengesInTier, maps, campaigns, sortByFractionalTiers);
+  const sortByFractionalTiers = settings.visual.topGoldenList.showFractionalTiers;
+  sortChallengesForTGL(challengesInTier, maps, campaigns, sortByFractionalTiers, isPlayer);
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
   const showOldTierNames = settings.general.showOldTierNames;
@@ -545,12 +545,27 @@ function TopGoldenListTier({
     </TableContainer>
   );
 }
-export function sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers) {
+export function sortChallengesForTGL(challenges, maps, campaigns, sortByFractionalTiers, isPlayer = false) {
   const sortChallenges = (a, b) => {
     //If fraction is available, use that for sorting first. if no frac is available, treat it as 0.5
     if (sortByFractionalTiers) {
-      const fracA = a.data.frac !== false && a.data.frac !== undefined ? a.data.frac : 0.5;
-      const fracB = b.data.frac !== false && b.data.frac !== undefined ? b.data.frac : 0.5;
+      let fracA = 0.5;
+      let fracB = 0.5;
+      if (isPlayer) {
+        //First sort for the suggested difficulty, if it exists
+        const diffSortA = a.submissions[0].suggested_difficulty?.sort ?? a.difficulty.sort;
+        const diffSortB = b.submissions[0].suggested_difficulty?.sort ?? b.difficulty.sort;
+
+        if (diffSortA !== diffSortB) {
+          return diffSortB - diffSortA;
+        }
+
+        fracA = a.submissions[0].frac ?? 50;
+        fracB = b.submissions[0].frac ?? 50;
+      } else {
+        fracA = a.data.frac !== false && a.data.frac !== undefined ? a.data.frac : 0.5;
+        fracB = b.data.frac !== false && b.data.frac !== undefined ? b.data.frac : 0.5;
+      }
       if (fracA !== fracB) {
         return fracB - fracA;
       }
@@ -605,9 +620,19 @@ function TopGoldenListRow({
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
   //TODO - Prepend tier fraction if the setting is enabled
-  if (settings.visual.topGoldenList.showFractionalTiers && !isPlayer) {
-    let frac = challenge.data.frac !== false && challenge.data.frac !== undefined ? challenge.data.frac : 0.5;
-    frac += challenge.difficulty.sort;
+  if (settings.visual.topGoldenList.showFractionalTiers && (!isPlayer || useSuggested)) {
+    let frac = 0.5;
+    if (isPlayer) {
+      frac = (challenge.submissions[0].frac ?? 50) / 100;
+    } else {
+      frac = challenge.data.frac !== false && challenge.data.frac !== undefined ? challenge.data.frac : 0.5;
+    }
+
+    if (useSuggested && challenge.submissions[0].suggested_difficulty !== null) {
+      frac += challenge.submissions[0].suggested_difficulty.sort;
+    } else {
+      frac += challenge.difficulty.sort;
+    }
     name = `${frac.toFixed(2)} - ${name}`;
   }
   if (nameSuffix !== "") {
@@ -816,6 +841,7 @@ function TopGoldenListRow({
                     : challenge.difficulty
                   : firstSubmissionSuggestion
               }
+              frac={firstSubmission.frac ?? 50}
               isPersonal={firstSubmission.is_personal}
               highlightPersonal
             />

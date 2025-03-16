@@ -680,6 +680,7 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
             <DifficultyChip
               difficulty={submission.suggested_difficulty}
               isPersonal={submission.is_personal}
+              frac={submission.frac ?? 50}
             />
           </Link>
         </TableCell>

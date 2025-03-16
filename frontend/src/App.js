@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PageForgotPassword, PageLogin, PageRegister, PageVerifyEmail } from "./pages/Login";
 import { AuthProvider, useAuth } from "./hooks/AuthProvider";
 import axios from "axios";
-import { API_URL } from "./util/constants";
+import { API_URL, CURRENT_VERSION } from "./util/constants";
 import { PageLogs } from "./pages/manage/Logs";
 import { PagePostOAuthLogin } from "./pages/PostOAuthLogin";
 import { Page403, Page404, PageNoPlayerClaimed } from "./pages/ErrorPages";
@@ -216,7 +216,7 @@ const router = createBrowserRouter([
           {
             path: "file-upload",
             element: (
-              <ProtectedRoute needsVerifier redirect="manage/file-upload">
+              <ProtectedRoute needsHelper redirect="manage/file-upload">
                 <PageFileUpload />
               </ProtectedRoute>
             ),
@@ -338,6 +338,12 @@ export const lightTheme = createTheme({
       background: "#e8e8e8",
       border: "#c8c8c8",
     },
+    posts: {
+      background: "#f9f9f9",
+      backgroundHover: "#e8e8e8",
+      shadowColor: "#888",
+      imageOutline: "#8a8a8a",
+    },
   },
   components: {
     MuiContainer: {
@@ -396,6 +402,12 @@ const darkTheme = createTheme({
     code: {
       background: "#1f1f1f",
       border: "#333",
+    },
+    posts: {
+      background: "#1e1e1e",
+      backgroundHover: "#2e2e2e",
+      shadowColor: "#888",
+      imageOutline: "#b0b0b0",
     },
   },
   components: {
@@ -628,6 +640,10 @@ export function Layout() {
           },
           icon: <FontAwesomeIcon icon={faSignOut} />,
         },
+        {
+          name: t("player_menu.app_version", { version: CURRENT_VERSION }),
+          isText: true,
+        },
       ],
     },
     submit: {
@@ -653,14 +669,19 @@ export function Layout() {
           icon: <FontAwesomeIcon icon={faEdit} />,
         },
         {
-          name: t("internal_menu.test"),
-          path: "/test",
-          icon: <FontAwesomeIcon icon={faQuestion} />,
-        },
-        {
           name: t("internal_menu.posts"),
           path: "/manage/posts/new",
           icon: <FontAwesomeIcon icon={faNewspaper} />,
+        },
+        {
+          name: t("internal_menu.file_upload"),
+          path: "/manage/file-upload",
+          icon: <FontAwesomeIcon icon={faFileUpload} />,
+        },
+        {
+          name: t("internal_menu.test"),
+          path: "/test",
+          icon: <FontAwesomeIcon icon={faQuestion} />,
         },
       ],
     },
@@ -672,11 +693,6 @@ export function Layout() {
           name: t("internal_menu.manage_accounts"),
           path: "/manage/accounts",
           icon: <FontAwesomeIcon icon={faUserEdit} />,
-        },
-        {
-          name: t("internal_menu.file_upload"),
-          path: "/manage/file-upload",
-          icon: <FontAwesomeIcon icon={faFileUpload} />,
         },
       ],
     },
@@ -1052,6 +1068,7 @@ function MobileSubMenu({ name, icon, items, nameStyle = {}, closeDrawer }) {
 }
 
 function MobileMenuItem({ item, indent = 0, closeDrawer }) {
+  const theme = useTheme();
   const { pathname } = useLocation();
   const selected = item.action ? false : pathMatchesItem(pathname, item.path);
 
@@ -1064,6 +1081,13 @@ function MobileMenuItem({ item, indent = 0, closeDrawer }) {
 
   if (item.divider) {
     return <Divider sx={{ ml: 2 }} />;
+  } else if (item.isText) {
+    return (
+      <ListItemText
+        primary={item.name}
+        sx={{ py: "2px", pl: 2 + indent * 2, color: theme.palette.text.secondary }}
+      />
+    );
   }
 
   return (
@@ -1271,8 +1295,16 @@ function DesktopSubMenu({ name, icon, items, nameStyle = {} }) {
 }
 
 function DesktopSubMenuItem({ item, closeMenu }) {
+  const theme = useTheme();
+
   if (item.divider === true) {
     return <Divider />;
+  } else if (item.isText === true) {
+    return (
+      <ListItem disablePadding>
+        <ListItemText primary={item.name} sx={{ pl: 2, color: theme.palette.text.secondary }} />
+      </ListItem>
+    );
   }
 
   if (item.action !== undefined) {

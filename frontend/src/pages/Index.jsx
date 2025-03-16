@@ -26,8 +26,11 @@ import { RecentSubmissions } from "../components/RecentSubmissions";
 import { DIFF_CONSTS, DISCORD_INVITE, getDifficultySubtierShares } from "../util/constants";
 import { Trans, useTranslation } from "react-i18next";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { PostIndexWidget } from "./Post";
+import { useAuth } from "../hooks/AuthProvider";
 
 export function PageIndex() {
+  const auth = useAuth();
   const { t } = useTranslation(undefined, { keyPrefix: "index" });
   return (
     <Container
@@ -45,25 +48,27 @@ export function PageIndex() {
               <WelcomeComponent />
             </BorderedBox>
             <BorderedBox>
-              <ErrorBoundary>
-                <ReworkNotice />
-              </ErrorBoundary>
-            </BorderedBox>
-            <BorderedBox>
-              <GettingStarted />
+              <PostIndexWidget />
             </BorderedBox>
             <BorderedBox>
               <GlobalStatsComponent />
             </BorderedBox>
-            {/* <BorderedBox>
-              <PublicTestNotice />
-            </BorderedBox> */}
           </Stack>
         </Grid>
         <Grid item xs={12} lg={6}>
           <Stack direction="column" spacing={2}>
+            {!auth.hasPlayerClaimed && (
+              <BorderedBox>
+                <GettingStarted />
+              </BorderedBox>
+            )}
             <BorderedBox>
               <RecentSubmissions />
+            </BorderedBox>
+            <BorderedBox>
+              <ErrorBoundary>
+                <ReworkNotice />
+              </ErrorBoundary>
             </BorderedBox>
             <BorderedBox>
               <UsefulLinksComponent />

@@ -310,6 +310,7 @@ export function SubmissionDetailsDisplay({ submission, challenge = null, ...prop
               ) : (
                 <DifficultyChip
                   difficulty={submission.suggested_difficulty}
+                  frac={submission.frac ?? 50}
                   isPersonal={submission.is_personal}
                 />
               )

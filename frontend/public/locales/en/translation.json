@@ -395,6 +395,8 @@
       "player_notes": "Player Notes",
       "is_personal": "Is Personal",
       "personal_note": "'Personal' difficulty opinions indicate that this opinion should not be used for difficulty placements",
+      "frac_header": "Fractional Tier",
+      "frac_note": "You can specify where you think the challenge places within the tier. Default is 0.5 (exactly in the middle).",
       "time_taken": "Time Taken",
       "date_submitted": "Date Submitted",
       "date_achieved": "Date Achieved",
@@ -510,7 +512,8 @@
       "claim_a_player": "Claim a Player",
       "my_player_page": "My Player Page",
       "my_top_goldens": "My Top Goldens",
-      "logout": "Logout"
+      "logout": "Logout",
+      "app_version": "goldberries v{{version}}"
     }
   },
   "manage": {
@@ -1749,11 +1752,25 @@
     "file_path": "File Path",
     "destination": {
       "icon": "Icon",
-      "campaign_icon": "Campaign Icon"
+      "campaign_icon": "Campaign Icon",
+      "post": "Post Image"
     },
     "feedback": {
       "success": "File uploaded successfully",
       "copy_success": "Path copied to clipboard"
+    }
+  },
+  "post": {
+    "list": {
+      "title_news": "News Posts",
+      "title_changelog": "Changelog",
+      "search": "Search Posts",
+      "show_more": "Show more..."
+    },
+    "index": {
+      "header_news": "Recent News",
+      "header_changelog": "Website Changelog",
+      "view_all": "View All"
     }
   }
 }

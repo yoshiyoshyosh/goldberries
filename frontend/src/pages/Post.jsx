@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   Grid,
+  Pagination,
   Paper,
   Stack,
   Table,
@@ -10,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
   colors,
   useTheme,
@@ -24,7 +26,7 @@ import {
   TooltipLineBreaks,
 } from "../components/BasicComponents";
 import { useParams } from "react-router-dom";
-import { getQueryData, useGetAdjacentPosts, useGetPost } from "../hooks/useApi";
+import { getQueryData, useGetAdjacentPosts, useGetPost, useGetPostPaginated } from "../hooks/useApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendar, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
@@ -34,6 +36,10 @@ import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./Rules";
 import { visit } from "unist-util-visit";
 import emoji from "remark-emoji";
+import { useAuth } from "../hooks/AuthProvider";
+import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 export function PagePostList({ type }) {
   const { id } = useParams();
@@ -46,12 +52,157 @@ export function PagePostList({ type }) {
   );
 }
 
+//#region Post List
 export function PostList({ type }) {
-  return <Typography variant="h4">Post List: {type}</Typography>;
+  const { t } = useTranslation(undefined, { keyPrefix: "post.list" });
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  const [page, setPage] = useLocalStorage(`post_list_${type}_page`, 1);
+  const perPage = 15;
+  const [search, setSearch] = useLocalStorage(`post_list_${type}_search`, "");
+  const searchDebounced = useDebounce(search, 500);
+
+  const onChangeSearch = (value) => {
+    setPage(1);
+    setSearch(value);
+  };
+
+  const query = useGetPostPaginated(type, page, perPage, searchDebounced);
+  const data = getQueryData(query);
+
+  const title = t("title_" + type);
+  return (
+    <Grid container spacing={2}>
+      <HeadTitle title={title} />
+      <Grid item xs={12}>
+        <Typography variant="h4">{title}</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <PostListSearch search={search} setSearch={onChangeSearch} />
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      {query.isLoading && (
+        <Grid item xs={12}>
+          <LoadingSpinner />
+        </Grid>
+      )}
+      {query.isError && (
+        <Grid item xs={12}>
+          <ErrorDisplay error={query.error} />
+        </Grid>
+      )}
+      {data && (
+        <>
+          <Grid item xs={12} display="flex" justifyContent="space-around">
+            <Pagination count={data.max_page} page={page} onChange={(e, value) => setPage(value)} />
+          </Grid>
+          <Grid item xs={12}>
+            <PostListResult type={type} posts={data.posts} />
+          </Grid>
+          <Grid item xs={12} display="flex" justifyContent="space-around">
+            <Pagination count={data.max_page} page={page} onChange={(e, value) => setPage(value)} />
+          </Grid>
+        </>
+      )}
+    </Grid>
+  );
 }
 
-export function PostDetail({ type, id }) {
+function PostListSearch({ search, setSearch }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "post.list" });
+  const [localSearch, setLocalSearch] = useState(search);
+  const localSearchDebounced = useDebounce(localSearch, 500);
+
+  useEffect(() => {
+    if (localSearch !== search) {
+      setSearch(localSearch);
+    }
+  }, [localSearchDebounced]);
+
+  return (
+    <TextField
+      label={t("search")}
+      value={localSearch}
+      onChange={(e) => setLocalSearch(e.target.value)}
+      fullWidth
+    />
+  );
+}
+
+function PostListResult({ type, posts }) {
+  return (
+    <Grid container spacing={2}>
+      {posts.length === 0 && (
+        <Grid item xs={12}>
+          <Typography variant="body1">No posts found</Typography>
+        </Grid>
+      )}
+      {posts.map((post) => (
+        <Grid item xs={12} key={post.id}>
+          <PostListPost post={post} />
+        </Grid>
+      ))}
+    </Grid>
+  );
+}
+
+function PostListPost({ post }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "post.list" });
   const theme = useTheme();
+  const content = post.content;
+  const firstParagraph = content.split("\n\n")[0];
+
+  const hasMoreContent = content.length > firstParagraph.length;
+
+  return (
+    <StyledLink
+      to={`/${post.type}/${post.id}`}
+      style={{ textDecoration: "none", color: theme.palette.text.primary }}
+    >
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: "5px",
+          background: theme.palette.posts.background,
+          "&:hover": { background: theme.palette.posts.backgroundHover },
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={post.image_url ? 8 : 12}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <PostTitle title={post.title} />
+              </Grid>
+              <Grid item xs={12} sx={{ "& > :first-child": { mt: 0 }, "& > :last-child": { mb: 0 } }}>
+                <MarkdownRenderer markdown={firstParagraph} />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="caption" color={theme.palette.text.secondary}>
+                  {hasMoreContent && t("show_more")}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          {post.image_url && (
+            <Grid item xs={12} sm={4}>
+              <PostImage image_url={post.image_url} title={post.title} />
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <PostAuthor post={post} />
+          </Grid>
+        </Grid>
+      </Paper>
+    </StyledLink>
+  );
+}
+//#endregion
+
+//#region Post Detail
+export function PostDetail({ type, id }) {
+  const auth = useAuth();
   const query = useGetPost(id);
 
   if (query.isLoading) {
@@ -61,7 +212,6 @@ export function PostDetail({ type, id }) {
   }
 
   const post = getQueryData(query);
-  const colorSecondary = theme.palette.text.secondary;
 
   return (
     <Grid container spacing={2}>
@@ -74,37 +224,17 @@ export function PostDetail({ type, id }) {
           </Stack>
         </StyledLink>
       </Grid>
-      <Grid item xs="auto">
-        <StyledLink to={`/manage/posts/${post.id}`}>
-          <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faEdit} size="sm" />}>
-            Edit
-          </Button>
-        </StyledLink>
-      </Grid>
+      {((post.type === "news" && auth.hasHelperPriv) || (post.type === "changelog" && auth.hasAdminPriv)) && (
+        <Grid item xs="auto">
+          <StyledLink to={`/manage/posts/${post.id}`}>
+            <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faEdit} size="sm" />}>
+              Edit
+            </Button>
+          </StyledLink>
+        </Grid>
+      )}
       <Grid item xs={12}>
-        <Stack direction="row" gap={0.75} alignItems="center">
-          <TooltipLineBreaks title={jsonDateToJsDate(post.date_created).toLocaleString()}>
-            <Typography variant="body2" color={colorSecondary}>
-              {dateToTimeAgoString(jsonDateToJsDate(post.date_created))}
-            </Typography>
-          </TooltipLineBreaks>
-          {post.date_edited && (
-            <>
-              <TooltipLineBreaks title={jsonDateToJsDate(post.date_edited).toLocaleString()}>
-                <Typography variant="body2" color={colorSecondary}>
-                  (edited {dateToTimeAgoString(jsonDateToJsDate(post.date_edited))})
-                </Typography>
-              </TooltipLineBreaks>
-            </>
-          )}
-          <Typography variant="body2" color={colorSecondary}>
-            ·
-          </Typography>
-          <Typography variant="body2" color={colorSecondary}>
-            by
-          </Typography>
-          <PlayerChip player={post.author} size="small" />
-        </Stack>
+        <PostAuthor post={post} />
       </Grid>
       <Grid item xs={12}>
         <Divider />
@@ -134,8 +264,45 @@ export function PostDetail({ type, id }) {
   );
 }
 
-export function AdjacentPostsDisplay({ type, id }) {
+function PostAuthor({ post, noEdited = false }) {
   const theme = useTheme();
+  const colorSecondary = theme.palette.text.secondary;
+
+  return (
+    <Stack direction="row" gap={0.75} alignItems="center">
+      <DateRelativeTooltip date={post.date_created} color={colorSecondary} />
+      {post.date_edited && !noEdited && (
+        <DateRelativeTooltip
+          date={post.date_edited}
+          color={colorSecondary}
+          formatter={(s) => `(edited ${s})`}
+        />
+      )}
+      <Typography variant="body2" color={colorSecondary}>
+        ·
+      </Typography>
+      <Typography variant="body2" color={colorSecondary}>
+        by
+      </Typography>
+      <PlayerChip player={post.author} size="small" />
+    </Stack>
+  );
+}
+
+export function DateRelativeTooltip({ date, variant = "body2", formatter = null, ...props }) {
+  const dateObj = jsonDateToJsDate(date);
+  const timeAgo = dateToTimeAgoString(dateObj);
+  const str = formatter ? formatter(timeAgo) : timeAgo;
+  return (
+    <TooltipLineBreaks title={dateObj.toLocaleString()}>
+      <Typography variant={variant} {...props}>
+        {str}
+      </Typography>
+    </TooltipLineBreaks>
+  );
+}
+
+export function AdjacentPostsDisplay({ type, id }) {
   const query = useGetAdjacentPosts(id);
   const data = getQueryData(query);
 
@@ -147,96 +314,99 @@ export function AdjacentPostsDisplay({ type, id }) {
 
   const { previous, next } = data;
 
-  const textShadow =
-    "0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black";
-  const dropShadow =
-    "drop-shadow(0 0 1px black) drop-shadow(0 0 1px black) drop-shadow(0 0 1px black) drop-shadow(0 0 1px black)";
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
-        {previous && (
-          <StyledLink to={`/${type}/${previous.id}`} style={{ textDecoration: "none" }}>
-            <Stack
-              direction="column"
-              gap={0.5}
-              sx={{
-                p: "5px",
-                borderRadius: "5px",
-                alignItems: "center",
-                // "&:hover": { background: theme.palette.background.subtle },
-                //Background image: if previous.image_url is set
-                backgroundImage: previous.image_url ? `url(${previous.image_url})` : "none",
-                backgroundSize: "cover",
-              }}
-            >
-              <Stack direction="row" gap={1} alignItems="center">
-                <FontAwesomeIcon
-                  icon={faArrowLeft}
-                  color={theme.palette.text.secondary}
-                  style={{ filter: dropShadow }}
-                />
-                <Typography variant="body1" color={theme.palette.text.secondary} sx={{ textShadow }}>
-                  Previous Post
-                </Typography>
-              </Stack>
-              <AdjacentPostDetails post={previous} />
-            </Stack>
-          </StyledLink>
-        )}
+        {previous && <AdjacentPostDetails post={previous} />}
       </Grid>
       <Grid item xs={6}>
-        {next && (
-          <StyledLink to={`/${type}/${next.id}`} style={{ textDecoration: "none" }}>
-            <Stack
-              direction="column"
-              gap={0.5}
-              sx={{
-                p: "5px",
-                borderRadius: "5px",
-                alignItems: "center",
-                // "&:hover": { background: theme.palette.background.subtle },
-                backgroundImage: next.image_url ? `url(${next.image_url})` : "none",
-                backgroundSize: "cover",
-              }}
-            >
-              <Stack direction="row" gap={1} alignItems="center">
-                <Typography variant="body1" color={theme.palette.text.secondary} sx={{ textShadow }}>
-                  Next Post
-                </Typography>
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  color={theme.palette.text.secondary}
-                  style={{ filter: dropShadow }}
-                />
-              </Stack>
-              <AdjacentPostDetails post={next} />
-            </Stack>
-          </StyledLink>
-        )}
+        {next && <AdjacentPostDetails isNext post={next} />}
       </Grid>
     </Grid>
   );
 }
 
-function AdjacentPostDetails({ post }) {
+function AdjacentPostDetails({ isNext = false, post }) {
   const theme = useTheme();
-  const textShadow =
-    "0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black, 0px 0px 3px black";
+  const darkmode = theme.palette.mode === "dark";
+  const color = darkmode ? "black" : "white";
+  const radius = darkmode ? 3 : 2;
+
+  const textShadow = `0px 0px ${radius}px ${color}, 0px 0px ${radius}px ${color}, 0px 0px ${radius}px ${color}, 0px 0px ${radius}px ${color}, 0px 0px ${radius}px ${color}`;
+  const dropShadow = `drop-shadow(0 0 1px ${color}) drop-shadow(0 0 1px ${color}) drop-shadow(0 0 1px ${color}) drop-shadow(0 0 1px ${color})`;
+
+  const text = isNext ? "Next Post" : "Previous Post";
+
   return (
-    <Stack direction="row" gap={1} alignItems="center" sx={{ overflow: "hidden", maxWidth: "90%" }}>
-      {/* {post.image_url && (
-        <img src={post.image_url} style={{ width: "50px", height: "50px", objectFit: "cover" }} />
-      )} */}
-      <Typography
-        variant="body1"
-        color={theme.palette.text.primary}
-        sx={{ textShadow, textWrap: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
+    <StyledLink to={`/${post.type}/${post.id}`} style={{ textDecoration: "none" }}>
+      <Stack
+        direction="column"
+        gap={0.5}
+        sx={{
+          p: "5px",
+          borderRadius: "5px",
+          alignItems: "center",
+          backgroundImage: post.image_url ? `url(${post.image_url})` : "none",
+          backgroundSize: "cover",
+        }}
       >
-        {post.title}
-      </Typography>
-    </Stack>
+        <Stack direction="row" gap={1} alignItems="center">
+          {!isNext && (
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              color={theme.palette.text.secondary}
+              style={{ filter: dropShadow }}
+            />
+          )}
+          <Typography variant="body1" color={theme.palette.text.secondary} sx={{ textShadow }}>
+            {text}
+          </Typography>
+          {isNext && (
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              color={theme.palette.text.secondary}
+              style={{ filter: dropShadow }}
+            />
+          )}
+        </Stack>
+        <Stack direction="row" gap={1} alignItems="center" sx={{ overflow: "hidden", maxWidth: "90%" }}>
+          <Typography
+            variant="body1"
+            color={theme.palette.text.primary}
+            sx={{ textShadow, textWrap: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
+          >
+            {post.title}
+          </Typography>
+        </Stack>
+      </Stack>
+    </StyledLink>
   );
+}
+
+function parseImageAlt(alt) {
+  const obj = {
+    alt: "",
+    displayAlt: false,
+    outline: false,
+    width: undefined,
+  };
+
+  const altSplit = alt.split(";");
+  if (altSplit.length === 2) {
+    obj.alt = altSplit[1];
+    obj.width = altSplit[0];
+  }
+  const flags = [
+    { flag: "!", prop: "displayAlt" },
+    { flag: "_", prop: "outline" },
+  ];
+  //While there is still some flag at the start of the string, keep parsing
+  while (flags.some((f) => obj.alt.startsWith(f.flag))) {
+    const flag = flags.find((f) => obj.alt.startsWith(f.flag));
+    obj.alt = obj.alt.substring(1);
+    obj[flag.prop] = true;
+  }
+  return obj;
 }
 
 //#region Post Components
@@ -249,23 +419,20 @@ export function MarkdownRenderer({ markdown }) {
       components={{
         a: ({ href, children, ...props }) => <StyledExternalLink href={href}>{children}</StyledExternalLink>,
         img: ({ src, alt }) => {
-          //split alt by |
-          //if there are 2 values, the first will be the width percentage, the second will be the alt text
-          const altSplit = alt.split(";");
-          let altText = alt;
-          let displayAlt = false;
-          let width = undefined;
-          if (altSplit.length === 2) {
-            altText = altSplit[1];
-            width = altSplit[0];
-          }
-          if (altText.startsWith("!")) {
-            altText = altText.substring(1);
-            displayAlt = true;
-          }
+          const { alt: altText, displayAlt, outline, width } = parseImageAlt(alt);
+          const outlineStyle = outline
+            ? {
+                border: `1px solid ${theme.palette.posts.imageOutline}`,
+                boxShadow: `0px 0px 3px ${theme.palette.posts.imageOutline}`,
+              }
+            : {};
           return (
             <Stack direction="column" alignItems="center">
-              <img src={src} alt={altText} style={{ width: width, maxWidth: "100%" }} />
+              <img
+                src={src}
+                alt={altText}
+                style={{ width: width, maxWidth: "100%", borderRadius: "10px", ...outlineStyle }}
+              />
               {displayAlt && (
                 <Typography variant="caption" color={colorSecondary}>
                   {altText}
@@ -279,6 +446,7 @@ export function MarkdownRenderer({ markdown }) {
             <Table size="small">{children}</Table>
           </TableContainer>
         ),
+        ul: ({ children }) => <ul style={{ paddingLeft: "25px" }}>{children}</ul>,
         thead: ({ children }) => <TableHead>{children}</TableHead>,
         tbody: ({ children }) => <TableBody>{children}</TableBody>,
         tr: ({ children }) => <TableRow>{children}</TableRow>,
@@ -334,19 +502,27 @@ export function MarkdownRenderer({ markdown }) {
   );
 }
 
-export function PostImage({ image_url, title }) {
+export function PostImage({ image_url, title, compact = false }) {
+  const theme = useTheme();
   return (
     <img
       src={image_url}
-      style={{ width: "100%", maxHeight: "120px", objectFit: "cover", borderRadius: "5px" }}
+      style={{
+        width: "100%",
+        maxHeight: compact ? "80px" : "120px",
+        objectFit: "cover",
+        borderRadius: "5px",
+        border: `1px solid ${theme.palette.posts.imageOutline}`,
+      }}
       alt={title}
     />
   );
 }
 
-export function PostTitle({ title }) {
+export function PostTitle({ title, compact = false }) {
+  const sx = compact ? { textWrap: "nowrap", textOverflow: "ellipsis", overflow: "hidden" } : {};
   return (
-    <Typography variant="h4" fontWeight="bold">
+    <Typography variant={compact ? "h5" : "h5"} fontWeight="bold" sx={sx}>
       {title}
     </Typography>
   );
@@ -461,4 +637,123 @@ function pluginEmojis() {
 //     console.log("tree after emoji pass:", JSON.stringify(tree, null, 2));
 //   };
 // }
+//#endregion
+
+//#endregion
+
+//#region Index Widget
+export function PostIndexWidget({}) {
+  const { t } = useTranslation(undefined, { keyPrefix: "post.index" });
+
+  return (
+    <Grid container spacing={1.5}>
+      <Grid item xs={12} sm={12}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography variant="h5" gutterBottom sx={{ textWrap: "nowrap" }}>
+            {t("header_news")}
+          </Typography>
+          <StyledLink to="/news">{t("view_all")}</StyledLink>
+        </Stack>
+        <PostIndexWidgetList type="news" />
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Divider />
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography variant="h5" gutterBottom sx={{ textWrap: "nowrap" }}>
+            {t("header_changelog")}
+          </Typography>
+          <StyledLink to="/changelog">{t("view_all")}</StyledLink>
+        </Stack>
+        <PostIndexWidgetList type="changelog" />
+      </Grid>
+    </Grid>
+  );
+}
+function PostIndexWidgetList({ type }) {
+  const query = useGetPostPaginated(type, 1, 3, "");
+  const data = getQueryData(query);
+
+  return (
+    <Grid container spacing={1}>
+      {query.isLoading && (
+        <Grid item xs={12}>
+          <LoadingSpinner />
+        </Grid>
+      )}
+      {query.isError && (
+        <Grid item xs={12}>
+          <ErrorDisplay error={query.error} />
+        </Grid>
+      )}
+      {data && data.posts.length === 0 && (
+        <Grid item xs={12}>
+          <Typography variant="body1">No posts found</Typography>
+        </Grid>
+      )}
+      {data &&
+        data.posts.map((post) => (
+          <Grid item xs={12} key={post.id}>
+            <PostIndexWidgetPost post={post} />
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
+function PostIndexWidgetPost({ post }) {
+  const { t: t_pl } = useTranslation(undefined, { keyPrefix: "post.list" });
+  const theme = useTheme();
+  const content = post.content;
+  const firstParagraph = content.split("\n\n")[0];
+  const hasMoreContent = content.length > firstParagraph.length;
+
+  return (
+    <StyledLink
+      to={`/${post.type}/${post.id}`}
+      style={{ textDecoration: "none", color: theme.palette.text.primary }}
+    >
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: "5px",
+          background: theme.palette.posts.background,
+          "&:hover": { background: theme.palette.posts.backgroundHover },
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={post.image_url ? 9 : 12}>
+            <Grid container rowSpacing={0} columnSpacing={2}>
+              <Grid item xs={12}>
+                <PostTitle title={post.title} compact />
+              </Grid>
+              <Grid item xs={12} sx={{ "& > :first-child": { mt: 0 }, "& > :last-child": { mb: 0 } }}>
+                <MarkdownRenderer markdown={firstParagraph} />
+              </Grid>
+              <Grid item xs="auto">
+                <PostAuthor post={post} noEdited />
+              </Grid>
+              {/* {hasMoreContent && (
+                <Grid item xs>
+                  <Typography variant="caption" color={theme.palette.text.secondary}>
+                    {t_pl("show_more")}
+                  </Typography>
+                </Grid>
+              )} */}
+            </Grid>
+          </Grid>
+          {post.image_url && (
+            <Grid item xs={12} sm={3}>
+              <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <PostImage image_url={post.image_url} title={post.title} compact />
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      </Paper>
+    </StyledLink>
+  );
+}
 //#endregion

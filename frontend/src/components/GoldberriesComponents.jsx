@@ -266,8 +266,8 @@ export function SubtierIcon({ subtier, height = "1em" }) {
 }
 export function DifficultyChip({
   difficulty,
+  frac = null,
   prefix = "",
-  suffix = "",
   useDarkening = false,
   isPersonal = false,
   highlightPersonal = false,
@@ -280,6 +280,14 @@ export function DifficultyChip({
   if (difficulty === null) return null;
 
   const text = getDifficultyName(difficulty);
+  let suffix = "";
+  if (frac !== null && settings.visual.topGoldenList.showFractionalTiers) {
+    if (frac < 10) {
+      suffix = ".0" + frac;
+    } else {
+      suffix = "." + frac;
+    }
+  }
   const colors = getNewDifficultyColors(settings, difficulty?.id, useDarkening);
 
   const showOld =

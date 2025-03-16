@@ -11,6 +11,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Slider,
   Stack,
   TextField,
   Tooltip,
@@ -110,6 +111,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const onUpdateSubmit = form.handleSubmit((data) => {
     saveSubmission({
       ...data,
+      frac: data.frac === 50 ? null : data.frac,
       time_taken: durationToSeconds(data.time_taken),
       challenge_id: challenge?.id,
       player_id: player.id,
@@ -146,6 +148,8 @@ export function FormSubmission({ submission, onSave, ...props }) {
 
   const new_challenge_id = form.watch("new_challenge_id");
   const new_challenge = form.watch("new_challenge");
+  const suggested_difficulty_id = form.watch("suggested_difficulty_id");
+  const frac = form.watch("frac");
 
   const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
   let mapForCollectibles = submission.challenge?.map;
@@ -367,6 +371,44 @@ export function FormSubmission({ submission, onSave, ...props }) {
             <TooltipInfoButton title={t("personal_note")} />
           </Grid>
         </Grid>
+        {(suggested_difficulty_id || true) && (
+          <Grid container columnSpacing={2}>
+            <Grid item xs={12} sm="auto" display="flex" alignItems="center">
+              <Stack direction="row" gap={1} alignItems="center">
+                <Typography variant="body2">{t("frac_header")}</Typography>
+                <TooltipInfoButton title={t("frac_note")} />
+              </Stack>
+            </Grid>
+            <Grid item xs={12} sm>
+              <Grid container spacing={1}>
+                <Grid item xs={10} display="flex" alignItems="center">
+                  <Controller
+                    control={form.control}
+                    name="frac"
+                    render={({ field }) => (
+                      <Slider
+                        value={field.value ?? 50}
+                        onChange={(_, v) => field.onChange(v)}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        min={0}
+                        max={99}
+                        valueLabelFormat={(v) => "" + v / 100}
+                        sx={{ width: "100%" }}
+                        disabled={suggested_difficulty_id === null}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={2} display="flex" alignItems="center" justifyContent="space-around">
+                  <Typography variant="body2" align="center">
+                    {(frac ?? 50) / 100}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
 
         <TextField
           {...form.register("time_taken", FormOptions.TimeTaken(t_ff))}

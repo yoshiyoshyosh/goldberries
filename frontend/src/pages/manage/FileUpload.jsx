@@ -60,6 +60,7 @@ export function PageFileUpload() {
           >
             <MenuItem value="icon">{t("destination.icon")}</MenuItem>
             <MenuItem value="campaign_icon">{t("destination.campaign_icon")}</MenuItem>
+            <MenuItem value="post">{t("destination.post")}</MenuItem>
           </Select>
         </Grid>
         <Grid item xs={12} sm="auto" display="flex" alignItems="center">
