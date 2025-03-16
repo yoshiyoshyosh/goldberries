@@ -44,8 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $post->date_edited = new JsonDateTime();
     //These fields can't be updated
+    $post->type = $old_post->type;
     $post->date_created = $old_post->date_created;
     $post->author_id = $old_post->author_id;
+    if ($post->type === "changelog" && !is_admin($account)) {
+      die_json(403, "Only admins can edit changelog posts");
+    }
+
     if ($post->update($DB)) {
       log_info("'{$account->player->name}' updated {$post}", "Post");
       api_write($post);
@@ -55,6 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   } else {
     // Insert
+    if ($post->type === "changelog" && !is_admin($account)) {
+      die_json(403, "Only admins can create changelog posts");
+    }
     $post->date_created = new JsonDateTime();
     $post->author_id = $account->player->id;
     if ($post->insert($DB)) {
@@ -93,6 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   //If the account is a helper, they can only delete objects that were created within the last 24 hours
   if ($account->role === $HELPER && !helper_can_delete($post->date_created)) {
     die_json(403, "You can only delete posts that were created within the last 24 hours");
+  }
+
+  if ($post->type === "changelog" && !is_admin($account)) {
+    die_json(403, "Only admins can delete changelog posts");
   }
 
   if ($post->delete($DB)) {
