@@ -19,7 +19,7 @@ import { useEffect, useMemo } from "react";
 import { getQueryData, usePostPost } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import { MarkdownRenderer, PostImage, PostTitle } from "../../pages/Post";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useAuth } from "../../hooks/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -33,17 +33,17 @@ export function FormPostWrapper({ id, onSave, ...props }) {
     enabled: id !== null,
   });
 
+  const [storedPost, setStoredPost] = useLocalStorage("new_post", {
+    id: null,
+    type: "news",
+    image_url: "",
+    title: "",
+    content: "",
+  });
+
   const data = getQueryData(query);
   const post = useMemo(() => {
-    return id !== null
-      ? data
-      : {
-          id: null,
-          type: "news",
-          image_url: "",
-          title: "",
-          content: "",
-        };
+    return id !== null ? data : storedPost;
   }, [data]);
 
   if (query.isLoading) {
@@ -66,10 +66,10 @@ export function FormPostWrapper({ id, onSave, ...props }) {
     );
   }
 
-  return <FormPost post={post} onSave={onSave} {...props} />;
+  return <FormPost post={post} setStoredPost={setStoredPost} onSave={onSave} {...props} />;
 }
 
-export function FormPost({ post, onSave, ...props }) {
+export function FormPost({ post, setStoredPost, onSave, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "forms.post" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
@@ -82,7 +82,6 @@ export function FormPost({ post, onSave, ...props }) {
     if (onSave) onSave(data);
   });
   const gotoPost = () => {
-    // window.open(`/${post.type}/${post.id}`, "_blank");
     navigate(`/${post.type}/${post.id}`);
   };
 
@@ -99,6 +98,13 @@ export function FormPost({ post, onSave, ...props }) {
   }, [post]);
 
   const formPost = form.watch();
+
+  useEffect(() => {
+    if (newPost) {
+      setStoredPost(formPost);
+    }
+  }, [formPost]);
+
   const imageUrlDebounced = useDebounce(formPost.image_url, 500);
 
   const pageTitle = newPost ? t_g("new") : post.title;
