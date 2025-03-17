@@ -233,7 +233,7 @@ function can_modify_account($account, $target)
 
 function can_assign_role($account, $role)
 {
-  global $USER, $EX_HELPER, $HELPER, $VERIFIER, $ADMIN;
+  global $USER, $EX_HELPER, $NEWS_WRITER, $HELPER, $VERIFIER, $ADMIN;
 
   if ($account === null) {
     return false;
@@ -245,7 +245,7 @@ function can_assign_role($account, $role)
   }
 
   //VERIFIERs can only assign user, ex-helper and helper
-  if ($account->role === $VERIFIER && array_search($role, [$USER, $EX_HELPER, $HELPER]) !== false) {
+  if ($account->role === $VERIFIER && array_search($role, [$USER, $NEWS_WRITER, $EX_HELPER, $HELPER]) !== false) {
     return true;
   }
 
