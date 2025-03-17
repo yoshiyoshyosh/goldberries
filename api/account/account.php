@@ -106,6 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     //Assigning roles
     if ($accountReq->role !== $target->role) {
+      if (!in_array($accountReq->role, $VALID_ROLES)) {
+        die_json(400, "Invalid role");
+      }
       if (can_assign_role($account, $accountReq->role)) {
         $target->role = $accountReq->role;
         $role_name = get_role_name($target->role);

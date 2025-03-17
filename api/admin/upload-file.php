@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $account = get_user_data();
 check_access($account, false);
-if (!is_helper($account)) {
+if (!is_news_writer($account)) {
   die_json(403, "Not authorized");
 }
 
@@ -17,6 +17,11 @@ $destinations = [
   "icon" => "icons",
   "campaign_icon" => "icons/campaigns",
   "post" => "img/post",
+];
+$min_role = [
+  "icon" => $HELPER,
+  "campaign_icon" => $HELPER,
+  "post" => $NEWS_WRITER,
 ];
 $allowed_extensions = ["png", "jpg", "jpeg", "gif", "svg"];
 
@@ -30,6 +35,9 @@ if (!isset($_FILES['file']) || !isset($_POST['destination'])) {
 $destination = $_POST['destination'];
 if (!array_key_exists($destination, $destinations)) {
   die_json(400, "Destination must match one of the following: " . implode(", ", array_keys($destinations)));
+}
+if ($account->role < $min_role[$destination]) {
+  die_json(403, "Not authorized to upload to this destination");
 }
 
 $target_destination = $destinations[$destination];

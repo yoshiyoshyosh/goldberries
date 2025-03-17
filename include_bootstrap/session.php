@@ -21,9 +21,12 @@ $USER = 0;
 $EX_HELPER = 10;
 $EX_VERIFIER = 11;
 $EX_ADMIN = 12;
+$NEWS_WRITER = 15;
 $HELPER = 20;
 $VERIFIER = 30;
 $ADMIN = 40;
+
+$VALID_ROLES = [$USER, $EX_HELPER, $EX_VERIFIER, $EX_ADMIN, $NEWS_WRITER, $HELPER, $VERIFIER, $ADMIN];
 //===============
 
 session_start();
@@ -161,6 +164,16 @@ function valid_email($email)
   return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
+function is_news_writer($account = null)
+{
+  global $NEWS_WRITER;
+  $account = $account ?? get_user_data();
+  if ($account == null) {
+    return false;
+  }
+  return $account->role >= $NEWS_WRITER;
+}
+
 function is_helper($account = null)
 {
   global $HELPER;
@@ -246,7 +259,7 @@ function can_assign_role($account, $role)
 
 function get_role_name($role)
 {
-  global $USER, $EX_HELPER, $EX_VERIFIER, $EX_ADMIN, $HELPER, $VERIFIER, $ADMIN;
+  global $USER, $EX_HELPER, $EX_VERIFIER, $EX_ADMIN, $NEWS_WRITER, $HELPER, $VERIFIER, $ADMIN;
 
   switch ($role) {
     case $USER:
@@ -257,6 +270,8 @@ function get_role_name($role)
       return "Ex-Verifier";
     case $EX_ADMIN:
       return "Ex-Admin";
+    case $NEWS_WRITER:
+      return "News Writer";
     case $HELPER:
       return "Helper";
     case $VERIFIER:

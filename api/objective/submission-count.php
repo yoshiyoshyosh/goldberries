@@ -1,6 +1,6 @@
 <?php
 
-require_once ('../api_bootstrap.inc.php');
+require_once('../api_bootstrap.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   die_json(405, 'Method Not Allowed');
@@ -31,7 +31,7 @@ $query = "SELECT
   JOIN objective ON challenge.objective_id = objective.id
   LEFT JOIN map ON challenge.map_id = map.id
   LEFT JOIN campaign ON challenge.campaign_id = campaign.id
-  WHERE submission.is_verified = true AND difficulty.sort > 2 $whereAddition
+  WHERE submission.is_verified = true AND difficulty.sort > 0 $whereAddition
   GROUP BY objective.id";
 $result = pg_query($DB, $query);
 

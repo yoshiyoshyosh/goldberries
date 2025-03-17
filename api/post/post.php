@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $account = get_user_data();
   if ($account === null) {
     die_json(401, "Not logged in");
-  } else if (!is_helper($account)) {
+  } else if (!is_news_writer($account)) {
     die_json(403, "Not authorized");
   }
 
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   $account = get_user_data();
   if ($account === null) {
     die_json(401, "Not logged in");
-  } else if (!is_helper($account)) {
+  } else if (!is_news_writer($account)) {
     die_json(403, "Not authorized");
   }
 
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   }
 
   //If the account is a helper, they can only delete objects that were created within the last 24 hours
-  if ($account->role === $HELPER && !helper_can_delete($post->date_created)) {
+  if (($account->role === $HELPER || $account->role === $NEWS_WRITER) && !helper_can_delete($post->date_created)) {
     die_json(403, "You can only delete posts that were created within the last 24 hours");
   }
 
