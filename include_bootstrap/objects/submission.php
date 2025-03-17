@@ -16,6 +16,7 @@ class Submission extends DbObject
   public bool $is_obsolete = false;
   public ?int $time_taken = null; //In seconds
   public ?JsonDateTime $date_achieved = null;
+  public ?int $frac = null;
 
   // Foreign Keys
   public ?int $challenge_id = null;
@@ -54,6 +55,7 @@ class Submission extends DbObject
       'is_obsolete' => $this->is_obsolete,
       'time_taken' => $this->time_taken,
       'date_achieved' => $this->date_achieved,
+      'frac' => $this->frac,
     );
   }
 
@@ -82,6 +84,8 @@ class Submission extends DbObject
       $this->time_taken = intval($arr[$prefix . 'time_taken']);
     if (isset($arr[$prefix . 'date_achieved']))
       $this->date_achieved = new JsonDateTime($arr[$prefix . 'date_achieved']);
+    if (isset($arr[$prefix . 'frac']))
+      $this->frac = intval($arr[$prefix . 'frac']);
 
     if (isset($arr[$prefix . 'date_verified']))
       $this->date_verified = new JsonDateTime($arr[$prefix . 'date_verified']);

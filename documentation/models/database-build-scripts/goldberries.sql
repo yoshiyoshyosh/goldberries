@@ -236,7 +236,7 @@ CREATE TABLE submission
  CONSTRAINT submission_suggested_difficulty_id_fkey FOREIGN KEY ( suggested_difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT submission_verifier_id_fkey FOREIGN KEY ( verifier_id ) REFERENCES player ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT check_submission_challenge_id CHECK ( challenge_id IS NOT NULL OR new_challenge_id IS NOT NULL ),
- CONSTRAINT check_submission_frac CHECK ( frac >= 0 AND frac <= 99 )
+ CONSTRAINT check_submission_frac CHECK ( frac >= 0 AND frac <= 99 AND (frac IS NULL OR suggested_difficulty_id IS NOT NULL) )
 );
 
 -- ====== suggestion ======
@@ -452,6 +452,7 @@ CREATE VIEW "view_submissions" AS SELECT
   submission.raw_session_url AS submission_raw_session_url,
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
+  submission.frac AS submission_frac,
   submission.is_personal AS submission_is_personal,
   submission.is_verified AS submission_is_verified,
   submission.date_verified AS submission_date_verified,
@@ -728,6 +729,7 @@ CREATE VIEW "view_challenge_submissions" AS SELECT
   submission.raw_session_url AS submission_raw_session_url,
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
+  submission.frac AS submission_frac,
   submission.is_personal AS submission_is_personal,
   submission.is_verified AS submission_is_verified,
   submission.date_verified AS submission_date_verified,
@@ -801,6 +803,7 @@ CREATE VIEW "view_suggestion_votes" AS SELECT
   submission.raw_session_url AS submission_raw_session_url,
   submission.player_notes AS submission_player_notes,
   submission.suggested_difficulty_id AS submission_suggested_difficulty_id,
+  submission.frac AS submission_frac,
   submission.is_personal AS submission_is_personal,
   submission.is_verified AS submission_is_verified,
   submission.date_verified AS submission_date_verified,

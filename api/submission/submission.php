@@ -148,6 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+      $old_submission->frac = $submission->frac;
+      if ($old_submission->suggested_difficulty_id !== null) {
+        $old_submission->frac = $old_submission->frac === 0.5 ? null : $old_submission->frac;
+      } else {
+        $old_submission->frac = null;
+      }
+
       if ($submission->verifier_notes !== null && strlen($submission->verifier_notes) > 5000) {
         die_json(400, "Verifier notes can't be longer than 5000 characters");
       }
@@ -207,6 +214,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+      $old_submission->frac = $submission->frac;
+      if ($old_submission->suggested_difficulty_id !== null) {
+        $old_submission->frac = $old_submission->frac === 0.5 ? null : $old_submission->frac;
+      } else {
+        $old_submission->frac = null;
+      }
       $old_submission->is_personal = $submission->is_personal;
 
       if ($submission->time_taken !== null) {
@@ -246,6 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_submission->raw_session_url = $submission->raw_session_url;
     $new_submission->player_notes = $submission->player_notes;
     $new_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
+    $new_submission->frac = $submission->frac;
     $new_submission->is_personal = $submission->is_personal;
     $new_submission->time_taken = $submission->time_taken;
     $new_submission->date_achieved = $submission->date_achieved;
@@ -303,6 +317,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } else if ($difficulty->id === $TRIVIAL_ID) {
         die_json(400, "Cannot suggest 'Trivial' as difficulty");
       }
+      //frac of 0.5 is the default value, so assume null
+      $new_submission->frac = $new_submission->frac === 0.5 ? null : $new_submission->frac;
+    } else {
+      $new_submission->frac = null;
     }
     if ($new_submission->time_taken !== null) {
       if ($new_submission->time_taken < 0) {

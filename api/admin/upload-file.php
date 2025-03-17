@@ -8,14 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $account = get_user_data();
 check_access($account, false);
-if (!is_verifier($account)) {
+if (!is_helper($account)) {
   die_json(403, "Not authorized");
 }
 
 $destination_base = "../../";
 $destinations = [
   "icon" => "icons",
-  "campaign_icon" => "icons/campaigns"
+  "campaign_icon" => "icons/campaigns",
+  "post" => "img/post",
 ];
 $allowed_extensions = ["png", "jpg", "jpeg", "gif", "svg"];
 

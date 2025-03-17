@@ -249,7 +249,9 @@ function challenge_fractional_placement($challenge)
   foreach ($challenge->submissions as $submission) {
     if ($submission->suggested_difficulty_id !== null && $submission->is_personal === false) {
       $count_suggestions++;
-      $sum_sorts += $submission->suggested_difficulty->sort;
+      $sort = $submission->suggested_difficulty->sort;
+      $frac = $submission->frac ?? 50;
+      $sum_sorts += $sort + ($frac / 100);
     }
   }
 
@@ -259,7 +261,7 @@ function challenge_fractional_placement($challenge)
 
   $fraction = $sum_sorts / $count_suggestions;
   $fraction -= $challenge->difficulty->sort;
-  $fraction += 0.5; //So that the values are between 1 and 0 for a challenge that is in its correct tier
+  // $fraction += 0.5; //So that the values are between 1 and 0 for a challenge that is in its correct tier
   return $fraction;
 }
 
