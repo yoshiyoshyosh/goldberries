@@ -284,11 +284,11 @@ export function useGetSubmissionQueue() {
   });
 }
 
-export function useGetPlayer(id) {
+export function useGetPlayer(id, onError) {
   return useQuery({
     queryKey: ["player", id],
     queryFn: () => fetchPlayer(id),
-    onError: errorToast,
+    onError: onError ?? errorToast,
   });
 }
 

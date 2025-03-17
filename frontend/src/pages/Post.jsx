@@ -26,7 +26,13 @@ import {
   TooltipLineBreaks,
 } from "../components/BasicComponents";
 import { useParams } from "react-router-dom";
-import { getQueryData, useGetAdjacentPosts, useGetPost, useGetPostPaginated } from "../hooks/useApi";
+import {
+  getQueryData,
+  useGetAdjacentPosts,
+  useGetPlayer,
+  useGetPost,
+  useGetPostPaginated,
+} from "../hooks/useApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendar, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
@@ -234,12 +240,9 @@ export function PostDetail({ type, id }) {
           </StyledLink>
         </Grid>
       )}
-      <Grid item xs={12}>
-        <PostAuthor post={post} />
-      </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Divider />
-      </Grid>
+      </Grid> */}
       {post.image_url && (
         <Grid item xs={12}>
           <PostImage image_url={post.image_url} title={post.title} />
@@ -250,6 +253,12 @@ export function PostDetail({ type, id }) {
           <Grid item xs={12} sx={{ "&&": { pt: 0 } }}>
             <PostTitle title={post.title} />
           </Grid>
+          <Grid item xs={12} sx={{ "&&": { pt: 0 } }}>
+            <PostAuthor post={post} />
+          </Grid>
+          {/* <Grid item xs={12}>
+            <Divider />
+          </Grid> */}
           <Grid item xs={12} sx={{ "& > :first-child": { mt: 0 }, "& > :last-child": { mb: 0 } }}>
             <MarkdownRenderer markdown={post.content} />
           </Grid>
@@ -388,7 +397,7 @@ function parseImageAlt(alt) {
   const obj = {
     alt: "",
     displayAlt: false,
-    outline: false,
+    noOutline: false,
     width: undefined,
   };
 
@@ -399,7 +408,7 @@ function parseImageAlt(alt) {
   }
   const flags = [
     { flag: "!", prop: "displayAlt" },
-    { flag: "_", prop: "outline" },
+    { flag: "_", prop: "noOutline" },
   ];
   //While there is still some flag at the start of the string, keep parsing
   while (flags.some((f) => obj.alt.startsWith(f.flag))) {
@@ -418,10 +427,10 @@ export function MarkdownRenderer({ markdown }) {
   return (
     <Markdown
       components={{
-        a: ({ href, children, ...props }) => <StyledExternalLink href={href}>{children}</StyledExternalLink>,
+        a: ({ href, children, ...props }) => <MarkdownAnchor href={href}>{children}</MarkdownAnchor>,
         img: ({ src, alt }) => {
-          const { alt: altText, displayAlt, outline, width } = parseImageAlt(alt);
-          const outlineStyle = outline
+          const { alt: altText, displayAlt, noOutline, width } = parseImageAlt(alt);
+          const outlineStyle = !noOutline
             ? {
                 border: `1px solid ${theme.palette.posts.imageOutline}`,
                 boxShadow: `0px 0px 3px ${theme.palette.posts.imageOutline}`,
@@ -442,11 +451,13 @@ export function MarkdownRenderer({ markdown }) {
             </Stack>
           );
         },
-        table: ({ children }) => (
-          <TableContainer component={Paper}>
-            <Table size="small">{children}</Table>
-          </TableContainer>
-        ),
+        table: ({ children }) => {
+          return (
+            <TableContainer component={Paper} sx={{ width: "fit-content" /*, margin: "auto" */ }}>
+              <Table size="small">{children}</Table>
+            </TableContainer>
+          );
+        },
         ul: ({ children }) => <ul style={{ paddingLeft: "25px" }}>{children}</ul>,
         thead: ({ children }) => <TableHead>{children}</TableHead>,
         tbody: ({ children }) => <TableBody>{children}</TableBody>,
@@ -469,22 +480,7 @@ export function MarkdownRenderer({ markdown }) {
           if (node.data?.meta === "fence") {
             return <code>{children}</code>;
           }
-          let match = null;
-          if ((match = children.match(/^\{d:(\d+)\}$/)) !== null) {
-            //Example: {d:12}
-            const diffId = parseInt(match[1]);
-            const diff = DIFFICULTIES[diffId];
-            if (diff) {
-              return (
-                <DifficultyChip
-                  difficulty={{ id: diffId, name: diff.name, sort: diff.sort }}
-                  size="small"
-                  sx={{ position: "relative", top: "-2px" }}
-                />
-              );
-            }
-          }
-          return <CodeBlock className={className}>{children}</CodeBlock>;
+          return <MarkdownInlineCodeBlock className={className}>{children}</MarkdownInlineCodeBlock>;
         },
         pre: ({ children }) => (
           <pre
@@ -501,21 +497,53 @@ export function MarkdownRenderer({ markdown }) {
             {children}
           </pre>
         ),
-        //text is NEVER a top level node, so this will never be called
-        // text: ({ value, ...props }) => {
-        //   console.log("p node:", value, props);
-        //   return <span {...props}>{value}</span>;
-        // },
-        // emoji: ({ value, ...props }) => {
-        //   console.log("emoji:", value, props);
-        //   return <span style={{ color: "red" }}>{value}</span>;
-        // },
       }}
-      remarkPlugins={[/*pluginEmojis, */ pluginCodeFencer, remarkGfm, emoji]}
+      remarkPlugins={[pluginCodeFencer, remarkGfm, emoji]}
     >
       {markdown}
     </Markdown>
   );
+}
+const _OWN_DOMAINS = ["/", "http://localhost", "https://goldberries.net"];
+function MarkdownAnchor({ href, children }) {
+  if (!_OWN_DOMAINS.some((d) => href.startsWith(d))) {
+    return <StyledExternalLink href={href}>{children}</StyledExternalLink>;
+  }
+  return <StyledLink to={href}>{children}</StyledLink>;
+}
+function MarkdownInlineCodeBlock({ children, className }) {
+  let match = null;
+  if ((match = children.match(/^\{d:(\d+)\}$/)) !== null) {
+    //Example: {d:12}
+    const diffId = parseInt(match[1]);
+    const diff = DIFFICULTIES[diffId];
+    if (diff) {
+      return (
+        <DifficultyChip
+          difficulty={{ id: diffId, name: diff.name, sort: diff.sort }}
+          size="small"
+          sx={{ position: "relative", top: "-1px" }}
+        />
+      );
+    }
+  } else if ((match = children.match(/^\{p:(\d+)\}$/)) !== null) {
+    //Example: {p:12}
+    const playerId = parseInt(match[1]);
+    if (playerId >= 1) {
+      return <PlayerChipAsync id={playerId} size="small" sx={{ position: "relative", top: "-1px" }} />;
+    }
+  }
+  return <CodeBlock className={className}>{children}</CodeBlock>;
+}
+export function PlayerChipAsync({ id, size, ...props }) {
+  const query = useGetPlayer(id, () => {}); //Empty error handler
+  const player = getQueryData(query);
+
+  if (query.isLoading) {
+    return <LoadingSpinner size={size} />;
+  }
+
+  return <PlayerChip player={query.isError ? null : player} size={size} {...props} />;
 }
 
 export function PostImage({ image_url, title, compact = false }) {
@@ -538,7 +566,7 @@ export function PostImage({ image_url, title, compact = false }) {
 export function PostTitle({ title, compact = false }) {
   const sx = compact ? { textWrap: "nowrap", textOverflow: "ellipsis", overflow: "hidden" } : {};
   return (
-    <Typography variant={compact ? "h5" : "h5"} fontWeight="bold" sx={sx}>
+    <Typography variant={compact ? "h5" : "h4"} fontWeight="bold" sx={sx}>
       {title}
     </Typography>
   );
@@ -664,7 +692,7 @@ export function PostIndexWidget({}) {
   return (
     <Grid container spacing={1.5}>
       <Grid item xs={12} sm={12}>
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.25 }}>
           <Typography variant="h5" gutterBottom sx={{ textWrap: "nowrap" }}>
             {t("header_news")}
           </Typography>
@@ -672,11 +700,11 @@ export function PostIndexWidget({}) {
         </Stack>
         <PostIndexWidgetList type="news" />
       </Grid>
-      <Grid item xs={12} sm={12}>
+      {/* <Grid item xs={12} sm={12}>
         <Divider />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12} sm={12}>
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.25 }}>
           <Typography variant="h5" gutterBottom sx={{ textWrap: "nowrap" }}>
             {t("header_changelog")}
           </Typography>

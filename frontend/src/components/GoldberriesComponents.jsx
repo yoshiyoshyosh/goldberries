@@ -607,7 +607,7 @@ export function PlayerSelect({ type, value, onChange, label, ...props }) {
 export function PlayerChip({ player, trimLongNames = false, ...props }) {
   const { settings } = useAppSettings();
   if (player === undefined || player === null) {
-    return <Chip label="<none>" sx={{ mr: 1 }} {...props} />;
+    return <Chip label="<not found>" sx={{ mr: 1 }} {...props} />;
   }
 
   const style = getPlayerNameColorStyle(player, settings);

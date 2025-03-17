@@ -18,10 +18,12 @@ import { faClipboard, faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { MuiFileInput } from "mui-file-input";
 import { usePostUploadFile } from "../../hooks/useApi";
 import { toast } from "react-toastify";
+import { useAuth } from "../../hooks/AuthProvider";
 
 export function PageFileUpload() {
   const { t } = useTranslation(undefined, { keyPrefix: "file_upload" });
-  const [destination, setDestination] = useState("campaign_icon");
+  const auth = useAuth();
+  const [destination, setDestination] = useState("post");
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [apiResponse, setApiResponse] = useState(null);
@@ -58,9 +60,13 @@ export function PageFileUpload() {
             MenuProps={{ disableScrollLock: true }}
             fullWidth
           >
-            <MenuItem value="icon">{t("destination.icon")}</MenuItem>
-            <MenuItem value="campaign_icon">{t("destination.campaign_icon")}</MenuItem>
             <MenuItem value="post">{t("destination.post")}</MenuItem>
+            <MenuItem value="icon" disabled={!auth.hasHelperPriv}>
+              {t("destination.icon")}
+            </MenuItem>
+            <MenuItem value="campaign_icon" disabled={!auth.hasHelperPriv}>
+              {t("destination.campaign_icon")}
+            </MenuItem>
           </Select>
         </Grid>
         <Grid item xs={12} sm="auto" display="flex" alignItems="center">
