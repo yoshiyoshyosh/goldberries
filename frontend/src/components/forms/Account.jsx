@@ -336,6 +336,7 @@ function getRoleOptions(auth) {
     { value: ROLES.EX_HELPER, label: "Ex-Helper", disabled: false },
     { value: ROLES.EX_VERIFIER, label: "Ex-Verifier", disabled: !isAdmin },
     { value: ROLES.EX_ADMIN, label: "Ex-Admin", disabled: !isAdmin },
+    { value: ROLES.NEWS_WRITER, label: "News Writer", disabled: false },
     { value: ROLES.HELPER, label: "Helper", disabled: false },
     { value: ROLES.VERIFIER, label: "Verifier", disabled: !isAdmin },
     { value: ROLES.ADMIN, label: "Admin", disabled: !isAdmin },

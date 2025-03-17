@@ -12,10 +12,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ErrorDisplay, HeadTitle, LoadingSpinner, StyledLink } from "../BasicComponents";
+import { CustomIconButton, ErrorDisplay, HeadTitle, LoadingSpinner, StyledLink } from "../BasicComponents";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { getQueryData, usePostPost } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import { MarkdownRenderer, PostImage, PostTitle } from "../../pages/Post";
@@ -74,6 +74,7 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const auth = useAuth();
   const navigate = useNavigate();
+  const contentInputRef = useRef(null);
 
   const newPost = post.id === null;
 
@@ -105,7 +106,19 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
     }
   }, [formPost]);
 
+  const insertSnippet = (text) => {
+    //Insert the snippet at the cursor position
+    const contentInput = contentInputRef.current;
+    const startPos = contentInput.selectionStart;
+    const endPos = contentInput.selectionEnd;
+    const content = formPost.content;
+    const toInsert = "  \n" + text + " ";
+    const newContent = content.substring(0, startPos) + toInsert + content.substring(endPos);
+    form.setValue("content", newContent);
+  };
+
   const imageUrlDebounced = useDebounce(formPost.image_url, 500);
+  const snippets = [":white_check_mark:", ":wrench:", ":bug:", ":x:"];
 
   const pageTitle = newPost ? t_g("new") : post.title;
 
@@ -140,6 +153,7 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
                       fullWidth
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
+                      MenuProps={{ disableScrollLock: true }}
                     >
                       <MenuItem value="news">{t("types.news")}</MenuItem>
                       <MenuItem value="changelog" disabled={!auth.hasAdminPriv}>
@@ -159,11 +173,19 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
             <Grid item xs={12}>
               <TextField
                 label={t("content")}
+                inputRef={contentInputRef}
                 sx={{ mt: 2 }}
                 multiline
                 fullWidth
                 {...form.register("content")}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Stack direction="row" gap={1}>
+                {snippets.map((snippet, index) => (
+                  <SnippetButton key={index} text={snippet} onClick={insertSnippet} />
+                ))}
+              </Stack>
             </Grid>
           </Grid>
         </Grid>
@@ -196,5 +218,18 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
         {t(newPost ? "buttons.create" : "buttons.update")}
       </Button>
     </form>
+  );
+}
+
+function SnippetButton({ text, onClick }) {
+  return (
+    <CustomIconButton
+      variant="outlined"
+      onClick={() => onClick(text)}
+      size="small"
+      sx={{ "& > p": { my: 0 } }}
+    >
+      <MarkdownRenderer markdown={text} />
+    </CustomIconButton>
   );
 }

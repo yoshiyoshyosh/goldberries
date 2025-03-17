@@ -30,7 +30,7 @@ import { getQueryData, useGetAdjacentPosts, useGetPost, useGetPostPaginated } fr
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendar, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { dateToTimeAgoString, jsonDateToJsDate } from "../util/util";
-import { PlayerChip } from "../components/GoldberriesComponents";
+import { DifficultyChip, PlayerChip } from "../components/GoldberriesComponents";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./Rules";
@@ -40,6 +40,7 @@ import { useAuth } from "../hooks/AuthProvider";
 import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { DIFFICULTIES } from "../util/constants";
 
 export function PagePostList({ type }) {
   const { id } = useParams();
@@ -467,6 +468,21 @@ export function MarkdownRenderer({ markdown }) {
         code: ({ children, className, node }) => {
           if (node.data?.meta === "fence") {
             return <code>{children}</code>;
+          }
+          let match = null;
+          if ((match = children.match(/^\{d:(\d+)\}$/)) !== null) {
+            //Example: {d:12}
+            const diffId = parseInt(match[1]);
+            const diff = DIFFICULTIES[diffId];
+            if (diff) {
+              return (
+                <DifficultyChip
+                  difficulty={{ id: diffId, name: diff.name, sort: diff.sort }}
+                  size="small"
+                  sx={{ position: "relative", top: "-2px" }}
+                />
+              );
+            }
           }
           return <CodeBlock className={className}>{children}</CodeBlock>;
         },

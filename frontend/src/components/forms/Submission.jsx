@@ -17,6 +17,8 @@ import {
   Tooltip,
   Typography,
   duration,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   CustomIconButton,
@@ -93,6 +95,8 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const mapCollectiblesModal = useModal(null, undefined, {
     actions: [ModalButtons.close],
   });
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
 
   const { mutate: saveSubmission } = usePostSubmission((submission) => {
     toast.success(t("feedback.updated"));
@@ -371,44 +375,18 @@ export function FormSubmission({ submission, onSave, ...props }) {
             <TooltipInfoButton title={t("personal_note")} />
           </Grid>
         </Grid>
-        {(suggested_difficulty_id || true) && (
-          <Grid container columnSpacing={2}>
-            <Grid item xs={12} sm="auto" display="flex" alignItems="center">
-              <Stack direction="row" gap={1} alignItems="center">
-                <Typography variant="body2">{t("frac_header")}</Typography>
-                <TooltipInfoButton title={t("frac_note")} />
-              </Stack>
-            </Grid>
-            <Grid item xs={12} sm>
-              <Grid container spacing={1}>
-                <Grid item xs={10} display="flex" alignItems="center">
-                  <Controller
-                    control={form.control}
-                    name="frac"
-                    render={({ field }) => (
-                      <Slider
-                        value={field.value ?? 50}
-                        onChange={(_, v) => field.onChange(v)}
-                        valueLabelDisplay="auto"
-                        step={1}
-                        min={0}
-                        max={99}
-                        valueLabelFormat={(v) => "" + v / 100}
-                        sx={{ width: "100%" }}
-                        disabled={suggested_difficulty_id === null}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={2} display="flex" alignItems="center" justifyContent="space-around">
-                  <Typography variant="body2" align="center">
-                    {(frac ?? 50) / 100}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
+        <Controller
+          control={form.control}
+          name="frac"
+          render={({ field }) => (
+            <DifficultyFracGrid
+              value={field.value}
+              onChange={field.onChange}
+              disabled={suggested_difficulty_id === null}
+              compact
+            />
+          )}
+        />
 
         <TextField
           {...form.register("time_taken", FormOptions.TimeTaken(t_ff))}
@@ -547,6 +525,69 @@ export function FormSubmission({ submission, onSave, ...props }) {
         )}
       </CustomModal>
     </>
+  );
+}
+
+export function DifficultyFracGrid({ value, onChange, disabled, compact = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "forms.submission" });
+
+  return (
+    <Grid container columnSpacing={2}>
+      <Grid item xs={12} sm="auto" display="flex" alignItems="center">
+        <Stack direction="row" gap={1} alignItems="center">
+          <Typography variant="body2">{t("frac_header")}</Typography>
+          <TooltipInfoButton title={t("frac_note")} />
+        </Stack>
+      </Grid>
+      <Grid item xs={12} sm>
+        <Grid container spacing={1}>
+          <Grid item xs={10} display="flex" alignItems="center" justifyContent="space-around">
+            <DifficultyFracSlider
+              value={value ?? 50}
+              onChange={onChange}
+              disabled={disabled}
+              compact={compact}
+            />
+          </Grid>
+          <Grid item xs={2} display="flex" alignItems="center" justifyContent="space-around">
+            <Typography variant="body2" align="center">
+              {(value ?? 50) / 100}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
+function DifficultyFracSlider({ value, onChange, disabled, compact }) {
+  const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+  let top = 20;
+  if (!isMdScreen) top += 5;
+  if (!compact) top += 5;
+
+  return (
+    <Slider
+      value={value}
+      onChange={(_, v) => onChange(v)}
+      valueLabelDisplay="auto"
+      step={1}
+      min={0}
+      max={99}
+      valueLabelFormat={(v) => "" + v / 100}
+      marks={[
+        { value: 0, label: "Low" },
+        { value: 50, label: "Mid" },
+        { value: 99, label: "High" },
+      ]}
+      slotProps={{
+        root: { style: { marginBottom: "3px" } },
+        markLabel: { style: { top: `${top}px` } },
+      }}
+      sx={{ width: "95%" }}
+      disabled={disabled}
+    />
   );
 }
 

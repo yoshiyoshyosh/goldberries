@@ -13,11 +13,15 @@ export const ROLES = {
   EX_HELPER: 10,
   EX_VERIFIER: 11,
   EX_ADMIN: 12,
+  NEWS_WRITER: 15,
   HELPER: 20,
   VERIFIER: 30,
   ADMIN: 40,
 };
 
+export function isNewsWriter(account) {
+  return account.role === ROLES.NEWS_WRITER;
+}
 export function isHelper(account) {
   return account.role === ROLES.HELPER;
 }
@@ -99,10 +103,12 @@ export function AuthProvider({ children }) {
 
   const isLoggedIn = user !== null;
 
+  const isNewsWriter = user !== null && user.role === ROLES.NEWS_WRITER;
   const isHelper = user !== null && user.role === ROLES.HELPER;
   const isVerifier = user !== null && user.role === ROLES.VERIFIER;
   const isAdmin = user !== null && user.role === ROLES.ADMIN;
 
+  const hasNewsWriterPriv = isNewsWriter || isHelper || isVerifier || isAdmin;
   const hasHelperPriv = isHelper || isVerifier || isAdmin;
   const hasVerifierPriv = isVerifier || isAdmin;
   const hasAdminPriv = isAdmin;
@@ -115,9 +121,11 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isLoggedIn,
+        isNewsWriter,
         isHelper,
         isVerifier,
         isAdmin,
+        hasNewsWriterPriv,
         hasHelperPriv,
         hasVerifierPriv,
         hasAdminPriv,

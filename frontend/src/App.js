@@ -655,6 +655,21 @@ export function Layout() {
       path: "/login",
       icon: <FontAwesomeIcon icon={faSignIn} />,
     },
+    newsWriter: {
+      name: t("internal_menu.name"),
+      items: [
+        {
+          name: t("internal_menu.posts"),
+          path: "/manage/posts/new",
+          icon: <FontAwesomeIcon icon={faNewspaper} />,
+        },
+        {
+          name: t("internal_menu.file_upload"),
+          path: "/manage/file-upload",
+          icon: <FontAwesomeIcon icon={faFileUpload} />,
+        },
+      ],
+    },
     helper: {
       name: t("internal_menu.name"),
       items: [
@@ -667,16 +682,6 @@ export function Layout() {
           name: t("internal_menu.manage_challenges"),
           path: "/manage/challenges",
           icon: <FontAwesomeIcon icon={faEdit} />,
-        },
-        {
-          name: t("internal_menu.posts"),
-          path: "/manage/posts/new",
-          icon: <FontAwesomeIcon icon={faNewspaper} />,
-        },
-        {
-          name: t("internal_menu.file_upload"),
-          path: "/manage/file-upload",
-          icon: <FontAwesomeIcon icon={faFileUpload} />,
         },
         {
           name: t("internal_menu.test"),
@@ -773,17 +778,21 @@ export function Layout() {
 
   const leftMenu = [menus.lists, menus.campaigns, menus.other];
   const rightMenu = [];
-  if (auth.hasHelperPriv) {
-    const helperMenu = menus.helper;
+  if (auth.hasNewsWriterPriv) {
+    const newsWriterMenu = menus.newsWriter;
+    if (auth.hasHelperPriv) {
+      newsWriterMenu.items.push({ divider: true });
+      menus.helper.items.forEach((item) => newsWriterMenu.items.push(item));
+    }
     if (auth.hasVerifierPriv) {
-      helperMenu.items.push({ divider: true });
-      menus.verifier.items.forEach((item) => helperMenu.items.push(item));
+      newsWriterMenu.items.push({ divider: true });
+      menus.verifier.items.forEach((item) => newsWriterMenu.items.push(item));
     }
     if (auth.hasAdminPriv) {
-      helperMenu.items.push({ divider: true });
-      menus.admin.items.forEach((item) => helperMenu.items.push(item));
+      newsWriterMenu.items.push({ divider: true });
+      menus.admin.items.forEach((item) => newsWriterMenu.items.push(item));
     }
-    leftMenu.push(helperMenu);
+    leftMenu.push(newsWriterMenu);
   }
   rightMenu.push(menus.submit);
   rightMenu.push(menus.search);

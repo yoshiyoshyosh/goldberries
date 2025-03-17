@@ -70,6 +70,7 @@ import { useTheme } from "@emotion/react";
 import { getCollectibleOptions, getCollectibleVariantOptions } from "../components/forms/Map";
 import { StringListEditor } from "../components/StringListEditor";
 import { NOTIFICATIONS, hasNotificationFlag } from "./Account";
+import { DifficultyFracGrid } from "../components/forms/Submission";
 
 export function PageSubmit() {
   const { t } = useTranslation(undefined, { keyPrefix: "submit" });
@@ -173,6 +174,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
       player_notes: "",
       is_fc: false,
       suggested_difficulty_id: null,
+      frac: 50,
       is_personal: false,
       time_taken: "",
       date_achieved: new Date().toISOString(),
@@ -189,6 +191,7 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
   const errors = form.formState.errors;
   const proof_url = form.watch("proof_url");
   const raw_session_url = form.watch("raw_session_url");
+  const suggested_difficulty_id = form.watch("suggested_difficulty_id");
   const sameUrl = proof_url === raw_session_url && raw_session_url !== "";
   const needsRawSession =
     challenge !== null && challenge.difficulty.sort >= DIFF_CONSTS.RAW_SESSION_REQUIRED_SORT;
@@ -429,6 +432,19 @@ export function SingleUserSubmission({ defaultCampaign, defaultMap, defaultChall
               )}
             />
             <TooltipInfoButton title={t_fs("personal_note")} />
+          </Grid>
+          <Grid item xs={12} sm={12} sx={{ "&&": { pt: 0 } }}>
+            <Controller
+              control={form.control}
+              name="frac"
+              render={({ field }) => (
+                <DifficultyFracGrid
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={suggested_difficulty_id === null}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={12}>
             <TextField
@@ -891,6 +907,7 @@ export function NewChallengeUserSubmission({}) {
       player_notes: "",
       is_fc: false,
       suggested_difficulty_id: null,
+      frac: 50,
       is_personal: false,
       time_taken: "",
       date_achieved: new Date().toISOString(),
@@ -1100,6 +1117,19 @@ export function NewChallengeUserSubmission({}) {
               )}
             />
             <TooltipInfoButton title={t_fs("personal_note")} />
+          </Grid>
+          <Grid item xs={12} sm={12} sx={{ "&&": { pt: 0 } }}>
+            <Controller
+              control={form.control}
+              name="frac"
+              render={({ field }) => (
+                <DifficultyFracGrid
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={suggested_difficulty_id === null}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={12}>
             <TextField

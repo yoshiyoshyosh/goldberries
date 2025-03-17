@@ -77,7 +77,8 @@ export function getDifficultyNameShort(difficulty) {
   return "T" + difficulty.sort;
 }
 export function getDifficultyName(difficulty) {
-  let subtierPrefix = difficulty.subtier === null ? "" : difficulty.subtier + " ";
+  let subtierPrefix =
+    difficulty.subtier === null || difficulty.subtier === undefined ? "" : difficulty.subtier + " ";
   //capitalize first letter
   subtierPrefix = subtierPrefix.charAt(0).toUpperCase() + subtierPrefix.slice(1);
   return subtierPrefix + difficulty.name;
