@@ -29,6 +29,7 @@ import { useParams } from "react-router-dom";
 import {
   getQueryData,
   useGetAdjacentPosts,
+  useGetChallenge,
   useGetPlayer,
   useGetPost,
   useGetPostPaginated,
@@ -47,6 +48,7 @@ import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { DIFFICULTIES } from "../util/constants";
+import { ChallengeInline } from "./Player";
 
 export function PagePostList({ type }) {
   const { id } = useParams();
@@ -504,6 +506,7 @@ export function MarkdownRenderer({ markdown }) {
     </Markdown>
   );
 }
+
 const _OWN_DOMAINS = ["/", "http://localhost", "https://goldberries.net"];
 function MarkdownAnchor({ href, children }) {
   if (!_OWN_DOMAINS.some((d) => href.startsWith(d))) {
@@ -511,6 +514,7 @@ function MarkdownAnchor({ href, children }) {
   }
   return <StyledLink to={href}>{children}</StyledLink>;
 }
+
 function MarkdownInlineCodeBlock({ children, className }) {
   let match = null;
   if ((match = children.match(/^\{d:(\d+)\}$/)) !== null) {
@@ -532,18 +536,44 @@ function MarkdownInlineCodeBlock({ children, className }) {
     if (playerId >= 1) {
       return <PlayerChipAsync id={playerId} size="small" sx={{ position: "relative", top: "-1px" }} />;
     }
+  } else if ((match = children.match(/^\{c:(\d+):?(.)?\}$/)) !== null) {
+    //Example: {c:12:f}, {c:12}
+    const challengeId = parseInt(match[1]);
+    const full = match[2] === "f";
+    if (challengeId >= 1) {
+      return <ChallengeInlineAsync id={challengeId} full={full} size="small" />;
+    }
   }
   return <CodeBlock className={className}>{children}</CodeBlock>;
 }
 export function PlayerChipAsync({ id, size, ...props }) {
   const query = useGetPlayer(id, () => {}); //Empty error handler
-  const player = getQueryData(query);
+  let player = getQueryData(query);
+
+  player = query.isLoading ? { id: 0, name: "<loading>", account: {} } : player;
+  player = query.isError ? null : player;
+
+  return <PlayerChip player={player} size={size} {...props} />;
+}
+export function ChallengeInlineAsync({ id, full = false, ...props }) {
+  const query = useGetChallenge(id, () => {}); //Empty error handler
+  let challenge = getQueryData(query);
 
   if (query.isLoading) {
-    return <LoadingSpinner size={size} />;
+    return <LoadingSpinner size="small" />;
+  } else if (query.isError) {
+    return (
+      <Typography variant="body1" color={(t) => t.palette.error.main}>
+        {"<Challenge not found: " + id + ">"}
+      </Typography>
+    );
   }
 
-  return <PlayerChip player={query.isError ? null : player} size={size} {...props} />;
+  if (full) {
+    return <ChallengeInline challenge={challenge} {...props} />;
+  } else {
+    return <ChallengeInline challenge={challenge} separateChallenge {...props} />;
+  }
 }
 
 export function PostImage({ image_url, title, compact = false }) {

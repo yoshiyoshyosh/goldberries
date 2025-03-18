@@ -127,7 +127,7 @@ function FAQEntryVanillaReferences({}) {
               <Table size="small" sx={{ width: "unset" }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell width={1}>{t_g("challenge", { count: 1 })}</TableCell>
+                    <TableCell>{t_g("challenge", { count: 1 })}</TableCell>
                     <TableCell align="center">{t_g("difficulty", { count: 1 })}</TableCell>
                   </TableRow>
                 </TableHead>
@@ -136,7 +136,7 @@ function FAQEntryVanillaReferences({}) {
                     const difficulty = difficulties.find((d) => d.id === ref.difficulty_id);
                     return (
                       <TableRow key={index}>
-                        <TableCell width={1} sx={{ whiteSpace: "nowrap" }}>
+                        <TableCell>
                           <Stack direction="row" gap={1} alignItems="center">
                             {ref.name}
                             {ref.note && (

@@ -719,7 +719,7 @@ function TopGoldenListRow({
         align="center"
       >
         <Stack direction="row" gap={1} alignItems="center" justifyContent="center" sx={{ minWidth: "18px" }}>
-          <ChallengeFcIcon challenge={challenge} height="1.3em" isTopGoldenList />
+          <ChallengeFcIcon challenge={challenge} height="1.3em" allowTextIcons />
         </Stack>
       </TableCell>
       <TableCell
@@ -874,7 +874,15 @@ function TopGoldenListRow({
             </StyledLink>
           )}
           {isPlayer && (isOwnPlayer || auth.hasHelperPriv) && editSuggestions && (
-            <CustomIconButton onClick={onEditSuggestion} sx={{ py: 3 / 8 }}>
+            <CustomIconButton
+              onClick={onEditSuggestion}
+              sx={{
+                py: 3 / 8,
+                px: 8 / 8,
+                color: colors.contrast_color,
+                borderColor: colors.contrast_color,
+              }}
+            >
               <FontAwesomeIcon icon={faEdit} size="sm" />
             </CustomIconButton>
           )}

@@ -747,7 +747,6 @@ function TimelineSubmissionSingle({ submission, showDifficulty }) {
   const challenge = submission.challenge;
   const map = challenge.map;
   const campaign = getChallengeCampaign(challenge);
-  const nameIsSame = isMapSameNameAsCampaign(map, campaign);
   const showCampaignImage = showDifficulty ? challenge.difficulty.sort >= showDifficulty.sort : false;
 
   return (
@@ -759,23 +758,7 @@ function TimelineSubmissionSingle({ submission, showDifficulty }) {
         sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}
       >
         <DifficultyChip difficulty={challenge.difficulty} sx={{ mt: "1px" }} />
-        <Stack direction="row" alignItems="center" columnGap={1} flexWrap="wrap">
-          <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
-          {!nameIsSame && map && (
-            <>
-              {"/"}
-              <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign, false)}</StyledLink>
-            </>
-          )}
-          {getChallengeSuffix(challenge) !== null && (
-            <Typography variant="body2" color="textSecondary">
-              [{getChallengeSuffix(challenge)}]
-            </Typography>
-          )}
-          <StyledLink to={"/submission/" + submission.id} style={{ lineHeight: "1" }}>
-            <ChallengeFcIcon challenge={challenge} height="1.3em" />
-          </StyledLink>
-        </Stack>
+        <ChallengeInline challenge={challenge} submission={submission} />
       </Stack>
       {showCampaignImage && <TimelineSubmissionPreviewImage submission={submission} />}
     </Stack>
@@ -833,6 +816,48 @@ function TimelineSubmissionPreviewImage({ submission }) {
     <StyledExternalLink href={submission.proof_url}>
       <img src={url} alt={campaign.name} style={{ maxWidth: "200px", borderRadius: "5px" }} />
     </StyledExternalLink>
+  );
+}
+
+export function ChallengeInline({ challenge, submission, separateChallenge = false, ...props }) {
+  const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+  const map = challenge.map;
+  const campaign = getChallengeCampaign(challenge);
+
+  const nameIsSame = isMapSameNameAsCampaign(map, campaign);
+
+  return (
+    <Stack
+      display={"inline-flex"}
+      direction="row"
+      alignItems="center"
+      columnGap={1}
+      flexWrap="wrap"
+      {...props}
+    >
+      <StyledLink to={"/campaign/" + campaign.id}>{getCampaignName(campaign, t_g, true)}</StyledLink>
+      {!nameIsSame && map && (
+        <>
+          {"/"}
+          <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign, false)}</StyledLink>
+        </>
+      )}
+      {separateChallenge && "/"}
+      {getChallengeSuffix(challenge) !== null && (
+        <Typography variant="body2" color="textSecondary">
+          [{getChallengeSuffix(challenge)}]
+        </Typography>
+      )}
+      {submission ? (
+        <StyledLink to={"/submission/" + submission.id} style={{ lineHeight: "1" }}>
+          <ChallengeFcIcon showClear allowTextIcons challenge={challenge} height="1.3em" />
+        </StyledLink>
+      ) : (
+        <StyledLink to={"/challenge/" + challenge.id} style={{ lineHeight: "0" }}>
+          <ChallengeFcIcon showClear allowTextIcons challenge={challenge} height="1.3em" />
+        </StyledLink>
+      )}
+    </Stack>
   );
 }
 

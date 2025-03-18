@@ -816,7 +816,7 @@ export function ChallengeFcIcon({
   challenge,
   height = "1em",
   showClear = false,
-  isTopGoldenList = false,
+  allowTextIcons = false,
   style = {},
   ...props
 }) {
@@ -832,7 +832,7 @@ export function ChallengeFcIcon({
   if (
     !challenge.requires_fc &&
     !challenge.has_fc &&
-    isTopGoldenList &&
+    allowTextIcons &&
     !settings.visual.topGoldenList.useTextFcIcons &&
     !showClear
   ) {
@@ -841,7 +841,7 @@ export function ChallengeFcIcon({
 
   return (
     <Tooltip title={alt} arrow placement="top">
-      {isTopGoldenList && settings.visual.topGoldenList.useTextFcIcons ? (
+      {allowTextIcons && settings.visual.topGoldenList.useTextFcIcons ? (
         <span style={{ whiteSpace: "nowrap" }}>{shortAlt}</span>
       ) : (
         <img

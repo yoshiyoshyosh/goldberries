@@ -258,11 +258,11 @@ export function useGetChallengesInMap(id) {
   });
 }
 
-export function useGetChallenge(id) {
+export function useGetChallenge(id, onError) {
   return useQuery({
     queryKey: ["challenge", id],
     queryFn: () => fetchChallenge(id),
-    onError: errorToast,
+    onError: onError ?? errorToast,
     enabled: !!id,
   });
 }

@@ -3,7 +3,7 @@ import { getNewDifficultyColors } from "../util/constants";
 import { getDifficultyName } from "../util/data_util";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { useState } from "react";
-import { ChallengeFcIcon, DifficultyChip } from "./GoldberriesComponents";
+import { DifficultyChip } from "./GoldberriesComponents";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@emotion/react";
