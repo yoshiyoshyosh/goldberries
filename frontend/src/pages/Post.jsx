@@ -547,15 +547,17 @@ function MarkdownInlineCodeBlock({ children, className }) {
   return <CodeBlock className={className}>{children}</CodeBlock>;
 }
 export function PlayerChipAsync({ id, size, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.markdown.player_chip" });
   const query = useGetPlayer(id, () => {}); //Empty error handler
   let player = getQueryData(query);
 
-  player = query.isLoading ? { id: 0, name: "<loading>", account: {} } : player;
+  player = query.isLoading ? { id: 0, name: t("loading"), account: {} } : player;
   player = query.isError ? null : player;
 
   return <PlayerChip player={player} size={size} {...props} />;
 }
 export function ChallengeInlineAsync({ id, full = false, ...props }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "components.markdown.challenge_inline" });
   const query = useGetChallenge(id, () => {}); //Empty error handler
   let challenge = getQueryData(query);
 
@@ -564,7 +566,7 @@ export function ChallengeInlineAsync({ id, full = false, ...props }) {
   } else if (query.isError) {
     return (
       <Typography variant="body1" color={(t) => t.palette.error.main}>
-        {"<Challenge not found: " + id + ">"}
+        {t("error", { id })}
       </Typography>
     );
   }

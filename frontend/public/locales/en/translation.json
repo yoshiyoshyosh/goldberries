@@ -228,6 +228,14 @@
       "x_axis": "Hours",
       "show_scatter": "Show as scatter plot",
       "scatter_description": "The same data as a scatter plot."
+    },
+    "markdown": {
+      "player_chip": {
+        "loading": "<loading>"
+      },
+      "challenge_inline": {
+        "error": "<Challenge not found: {{id}}>"
+      }
     }
   },
   "forms": {
