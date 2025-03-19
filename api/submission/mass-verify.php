@@ -60,6 +60,7 @@ foreach ($submissions as $submission) {
   $submission->verifier_notes = $verifier_notes;
   $submission->date_verified = new JsonDateTime();
   $submission->verifier_id = $account->player->id;
+  $submission->new_challenge_id = $is_verified === true ? null : $submission->new_challenge_id;
 
   if ($submission->update($DB)) {
     submission_embed_change($submission->id, "submission");

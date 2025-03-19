@@ -165,70 +165,61 @@ class Submission extends DbObject
     return $submissions;
   }
 
-  static function get_recent_submissions($DB, $verified, $page, $per_page, $search = null, $player = null)
+  static function get_recent_submissions($DB, $verified, $page, $per_page, $player = null)
   {
-    $query = "SELECT * FROM view_submissions";
-
-    $where = array();
-
+    $where = [];
     if ($verified === null) {
-      $where[] = "submission_is_verified IS NULL";
+      $where[] = "is_verified IS NULL";
     } else if ($verified === true) {
-      $where[] = "submission_is_verified = true";
+      $where[] = "is_verified = true";
     } else if ($verified === false) {
-      $where[] = "submission_is_verified = false";
-    }
-    if ($search !== null) {
-      $search = pg_escape_string($search);
-      $where[] = "(campaign_name ILIKE '%" . $search . "%' OR map_name ILIKE '%" . $search . "%')";
+      $where[] = "is_verified = false";
     }
     if ($player !== null) {
       $where[] = "player_id = " . $player;
     }
 
+    $where_str = implode(" AND ", $where);
 
-    if (count($where) > 0) {
-      $query .= " WHERE " . implode(" AND ", $where);
-    }
-
+    $order_by = null;
     if ($player !== null) {
-      $query .= " ORDER BY submission_date_achieved DESC NULLS LAST";
+      $order_by = "date_achieved";
     } else if ($verified === null) {
-      $query .= " ORDER BY submission_date_created DESC NULLS LAST";
+      $order_by = "date_created";
     } else {
-      $query .= " ORDER BY submission_date_verified DESC NULLS LAST";
+      $order_by = "date_verified";
     }
 
-    $query = "
-    WITH submissions AS (
-      " . $query . "
-    )
-    SELECT *, count(*) OVER () AS total_count
-    FROM submissions";
+    $order_by = "$order_by DESC";
 
-    if ($per_page !== -1) {
-      $query .= " LIMIT " . $per_page . " OFFSET " . ($page - 1) * $per_page;
+    $count_query = "SELECT count(*) as total_count FROM submission WHERE $where_str";
+    $count_result = pg_query_params_or_die($DB, $count_query);
+    $assoc = pg_fetch_assoc($count_result);
+    $total_count = intval($assoc['total_count']);
+
+    $id_query = "SELECT id FROM submission WHERE $where_str ORDER BY $order_by LIMIT $per_page OFFSET " . ($page - 1) * $per_page;
+    $id_result = pg_query_params_or_die($DB, $id_query);
+    $ids = [];
+    while ($row = pg_fetch_assoc($id_result)) {
+      $ids[] = $row['id'];
     }
 
-    $result = pg_query_params_or_die($DB, $query);
-
-    $maxCount = 0;
-    $submissions = array();
-    while ($row = pg_fetch_assoc($result)) {
-      $submission = new Submission();
-      $submission->apply_db_data($row, "submission_");
-      $submission->expand_foreign_keys($row, 5);
-      $submissions[] = $submission;
-
-      if ($maxCount === 0) {
-        $maxCount = intval($row['total_count']);
+    $submissions = [];
+    if (count($ids) !== 0) {
+      $query = "SELECT * FROM view_submissions WHERE submission_id IN (" . implode(",", $ids) . ") ORDER BY submission_$order_by, submission_date_created DESC";
+      $result = pg_query_params_or_die($DB, $query);
+      while ($row = pg_fetch_assoc($result)) {
+        $submission = new Submission();
+        $submission->apply_db_data($row, "submission_");
+        $submission->expand_foreign_keys($row, 4);
+        $submissions[] = $submission;
       }
     }
 
     return [
       'submissions' => $submissions,
-      'max_count' => $maxCount,
-      'max_page' => ceil($maxCount / $per_page),
+      'max_count' => $total_count,
+      'max_page' => ceil($total_count / $per_page),
       'page' => $page,
       'per_page' => $per_page,
     ];
