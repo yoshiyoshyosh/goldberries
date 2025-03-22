@@ -52,8 +52,10 @@
   "components": {
     "difficulty_select": {
       "label": "Difficulty Opinion",
+      "label_no_opinion": "Difficulty",
       "no_suggestion": "No Opinion",
-      "no_selection": "No Selection"
+      "no_selection": "No Selection",
+      "no_options": "No Options"
     },
     "difficulty_chip": {
       "personal_tooltip": "This difficulty opinion is personal and should not be used for difficulty placements",
@@ -86,6 +88,7 @@
       "ex_helper": "Ex Helper",
       "ex_verifier": "Ex Verifier",
       "ex_admin": "Ex Admin",
+      "news_writer": "News Writer",
       "helper": "Helper",
       "verifier": "Verifier",
       "admin": "Admin"

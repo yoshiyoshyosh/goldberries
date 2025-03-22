@@ -42,6 +42,7 @@ import {
   faInfoCircle,
   faKeyboard,
   faLink,
+  faNewspaper,
   faPersonDrowning,
   faQuestionCircle,
   faShield,
@@ -74,7 +75,7 @@ import { StyledExternalLink, StyledLink, TooltipLineBreaks } from "./BasicCompon
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
-import { isAdmin, isHelper, isVerifier } from "../hooks/AuthProvider";
+import { isAdmin, isHelper, isNewsWriter, isVerifier } from "../hooks/AuthProvider";
 
 export function CampaignSelect({
   selected,
@@ -409,6 +410,7 @@ export function DifficultySelectControlled({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
   const { settings } = useAppSettings();
+  const [inputValue, setInputValue] = useState("");
 
   const query = useGetAllDifficulties();
 
@@ -421,12 +423,19 @@ export function DifficultySelectControlled({
   };
 
   const onChangeDifficulty = (id) => {
-    const difficulty = query.data?.data.find((d) => d.id === id);
-    if (setDifficulty) setDifficulty(difficulty);
-    if (setDifficultyId) setDifficultyId(id);
+    console.log("onChangeDifficulty", id);
+    const difficulty = getQueryData(query).find((d) => d.id === id);
+    if (!difficulty) {
+      if (setDifficulty) setDifficulty(null);
+      if (setDifficultyId) setDifficultyId(null);
+    } else {
+      if (setDifficulty) setDifficulty(difficulty);
+      if (setDifficultyId) setDifficultyId(id);
+    }
   };
 
-  let difficulties = getQueryData(query) ?? [];
+  let difficulties = getQueryData(query) ?? [{ id: difficultyId }];
+  difficulties = JSON.parse(JSON.stringify(difficulties));
   if (isSuggestion) {
     difficulties = difficulties.filter(
       (d) => d.id !== DIFF_CONSTS.TRIVIAL_ID && d.id !== DIFF_CONSTS.UNTIERED_ID
@@ -438,38 +447,77 @@ export function DifficultySelectControlled({
   if (maxSort !== null) {
     difficulties = difficulties.filter((d) => d.sort <= maxSort);
   }
+  //Add "No Selection" option at the start with id = 0
+  difficulties.unshift({ id: 0 });
+
+  const selectedDifficulty = difficulties.find((d) => d.id === difficultyId);
 
   return (
-    <TextField
+    <Autocomplete
       {...props}
-      select
-      value={difficultyId ?? ""}
-      onChange={(e) => onChangeDifficulty(e.target.value === "" ? null : e.target.value)}
-      SelectProps={{
-        ...props.SelectProps,
-        MenuProps: { disableScrollLock: true },
+      options={difficulties}
+      getOptionLabel={(difficulty) => (difficulty.id === 0 ? "" : getDifficultyName(difficulty))}
+      isOptionEqualToValue={(option, value) => {
+        if (option?.id && value?.id) return option.id === value.id;
+        return false;
       }}
-    >
-      {difficulties.length !== 0 && (
-        <MenuItem value="">
-          <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
-        </MenuItem>
+      value={selectedDifficulty}
+      onChange={(e, v) => onChangeDifficulty(v?.id)}
+      noOptionsText={t("no_options")}
+      loading={query.isLoading}
+      loadingText={"Loading"}
+      renderInput={(params) => (
+        <TextField {...params} label={t(isSuggestion ? "label" : "label_no_opinion")} />
       )}
-      {difficulties.map((difficulty) => (
-        <MenuItem key={difficulty.id} value={difficulty.id}>
-          <Stack direction="row" gap={1} alignItems="center">
+      renderOption={(props, difficulty) => {
+        if (difficulty.id === 0) {
+          return (
+            <Stack direction="row" gap={1} {...props}>
+              <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
+            </Stack>
+          );
+        }
+        return (
+          <Stack direction="row" gap={1} {...props}>
             <span>{getDifficultyName(difficulty)}</span>
             <span style={{ fontSize: "0.7em" }}>{getOldName(difficulty.id)}</span>
           </Stack>
-        </MenuItem>
-      ))}
-      {difficulties.length === 0 && (
-        <MenuItem disabled>
-          <em>Loading...</em>
-        </MenuItem>
-      )}
-    </TextField>
+        );
+      }}
+    />
   );
+
+  // return (
+  //   <TextField
+  //     {...props}
+  //     select
+  //     value={difficultyId ?? ""}
+  //     onChange={(e) => onChangeDifficulty(e.target.value === "" ? null : e.target.value)}
+  //     SelectProps={{
+  //       ...props.SelectProps,
+  //       MenuProps: { disableScrollLock: true },
+  //     }}
+  //   >
+  //     {difficulties.length !== 0 && (
+  //       <MenuItem value="">
+  //         <em>{t(isSuggestion ? "no_suggestion" : "no_selection")}</em>
+  //       </MenuItem>
+  //     )}
+  //     {difficulties.map((difficulty) => (
+  //       <MenuItem key={difficulty.id} value={difficulty.id}>
+  //         <Stack direction="row" gap={1} alignItems="center">
+  //           <span>{getDifficultyName(difficulty)}</span>
+  //           <span style={{ fontSize: "0.7em" }}>{getOldName(difficulty.id)}</span>
+  //         </Stack>
+  //       </MenuItem>
+  //     ))}
+  //     {difficulties.length === 0 && (
+  //       <MenuItem disabled>
+  //         <em>Loading...</em>
+  //       </MenuItem>
+  //     )}
+  //   </TextField>
+  // );
 }
 
 export function ObjectiveSelect({ objectiveId, setObjectiveId, ...props }) {
@@ -654,10 +702,19 @@ export function SubmissionIcon({ submission }) {
 }
 
 export function AccountRoleIcon({ account }) {
+  if (isNewsWriter(account)) return <NewsWriterIcon />;
   if (isHelper(account)) return <HelperIcon />;
   if (isVerifier(account)) return <VerifierIcon />;
   if (isAdmin(account)) return <AdminIcon />;
   return null;
+}
+export function NewsWriterIcon() {
+  const { t } = useTranslation();
+  return (
+    <Tooltip title={t("components.roles.news_writer")} arrow placement="top">
+      <FontAwesomeIcon icon={faNewspaper} color="grey" />
+    </Tooltip>
+  );
 }
 export function HelperIcon() {
   const { t } = useTranslation();

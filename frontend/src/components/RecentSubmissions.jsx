@@ -245,6 +245,9 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const mapName = map ? getMapName(map, campaign, false) : null;
   const campaignNameSame = campaign?.name === mapName;
 
+  const isAnnoyingCampaignName = campaign.name.length > 20 && !campaign.name.includes(" ");
+  const isAnnoyingMapName = mapName.length > 20 && !mapName.includes(" ");
+
   return (
     <TableRow
       key={submission.id}
@@ -264,11 +267,23 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
                 <CampaignIcon campaign={campaign} />
                 {!campaignNameSame && (
                   <>
-                    <StyledLink to={"/campaign/" + campaign.id}>{campaign.name}</StyledLink>
+                    <StyledLink
+                      to={"/campaign/" + campaign.id}
+                      style={{ wordBreak: isAnnoyingCampaignName ? "break-all" : "unset" }}
+                    >
+                      {campaign.name}
+                    </StyledLink>
                     {map && <Typography>-</Typography>}
                   </>
                 )}
-                {map && <StyledLink to={"/map/" + map.id}>{mapName}</StyledLink>}
+                {map && (
+                  <StyledLink
+                    to={"/map/" + map.id}
+                    style={{ wordBreak: isAnnoyingMapName ? "break-all" : "unset" }}
+                  >
+                    {mapName}
+                  </StyledLink>
+                )}
                 {getChallengeSuffix(challenge) !== null && (
                   <Typography variant="body2" color={theme.palette.text.secondary}>
                     [{getChallengeSuffix(challenge)}]
