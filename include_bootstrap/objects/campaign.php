@@ -210,6 +210,18 @@ class Campaign extends DbObject
       }
     }
     if (count($abbreviation_matches) > 0) {
+      //First, check to see if the abbreviation match result is already in the regular result set $maps, and if yes, remove it from $maps
+      //A simple in_array check is not enough. Compare the map IDs
+      $campaigns = array_filter($campaigns, function ($campaign) use ($abbreviation_matches) {
+        foreach ($abbreviation_matches as $abbreviation_match) {
+          if ($campaign->id === $abbreviation_match->id) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      //Then, add the abbreviation match result to the front of the list      
       $campaigns = array_merge($abbreviation_matches, $campaigns);
     }
 
