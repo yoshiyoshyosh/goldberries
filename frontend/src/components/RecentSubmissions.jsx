@@ -245,8 +245,8 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const mapName = map ? getMapName(map, campaign, false) : null;
   const campaignNameSame = campaign?.name === mapName;
 
-  const isAnnoyingCampaignName = campaign.name.length > 20 && !campaign.name.includes(" ");
-  const isAnnoyingMapName = mapName.length > 20 && !mapName.includes(" ");
+  const isAnnoyingCampaignName = challenge && campaign.name.length > 20 && !campaign.name.includes(" ");
+  const isAnnoyingMapName = challenge && mapName && mapName.length > 20 && !mapName.includes(" ");
 
   return (
     <TableRow

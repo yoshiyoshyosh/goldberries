@@ -462,6 +462,7 @@
       "title": "Title",
       "content": "Content",
       "type": "Post Type",
+      "short_preview": "Short Preview",
       "types": {
         "news": "News",
         "changelog": "Changelog"

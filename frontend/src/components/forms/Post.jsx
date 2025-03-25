@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { useEffect, useMemo, useRef } from "react";
 import { getQueryData, usePostPost } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
-import { MarkdownRenderer, PostImage, PostTitle } from "../../pages/Post";
+import { MarkdownRenderer, PostImage, PostIndexWidgetPost, PostTitle } from "../../pages/Post";
 import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useAuth } from "../../hooks/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -201,6 +201,22 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
             </Grid>
             <Grid item xs={12} sx={{ "& > :first-child": { mt: 0 }, "& > :last-child": { mb: 0 } }}>
               <MarkdownRenderer markdown={formPost.content} />
+            </Grid>
+            <Grid item xs={12}>
+              <Divider sx={{ mt: 4 }} />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h5">{t("short_preview")}</Typography>
+              <PostIndexWidgetPost
+                isPreview
+                post={{
+                  ...formPost,
+                  author: {
+                    ...auth.user.player,
+                    account: auth.user,
+                  },
+                }}
+              />
             </Grid>
           </Grid>
         </Grid>

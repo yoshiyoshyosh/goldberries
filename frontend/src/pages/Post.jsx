@@ -178,9 +178,9 @@ function PostListPost({ post }) {
           "&:hover": { background: theme.palette.posts.backgroundHover },
         }}
       >
-        <Grid container spacing={2}>
+        <Grid container spacing={0}>
           <Grid item xs={12} sm={post.image_url ? 8 : 12}>
-            <Grid container spacing={1}>
+            <Grid container spacing={0}>
               <Grid item xs={12}>
                 <PostTitle title={post.title} />
               </Grid>
@@ -276,19 +276,27 @@ export function PostDetail({ type, id }) {
   );
 }
 
-function PostAuthor({ post, noEdited = false }) {
+function PostAuthor({ post, noEdited = false, isPreview = false }) {
   const theme = useTheme();
   const colorSecondary = theme.palette.text.secondary;
 
   return (
     <Stack direction="row" gap={0.75} alignItems="center">
-      <DateRelativeTooltip date={post.date_created} color={colorSecondary} />
-      {post.date_edited && !noEdited && (
-        <DateRelativeTooltip
-          date={post.date_edited}
-          color={colorSecondary}
-          formatter={(s) => `(edited ${s})`}
-        />
+      {isPreview && !post.date_created ? (
+        <Typography variant="body2" color={colorSecondary}>
+          ... seconds ago
+        </Typography>
+      ) : (
+        <>
+          <DateRelativeTooltip date={post.date_created} color={colorSecondary} />
+          {post.date_edited && !noEdited && (
+            <DateRelativeTooltip
+              date={post.date_edited}
+              color={colorSecondary}
+              formatter={(s) => `(edited ${s})`}
+            />
+          )}
+        </>
       )}
       <Typography variant="body2" color={colorSecondary}>
         ·
@@ -777,7 +785,7 @@ function PostIndexWidgetList({ type }) {
     </Grid>
   );
 }
-function PostIndexWidgetPost({ post }) {
+export function PostIndexWidgetPost({ post, isPreview = false }) {
   const { t: t_pl } = useTranslation(undefined, { keyPrefix: "post.list" });
   const theme = useTheme();
   const content = post.content;
@@ -786,7 +794,7 @@ function PostIndexWidgetPost({ post }) {
 
   return (
     <StyledLink
-      to={`/${post.type}/${post.id}`}
+      to={isPreview ? "#" : `/${post.type}/${post.id}`}
       style={{ textDecoration: "none", color: theme.palette.text.primary }}
     >
       <Paper
@@ -807,7 +815,7 @@ function PostIndexWidgetPost({ post }) {
                 <MarkdownRenderer markdown={firstParagraph} />
               </Grid>
               <Grid item xs="auto">
-                <PostAuthor post={post} noEdited />
+                <PostAuthor post={post} noEdited isPreview={isPreview} />
               </Grid>
               {/* {hasMoreContent && (
                 <Grid item xs>
