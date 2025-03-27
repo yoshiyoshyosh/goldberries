@@ -140,15 +140,24 @@ export function fetchPlayerList(group) {
   return axios.get("/player/group", { params: { group: group } });
 }
 
-export function fetchCampaign(id, maps = true, challenges = true, submission = true) {
-  return axios.get("/campaign", {
-    params: {
-      id: id,
-      maps: maps,
-      challenges: challenges,
-      submissions: submission,
-    },
-  });
+export function fetchCampaign(
+  id,
+  maps = true,
+  challenges = true,
+  submission = true,
+  empty = false,
+  rejected = false
+) {
+  const params = {
+    id: id,
+    maps: maps,
+    challenges: challenges,
+    submissions: submission,
+  };
+  if (empty) params.empty = true;
+  if (rejected) params.rejected = true;
+
+  return axios.get("/campaign", { params });
 }
 
 export function fetchCampaignView(id) {

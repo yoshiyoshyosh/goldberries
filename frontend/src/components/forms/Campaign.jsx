@@ -58,9 +58,13 @@ export function FormCampaignWrapper({
   ...props
 }) {
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
+
+  const challenges = isEditMaps ? false : true;
+  const submissions = isEditMaps ? false : true;
+
   const query = useQuery({
-    queryKey: ["campaign", id],
-    queryFn: () => fetchCampaign(id),
+    queryKey: ["campaign", id, challenges, submissions],
+    queryFn: () => fetchCampaign(id, true, challenges, submissions, true, true),
     staleTime: 0,
     cacheTime: 0,
     enabled: id !== null,

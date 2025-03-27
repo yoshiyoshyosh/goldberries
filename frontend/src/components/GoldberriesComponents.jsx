@@ -406,11 +406,11 @@ export function DifficultySelectControlled({
   isSuggestion = false,
   minSort = null,
   maxSort = null,
+  label,
   ...props
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.difficulty_select" });
   const { settings } = useAppSettings();
-  const [inputValue, setInputValue] = useState("");
 
   const query = useGetAllDifficulties();
 
@@ -467,7 +467,7 @@ export function DifficultySelectControlled({
       loading={query.isLoading}
       loadingText={"Loading"}
       renderInput={(params) => (
-        <TextField {...params} label={t(isSuggestion ? "label" : "label_no_opinion")} />
+        <TextField {...params} label={label ?? t(isSuggestion ? "label" : "label_no_opinion")} />
       )}
       renderOption={(props, difficulty) => {
         if (difficulty.id === 0) {

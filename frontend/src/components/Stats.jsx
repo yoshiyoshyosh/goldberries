@@ -106,7 +106,7 @@ function SuggestedDifficultyPieChartWithLabel({ data, label }) {
         }}
         margin={{ right: 0 }}
         sx={{
-          animation: spin ? "spin 3s ease-in-out infinite" : "",
+          "& > g > g > g": { animation: spin ? "spin 3s ease-in-out infinite" : "" },
           [`& .${pieArcLabelClasses.root}`]: {
             fill: "black",
           },

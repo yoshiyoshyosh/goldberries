@@ -233,7 +233,8 @@ export function PostDetail({ type, id }) {
           </Stack>
         </StyledLink>
       </Grid>
-      {((post.type === "news" && auth.hasHelperPriv) || (post.type === "changelog" && auth.hasAdminPriv)) && (
+      {((post.type === "news" && auth.hasNewsWriterPriv) ||
+        (post.type === "changelog" && auth.hasAdminPriv)) && (
         <Grid item xs="auto">
           <StyledLink to={`/manage/posts/${post.id}`}>
             <Button variant="outlined" startIcon={<FontAwesomeIcon icon={faEdit} size="sm" />}>
