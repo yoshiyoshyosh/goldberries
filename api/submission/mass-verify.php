@@ -48,6 +48,9 @@ foreach ($ids as $id) {
   if ($submission->is_verified !== null) {
     die_json(400, "Submission (id:{$id}) has already been verified");
   }
+  if ($submission->challenge_id === null) {
+    die_json(400, "Submission (id:{$id}) does not have a challenge attached");
+  }
   if ($submission->player_id === $account->player->id) {
     die_json(400, "You can't verify your own submissions");
   }
