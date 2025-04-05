@@ -113,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $was_verified = false;
       $is_first_clear = false;
       if ($old_submission->is_verified !== $submission->is_verified) {
-        if ($old_submission->challenge_id === null && $submission->is_verified) {
-          die_json(400, "Cannot verify a submission without a challenge");
+        if ($old_submission->challenge_id === null && $submission->is_verified !== null) {
+          die_json(400, "Cannot verify or reject a submission without a challenge");
         }
         if ($old_submission->player_id === $account->player->id) {
           die_json(400, "Cannot change verification of your own submission");
