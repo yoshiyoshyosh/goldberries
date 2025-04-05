@@ -13,6 +13,7 @@ class Challenge extends DbObject
   public ?int $sort = null;
   public ?string $icon_url = null;
   public bool $is_rejected = false;
+  public ?string $reject_note = null;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -50,7 +51,8 @@ class Challenge extends DbObject
       'difficulty_id' => $this->difficulty_id,
       'sort' => $this->sort,
       'icon_url' => $this->icon_url,
-      'is_rejected' => $this->is_rejected
+      'is_rejected' => $this->is_rejected,
+      'reject_note' => $this->reject_note,
     );
   }
 
@@ -79,6 +81,8 @@ class Challenge extends DbObject
       $this->sort = intval($arr[$prefix . 'sort']);
     if (isset($arr[$prefix . 'icon_url']))
       $this->icon_url = $arr[$prefix . 'icon_url'];
+    if (isset($arr[$prefix . 'reject_note']))
+      $this->reject_note = $arr[$prefix . 'reject_note'];
   }
 
   function expand_foreign_keys($DB, $depths = 2, $expand_structure = true)

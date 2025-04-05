@@ -199,6 +199,7 @@ CREATE TABLE challenge
  sort          integer NULL,
  icon_url      text NULL,
  is_rejected   boolean NOT NULL DEFAULT false,
+ reject_note   text NULL,
  CONSTRAINT challenge_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT challenge_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
  CONSTRAINT challenge_difficulty_id_fkey FOREIGN KEY ( difficulty_id ) REFERENCES difficulty ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -430,6 +431,7 @@ CREATE VIEW "view_submissions" AS SELECT
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
   challenge.is_rejected AS challenge_is_rejected,
+  challenge.reject_note AS challenge_reject_note,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -578,6 +580,7 @@ CREATE VIEW "view_challenges" AS SELECT
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
   challenge.is_rejected AS challenge_is_rejected,
+  challenge.reject_note AS challenge_reject_note,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -674,6 +677,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
   challenge.is_rejected AS challenge_is_rejected,
+  challenge.reject_note AS challenge_reject_note,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
@@ -958,6 +962,7 @@ CREATE VIEW "view_campaigns" AS SELECT
   challenge.sort AS challenge_sort,
   challenge.icon_url AS challenge_icon_url,
   challenge.is_rejected AS challenge_is_rejected,
+  challenge.reject_note AS challenge_reject_note,
 
   cd.id AS difficulty_id,
   cd.name AS difficulty_name,
