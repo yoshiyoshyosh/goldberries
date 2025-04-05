@@ -445,8 +445,11 @@ function send_webhook_post_created(Post $post)
   $first_paragraph = explode("\n\n", $post->content)[0];
   $first_paragraph = clean_post_content($first_paragraph);
 
-  $message = "### {$post->title}\n{$first_paragraph}\n-# Check out the [full post here](<{$post->get_url()}>)";
-  send_simple_webhook_message($webhook_url, $message);
+  $announcement_ping = $post->type === "changelog" ? "<@&1323594694134861826> " : "";
+  $allowed_mentions = $post->type === "changelog" ? ["roles" => [1323594694134861826]] : ["parse" => []];
+
+  $message = "### {$post->title}\n{$first_paragraph}\n-# {$announcement_ping}Check out the [full post here](<{$post->get_url()}>)";
+  send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
 function clean_post_content($content)
