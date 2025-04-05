@@ -430,6 +430,63 @@ function send_webhook_challenge_moved($challenge, $new_difficulty_id)
   send_simple_webhook_message($webhook_url, $message, $allowed_mentions);
 }
 
+
+function send_webhook_post_created(Post $post)
+{
+  global $DB;
+  global $webhooks_enabled;
+  if (!$webhooks_enabled) {
+    return;
+  }
+
+  $post->expand_foreign_keys($DB, 5);
+  $webhook_url = constant($post->type === "changelog" ? 'POST_CHANGELOG_WEBHOOK_URL' : 'POST_NEWS_WEBHOOK_URL');
+
+  $first_paragraph = explode("\n\n", $post->content)[0];
+  $first_paragraph = clean_post_content($first_paragraph);
+
+  $message = "### {$post->title}\n{$first_paragraph}\n-# Check out the [full post here](<{$post->get_url()}>)";
+  send_simple_webhook_message($webhook_url, $message);
+}
+
+function clean_post_content($content)
+{
+  $content = preg_replace('/\s+/', ' ', $content);
+  $content = preg_replace('/`/', '', $content);
+
+  //Match the following pattern: `{d:<id>}` and replace it with the name of the difficulty
+  $content = preg_replace_callback('/{d:(\d+)}/', function ($matches) {
+    global $DB;
+    $difficulty = Difficulty::get_by_id($DB, $matches[1]);
+    if ($difficulty !== false) {
+      return $difficulty->to_tier_name();
+    }
+    return "(Unknown Difficulty)";
+  }, $content);
+
+  //Match the following pattern: `{c:<id>}` and replace it with the link to the challenge
+  $content = preg_replace_callback('/{c:(\d+)}/', function ($matches) {
+    global $DB;
+    $challenge = Challenge::get_by_id($DB, $matches[1], 5);
+    if ($challenge !== false) {
+      return $challenge->get_name_for_discord();
+    }
+    return "(Unknown Challenge)";
+  }, $content);
+
+  //Match the following pattern: `{p:<id>}` and replace it with the link to the player
+  $content = preg_replace_callback('/{p:(\d+)}/', function ($matches) {
+    global $DB;
+    $player = Player::get_by_id($DB, $matches[1]);
+    if ($player !== false) {
+      return "[`{$player->get_name_escaped()}`](<{$player->get_url()}>)";
+    }
+    return "(Unknown Player)";
+  }, $content);
+
+  return $content;
+}
+
 function send_simple_webhook_message($url, $message, $allowed_mentions = null)
 {
   $allowed_mentions = $allowed_mentions ?? ["parse" => []];

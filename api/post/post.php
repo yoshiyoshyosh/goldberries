@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post->author_id = $account->player->id;
     if ($post->insert($DB)) {
       log_info("'{$account->player->name}' created {$post}", "Post");
+      send_webhook_post_created($post);
       $post->expand_foreign_keys($DB, 5);
       api_write($post);
     } else {
