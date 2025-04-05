@@ -326,6 +326,7 @@ export const COLLECTIBLES = [
       { value: "12", name: "Anarchy Golden", icon: "/icons/golden-anarchy.png" },
       { value: "13", name: "Blackberry Golden", icon: "/icons/golden-blackberry.png" },
       { value: "14", name: "Moonstone Golden", icon: "/icons/golden-moonstone.png" },
+      { value: "15", name: "Jim's Adventure Golden", icon: "/icons/golden-jim.png" },
     ],
   },
   {
@@ -380,6 +381,8 @@ export const COLLECTIBLES = [
       { value: "17", name: "Celestecraft Strawberry", icon: "/icons/strawberry-celestecraft.png" },
       { value: "18", name: "Nyanwave Strawberry", icon: "/icons/strawberry-nyanwave.png" },
       { value: "19", name: "Crystallized Sanctuary Strawberry", icon: "/icons/strawberry-sanctuary.png" },
+      { value: "20", name: "Megalophobia Strawberry", icon: "/icons/strawberry-megalophobia.png" },
+      { value: "21", name: "Wednesday Strawberry", icon: "/icons/strawberry-wednesday.png" },
     ],
   },
   {
@@ -407,6 +410,16 @@ export const COLLECTIBLES = [
         value: "9",
         name: "Zescent Orb 3",
         icon: "/icons/orb-zescent-3.png",
+      },
+      {
+        value: "10",
+        name: "Megalophobia Black Heart",
+        icon: "/icons/crystal-heart-megalophobia-black.png",
+      },
+      {
+        value: "11",
+        name: "Megalophobia White Heart",
+        icon: "/icons/crystal-heart-megalophobia-white.png",
       },
     ],
   },
