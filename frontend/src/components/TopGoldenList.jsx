@@ -110,6 +110,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     settings.visual.topGoldenList.hideEmptyTiers +
     settings.visual.topGoldenList.hideTimeTakenColumn +
     settings.visual.topGoldenList.showFractionalTiers +
+    settings.general.showFractionalTiers +
     settings.visual.topGoldenList.unstackTiers;
   const [renderUpTo, setRenderUpTo] = useState({ key: currentKey, index: 0 });
 
@@ -142,6 +143,7 @@ function TopGoldenListComponent({ type, id, filter, isOverallList = false, useSu
     settings.visual.topGoldenList.hideEmptyTiers,
     settings.visual.topGoldenList.hideTimeTakenColumn,
     settings.visual.topGoldenList.showFractionalTiers,
+    settings.general.showFractionalTiers,
     settings.visual.topGoldenList.unstackTiers,
   ]);
 
@@ -408,7 +410,9 @@ function TopGoldenListTier({
   }
 
   //Sort challenges by getMapName(challenge.map, challenge.map.campaign)
-  const sortByFractionalTiers = settings.visual.topGoldenList.showFractionalTiers;
+  const sortByFractionalTiers =
+    (settings.visual.topGoldenList.showFractionalTiers && !isPlayer) ||
+    (settings.general.showFractionalTiers && isPlayer);
   sortChallengesForTGL(challengesInTier, maps, campaigns, sortByFractionalTiers, isPlayer);
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
@@ -620,7 +624,11 @@ function TopGoldenListRow({
   let nameSuffix = getChallengeSuffix(challenge) === null ? "" : `${getChallengeSuffix(challenge)}`;
   let name = nameSuffix !== "" ? `${getMapName(map, campaign)}` : getMapName(map, campaign);
   //TODO - Prepend tier fraction if the setting is enabled
-  if (settings.visual.topGoldenList.showFractionalTiers && (!isPlayer || useSuggested)) {
+  if (
+    ((settings.visual.topGoldenList.showFractionalTiers && !isPlayer) ||
+      (settings.general.showFractionalTiers && isPlayer)) &&
+    (!isPlayer || useSuggested)
+  ) {
     let frac = 0.5;
     if (isPlayer) {
       frac = (challenge.submissions[0].frac ?? 50) / 100;

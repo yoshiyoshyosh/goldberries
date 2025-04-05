@@ -142,7 +142,6 @@ export function AppSettingsGeneralForm() {
         />
       </SettingsEntry>
 
-      {/* Not yet released */}
       <SettingsEntry note={t("old_tier_names.note")}>
         <Controller
           name="showOldTierNames"
@@ -153,6 +152,21 @@ export function AppSettingsGeneralForm() {
               onChange={(e) => field.onChange(e.target.checked)}
               control={<Checkbox />}
               label={t("old_tier_names.label")}
+            />
+          )}
+        />
+      </SettingsEntry>
+
+      <SettingsEntry note={t("show_fractional_tiers.note")}>
+        <Controller
+          name="showFractionalTiers"
+          control={form.control}
+          render={({ field }) => (
+            <FormControlLabel
+              checked={field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+              control={<Checkbox />}
+              label={t("show_fractional_tiers.label")}
             />
           )}
         />

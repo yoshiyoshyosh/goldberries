@@ -282,7 +282,7 @@ export function DifficultyChip({
 
   const text = getDifficultyName(difficulty);
   let suffix = "";
-  if (frac !== null && settings.visual.topGoldenList.showFractionalTiers) {
+  if (frac !== null && settings.general.showFractionalTiers) {
     if (frac < 10) {
       suffix = ".0" + frac;
     } else {

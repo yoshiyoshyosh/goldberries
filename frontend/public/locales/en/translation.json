@@ -868,6 +868,10 @@
           "label": "Show Old Tier Names",
           "note": "Turn this on to make all difficulty chips show the old tier names in addition to the current names.",
           "tooltip": "Not all places will show the old tier names!"
+        },
+        "show_fractional_tiers": {
+          "label": "Show Fractional Tiers",
+          "note": "Show fractional tiers in various places throughout the website. This option also affects personal Top Golden Lists!"
         }
       },
       "visual": {
@@ -920,7 +924,7 @@
         },
         "show_fractional_tiers": {
           "label": "Show Fractional Tiers",
-          "note": "Shows fractional tier values and sorts the Top Golden List accordingly"
+          "note": "Shows fractional tier values and sorts the overall Top Golden List accordingly. Does NOT impact personal Top Golden Lists."
         },
         "unstack_tiers": {
           "label": "Unstack Tiers",

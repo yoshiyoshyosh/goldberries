@@ -11,6 +11,7 @@ export function AppSettingsProvider({ children }) {
         //language: "en",
         alwaysShowGoldenChanges: false,
         showOldTierNames: false,
+        showFractionalTiers: true,
       },
       visual: {
         darkmode: prefersDarkMode ?? true,

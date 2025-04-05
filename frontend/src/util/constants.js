@@ -272,7 +272,7 @@ export const DIFFICULTIES = {
     sort: 1,
     old_name: "Low Standard",
     old_name_label_color: "#ffffff",
-    shares: 6,
+    shares: 4,
   },
 
   //Trivial
@@ -282,7 +282,7 @@ export const DIFFICULTIES = {
     sort: 0,
     old_name: "Trivial",
     old_name_label_color: "#6f6f6f",
-    shares: 12,
+    shares: 4,
   },
 
   //Undetermined
@@ -292,7 +292,7 @@ export const DIFFICULTIES = {
     sort: -1,
     old_name: "Undetermined",
     old_name_label_color: "#6f6f6f",
-    shares: 6,
+    shares: 4,
   },
 };
 
