@@ -59,6 +59,7 @@ import {
   faClock,
   faComment,
   faEdit,
+  faExclamationTriangle,
   faExternalLink,
   faExternalLinkAlt,
   faFlagCheckered,
@@ -75,6 +76,7 @@ import { FormChallengeWrapper } from "../components/forms/Challenge";
 import {
   getQueryData,
   useGetChallenge,
+  useGetMap,
   usePostChallenge,
   usePostMap,
   usePostSubmission,
@@ -154,7 +156,7 @@ export function ChallengeDisplay({ id }) {
         </Stack>
       )}
       <ChallengeDetailsList map={challenge.map} challenge={challenge} sx={{ mb: 1, mt: 0.5 }} />
-      {challenge.description && challenge.is_rejected === false && (
+      {challenge.description && (
         <NoteDisclaimer title={t("description")} note={challenge.description} sx={{ mb: 2 }} />
       )}
       <ChallengeSubmissionTable challenge={challenge} />
@@ -183,6 +185,16 @@ export function ChallengeDisplay({ id }) {
   );
 }
 
+export function ChallengeDetailsListWrapper({ id }) {
+  const query = useGetMap(id);
+  if (query.isLoading) {
+    return <LoadingSpinner />;
+  } else if (query.isError) {
+    return <ErrorDisplay error={query.error} />;
+  }
+  const map = getQueryData(query);
+  return <ChallengeDetailsList map={map} />;
+}
 export function ChallengeDetailsList({ map, challenge = null, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "challenge" });
   const { t: t_cib } = useTranslation(undefined, { keyPrefix: "campaign.info_boxes" });
@@ -257,6 +269,11 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
                 text={
                   <Stack direction="row" alignItems="center" gap={1}>
                     <DifficultyChip difficulty={challenge.difficulty} />
+                    {challenge.reject_note && !challenge.is_rejected && (
+                      <TooltipLineBreaks title={challenge.reject_note}>
+                        <FontAwesomeIcon icon={faExclamationTriangle} />
+                      </TooltipLineBreaks>
+                    )}
                   </Stack>
                 }
                 isSecondary
@@ -278,7 +295,7 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
               text={
                 <Stack direction="row" alignItems="center" gap={1}>
                   <VerificationStatusChip isVerified={false} size="small" />
-                  {challenge.description}
+                  {challenge.reject_note}
                 </Stack>
               }
               isSecondary

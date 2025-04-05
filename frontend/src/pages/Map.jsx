@@ -140,6 +140,17 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
             <ChallengeFcIcon challenge={selectedChallenge} showClear height="1.3em" />
             <span>{getChallengeFcShort(selectedChallenge)}</span>
             <DifficultyChip difficulty={selectedChallenge.difficulty} />
+            {selectedChallenge.reject_note && (
+              <>
+                {selectedChallenge.is_rejected && <VerificationStatusChip isVerified={false} size="small" />}
+                <TooltipLineBreaks title={selectedChallenge.reject_note}>
+                  <FontAwesomeIcon
+                    color={selectedChallenge.is_rejected ? theme.palette.error.main : undefined}
+                    icon={faExclamationTriangle}
+                  />
+                </TooltipLineBreaks>
+              </>
+            )}
             {!selectedChallenge.is_rejected && (
               <StyledLink
                 to={"/submit/single-challenge/" + selectedChallenge.id}
@@ -149,14 +160,6 @@ export function MapDisplay({ id, challengeId, isModal = false }) {
                   {t("buttons.submit")}
                 </Button>
               </StyledLink>
-            )}
-            {selectedChallenge.is_rejected && (
-              <>
-                <VerificationStatusChip isVerified={false} size="small" />
-                <TooltipLineBreaks title={selectedChallenge.description}>
-                  <FontAwesomeIcon color={theme.palette.error.main} icon={faExclamationTriangle} />
-                </TooltipLineBreaks>
-              </>
             )}
             <StyledLink
               to={"/challenge/" + selectedChallenge.id}

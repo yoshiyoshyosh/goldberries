@@ -43,13 +43,17 @@ import { jsonDateToJsDate } from "../../util/util";
 import { useDebounce } from "@uidotdev/usehooks";
 import { FormOptions } from "../../util/constants";
 import { FullChallengeDisplay } from "../../pages/Submission";
-import { usePostSubmission } from "../../hooks/useApi";
+import { getQueryData, usePostSubmission } from "../../hooks/useApi";
 import { CreateAnyButton } from "../../pages/manage/Challenges";
 import { useTranslation } from "react-i18next";
 import { DatePicker, DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
-import { ChallengeDetailsList, CollectiblesInfoBox } from "../../pages/Challenge";
+import {
+  ChallengeDetailsList,
+  ChallengeDetailsListWrapper,
+  CollectiblesInfoBox,
+} from "../../pages/Challenge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBasketShopping } from "@fortawesome/free-solid-svg-icons";
 import { CharsCountLabel } from "../../pages/Suggestions";
@@ -83,7 +87,8 @@ export function FormSubmissionWrapper({ id, onSave, ...props }) {
     );
   }
 
-  return <FormSubmission submission={query.data?.data ?? query.data} onSave={onSave} {...props} />;
+  const data = getQueryData(query);
+  return <FormSubmission submission={data} onSave={onSave} {...props} />;
 }
 
 export function FormSubmission({ submission, onSave, ...props }) {
@@ -156,11 +161,6 @@ export function FormSubmission({ submission, onSave, ...props }) {
   const frac = form.watch("frac");
 
   const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
-  let mapForCollectibles = submission.challenge?.map;
-  if (mapForCollectibles) {
-    mapForCollectibles = JSON.parse(JSON.stringify(mapForCollectibles)); //Make copy to avoid modifying original
-    mapForCollectibles.challenges = [submission.challenge];
-  }
 
   if (!isHelper && submission.player.id !== auth.user.player.id) {
     return (
@@ -302,7 +302,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               <span style={{ flexGrow: 1 }} />
               <Tooltip arrow placement="top" title={t("map_information")}>
                 <CustomIconButton
-                  onClick={() => mapCollectiblesModal.open(mapForCollectibles)}
+                  onClick={() => mapCollectiblesModal.open(submission.challenge.map)}
                   sx={{ alignSelf: "stretch" }}
                 >
                   <FontAwesomeIcon icon={faBasketShopping} />
@@ -520,7 +520,7 @@ export function FormSubmission({ submission, onSave, ...props }) {
               </StyledLink>
               )
             </Typography>
-            <ChallengeDetailsList map={mapCollectiblesModal.data} />
+            <ChallengeDetailsListWrapper id={mapCollectiblesModal.data.id} />
           </>
         )}
       </CustomModal>

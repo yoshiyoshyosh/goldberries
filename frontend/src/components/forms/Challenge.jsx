@@ -164,13 +164,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       <TextField label={t_g("icon_url")} sx={{ mt: 2 }} fullWidth {...form.register("icon_url")} />
 
       <TextField label={t_g("label")} sx={{ mt: 2 }} fullWidth {...form.register("label")} />
-      <TextField
-        label={t_g("description")}
-        sx={{ mt: 2 }}
-        fullWidth
-        {...form.register("description", { required: is_rejected ? true : undefined })}
-        error={is_rejected && form.formState.errors.description !== undefined}
-      />
+      <TextField label={t_g("description")} sx={{ mt: 2 }} fullWidth {...form.register("description")} />
 
       <Controller
         control={form.control}
@@ -223,6 +217,14 @@ export function FormChallenge({ challenge, onSave, ...props }) {
             control={<Checkbox />}
           />
         )}
+      />
+
+      <TextField
+        label={t("reject_note")}
+        sx={{ mt: 1 }}
+        fullWidth
+        {...form.register("reject_note", { required: is_rejected ? true : undefined })}
+        error={form.formState.errors.reject_note !== undefined}
       />
 
       <Controller

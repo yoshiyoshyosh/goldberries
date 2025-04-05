@@ -344,6 +344,7 @@
       "has_fc": "Has FC",
       "is_arbitrary": "Is Arbitrary",
       "is_rejected": "Is Rejected",
+      "reject_note": "Reject Note",
       "sort_order": "Sort Order",
       "skip_webhook": "Skip Placement Change Webhook",
       "buttons": {

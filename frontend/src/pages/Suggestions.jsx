@@ -302,18 +302,22 @@ function SuggestionDisplay({ suggestion, expired, modalRefs }) {
 
       <Grid container sx={{ mb: 1 }}>
         <Grid item xs={12} sm={8}>
-          <Stack direction="row" gap={1} flexWrap={{ xs: "wrap", sm: "unset" }}>
-            <Typography variant="body2">
-              {suggestion.author_id === null ? (
-                t("deleted_player")
-              ) : (
-                <PlayerChip player={suggestion.author} size="small" />
-              )}
-            </Typography>
-            <Typography variant="body2" sx={{ mt: 0.25 }}>
-              <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
-            </Typography>
-          </Stack>
+          <Grid container columnSpacing={0.5}>
+            <Grid item xs={12} sm="auto">
+              <Typography variant="body2">
+                {suggestion.author_id === null ? (
+                  t("deleted_player")
+                ) : (
+                  <PlayerChip player={suggestion.author} size="small" />
+                )}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm>
+              <Typography variant="body2" sx={{ mt: 0.25 }}>
+                <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid
           item
@@ -738,18 +742,22 @@ function ViewSuggestionModal({ id }) {
           </Grid>
         )}
         <Grid item xs={12}>
-          <Stack direction="row" gap={1} alignItems="center">
-            <Typography variant="body2">
-              {suggestion.author_id === null ? (
-                t_s("display.deleted_player")
-              ) : (
-                <PlayerChip player={suggestion.author} size="small" />
-              )}
-            </Typography>
-            <Typography variant="body2">
-              <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
-            </Typography>
-          </Stack>
+          <Grid container columnSpacing={0.5}>
+            <Grid item xs={12} sm="auto">
+              <Typography variant="body2">
+                {suggestion.author_id === null ? (
+                  t_s("display.deleted_player")
+                ) : (
+                  <PlayerChip player={suggestion.author} size="small" />
+                )}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm>
+              <Typography variant="body2" sx={{ mt: 0.25 }}>
+                <FontAwesomeIcon icon={faComment} /> {suggestion.comment ?? "-"}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Stack direction="column" gap={0.25}>
