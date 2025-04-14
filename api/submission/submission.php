@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if ($difficulty->id === $UNDETERMINED_ID) {
           die_json(400, "Cannot suggest 'Undetermined' as difficulty");
         } else if ($difficulty->id === $TRIVIAL_ID) {
-          die_json(400, "Cannot suggest 'Trivial' as difficulty");
+          die_json(400, "Cannot suggest 'Untiered' as difficulty");
         }
       }
       $old_submission->suggested_difficulty_id = $submission->suggested_difficulty_id;
@@ -315,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } else if ($difficulty->id === $UNDETERMINED_ID) {
         die_json(400, "Cannot suggest 'Undetermined' as difficulty");
       } else if ($difficulty->id === $TRIVIAL_ID) {
-        die_json(400, "Cannot suggest 'Trivial' as difficulty");
+        die_json(400, "Cannot suggest 'Untiered' as difficulty");
       }
       //frac of 0.5 is the default value, so assume null
       $new_submission->frac = $new_submission->frac === 0.5 ? null : $new_submission->frac;

@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         //Placement suggestions are not allowed for trivial challenges
         if ($challenge->difficulty_id === $TRIVIAL_ID) {
-          die_json(400, "Placement suggestions cannot be made for trivial challenges");
+          die_json(400, "Placement suggestions cannot be made for untiered challenges");
         }
 
         //Check if the same challenge had a recent suggestion for placement change
