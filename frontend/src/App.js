@@ -1393,7 +1393,9 @@ function SearchModal({ open, onClose }) {
       }}
       disableRestoreFocus
     >
-      <PageSearch isDirectSearch />
+      <ErrorBoundary>
+        <PageSearch isDirectSearch />
+      </ErrorBoundary>
     </Dialog>
   );
 }
@@ -1417,7 +1419,9 @@ function SettingsModal({ open, onClose }) {
       }}
       disableRestoreFocus
     >
-      <PageAppSettings isModal />
+      <ErrorBoundary>
+        <PageAppSettings isModal />
+      </ErrorBoundary>
     </Dialog>
   );
 }

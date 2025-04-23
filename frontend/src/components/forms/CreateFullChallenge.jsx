@@ -109,6 +109,8 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       requires_fc: data.requires_fc,
       has_fc: data.has_fc,
       is_arbitrary: data.is_arbitrary,
+      is_rejected: data.is_rejected,
+      reject_note: data.reject_note,
       difficulty_id: data.difficulty_id,
       sort: data.sort,
     };
@@ -146,6 +148,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
   const fetchingButtonSpin = modFetchState === 1;
 
   const campaignName = form.watch("campaign_name");
+  const challenge_is_rejected = form.watch("is_rejected");
 
   return (
     <form {...props}>
@@ -323,6 +326,26 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
             control={<Checkbox />}
           />
         )}
+      />
+      <Controller
+        control={form.control}
+        name="is_rejected"
+        render={({ field }) => (
+          <FormControlLabel
+            onChange={field.onChange}
+            label={t_fch("is_rejected")}
+            checked={field.value}
+            control={<Checkbox />}
+          />
+        )}
+      />
+
+      <TextField
+        label={t_fch("reject_note")}
+        sx={{ mt: 1 }}
+        fullWidth
+        {...form.register("reject_note", { required: challenge_is_rejected ? true : undefined })}
+        error={form.formState.errors.reject_note !== undefined}
       />
 
       <Controller
