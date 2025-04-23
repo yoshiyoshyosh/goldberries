@@ -249,7 +249,7 @@ function ManageChallengesTable({ page, perPage, search, setPage, setPerPage, mod
                 : null;
 
               //Both map and challenge can be undefined here
-              const key = campaign.id + (map ? map.id : "") + (challenge ? challenge.id : "");
+              const key = "" + campaign.id + (map ? map.id : "") + (challenge ? challenge.id : "");
 
               return (
                 <TableRow key={key}>
