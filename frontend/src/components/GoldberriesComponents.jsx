@@ -294,7 +294,8 @@ export function DifficultyChip({
   const showOld =
     settings.general.showOldTierNames &&
     difficulty.id !== DIFF_CONSTS.TRIVIAL_ID &&
-    difficulty.id !== DIFF_CONSTS.UNTIERED_ID;
+    difficulty.id !== DIFF_CONSTS.UNTIERED_ID &&
+    false;
   const isTrivial = difficulty.id === DIFF_CONSTS.TRIVIAL_ID;
 
   const bgColor = colors.color;
@@ -414,7 +415,7 @@ export function DifficultySelectControlled({
 
   const query = useGetAllDifficulties();
 
-  const showOldTierNames = settings.general.showOldTierNames;
+  const showOldTierNames = settings.general.showOldTierNames && false;
   const getOldName = (id) => {
     if (showOldTierNames) {
       return " (" + getOldDifficultyName(id) + ")";

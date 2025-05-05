@@ -416,7 +416,7 @@ function TopGoldenListTier({
   sortChallengesForTGL(challengesInTier, maps, campaigns, sortByFractionalTiers, isPlayer);
 
   const showTimeTakenColumn = isPlayer && !settings.visual.topGoldenList.hideTimeTakenColumn;
-  const showOldTierNames = settings.general.showOldTierNames;
+  const showOldTierNames = settings.general.showOldTierNames && false;
 
   const cellStyle = {
     borderBottom: "1px solid " + theme.palette.tableDivider,

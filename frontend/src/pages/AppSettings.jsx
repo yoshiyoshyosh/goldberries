@@ -142,20 +142,22 @@ export function AppSettingsGeneralForm() {
         />
       </SettingsEntry>
 
-      <SettingsEntry note={t("old_tier_names.note")}>
-        <Controller
-          name="showOldTierNames"
-          control={form.control}
-          render={({ field }) => (
-            <FormControlLabel
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-              control={<Checkbox />}
-              label={t("old_tier_names.label")}
-            />
-          )}
-        />
-      </SettingsEntry>
+      {false && (
+        <SettingsEntry note={t("old_tier_names.note")}>
+          <Controller
+            name="showOldTierNames"
+            control={form.control}
+            render={({ field }) => (
+              <FormControlLabel
+                checked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+                control={<Checkbox />}
+                label={t("old_tier_names.label")}
+              />
+            )}
+          />
+        </SettingsEntry>
+      )}
 
       <SettingsEntry note={t("show_fractional_tiers.note")}>
         <Controller
@@ -699,7 +701,7 @@ function AppSettingsDifficultyColorsForm() {
             <Grid item xs={12} md={2} display="flex" alignItems="center" justifyContent="space-around">
               <Stack direction="column" alignItems="center" justifyContent="center" gap={0}>
                 <Typography variant="body1">{name}</Typography>
-                {settings.general.showOldTierNames && (
+                {settings.general.showOldTierNames && false && (
                   <Typography
                     variant="body2"
                     color={(t) => t.palette.text.secondary}
