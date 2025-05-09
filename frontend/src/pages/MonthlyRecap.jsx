@@ -133,7 +133,7 @@ function MonthlyRecap({ month }) {
           fullWidth
           difficultyId={allClearsDifficulty?.id ?? 23}
           setDifficulty={setAllClearsDifficulty}
-          minSort={DIFF_CONSTS.LOW_TIER_3_SORT}
+          minSort={DIFF_CONSTS.TIERED_SORT_START}
           maxSort={DIFF_CONSTS.MAX_SORT}
         />
       </Grid>
