@@ -327,6 +327,8 @@ export const COLLECTIBLES = [
       { value: "13", name: "Blackberry Golden", icon: "/icons/golden-blackberry.png" },
       { value: "14", name: "Moonstone Golden", icon: "/icons/golden-moonstone.png" },
       { value: "15", name: "Jim's Adventure Golden", icon: "/icons/golden-jim.png" },
+      { value: "16", name: "Focus Golden", icon: "/icons/golden-focus.png" },
+      { value: "17", name: "Balls 2 Golden", icon: "/icons/golden-balls2.png" },
     ],
   },
   {
@@ -356,6 +358,7 @@ export const COLLECTIBLES = [
       { value: "10", name: "DMR Moon Berry", icon: "/icons/moonberry-dmr.png" },
       { value: "11", name: "Vivid Abyss Moon Berry", icon: "/icons/moonberry-vabyss.png" },
       { value: "12", name: "Strawberry (hidden Moon Berry)", icon: "/icons/strawberry-8x.png" },
+      { value: "13", name: "Balls 2 Moon Berry", icon: "/icons/moonberry-balls2.png" },
     ],
   },
   {
@@ -383,6 +386,7 @@ export const COLLECTIBLES = [
       { value: "19", name: "Crystallized Sanctuary Strawberry", icon: "/icons/strawberry-sanctuary.png" },
       { value: "20", name: "Megalophobia Strawberry", icon: "/icons/strawberry-megalophobia.png" },
       { value: "21", name: "Wednesday Strawberry", icon: "/icons/strawberry-wednesday.png" },
+      { value: "22", name: "Focus Strawberry", icon: "/icons/strawberry-focus.png" },
     ],
   },
   {

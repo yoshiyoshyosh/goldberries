@@ -22,7 +22,7 @@ export function PageCredits() {
           </TableRow>
           <TableRow>
             <TableCell>{t("rules")}</TableCell>
-            <TableCell>Yoshi</TableCell>
+            <TableCell>Yoshi and many more people</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>{t("testing")}</TableCell>
@@ -34,7 +34,7 @@ export function PageCredits() {
           </TableRow>
           <TableRow>
             <TableCell>{t("french_translation")}</TableCell>
-            <TableCell>Tomygood</TableCell>
+            <TableCell>Tomygood & Lee Sin Support</TableCell>
           </TableRow>
         </TableBody>
       </Table>

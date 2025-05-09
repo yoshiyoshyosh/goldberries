@@ -17,7 +17,11 @@
     "objective_other": "Objectifs",
     "account_one": "Compte",
     "account_other": "Comptes",
-    "table_rows_per_page": "Colonnes par page :",
+    "post_one": "Publication",
+    "post_other": "Publications",
+    "news": "Nouveautés",
+    "changelog": "Changements",
+    "table_rows_per_page": "Lignes par page :",
     "modals": {
       "buttons": {
         "delete": "Supprimer",
@@ -29,7 +33,7 @@
     },
     "name": "Nom",
     "url": "Lien",
-    "icon_url": "Lien de l’icône",
+    "icon_url": "Lien de l'icône",
     "new": "Nouveau",
     "label": "Étiquette",
     "description": "Description",
@@ -38,13 +42,20 @@
     "time": "Heure",
     "by": "par",
     "unknown_author": "Mappeur·euse inconnu·e",
-    "unknown_date": "Date inconnue"
+    "unknown_date": "Date inconnue",
+    "loading": "Chargement...",
+    "error_handling": {
+      "header": "Une erreur est survenue !",
+      "default": "Essaie de rafraîchir le cache de ton navigateur (Ctrl + F5) ou demande dans #gb-report si le problème persiste."
+    }
   },
   "components": {
     "difficulty_select": {
       "label": "Difficulté ressentie",
-      "no_suggestion": "Laisser vide",
-      "no_selection": "Non sélectionné"
+      "label_no_opinion": "Difficulté",
+      "no_suggestion": "Pas d'opinion",
+      "no_selection": "Laisser vide",
+      "no_options": "Pas d'options"
     },
     "difficulty_chip": {
       "personal_tooltip": "Cette difficulté ressentie est personnelle et ne doit pas être utilisée pour le classement de cette map.",
@@ -57,27 +68,33 @@
       "submissions_suffix": {
         "verified": "Entrées vérifiées",
         "pending": "Entrées en attente",
-        "rejected": "Entrées rejetées"
+        "rejected": "Entrées refusées"
       },
       "status_prefix": {
-        "verified": "Statut : vérifiée",
-        "pending": "Statut : en attente",
-        "rejected": "Statut : rejetée"
+        "verified": "Statut : Vérifiée",
+        "pending": "Statut : En attente",
+        "rejected": "Statut : Refusée"
       },
       "claim_prefix": {
-        "verified": "Réclamation : vérifiée",
-        "pending": "Réclamation : en attente",
-        "rejected": "Réclamation : refusée"
+        "verified": "Réclamation : Vérifiée",
+        "pending": "Réclamation : En attente",
+        "rejected": "Réclamation : Réfusée"
       }
     },
     "full_challenge_select": {
       "full_game_label": "Sélectionne une map OU un challenge full game"
     },
-    "verifier_icon": "Membre de la Modded Golden Team",
-    "admin_icon": "Admin du site",
-    "temp_verifier_icon": "Peut temporairement vérifier des entrées",
+    "roles": {
+      "ex_helper": "Ex Aide",
+      "ex_verifier": "Ex vérifieur·euse",
+      "ex_admin": "Ex Admin",
+      "news_writer": "Rédacteur·rice",
+      "helper": "Aide",
+      "verifier": "Vérifieur·euse",
+      "admin": "Admin"
+    },
     "suspended_icon": {
-      "with_reason": "Cette personne est suspendue : {{reason}}",
+      "with_reason": "Cette personne est suspendue: {{reason}}",
       "no_reason": "Cette personne est suspendue"
     },
     "input_methods": {
@@ -96,7 +113,7 @@
     "loading": "Chargement",
     "error": "Erreur",
     "video_embed": {
-      "error": "L’intégration de la vidéo a échoué :"
+      "error": "L'intégration de la vidéo a échoué :"
     },
     "external_link": {
       "warning": "Tu t’apprêtes à ouvrir un lien externe. Clique ici pour continuer :"
@@ -110,21 +127,21 @@
       "show": "Afficher :",
       "no_pending": "Aucune entrée en attente trouvée",
       "no_verified": "Aucune entrée vérifiée trouvée",
-      "no_rejected": "Aucune entrée rejetée trouvée",
+      "no_rejected": "Aucune entrée refusée trouvée",
       "new_challenge": "Nouveau challenge :",
-      "new_challenge_note": "Ceci est un challenge qui ne se trouve pas encore dans la base de données !",
+      "new_challenge_note": "Ceci est un nouveau challenge qui ne se trouve pas encore dans la base de données !",
       "submissions_per_page": "Entrées par page :"
     },
     "changelog": {
-      "name": "Changelog",
+      "name": "Changements",
       "no_changes_yet": "Pas de changements pour le moment",
       "entry_deleted": "Entrée supprimée",
       "entry_delete_confirm": "Veux-tu vraiment supprimer cette entrée ?",
-      "entry_delete_modal_title": "Supprimer l’entrée ?",
+      "entry_delete_modal_title": "Supprimer l'entrée ?",
       "moved_from": "Déplacé de"
     },
     "stats": {
-      "no_suggestions_yet": "Pas de difficultée ressentie pour le moment"
+      "no_suggestions_yet": "Pas de difficulté ressentie pour le moment"
     },
     "top_golden_list": {
       "use_suggested": "Utiliser les difficultés ressenties pour le classement",
@@ -132,28 +149,35 @@
       "empty": "C’est un peu vide ici. Obtiens des goldens de la Top Golden List afin de peupler ta propre liste !",
       "note_number_people": "Ce tier contient {{challenges}} challenges pour {{submissions}} entrées",
       "note_suggested_difficulties": "Les difficultés ressenties de cette personne",
-      "note_video_link": "Ces liens mènent à la vidéo du premier clear d’un challenge",
-      "note_time_taken": "Temps qu’a pris ce challenge",
+      "suggestion_abbreviated": "Perso.",
+      "note_video_link_personal": "Ces liens mènent à la vidéo de cette personne pour chaque challenge",
+      "note_video_link_other": "Ces liens mènent à la vidéo du premier clear d’un challenge",
+      "note_time_taken": "Temps qu'a pris ce challenge",
       "obsolete_notice": "Cette entrée est marquée comme étant obsolète",
-      "stable_explanation": "Ce challenge a un positionnement stable.",
+      "stable_explanation": "Ce challenge a un positionnement stable",
       "placement_difficulty": "Positionnement de cette difficulté :",
+      "export_button_tooltip": "Exporter la Top Golden List",
+      "stats_button_tooltip": "Voir la distribution des temps pris",
       "export": {
         "feedback": {
           "copied": "Copié dans le presse-papier !",
           "error": "Erreur lors de la copie"
         },
-        "submission_count": "Nombre d’entrées",
+        "challenge_name": "Nom du challenge",
+        "submission_count": "Nombre d'entrées",
         "first_clear_url": "Lien du premier clear",
+        "time_taken": "Temps pris",
         "header": "Exporter la Top Golden List",
         "text": "Utilise le bouton ci-dessous pour copier tous les challenges actuellement visibles dans ton presse-papier.",
-        "include_header": "Inclure les données d’en-tête",
-        "include_submission_count": "Inclure le nombre d’entrées",
+        "include_header": "Inclure les données d'en-tête",
+        "include_submission_count": "Inclure le nombre d'entrées",
         "include_first_clear_url": "Inclure le lien du premier clear",
+        "include_time_taken": "Include le temps pris",
         "button": "Copier dans le presse-papier"
       }
     },
     "custom_links": {
-      "label": "Liens custom",
+      "label": "Liens personnalisés",
       "add_link": "Ajouter un lien",
       "remove_link": "Supprimer",
       "invalid_url": "Lien invalide"
@@ -163,20 +187,24 @@
       "additional_filters": "Filtres supplémentaires",
       "show_archived": "Afficher les maps archivées",
       "show_arbitrary": "Afficher les challenges arbitraires",
+      "show_undetermined": "Afficher les placements pas encore déterminés",
+      "minimum_tier": "Tier minimum",
+      "tier_slider": "Tier min/max",
       "categories_hidden_one": "{{count}} catégorie cachée",
       "categories_hidden_other": "{{count}} catégories cachées",
       "all": "Tous",
-      "apply": "Appliquer",
+      "none": "Aucun",
+      "apply": "Appliquer les filtres",
       "clear_state": {
         "label": "Type de clears",
         "all": "Tous les challenges",
-        "only_c": "Uniquement les entrées clear standard",
-        "only_fc": "Uniquement les entrées full clear",
+        "only_c": "Uniquement les clears standard",
+        "only_fc": "Uniquement les full clears",
         "no_c": "Pas de clear standard",
         "no_fc": "Pas de full clear"
       },
       "submission_count": {
-        "label": "Nombre d’entrées",
+        "label": "Nombre d'entrées",
         "explanation": "Afficher uniquement les challenges comportant au moins ou au plus ce nombre d’entrées.",
         "none": "Sans filtre",
         "max": "max",
@@ -186,15 +214,31 @@
         "label": "Date des entrées",
         "explanation": "Afficher uniquement les entrées ayant été effectuées entre la date de début et la date de fin indiquées.",
         "start_date": "Date de début",
-        "end_date": "Date de fin"
+        "end_date": "Date de fin",
+        "clear_dates": "Supprimer les dates"
       }
     },
     "chars_count_label": {
-      "label": "({{count}} / {{max}} caractères)"
+      "label": "({{count}}/{{max}} caractères)"
     },
     "country_select": {
       "label": "Pays",
       "not_specified": "Non précisé"
+    },
+    "time_taken_graph": {
+      "title": "Distribution des temps pris",
+      "description": "Ce graphique montre la distribution des temps pris par cette personne pour compléter des challenges pour chaque tier.",
+      "x_axis": "Heures",
+      "show_scatter": "Afficher sous la forme d'un nuage de points",
+      "scatter_description": "Le même graphique sous la forme d'un nuage de points."
+    },
+    "markdown": {
+      "player_chip": {
+        "loading": "<loading>"
+      },
+      "challenge_inline": {
+        "error": "<Challenge not found: {{id}}>"
+      }
     }
   },
   "forms": {
@@ -205,8 +249,8 @@
       },
       "button_update": "Mettre à jour son compte",
       "claimed_player": "Nom réclamé",
-      "new_email": "Nouvel email",
-      "email_verified": "Email verifié",
+      "new_email": "Nouvelle adresse e-mail",
+      "email_verified": "e-mail vérifié",
       "new_password": "Nouveau mot de passe",
       "unlink_discord": "Se déconnecter de Discord",
       "user_links": "Liens",
@@ -214,15 +258,16 @@
       "about_me_placeholder": "« À propos de moi » de cette personne",
       "last_player_rename": "Dernier changement de nom",
       "suspended": "Suspendu·e",
-      "suspension_reason": "Raison de suspension",
+      "suspension_reason": "Raison de la suspension",
       "is_verifier": "Peut vérifier des entrées",
       "is_admin": "Est admin",
       "logout_user": "Déconnecter ce compte",
+      "role": "Rôle",
       "delete": {
-        "title": "Supprimer ce compte",
+        "title": "Supprimer le compte",
         "description": "Veux-tu vraiment supprimer ce compte ? Tu ne pourras pas faire demi-tour.",
         "confirm": "Confirmer",
-        "button": "Supprimer ce compte"
+        "button": "Supprimer le compte"
       }
     },
     "campaign": {
@@ -233,19 +278,19 @@
       },
       "name_feedback": {
         "generic_error": "Erreur lors de la recherche de nom de campagne",
-        "duplicate": "Ce nom de campagne est déjà pris !",
+        "duplicate": "Un campagne sous ce nom existe déjà !",
         "unique": "Ce nom de campagne est unique"
       },
-      "icon_url": "Lien de l’icône",
-      "url_fetch_tooltip": "Récupérer les infos de la campagne directement depuis GameBanana",
+      "icon_url": "Lien de l'icône",
+      "url_fetch_tooltip": "Récuperer les infos de la campagne depuis GameBanana",
       "author_gb_id": "ID GameBanana du/de la mappeur·euse",
       "author_gb_name": "Nom GameBanana du/de la mappeur·euse",
       "sort_category_major": "Tri majeur des maps",
       "sort_category_minor": "Tri mineur des maps",
       "note": "Note",
       "buttons": {
-        "create": "Créer cette campagne",
-        "update": "Mettre à jour cette campagne"
+        "create": "Créer la campagne",
+        "update": "Mettre à jour la campagne"
       },
       "sort_editor": {
         "delete": "Supprimer",
@@ -262,26 +307,26 @@
         "undo_delete": "Annuler la suppression",
         "confirm_delete_one": "Veux-tu vraiment supprimer 1 map ? Tu ne pourras pas revenir en arrière !",
         "confirm_delete_other": "Veux-tu vraiment supprimer {{count}} maps ? Tu ne pourras pas revenir en arrière !",
-        "confirm_delete_label_one": "Oui, supprimer 1 map ainsi que tous les challenges & les entrées qui y sont liés.",
-        "confirm_delete_label_other": "Oui, supprimer {{count}} maps ainsi que tous les challenges & les entrées qui y sont liés.",
-        "save_maps": "Sauvegarder ces maps"
+        "confirm_delete_label_one": "Oui, supprimer '1' map ainsi que tous les challenges & les entrées qui y sont liés.",
+        "confirm_delete_label_other": "Oui, supprimer '{{count}}' maps ainsi que tous les challenges & les entrées qui y sont liés.",
+        "save_maps": "Sauvegarder les maps"
       }
     },
     "campaign_mass_add_maps": {
       "feedback": {
-        "adding_one": "Ajout d’une map ({{current}}/{{count}})",
-        "adding_other": "Ajout de plusieurs maps ({{current}}/{{count}})"
+        "adding_one": "Ajout d'une map ({{current}}/{{count}})",
+        "adding_other": "Ajout des maps ({{current}}/{{count}})"
       },
-      "title": "Ajout de masse de maps",
+      "title": "Ajout en masse de maps",
       "step": "Étape {{current}} / {{total}}",
       "next": "Suivant",
       "back": "Retour",
       "step_1": {
-        "helper": "Chaque ligne correspond au nom d’une map.",
+        "helper": "Chaque ligne correspond au nom d'une map.",
         "label": "Nom des maps"
       },
       "step_2": {
-        "helper": "Indique quels challenges tu souhaites ajouter à ces maps.",
+        "helper": "Indique quels challenges tu souhaites ajouter pour chaque map.",
         "map_name": "Nom de la map",
         "generate_challenges": "Générer des challenges",
         "c_fc_distinct": "Clear et FC séparés",
@@ -298,7 +343,9 @@
       "requires_fc": "Nécessite le FC",
       "has_fc": "A un FC",
       "is_arbitrary": "Est arbitraire",
-      "sort_order": "Trier l’ordre",
+      "is_rejected": "Est rejetée",
+      "reject_note": "Note sur le rejet :",
+      "sort_order": "Trier",
       "skip_webhook": "Ne pas mentionner ce changement aux crochets web",
       "buttons": {
         "create": "Créer ce challenge",
@@ -332,15 +379,15 @@
         "label": "Collectibles",
         "variant": "Variante",
         "count": "Nombre (par défaut : 1)",
-        "note": "Note (optionnelle)"
+        "note": "Note (optionelle)"
       },
-      "rejection_reason": "Raison de rejet",
+      "rejection_reason": "Raison du rejet",
       "note": "Note",
       "golden_changes": "Changements liés à la golden",
       "author_note": "Laisse ces espaces vides s’ils correspondent au/à la mappeur·euse de la map.",
       "counts_for_map": {
         "label": "Compter comme map",
-        "note": "Faire de cette map une map à part sur la page de campagne"
+        "note": "Faire de cette map une map à part sur la page de la campagne"
       },
       "buttons": {
         "create": "Créer cette map",
@@ -360,16 +407,18 @@
       "player_notes": "Notes personnelles",
       "is_personal": "Est personnelle",
       "personal_note": "Les difficultés ressenties sont indiquées comme étant « personnelles » lorsqu’elles ne doivent pas être utilisées pour le classement d’un challenge",
+      "frac_header": "Tier fractionnel",
+      "frac_note": "Tu peux préciser où tu penses que le challenge se place au sein du tier. La valeur par défaut est 0.5 (pile au milieu).",
       "time_taken": "Temps pris",
-      "date_submitted": "Date de soumission",
-      "date_achieved": "Date de complétion",
-      "date_verified": "Date de vérification",
+      "date_submitted": "Date de la soumission",
+      "date_achieved": "Date de la complétion",
+      "date_verified": "Date de la vérification",
       "verifier": "Vérification",
-      "verifier_notes": "Notes de vérification",
+      "verifier_notes": "Notes de vérifiation",
       "map_information": "Informations sur la map",
       "golden_changes": "Changements liés à la golden",
       "buttons": {
-        "update": "Mettre à jour cette entrée",
+        "update": "Mettre à jour cette entrés",
         "verify": "Vérifier",
         "reject": "Rejeter"
       }
@@ -377,40 +426,60 @@
     "feedback": {
       "player_name": {
         "required": "Ton nom ne peut pas être vide",
-        "min_length": "Ton nom doit faire plus de 2 caractères",
-        "max_length": "Ton nom doit faire moins de 32 caractères"
+        "min_length": "Ton nom doit faire au moins 2 caractères",
+        "max_length": "Ton nom doit faire au plus 32 caractères"
       },
       "password": {
         "required": "Ton mot de passe ne peut pas être vide",
-        "min_length": "Ton mot de passe doit faire plus de 8 caractères",
-        "max_length": "Ton mot de passe doit faire moins de 128 caractères"
+        "min_length": "Ton mot de passe doit faire au moins 8 caractères",
+        "max_length": "Ton mot de passe doit faire au plus 128 caractères"
       },
       "email": {
-        "required": "Ton email ne peut pas être vide",
-        "invalid": "Adresse email invalide"
+        "required": "Ton adresse e-mail ne doit pas être vide",
+        "invalid": "Adresse e-mail invalide"
       },
       "name": {
         "required": "Ton nom ne peut pas être vide",
-        "max_length": "Ton nom doit faire plus de {{count}} caractères"
+        "max_length": "Ton nom ne doit pas faire plus de {{count}} caractères"
       },
       "url": {
         "required": "Le lien ne peut pas être vide"
       },
       "submission_url": {
-        "required": "Le lien de l’entrée ne peut pas être vide",
+        "required": "Le lien de l'entrée ne peut pas être vide",
         "invalid": "Lien invalide",
         "disallowed": "Ce type de lien n’est pas autorisé pour les entrées. (<CustomLink to=\"/rules#submissions-all\">Entrées → Règle nº 1</CustomLink>)",
-        "disallowed_variant": "Ce site est autorisé pour les vidéos mais utilise plutôt un lien direct vers la vidéo !"
+        "disallowed_variant": "Ce site est autorisé pour les vidéos, mais tu dois utiliser un lien direct vers la vidéo !"
       },
       "time_taken": {
-        "invalid": "La durée doit correspondre au format « (hh:)mm:ss »"
+        "invalid": "La durée doit être sous le format '(hh:)mm:ss'"
+      }
+    },
+    "post": {
+      "feedback": {
+        "created": "Publication créée",
+        "updated": "Publication mise à jour"
+      },
+      "title": "Titre",
+      "content": "Contenu",
+      "type": "Type de publication",
+      "short_preview": "Aperçu court",
+      "types": {
+        "news": "Nouveautés",
+        "changelog": "Changements"
+      },
+      "image_url": "Lien de l'image",
+      "buttons": {
+        "create": "Créer la publication",
+        "update": "Mettre à jour la publication",
+        "goto": "Aller à la publication"
       }
     }
   },
   "hooks": {
     "auth": {
       "logout_success": "Déconnexion réussie",
-      "not_logged_in": "Il faut d’abord se connecter"
+      "not_logged_in": "Il faut d'abord se connecter"
     }
   },
   "navigation": {
@@ -423,17 +492,22 @@
     "other_menu": {
       "name": "Autres",
       "suggestion_box": "Boîte à suggestions",
-      "monthly_recap": "Récap’ du mois",
+      "monthly_recap": "Récap' du mois",
       "stats": "Stats",
       "rules": "Règles",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "news": "Nouveautés",
+      "changelog": "Changements"
     },
     "internal_menu": {
       "name": "Interne",
       "logs": "Logs",
-      "submission_queue": "File d’attente des entrées",
+      "submission_queue": "File d'attente des entrées",
       "manage_challenges": "Gérer les challenges",
-      "manage_accounts": "Gérer les comptes"
+      "manage_accounts": "Gérer les comptes",
+      "file_upload": "Téléverser un fichier",
+      "test": "Tester la page",
+      "posts": "Nouvelle publication"
     },
     "widgets": {
       "submission_queue": "Entrées en attente",
@@ -451,7 +525,8 @@
       "claim_a_player": "Réclamer un nom",
       "my_player_page": "Ma page",
       "my_top_goldens": "Mes Top Goldens",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "app_version": "goldberries v{{version}}"
     }
   },
   "manage": {
@@ -466,13 +541,13 @@
           "label": "Réclamations de noms",
           "feedback": {
             "accepted": "Réclamation acceptée",
-            "rejected": "Réclamation refusée"
+            "rejected": "Réclamation rejetée"
           },
           "id": "ID",
           "no_claims": "Aucune réclamation",
           "buttons": {
             "accept": "Accepter",
-            "reject": "Refuser"
+            "reject": "Rejeter"
           }
         },
         "player_rename": {
@@ -512,7 +587,7 @@
         },
         "challenge": {
           "edit": "Modifier",
-          "split": "Séparer ce challenge en deux",
+          "split": "Séparer ce challenge ne deux",
           "merge": "Fusionner ces challenges",
           "mark_personal": "Indiquer comme étant personnelle",
           "delete": "Supprimer"
@@ -541,10 +616,10 @@
         },
         "merge_split_challenges": {
           "feedback": {
-            "split": "Challenge séparé",
+            "split": "Challenge séparer",
             "merge": "Challenges fusionnés"
           },
-          "title": "Séprarer / Fusionner des challenges",
+          "title": "Séparer/fusionner des challenges",
           "challenge_num": "Challenge {{num}}",
           "split_note": "Ce challenge sera séparé en deux challenges C et FC. Toutes les entrées en FC seront automatiquement redirigées vers le challenge FC.",
           "merge_note": "Les entrées du second challenge seront fusionnées avec celles du premier. Le premier challenge sera modifié en conséquence et le second sera supprimé après que toutes ses entrées aient été déplacées.",
@@ -562,7 +637,7 @@
         "new_map": "Nouvelle map",
         "new_challenge": "Nouveau challenge",
         "create_full_challenge": "Créer un challenge full game",
-        "mass_add_maps": "Ajout de masse de maps à une campagne"
+        "mass_add_maps": "Ajout en masse de maps à une campagne"
       }
     },
     "logs": {
@@ -578,27 +653,27 @@
         "viewing_gone": "L’entrée que tu observais ne se trouve plus dans la file. Elle a soit été supprimée, soit vérifiée par quelqu’un d’autre.",
         "all_verified": "Toutes les entrées sélectionnées ont été vérifiées",
         "all_rejected": "Toutes les entrées sélectionnées ont été rejetées",
-        "already_locked": "Quelqu’un d’autre est en train de vérifier cette entrée"
+        "already_locked": "Quelqu'un d'autre est en train de vérifier cette entrée"
       },
-      "title": "File d’attente des entrées",
-      "title_with_count": "({{count}}) File d’attente des entrées",
-      "queue_empty": "Aucune entrée dans la file d’attente",
+      "title": "File d'attente des entrées",
+      "title_with_count": "({{count}}) File d'attente des entrées",
+      "queue_empty": "Aucune entrée en attente",
       "selected": "{{count}} sélectionnées",
       "total": "Entrées ({{count}} au total)",
-      "note_placeholder": "Note de vérification / Raison de rejet",
+      "note_placeholder": "Note de vérification / Raison du rejet",
       "filter_placeholder": "Joueur·euse / Map / Campagne",
-      "new_challenge": "Nouveau challenge :",
+      "new_challenge": "Nouveau challenge:",
       "or": "OU",
       "buttons": {
-        "verify": "Vérifier {{count}}",
-        "reject": "Rejeter {{count}}"
+        "verify": "Vérifier '{{count}}'",
+        "reject": "Rejeter '{{count}}'"
       }
     },
     "server_settings": {
       "title": "Paramètres du serveur",
       "form": {
         "feedback": {
-          "updated": "Paramètres mis à jour"
+          "updated": "Paramètres du serveur mis à jour"
         },
         "registrations_enabled": "Inscriptions activées",
         "submissions_enabled": "Entrées activées",
@@ -609,7 +684,7 @@
           "message": "Message"
         },
         "buttons": {
-          "update": "Mettre à jours les paramètres du serveur"
+          "update": "Mettre à jour les paramètres du serveur"
         }
       }
     }
@@ -617,25 +692,25 @@
   "server_costs": {
     "server_costs": {
       "title": "Coûts du serveur",
-      "description": "Salut, c’est viddie. Sans grande surprise, faire tourner des serveurs n’est pas gratuit, et bien que je sois prêt à passer mes journées à gérer ce projet, quelqu’un doit bien payer le serveur. Ce site n’a pas (et n’aura jamais) de pubs. Si besoin, je suis capable de couvrir les frais de ma propre poche, mais si un ou plusieurs membres de la communauté souhaitent participer, ce serait avec grand plaisir !",
+      "description": "Salut, c’est viddie. Sans grande surprise, faire tourner des serveurs n’est pas gratuit, et bien que je sois prêt à passer mes journées à gérer ce projet, quelqu’un doit bien payer le serveur. Ce site n’a pas (et n’aura jamais) de pubs. Si besoin, je suis capable de couvrir les frais de ma propre poche, mais si un ou plusieurs membres de la communauté souhaitent participer, ce serait accueilli avec grand plaisir !",
       "table": {
         "item": "Item",
         "cost": "Prix",
         "VPS": "VPS",
         "domain": "Domaine",
         "total": "Total",
-        "value": "{{value}} € / mois"
+        "value": "{{value}}€ / mois"
       }
     },
     "costs_so_far": {
-      "title": "Coûts jusqu’à maintenant",
-      "description": "Le serveur est en marche depuis <strong>avril 2024</strong>. Ça fait un total de <strong>{{months}} mois</strong>.",
+      "title": "Coûts jusqu'à maintenant",
+      "description": "Le serveur est en marche depuis <strong>avril 2024</strong>. Ça fait un total de <strong>{{months}} mois</strong> jusqu'à maintenant.",
       "table": {
-        "total_costs": "Prix total",
+        "total_costs": "Coûts totaux",
         "total_donations": "Total des dons",
         "total_difference": "Différence totale"
       },
-      "not_lose": "Voici le montant d’€ dont j’ai besoin pour ne pas perdre d’argent"
+      "not_lose": "Voici le montant, en €, dont j'ai besoin pour ne pas perdre d'argent"
     },
     "stocked_up": {
       "title": "Réserves",
@@ -647,8 +722,8 @@
       "title": "Tu peux aider",
       "description": "Si tu souhaites participer à l’entretien du serveur, tu peux faire un don via une des méthodes suivantes :",
       "table": {
-        "paypal_donation": "PayPal (Don, les frais de PayPal s’appliquent)",
-        "paypal_direct": "PayPal (Directement à moi, aucun frais)",
+        "paypal_donation": "PayPal (Don, les frais de PayPal s'appliquent)",
+        "paypal_direct": "PayPal (Directement à moi, pas de frais)",
         "paypal_website": "Site de PayPal",
         "note": "* Les dons ne se mettent pas à jour automatiquement, ils peuvent prendre un peu de temps avant d’apparaître ici."
       }
@@ -673,15 +748,15 @@
     "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment. Dirige-toi <CustomLink>ici</CustomLink> pour en créer ou en réclamer un !",
     "tabs": {
       "login_methods": {
-        "label": "Modes de connexion",
+        "label": "Méthodes de connexion",
         "feedback": {
           "updated": "Compte mis à jour"
         },
-        "note": "Note : au moins un des modes de connexion doit être actif !",
+        "note": "Note : au moins une de ces méthodes de connexion doit être active",
         "email": "Email",
         "password": "Mot de passe",
         "confirm_password": "Confirmer le mot de passe",
-        "add_email": "Ajouter une adresse email",
+        "add_email": "Ajouter une adresse e-mail",
         "undo": "Annuler",
         "unlink": "Déconnecter",
         "discord": "Discord",
@@ -692,7 +767,7 @@
       "notifications": {
         "label": "Notifications",
         "feedback": {
-          "updated": "Paramètres de notifications mis à jour !"
+          "updated": "Paramètres de notifications mis à jour"
         },
         "note": "Note : pour le moment, ces notifications se font sous forme de pings dans le serveur Discord « Modded Goldens ». Pour recevoir une notification, tu devras rejoindre ce serveur (<CustomLink1>invitation</CustomLink1>) ET connecter ton compte Discord à ton compte goldberries.net <CustomLink2>juste ici</CustomLink2> !",
         "sub_verified": {
@@ -701,15 +776,19 @@
         },
         "marked_personal": {
           "label": "Difficultée ressentie changée comme étant personnelle",
-          "description": "Se faire notifier lorsqu’une stratégie majeure est découverte, rendant une de tes difficultés ressenties « personnelle »"
+          "description": "Pour être notifié·e lorsqu’une stratégie majeure est découverte, rendant une de tes difficultés ressenties « personnelle »"
         },
         "challenge_moved": {
           "label": "Challenge déplacé",
-          "description": "Se faire notifier lorsqu’un challenge que tu as complété change de difficulté"
+          "description": "Pour être notifié·e lorsqu’un challenge que tu as complété change de difficulté"
         },
         "suggestion_created": {
           "label": "Suggestion créée",
-          "description": "Se faire notifier lorsqu’une suggestion portant sur un challenge que tu as complété est créée"
+          "description": "Pour être notifié·e lorsqu’une suggestion portant sur un challenge que tu as complété est créée"
+        },
+        "suggestion_accepted": {
+          "label": "Statut de ta suggestion",
+          "description": "Pour être notifié·e lorsque le statut d'une de tes suggestion (acceptée/rejetée) est changé."
         }
       },
       "profile": {
@@ -746,7 +825,7 @@
         "note_1": "Choisis jusqu’à 9 entrées qui seront affichées sur ton profil !",
         "note_2": "Note : si aucune entrée n’est sélectionnée, les 9 entrées les plus difficiles seront affichées sur ton profil.",
         "buttons": {
-          "save": "Mettre à jour sa vitrine",
+          "save": "Enregistrer la vitrine",
           "add_submission": "Ajouter une entrée",
           "remove_submission": "Supprimer une entrée"
         }
@@ -755,19 +834,19 @@
         "label": "Changement de nom",
         "title": "Se renommer",
         "feedback": {
-          "renamed": "Nom changé avec succès !"
+          "renamed": "Nom changé avec succès"
         },
-        "no_player_claimed": "Tu n’as pas réclamé de nom pour le moment !",
-        "description": "Donne-toi un nouveau nom. Cette action peut être effectuée toutes les 24 heures.",
+        "no_player_claimed": "Tu n'as pas réclamé de nom pour le moment !",
+        "description": "Donne-toi un nouveau nom. Cette action peut être effectuée une fois toutes les 24 heures.",
         "can_rename": "Tu peux te renommer !",
-        "cannot_rename": "Tu pourras rechanger de nom dans {{time}}.",
+        "cannot_rename": "Tu pourras te renommer à nouveau dans {{time}}.",
         "new_name": "Nouveau nom",
         "log_change": "Faire part de ce changement de nom dans mon changelog",
         "button": "Changer de nom"
       },
       "danger_zone": {
         "label": "Zone de danger",
-        "description": "Supprimer ton compte à jamais.",
+        "description": "Supprimer ton compte à jamais",
         "note": "Note que cette action ne supprimera pas le nom associé à ton compte ! Aucune entrée ne sera affectée, et ton nom pourra à nouveau être réclamé. Si tu ne veux pas que ton nom apparaisse sur ce site, ou souhaites supprimer toutes tes entrées, contacte un membre de l’équipe !",
         "confirm": "Écris “DELETE” pour confirmer",
         "button": "Supprimer ce compte"
@@ -784,6 +863,15 @@
         "golden_changes": {
           "label": "Toujours afficher les changements liés aux goldens",
           "note": "Active cette option pour enlever le bouton anti-spoiler pour les golden rooms ou les changements exclusifs liés aux goldens."
+        },
+        "old_tier_names": {
+          "label": "Afficher les anciens noms de tier",
+          "note": "Active cette option pour que les étiquettes de difficulté affichent l'ancien nom de tier en plus du nouveau.",
+          "tooltip": "Les anciens noms de tier ne seront pas affichés partout !"
+        },
+        "show_fractional_tiers": {
+          "label": "Montrer les tiers fractionnels",
+          "note": "Afficher les tiers fractionnels un peu partout dans le site. Cette option affecte aussi les Top Golden Lists personnelles !"
         }
       },
       "visual": {
@@ -791,21 +879,21 @@
         "name_colors": {
           "label": "Couleur des noms",
           "show": "Afficher les couleurs des noms",
-          "prefer_solid_color": "Préférer une unique couleur à un dégradé",
+          "prefer_solid_color": "Préférer une couleur unique à un dégradé",
           "show_outline": "Afficher le contour"
         },
         "background": {
           "label": "Arrière-plan",
           "blur": {
             "label": "Flou",
-            "tooltip": "Flou gaussien appliqué à l’arrière-plan"
+            "tooltip": "Flou gaussien appliqué à l'arrière-plan"
           },
           "light_mode": "Mode clair",
           "dark_mode": "Mode sombre",
           "default": "Arrière-plan par défaut",
           "custom": {
             "label": "Arrière-plan personnalisé",
-            "tooltip": "Si indiqué, remplace l’arrière-plan sélectionné ci-dessus",
+            "tooltip": "Si renseigné, remplace l'arrière-plan sélectionné ci-dessus",
             "placeholder": "Lien vers une image"
           }
         }
@@ -813,9 +901,9 @@
       "top_golden_list": {
         "label": "Top Golden List",
         "darken_colors": {
-          "label": "Assombrir les couleurs des tiers",
+          "label": "Assombrir les couleurs des tiiers",
           "tooltip": "En mode sombre, rend plus sombres les couleurs des tiers. 0 % correspond aux couleurs par défaut, 100 % met tout en noir.",
-          "note": "Ceci ne s’applique qu’en mode sombre !"
+          "note": "Cette option ne s'applique qu'en mode sombre !"
         },
         "campaign_icons": {
           "label": "Afficher les icônes des campagnes",
@@ -827,28 +915,42 @@
         },
         "switch_order": {
           "label": "Échanger map et challenge",
-          "note": "Change le format « Nom de la map [Nom du segment] » en format « Nom du segment [Nom de la map] »"
+          "note": "Change le format « Nom de la map [Nom du segment] » en format « Nom du segment [Nom de la map] »' format"
         },
-        "hide_empty_tiers": "Cacher les tiers vides",
+        "hide_empty_tiers": "Masquer les tiers vides",
         "hide_time_taken_column": {
-          "label": "Cacher la colonne « Temps pris »",
-          "note": "Cache la colonne « Temps pris » dans les Top Golden List personnelles"
+          "label": "Masquer la colonne « Temps pris »",
+          "note": "Masque la colonne « Temps pris » dans les Top Golden Lists personnelles"
+        },
+        "show_fractional_tiers": {
+          "label": "Afficher les tiers fractionnels",
+          "note": "Affiche les valeurs de tier fractionnelles et trie la Top Golden List globale selon ces valeurs. N'impacte PAS la Top Golden List personnelle."
+        },
+        "unstack_tiers": {
+          "label": "Dépiler les tiers",
+          "note": "Met chaque tier dans sa propre colonne, au lieu de les empiler verticalement."
         }
       },
       "difficulty_colors": {
         "label": "Couleurs des difficultés",
-        "description": "Les couleurs des subtiers High et Low sont calculées par rapport à la couleur du Mid. Tu peux aussi choisir explicitement une couleur pour ces deux (deux ???) subtiers.",
-        "high": "High",
-        "mid": "Mid",
-        "low": "Low",
-        "t4+": "Tier 4 et + (pas de subtiers)",
+        "description": "Les couleurs des subtiers Haut et Bas sont calculées par rapport à la couleur du Milieu. Tu peux aussi choisir explicitement la couleur des subtiers Haut et Bas.",
+        "high": "Haut",
+        "mid": "Milieu",
+        "low": "Bas",
+        "t4+": "Tiers 4 et + (pas subtiers)",
         "presets": {
           "label": "Préréglages :",
-          "default": "Défaut",
-          "colorblind": "Couleurs adaptées au daltonisme :",
+          "default": "Par défaut",
+          "colorblind": "Mode daltonien :",
           "protanopia": "Protanopie",
           "deuteranopia": "Deutéranopie",
           "tritanopia": "Tritanopie"
+        },
+        "export": {
+          "label": "Exporter/Importer des couleurs",
+          "export": "Copier dans le presse-papier",
+          "export_success": "Copié dans le presse-papier",
+          "import": "Importer depuis le presse-papier"
         }
       }
     }
@@ -859,12 +961,15 @@
       "edit": "Modifier le challenge"
     },
     "difficulty_suggestions": "Suggestions de difficulté",
-    "is_full_game": "full game ?",
+    "is_full_game": "Full game ?",
     "lobby_info": "Infos du Lobby",
     "description": "Description du challenge",
+    "status": "Statut du Challenge",
     "submission_table": {
-      "suggestion": "Suggestion",
-      "empty": "Aucune entrée"
+      "suggestion": "Suggestions",
+      "empty": "Aucune entrée",
+      "show_all": "Afficher toutes les {{count}} entrées",
+      "show_less": "Afficher moins"
     }
   },
   "claim_player": {
@@ -877,7 +982,7 @@
       "title": "Réclamer un nom",
       "info": "Pour le moment, ton compte n’est pas lié à un nom. Si tu possèdes déjà des entrées sur l’ancien tableur, tu peux réclamer le nom qui y est lié. Sinon, tu peux créer un nouveau nom.",
       "buttons": {
-        "link": "Choisir un nom déjà existant",
+        "link": "Lier un nom déjà existant",
         "create": "Créer un nouveau nom"
       },
       "back": "Retour",
@@ -886,10 +991,10 @@
         "feedback": {
           "created": "Nom créé",
           "already_exists": "Ce nom est déjà pris",
-          "name_missing": "Entre un nom",
-          "name_short": "Ton nom doit faire plus de 3 caractères"
+          "name_missing": "Le nom ne peut pas être vide",
+          "name_short": "Ton nom doit faire au moins 3 caractères"
         },
-        "info": "Entre ici le nom que tu souhaites avoir sur la liste. Si tu possèdes déjà des entrées sur l’ancien tableur, reviens en arrière et sélectionne « Choisir un nom déjà existant ».",
+        "info": "Entre ici le nom que tu souhaites avoir sur la liste. Si tu possèdes déjà des entrées sur l’ancien tableur, reviens en arrière et sélectionne « Lier un nom déjà existant ».",
         "player_name": "Nom",
         "button": "Créer ce nom"
       },
@@ -897,7 +1002,7 @@
         "title": "Réclamer un nom",
         "info_1": "Si tu possèdes déjà des entrées sur l’ancien tableur, tu peux les réclamer ici.",
         "info_2": "Suite à une réclamation, tu devras contacter directement un membre de l’équipe afin de vérifier que tu es bien qui tu prétends être !",
-        "this_u": "C toi ?",
+        "this_u": "C toi?",
         "confirm": "Je confirme être la personne jouant dans cette vidéo",
         "button": "Réclamer ce nom"
       }
@@ -907,9 +1012,9 @@
       "info": "Ta réclamation a bien été prise en compte ! Afin de la vérifier, contacte (en anglais !) un membre de l’équipe via Discord (ou autre). Un @ dans le Discord de la <CustomLink>Modded Golden Team</CustomLink> devrait suffir dans la plupart des cas !",
       "your_data": {
         "title": "Tes données",
-        "account_id": "ID :",
-        "claimed_player": "Nom réclamé :",
-        "verifiers": "Membres de l’équipe"
+        "account_id": "ID du compte:",
+        "claimed_player": "Nom réclamé:",
+        "verifiers": "Membres de l'équipe"
       }
     }
   },
@@ -933,7 +1038,7 @@
     "show_archived": "Afficher les maps archivées",
     "show_arbitrary": "Afficher les challenges arbitraires",
     "state": {
-      "submissions": "{{count}} entrées pour un total de {{campaigns}} campagnes",
+      "submissions": "{{count}} entrées sur un total de {{campaigns}} campagnes",
       "campaigns": "Chargement des campagnes {{current}}/{{total}}",
       "done_loading": "Chargement fini"
     }
@@ -945,39 +1050,39 @@
       "feedback": {
         "passwords_not_match": "Les mots de passe ne correspondent pas"
       },
-      "email": "Adresse email",
+      "email": "Adresse e-mail",
       "password": "Mot de passe",
       "or": "OU",
       "buttons": {
         "sign_in": "Se connecter",
         "forgot_password": "Mot de passe oublié ?",
-        "sign_up": "S’inscrire",
+        "sign_up": "S'inscrire",
         "discord": "Se connecter via Discord"
       }
     },
     "register": {
       "title": "Inscription",
       "success": "Check ta boîte de réception (et tes spams !) pour l’email d’activation",
-      "info": "S’inscrire par email demandera une vérification. Inscris-toi via Discord pour éviter ça.",
+      "info": "S’inscrire par email demandera une vérification. Inscris-toi via Discord pour passer cette étape.",
       "confirm_password": "Confirmer le mot de passe",
       "buttons": {
-        "register": "S’inscrire",
+        "register": "S'inscrire",
         "sign_in": "Tu as déjà un compte ? Connecte-toi !",
-        "discord": "S’inscrire via Discord"
+        "discord": "S'inscrire via Discord"
       }
     },
     "verify_email": {
-      "title": "Vérification de l’email",
-      "success": "Ton email a été vérifié ! Tu peux à présent te connecter à ton compte.",
+      "title": "Vérification de l'adresse e-mail",
+      "success": "Ton adresse e-mail a été vérifiée ! Tu peux à présent te connecter à ton compte.",
       "to_login": "Se connecter",
-      "info": "Clique sur le bouton ci-dessous pour vérifier ton adresse email.",
-      "button": "Vérifier son email"
+      "info": "Clique sur le bouton ci-dessous pour vérifier ton adresse e-mail.",
+      "button": "Vérifier son e-mail"
     },
     "forgot_password": {
       "request": {
         "title": "Mot de passe oublié",
         "info": "Si un compte correspondant à cet email existe, tu recevras un email avec les instructions te permettant de réinitialiser ton mot de passe. N’oublie pas de checker tes spams !",
-        "button": "Envoyer le mail de récupération"
+        "button": "Envoyer l'e-mail de récupération"
       },
       "verify": {
         "title": "Réinitialiser son mot de passe",
@@ -994,9 +1099,10 @@
       "view_challenge": "Voir ce challenge",
       "submit": "Ajouter une entrée"
     },
-    "no_challenges": "Cette map n’a pas de challenge pour le moment…",
+    "no_challenges": "Cette map n'a pas de challenges pour le moment",
     "info_boxes": {
       "collectibles": "Collectibles de la map",
+      "no_collectibles": "Non défini",
       "golden_changes": {
         "label": "Changements liés à la golden",
         "no_changes": "Aucun changement",
@@ -1007,11 +1113,22 @@
   "player": {
     "title": "Profil",
     "personal_tgl": "Top Golden List personnelle",
-    "stats": "Stats",
-    "showcase_hardest": "Entrées les plus difficiles",
-    "chart": {
-      "show_standard": "Afficher les entrées Standards & Undetermined",
-      "x_axis": "Nombre de goldens par tier"
+    "tabs": {
+      "info": {
+        "label": "Info du/de la joueur·euse",
+        "stats": "Statistiques du/de la joueur·euse",
+        "showcase_hardest": "Entrées les plus difficiles",
+        "chart": {
+          "show_standard": "Afficher les entrées triviales et non déterminées",
+          "x_axis": "Nombre de goldens par tier"
+        }
+      },
+      "timeline": {
+        "label": "Chronologie",
+        "description": "Voici la chronologie de tout ce que cette personne a fait !",
+        "group_campaigns": "Grouper les entrées d'une même campagne",
+        "show_difficulty_ratio": "Montrer les thumbnails pour ce pourcentage des entrées visibles"
+      }
     }
   },
   "rejected_maps": {
@@ -1020,8 +1137,14 @@
     "info_2": "Si une map ou un map pack enfreint la règle nº 4 (contenu inapproprié), elle ne sera pas listée ici.",
     "reason": "Raison"
   },
+  "rejected_challenges": {
+    "title": "Challenges rejetés",
+    "info": "Les challenges suivant ont été rejetés explicitement, mais la map/campaigne dont ils font partie sont acceptés pour d'autres challenges.",
+    "fullgame_notice": "Ceci est un challenge full game.",
+    "no_rejected_challenges": "Il n'y a pas de challenges rejetés pour le moment."
+  },
   "search": {
-    "title_content": "Recherche de  « {{content}} »",
+    "title_content": "Recherche de '{{content}}'",
     "title_no_content": "Recherche",
     "feedback": {
       "min_length": "Mode de correspondance exacte activé. Entre {{count}} caractères ou plus pour une recherche plus vaste."
@@ -1036,11 +1159,11 @@
     "no_authors": "Aucun·e mappeur·euse trouvé·e"
   },
   "monthly_recap": {
-    "title": "Récap’ du mois {{month}}",
+    "title": "Récap’ du mois '{{month}}'",
     "settings": {
       "header": "Récap’ du mois",
-      "less_recent": "Plus ancien {{month}}",
-      "more_recent": "Plus récent {{month}}",
+      "less_recent": "Plus ancien '{{month}}'",
+      "more_recent": "Plus récent '{{month}}'",
       "normal_clears": "Difficulté min. des clears",
       "first_clears": "Difficulté min. des premiers clears",
       "hide_changelog": "Cacher le changelog"
@@ -1051,7 +1174,7 @@
       "label": "Chronologie",
       "first_clear": "Premier clear",
       "clear": "Clear",
-      "moved": "Déplacement"
+      "moved": "Déplacé"
     }
   },
   "submission": {
@@ -1062,7 +1185,8 @@
     "details": {
       "new_challenge": "Nouveau challenge",
       "submitted": "Soumis",
-      "achieved": "Complétion",
+      "achieved": "Complété",
+      "time_taken_explanation": "Temps fourni par le/la joueur·euse pour réussir ce challenge, sous le format (hh:)mm:ss",
       "verification": "Vérification",
       "status": "Statut",
       "links": "Liens",
@@ -1070,7 +1194,7 @@
       "raw_session": "Session complète"
     },
     "delete_modal": {
-      "title": "Supprimer une entrée",
+      "title": "Supprimer l'entrée",
       "description": "Veux-tu vraiment supprimer cette entrée ?"
     },
     "buttons": {
@@ -1085,9 +1209,9 @@
       "single": {
         "label": "Challenge",
         "header": "Ajouter une run",
-        "select": "Choisis un challenge",
-        "full_game": "Choisis une map OU un challenge full game",
-        "challenge_data": "Infos du challenge",
+        "select": "Choisir un challenge",
+        "full_game": "Choisir une map OU un challenge full game",
+        "challenge_data": "Données du challenge",
         "your_run": "Ta run",
         "verifier": {
           "player_select": "[Vérificateur·rice seulement] Ajouter au nom de",
@@ -1097,8 +1221,10 @@
             "add_player": "Ajouter ce nom"
           }
         },
+        "test_embed": "Tester le lien",
+        "hide_embed": "Cacher",
         "proof_note": "La preuve vidéo doit être disponible à tout moment, comme par exemple sur YouTube, Bilibili, ou un temps fort Twitch.",
-        "raw_session_note": "Une vidéo de la session complète est nécessaire pour les goldens classées tier 3 ou plus difficiles.",
+        "raw_session_note": "Une vidéo de la session complète est nécessaire pour les goldens classées tier 8 ou plus difficiles.",
         "raw_session_same_url_info": "Veux-tu vraiment utiliser le même lien pour la session complète ?",
         "is_fc": "La run est un full clear",
         "date_created": "[Vérificateur·rice seulement] Date de création",
@@ -1107,7 +1233,7 @@
         "button": "Soumettre"
       },
       "multi": {
-        "label": "Multi challenge",
+        "label": "Multi Challenge",
         "feedback": {
           "invalid_urls_one": "1 lien est invalide",
           "invalid_urls_other": "{{count}} liens sont invalides",
@@ -1116,21 +1242,21 @@
         },
         "header": "Ajouter une compilation vidéo",
         "info": "Tu peux ici ajouter une compilation vidéo de plusieurs challenges d’une campagne ou d’un lobby entier",
-        "select_campaign": "Choisis une campagne",
+        "select_campaign": "Choisir une campagne",
         "all": "Toutes",
         "prefer_fc": "Préférer le full clear",
         "multi_video": {
           "label": "Utiliser des vidéos séparées",
           "tooltip": "Coche cette option si tu as plusieurs vidéos pour cette campagne. Si tu ne rentres pas de lien pour une map, la vidéo compilation sera utilisée."
         },
-        "is_fc": "Est en FC",
+        "is_fc": "Est un FC",
         "compilation_video": "Compilation vidéo",
-        "remove_map": "Enlever la map",
-        "button": "Ajouter {{count}} runs"
+        "remove_map": "Retirer la map",
+        "button": "Ajouter '{{count}}' runs"
       },
       "new": {
         "label": "Nouveau challenge",
-        "header": "Ajouter un nouveau challenge ",
+        "header": "Ajouter un nouveau challenge",
         "challenge_data": "Infos du challenge",
         "info": "Tu peux ici demander à ajouter à la liste un challenge qui n’y est pas déjà. Ça peut prendre un certain temps à être accepté !",
         "gamebanana_url": "Lien GameBanana",
@@ -1159,8 +1285,8 @@
     "filter_by_type": "Filtrer par type",
     "active": "Suggestions actives",
     "undecided": "Suggestions non décidées",
-    "expired": "Suggestions expirées",
-    "showing_one": "{{from}} – {{to}} affichée pour un total de {{count}} suggestions",
+    "expired": "Suggestions décidées",
+    "showing_one": "{{from}} – {{to}} affichée pour un total de {{count}} suggestion",
     "showing_other": "{{from}} – {{to}} affichées pour un total de {{count}} suggestions",
     "buttons": {
       "create": "Créer"
@@ -1172,14 +1298,14 @@
     "name": {
       "general": "Suggestion générale",
       "pending": "Vérification en attente",
-      "rejected": "Vérification refusée",
+      "rejected": "Vérification refusée ",
       "same_map": "par {{author}}",
       "different_map": "de {{campaign}} (par {{author}})"
     },
     "votes": {
       "label": "Votes",
       "did_challenge": "Votes de personnes ayant réalisé ce challenge",
-      "others": "Votes de personnes n’ayant pas réalisé ce challenge",
+      "others": "Votes de personnes n'ayant pas réalisé ce challenge",
       "for": "Pour",
       "against": "Contre",
       "indifferent": "Indifférent",
@@ -1190,7 +1316,7 @@
     "icon": {
       "undecided": "Non décidée",
       "accepted": "Acceptée",
-      "rejected": "Refusée"
+      "rejected": "Rejetée"
     },
     "modals": {
       "view": {
@@ -1199,18 +1325,18 @@
         },
         "claim_player": "Réclame un nom pour pouvoir voter sur une suggestion !",
         "your_comment": "Commentaire (en anglais !)",
-        "comment_required": "Merci d’écrire un commentaire pour compléter le vote !",
+        "comment_required": "Merci d’écrire un commentaire pour soumettre le vote !",
         "comment_note": "Pour modifier un commentaire après avoir voté, supprime ton vote et vote à nouveau.",
         "stats": "Stats",
         "totals": "Totaux",
-        "done_challenge": "Challenge effectué",
-        "not_done_challenge": "Challenge non effectué",
+        "done_challenge": "Challenge réalisé",
+        "not_done_challenge": "Challenge pas réalisé",
         "related_challenges": "Challenges apparentés",
         "buttons": {
           "verify": "Vérifier",
           "accept": "Accepter la modification",
-          "reject_verification": "Refuser la vérification",
-          "reject_change": "Refuser la modification"
+          "reject_verification": "Rejeter la vérification",
+          "reject_change": "Rejeter le changement"
         }
       },
       "create": {
@@ -1227,7 +1353,7 @@
         },
         "no_challenge_note": "Ne sélectionne pas de challenge si ta suggestion est d’ordre général.",
         "challenge_details": "Détails du challenge",
-        "totals": "Total pour chaque tier",
+        "totals": "Total for chaque tier",
         "comment": {
           "label": "Commentaire (en anglais !)",
           "placeholder": "Explique pourquoi tu penses qu’un changement est nécessaire (en anglais !)",
@@ -1236,14 +1362,14 @@
         "button": "Créer cette suggestion"
       },
       "delete": {
-        "title": "Supprimer cette suggestion ?",
+        "title": "Supprimer cette suggestion?",
         "info": "Veux-tu vraiment supprimer cette suggestion ainsi que tous les votes qui y sont liés ?"
       }
     },
     "filter": {
       "all": "Toutes les suggestions",
       "general": "Suggestions générales",
-      "challenge": "Suggestions liées à un challenge en particulier",
+      "challenge": "Suggestions liées à un challenge",
       "challenge_own": "Suggestions liées à un challenge que j’ai fini"
     }
   },
@@ -1256,19 +1382,19 @@
     }
   },
   "campaign": {
-    "note": "Note de la campagne",
+    "note": "Note de campagne",
     "buttons": {
       "edit": "Modifier la campagne"
     },
     "info_boxes": {
       "author": "Mappeur·euse",
-      "map_count": "Count",
-      "maps_one": "{{count}} Map",
-      "maps_other": "{{count}} Maps",
-      "maps_archived_one": "{{count}} Map (+ {{archived}} archivées)",
-      "maps_archived_other": "{{count}} Maps (+ {{archived}} archivées)",
-      "maps_rejected_one": "+ {{count}} map rejetée",
-      "maps_rejected_other": "+ {{count}} maps rejetées",
+      "map_count": "Nombre de maps",
+      "maps_one": "{{count}} map",
+      "maps_other": "{{count}} maps",
+      "maps_archived_one": "{{count}} map (+{{archived}} archivée)",
+      "maps_archived_other": "{{count}} Maps (+{{archived}} archivées)",
+      "maps_rejected_one": "+{{count}} map rejetée",
+      "maps_rejected_other": "+{{count}} maps rejetées",
       "links": "Liens",
       "campaign_tgl": "Top Golden List de la campagne",
       "no_download": "Cette campagne n’est plus publiquement disponible."
@@ -1276,7 +1402,7 @@
     "tabs": {
       "players": {
         "progress": "Progrès",
-        "no_players": "Personne pour l’instant.",
+        "no_players": "Personne pour l'instant.",
         "more_players_one": "+ {{count}} autre",
         "more_players_other": "+ {{count}} autres",
         "you": "Toi",
@@ -1286,8 +1412,8 @@
   },
   "rules": {
     "title": "Règles",
-    "toc": "Sommaire",
-    "description": "Cette page existe dans le but de formaliser les règles et leurs cas limites. Il y est dit à peu près ce à quoi on peut s’attendre de règles : ne triche pas, n’utilise pas de mods qui modifient trop le gameplay, garde un enregistrement de la session complète de jeu pour les challenges de <i>tier 3</i> ou plus difficiles, et montre bien la run du début à la fin. Cette page existe dans le but de résoudre des conflits et couvrir toutes sortes de cas limites, mais elle n’est pas exhaustive. Ce serait impossible, les mappeuses et mappeurs inventeront toujours de nouvelles manières de nous surprendre et on s’y perdrait à tout vouloir prévoir. Si tu te retrouves face à un cas spécifique qui n’est pas mentionné dans cette liste, ou si tu as généralement des questions par rapport à celle-ci, n’hésite pas à nous le faire savoir ! C’est toujours mieux de demander avant de soumettre une complétion qui risquerait de résulter en des débats sans fins qui pourraient finir par l’invalidation de ton entrée. Merci.",
+    "toc": "Table des matières",
+    "description": "Cette page existe dans le but de formaliser les règles et leurs cas limites. Il y est dit à peu près ce à quoi on peut s’attendre de règles : ne triche pas, n’utilise pas de mods qui modifient trop le gameplay, garde un enregistrement de la session complète de jeu pour les challenges de <i>tier 8</i> ou plus difficiles, et montre bien la run du début à la fin. Cette page existe dans le but de résoudre des conflits et couvrir toutes sortes de cas limites, mais elle n’est pas exhaustive. Ce serait impossible, les mappeuses et mappeurs inventeront toujours de nouvelles manières de nous surprendre et on s’y perdrait à tout vouloir prévoir. Si tu te retrouves face à un cas spécifique qui n’est pas mentionné dans cette liste, ou si tu as généralement des questions par rapport à celle-ci, n’hésite pas à nous le faire savoir ! C’est toujours mieux de demander avant de soumettre une complétion qui risquerait de résulter en des débats sans fins qui pourraient finir par l’invalidation de ton entrée. Merci.",
     "maps": {
       "header": "Règles pour les maps et les challenges",
       "rules": {
@@ -1298,7 +1424,7 @@
           },
           {
             "heading": "Non-trivialité",
-            "text": "La map ou le <i>map pack</i> <strong>ne doit pas</strong> être de difficulté triviale, même s’il se trouve être très facile. Les maps qui contiennent peu de danger ou quasiment aucun moyen de mourir seront refusées. Un exemple de map qui, bien que difficile, ne satisfait pas cette condition est <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. Sous certaines conditions, par exemple lorsqu’une map fait partie d’une campagne ou d’un lobby, des exceptions peuvent être faites, comme le montre le cas de la <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">silver de Summit Down-Side</CustomExternalLink>. Ces maps-ci sont indiquées par la note “Trivial”."
+            "text": "La map ou le <i>map pack</i> <strong>ne doit pas</strong> être de difficulté triviale, même s’il se trouve être très facile. Les maps qui contiennent peu de danger ou quasiment aucun moyen de mourir seront refusées. Un exemple de map qui, bien que difficile, ne satisfait pas cette condition est <CustomExternalLink href=\"https://www.youtube.com/watch?v=5YpJwGcr8ds\">Ultra Skrimbles</CustomExternalLink>. Sous certaines conditions, par exemple lorsqu’une map fait partie d’une campagne ou d’un lobby, des exceptions peuvent être faites, comme le montre le cas de la <CustomExternalLink href=\"https://www.youtube.com/watch?v=o5zGa_w_2wA\">silver de Summit Down-Side</CustomExternalLink>. Ces maps-ci sont indiquées par la note \"Trivial\"."
           },
           {
             "heading": "Unicité",
@@ -1316,9 +1442,9 @@
       }
     },
     "goldens": {
-      "header": "Entrées",
+      "header": "Runs",
       "rules": {
-        "header": "Règles pour toutes les entrées",
+        "header": "Règles pour TOUTES les runs",
         "entries": [
           {
             "heading": "Lien vidéo permanent",
@@ -1342,10 +1468,10 @@
           },
           {
             "heading": "Session complète",
-            "text": "Pour les challenges de <i><strong>tier 3</strong></i> ou plus difficiles, un enregistrement de la session entière est demandé. Si jamais le challenge a été complété au début d’une session, la session de jeu précédente peut être demandée."
+            "text": "Pour les challenges de <i><strong>tier 8</strong></i> ou plus difficiles, un enregistrement de la session entière est demandé. Si jamais le challenge a été complété au début d’une session, la session de jeu précédente peut être demandée."
           },
           {
-            "heading": "Info Mods",
+            "heading": "Mods avec infos supplémentaires",
             "text": "Il est <strong>recommandé de ne pas</strong> utiliser d’“info mods”, qui donnent des informations qui ne seraient pas disponibles sans eux, comme la fonctionnalité <i>show frame count</i> du mod Input History (qui permet d’afficher l’historique des boutons pressés), une jauge de <i>stamina</i> (d’endurance), ou encore l’info HUD de CelesteTAS. Sur certains challenges où de tels mods font peu de différence, les entrées peuvent être acceptées et données une note. Si de tels mods donnent un avantage considérable, comme pour des maps centrées sur l’endurance ou demandant des alignements au <i>subpixel</i>, de telles entrées seront probablement rejetées."
           },
           {
@@ -1384,7 +1510,7 @@
       },
       "full_game_additional": {
         "header": "Règles supplémentaires pour les challenges full game",
-        "explanation": "Il existe deux types de challenges “full game” : ceux qui complètent sans mourir un sous-ensemble pertinent de maps d’un map pack (qu’on appellera des <i>challenges full game partiels</i>), comme par exemple faire toutes les faces C ou un lobby sans mourir, et les challenges plus complets, comme par exemple faire toutes les maps sans mourir, ou même un 100 % <i>deathless</i> (qu’on appellera des <i>challenges full game complets</i>). Les règles s’appliquant seulement sur une de ces deux catégories le mentionneront.",
+        "explanation": "Il existe deux types de challenges \"full game\" : ceux qui complètent sans mourir un sous-ensemble pertinent de maps d’un map pack (qu’on appellera des <i>challenges full game partiels</i>), comme par exemple faire toutes les faces C ou un lobby sans mourir, et les challenges plus complets, comme par exemple faire toutes les maps sans mourir, ou même un 100 % <i>deathless</i> (qu’on appellera des <i>challenges full game complets</i>). Les règles s’appliquant seulement sur une de ces deux catégories le mentionneront.",
         "entries": [
           {
             "heading": "Vidéo complète",
@@ -1395,7 +1521,7 @@
             "text": "Pour rappel, la règle nº 14 explique comment la progression des challenges, dont les challenges full game, doit être gérée. En général, les entrées de challenges full game complets <strong>doivent</strong> commencer à ce qui correspond à un nouveau fichier de sauvegarde, alors que le début de runs de challenges partiels peut varier. Par exemple, prenons l’exemple du jeu de base. Si on était amené à faire toutes les faces A sans mourir, celles-ci devraient être finies dans l’ordre, puisque 1A débloque 2A, 2A débloque 3A, etc. Si on était amené à faire toutes les faces B sans mourir, celles-ci pourraient être complétées dans n’importe quel ordre, puisque débloquer une face B ne dépend pas du progrès dans les autres. Un challenge comme un 100 % sans mourir doit être effectué à partir d’un nouveau fichier de sauvegarde."
           },
           {
-            "heading": "Pas de Retour à la carte",
+            "heading": "Pas de \" Retour à la carte\"",
             "text": "Les entrées de challenges full game <strong>ne doivent pas</strong> utiliser de « Retour à la carte » (<i>Return to Map</i>) ou quelconque option similaire permettant de réinitialiser l’état d’une salle. L’état d’une salle comprend la position de Madeline, les cristaux à usage unique, les blocs qui tombent, les positions des Kevins, les pièces, etc."
           },
           {
@@ -1459,7 +1585,7 @@
             "text": "Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/514173\">Motion Smoothing</CustomExternalLink> permet de jouer à plus de 60 FPS sans casser la physique du jeu. Ce mod est autorisé pour les entrées, mais les mods permettant d’augmenter les FPS susceptibles de changer la physique du jeu ne le sont pas."
           },
           {
-            "text": "Les mod <CustomExternalLink href=\"https://gamebanana.com/mods/464283\">izumi’s quality of life</CustomExternalLink> ajoute quelques fonctionnalités intéressantes, comme prendre des captures d’écrans des journaux et les comparer aux stats actuelles, afficher les stats pour chaque face séparément, ajouter une alerte quand l’enregistrement n’est pas lancé, et pouvoir changer entre plusieurs configurations de boutons différente. Ce mod est autorisé pour les entrées, mais l’utilisation de fonctionnalités modifiant le gameplay ou permettant le gain d’information durant un challenge est interdite. Changer de configuration de boutons n’est autorisé uniquement en l’absence de danger de mort. Par exemple, changer ses contrôles sur le sol ou en étant sur un mur est autorisé dans la plupart des cas, mais le faire dans les airs ou au milieu d’une salle peut mener au rejet de l’entrée."
+            "text": "Le mod <CustomExternalLink href=\"https://gamebanana.com/mods/464283\">izumi’s quality of life</CustomExternalLink> ajoute quelques fonctionnalités intéressantes, comme prendre des captures d’écrans des journaux et les comparer aux stats actuelles, afficher les stats pour chaque face séparément, ajouter une alerte quand l’enregistrement n’est pas lancé, et pouvoir changer entre plusieurs configurations de boutons différente. Ce mod est autorisé pour les entrées, mais l’utilisation de fonctionnalités modifiant le gameplay ou permettant le gain d’information durant un challenge est interdite. Changer de configuration de boutons n’est autorisé uniquement en l’absence de danger de mort. Par exemple, changer ses contrôles sur le sol ou en étant sur un mur est autorisé dans la plupart des cas, mais le faire dans les airs ou au milieu d’une salle peut mener au rejet de l’entrée."
           },
           {
             "text": "D’autres mods sont communément utilisés dans la complétion de challenges <i>deathless</i>, comme <CustomExternalLink href=\"https://gamebanana.com/mods/358978\">Consistency Tracker</CustomExternalLink> et <CustomExternalLink href=\"https://gamebanana.com/mods/53681\">DeathTracker</CustomExternalLink>."
@@ -1485,28 +1611,24 @@
       },
       {
         "question": "Pourquoi est-ce que certaines maps n’ont pas de full clear ?",
-        "answer": "Des maps peuvent comporter des collectibles qui ne sont pas optionnels, comme les fraises de Hell Gym ."
+        "answer": "Des maps peuvent comporter des collectibles qui ne sont pas optionnels, comme les fraises de Hell Gym."
       },
       {
-        "question": "Au fait, c’est quoi la Top Golden List ?",
-        "answer": "Il existe trois catégories de difficulté recensées ici : Trivial, Standard, et Hard. La Top Golden List est une liste des challenges de la catégorie “Hard” ayant été complétés. La golden d’une map figure sur la liste si elle est considérée comme étant plus difficile que le <i>Hell Trio</i>, les goldens des faces B des chapitres 6, 7 et 8 du jeu de base. Les goldens sont ensuite placées sur la liste en fonction de comment elles se comparent aux autres déjà présentes. Les placements ne sont jamais 100 % justes, puisque de nouvelles techniques peuvent être trouvées, et juger de la difficulté d’un challenge reste bien sûr entièrement subjectif. On compare principalement les goldens en fonction de quelques facteurs, comme par exemple le temps de jeu total qu’elles ont pris, l’expérience sur le jeu au moment de la collection, le temps pris sur les maps avant d’essayer la golden, et une analyse plus subjective de la longueur des maps, de la distribution de leur difficulté, de la <i>consistency</i> de leur gameplay…"
-      },
-      {
-        "question": "Cette map est beaucoup plus dure que ce qui est indiqué sur la liste ! Pourquoi donc ?",
+        "question": "Cette map est beaucoup plus dure que son placement sur la liste ! Comment ça se fait ?",
         "answer": "Un challenge est placé en fonction des stratégies existantes les plus simples permettant de le compléter. Si une map comprend un <i>skip</i> majeur, la route comprenant le <i>skip</i> sera utilisée pour la placer sur la liste. De plus, encore une fois, les placements sont subjectifs et dépendent entièrement des personnes les ayant effectués. Un changement de difficulté pour n’importe quel challenge peut être demandé si voulu."
       },
       {
-        "question": "À quoi sert la difficulté “Trivial” ?",
+        "question": "À quoi sert la difficulté \"Trivial\" ?",
         "answer": "Cette difficulté est réservée aux challenges, eh bien, triviaux à compléter. Sont inclues les maps d’une seule salle, où un clear standard ne diffère pas de la golden, ainsi que les maps où il n’est pas possible de mourir."
       },
       {
         "question": "Est-ce que les maps multijoueurs sont autorisées ? Est-ce que les maps contenant X sont autorisées ?",
-        "answer": "Si une map suit toutes les règles établies pour les maps, elle est autorisée sur la liste. Dans le cas des maps multijoueurs, la difficulté des challenges se basera sur le nombre de joueurs initialement prévu pour la map. "
+        "answer": "Si une map suit toutes les règles établies pour les maps, elle est autorisée sur la liste. Dans le cas des maps multijoueurs, la difficulté des challenges se basera sur le nombre de joueurs initialement prévu pour la map."
       }
     ],
     "vanilla_references": {
-      "question": "Pourquoi est-ce que les challenges du jeu de base ne sont-ils pas sur cette liste ?",
-      "answer": "Les challenges du jeu de base ne sont pas recensées sur cette liste, puisque non seulement ils sortent du cadre du moddé, mais possèdent également trop de complétions pour pouvoir raisonnablement tenir le compte du nombre de personnes qui les ont complétés. Cependant, leur difficulté peut tout de même être estimée. Tu trouveras ci-dessous une liste de référence de comment seraient placés les challenges du jeu de base sur la Top Golden List. Tout golden non listée ici est considérée comme étant de difficulté Standard, avec le “Hell Trio” (faces B des chapitres 6, 7, et 8) se trouvant au pic de la difficulté Standard.<br/><br/><i>Note : dans le passé, la golden de </i>Farewell<i> (Adieu) sans DTS était considérée comme la référence pour les challenges de difficulté </i>Low Tier 3<i> sur la Top Golden List. Ce n’est plus le cas, et la golden fait maintenant simplement partie du </i>tier<i>.</i>"
+      "question": "Pourquoi les challenges du jeu de base ne sont-ils pas sur cette liste ?",
+      "answer": "Les challenges du jeu de base ne sont pas recensées sur cette liste, puisque non seulement ils sortent du cadre du moddé, mais possèdent également trop de complétions pour pouvoir raisonnablement tenir le compte du nombre de personnes qui les ont complétés. Cependant, leur difficulté peut tout de même être estimée. Tu trouveras ci-dessous une liste de référence de comment seraient placés les challenges du jeu de base sur la Top Golden List. <br/><br/><i>Note : dans le passé, la golden de </i>Farewell<i> (Adieu) sans DTS était considérée comme la référence pour les challenges de difficulté </i>Low Tier 3<i> sur la Top Golden List. Ce n’est plus le cas, et la golden fait maintenant simplement partie du </i>tier<i>. De plus, les goldens du \"Hell Trio\" (6B, 7B, 8B) ne représentent plus la difficulté de base du </i>tier 4<i>.</i>"
     }
   },
   "index": {
@@ -1515,7 +1637,7 @@
       "header": "Celeste moddé, mais sans mourir !",
       "text": "Le but premier de ce site est de répertorier toutes les maps ou les campagnes ayant été complétées sans mourir, mais il sert aussi à motiver les personnes voulant se lancer dans de tels challenges et à rendre plus active la scène deathless moddée de Celeste. Ce site contient toutes les maps ayant été complétées sans mourir, ainsi que le nom de toutes les personnes ayant collecté ces goldens.",
       "info": "Si tu as des questions ou des suggestions, n’hésite pas à rejoindre le serveur Discord de la Modded Golden Team, ou à contacter un membre de l’équipe.",
-      "team_members": "Membres de l’équipe"
+      "team_members": "Membres de l'équipe"
     },
     "links": {
       "header": "Liens importants",
@@ -1523,15 +1645,15 @@
       "header_other_lists": "Autres listes",
       "rules": "Règles",
       "faq": "FAQ",
-      "celeste_discord": "Serveur Celeste principal",
-      "celeste_discord_fr": "Serveur Celeste francophone",
-      "celeste_discord_pt_br": "Serveur Celeste brésilien",
-      "modded_golden_team_discord": "Serveur Discord de la Modded Golden Team",
+      "celeste_discord": "Discord Celeste principal",
+      "celeste_discord_fr": "Discord Celeste francophone",
+      "celeste_discord_pt_br": "Discord Celeste brésilien",
+      "modded_golden_team_discord": "Discord de la Modded Golden Team",
       "fwg_sheet": "Liste des détenteurs de la golden de Farewell (Adieu)",
       "survivors_list": "Liste des Celeste Survivors (Runs deathless de vanilla Celeste)",
       "legal_notice": "Mention légale",
       "api_docs": "Documentation API",
-      "server_costs": "Vue d’ensemble des coûts du serveur",
+      "server_costs": "Vue d'ensemble des coûts du serveur",
       "credits": "Crédits"
     },
     "issues": {
@@ -1542,20 +1664,20 @@
       "header": "Stats globales",
       "totals": {
         "header": "Il y a actuellement :",
-        "campaigns": "<strong>{{campaigns}}</strong> campagnes (dont {{standalone}} stand-alone)",
-        "maps": "<strong>{{maps}}</strong> maps (with <strong>{{challenges}}</strong> total challenges)",
-        "submissions": "et <strong>{{submissions}}</strong> entrées de <strong>{{players}}</strong> joueuses et joueurs !"
+        "campaigns": "<strong>{{campaigns}}</strong> campagnes, dont ({{standalone}} stand-alone)",
+        "maps": "<strong>{{maps}}</strong> maps (pour un total de <strong>{{challenges}}</strong> challenges)",
+        "submissions": "et <strong>{{submissions}}</strong> runs de <strong>{{players}}</strong> joueurs et joueuses!"
       },
       "difficulty_stats": {
         "header": "Stats par difficulté",
-        "text": "Nombre d’entrées pour chaque tier"
+        "text": "Nombre d'entrées pour chaque tier"
       }
     },
     "getting_started": {
       "header": "Pour bien démarrer",
       "preface": "Afin d’ajouter une de tes runs sur ce site, tu vas devoir :",
       "video": "Avoir une preuve vidéo de ta run, disponible à tout moment (par exemple sur YouTube, bilibili, …).",
-      "account": "<strong><RegisterLink>Créer</RegisterLink> un compte et t’y <LoginLink>connecter</LoginLink></strong>. Tu peux te connecter via Discord ou avec une adresse email et un mot de passe.",
+      "account": "<strong><RegisterLink>Créer</RegisterLink> un compte et t’y <LoginLink>connecter</LoginLink></strong>. Tu peux te connecter via Discord ou avec une adresse e-mail et un mot de passe.",
       "player": "<strong><CustomLink>Apparaître sur la liste</CustomLink></strong>. Si tu possèdes déjà des entrées sur l’ancien tableur, ton « nom » existe déjà, et tu peux le réclamer. Si c’est ta première fois, tu peux créer un nouveau nom.",
       "submit": "Lis bien les <RulesLink>règles</RulesLink>, rends-toi sur <CustomLink>cette page</CustomLink> et rajoute ta run !"
     },
@@ -1563,13 +1685,24 @@
       "header": "Un site tout beau tout neuf !",
       "text": "Ce site vient juste d’être rendu public ! De par la nature chaotique du tableur, il n’est pas rare que certaines données soient fausses ou irrégulières. Si tu en trouves, signale-nous ça sur le serveur Discord de la Modded Golden Team !",
       "migration": "Faire migrer toutes les données, ainsi que toute la communauté sur ce site va prendre un petit moment, donc pour l’instant, tu peux toujours rajouter des entrées comme au bon vieux temps, en taggant la modded golden team sur le serveur Discord de Celeste, ou sur le serveur Discord de la Modded Golden Team."
+    },
+    "rework": {
+      "header": "Rework des tiers !",
+      "text": "Depuis février 2025, le système des tiers a été modifié ! Ce changement a été effectué pour de nombreuses raisons, en particulier pour rendre les changements liés aux futures goldens \"les plus difficiles\" plus simples, faciliter le processus pour rajouter des tiers supérieures, et normaliser les tiers en un système de nombres ascendants tout simplel !",
+      "bullet_points": [
+        "Les noms des tiers ont maintenant changé pour que le Tier 1 soit le plus simple, et que la difficulté augmente avec le nombre.",
+        "La difficulté \"Standard\" consiste maintenant des 3 tiers les plus bas. Ces tiers sont cachés par défaut sur la Top Golden List afin de réduire le temps de chargement, mais peuvent être affichés en ajustant la \"Difficulté min.\" dans les filtres des entrées.",
+        "Chaque subtier est maintenant un tier entier",
+        "Un tier supplémentaire a été rajouté entre les anciens Tiers Low 0 et High 1, amenant le nombre total de tiers actuel à 19."
+      ],
+      "more_text": "Pour aiser le passage au nouveau système de tiers, une option temporaire a été ajouté pour afficher les anciens tiers à côté des nouveaux. De plus, une option a été rajoutée pour empiler les plus hauts tiers verticalement afin de rendre la Top Golden List plus compacte."
     }
   },
   "credits": {
     "title": "Crédits",
     "text": "Cette page liste toutes les personnes ayant contribué à la création de ce site.",
     "modelling": "Mise en page",
-    "backend_frontend": "Backend et frontend",
+    "backend_frontend": "Backend et Frontend",
     "rules": "Règles",
     "testing": "Tests et retours",
     "people": "plein plein de personnes géniales du fil goldberries-net du Discord de la Modded Golden Team",
@@ -1586,33 +1719,75 @@
         "label": "Historique des clears",
         "header": "Nombre de clears mensuel par tier",
         "text": "Ces graphiques indiquent le nombre de clears mensuel pour chaque tier depuis le tout début de la liste.",
-        "total_tiered": "Total"
+        "total_submissions": "Total"
       },
       "most_goldened": {
         "label": "Les goldens les plus faites",
-        "header": "Les campagnes & les maps ayant été le plus golden",
-        "text": "Ici se trouvent les campagnes et les maps comptant le plus d’entrées.",
+        "header": "Les campagnes et maps ayant été le plus golden",
+        "text": "Voici les campagnes et les maps comptant le plus d'entrées",
         "time_machine": "Sélectionne une date ci-dessous afin de voir quelles maps et campagnes étaient les plus golden à ce moment-là.",
         "date": "Date"
       },
       "misc": {
         "label": "Autres stats",
-        "header": "Autres stats diverses",
+        "header": "Statistiques diverses",
         "suggestions": {
           "header": "Suggestions",
           "accepted": "Suggestions acceptées",
-          "rejected": "Suggestions refusées"
+          "rejected": "Suggestions rejetées"
         },
         "submissions": {
           "header": "Nombre d’entrées depuis le lancement du site",
-          "text": "Depuis la sortie du site le 2 août 2024, un total de <strong>{{count}}</strong> ont été ajoutées."
+          "text": "Depuis la sortie du site le 2 août 2024, un total de <strong>{{count}}</strong> runs ont été ajoutées."
         },
         "difficulties": {
           "header": "Stats par difficulté",
           "text": "Pour chaque tier, le pourcentage de personnes ayant effectué au moins une golden de ce tier.",
           "axis_label": "% de personnes"
         }
+      },
+      "verifier_stats": {
+        "label": "Verifier Stats",
+        "header": "Verifier Stats",
+        "most_verified": {
+          "header": "Most Verified",
+          "text": "These verifiers verified the most amount of submissions."
+        },
+        "most_created": {
+          "header": "Most Created",
+          "text": "These verifiers created the most amount of campaigns/maps/challenges."
+        }
       }
+    }
+  },
+  "file_upload": {
+    "title": "Téléverser un fichier",
+    "file_input_description": "Glisser le fichier ici ou cliquer pour en sélectionner un",
+    "file_input": "Insérer un fichier / Cliquer pour en choisir un",
+    "image_preview": "Aperçu image",
+    "file_name": "Nom du nouveau fichier",
+    "file_path": "Chemin du fichier",
+    "destination": {
+      "icon": "Icône",
+      "campaign_icon": "Icône de la campagne",
+      "post": "Publier l'image"
+    },
+    "feedback": {
+      "success": "Fichier importé avec succès",
+      "copy_success": "Chemin copié dans le presse-papier"
+    }
+  },
+  "post": {
+    "list": {
+      "title_news": "Nouveautés",
+      "title_changelog": "Changements",
+      "search": "Chercher des publications",
+      "show_more": "Afficher plus..."
+    },
+    "index": {
+      "header_news": "Nouveautés",
+      "header_changelog": "Changelog du site",
+      "view_all": "Voir tout"
     }
   }
 }

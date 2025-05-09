@@ -472,8 +472,9 @@ export function AuthWrapper({ children }) {
   return <AuthProvider>{children}</AuthProvider>;
 }
 export function DateLibraryWrapper({ children }) {
+  const adapterLocale = navigator.language === "en-US" ? "en" : "en-gb";
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={adapterLocale}>
       {children}
     </LocalizationProvider>
   );
