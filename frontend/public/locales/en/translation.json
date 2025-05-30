@@ -157,7 +157,7 @@
       "stable_explanation": "This challenge has a stable difficulty placement",
       "placement_difficulty": "Placement Difficulty:",
       "export_button_tooltip": "Export Top Golden List",
-      "stats_button_tooltip": "View Time Taken Distribution",
+      "stats_button_tooltip": "View Total Grind Time Distribution",
       "export": {
         "feedback": {
           "copied": "Copied to clipboard",
@@ -166,13 +166,13 @@
         "challenge_name": "Challenge Name",
         "submission_count": "Submission Count",
         "first_clear_url": "First Clear URL",
-        "time_taken": "Time Taken",
+        "time_taken": "Total Total Grind Time",
         "header": "Export Top Golden List",
         "text": "Use the button below to copy all visible challenges to your clipboard.",
         "include_header": "Include data header",
         "include_submission_count": "Include submission count",
         "include_first_clear_url": "Include first clear URL",
-        "include_time_taken": "Include Time Taken",
+        "include_time_taken": "Include Total Grind Time",
         "button": "Copy to Clipboard"
       }
     },
@@ -226,7 +226,7 @@
       "not_specified": "Not Specified"
     },
     "time_taken_graph": {
-      "title": "Time Taken Distribution",
+      "title": "Total Grind Time Distribution",
       "description": "This graph shows the range of how long this player took to complete challenges for each tier. The same submission filters apply.",
       "x_axis": "Hours",
       "show_scatter": "Show as scatter plot",
@@ -409,7 +409,7 @@
       "personal_note": "'Personal' difficulty opinions indicate that this opinion should not be used for difficulty placements",
       "frac_header": "Fractional Tier",
       "frac_note": "You can specify where you think the challenge places within the tier. Default is 0.5 (exactly in the middle).",
-      "time_taken": "Time Taken",
+      "time_taken": "Total Grind Time",
       "date_submitted": "Date Submitted",
       "date_achieved": "Date Achieved",
       "date_verified": "Date Verified",
@@ -919,8 +919,8 @@
         },
         "hide_empty_tiers": "Hide Empty Tiers",
         "hide_time_taken_column": {
-          "label": "Hide Time Taken Column",
-          "note": "Hides the 'Time Taken' column in the personal Top Golden List of players"
+          "label": "Hide Total Grind Time Column",
+          "note": "Hides the 'Total Grind Time' column in the personal Top Golden List of players"
         },
         "show_fractional_tiers": {
           "label": "Show Fractional Tiers",

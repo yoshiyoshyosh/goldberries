@@ -480,6 +480,7 @@ export const COLLECTIBLES = [
         name: "Summit Gem",
         icon: "/icons/orb-zescent-2.png",
       },
+      { value: "4", name: "Intro Car", displayName: "Intro Car", icon: "/icons/intro-car.png" },
     ],
   },
 ];
