@@ -173,7 +173,7 @@ class Map extends DbObject
   {
     $whereAddition = $include_arbitrary ? null : "(is_arbitrary = false OR is_arbitrary IS NULL)";
     $whereAddition = $hide_rejected ? ($whereAddition === null ? "is_rejected = false" : "$whereAddition AND is_rejected = false") : $whereAddition;
-    $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, id ASC");
+    $challenges = $this->fetch_list($DB, 'map_id', Challenge::class, $whereAddition, "ORDER BY sort ASC, requires_fc ASC, label ASC NULLS FIRST, id ASC");
     if ($challenges === false)
       return false;
     $this->challenges = $challenges;
