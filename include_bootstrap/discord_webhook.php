@@ -366,7 +366,7 @@ function send_webhook_challenge_marked_personal($challenge)
   foreach ($challenge->submissions as $submission) {
     if ($submission->suggested_difficulty_id !== null && !$submission->is_personal) {
       $submission_url = $submission->get_url();
-      $name = "[{$submission->player->name}]({$submission_url})";
+      $name = "[{$submission->player->name}](<{$submission_url}>)";
       $account = $submission->player->get_account($DB);
       if ($account !== null && $account->discord_id !== null && $account->has_notification_flag(Account::$NOTIF_CHALL_PERSONAL)) {
         $name .= " (<@{$account->discord_id}>)";

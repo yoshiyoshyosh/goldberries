@@ -22,3 +22,18 @@ WHERE t.row_number = 1 OR t.row_number = 2
 GROUP BY t.challenge_id
 ORDER BY days_difference DESC
 ```
+
+## Most searched terms
+
+```
+SELECT
+	tmp.search_term,
+	COUNT(*) AS count_searched
+FROM (SELECT
+		LOWER(regexp_replace((regexp_matches(traffic.query, 'q=([^&]+)', ''))[1], '\+', ' ', 'g')) AS search_term
+	FROM traffic
+	WHERE traffic.page = '/api/search') AS tmp
+WHERE LENGTH(tmp.search_term) > 1
+GROUP BY search_term
+ORDER BY count_searched DESC
+```
