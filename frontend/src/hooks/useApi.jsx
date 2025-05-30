@@ -142,7 +142,7 @@ export function useGetAllChallengesInCampaign(campaignId) {
 }
 export function useGetManageChallenges(page, perPage, search) {
   return useQuery({
-    queryKey: ["manage_campaigns", page, perPage, search],
+    queryKey: ["manage_challenges", page, perPage, search],
     queryFn: () => fetchCampaignsPaginated(page, perPage, search),
   });
 }
