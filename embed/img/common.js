@@ -26,6 +26,14 @@ function sel(selector) {
 }
 
 const DIFFICULTIES = {
+  24: {
+    color: "#f266ff",
+    name: "Tier 20",
+    sort: 20,
+    old_name: "",
+    old_name_label_color: "#ffffff",
+    shares: 4,
+  },
   //Tier 0
   2: {
     color: "#ff68d9",

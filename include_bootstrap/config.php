@@ -20,7 +20,7 @@ $LOW_TIER_3_SORT = 8;
 $STANDARD_SORT_START = 1;
 $STANDARD_SORT_END = 3;
 $TIERED_SORT_START = 4;
-$MAX_SORT = 19;
+$MAX_SORT = 20;
 $MIN_SORT = -1;
 $RAW_SESSION_REQUIRED_SORT = $LOW_TIER_3_SORT;
 //=================================================
