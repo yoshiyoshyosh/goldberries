@@ -255,13 +255,19 @@ export function getCampaignName(campaign, t, noAuthor = false) {
 }
 
 export function getAccountName(account) {
-  if (account.player !== null) {
-    return `(${account.id}) ${account.player.name}`;
-  } else if (account.claimed_player !== null) {
-    return `(${account.id}) [Claim] ${account.claimed_player.name}`;
+  let prefix = `(${account.id})`;
+
+  if (account.is_suspended) {
+    prefix += " [Banned]";
   }
 
-  return `(${account.id}) <no player>`;
+  if (account.player !== null) {
+    return `${prefix} ${account.player.name}`;
+  } else if (account.claimed_player !== null) {
+    return `${prefix} [Claim] ${account.claimed_player.name}`;
+  }
+
+  return `${prefix} <no player>`;
 }
 
 export function getPlayerNameColorStyle(player, settings = null) {

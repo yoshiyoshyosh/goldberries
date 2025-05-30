@@ -312,7 +312,9 @@ export function PagePlayerTopGoldenList({ id }) {
   const exportModal = useModal();
   const statsModal = useModal();
   const useSuggestedRef = useRef();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", getDefaultFilter(false));
+
+  const defaultFilter = getDefaultFilter(false);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_player", defaultFilter);
 
   if (query.isLoading) {
     return (
@@ -340,7 +342,13 @@ export function PagePlayerTopGoldenList({ id }) {
           <StyledLink to={`/player/${id}`}>{player.name}</StyledLink> - {t("personal_tgl")}
         </Typography>
         <Stack direction="row" gap={1}>
-          <SubmissionFilter type="player" id={id} filter={filter} setFilter={setFilter} />
+          <SubmissionFilter
+            type="player"
+            id={id}
+            filter={filter}
+            setFilter={setFilter}
+            defaultFilter={defaultFilter}
+          />
           <TooltipLineBreaks title={t_tgl("export_button_tooltip")}>
             <IconButton onClick={exportModal.open}>
               <FontAwesomeIcon

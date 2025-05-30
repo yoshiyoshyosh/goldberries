@@ -99,6 +99,14 @@ export const FormOptions = {
 };
 
 export const DIFFICULTIES = {
+  24: {
+    color: "#f266ff",
+    name: "Tier 20",
+    sort: 20,
+    old_name: "",
+    old_name_label_color: "#ffffff",
+    shares: 6,
+  },
   //Tier 0
   2: {
     color: "#ff68d9",
@@ -106,7 +114,7 @@ export const DIFFICULTIES = {
     sort: 19,
     old_name: "Mid Tier 0",
     old_name_label_color: "#ffffff",
-    shares: 4,
+    shares: 6,
   },
   3: {
     color: "#ff6daa",
@@ -282,7 +290,7 @@ export const DIFFICULTIES = {
     sort: 0,
     old_name: "Trivial",
     old_name_label_color: "#6f6f6f",
-    shares: 4,
+    shares: 6,
   },
 
   //Undetermined
@@ -292,7 +300,7 @@ export const DIFFICULTIES = {
     sort: -1,
     old_name: "Undetermined",
     old_name_label_color: "#6f6f6f",
-    shares: 4,
+    shares: 6,
   },
 };
 
@@ -323,7 +331,7 @@ export function getDifficultySubtierShares(id) {
 //Some difficulty details being used in the frontend
 const DIFF_CONSTS_ = {
   //Difficulty ID constants
-  HIGHEST_TIER_ID: 2,
+  HIGHEST_TIER_ID: 24,
   TRIVIAL_ID: 20,
   UNTIERED_ID: 19,
   STANDARD_IDS: [22, 18, 21], //high, mid, low
@@ -336,7 +344,7 @@ const DIFF_CONSTS_ = {
   STANDARD_SORT_END: 3,
   TIERED_SORT_START: 4,
   UNTIERED_SORT: 0,
-  MAX_SORT: 19,
+  MAX_SORT: 20,
   MIN_SORT: -1,
 
   //References, added here for intellisense
@@ -367,7 +375,7 @@ export function sortToDifficulty(sort) {
 export function sortToDifficultyId(sort) {
   for (const id in DIFFICULTIES) {
     if (DIFFICULTIES[id].sort === sort) {
-      return id;
+      return parseInt(id);
     }
   }
   return DIFF_CONSTS.UNTIERED_ID;
@@ -386,7 +394,7 @@ export function getDifficultiesSorted() {
   //Also put the ID into each difficulty object
   const difficulties = Object.keys(DIFFICULTIES).map((id) => {
     return {
-      id: id,
+      id: parseInt(id),
       ...DIFFICULTIES[id],
     };
   });
@@ -394,6 +402,7 @@ export function getDifficultiesSorted() {
 }
 
 export const DIFFICULTY_STACKS = [
+  [24],
   [2, 3, 23],
   [4, 5, 6],
   [7, 8, 9],

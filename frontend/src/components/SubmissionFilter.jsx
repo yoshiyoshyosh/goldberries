@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   ButtonGroup,
   Checkbox,
@@ -14,7 +13,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getQueryData, useGetObjectiveSubmissionCount, useGetObjectives } from "../hooks/useApi";
 import { ErrorDisplay, LoadingSpinner, TooltipLineBreaks, getErrorFromMultiple } from "./BasicComponents";
 import { useTheme } from "@emotion/react";
@@ -24,19 +23,15 @@ import {
   faCheck,
   faCheckSquare,
   faEyeSlash,
-  faGreaterThan,
   faGreaterThanEqual,
   faLessThanEqual,
   faQuestionCircle,
-  faRemove,
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { DIFFICULTIES, DIFF_CONSTS, sortToDifficulty, sortToDifficultyId } from "../util/constants";
-import { DifficultySelectControlled } from "./GoldberriesComponents";
-import { use } from "react";
 
 /*
   filter structure:
@@ -60,6 +55,7 @@ export function SubmissionFilter({
   setFilter,
   anchorOrigin,
   transformOrigin,
+  defaultFilter,
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: "components.submission_filter" });
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
@@ -98,6 +94,30 @@ export function SubmissionFilter({
       return { ...prev, hide_objectives };
     });
   };
+
+  useEffect(() => {
+    if (filter.filter_version !== defaultFilter.filter_version) {
+      console.log("Outdated filter found, updating...");
+
+      if (
+        (filter.filter_version < 1 || filter.filter_version === undefined) &&
+        defaultFilter.filter_version >= 1
+      ) {
+        console.log("Updating filter from version <undefined> to 1");
+
+        //Fix the IDs being strings instead of numbers
+        filter.min_diff_id = parseInt(filter.min_diff_id);
+        filter.max_diff_id = parseInt(filter.max_diff_id);
+
+        //only change max_diff_id to t20 if previously it was set to t19
+        if (filter.max_diff_id === 2) {
+          filter.max_diff_id = 24;
+        }
+      }
+      filter.filter_version = defaultFilter.filter_version;
+      setFilter({ ...filter });
+    }
+  }, []);
 
   const queryObjectives = useGetObjectives();
   const objectives = getQueryData(queryObjectives);
@@ -218,19 +238,8 @@ export function SubmissionFilter({
                 sx={{ whiteSpace: "nowrap", mr: 0 }}
               />
 
-              {/* <DifficultySelectControlled
-                difficultyId={localFilter.min_diff_id ?? DIFF_CONSTS.TIER_7_ID}
-                setDifficultyId={(id) => changedFilter("min_diff_id", id)}
-                minSort={DIFF_CONSTS.UNTIERED_SORT}
-                fullWidth
-                label={t("minimum_tier")}
-                sx={{ my: 0.5 }}
-              /> */}
               <Typography variant="body1" sx={{ mt: 1 }}>
                 {t("tier_slider")}
-                {/* <Tooltip arrow placement="top" title={t("tier_slider.explanation")}>
-                  <FontAwesomeIcon icon={faQuestionCircle} />
-                </Tooltip> */}
               </Typography>
               <Stack direction="row" gap={1} alignItems="center" justifyContent="space-around">
                 <Slider
@@ -387,5 +396,6 @@ export function getDefaultFilter(isOverall) {
     sub_count_is_min: false,
     start_date: null,
     end_date: null,
+    filter_version: 1, //Version of the filter structure, used for future changes
   };
 }

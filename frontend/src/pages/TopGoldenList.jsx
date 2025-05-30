@@ -26,12 +26,15 @@ import {
   getMapName,
 } from "../util/data_util";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
+import { useEffect } from "react";
 
 export function PageTopGoldenList({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "top_golden_list" });
   const { type, id } = useParams();
   const theme = useTheme();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", getDefaultFilter(true));
+
+  const defaultFilter = getDefaultFilter(true);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter", defaultFilter);
 
   const exportModal = useModal();
 
@@ -54,7 +57,13 @@ export function PageTopGoldenList({}) {
               {title}
             </Typography>
             <Stack direction="row" gap={1}>
-              <SubmissionFilter type={type} id={id} filter={filter} setFilter={setFilter} />
+              <SubmissionFilter
+                type={type}
+                id={id}
+                filter={filter}
+                setFilter={setFilter}
+                defaultFilter={defaultFilter}
+              />
               <IconButton onClick={exportModal.open}>
                 <FontAwesomeIcon
                   color={theme.palette.text.secondary}

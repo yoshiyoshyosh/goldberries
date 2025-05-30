@@ -770,7 +770,9 @@ export function PageCampaignTopGoldenList({ id }) {
   const query = useGetCampaignView(id);
   const theme = useTheme();
   const exportModal = useModal();
-  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_campaign", getDefaultFilter(false));
+
+  const defaultFilter = getDefaultFilter(false);
+  const [filter, setFilter] = useLocalStorage("top_golden_list_filter_campaign", defaultFilter);
 
   if (query.isLoading) {
     return (
@@ -795,7 +797,13 @@ export function PageCampaignTopGoldenList({ id }) {
           Top Golden List: <StyledLink to={`/campaign/${id}`}>{response.campaign.name}</StyledLink>
         </Typography>
         <Stack direction="row" gap={1}>
-          <SubmissionFilter type="campaign" id={id} filter={filter} setFilter={setFilter} />
+          <SubmissionFilter
+            type="campaign"
+            id={id}
+            filter={filter}
+            setFilter={setFilter}
+            defaultFilter={defaultFilter}
+          />
           <IconButton onClick={exportModal.open}>
             <FontAwesomeIcon color={theme.palette.text.secondary} icon={faFileExport} fixedWidth size="2xs" />
           </IconButton>
