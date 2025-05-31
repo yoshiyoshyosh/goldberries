@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $challenges = isset($_REQUEST['challenges']) && $_REQUEST['challenges'] === 'true';
   $submissions = isset($_REQUEST['submissions']) && $_REQUEST['submissions'] === 'true';
   $rejected = isset($_REQUEST['rejected']) && $_REQUEST['rejected'] === 'true';
+  $other_maps = isset($_REQUEST['other_maps']) && $_REQUEST['other_maps'] === 'true';
 
   $id = $_REQUEST['id'];
   $maps = Map::get_request($DB, $id);
@@ -14,10 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       foreach ($maps as $map) {
         $map->expand_foreign_keys($DB, 2, false);
         $map->fetch_challenges($DB, $submissions, true, true, !$rejected);
+        if ($other_maps) {
+          $map->fetch_other_maps($DB);
+        }
       }
     } else {
       $maps->expand_foreign_keys($DB, 2, false);
       $maps->fetch_challenges($DB, $submissions, true, true, !$rejected);
+      if ($other_maps) {
+        $maps->fetch_other_maps($DB);
+      }
     }
   }
 

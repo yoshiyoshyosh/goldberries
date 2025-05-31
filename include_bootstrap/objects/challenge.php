@@ -127,7 +127,8 @@ class Challenge extends DbObject
   // === Find Functions ===
   function fetch_submissions($DB, $filter_suspended = false): bool
   {
-    $where = ["submission_challenge_id = $1", "submission_is_verified = true"];
+    $verified_cond = $this->is_rejected ? "1 = 1" : "submission_is_verified = true";
+    $where = ["submission_challenge_id = $1", $verified_cond];
     if ($filter_suspended) {
       $where[] = "(player_account_is_suspended = false OR player_account_is_suspended IS NULL)";
     }
@@ -198,6 +199,7 @@ class Challenge extends DbObject
       $challenge = new Challenge();
       $challenge->apply_db_data($row, "challenge_");
       $challenge->expand_foreign_keys($row, 5);
+      $challenge->fetch_all_submissions($DB);
       $challenges[] = $challenge;
     }
     return $challenges;

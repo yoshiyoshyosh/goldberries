@@ -25,6 +25,8 @@ FROM view_submissions
 WHERE submission_is_verified = true 
   AND campaign_id = $campaign_id 
   -- AND map_is_archived = false 
+  AND map_is_progress = true
+  AND challenge_is_rejected = false
   AND objective_is_arbitrary = false 
   AND (challenge_is_arbitrary = false OR challenge_is_arbitrary IS NULL)
   AND (player_account_is_suspended IS NULL OR player_account_is_suspended = false)";
@@ -145,12 +147,18 @@ function parse_campaign_view($result, $campaign)
   $max_major_sorts = array();
   if ($campaign->sort_major_name !== null) {
     foreach ($campaign->maps as $map) {
-      if ($map->is_archived === false && $map->is_rejected === false && $map->sort_major !== null) {
-        if (!array_key_exists($map->sort_major, $max_major_sorts)) {
-          $max_major_sorts[$map->sort_major] = 0;
-        }
-        $max_major_sorts[$map->sort_major]++;
+      if ($map->is_archived || $map->sort_major === null || $map->is_progress === false)
+        continue; //Skip maps that are archived, have no major sort, or are not progress maps
+      if (
+        empty(array_filter($map->challenges, fn($challenge) => $challenge->is_rejected === false))
+      ) {
+        continue; //Skip maps with no un-rejected challenges
       }
+
+      if (!array_key_exists($map->sort_major, $max_major_sorts)) {
+        $max_major_sorts[$map->sort_major] = 0;
+      }
+      $max_major_sorts[$map->sort_major]++;
     }
   }
 

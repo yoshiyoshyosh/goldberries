@@ -956,5 +956,9 @@ $MAP_ABBREVIATIONS = [
   [
     "abbreviation" => ["cts"],
     "id" => 2998,
+  ],
+  [
+    "abbreviation" => ["anachronism", "ancestor"],
+    "id" => 4411,
   ]
 ];

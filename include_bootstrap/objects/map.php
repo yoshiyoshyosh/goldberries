@@ -8,8 +8,6 @@ class Map extends DbObject
   public string $name;
   public ?StringList $url = null;
   public ?JsonDateTime $date_added = null;
-  public bool $is_rejected = false;
-  public ?string $rejection_reason = null;
   public bool $is_archived = false;
   public ?int $sort_major = null;
   public ?int $sort_minor = null;
@@ -19,6 +17,7 @@ class Map extends DbObject
   public ?string $note = null;
   public ?StringList $collectibles = null;
   public ?string $golden_changes = null;
+  public bool $is_progress = true;
 
   // Foreign Keys
   public ?int $campaign_id = null;
@@ -40,8 +39,6 @@ class Map extends DbObject
       'name' => $this->name,
       'url' => $this->url === null ? null : $this->url->__toString(),
       'date_added' => $this->date_added,
-      'is_rejected' => $this->is_rejected,
-      'rejection_reason' => $this->rejection_reason,
       'is_archived' => $this->is_archived,
       'sort_major' => $this->sort_major,
       'sort_minor' => $this->sort_minor,
@@ -53,6 +50,7 @@ class Map extends DbObject
       'collectibles' => $this->collectibles === null ? null : $this->collectibles->__toString(),
       'golden_changes' => $this->golden_changes,
       'counts_for_id' => $this->counts_for_id,
+      'is_progress' => $this->is_progress,
     );
   }
 
@@ -60,8 +58,8 @@ class Map extends DbObject
   {
     $this->id = intval($arr[$prefix . 'id']);
     $this->name = $arr[$prefix . 'name'];
-    $this->is_rejected = $arr[$prefix . 'is_rejected'] === 't';
     $this->is_archived = $arr[$prefix . 'is_archived'] === 't';
+    $this->is_progress = $arr[$prefix . 'is_progress'] === 't';
 
     if (isset($arr[$prefix . 'date_added']))
       $this->date_added = new JsonDateTime($arr[$prefix . 'date_added']);
@@ -80,8 +78,6 @@ class Map extends DbObject
     }
     if (isset($arr[$prefix . 'side']))
       $this->side = $arr[$prefix . 'side'];
-    if (isset($arr[$prefix . 'rejection_reason']))
-      $this->rejection_reason = $arr[$prefix . 'rejection_reason'];
     if (isset($arr[$prefix . 'sort_major']))
       $this->sort_major = intval($arr[$prefix . 'sort_major']);
     if (isset($arr[$prefix . 'sort_minor']))
@@ -152,8 +148,6 @@ class Map extends DbObject
       'map_name',
       'map_url',
       'map_date_added',
-      'map_is_rejected',
-      'map_rejection_reason',
       'map_is_archived',
       'map_sort_major',
       'map_sort_minor',
@@ -165,6 +159,7 @@ class Map extends DbObject
       'map_collectibles',
       'map_golden_changes',
       'map_counts_for_id',
+      'map_is_progress',
     ];
   }
 
@@ -185,11 +180,21 @@ class Map extends DbObject
     return true;
   }
 
+  function fetch_other_maps($DB)
+  {
+    $this->campaign->fetch_maps($DB, false, false, false, false, true);
+    $this->campaign->maps = array_values(array_filter(
+      $this->campaign->maps,
+      fn($map) => $map->id !== $this->id // Exclude the current map
+    ));
+  }
+
+
   static function search_by_name($DB, string $search, string $raw_search, bool $is_exact_search)
   {
     global $MAP_ABBREVIATIONS;
     $raw_search_lower = strtolower($raw_search);
-    $similar = $is_exact_search ? "" : " OR SIMILARITY(map.name, '$raw_search_lower') > 0.3";
+    $similar = $is_exact_search ? "" : " OR SIMILARITY(map.name, '$raw_search_lower') > 0.4";
 
     $query = "SELECT * FROM map WHERE map.name ILIKE '$search' $similar ORDER BY name";
     $result = pg_query($DB, $query);
@@ -281,23 +286,6 @@ class Map extends DbObject
     return $maps;
   }
 
-  static function get_all_rejected($DB)
-  {
-    $query = "SELECT * FROM map WHERE is_rejected = true ORDER BY name";
-    $result = pg_query($DB, $query);
-    if (!$result) {
-      die_json(500, "Could not query database");
-    }
-    $maps = array();
-    while ($row = pg_fetch_assoc($result)) {
-      $map = new Map();
-      $map->apply_db_data($row);
-      $map->expand_foreign_keys($DB, 2);
-      $maps[] = $map;
-    }
-    return $maps;
-  }
-
   // === Utility Functions ===
   function __toString()
   {
@@ -326,12 +314,12 @@ class Map extends DbObject
       $stateNow = $new->is_archived ? "Archived the map" : "Unarchived the map";
       Change::create_change($DB, 'map', $new->id, $stateNow);
     }
-    if ($old->is_rejected !== $new->is_rejected) {
-      $stateNow = $new->is_rejected ? "Rejected the map" : "Cleared rejection status";
-      Change::create_change($DB, 'map', $new->id, $stateNow);
-    }
     if ($old->counts_for_id !== $new->counts_for_id) {
       Change::create_change($DB, 'map', $new->id, "Changed this map counting for a different map in the campaign view from ID '{$old->counts_for_id}' to ID '{$new->counts_for_id}'");
+    }
+    if ($old->is_progress !== $new->is_progress) {
+      $stateNow = $new->is_progress ? "Set this map as providing campaign progress" : "Set this map as not providing campaign progress";
+      Change::create_change($DB, 'map', $new->id, $stateNow);
     }
 
     return true;
@@ -348,7 +336,6 @@ class Map extends DbObject
     $campaign_name_with_author = $this->campaign->get_name();
     $is_same = $campaign_name === $this->name;
     $archived_prefix = $this->is_archived ? "[Old] " : "";
-    $rejected_prefix = $this->is_rejected ? "[Rejected] " : "";
     $is_side = is_side_name($this->name);
 
     if ($is_same) {
@@ -356,9 +343,9 @@ class Map extends DbObject
     } else {
       if ($no_campaign) {
         $map_name = $is_side ? $this->campaign->name . " [{$this->name}]" : $this->name;
-        return "{$rejected_prefix}{$archived_prefix}{$map_name}";
+        return "{$archived_prefix}{$map_name}";
       } else {
-        return "{$campaign_name_with_author} / {$rejected_prefix}{$archived_prefix}{$this->name}";
+        return "{$campaign_name_with_author} / {$archived_prefix}{$this->name}";
       }
     }
   }

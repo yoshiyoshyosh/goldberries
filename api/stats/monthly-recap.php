@@ -38,7 +38,7 @@ FROM submission
 JOIN challenge ON submission.challenge_id = challenge.id
 LEFT JOIN map ON challenge.map_id = map.id
 JOIN difficulty ON challenge.difficulty_id = difficulty.id
-WHERE $time_filter AND submission.is_verified = true AND (map.is_rejected = FALSE OR map.is_rejected IS NULL)
+WHERE $time_filter AND submission.is_verified = true AND challenge.is_rejected = false
 GROUP BY date_trunc('month', submission.date_achieved, 'UTC') AT TIME ZONE 'UTC', difficulty.id
 ORDER BY date_achieved DESC, difficulty.id
 ";

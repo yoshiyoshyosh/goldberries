@@ -165,8 +165,6 @@ CREATE TABLE "map"
  name             varchar(128) NOT NULL,
  url              text NULL,
  date_added       timestamptz NULL DEFAULT CURRENT_TIMESTAMP,
- is_rejected      boolean NOT NULL DEFAULT false,
- rejection_reason text NULL,
  is_archived      boolean NOT NULL DEFAULT false,
  sort_major       integer NULL,
  sort_minor       integer NULL,
@@ -177,6 +175,7 @@ CREATE TABLE "map"
  collectibles     text NULL,
  golden_changes   text NULL,
  counts_for_id    integer NULL,
+ is_progress      boolean NOT NULL DEFAULT true,
  CONSTRAINT map_pkey PRIMARY KEY ( "id" ),
  CONSTRAINT map_counts_for_id_fkey FOREIGN KEY ( counts_for_id ) REFERENCES "map" ( "id" ) ON DELETE SET NULL ON UPDATE CASCADE,
  CONSTRAINT map_campaign_id_fkey FOREIGN KEY ( campaign_id ) REFERENCES campaign ( "id" ) ON DELETE CASCADE ON UPDATE CASCADE
@@ -386,8 +385,6 @@ CREATE VIEW "view_submissions" AS SELECT
   map.name AS map_name,
   map.url AS map_url,
   map.date_added AS map_date_added,
-  map.is_rejected AS map_is_rejected,
-  map.rejection_reason AS map_rejection_reason,
   map.is_archived AS map_is_archived,
   map.sort_major AS map_sort_major,
   map.sort_minor AS map_sort_minor,
@@ -398,14 +395,13 @@ CREATE VIEW "view_submissions" AS SELECT
   map.collectibles AS map_collectibles,
   map.golden_changes AS map_golden_changes,
   map.counts_for_id AS map_counts_for_id,
+  map.is_progress AS map_is_progress,
 
   for_map.id AS for_map_id,
   for_map.campaign_id AS for_map_campaign_id,
   for_map.name AS for_map_name,
   for_map.url AS for_map_url,
   for_map.date_added AS for_map_date_added,
-  for_map.is_rejected AS for_map_is_rejected,
-  for_map.rejection_reason AS for_map_rejection_reason,
   for_map.is_archived AS for_map_is_archived,
   for_map.sort_major AS for_map_sort_major,
   for_map.sort_minor AS for_map_sort_minor,
@@ -416,6 +412,7 @@ CREATE VIEW "view_submissions" AS SELECT
   for_map.collectibles AS for_map_collectibles,
   for_map.golden_changes AS for_map_golden_changes,
   for_map.counts_for_id AS for_map_counts_for_id,
+  for_map.is_progress AS for_map_is_progress,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -508,7 +505,7 @@ LEFT JOIN account pa ON p.id = pa.player_id
 LEFT JOIN account va ON v.id = va.player_id
 LEFT JOIN new_challenge ON submission.new_challenge_id = new_challenge.id
 
-WHERE map.is_rejected = false OR map.is_rejected IS NULL
+WHERE challenge.is_rejected = false OR challenge.is_rejected IS NULL
 
 ORDER BY COALESCE(campaign.name, fg_campaign.name), COALESCE(campaign.id, fg_campaign.id), map.sort_major, map.sort_minor, map.sort_order, map.name, challenge.sort, cd.sort DESC, submission.date_achieved, submission.date_created, submission.id ;
 
@@ -535,8 +532,6 @@ CREATE VIEW "view_challenges" AS SELECT
   map.name AS map_name,
   map.url AS map_url,
   map.date_added AS map_date_added,
-  map.is_rejected AS map_is_rejected,
-  map.rejection_reason AS map_rejection_reason,
   map.is_archived AS map_is_archived,
   map.sort_major AS map_sort_major,
   map.sort_minor AS map_sort_minor,
@@ -547,14 +542,13 @@ CREATE VIEW "view_challenges" AS SELECT
   map.collectibles AS map_collectibles,
   map.golden_changes AS map_golden_changes,
   map.counts_for_id AS map_counts_for_id,
+  map.is_progress AS map_is_progress,
 
   for_map.id AS for_map_id,
   for_map.campaign_id AS for_map_campaign_id,
   for_map.name AS for_map_name,
   for_map.url AS for_map_url,
   for_map.date_added AS for_map_date_added,
-  for_map.is_rejected AS for_map_is_rejected,
-  for_map.rejection_reason AS for_map_rejection_reason,
   for_map.is_archived AS for_map_is_archived,
   for_map.sort_major AS for_map_sort_major,
   for_map.sort_minor AS for_map_sort_minor,
@@ -565,6 +559,7 @@ CREATE VIEW "view_challenges" AS SELECT
   for_map.collectibles AS for_map_collectibles,
   for_map.golden_changes AS for_map_golden_changes,
   for_map.counts_for_id AS for_map_counts_for_id,
+  for_map.is_progress AS for_map_is_progress,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -632,8 +627,6 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   map.name AS map_name,                                                  
   map.url AS map_url,                                                    
   map.date_added AS map_date_added,                                      
-  map.is_rejected AS map_is_rejected,                                    
-  map.rejection_reason AS map_rejection_reason,
   map.is_archived AS map_is_archived,
   map.sort_major AS map_sort_major,
   map.sort_minor AS map_sort_minor,
@@ -644,14 +637,13 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   map.collectibles AS map_collectibles,
   map.golden_changes AS map_golden_changes,
   map.counts_for_id AS map_counts_for_id,
+  map.is_progress AS map_is_progress,
 
   for_map.id AS for_map_id,
   for_map.campaign_id AS for_map_campaign_id,
   for_map.name AS for_map_name,
   for_map.url AS for_map_url,
   for_map.date_added AS for_map_date_added,
-  for_map.is_rejected AS for_map_is_rejected,
-  for_map.rejection_reason AS for_map_rejection_reason,
   for_map.is_archived AS for_map_is_archived,
   for_map.sort_major AS for_map_sort_major,
   for_map.sort_minor AS for_map_sort_minor,
@@ -662,6 +654,7 @@ CREATE VIEW "view_challenge_changes" AS SELECT
   for_map.collectibles AS for_map_collectibles,
   for_map.golden_changes AS for_map_golden_changes,
   for_map.counts_for_id AS for_map_counts_for_id,
+  for_map.is_progress AS for_map_is_progress,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,
@@ -917,8 +910,6 @@ CREATE VIEW "view_campaigns" AS SELECT
   map.name AS map_name,
   map.url AS map_url,
   map.date_added AS map_date_added,
-  map.is_rejected AS map_is_rejected,
-  map.rejection_reason AS map_rejection_reason,
   map.is_archived AS map_is_archived,
   map.sort_major AS map_sort_major,
   map.sort_minor AS map_sort_minor,
@@ -929,14 +920,13 @@ CREATE VIEW "view_campaigns" AS SELECT
   map.collectibles AS map_collectibles,
   map.golden_changes AS map_golden_changes,
   map.counts_for_id AS map_counts_for_id,
+  map.is_progress AS map_is_progress,
 
   for_map.id AS for_map_id,
   for_map.campaign_id AS for_map_campaign_id,
   for_map.name AS for_map_name,
   for_map.url AS for_map_url,
   for_map.date_added AS for_map_date_added,
-  for_map.is_rejected AS for_map_is_rejected,
-  for_map.rejection_reason AS for_map_rejection_reason,
   for_map.is_archived AS for_map_is_archived,
   for_map.sort_major AS for_map_sort_major,
   for_map.sort_minor AS for_map_sort_minor,
@@ -947,6 +937,7 @@ CREATE VIEW "view_campaigns" AS SELECT
   for_map.collectibles AS for_map_collectibles,
   for_map.golden_changes AS for_map_golden_changes,
   for_map.counts_for_id AS for_map_counts_for_id,
+  for_map.is_progress AS for_map_is_progress,
 
   challenge.id AS challenge_id,
   challenge.campaign_id AS challenge_campaign_id,

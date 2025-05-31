@@ -117,7 +117,6 @@ class Campaign extends DbObject
   function fetch_maps($DB, $with_challenges = false, $with_submissions = false, $include_archived = true, $include_arbitrary = true, $hide_rejected = false): bool
   {
     $whereAddition = $include_archived ? null : "is_archived = false";
-    $whereAddition = $hide_rejected ? ($whereAddition ? "$whereAddition AND " : "") . "is_rejected = false" : $whereAddition;
     $maps = $this->fetch_list($DB, 'campaign_id', Map::class, $whereAddition, "ORDER BY sort_major, sort_minor, sort_order, name");
     if ($maps === false)
       return false;
@@ -146,14 +145,13 @@ class Campaign extends DbObject
     return true;
   }
 
-
   static function search_by_name($DB, string $search, string $raw_search, bool $is_exact_search)
   {
     global $CAMPAIGN_ABBREVIATIONS;
 
     $campaigns = array();
     $raw_search_lower = strtolower($raw_search);
-    $similar = $is_exact_search ? "" : " OR SIMILARITY(campaign.name, '$raw_search_lower') > 0.3";
+    $similar = $is_exact_search ? "" : " OR SIMILARITY(campaign.name, '$raw_search_lower') > 0.4";
 
     $query = "SELECT * FROM campaign WHERE campaign.name ILIKE '$search' $similar ORDER BY name";
     $result = pg_query($DB, $query);
