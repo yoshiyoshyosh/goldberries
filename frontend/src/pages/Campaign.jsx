@@ -11,6 +11,7 @@ import {
   LoadingSpinner,
   StyledExternalLink,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import {
   Box,
@@ -40,6 +41,7 @@ import {
   faEdit,
   faExternalLink,
   faFileExport,
+  faInfoCircle,
   faListDots,
   faUser,
   faXmark,
@@ -299,6 +301,10 @@ export function AuthorInfoBoxLine({ author_gb_id, author_gb_name }) {
 
 //#region Campaign Player Table
 
+function mapHasValidChallenges(map) {
+  return map.challenges.some((challenge) => !challenge.is_rejected);
+}
+
 export function CampaignPlayerTable({ campaign, players, ...props }) {
   const { t } = useTranslation(undefined, { keyPrefix: "campaign.tabs.players" });
   const auth = useAuth();
@@ -311,9 +317,11 @@ export function CampaignPlayerTable({ campaign, players, ...props }) {
     }
   }, [showAll]);
 
-  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const validMaps = campaign.maps.filter(
+    (map) => !map.is_archived && map.is_progress && mapHasValidChallenges(map)
+  );
   const countFcs = validMaps.filter((map) =>
-    map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
+    map.challenges.some((challenge) => (challenge.has_fc || challenge.requires_fc) && !challenge.is_rejected)
   ).length;
   const reducedPlayerAmount = 100;
   const playersToShow = actuallyShowAll ? players : players.slice(0, reducedPlayerAmount);
@@ -417,10 +425,12 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry, isSelf = false }
   } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const { player, stats, last_submission, highest_lobby_sweep, highest_lobby_sweep_fcs } = playerEntry;
-  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const validMaps = campaign.maps.filter(
+    (map) => !map.is_archived && map.is_progress && mapHasValidChallenges(map)
+  );
   const mapsInCampaign = validMaps.length;
   const countFcs = validMaps.filter((map) =>
-    map.challenges.some((challenge) => challenge.has_fc || challenge.requires_fc)
+    map.challenges.some((challenge) => (challenge.has_fc || challenge.requires_fc) && !challenge.is_rejected)
   ).length;
   const hasAllFcs = stats.full_clears === countFcs && countFcs > 0;
   const hasAllClears = stats.clears === mapsInCampaign;
@@ -502,7 +512,10 @@ function CampaignPlayerTableRow({ index, campaign, playerEntry, isSelf = false }
 
 function CampaignPlayerTableRowExpanded({ player, campaign }) {
   const query = useGetCampaignViewPlayer(campaign.id, player.id);
-  const validMaps = campaign.maps.filter((map) => !map.is_archived && !map.is_rejected);
+  const validMaps = campaign.maps.filter((map) => !map.is_archived && mapHasValidChallenges(map));
+  const validMapsForMax = campaign.maps.filter(
+    (map) => !map.is_archived && map.is_progress && mapHasValidChallenges(map)
+  );
   const hasMajorSort = campaign.sort_major_name !== null;
 
   if (query.isLoading) {
@@ -519,7 +532,8 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
       {hasMajorSort ? (
         campaign.sort_major_labels.map((major, index) => {
           const maps = validMaps.filter((map) => map.sort_major === index);
-          const countCompleted = maps.reduce((acc, map) => {
+          const mapsForCount = validMapsForMax.filter((map) => map.sort_major === index);
+          const countCompleted = mapsForCount.reduce((acc, map) => {
             return acc + (mapData[map.id] !== undefined ? 1 : 0);
           }, 0);
           return (
@@ -527,7 +541,7 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
               <Stack direction="row" gap={1} alignItems="center">
                 <Typography variant="h6">{major}</Typography>
                 <Typography variant="body1" color="text.secondary">
-                  ({countCompleted} / {maps.length})
+                  ({countCompleted} / {mapsForCount.length})
                 </Typography>
               </Stack>
               <CampaignPlayerTableRowExpandedMapGroup
@@ -541,7 +555,11 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
           );
         })
       ) : (
-        <CampaignPlayerTableRowExpandedMapGroup maps={validMaps} mapData={mapData} campaign={campaign} />
+        <CampaignPlayerTableRowExpandedMapGroup
+          maps={validMapsForMax}
+          mapData={mapData}
+          campaign={campaign}
+        />
       )}
     </Stack>
   );
@@ -568,12 +586,19 @@ function CampaignPlayerTableRowExpandedMapGroup({ maps, mapData, campaign }) {
 }
 function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
   const auth = useAuth();
+  const theme = useTheme();
+
   const hasMajorSort = campaign.sort_major_name !== null;
   const hasMinorSort = campaign.sort_minor_name !== null;
   const borderLeft = hasMajorSort ? "10px solid " + campaign.sort_major_colors[map.sort_major] : "none";
   const hasSubmission = mapData[map.id] !== undefined;
   const hasOtherSubmission = Object.values(mapData).some((mapDataMap) => map.id === mapDataMap.counts_for_id);
   const hasAnySubmission = hasSubmission || hasOtherSubmission;
+  const countsForProgress = map.is_progress;
+  const forProgressStyle = countsForProgress
+    ? {}
+    : { background: theme.palette.campaignPage.noProgressBackground, filter: "grayscale(50%)" };
+
   let submission = null;
   if (hasSubmission) {
     submission = mapData[map.id].challenges[0].submissions[0];
@@ -581,23 +606,15 @@ function CampaignPlayerTableRowExpandedMapGroupRow({ map, mapData, campaign }) {
     submission = Object.values(mapData).find((mapDataMap) => map.id === mapDataMap.counts_for_id)
       .challenges[0].submissions[0];
   }
-  console.log(
-    "map_id",
-    map.id,
-    "hasSubmission",
-    hasSubmission,
-    "hasOtherSubmission",
-    hasOtherSubmission,
-    "submission",
-    submission,
-    "mapData",
-    mapData
-  );
+
   const borderRight = hasMinorSort ? "15px solid " + campaign.sort_minor_colors[map.sort_minor] : "none";
   return (
-    <TableRow key={map.id}>
+    <TableRow key={map.id} sx={forProgressStyle}>
       <TableCell sx={{ px: 2, borderLeft }}>
-        <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
+        <Stack direction="row" gap={0.75} alignItems="center">
+          <StyledLink to={"/map/" + map.id}>{getMapName(map, campaign)}</StyledLink>
+          {!countsForProgress && <MapNoProgressTooltip />}
+        </Stack>
       </TableCell>
       <TableCell width={1} align="right" sx={{ pr: 0 }}>
         {hasAnySubmission && auth.hasHelperPriv && <ToggleSubmissionFcButton submission={submission} />}
@@ -634,6 +651,15 @@ const CampaignPlayerTableRowExpandedMapGroupRowMemo = memo(
     );
   }
 );
+
+export function MapNoProgressTooltip() {
+  const { t } = useTranslation(undefined, { keyPrefix: "campaign.tabs.players" });
+  return (
+    <TooltipLineBreaks title={t("map_no_progress")}>
+      <FontAwesomeIcon icon={faInfoCircle} size="sm" color="rgb(124, 124, 124)" />
+    </TooltipLineBreaks>
+  );
+}
 //#endregion
 
 //#region Campaign Map List

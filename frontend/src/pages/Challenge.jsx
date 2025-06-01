@@ -34,6 +34,7 @@ import {
   ObjectiveIcon,
   OtherIcon,
   PlayerNotesIcon,
+  ProofExternalLinkButton,
   SubmissionFcIcon,
   VerificationStatusChip,
   VerifierNotesIcon,
@@ -85,7 +86,7 @@ import { Changelog } from "../components/Changelog";
 import { SuggestedDifficultyChart, SuggestedDifficultyTierCounts } from "../components/Stats";
 import { useAppSettings } from "../hooks/AppSettingsProvider";
 import { useTranslation } from "react-i18next";
-import { AuthorInfoBoxLine } from "./Campaign";
+import { AuthorInfoBoxLine, MapNoProgressTooltip } from "./Campaign";
 import { toast } from "react-toastify";
 import { memo, useState } from "react";
 import { jsonDateToJsDate } from "../util/util";
@@ -221,7 +222,15 @@ export function ChallengeDetailsList({ map, challenge = null, ...props }) {
             {getMapName(map, campaign) === campaign.name ? null : (
               <InfoBox>
                 <InfoBoxIconTextLine text={t_g("map", { count: 1 })} />
-                <InfoBoxIconTextLine text={getMapName(map, campaign)} isSecondary />
+                <InfoBoxIconTextLine
+                  text={
+                    <Stack direction="row" alignItems="center" gap={0.75}>
+                      <span>{getMapName(map, campaign)}</span>
+                      {!map.is_progress && <MapNoProgressTooltip />}
+                    </Stack>
+                  }
+                  isSecondary
+                />
               </InfoBox>
             )}
             {challenge === null && <CollectiblesInfoBox map={map} collectibles={map.collectibles} />}
@@ -687,9 +696,7 @@ export function ChallengeSubmissionRow({ submission, index, compact }) {
         </TableCell>
       )}
       <TableCell width={1} align="center" sx={{ pl: 0.75, pr: 0.25 }}>
-        <StyledLink to={submission.proof_url} target="_blank">
-          <FontAwesomeIcon icon={getPlatformIcon(submission.proof_url)} />
-        </StyledLink>
+        <ProofExternalLinkButton url={submission.proof_url} />
       </TableCell>
       {compact ? null : (
         <TableCell width={1} align="center" sx={{ p: 0 }}>

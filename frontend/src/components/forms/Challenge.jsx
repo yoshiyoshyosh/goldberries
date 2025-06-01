@@ -220,7 +220,7 @@ export function FormChallenge({ challenge, onSave, ...props }) {
       />
 
       <TextField
-        label={t("reject_note")}
+        label={t(is_rejected ? "reject_note" : "reject_note_not_rejected")}
         sx={{ mt: 1 }}
         fullWidth
         {...form.register("reject_note", { required: is_rejected ? true : undefined })}

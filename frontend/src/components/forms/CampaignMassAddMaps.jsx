@@ -42,6 +42,7 @@ export function FormCampaignMassAddMaps({ onSave }) {
         campaign_id: data.campaign.id,
         has_fc: map.generate_challenges === "c_fc" || map.generate_challenges === "c_fc_distinct",
         golden_changes: "Unknown",
+        is_progress: true,
       }).then((response) => {
         const newMapId = response.data.id;
         const promises = [];

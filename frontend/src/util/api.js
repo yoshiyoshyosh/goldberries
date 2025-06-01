@@ -176,13 +176,14 @@ export function fetchCampaignViewPlayer(id, playerId) {
   });
 }
 
-export function fetchMap(id, challenges = true, submission = true, rejected = true) {
+export function fetchMap(id, challenges = true, submission = true, rejected = true, other_maps = false) {
   return axios.get("/map", {
     params: {
       id: id,
       challenges: challenges,
       submissions: submission,
       rejected: rejected,
+      other_maps: other_maps,
     },
   });
 }

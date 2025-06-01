@@ -37,7 +37,7 @@ export function FormMapWrapper({
   const { t: t_g } = useTranslation(undefined, { keyPrefix: "general" });
   const query = useQuery({
     queryKey: ["map", id],
-    queryFn: () => fetchMap(id),
+    queryFn: () => fetchMap(id, true, true, true, true),
     staleTime: 0,
     cacheTime: 0,
     enabled: id !== null,
@@ -51,8 +51,6 @@ export function FormMapWrapper({
         campaign: null,
         name: defaultMapName ?? "",
         url: null,
-        is_rejected: false,
-        rejection_reason: "",
         is_archived: false,
         sort_major: null,
         sort_minor: null,
@@ -65,6 +63,7 @@ export function FormMapWrapper({
             ? defaultMapGoldenChanges
             : "Unknown",
         counts_for: null,
+        is_progress: true,
       }
     );
   }, [data]);
@@ -126,7 +125,6 @@ export function FormMap({ map, onSave, ...props }) {
 
   const campaign = form.watch("campaign");
   const counts_for = form.watch("counts_for");
-  const is_rejected = form.watch("is_rejected");
 
   const name = form.watch("name");
   const nameDebounced = useDebounce(name, 200);
@@ -191,19 +189,6 @@ export function FormMap({ map, onSave, ...props }) {
 
       <Controller
         control={form.control}
-        name="is_rejected"
-        defaultValue={map.is_rejected}
-        render={({ field }) => (
-          <FormControlLabel
-            onChange={field.onChange}
-            label={t("is_rejected")}
-            checked={field.value}
-            control={<Checkbox />}
-          />
-        )}
-      />
-      <Controller
-        control={form.control}
         name="is_archived"
         defaultValue={map.is_archived}
         render={({ field }) => (
@@ -215,15 +200,19 @@ export function FormMap({ map, onSave, ...props }) {
           />
         )}
       />
-
-      {is_rejected && (
-        <TextField
-          label={t("rejection_reason")}
-          sx={{ mt: 2 }}
-          fullWidth
-          {...form.register("rejection_reason", { requires: true })}
-        />
-      )}
+      <Controller
+        control={form.control}
+        name="is_progress"
+        defaultValue={map.is_progress}
+        render={({ field }) => (
+          <FormControlLabel
+            onChange={field.onChange}
+            label={t("is_progress")}
+            checked={field.value}
+            control={<Checkbox />}
+          />
+        )}
+      />
 
       <TextField label={t("note")} sx={{ mt: 2 }} fullWidth {...form.register("note")} />
 

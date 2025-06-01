@@ -101,6 +101,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       name: data.map_name,
       golden_changes: data.map_golden_changes,
       collectibles: data.map_collectibles,
+      is_progress: true,
     };
     const challenge = {
       objective_id: data.objective_id,
@@ -341,7 +342,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
       />
 
       <TextField
-        label={t_fch("reject_note")}
+        label={t_fch(challenge_is_rejected ? "reject_note" : "reject_note_not_rejected")}
         sx={{ mt: 1 }}
         fullWidth
         {...form.register("reject_note", { required: challenge_is_rejected ? true : undefined })}

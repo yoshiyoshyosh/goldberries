@@ -345,6 +345,7 @@
       "is_arbitrary": "Is Arbitrary",
       "is_rejected": "Is Rejected",
       "reject_note": "Reject Note",
+      "reject_note_not_rejected": "Placement Note",
       "sort_order": "Sort Order",
       "skip_webhook": "Skip Placement Change Webhook",
       "buttons": {
@@ -373,15 +374,14 @@
         "updated": "Map updated"
       },
       "same_name_exists": "This map name already exists in the campaign",
-      "is_rejected": "Is Rejected",
       "is_archived": "Is Archived",
+      "is_progress": "Is Campaign Progress",
       "collectibles": {
         "label": "Collectibles",
         "variant": "Variant",
         "count": "Count (default: 1)",
         "note": "Note (optional)"
       },
-      "rejection_reason": "Rejection Reason",
       "note": "Note",
       "golden_changes": "Golden Changes",
       "author_note": "Leave these blank if they match the author of the campaign.",
@@ -1131,17 +1131,14 @@
       }
     }
   },
-  "rejected_maps": {
-    "title": "Rejected Maps",
-    "info_1": "This page contains all the maps that have been decided to not be added to the list, as well as reasons why such decision was made.",
-    "info_2": "If the map or map pack breaks <CustomLink>rule 4</CustomLink> (has inappropriate words/visual stuff/etc), it won't be listed here.",
-    "reason": "Reason"
-  },
   "rejected_challenges": {
     "title": "Rejected Challenges",
-    "info": "The following challenges are explicitly rejected, while the map/campaign they exist in are still accepted for other challenges.",
+    "info_1": "This page lists all rejected challenges. If you think a challenge is listed by mistake, bring it up in #gb-report in the Discord server!",
+    "info_2": "If the map or map pack breaks <CustomLink>rule 4</CustomLink> (has inappropriate words/visual stuff/etc), it won't be listed here.",
     "fullgame_notice": "This is a fullgame challenge",
-    "no_rejected_challenges": "There are currently no rejected challenges."
+    "no_rejected_challenges": "There are currently no rejected challenges.",
+    "reason": "Reason",
+    "video": "Video"
   },
   "search": {
     "title_content": "Search '{{content}}'",
@@ -1406,7 +1403,8 @@
         "more_players_one": "+ {{count}} more player",
         "more_players_other": "+ {{count}} more players",
         "you": "You",
-        "show_all": "Show All"
+        "show_all": "Show All",
+        "map_no_progress": "This map doesn't count towards the campaign progress."
       }
     }
   },

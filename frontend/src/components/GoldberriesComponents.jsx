@@ -1144,3 +1144,11 @@ export function DateAchievedTimePicker({ value, onChange, sx = {}, ...props }) {
     />
   );
 }
+
+export function ProofExternalLinkButton({ url }) {
+  return (
+    <StyledLink to={url} target="_blank">
+      <FontAwesomeIcon icon={getPlatformIcon(url)} />
+    </StyledLink>
+  );
+}

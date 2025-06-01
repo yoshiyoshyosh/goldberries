@@ -327,6 +327,7 @@ export const lightTheme = createTheme({
       sweepBackground: "rgba(255,191,0,0.1)",
       highlightBackground: "rgba(0,0,0,0.1)",
       sweepHightlightBackground: "rgba(255,191,0,0.2)",
+      noProgressBackground: "rgba(0,0,0,4%)",
     },
     stats: {
       chartBackdrop: "rgba(255,255,255,75%)",
@@ -392,6 +393,7 @@ const darkTheme = createTheme({
       sweepBackground: "rgba(255,191,0,0.1)",
       highlightBackground: "rgba(255,255,255,0.1)",
       sweepHightlightBackground: "rgba(255,191,0,0.2)",
+      noProgressBackground: "rgba(255,255,255,7%)",
     },
     stats: {
       chartBackdrop: "rgba(0,0,0,25%)",
