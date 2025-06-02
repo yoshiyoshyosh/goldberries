@@ -455,6 +455,12 @@ export const COLLECTIBLES = [
       },
       { value: "10", name: "FLP Frog Berry", displayName: "Frog Berry", icon: "/icons/frogberry.png" },
       { value: "11", name: "Rotten Berry", displayName: "Rotten Berry", icon: "/icons/rottenberry.png" },
+      {
+        value: "12",
+        name: "100 Clouds Storm Berry",
+        displayName: "Storm Berry",
+        icon: "/icons/stormberry-100-clouds.png",
+      },
     ],
   },
   {

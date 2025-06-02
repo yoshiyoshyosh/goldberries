@@ -15,12 +15,19 @@ import {
   HeadTitle,
   StyledExternalLink,
   StyledLink,
+  TooltipLineBreaks,
 } from "../components/BasicComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useParams } from "react-router-dom";
 import { AnyImage, EmoteImage } from "../components/GoldberriesComponents";
 import { Trans, useTranslation } from "react-i18next";
+import { PlayerChipAsync } from "./Post";
+
+function differenceInMonths(date1, date2) {
+  const diff = Math.ceil((date2 - date1) / (1000 * 60 * 60 * 24 * 30));
+  return diff;
+}
 
 export function PageServerCosts({}) {
   const { status } = useParams();
@@ -31,36 +38,49 @@ export function PageServerCosts({}) {
   const { t: t_ty } = useTranslation(undefined, { keyPrefix: "server_costs.thank_you" });
 
   //In euro
-  const vpsCostPerMonth = 5.36;
+  const oldCosts = [
+    { start: "2024-04-01", end: "2025-04-01", cost: 5.36 }, // Initial price
+    { start: "2025-05-01", end: null, cost: 6.5 }, // Current price
+  ];
+  const currentVpsCost = 6.5;
   const domainCostPerMonth = 0.46;
-  const totalCost = vpsCostPerMonth + domainCostPerMonth;
-
+  const currentTotalCost = currentVpsCost + domainCostPerMonth;
   const firstMonth = "2024-04-01";
   const currentMonth = new Date().toISOString().split("T")[0];
 
-  const months = Math.ceil((new Date(currentMonth) - new Date(firstMonth)) / (1000 * 60 * 60 * 24 * 30));
-
   const donations = [
-    { amount: 20, date: "2024-06-24", name: "winter" },
-    { amount: 50, date: "2024-06-24", name: "Parrot Dash" },
-    { amount: 28.3, date: "2024-06-24", name: "Viva" },
-    { amount: 19.58, date: "2024-06-24", name: "Viva" },
-    { amount: 48.97, date: "2024-07-12", name: "slash" },
-    { amount: 18.75, date: "2024-07-12", name: "anonymous" },
-    { amount: 20, date: "2024-07-12", name: "burgerhex" },
-    { amount: 10, date: "2024-07-12", name: "Lilian" },
-    { amount: 9.78, date: "2024-07-12", name: "Shiggy" },
-    { amount: 12.82, date: "2024-08-02", name: "anonymous" },
-    { amount: 8.78, date: "2024-08-03", name: "CoffeeCat" },
-    { amount: 61.48, date: "2025-02-11", name: "RisingSunLight" },
-    { amount: 13.15, date: "2025-03-12", name: "orion" },
+    { amount: 20, date: "2024-06-24", name: "winter", playerId: 564 },
+    { amount: 50, date: "2024-06-24", name: "Parrot Dash", playerId: 11 },
+    { amount: 28.3, date: "2024-06-24", name: "Viva", playerId: 503 },
+    { amount: 19.58, date: "2024-06-24", name: "Viva", playerId: 503 },
+    { amount: 48.97, date: "2024-07-12", name: "slash", playerId: 461 },
+    { amount: 18.75, date: "2024-07-12", name: "anonymous", playerId: null },
+    { amount: 20, date: "2024-07-12", name: "burgerhex", playerId: 458 },
+    { amount: 10, date: "2024-07-12", name: "Lilian", playerId: 712 },
+    { amount: 9.78, date: "2024-07-12", name: "Shiggy", playerId: 459 },
+    { amount: 12.82, date: "2024-08-02", name: "anonymous", playerId: null },
+    { amount: 8.78, date: "2024-08-03", name: "CoffeeCat", playerId: null },
+    { amount: 61.48, date: "2025-02-11", name: "RisingSunLight", playerId: 1710 },
+    { amount: 13.15, date: "2025-03-12", name: "orion", playerId: 234 },
+    { amount: 17.46, date: "2025-06-01", name: "Pawn_b4", playerId: 2497 },
   ];
   const donationsSoFar =
     Math.round(donations.reduce((acc, donation) => acc + donation.amount, 0) * 100) / 100;
 
-  const totalCostSoFar = totalCost * months;
+  const months = differenceInMonths(new Date(firstMonth), new Date(currentMonth));
+
+  //calculate the total cost so far based on the segments of oldCosts, and past the end of the last segment, use the current vpsCostPerMonth until the current month
+  // const totalCostSoFar = totalCost * months; //Not like this anymore
+  let totalCostSoFar = 0;
+  oldCosts.forEach((segment) => {
+    const totalCostPerMonth = segment.cost + domainCostPerMonth;
+    const start = new Date(segment.start);
+    const end = segment.end ? new Date(segment.end) : new Date(currentMonth);
+    totalCostSoFar += differenceInMonths(start, end) * totalCostPerMonth;
+  });
+
   const totalDifference = donationsSoFar - totalCostSoFar;
-  const monthsToSpare = totalDifference / totalCost; //Use if totalDifference > 0, to show how many months the server can run without donations
+  const monthsToSpare = totalDifference / currentTotalCost; //Use if totalDifference > 0, to show how many months the server can run without donations
   const maxMonthsShown = 12;
   const additionalMonths = monthsToSpare > maxMonthsShown ? Math.floor(monthsToSpare - maxMonthsShown) : 0;
 
@@ -82,6 +102,8 @@ export function PageServerCosts({}) {
     );
   }
 
+  const priceTooltip = "Price increases so far:\n- May 2025: 5.36€ -> 6.50€";
+
   return (
     <Stack direction="column" gap={1} alignItems="center">
       <HeadTitle title={t_sc("title")} />
@@ -98,16 +120,23 @@ export function PageServerCosts({}) {
           <TableBody>
             <TableRow>
               <TableCell>{t_sc("table.VPS")}</TableCell>
-              <TableCell>{t_sc("table.value", { value: vpsCostPerMonth })}</TableCell>
+              <TableCell>
+                <Stack direction="row" gap={0.75} alignItems="center">
+                  <span>{t_sc("table.value", { value: currentVpsCost.toFixed(2) })}</span>
+                  <TooltipLineBreaks title={priceTooltip}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                  </TooltipLineBreaks>
+                </Stack>
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>{t_sc("table.domain")}</TableCell>
-              <TableCell>{t_sc("table.value", { value: domainCostPerMonth })}</TableCell>
+              <TableCell>{t_sc("table.value", { value: domainCostPerMonth.toFixed(2) })}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }}>{t_sc("table.total")}</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>
-                {t_sc("table.value", { value: totalCost.toFixed(2) })}
+                {t_sc("table.value", { value: currentTotalCost.toFixed(2) })}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -138,9 +167,6 @@ export function PageServerCosts({}) {
           </TableBody>
         </Table>
 
-        {/* <Typography variant="h5" sx={{ mt: 2 }}>
-        Break Even
-      </Typography> */}
         <Typography variant="body1" sx={{ mt: 2 }}>
           {t_csf("not_lose")}
         </Typography>
@@ -181,7 +207,7 @@ export function PageServerCosts({}) {
                   valueLabel={
                     <FontAwesomeIcon icon={faCheckCircle} color="green" style={{ margin: "0px 11px" }} />
                   }
-                  maxLabel={totalCost.toFixed(2) + "€"}
+                  maxLabel={currentTotalCost.toFixed(2) + "€"}
                   color="success"
                   sx={{ mt: 1, width: "100%" }}
                 />
@@ -197,8 +223,8 @@ export function PageServerCosts({}) {
               monthsToSpare % 1 > 0 && (
                 <LinearProgressWithLabel
                   value={(monthsToSpare % 1) * 100}
-                  valueLabel={(totalCost * (monthsToSpare % 1)).toFixed(2) + "€"}
-                  maxLabel={totalCost.toFixed(2) + "€"}
+                  valueLabel={(currentTotalCost * (monthsToSpare % 1)).toFixed(2) + "€"}
+                  maxLabel={currentTotalCost.toFixed(2) + "€"}
                   color="success"
                   sx={{ mt: 1, width: "100%" }}
                 />
@@ -264,7 +290,7 @@ export function PageServerCosts({}) {
             <TableRow>
               <TableCell>{t_ty("table.date")}</TableCell>
               <TableCell align="center">{t_ty("table.amount")}</TableCell>
-              <TableCell>{t_ty("table.name")}</TableCell>
+              <TableCell align="center">{t_ty("table.name")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -275,13 +301,18 @@ export function PageServerCosts({}) {
                 </TableCell>
               </TableRow>
             )}
-            {donations.map((donation, index) => (
-              <TableRow key={index}>
-                <TableCell>{donation.date}</TableCell>
-                <TableCell align="center">{donation.amount}€</TableCell>
-                <TableCell>{donation.name}</TableCell>
-              </TableRow>
-            ))}
+            {donations.map((donation, index) => {
+              const playerId = donation.playerId;
+              return (
+                <TableRow key={index}>
+                  <TableCell>{donation.date}</TableCell>
+                  <TableCell align="center">{donation.amount}€</TableCell>
+                  <TableCell align="center">
+                    {playerId !== null ? <PlayerChipAsync id={playerId} size="small" /> : donation.name}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </BasicContainerBox>

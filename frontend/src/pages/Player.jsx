@@ -520,6 +520,8 @@ function PlayerTimeline({ id }) {
   const groupCampaigns = false; //I thought this might be cool, but it kinda sucked so w/e
   const [ratio, setRatio] = useLocalStorage("player_timeline_show_difficulty_ratio", 0.05);
 
+  const defaultFilter = getDefaultFilter(false);
+
   if (query.isLoading) {
     return <LoadingSpinner />;
   } else if (query.isError) {
@@ -604,6 +606,7 @@ function PlayerTimeline({ id }) {
             type="player"
             id={id}
             filter={filter}
+            defaultFilter={defaultFilter}
             setFilter={setFilter}
             variant="outlined"
             anchorOrigin={{ vertical: "top", horizontal: "left" }}

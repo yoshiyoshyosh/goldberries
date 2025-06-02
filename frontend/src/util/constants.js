@@ -402,8 +402,7 @@ export function getDifficultiesSorted() {
 }
 
 export const DIFFICULTY_STACKS = [
-  [24],
-  [2, 3, 23],
+  [24, 2, 3, 23],
   [4, 5, 6],
   [7, 8, 9],
   [10, 11, 12],
