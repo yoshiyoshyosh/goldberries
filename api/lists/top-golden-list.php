@@ -26,7 +26,6 @@ $clear_state = isset($_GET['clear_state']) ? intval($_GET['clear_state']) : 0;
 $query = "SELECT * FROM view_submissions";
 $where = [];
 $where[] = "submission_is_verified = true";
-$where[] = "(map_is_rejected = FALSE OR map_is_rejected IS NULL)";
 $where[] = "challenge_is_rejected = FALSE";
 
 $is_player = isset($_GET['player']);
