@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($suggestion->is_verified !== true && !is_helper($account)) {
     die_json(400, "Suggestion is not verified yet");
   }
-  if ($suggestion->is_closed()) {
+  if ($suggestion->is_closed() && !is_verifier($account)) {
     die_json(400, "Suggestion is closed");
   }
   if (SuggestionVote::has_voted_on_suggestion($DB, $account->player_id, $data['suggestion_id'])) {
