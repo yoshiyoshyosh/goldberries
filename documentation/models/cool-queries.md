@@ -37,3 +37,17 @@ WHERE LENGTH(tmp.search_term) > 1
 GROUP BY search_term
 ORDER BY count_searched DESC
 ```
+
+## Map Totals Collectibles
+
+```
+SELECT
+  split_part(entry, '|', 1) AS collectible_id,
+  SUM(
+    NULLIF(split_part(entry, '|', 3), '')::INTEGER
+  ) AS total_amount
+FROM "map",
+  unnest(string_to_array(collectibles, E'\t')) AS entry
+GROUP BY collectible_id
+ORDER BY collectible_id;
+```

@@ -24,7 +24,9 @@ $query = "SELECT
   campaign_id,
   COUNT(*) AS submission_count
 FROM view_submissions
-WHERE challenge_is_rejected = FALSE
+WHERE (challenge_is_arbitrary IS NULL OR challenge_is_arbitrary = false)
+  AND objective_is_arbitrary = FALSE
+  AND challenge_is_rejected = FALSE
   AND submission_is_verified = TRUE
   AND (player_account_is_suspended IS NULL OR player_account_is_suspended = FALSE)
   AND $time_filter
@@ -64,7 +66,8 @@ $query = "SELECT
   map_id,
   COUNT(*) AS submission_count
 FROM view_submissions
-WHERE ((challenge_is_arbitrary IS NULL AND objective_is_arbitrary = false) OR challenge_is_arbitrary = false)
+WHERE (challenge_is_arbitrary IS NULL OR challenge_is_arbitrary = false)
+  AND objective_is_arbitrary = FALSE
   AND challenge_is_rejected = FALSE
   AND map_id IS NOT NULL
   AND submission_is_verified = TRUE
