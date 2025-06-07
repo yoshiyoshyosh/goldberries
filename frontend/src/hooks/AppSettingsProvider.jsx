@@ -131,6 +131,7 @@ export const COLOR_PRESETS = [
     name: "Default",
     disabled: false,
     colors: {
+      24: "",
       2: "",
       3: "",
       23: "",

@@ -67,6 +67,9 @@ export function PageFileUpload() {
             <MenuItem value="campaign_icon" disabled={!auth.hasHelperPriv}>
               {t("destination.campaign_icon")}
             </MenuItem>
+            <MenuItem value="badge" disabled={!auth.hasVerifierPriv}>
+              {t("destination.badge")}
+            </MenuItem>
           </Select>
         </Grid>
         <Grid item xs={12} sm="auto" display="flex" alignItems="center">

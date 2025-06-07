@@ -1814,7 +1814,8 @@
     "destination": {
       "icon": "Icon",
       "campaign_icon": "Campaign Icon",
-      "post": "Post Image"
+      "post": "Post Image",
+      "badge": "Badge Image"
     },
     "feedback": {
       "success": "File uploaded successfully",

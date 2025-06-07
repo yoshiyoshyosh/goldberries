@@ -9,6 +9,7 @@ export const LANGUAGES = [
   { code: "de", name: "German" },
   { code: "cn", name: "Chinese" },
   { code: "fr", name: "French" },
+  { code: "ru", name: "Russian" },
 ];
 
 const DETECTION_OPTIONS = {
