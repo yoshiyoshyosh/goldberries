@@ -66,6 +66,15 @@ function check_url($url, $field_name = null)
   }
 }
 
+function check_id($id)
+{
+  $id = intval($_REQUEST['id']);
+  if ($id === 0 || $id < 0) {
+    die_json(400, "Invalid id");
+  }
+  return $id;
+}
+
 ////// UNIFIED GET FUNCTION
 
 function api_unified_output($DB, string $table_noesc, $object_skel)

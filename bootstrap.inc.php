@@ -26,6 +26,8 @@ $requireObjects = array(
   "verification_notice",
   "server_settings",
   "post",
+  "badge",
+  "badge_player",
 );
 
 foreach ($requireObjects as $obj) {

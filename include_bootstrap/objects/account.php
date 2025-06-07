@@ -42,7 +42,6 @@ class Account extends DbObject
   public ?Player $player = null;
   public ?Player $claimed_player = null;
 
-
   // === Abstract Functions ===
   function apply_db_data($arr, $prefix = '')
   {

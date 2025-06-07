@@ -8,7 +8,10 @@ class Player extends DbObject
 
 
   // === Player Bonus Objects ===
-  public array $account = array(); //role, is_suspended
+  public array $account = []; //role, is_suspended
+
+  //Omitted by default, attach when needed
+  // public array $data = []; //arbitrary data like badges, etc.
 
   // === Abstract Functions ===
   function get_field_set()
@@ -77,10 +80,21 @@ class Player extends DbObject
       $this->account['input_method'] = $account->input_method;
       $this->account['about_me'] = $account->about_me;
       $this->account['country'] = $account->country;
+
+      $this->data = [];
+      $this->data['badges'] = $this->fetch_badges($DB);
     }
   }
 
   // === Find Functions ===
+  function fetch_badges($DB)
+  {
+    $badges = Badge::get_all_for_player($DB, $this->id);
+    $this->data = [];
+    $this->data['badges'] = $badges;
+    return $badges;
+  }
+
   static function find_by_group($DB, string $group, $customization = false)
   {
     global $HELPER, $VERIFIER, $ADMIN;
