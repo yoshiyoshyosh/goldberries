@@ -17,11 +17,13 @@ $destinations = [
   "icon" => "icons",
   "campaign_icon" => "icons/campaigns",
   "post" => "img/post",
+  "badge" => "badges",
 ];
 $min_role = [
   "icon" => $HELPER,
   "campaign_icon" => $HELPER,
   "post" => $NEWS_WRITER,
+  "badge" => $VERIFIER,
 ];
 $allowed_extensions = ["png", "jpg", "jpeg", "gif", "svg"];
 
