@@ -631,12 +631,12 @@ export function PlayerSelect({ type, value, onChange, label, ...props }) {
     queryFn: queryFn,
   });
 
-  const players = query.data?.data ?? [];
+  const players = getQueryData(query) ?? [];
   //Sort alphabetically
   players.sort((a, b) => a.name.localeCompare(b.name));
 
   const getOptionLabel = (player) => {
-    return player?.name;
+    return player?.name ?? "";
   };
 
   label = label ?? t("general.player", { count: 1 });

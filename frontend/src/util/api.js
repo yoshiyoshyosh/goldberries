@@ -376,6 +376,28 @@ export function fetchModInfo(url) {
 export function fetchServerSettings() {
   return axios.get("/server-settings");
 }
+
+export function fetchBadges() {
+  return axios.get("/badge", {
+    params: {
+      id: "all",
+    },
+  });
+}
+export function fetchBadge(badgeId) {
+  return axios.get("/badge", {
+    params: {
+      id: badgeId,
+    },
+  });
+}
+export function fetchBadgePlayers(badgeId) {
+  return axios.get("/badge/get-players", {
+    params: {
+      id: badgeId,
+    },
+  });
+}
 //#endregion
 
 //#region == POST ==
@@ -485,6 +507,13 @@ export function postShowcase(submissions) {
 export function postServerSettings(settings) {
   return axios.post("/server-settings", formatDataForApi(settings));
 }
+
+export function postBadge(data) {
+  return axios.post("/badge", formatDataForApi(data));
+}
+export function postBadgePlayer(data) {
+  return axios.post("/badge/player", formatDataForApi(data));
+}
 //#endregion
 
 //#region == DELETE ==
@@ -576,6 +605,21 @@ export function deleteSuggestionVote(id) {
 
 export function deleteVerificationNotice(id) {
   return axios.delete("/verification-notice", {
+    params: {
+      id: id,
+    },
+  });
+}
+
+export function deleteBadge(id) {
+  return axios.delete("/badge", {
+    params: {
+      id: id,
+    },
+  });
+}
+export function deleteBadgePlayer(id) {
+  return axios.delete("/badge/player", {
     params: {
       id: id,
     },

@@ -84,6 +84,13 @@ import {
   fetchPostPaginated,
   deletePost,
   fetchAdjacentPosts,
+  fetchBadgePlayers,
+  fetchBadges,
+  fetchBadge,
+  postBadge,
+  deleteBadge,
+  postBadgePlayer,
+  deleteBadgePlayer,
 } from "../util/api";
 import { errorToast } from "../util/util";
 import { toast } from "react-toastify";
@@ -464,6 +471,31 @@ export function useGetServerSettings() {
   });
 }
 
+export function useGetBadges() {
+  return useQuery({
+    queryKey: ["all_badges"],
+    queryFn: () => fetchBadges(),
+    onError: errorToast,
+  });
+}
+export function useGetBadge(badgeId) {
+  return useQuery({
+    queryKey: ["badges", badgeId],
+    queryFn: () => fetchBadge(badgeId),
+    onError: errorToast,
+    staleTime: 0,
+    cacheTime: 0,
+    enabled: badgeId !== null,
+  });
+}
+export function useGetBadgePlayers(badgeId) {
+  return useQuery({
+    queryKey: ["badge_players", badgeId],
+    queryFn: () => fetchBadgePlayers(badgeId),
+    onError: errorToast,
+  });
+}
+
 //#endregion
 
 //#region == POST ==
@@ -759,6 +791,29 @@ export function usePostServerSettings(onSuccess) {
     onError: errorToast,
   });
 }
+
+export function usePostBadge(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => postBadge(data),
+    onSuccess: (response, data) => {
+      queryClient.invalidateQueries(["all_badges"]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
+export function usePostBadgePlayer(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => postBadgePlayer(data),
+    onSuccess: (response, data) => {
+      queryClient.invalidateQueries(["badge_players", data.badge_id]);
+      if (onSuccess) onSuccess(response.data);
+    },
+    onError: errorToast,
+  });
+}
 //#endregion
 
 //#region == DELETE ==
@@ -917,6 +972,32 @@ export function useDeleteVerificationNotice(onSuccess) {
       queryClient.invalidateQueries(["submission_queue"]);
       if (onSuccess) onSuccess(response);
       else toast.success("Notice removed");
+    },
+    onError: errorToast,
+  });
+}
+
+export function useDeleteBadge(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => deleteBadge(id),
+    onSuccess: (response, id) => {
+      queryClient.invalidateQueries(["all_badges"]);
+      queryClient.invalidateQueries(["badge_players", id]);
+      if (onSuccess) onSuccess(response);
+      else toast.success("Badge deleted");
+    },
+    onError: errorToast,
+  });
+}
+export function useDeleteBadgePlayer(onSuccess) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, badgeId }) => deleteBadgePlayer(id),
+    onSuccess: (response, { id, badgeId }) => {
+      queryClient.invalidateQueries(["badge_players", badgeId]);
+      if (onSuccess) onSuccess(response);
+      else toast.success("Badge unassigned");
     },
     onError: errorToast,
   });

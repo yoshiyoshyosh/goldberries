@@ -85,6 +85,7 @@ import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineConnector from "@mui/lab/TimelineConnector";
+import { BadgeDisplay } from "../components/Badge";
 
 export function PagePlayer() {
   const { id, tab } = useParams();
@@ -164,13 +165,17 @@ export function PlayerDisplay({ id, tab, setTab }) {
           <Box flexGrow={1} />
           <StyledLink to={`/player/${id}/top-golden-list`}>{t("personal_tgl")}</StyledLink>
         </Stack>
-        {player.account?.links ? (
-          <Stack direction="row" gap={1}>
-            {player.account.links.map((link) => (
-              <LinkIcon url={link} />
-            ))}
-          </Stack>
-        ) : null}
+        <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
+          {player.account?.links ? (
+            <Stack direction="row" gap={1}>
+              {player.account.links.map((link) => (
+                <LinkIcon url={link} />
+              ))}
+            </Stack>
+          ) : null}
+          <Box flexGrow={1} />
+          <BadgeDisplay player={player} />
+        </Stack>
 
         {player.account.about_me && (
           <>

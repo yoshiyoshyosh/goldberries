@@ -69,7 +69,7 @@ import { CharsCountLabel } from "./Suggestions";
 import { useTheme } from "@emotion/react";
 import { getCollectibleOptions, getCollectibleVariantOptions } from "../components/forms/Map";
 import { StringListEditor } from "../components/StringListEditor";
-import { NOTIFICATIONS, hasNotificationFlag } from "./Account";
+import { NOTIFICATIONS, hasFlag } from "./Account";
 import { DifficultyFracGrid } from "../components/forms/Submission";
 
 export function PageSubmit() {
@@ -1407,8 +1407,7 @@ function NotificationNotice({}) {
   const { t } = useTranslation(undefined, { keyPrefix: "submit.notifications" });
   const auth = useAuth();
   const hasDiscord = auth.user?.discord_id !== null;
-  const notifsEnabled =
-    hasDiscord && hasNotificationFlag(auth.user.notifications, NOTIFICATIONS.sub_verified.flag);
+  const notifsEnabled = hasDiscord && hasFlag(auth.user.notifications, NOTIFICATIONS.sub_verified.flag);
   return (
     <>
       {(notifsEnabled || true) && (

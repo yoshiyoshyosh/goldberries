@@ -19,6 +19,8 @@
     "account_other": "Accounts",
     "post_one": "Post",
     "post_other": "Posts",
+    "badge_one": "Badge",
+    "badge_other": "Badges",
     "news": "News",
     "changelog": "Changelog",
     "table_rows_per_page": "Rows per page:",
@@ -44,6 +46,7 @@
     "unknown_author": "Unknown Author",
     "unknown_date": "Unknown Date",
     "loading": "Loading...",
+    "id": "ID",
     "error_handling": {
       "header": "Something went wrong!",
       "default": "Try refreshing your browser's cache (Ctrl + F5) or ask in #gb-report if the problem persists."
@@ -474,6 +477,24 @@
         "update": "Update Post",
         "goto": "Go to Post"
       }
+    },
+    "badge": {
+      "title": "Title",
+      "color": "Color",
+      "shiny": "Shiny",
+      "glow": "Glow",
+      "level1": "Bronze Level",
+      "level2": "Silver Level",
+      "level3": "Gold Level",
+      "buttons": {
+        "create": "Create Badge",
+        "update": "Update Badge"
+      },
+      "feedback": {
+        "created": "Badge created",
+        "updated": "Badge updated",
+        "deleted": "Badge deleted"
+      }
     }
   },
   "hooks": {
@@ -505,6 +526,7 @@
       "submission_queue": "Submission Queue",
       "manage_challenges": "Manage Challenges",
       "manage_accounts": "Manage Accounts",
+      "manage_badges": "Manage Badges",
       "file_upload": "File Upload",
       "test": "Test Page",
       "posts": "New Post"
@@ -685,6 +707,30 @@
         },
         "buttons": {
           "update": "Update Server Settings"
+        }
+      }
+    },
+    "badges": {
+      "title": "Manage Badges",
+      "icon": "Icon",
+      "actions": "Actions",
+      "buttons": {
+        "create": "New Badge",
+        "edit": "Edit",
+        "assign_players": "Assign",
+        "delete": "Delete"
+      },
+      "modals": {
+        "delete_badge": {
+          "title": "Delete Badge",
+          "description": "Are you sure you want to delete the badge <strong>'{{name}}'</strong>? This action cannot be undone.",
+          "button": "Delete Badge"
+        },
+        "assign": {
+          "title": "Assign Players to this Badge",
+          "players": "Players with this Badge ({{count}})",
+          "remove": "Remove Assignment",
+          "no_players": "No players assigned to this badge."
         }
       }
     }

@@ -47,6 +47,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBalanceScale,
   faBan,
+  faBandage,
   faBars,
   faChartBar,
   faCheckCircle,
@@ -72,6 +73,7 @@ import {
   faPlayCircle,
   faPooStorm,
   faQuestion,
+  faRibbon,
   faSearch,
   faServer,
   faSignIn,
@@ -135,6 +137,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PageFileUpload } from "./pages/manage/FileUpload";
 import { PagePostList } from "./pages/Post";
 import { PageManagePosts } from "./pages/manage/Posts";
+import { PageManageBadges } from "./pages/manage/Badges";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -226,6 +229,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute needsHelper redirect="manage/posts">
                 <PageManagePosts />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "badges",
+            element: (
+              <ProtectedRoute needsVerifier redirect="manage/badges">
+                <PageManageBadges />
               </ProtectedRoute>
             ),
           },
@@ -345,6 +356,9 @@ export const lightTheme = createTheme({
       shadowColor: "#888",
       imageOutline: "#8a8a8a",
     },
+    tooltip: {
+      background: "rgba(230, 230, 230 ,1)",
+    },
   },
   components: {
     MuiContainer: {
@@ -410,6 +424,9 @@ const darkTheme = createTheme({
       backgroundHover: "#2e2e2e",
       shadowColor: "#888",
       imageOutline: "#b0b0b0",
+    },
+    tooltip: {
+      background: "rgba(50, 50, 50, 1)",
     },
   },
   components: {
@@ -701,6 +718,11 @@ export function Layout() {
           name: t("internal_menu.manage_accounts"),
           path: "/manage/accounts",
           icon: <FontAwesomeIcon icon={faUserEdit} />,
+        },
+        {
+          name: t("internal_menu.manage_badges"),
+          path: "/manage/badges",
+          icon: <FontAwesomeIcon icon={faRibbon} />,
         },
       ],
     },

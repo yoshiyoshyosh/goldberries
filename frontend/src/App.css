@@ -31,3 +31,86 @@
     transform: rotate(3600deg);
   }
 }
+
+
+
+
+
+/* Badge testing */
+.badge-container {
+  width: 32px;
+  height: 32px;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.badge {
+  /* width: 100%;
+  height: 100%; */
+  display: block;
+}
+
+/* 4. Glow / Outer Glow */
+.badge-container.glow {
+  box-shadow: 0 0 6px 2px rgba(0, 255, 255, 0.7);
+  border-radius: 4px;
+}
+
+.badge-container.glow.large {
+  box-shadow: 0 0 12px 4px rgba(0, 255, 255, 0.7);
+  /* border-radius: 12px; */
+}
+
+/* 7. Animated Sparkle / Shine */
+.badge-container.shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.6) 50%, transparent 70%);
+  animation: shine 5s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    left: -200%;
+  }
+
+  100% {
+    left: 1000%;
+  }
+}
+
+/* 12. Badge Level Indicators (top-right corner) */
+.badge-container.level::after {
+  content: "★";
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  color: gold;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0 2px;
+  border-radius: 0 0 0 4px;
+}
+
+.badge-container.level.gold::after {
+  color: gold;
+}
+
+.badge-container.level.silver::after {
+  color: silver;
+}
+
+.badge-container.level.bronze::after {
+  color: #cd7f32;
+}
+
+.badge-container.level.large::after {
+  font-size: 18px;
+  padding: 0 4px;
+}

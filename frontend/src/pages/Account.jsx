@@ -79,11 +79,11 @@ export const NOTIFICATIONS = {
   chall_moved: { key: "challenge_moved", flag: 8 },
   suggestion_accepted: { key: "suggestion_accepted", flag: 16 },
 };
-export function hasNotificationFlag(notifications, flag) {
-  return (notifications & flag) === flag;
+export function hasFlag(flags, flag) {
+  return (flags & flag) === flag;
 }
-export function setNotificationFlag(notifications, flag, value) {
-  return value ? notifications | flag : notifications & ~flag;
+export function setFlag(flags, flag, value) {
+  return value ? flags | flag : flags & ~flag;
 }
 
 export function PageAccount() {
@@ -367,7 +367,7 @@ export function UserAccountNotificationsForm() {
 
   const notifications = form.watch("notifications"); //Integer for bitwise flags for all notifications
   const updateNotification = (flag, value) => {
-    form.setValue("notifications", setNotificationFlag(notifications, flag, value));
+    form.setValue("notifications", setFlag(notifications, flag, value));
   };
 
   //Sort NOTIFICATIONS by flag value
@@ -394,7 +394,7 @@ export function UserAccountNotificationsForm() {
           shiftNote
         >
           <FormControlLabel
-            checked={hasNotificationFlag(notifications, notification.flag)}
+            checked={hasFlag(notifications, notification.flag)}
             onChange={(e) => updateNotification(notification.flag, e.target.checked)}
             control={<Switch />}
           />
