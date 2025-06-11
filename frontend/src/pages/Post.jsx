@@ -49,6 +49,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { DIFFICULTIES } from "../util/constants";
 import { ChallengeInline } from "./Player";
+import { BadgeAsync } from "../components/Badge";
 
 export function PagePostList({ type }) {
   const { id } = useParams();
@@ -431,13 +432,18 @@ function parseImageAlt(alt) {
 }
 
 //#region Post Components
-export function MarkdownRenderer({ markdown }) {
+export function MarkdownRenderer({ markdown, isCentered = false }) {
   const theme = useTheme();
   const colorSecondary = theme.palette.text.secondary;
 
   return (
     <Markdown
       components={{
+        p: ({ children, ...props }) => (
+          <p style={{ textAlign: isCentered ? "center" : undefined }} {...props}>
+            {children}
+          </p>
+        ),
         a: ({ href, children, ...props }) => <MarkdownAnchor href={href}>{children}</MarkdownAnchor>,
         img: ({ src, alt }) => {
           const { alt: altText, displayAlt, noOutline, width } = parseImageAlt(alt);
@@ -551,6 +557,12 @@ function MarkdownInlineCodeBlock({ children, className }) {
     const full = match[2] === "f";
     if (challengeId >= 1) {
       return <ChallengeInlineAsync id={challengeId} full={full} size="small" />;
+    }
+  } else if ((match = children.match(/^\{b:(\d+)\}$/)) !== null) {
+    //Example: {b:badgeId}
+    const badgeId = parseInt(match[1]);
+    if (badgeId >= 1) {
+      return <BadgeAsync id={badgeId} />;
     }
   }
   return <CodeBlock className={className}>{children}</CodeBlock>;

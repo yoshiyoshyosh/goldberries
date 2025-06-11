@@ -88,7 +88,20 @@ function ManageBadges() {
 
   const badges = getQueryData(query);
   //Sort by ID
-  badges.sort((a, b) => a.id - b.id);
+  // badges.sort((a, b) => a.id - b.id);
+
+  //Sort by title (natural sort), then by flags (integer)
+  var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+  badges.sort((a, b) => {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    const titleComparison = collator.compare(titleA, titleB);
+    if (titleComparison !== 0) {
+      return titleComparison; // Sort by title if they are not equal
+    }
+    return a.flags - b.flags; // Sort by flags if titles are equal
+  });
+
   return (
     <Stack direction="column">
       <Stack direction="row">
@@ -105,11 +118,13 @@ function ManageBadges() {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell width={1} align="center">
+              {/* <TableCell width={1} align="center">
                 {t_g("id")}
+              </TableCell> */}
+              <TableCell width={1} align="center">
+                {t_g("badge", { count: 1 })}
               </TableCell>
-              <TableCell width={1}>{t("icon")}</TableCell>
-              <TableCell>{t_g("badge", { count: 1 })}</TableCell>
+              <TableCell>{t("table_title")}</TableCell>
               <TableCell width={1} align="center">
                 {t("actions")}
               </TableCell>
@@ -118,11 +133,13 @@ function ManageBadges() {
           <TableBody>
             {badges.map((badge) => (
               <TableRow key={badge.id}>
-                <TableCell width={1} align="center">
+                {/* <TableCell width={1} align="center">
                   {badge.id}
-                </TableCell>
+                </TableCell> */}
                 <TableCell width={1}>
-                  <Badge badge={badge} />
+                  <Stack direction="row" justifyContent="center" alignItems="center">
+                    <Badge badge={badge} />
+                  </Stack>
                 </TableCell>
                 <TableCell sx={{ textWrap: "nowrap" }}>{badge.title}</TableCell>
                 <TableCell width={1}>
@@ -138,7 +155,7 @@ function ManageBadges() {
                       <CustomIconButton
                         variant="contained"
                         color="primary"
-                        onClick={() => modalRefs.assign.current.open({ id: badge.id })}
+                        onClick={() => modalRefs.assign.current.open(badge)}
                       >
                         <FontAwesomeIcon icon={faUserPlus} size="lg" />
                       </CustomIconButton>
@@ -203,30 +220,33 @@ function ManageModalContainer({ modalRefs }) {
         {editBadgeModal.data === null ? (
           <LoadingSpinner />
         ) : (
-          <AssignPlayersModal id={assignBadgeModal.data?.id} onSave={assignBadgeModal.close} />
+          <AssignPlayersModal badge={assignBadgeModal.data} onSave={assignBadgeModal.close} />
         )}
       </CustomModal>
     </>
   );
 }
 
-function AssignPlayersModal({ id }) {
+function AssignPlayersModal({ badge }) {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.badges.modals.assign" });
   const [player, setPlayer] = useState(null);
 
   const { mutate: postBadgePlayer } = usePostBadgePlayer();
-  const query = useGetBadgePlayers(id);
+  const query = useGetBadgePlayers(badge.id);
   const badgePlayers = getQueryData(query);
 
   const addPlayer = () => {
     //Add player here
     if (player === null) return;
-    postBadgePlayer({ badge_id: id, player_id: player.id });
+    postBadgePlayer({ badge_id: badge.id, player_id: player.id });
   };
 
   return (
     <Stack direction="column" gap={2}>
-      <Typography variant="h6">{t("title")}</Typography>
+      <Stack direction="row" alignItems="center" gap={2}>
+        <Typography variant="h6">{t("title")}</Typography>
+        <Badge badge={badge} />
+      </Stack>
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -244,17 +264,17 @@ function AssignPlayersModal({ id }) {
       <Typography variant="h6">
         {t("players", { count: badgePlayers ? badgePlayers.length : "?" })}
       </Typography>
-      <AssignPlayersList badgePlayers={badgePlayers} badgeId={id} />
+      <AssignPlayersList badge={badge} badgePlayers={badgePlayers} />
     </Stack>
   );
 }
 
-function AssignPlayersList({ badgePlayers, badgeId }) {
+function AssignPlayersList({ badge, badgePlayers }) {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.badges.modals.assign" });
   const { mutate: deleteBadgePlayer } = useDeleteBadgePlayer();
 
   const onDelete = (badgePlayer) => {
-    deleteBadgePlayer({ id: badgePlayer.id, badgeId: badgeId });
+    deleteBadgePlayer({ id: badgePlayer.id, badgeId: badge.id });
   };
 
   if (badgePlayers === null) {

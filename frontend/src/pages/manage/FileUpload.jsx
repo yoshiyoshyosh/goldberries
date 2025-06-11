@@ -67,7 +67,7 @@ export function PageFileUpload() {
             <MenuItem value="campaign_icon" disabled={!auth.hasHelperPriv}>
               {t("destination.campaign_icon")}
             </MenuItem>
-            <MenuItem value="badge" disabled={!auth.hasVerifierPriv}>
+            <MenuItem value="badge" disabled={!auth.hasHelperPriv}>
               {t("destination.badge")}
             </MenuItem>
           </Select>

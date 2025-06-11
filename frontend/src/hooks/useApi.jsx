@@ -798,6 +798,7 @@ export function usePostBadge(onSuccess) {
     mutationFn: (data) => postBadge(data),
     onSuccess: (response, data) => {
       queryClient.invalidateQueries(["all_badges"]);
+      queryClient.invalidateQueries(["player"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,
@@ -809,6 +810,7 @@ export function usePostBadgePlayer(onSuccess) {
     mutationFn: (data) => postBadgePlayer(data),
     onSuccess: (response, data) => {
       queryClient.invalidateQueries(["badge_players", data.badge_id]);
+      queryClient.invalidateQueries(["player"]);
       if (onSuccess) onSuccess(response.data);
     },
     onError: errorToast,
@@ -984,6 +986,7 @@ export function useDeleteBadge(onSuccess) {
     onSuccess: (response, id) => {
       queryClient.invalidateQueries(["all_badges"]);
       queryClient.invalidateQueries(["badge_players", id]);
+      queryClient.invalidateQueries(["player"]);
       if (onSuccess) onSuccess(response);
       else toast.success("Badge deleted");
     },
@@ -996,6 +999,7 @@ export function useDeleteBadgePlayer(onSuccess) {
     mutationFn: ({ id, badgeId }) => deleteBadgePlayer(id),
     onSuccess: (response, { id, badgeId }) => {
       queryClient.invalidateQueries(["badge_players", badgeId]);
+      queryClient.invalidateQueries(["player"]);
       if (onSuccess) onSuccess(response);
       else toast.success("Badge unassigned");
     },

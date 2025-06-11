@@ -1,7 +1,10 @@
-import { Stack, Tooltip, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Tooltip, Typography, useTheme } from "@mui/material";
 import { MarkdownRenderer } from "../pages/Post";
 import { hasFlag } from "../pages/Account";
 import { BADGE_FLAGS } from "./forms/Badge";
+import Color from "color";
+import { getQueryData, useGetBadge } from "../hooks/useApi";
+import { ErrorDisplay, LoadingSpinner } from "./BasicComponents";
 
 export function BadgeDisplay({ player }) {
   const badges = player.data?.badges || [];
@@ -10,6 +13,25 @@ export function BadgeDisplay({ player }) {
       {badges.map((badge) => (
         <Badge key={badge.id} badge={badge} />
       ))}
+    </Stack>
+  );
+}
+
+export function BadgeAsync({ id, inline = true }) {
+  const query = useGetBadge(id);
+
+  if (query.isLoading) return <LoadingSpinner />;
+  if (query.isError) return <ErrorDisplay error={query.error} />;
+
+  const badge = getQueryData(query);
+  return (
+    <Stack
+      direction="row"
+      sx={{ display: inline ? "inline-block" : undefined, verticalAlign: inline ? "middle" : undefined }}
+      justifyContent="space-around"
+      alignItems="center"
+    >
+      <Badge badge={badge} />
     </Stack>
   );
 }
@@ -30,9 +52,12 @@ export function Badge({ badge }) {
         },
       }}
     >
-      <Stack sx={{ maxWidth: "fit-content" }}>
+      <Box height={32}>
         <BadgeImage badge={badge} />
-      </Stack>
+      </Box>
+      {/* <Stack sx={{ maxWidth: "fit-content" }}>
+        <BadgeImage badge={badge} />
+      </Stack> */}
     </Tooltip>
   );
 }
@@ -50,6 +75,12 @@ function BadgeImage({ badge, full = false }) {
   const level3Class = hasFlag(badge.flags, BADGE_FLAGS.level3.flag) ? " level gold" : "";
   const levelClass = level3Class || level2Class || level1Class || "";
   const fullClass = full ? " large" : "";
+
+  // var backgroundColor = "#000000";
+  // var backgroundColor = new Color(borderColor).darken(0.5).hex();
+  // var backgroundColor = new Color(borderColor).desaturate(0.5).darken(0.35).hex();
+  var backgroundColor = new Color(borderColor).darken(0.45).desaturate(0.4).hex();
+
   return (
     <Stack
       className={"badge-container" + fullClass + shinyClass + glowClass + levelClass}
@@ -64,8 +95,7 @@ function BadgeImage({ badge, full = false }) {
         style={{
           borderRadius: "4px",
           border: "solid " + borderWidth + " " + borderColor,
-          background: "#000000",
-          // background: badge.color || "#000000",
+          background: backgroundColor,
         }}
       />
     </Stack>
@@ -73,10 +103,12 @@ function BadgeImage({ badge, full = false }) {
 }
 function BadgeExplanation({ badge }) {
   return (
-    <Stack direction="column" gap={1} sx={{ maxWidth: "300px" }} alignItems="center">
+    <Stack direction="column" gap={1} sx={{ maxWidth: "300px", minWidth: "200px" }} alignItems="center">
       <BadgeTitle badge={badge} />
       <BadgeImage badge={badge} full />
-      <MarkdownRenderer markdown={badge.description} />
+      <Stack sx={{ textAlign: "center" }}>
+        <MarkdownRenderer markdown={badge.description} isCentered />
+      </Stack>
     </Stack>
   );
 }

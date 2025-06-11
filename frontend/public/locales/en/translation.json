@@ -712,7 +712,7 @@
     },
     "badges": {
       "title": "Manage Badges",
-      "icon": "Icon",
+      "table_title": "Title",
       "actions": "Actions",
       "buttons": {
         "create": "New Badge",

@@ -534,7 +534,13 @@ function CampaignPlayerTableRowExpanded({ player, campaign }) {
           const maps = validMaps.filter((map) => map.sort_major === index);
           const mapsForCount = validMapsForMax.filter((map) => map.sort_major === index);
           const countCompleted = mapsForCount.reduce((acc, map) => {
-            return acc + (mapData[map.id] !== undefined ? 1 : 0);
+            return (
+              acc +
+              (mapData[map.id] !== undefined ||
+              Object.keys(mapData).some((key) => mapData[key].counts_for_id === map.id)
+                ? 1
+                : 0)
+            );
           }, 0);
           return (
             <>

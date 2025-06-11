@@ -19,6 +19,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { hasFlag, setFlag } from "../../pages/Account";
 import { MuiColorInput } from "mui-color-input";
+import { Badge } from "../Badge";
 
 export const BADGE_FLAGS = {
   shiny: { key: "shiny", flag: 1 },
@@ -91,29 +92,36 @@ export function FormBadge({ badge, onSave, ...props }) {
     },
   });
   const onUpdateSubmit = form.handleSubmit((data) => {
+    saveBadge(data);
+  });
+  const getFlagsValue = (data) => {
     let flags = setFlag(0, BADGE_FLAGS.shiny.flag, data.shiny);
     flags = setFlag(flags, BADGE_FLAGS.glow.flag, data.glow);
     flags = setFlag(flags, BADGE_FLAGS.level1.flag, data.level1);
     flags = setFlag(flags, BADGE_FLAGS.level2.flag, data.level2);
     flags = setFlag(flags, BADGE_FLAGS.level3.flag, data.level3);
-    const toSubmit = {
-      ...data,
-      flags,
-    };
-    saveBadge(toSubmit);
-  });
+    return flags;
+  };
+
+  const formBadge = form.watch();
 
   useEffect(() => {
     form.reset(badge);
   }, [badge]);
-
-  const formBadge = form.watch();
+  useEffect(() => {
+    //When formBadge changes, update the flags in the form
+    const flags = getFlagsValue(formBadge);
+    form.setValue("flags", flags);
+  }, [formBadge]);
 
   return (
     <form {...props}>
-      <Typography variant="h6" gutterBottom>
-        {t_g("badge", { count: 1 })} ({newBadge ? t_g("new") : badge.id})
-      </Typography>
+      <Stack direction="row" alignItems="center" gap={2}>
+        <Typography variant="h6" gutterBottom>
+          {t_g("badge", { count: 1 })} ({newBadge ? t_g("new") : badge.id})
+        </Typography>
+        <Badge badge={formBadge} />
+      </Stack>
 
       <TextField
         label={t_g("icon_url") + " *"}
@@ -132,6 +140,8 @@ export function FormBadge({ badge, onSave, ...props }) {
         label={t_g("description") + " *"}
         sx={{ mt: 2 }}
         fullWidth
+        multiline
+        rows={3}
         {...form.register("description", { required: true })}
       />
 
