@@ -996,43 +996,81 @@ export function ObjectiveIcon({ objective, challenge = null, height = "1em" }) {
   );
 }
 
+const defaultEmote = {
+  img: "golden-control.png",
+  alt: "Goldberries.net",
+};
 export const EMOTES = [
-  {
-    img: "golden-control.png",
-    alt: "Goldberries.net",
-  },
   {
     img: "chart_with_sideways_trend.png",
     alt: "Chart with Sideways Trend",
+    weight: 100,
   },
   {
     img: "chart_with_midwards_trend.png",
     alt: "Chart with Midwards Trend",
+    weight: 100,
   },
   {
     img: "chart_with_awesome_trend.png",
     alt: "Chart with Awesome Trend",
+    weight: 100,
   },
   {
     img: "chart_with_no_trend.png",
     alt: "Chart with No Trend",
+    weight: 100,
   },
   {
     img: "chart_with_dunning_kruger_trend.png",
     alt: "Chart with Dunning Kruger Trend",
+    weight: 100,
   },
   {
     img: "chart_with_horse_trend.png",
     alt: "Chart with Horse Trend",
+    weight: 100,
+  },
+  {
+    img: "clowneline.png",
+    alt: "Clowneline",
+    weight: 50,
+  },
+  {
+    img: "frank.png",
+    alt: "Frank",
+    weight: 50,
+  },
+  {
+    img: "3dgrineline.png",
+    alt: "3dgrineline",
+    weight: 50,
+  },
+  {
+    img: "3dfrowneline.png",
+    alt: "3dfrowneline",
+    weight: 50,
+  },
+  {
+    img: "entity.png",
+    alt: "Entity",
+    weight: 10,
   },
 ];
 export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false }) {
-  let icon = EMOTES[0];
+  let totalWeight = EMOTES.reduce((sum, emote) => sum + emote.weight, 0);
 
-  const rand = Math.random();
-  if (!preventFunny && rand < 0.01) {
-    const randomIndex = Math.floor(1 + Math.random() * (EMOTES.length - 1));
-    icon = EMOTES[randomIndex];
+  let rand = Math.random() * totalWeight;
+  let icon = defaultEmote; // Default icon if no emote is selected
+
+  if (!preventFunny && Math.random() < 0.01) {
+    for (const emote of EMOTES) {
+      if (rand < emote.weight) {
+        icon = emote;
+        break;
+      }
+      rand -= emote.weight;
+    }
   }
 
   return (
