@@ -1189,11 +1189,12 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
       key: "W",
       shift,
       onKey: () => {
-        if (!auth.hasHelperPriv) return;
+        if (!auth.hasVerifierPriv) return;
         navigate("/manage/accounts/player-claims");
       },
     },
     { key: "E", shift, onKey: () => navigate("/suggestions") },
+    { key: "R", shift, onKey: () => navigate("/submit") },
     { key: "A", shift, onKey: () => navigate("/top-golden-list") },
     { key: "D", shift, onKey: () => navigate("/") },
     {
@@ -1220,6 +1221,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
   useKeyboardShortcut(hotkeys[4]);
   useKeyboardShortcut(hotkeys[5]);
   useKeyboardShortcut(hotkeys[6]);
+  useKeyboardShortcut(hotkeys[7]);
 
   return (
     <Box

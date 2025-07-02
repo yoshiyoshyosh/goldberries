@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 export function useKeyboardShortcut({ key, shift = false, onKey }) {
   function keyDownHandler(e) {
-    if (e.key === key && (!shift || e.shiftKey)) {
+    const typingInInput = e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA";
+    if (e.key === key && (!shift || e.shiftKey) && !typingInInput) {
       e.preventDefault();
       onKey();
     }
@@ -12,5 +13,5 @@ export function useKeyboardShortcut({ key, shift = false, onKey }) {
     return () => {
       document.removeEventListener("keydown", keyDownHandler);
     };
-  }, []);
+  }, [onKey]);
 }
