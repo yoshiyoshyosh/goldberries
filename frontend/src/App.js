@@ -1,6 +1,13 @@
 import "./App.css";
 import { Outlet } from "react-router";
-import { createBrowserRouter, Link, RouterProvider, Navigate, useLocation } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Link,
+  RouterProvider,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { PageIndex } from "./pages/Index";
 
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -138,6 +145,7 @@ import { PageFileUpload } from "./pages/manage/FileUpload";
 import { PagePostList } from "./pages/Post";
 import { PageManagePosts } from "./pages/manage/Posts";
 import { PageManageBadges } from "./pages/manage/Badges";
+import { useKeyboardShortcut } from "./hooks/useKeyboardShortcut";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = API_URL;
@@ -749,6 +757,7 @@ export function Layout() {
         searchOpenRef.current(true);
       },
       icon: <FontAwesomeIcon icon={faSearch} />,
+      key: "S",
     },
     other: {
       name: t("other_menu.name"),
@@ -1149,8 +1158,9 @@ function MobileMenuItem({ item, indent = 0, closeDrawer }) {
 }
 
 function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
-  const auth = useAuth();
   const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
+  const auth = useAuth();
+  const navigate = useNavigate();
   const { settings, setSettings } = useAppSettings();
   const nameStyle = getPlayerNameColorStyle(auth.user?.player, settings);
 
@@ -1164,6 +1174,52 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
       },
     });
   };
+
+  const shift = true;
+  const hotkeys = [
+    {
+      key: "Q",
+      shift,
+      onKey: () => {
+        if (!auth.hasHelperPriv) return;
+        navigate("/manage/submission-queue");
+      },
+    },
+    {
+      key: "W",
+      shift,
+      onKey: () => {
+        if (!auth.hasHelperPriv) return;
+        navigate("/manage/accounts/player-claims");
+      },
+    },
+    { key: "E", shift, onKey: () => navigate("/suggestions") },
+    { key: "A", shift, onKey: () => navigate("/top-golden-list") },
+    { key: "D", shift, onKey: () => navigate("/") },
+    {
+      key: "F",
+      shift,
+      onKey: () => {
+        if (!auth.hasPlayerClaimed) return;
+        navigate("/player/" + auth.user.player.id);
+      },
+    },
+    {
+      key: "G",
+      shift,
+      onKey: () => {
+        if (!auth.hasPlayerClaimed) return;
+        navigate("/player/" + auth.user.player.id + "/top-golden-list");
+      },
+    },
+  ];
+  useKeyboardShortcut(hotkeys[0]);
+  useKeyboardShortcut(hotkeys[1]);
+  useKeyboardShortcut(hotkeys[2]);
+  useKeyboardShortcut(hotkeys[3]);
+  useKeyboardShortcut(hotkeys[4]);
+  useKeyboardShortcut(hotkeys[5]);
+  useKeyboardShortcut(hotkeys[6]);
 
   return (
     <Box
@@ -1234,13 +1290,11 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
                 nameStyle={nameStyle}
               />
             )}
-            {/* <StyledLink to="/settings" sx={{ color: "#fff", p: 0 }}> */}
             <Tooltip title={t("settings")}>
               <IconButton sx={{ color: "#fff", p: 0, mr: 0.5 }} onClick={() => settingsOpenRef.current(true)}>
                 <FontAwesomeIcon icon={faCogs} style={{ fontSize: "75%" }} />
               </IconButton>
             </Tooltip>
-            {/* </StyledLink> */}
             <Tooltip title={t(darkmode ? "switch_to_light_mode" : "switch_to_dark_mode")}>
               <IconButton onClick={toggleDarkmode} sx={{ color: "#fff", p: 0 }}>
                 <FontAwesomeIcon icon={darkmode ? faSun : faMoon} style={{ fontSize: "75%" }} />
@@ -1254,6 +1308,17 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
 }
 
 function DesktopItem({ item }) {
+  const navigate = useNavigate();
+  const handleShortcut = () => {
+    if (item.key === undefined || item.key === null) return;
+    if (item.action !== undefined) {
+      item.action();
+    } else {
+      navigate(item.path);
+    }
+  };
+  useKeyboardShortcut({ key: item.key || "Enter", shift: true, onKey: handleShortcut });
+
   if (item.action !== undefined) {
     return (
       <Button
@@ -1366,7 +1431,7 @@ function DesktopSubMenuItem({ item, closeMenu }) {
 function VerifierStatsNavDesktop() {
   const { t } = useTranslation(undefined, { keyPrefix: "navigation" });
   const query = useGetStatsVerifierTools();
-  const data = query.data?.data ?? {
+  const data = getQueryData(query) ?? {
     submissions_in_queue: null,
     open_player_claims: null,
   };

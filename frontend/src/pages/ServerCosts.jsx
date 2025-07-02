@@ -63,6 +63,7 @@ export function PageServerCosts({}) {
     { amount: 61.48, date: "2025-02-11", name: "RisingSunLight", playerId: 1710 },
     { amount: 13.15, date: "2025-03-12", name: "orion", playerId: 234 },
     { amount: 17.46, date: "2025-06-01", name: "Pawn_b4", playerId: 2497 },
+    { amount: 100, date: "2025-07-01", name: "anonymous", playerId: null },
   ];
   const donationsSoFar =
     Math.round(donations.reduce((acc, donation) => acc + donation.amount, 0) * 100) / 100;

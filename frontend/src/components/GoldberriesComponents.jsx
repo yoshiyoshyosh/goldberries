@@ -1072,6 +1072,14 @@ export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false }
       rand -= emote.weight;
     }
   }
+  // Flipped
+  if (!preventFunny && Math.random() < 0.005) {
+    style.transform = "rotate(180deg)";
+  }
+  // Shiny
+  if (!preventFunny && Math.random() < 1 / 8192) {
+    style.filter = "hue-rotate(180deg)";
+  }
 
   return (
     <img
