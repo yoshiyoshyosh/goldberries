@@ -36,6 +36,10 @@ export function PageCredits() {
             <TableCell>{t("french_translation")}</TableCell>
             <TableCell>Tomygood & Lee Sin Support</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell>{t("russian_translation")}</TableCell>
+            <TableCell>Kurome & Vagrant</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </BasicContainerBox>
