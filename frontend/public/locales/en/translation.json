@@ -549,6 +549,12 @@
       "my_top_goldens": "My Top Goldens",
       "logout": "Logout",
       "app_version": "goldberries v{{version}}"
+    },
+    "icon_tooltip": {
+      "text": "Icon: {{icon}}{{postfix}}\nOdds for this specific icon and style: {{odds}}\nYou have loaded goldberries.net {{count}} times.",
+      "default": "Default",
+      "flipped": "Flipped",
+      "shiny": "SHINY"
     }
   },
   "manage": {
@@ -1457,7 +1463,7 @@
   "rules": {
     "title": "Rules",
     "toc": "Table of Contents",
-    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The most basic form of requied submission rules is \"don't cheat, don't use gameplay-altering mods, have a full session recording for Tier 8+ challenges, and make sure to show the end screen\". However, this formalization exists to cover potential confusion for certain edge cases and all the like. This list isn't exhaustive. It can't be. Mappers come up with ways to subvert our expectations all the time, and if we tried to formalize the minefield that it is, we would get nowhere. If you have an edge case not covered by this list, or general questions about it, please ask us! Ask us before you make a submission that results in days of debate that may or may not result in it getting rejected. Thank you.",
+    "description": "This page exists mostly as a formalization of rules and edge cases for said rules. The most basic form of required submission rules is \"don't cheat, don't use gameplay-altering mods, have a full session recording for Tier 8+ challenges, and make sure to show the end screen\". However, this formalization exists to cover potential confusion for certain edge cases and all the like. This list isn't exhaustive. It can't be. Mappers come up with ways to subvert our expectations all the time, and if we tried to formalize the minefield that it is, we would get nowhere. If you have an edge case not covered by this list, or general questions about it, please ask us! Ask us before you make a submission that results in days of debate that may or may not result in it getting rejected. Thank you.",
     "maps": {
       "header": "Rules for Maps and Challenges",
       "rules": {
@@ -1585,7 +1591,7 @@
             "text": "Submissions <strong>are recommended to not</strong> take long or frequent breaks on the menu or pause screen. It is more acceptable to take breaks while inside a map and not paused, though taking frequent breaks might raise suspicion and request for more proof."
           },
           {
-            "heading": "",
+            "heading": "Submittable Deathless-Berryless",
             "text": "If a submission does not collect golden/silver berries, it <strong>may</strong> be submitted for individual map runs on the respective sheet if the challenge follows the same aforementioned rule about deathless berryless runs."
           }
         ]
@@ -1751,7 +1757,8 @@
     "testing": "Testing & Feedback",
     "people": "many many wonderful people from the goldberries-net thread in the Modded Golden Team Discord",
     "chinese_translation": "Chinese Translation",
-    "french_translation": "French Translation"
+    "french_translation": "French Translation",
+    "russian_translation": "Russian Translation"
   },
   "stats": {
     "title": "Stats",

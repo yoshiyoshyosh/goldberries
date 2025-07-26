@@ -21,7 +21,7 @@ import {
   getOldDifficultyLabelColor,
   getOldDifficultyName,
 } from "../util/constants";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -76,6 +76,7 @@ import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { DateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import { isAdmin, isHelper, isNewsWriter, isVerifier } from "../hooks/AuthProvider";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export function CampaignSelect({
   selected,
@@ -998,7 +999,7 @@ export function ObjectiveIcon({ objective, challenge = null, height = "1em" }) {
 
 const defaultEmote = {
   img: "golden-control.png",
-  alt: "Goldberries.net",
+  alt: "Golden Control",
 };
 export const EMOTES = [
   {
@@ -1057,39 +1058,87 @@ export const EMOTES = [
     weight: 10,
   },
 ];
-export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false }) {
-  let totalWeight = EMOTES.reduce((sum, emote) => sum + emote.weight, 0);
+// new emotes: destareline, catplush, catbucket and catbus (uncommon), frontstare (rare), catnodwashingmachine and Cat (ultra rare)
+export function WebsiteIcon({ height = "1em", style = {}, preventFunny = false, countLoad = false }) {
+  const { t } = useTranslation(undefined, { keyPrefix: "navigation.icon_tooltip" });
+  const [loaded, setLoaded] = useLocalStorage("website_icon_loaded", 0);
 
+  //Track how often the icon is loaded
+  useEffect(() => {
+    if (countLoad) {
+      setLoaded((prev) => prev + 1);
+    }
+  }, []);
+
+  let totalWeight = EMOTES.reduce((sum, emote) => sum + emote.weight, 0);
   let rand = Math.random() * totalWeight;
   let icon = defaultEmote; // Default icon if no emote is selected
+  let odds = 1;
+  let postfix = "";
 
   if (!preventFunny && Math.random() < 0.01) {
+    odds *= 0.01;
     for (const emote of EMOTES) {
       if (rand < emote.weight) {
         icon = emote;
+        odds *= emote.weight / totalWeight;
         break;
       }
       rand -= emote.weight;
     }
+  } else {
+    odds *= 0.99;
   }
   // Flipped
   if (!preventFunny && Math.random() < 0.005) {
+    odds *= 0.005;
     style.transform = "rotate(180deg)";
+    postfix += " [" + t("flipped") + "]";
+  } else {
+    odds *= 0.995;
   }
   // Shiny
   if (!preventFunny && Math.random() < 1 / 8192) {
+    odds *= 1 / 8192;
     style.filter = "hue-rotate(180deg)";
+    postfix += " [" + t("shiny") + "]";
+  } else {
+    odds *= 8191 / 8192;
   }
 
+  if (postfix === "") postfix = " [" + t("default") + "]";
+
+  let oddsText;
+  if (odds < 0.0001) {
+    oddsText = "1 in " + Math.round(1 / odds).toLocaleString();
+  } else {
+    oddsText = (odds * 100).toFixed(2) + "%";
+  }
+
+  let iconToDisplay = useMemo(() => icon, []);
+  let text = useMemo(
+    () =>
+      t("text", {
+        icon: iconToDisplay.alt,
+        postfix: postfix,
+        odds: oddsText,
+        count: loaded,
+      }),
+    []
+  );
+  let styleToDisplay = useMemo(() => style, []);
+
   return (
-    <img
-      src={"/emotes/" + icon.img}
-      alt={icon.alt}
-      style={{
-        height: height,
-        ...style,
-      }}
-    />
+    <TooltipLineBreaks title={text}>
+      <img
+        src={"/emotes/" + iconToDisplay.img}
+        alt={iconToDisplay.alt}
+        style={{
+          height: height,
+          ...styleToDisplay,
+        }}
+      />
+    </TooltipLineBreaks>
   );
 }
 export const MemoWebsiteIcon = memo(WebsiteIcon);

@@ -1265,7 +1265,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
           >
             <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
               <Stack direction="row" gap={0.5} alignItems="center">
-                <MemoWebsiteIcon />
+                <MemoWebsiteIcon countLoad />
                 <span>goldberries.net</span>
               </Stack>
             </Link>
