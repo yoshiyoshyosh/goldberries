@@ -18,6 +18,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import {
   CampaignIcon,
@@ -245,8 +246,12 @@ function RecentSubmissionsTableRow({ submission, hasPlayer }) {
   const mapName = map ? getMapName(map, campaign, false) : null;
   const campaignNameSame = campaign?.name === mapName;
 
-  const isAnnoyingCampaignName = challenge && campaign.name.length > 20 && !campaign.name.includes(" ");
-  const isAnnoyingMapName = challenge && mapName && mapName.length > 20 && !mapName.includes(" ");
+  const isMdScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+  const isAnnoyingCampaignName =
+    isMdScreen && challenge && campaign.name.length > 20 && !campaign.name.includes(" ");
+  const isAnnoyingMapName =
+    isMdScreen && challenge && mapName && mapName.length > 20 && !mapName.includes(" ");
 
   return (
     <TableRow

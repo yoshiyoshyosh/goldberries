@@ -18,7 +18,13 @@ import { toast } from "react-toastify";
 import { useEffect, useMemo, useRef } from "react";
 import { getQueryData, usePostPost } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
-import { MarkdownRenderer, PostImage, PostIndexWidgetPost, PostTitle } from "../../pages/Post";
+import {
+  MarkdownRenderer,
+  MarkdownRendererMemo,
+  PostImage,
+  PostIndexWidgetPost,
+  PostTitle,
+} from "../../pages/Post";
 import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useAuth } from "../../hooks/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -99,6 +105,8 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
   }, [post]);
 
   const formPost = form.watch();
+  const contentDebounced = useDebounce(formPost.content, 500);
+  console.log("contentDebounced", contentDebounced);
 
   useEffect(() => {
     if (newPost) {
@@ -200,7 +208,7 @@ export function FormPost({ post, setStoredPost, onSave, ...props }) {
               <PostTitle title={formPost.title} />
             </Grid>
             <Grid item xs={12} sx={{ "& > :first-child": { mt: 0 }, "& > :last-child": { mb: 0 } }}>
-              <MarkdownRenderer markdown={formPost.content} />
+              <MarkdownRendererMemo markdown={contentDebounced} />
             </Grid>
             <Grid item xs={12}>
               <Divider sx={{ mt: 4 }} />

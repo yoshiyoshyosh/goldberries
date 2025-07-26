@@ -46,7 +46,7 @@ import emoji from "remark-emoji";
 import { useAuth } from "../hooks/AuthProvider";
 import { useDebounce, useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { DIFFICULTIES } from "../util/constants";
 import { ChallengeInline } from "./Player";
 import { BadgeAsync } from "../components/Badge";
@@ -432,6 +432,7 @@ function parseImageAlt(alt) {
 }
 
 //#region Post Components
+export const MarkdownRendererMemo = memo(MarkdownRenderer);
 export function MarkdownRenderer({ markdown, isCentered = false }) {
   const theme = useTheme();
   const colorSecondary = theme.palette.text.secondary;
