@@ -156,10 +156,10 @@ export const COLOR_PRESETS = [
     },
   },
   {
-    name: "Old Colors",
+    name: "Alternate Colors",
     disabled: false,
     colors: {
-      24: "#ff97d8",
+      24: "#ff76cc",
       2: "#ff97d8",
       3: "#fcb5e0",
       23: "#ff99b2",
