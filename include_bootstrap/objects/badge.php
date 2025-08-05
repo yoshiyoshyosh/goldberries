@@ -73,7 +73,7 @@ class Badge extends DbObject
   // === Utility Functions ===
   function __toString()
   {
-    return "(Badge, id:{$this->id}, title:{$this->title}";
+    return "(Badge, id:{$this->id}, title:{$this->title})";
   }
 
   function is_shiny()

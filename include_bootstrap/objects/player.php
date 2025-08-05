@@ -62,25 +62,27 @@ class Player extends DbObject
       return;
 
     $accounts = Account::find_by_player_id($DB, $this->id);
-    if ($accounts === false || count($accounts) === 0) {
-      return;
+    if ($accounts !== false && count($accounts) === 1) {
+      $account = $accounts[0];
+      $this->account['role'] = $account->role;
+      $this->account['is_suspended'] = $account->is_suspended;
+      $this->account['suspension_reason'] = $account->suspension_reason;
+
+      $this->account['name_color_start'] = $account->name_color_start;
+      $this->account['name_color_end'] = $account->name_color_end;
+
+      //For player, expand structure is for the profile customization that isn't needed for all pages
+      //extract the fields: links, input_method, about_me, name_color_start, name_color_end
+      if ($expand_structure === true) {
+        $this->account['links'] = $account->links;
+        $this->account['input_method'] = $account->input_method;
+        $this->account['about_me'] = $account->about_me;
+        $this->account['country'] = $account->country;
+
+      }
     }
-    $account = $accounts[0];
-    $this->account['role'] = $account->role;
-    $this->account['is_suspended'] = $account->is_suspended;
-    $this->account['suspension_reason'] = $account->suspension_reason;
 
-    $this->account['name_color_start'] = $account->name_color_start;
-    $this->account['name_color_end'] = $account->name_color_end;
-
-    //For player, expand structure is for the profile customization that isn't needed for all pages
-    //extract the fields: links, input_method, about_me, name_color_start, name_color_end
     if ($expand_structure === true) {
-      $this->account['links'] = $account->links;
-      $this->account['input_method'] = $account->input_method;
-      $this->account['about_me'] = $account->about_me;
-      $this->account['country'] = $account->country;
-
       $this->data = [];
       $this->data['badges'] = $this->fetch_badges($DB);
     }

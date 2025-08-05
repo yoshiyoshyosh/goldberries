@@ -22,7 +22,7 @@ DROP TABLE change;
 DROP TABLE submission;
 DROP TABLE suggestion;
 
-DROP TABLE badge_account;
+DROP TABLE badge_player;
 DROP TABLE challenge;
 DROP TABLE "session";
 
@@ -372,7 +372,7 @@ CREATE TABLE badge
  icon_url     text NOT NULL,
  title        text NOT NULL,
  description  text NOT NULL,
- color        text NULL,
+ color        text NOT NULL DEFAULT '#ffffff',
  date_created timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
  flags        integer NOT NULL DEFAULT 0,
  CONSTRAINT badge_pkey PRIMARY KEY ( "id" )

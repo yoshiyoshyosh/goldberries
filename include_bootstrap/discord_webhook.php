@@ -104,12 +104,6 @@ function send_webhook_suggestion_verified($suggestion)
     }
     $difficulties_str = implode(", ", $difficulties_str_arr);
 
-    $suggestions_percent = round($count_suggestions / $count_submissions * 100, 1);
-    // $fields[] = [
-    //   "name" => "Data",
-    //   "value" => "$count_suggestions difficulty suggestions ({$suggestions_percent}%, from {$count_submissions} submissions)",
-    //   "inline" => false
-    // ];
     $fields[] = [
       "name" => "Difficulty Suggestions ({$count_suggestions}/{$count_submissions} submissions)",
       "value" => "$difficulties_str",
@@ -485,6 +479,16 @@ function clean_post_content($content)
       return "[`{$player->get_name_escaped()}`](<{$player->get_url()}>)";
     }
     return "(Unknown Player)";
+  }, $content);
+
+  //Match the following pattern: `{b:<id>}` and replace it with the title of the badge linked to the id
+  $content = preg_replace_callback('/{b:(\d+)}/', function ($matches) {
+    global $DB;
+    $badge = Badge::get_by_id($DB, $matches[1]);
+    if ($badge !== false) {
+      return $badge->title;
+    }
+    return "(Unknown Badge)";
   }, $content);
 
   return $content;

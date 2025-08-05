@@ -23,7 +23,7 @@ $min_role = [
   "icon" => $HELPER,
   "campaign_icon" => $HELPER,
   "post" => $NEWS_WRITER,
-  "badge" => $VERIFIER,
+  "badge" => $HELPER,
 ];
 $allowed_extensions = ["png", "jpg", "jpeg", "gif", "svg"];
 
