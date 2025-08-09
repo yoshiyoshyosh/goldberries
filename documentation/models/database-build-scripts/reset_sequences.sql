@@ -8,6 +8,8 @@ SELECT setval('map_id_seq', (SELECT MAX(id) FROM "map"));
 SELECT setval('challenge_id_seq', (SELECT MAX(id) FROM challenge));
 SELECT setval('submission_id_seq', (SELECT MAX(id) FROM submission));
 
+SELECT setval('verification_notice_id_seq', (SELECT MAX(id) FROM verification_notice));
+
 SELECT setval('objective_id_seq', (SELECT MAX(id) FROM objective));
 SELECT setval('difficulty_id_seq', (SELECT MAX(id) FROM difficulty));
 SELECT setval('new_challenge_id_seq', (SELECT MAX(id) FROM new_challenge));
@@ -32,6 +34,8 @@ SELECT setval('campaign_id_seq', 1);
 SELECT setval('map_id_seq', 1);
 SELECT setval('challenge_id_seq', 1);
 SELECT setval('submission_id_seq', 1);
+
+SELECT setval('verification_notice_id_seq', 1);
 
 SELECT setval('objective_id_seq', 1);
 SELECT setval('difficulty_id_seq', 1);

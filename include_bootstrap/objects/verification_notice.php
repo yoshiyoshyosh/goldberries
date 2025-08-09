@@ -6,6 +6,7 @@ class VerificationNotice extends DbObject
 
   public int $verifier_id;
   public int $submission_id;
+  public ?string $message = null;
 
   // Linked Objects
   public ?Player $verifier = null;
@@ -17,6 +18,7 @@ class VerificationNotice extends DbObject
     return array(
       'verifier_id' => $this->verifier_id,
       'submission_id' => $this->submission_id,
+      'message' => $this->message,
     );
   }
 
@@ -25,6 +27,10 @@ class VerificationNotice extends DbObject
     $this->id = intval($arr[$prefix . 'id']);
     $this->verifier_id = intval($arr[$prefix . 'verifier_id']);
     $this->submission_id = intval($arr[$prefix . 'submission_id']);
+
+    if (isset($arr[$prefix . 'message'])) {
+      $this->message = $arr[$prefix . 'message'];
+    }
   }
 
   function expand_foreign_keys($DB, $depth = 2, $expand_structure = true)
