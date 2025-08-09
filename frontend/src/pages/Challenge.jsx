@@ -410,7 +410,7 @@ export function CollectiblesInfoBox({ map, collectibles }) {
   const addDefaultCollectible = () => {
     postMap({
       ...map,
-      collectibles: [[collectible + "", "", "", ""]],
+      collectibles: [[collectible + "", "", "", "", ""]],
     });
   };
 
@@ -459,10 +459,10 @@ export function CollectiblesInfoBox({ map, collectibles }) {
                     <OtherIcon url={getCollectibleIcon(item[0], item[1])} />
                   </Stack>
                   <Typography variant="body1">
-                    {getCollectibleName(item[0], item[1]) + " x" + (item[2] ? item[2] : "1")}
+                    {getCollectibleName(item[0], item[1]) + " x" + (item[3] ? item[3] : "1")}
                   </Typography>
-                  {item[3] && (
-                    <TooltipLineBreaks title={item[3]}>
+                  {item[2] && (
+                    <TooltipLineBreaks title={item[2]}>
                       <FontAwesomeIcon icon={faInfoCircle} />
                     </TooltipLineBreaks>
                   )}

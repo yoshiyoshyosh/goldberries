@@ -264,19 +264,22 @@ export function FormMap({ map, onSave, ...props }) {
                 options: getCollectibleOptions(),
               },
               { type: "enum", options: (item, index, value) => getCollectibleVariantOptions(item[0]) },
-              { type: "string" },
               { type: "string", multiline: true },
+              { type: "string" },
+              { type: "string" },
             ]}
             valueLabels={[
               t("collectibles.label"),
               t("collectibles.variant"),
-              t("collectibles.count"),
               t("collectibles.note"),
+              t("collectibles.count"),
+              t("collectibles.global_count"),
             ]}
             list={field.value}
             setList={field.onChange}
-            valueCount={4}
+            valueCount={5}
             reorderable
+            inline={[6, 6, 12, 6, 6]}
           />
         )}
       />

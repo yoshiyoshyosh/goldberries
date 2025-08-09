@@ -261,19 +261,22 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
                 options: getCollectibleOptions(),
               },
               { type: "enum", options: (item, index, value) => getCollectibleVariantOptions(item[0]) },
-              { type: "string" },
               { type: "string", multiline: true },
+              { type: "string" },
+              { type: "string" },
             ]}
             valueLabels={[
               t_fm("collectibles.label"),
               t_fm("collectibles.variant"),
-              t_fm("collectibles.count"),
               t_fm("collectibles.note"),
+              t_fm("collectibles.count"),
+              t_fm("collectibles.global_count"),
             ]}
             list={field.value}
             setList={field.onChange}
             valueCount={4}
             reorderable
+            inline={[6, 6, 12, 6, 6]}
           />
         )}
       />
