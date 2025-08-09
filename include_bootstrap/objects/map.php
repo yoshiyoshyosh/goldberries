@@ -97,13 +97,13 @@ class Map extends DbObject
       $value = $arr[$prefix . 'collectibles'];
       if (is_array($value)) {
         if (count($value) > 0) {
-          $this->collectibles = new StringList(4);
+          $this->collectibles = new StringList(5);
           $this->collectibles->arr = $value;
         } else {
           $this->collectibles = null;
         }
       } else {
-        $this->collectibles = new StringList(4, $value);
+        $this->collectibles = new StringList(5, $value);
       }
     }
     if (isset($arr[$prefix . 'golden_changes']))

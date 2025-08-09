@@ -45,12 +45,14 @@ SELECT
   split_part(entry, '|', 1)::INTEGER AS collectible_id,
   SUM(
     CASE
-      WHEN split_part(entry, '|', 3) = '' THEN 1
-      ELSE split_part(entry, '|', 3)::INTEGER
+      WHEN split_part(entry, '|', 5) <> '' THEN split_part(entry, '|', 5)::INTEGER
+      WHEN split_part(entry, '|', 4) = '' THEN 1
+      ELSE split_part(entry, '|', 4)::INTEGER
     END
   ) AS total_amount
-FROM "map",
-  unnest(string_to_array(collectibles, E'\t')) AS entry
+FROM "map"
+CROSS JOIN LATERAL unnest(string_to_array(collectibles, E'\t')) AS entry
+WHERE collectibles IS NOT NULL
 GROUP BY collectible_id
 ORDER BY collectible_id;
 ```
