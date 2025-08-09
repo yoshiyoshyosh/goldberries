@@ -84,6 +84,12 @@ export const ModalButtons = {
     close: false,
     cancel: true,
   },
+  submit: {
+    key: "submit",
+    variant: "contained",
+    color: "primary",
+    close: true,
+  },
   save: {
     key: "save",
     variant: "contained",

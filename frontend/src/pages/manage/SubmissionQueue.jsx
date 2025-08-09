@@ -1,5 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { BasicContainerBox, ErrorDisplay, HeadTitle, LoadingSpinner } from "../../components/BasicComponents";
+import {
+  BasicContainerBox,
+  ErrorDisplay,
+  HeadTitle,
+  LoadingSpinner,
+  TooltipLineBreaks,
+} from "../../components/BasicComponents";
 import { FormSubmissionWrapper, shouldMarkSubmissionDateAchieved } from "../../components/forms/Submission";
 import {
   Box,
@@ -49,6 +55,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../hooks/AuthProvider";
 import { jsonDateToJsDate } from "../../util/util";
+import { CustomModal, ModalButtons, useModal } from "../../hooks/useModal";
 
 export function PageSubmissionQueue() {
   const { t } = useTranslation(undefined, { keyPrefix: "manage.submission_queue" });
@@ -430,8 +437,18 @@ function SubmissionQueueTableRow({
   const auth = useAuth();
   const { mutateAsync: postNotice } = usePostVerificationNotice();
   const { mutateAsync: deleteNotice } = useDeleteVerificationNotice();
+  const noticeMessageModal = useModal(
+    "",
+    (cancelled, message) => {
+      if (cancelled) return;
+      message = message.trim();
+      if (message === "") message = null;
+      postNotice({ submission_id: submission.id, message: message });
+    },
+    { actions: [ModalButtons.cancel, ModalButtons.submit] }
+  );
 
-  const onClickNotice = () => {
+  const onClickNotice = (event) => {
     if (notice) {
       if (auth.user.player_id !== notice.verifier.id) {
         toast.error(t("feedback.already_locked"));
@@ -439,7 +456,11 @@ function SubmissionQueueTableRow({
       }
       deleteNotice(notice.id);
     } else {
-      postNotice({ submission_id: submission.id });
+      if (event.ctrlKey) {
+        noticeMessageModal.open();
+      } else {
+        postNotice({ submission_id: submission.id });
+      }
     }
   };
 
@@ -459,10 +480,24 @@ function SubmissionQueueTableRow({
   const isNewChallenge = challenge === null;
   const markDateAchieved = shouldMarkSubmissionDateAchieved(submission);
 
+  let noticeTooltipText = null;
+  let noticeButtonColor = "primary";
+  if (notice) {
+    if (notice.verifier.id === auth.user.player_id) {
+      noticeButtonColor = notice.message ? "secondary" : "primary";
+    } else {
+      noticeButtonColor = notice.message ? "warning" : "success";
+    }
+    noticeTooltipText = notice.verifier.name;
+    if (notice.message) {
+      noticeTooltipText += ": " + notice.message;
+    }
+  }
+
   const noticeButton = (
     <Button
       variant={notice ? "contained" : "outlined"}
-      color={notice ? (notice.verifier.id === auth.user.player_id ? "success" : "warning") : "primary"}
+      color={noticeButtonColor}
       size="small"
       sx={{ minWidth: "unset" }}
       onClick={onClickNotice}
@@ -472,57 +507,74 @@ function SubmissionQueueTableRow({
   );
 
   return (
-    <TableRow
-      key={submission.id}
-      selected={submission.id === selectedSubmissionId}
-      sx={{ cursor: "pointer" }}
-    >
-      <TableCell sx={{ p: 0 }} width={1}>
-        <Checkbox
-          checked={isSelected}
-          onClick={(event) => onSelect(event, submission.id)}
-          disabled={isNewChallenge}
-        />
-      </TableCell>
-      <TableCell
-        onClick={() => {
-          setSubmissionId(submission.id);
-        }}
-        sx={{ pl: 1 }}
-        colSpan={1}
+    <>
+      <TableRow
+        key={submission.id}
+        selected={submission.id === selectedSubmissionId}
+        sx={{ cursor: "pointer" }}
       >
-        <Stack direction="row">
-          <Stack direction="row" sx={{ flex: 1 }} gap={0.25} alignItems="center">
-            <Typography variant="body1">{textTop}</Typography>
-            {markDateAchieved && (
-              <Tooltip
-                title={
-                  "Date Achieved set to more than 4 weeks ago: " +
-                  jsonDateToJsDate(submission.date_achieved).toLocaleString(navigator.language)
-                }
-                placement="top"
-                arrow
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
-                  <circle cx="50" cy="50" r="40" fill="yellow" />
-                </svg>
-              </Tooltip>
-            )}
+        <TableCell sx={{ p: 0 }} width={1}>
+          <Checkbox
+            checked={isSelected}
+            onClick={(event) => onSelect(event, submission.id)}
+            disabled={isNewChallenge}
+          />
+        </TableCell>
+        <TableCell
+          onClick={() => {
+            setSubmissionId(submission.id);
+          }}
+          sx={{ pl: 1 }}
+          colSpan={1}
+        >
+          <Stack direction="row">
+            <Stack direction="row" sx={{ flex: 1 }} gap={0.25} alignItems="center">
+              <Typography variant="body1">{textTop}</Typography>
+              {markDateAchieved && (
+                <Tooltip
+                  title={
+                    "Date Achieved set to more than 4 weeks ago: " +
+                    jsonDateToJsDate(submission.date_achieved).toLocaleString(navigator.language)
+                  }
+                  placement="top"
+                  arrow
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">
+                    <circle cx="50" cy="50" r="40" fill="yellow" />
+                  </svg>
+                </Tooltip>
+              )}
+            </Stack>
+            <Typography variant="body1">{submission.id}</Typography>
           </Stack>
-          <Typography variant="body1">{submission.id}</Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          <Stack direction="row" gap={1} alignItems="center" sx={{ flex: 1 }}>
-            <Typography variant="body2">{textBottom}</Typography>
-            <SubmissionFcIcon submission={submission} />
+          <Stack direction="row" alignItems="center">
+            <Stack direction="row" gap={1} alignItems="center" sx={{ flex: 1 }}>
+              <Typography variant="body2">{textBottom}</Typography>
+              <SubmissionFcIcon submission={submission} />
+            </Stack>
+            <DifficultyChip difficulty={diff} />
           </Stack>
-          <DifficultyChip difficulty={diff} />
-        </Stack>
-      </TableCell>
-      <TableCell sx={{ pl: 0, pr: 0 }} width={1}>
-        {notice ? <Tooltip title={notice.verifier.name}>{noticeButton}</Tooltip> : noticeButton}
-      </TableCell>
-    </TableRow>
+        </TableCell>
+        <TableCell sx={{ pl: 0, pr: 0 }} width={1}>
+          {notice ? (
+            <TooltipLineBreaks title={noticeTooltipText}>{noticeButton}</TooltipLineBreaks>
+          ) : (
+            noticeButton
+          )}
+        </TableCell>
+      </TableRow>
+      <CustomModal modalHook={noticeMessageModal} maxWidth="sm" options={{ title: "Attach Message" }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder={t("notice_message_modal.placeholder")}
+          value={noticeMessageModal.data}
+          onChange={(event) => noticeMessageModal.setData(event.target.value)}
+          multiline
+          rows={4}
+        />
+      </CustomModal>
+    </>
   );
 }
 

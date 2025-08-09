@@ -30,7 +30,8 @@
         "cancel": "Cancel",
         "save": "Save",
         "close": "Close",
-        "update": "Update"
+        "update": "Update",
+        "submit": "Submit"
       }
     },
     "name": "Name",
@@ -382,8 +383,9 @@
       "collectibles": {
         "label": "Collectibles",
         "variant": "Variant",
+        "note": "Note (optional)",
         "count": "Count (default: 1)",
-        "note": "Note (optional)"
+        "global_count": "Global Count Override"
       },
       "note": "Note",
       "golden_changes": "Golden Changes",
@@ -692,6 +694,10 @@
       "filter_placeholder": "Player / Map / Campaign",
       "new_challenge": "New Challenge:",
       "or": "OR",
+      "notice_message_modal": {
+        "title": "Attach Message",
+        "placeholder": "Message"
+      },
       "buttons": {
         "verify": "Verify '{{count}}' Selected",
         "reject": "Reject '{{count}}' Selected"
@@ -1502,7 +1508,7 @@
           },
           {
             "heading": "Complete Footage",
-            "text": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/c4VwQrNwGjE?t=235\">Anubi Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy."
+            "text": "The submission video <strong>must</strong> show the complete achievement of the challenge, e.g. from obtaining the golden strawberry to when the golden strawberry collects. It is not necessary that one must stay alive after the completion of the challenge but before exiting the map (e.g. \"Heart Deaths\", an example of which can be found in the golden of <CustomExternalLink href=\"https://youtu.be/6BeQPj4UXE0?si=lob3z8BOTGtmtqLp&t=62\">Magnetic Dawn B-Side</CustomExternalLink>). Note that a golden strawberry collecting may not always be the end of a challenge, such as a berry remaining in a full clear challenge, as is the case for <CustomExternalLink href=\"https://youtu.be/tOHsr2JBfyQ?t=190\">Heather's Aquarium Full Clear</CustomExternalLink>. Exceptions to this are very rare and evaluated on a case-by-case basis, such as a livestream cutting out for a brief moment, so long as the circumstances and player are deemed trustworthy."
           },
           {
             "heading": "End Screen",
@@ -1708,7 +1714,7 @@
     },
     "issues": {
       "header": "Report Issues",
-      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1269306272776458321\">dedicated channel</CustomExternalLink> for this website"
+      "text": "If you find any issues, please report them by either creating a <CustomExternalLink href=\"https://github.com/yoshiyoshyosh/goldberries/issues\">new issue on GitHub</CustomExternalLink> or by @-ing viddie in the Modded Golden Team Discord server, preferably in the <CustomExternalLink href=\"https://discord.com/channels/790156040653897749/1269306272776458321\">dedicated channel</CustomExternalLink> for this website."
     },
     "global_stats": {
       "header": "Global Stats",
