@@ -274,7 +274,7 @@ export function FormCreateFullChallenge({ data, onSuccess, ...props }) {
             ]}
             list={field.value}
             setList={field.onChange}
-            valueCount={4}
+            valueCount={5}
             reorderable
             inline={[6, 6, 12, 6, 6]}
           />
