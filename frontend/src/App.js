@@ -299,7 +299,7 @@ const router = createBrowserRouter([
       { path: "stats/:tab?/:subtab?", element: <PageStats /> },
 
       { path: "rules", element: <PageRules /> },
-      { path: "faq", element: <PageFAQ /> },
+      { path: "faq/:entry?", element: <PageFAQ /> },
 
       { path: "settings/:tab?", element: <PageAppSettings /> },
 
