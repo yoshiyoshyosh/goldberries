@@ -1161,6 +1161,7 @@
     "info_boxes": {
       "collectibles": "Map Collectibles",
       "no_collectibles": "Unknown",
+      "meaningful_collectibles": "(Meaningful collectibles: {{count}})",
       "golden_changes": {
         "label": "Golden Changes",
         "no_changes": "No golden changes",
@@ -1749,9 +1750,9 @@
         "Tier names are now changed to start at Tier 1 for the easiest difficulty and ascend as difficulty increases.",
         "The \"Standard\" difficulty is now represented by the 3 lowest tiers. These tiers are hidden by default on the Top Golden List due to increased load times, but they can be shown by adjusting the \"Minimum Tier\" in submission filters.",
         "Every subtier is now represented by its own tier.",
-        "A new tier has been added between the old High Tier 1 and Low Tier 0, bringing the total number of tiers to 19."
+        "A new tier has been added between the old High Tier 1 and Low Tier 0, bringing the total number of tiers to 20."
       ],
-      "more_text": "To help with adjusting to the reworked tiers, a temporary option has been added to display the old tier names alongside the new ones. Additionally, an option has been added to stack the highest tiers vertically (enabled by default) to make the Top Golden List more compact."
+      "more_text": "An option has been added to stack the highest tiers vertically (disabled by default) to make the Top Golden List more compact, like it was before the rework."
     }
   },
   "credits": {

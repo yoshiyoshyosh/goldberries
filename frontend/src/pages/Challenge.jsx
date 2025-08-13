@@ -444,6 +444,11 @@ export function CollectiblesInfoBox({ map, collectibles }) {
         collectibles.map((item, index) => {
           const collectible = COLLECTIBLES.find((c) => c.value === item[0]);
           if (!collectible) return null;
+          let collectibleNote = item[2] ? item[2] : null;
+          if (item[4]) {
+            const append = t("meaningful_collectibles", { count: item[4] });
+            collectibleNote = collectibleNote ? collectibleNote + "\n" + append : append;
+          }
           return (
             <InfoBoxIconTextLine
               key={collectibles.value}
@@ -461,8 +466,8 @@ export function CollectiblesInfoBox({ map, collectibles }) {
                   <Typography variant="body1">
                     {getCollectibleName(item[0], item[1]) + " x" + (item[3] ? item[3] : "1")}
                   </Typography>
-                  {item[2] && (
-                    <TooltipLineBreaks title={item[2]}>
+                  {collectibleNote && (
+                    <TooltipLineBreaks title={collectibleNote}>
                       <FontAwesomeIcon icon={faInfoCircle} />
                     </TooltipLineBreaks>
                   )}
