@@ -1178,7 +1178,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
   const shift = true;
   const hotkeys = [
     {
-      key: "Q",
+      key: "q",
       shift,
       onKey: () => {
         if (!auth.hasHelperPriv) return;
@@ -1186,19 +1186,19 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
       },
     },
     {
-      key: "W",
+      key: "w",
       shift,
       onKey: () => {
         if (!auth.hasVerifierPriv) return;
         navigate("/manage/accounts/player-claims");
       },
     },
-    { key: "E", shift, onKey: () => navigate("/suggestions") },
-    { key: "R", shift, onKey: () => navigate("/submit") },
-    { key: "A", shift, onKey: () => navigate("/top-golden-list") },
-    { key: "D", shift, onKey: () => navigate("/") },
+    { key: "e", shift, onKey: () => navigate("/suggestions") },
+    { key: "r", shift, onKey: () => navigate("/submit") },
+    { key: "a", shift, onKey: () => navigate("/top-golden-list") },
+    { key: "d", shift, onKey: () => navigate("/") },
     {
-      key: "F",
+      key: "f",
       shift,
       onKey: () => {
         if (!auth.hasPlayerClaimed) return;
@@ -1206,7 +1206,7 @@ function DesktopNav({ leftMenu, rightMenu, userMenu, settingsOpenRef }) {
       },
     },
     {
-      key: "G",
+      key: "g",
       shift,
       onKey: () => {
         if (!auth.hasPlayerClaimed) return;
