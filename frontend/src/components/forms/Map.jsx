@@ -382,6 +382,8 @@ export const COLLECTIBLES = [
       { value: "23", name: "Burnt Strawberry", icon: "/icons/strawberry-burnt.png" },
       { value: "24", name: "Getsuyuubyou Light Strawberry", icon: "/icons/strawberry-light.png" },
       { value: "25", name: "Getsuyuubyou Dark Strawberry", icon: "/icons/strawberry-dark.png" },
+      { value: "26", name: "Chaos Complex Strawberry", icon: "/icons/strawberry-chaoscomplex.png" },
+      { value: "27", name: "Winter Collab Strawberry", icon: "/icons/strawberry-wintercollab.png" },
     ],
   },
   {
@@ -472,6 +474,11 @@ export const COLLECTIBLES = [
         name: "Minecire Bronze Berry",
         displayName: "Bronze Berry",
         icon: "/icons/bronzeberry-minecire.png",
+      },
+      {
+        value: "14",
+        name: "Corner Berry",
+        icon: "/icons/cornerberry.png",
       },
     ],
   },

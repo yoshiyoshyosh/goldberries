@@ -226,6 +226,10 @@ const testBackgrounds = [
     name: "Banana Mountain",
     file: "banana.jpg",
   },
+  {
+    name: "Zenith's Descent",
+    file: "zescent.png",
+  },
 ];
 const backgroundsDark = [
   {
